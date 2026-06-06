@@ -1,0 +1,41 @@
+alter table public.platform_settings
+add column if not exists public_app_url text;
+
+create or replace view public.platform_branding_public as
+select
+  id,
+  logo_url,
+  logo_dark_url,
+  favicon_url,
+  platform_name,
+  support_email,
+  primary_color,
+  accent_color,
+  gradient_style,
+  gradient_custom,
+  border_radius,
+  default_theme,
+  font_family,
+  font_url,
+  base_font_size,
+  footer_text,
+  terms_url,
+  privacy_url,
+  login_headline,
+  login_subheadline,
+  login_stats_enabled,
+  login_bg_image_url,
+  login_bg_layout,
+  login_logo_position,
+  hide_widget_branding,
+  widget_accent_color,
+  powered_by_text,
+  browser_title,
+  meta_description,
+  og_image_url,
+  twitter_handle,
+  default_language,
+  created_at,
+  updated_at,
+  public_app_url
+from public.platform_settings;

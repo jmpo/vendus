@@ -1,0 +1,2 @@
+ALTER TABLE public.whatsapp_meta_connections DROP CONSTRAINT whatsapp_meta_connections_status_check;
+ALTER TABLE public.whatsapp_meta_connections ADD CONSTRAINT whatsapp_meta_connections_status_check CHECK (status = ANY (ARRAY['draft'::text, 'pending'::text, 'active'::text, 'error'::text, 'revoked'::text]));
