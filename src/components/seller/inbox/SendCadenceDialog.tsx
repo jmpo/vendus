@@ -126,7 +126,7 @@ export function SendCadenceDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSend} disabled={!leadId || !cadenceDays?.length || isSending}>
             {isSending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            {selectedDay ? `Iniciar do Día ${selectedDay.day}` : 'Iniciar do Día 1'}
+            {selectedDay ? `Iniciar desde el Día ${selectedDay.day}` : 'Iniciar desde el Día 1'}
           </Button>
         </DialogFooter>
       </DialogContent>

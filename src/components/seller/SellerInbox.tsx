@@ -557,7 +557,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     if (!selectedConversation) return;
     try {
       await resumeConversation.mutateAsync(selectedConversation.id);
-      toast({ title: 'Atención retomado' });
+      toast({ title: 'Atención retomada' });
     } catch { toast({ title: 'Error', description: 'No foi possível retomar.', variant: 'destructive' }); }
   };
 
@@ -783,7 +783,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         });
         if (error) throw error;
         if (data?.error) throw new Error(data.error);
-        toast({ title: 'Atención aceito' });
+        toast({ title: 'Atención aceptada' });
         queryClient.invalidateQueries({ queryKey: detailKey, refetchType: 'active' });
         refetchConversations();
       } catch (e: any) {

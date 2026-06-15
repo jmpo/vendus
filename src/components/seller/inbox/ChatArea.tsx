@@ -337,7 +337,7 @@ export function ChatArea({
     switch (status) {
       case 'active': return 'Conversación activa';
       case 'waiting': return 'Esperando atención';
-      case 'bot_active': return 'Atención por IA';
+      case 'bot_active': return 'Atendiendo con IA';
       case 'closed': return 'Conversación finalizada';
       default: return status;
     }
@@ -777,7 +777,7 @@ export function ChatArea({
             <div className="border-t border-border bg-amber-50 dark:bg-amber-950/30 px-4 py-3 flex items-center justify-between gap-3 flex-shrink-0 min-w-0">
           <div className="text-sm">
             <span className="font-medium text-amber-900 dark:text-amber-200">
-              Tú está visualizando este atención{attendantName ? ` de ${attendantName}` : ''}.
+              Estás visualizando esta atención{attendantName ? ` de ${attendantName}` : ''}.
             </span>
             <p className="text-xs text-amber-700 dark:text-amber-300">Para responder, assuma a conversa.</p>
           </div>
