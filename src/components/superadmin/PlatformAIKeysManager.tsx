@@ -18,7 +18,7 @@ import {
 import { MODELS_BY_PROVIDER, TAG_LABELS, getDefaultModel } from '@/config/aiModelsCatalog';
 import { cn } from '@/lib/utils';
 
-// Provedores externos cadastráveis (Lovable não entra: é automática)
+// Proveedores externos cadastráveis (Lovable não entra: é automática)
 const EXTERNAL_PROVIDERS: { value: Exclude<PoolProvider, 'lovable'>; label: string; help: string; placeholder: string }[] = [
   { value: 'openai',    label: 'OpenAI',         help: 'sk-... — consumo direto na sua conta OpenAI.',         placeholder: 'sk-...' },
   { value: 'anthropic', label: 'Anthropic',      help: 'sk-ant-... — consumo direto na sua conta Anthropic.', placeholder: 'sk-ant-...' },
@@ -48,19 +48,19 @@ export function PlatformAIKeysManager() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">IA da Plataforma</h2>
+          <h2 className="text-2xl font-bold">IA de la Plataforma</h2>
           <p className="text-sm text-muted-foreground max-w-2xl mt-1">
-            Cadastre as chaves de IA que serão compartilhadas entre as empresas com plano "IA da plataforma" ativado.
-            Você pode cadastrar várias chaves do mesmo provedor — o roteador distribui as chamadas por estratégia
+            Registre las claves de IA que se compartirán entre las empresas con el plan "IA de la plataforma" activado.
+            Você pode cadastrar várias chaves do mesmo provedor — o roteador distribui as llamadas por estratégia
             (aleatório ponderado ou round-robin) conforme o plano escolher.
           </p>
         </div>
         <Button onClick={() => { setEditing(null); setDialogOpen(true); }}>
-          <Plus className="h-4 w-4 mr-1" /> Nova chave
+          <Plus className="h-4 w-4 mr-1" /> Nueva clave
         </Button>
       </div>
 
-      {isLoading && <p className="text-sm text-muted-foreground">Carregando...</p>}
+      {isLoading && <p className="text-sm text-muted-foreground">Cargando...</p>}
 
       {/* Card Lovable: informativo, sem cadastro manual */}
       <Card className="border-violet-500/30 bg-violet-500/5">
@@ -69,7 +69,7 @@ export function PlatformAIKeysManager() {
             <Sparkles className="h-4 w-4 text-violet-500" />
             Lovable AI
             <Badge className="bg-violet-500/20 text-violet-700 dark:text-violet-300 border-violet-500/30">
-              Ativa automaticamente
+              Activa automáticamente
             </Badge>
           </CardTitle>
           <p className="text-xs text-muted-foreground mt-1">
@@ -105,12 +105,12 @@ export function PlatformAIKeysManager() {
                     setDialogOpen(true);
                   }}
                 >
-                  <Plus className="h-4 w-4 mr-1" /> Adicionar
+                  <Plus className="h-4 w-4 mr-1" /> Agregar
                 </Button>
               </CardHeader>
               <CardContent className="space-y-2">
                 {list.length === 0 && (
-                  <p className="text-sm text-muted-foreground italic">Nenhuma chave cadastrada.</p>
+                  <p className="text-sm text-muted-foreground italic">Ninguna clave registrada.</p>
                 )}
                 {list.map((k) => (
                   <KeyRow key={k.id} k={k} onEdit={() => { setEditing(k); setDialogOpen(true); }} />
@@ -147,8 +147,8 @@ function KeyRow({ k, onEdit }: { k: PlatformAIKey; onEdit: () => void }) {
         <p className="text-xs text-muted-foreground font-mono">{k.api_key_masked}</p>
         <p className="text-[11px] text-muted-foreground">
           {k.model_default && <>modelo <span className="font-mono">{k.model_default}</span> · </>}
-          prioridade {k.priority} · peso {k.weight} · {k.usage_count.toLocaleString('pt-BR')} chamadas
-          {k.last_used_at ? ` · último uso ${new Date(k.last_used_at).toLocaleString('pt-BR')}` : ''}
+          prioridad {k.priority} · peso {k.weight} · {k.usage_count.toLocaleString( 'es' )} llamadas
+          {k.last_used_at ? ` · último uso ${new Date(k.last_used_at).toLocaleString( 'es' )}` : ''}
         </p>
         {k.last_error && <p className="text-[11px] text-destructive truncate">{k.last_error}</p>}
       </div>
@@ -156,7 +156,7 @@ function KeyRow({ k, onEdit }: { k: PlatformAIKey; onEdit: () => void }) {
         <Button
           size="icon"
           variant="ghost"
-          title={k.is_active ? 'Desativar' : 'Ativar'}
+          title={k.is_active ? 'Desactivar' : 'Activar'}
           onClick={() => action.mutate({ id: k.id, action: 'toggle', is_active: !k.is_active })}
         >
           <Power className={`h-4 w-4 ${k.is_active ? 'text-green-600' : 'text-muted-foreground'}`} />
@@ -164,7 +164,7 @@ function KeyRow({ k, onEdit }: { k: PlatformAIKey; onEdit: () => void }) {
         <Button
           size="icon"
           variant="ghost"
-          title="Testar"
+          title="Probar"
           onClick={() => action.mutate({ id: k.id, action: 'test' })}
         >
           <RefreshCw className="h-4 w-4" />
@@ -173,9 +173,9 @@ function KeyRow({ k, onEdit }: { k: PlatformAIKey; onEdit: () => void }) {
         <Button
           size="icon"
           variant="ghost"
-          title="Excluir"
+          title="Eliminar"
           onClick={() => {
-            if (confirm(`Excluir chave "${k.label}"?`)) action.mutate({ id: k.id, action: 'delete' });
+            if (confirm(`Eliminar chave "${k.label}"?`)) action.mutate({ id: k.id, action: 'delete' });
           }}
         >
           <Trash2 className="h-4 w-4 text-destructive" />
@@ -262,11 +262,11 @@ function KeyDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{editing ? 'Editar chave' : 'Nova chave de IA'}</DialogTitle>
+          <DialogTitle>{editing ? 'Editar chave' : 'Nueva clave de IA'}</DialogTitle>
         </DialogHeader>
         <div className="space-y-3">
           <div className="space-y-1">
-            <Label className="text-xs">Provedor</Label>
+            <Label className="text-xs">Proveedor</Label>
             <Select value={provider} onValueChange={handleProviderChange} disabled={!!editing}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -275,12 +275,12 @@ function KeyDialog({
             </Select>
           </div>
           <div className="space-y-1">
-            <Label className="text-xs">Apelido</Label>
+            <Label className="text-xs">Apodo</Label>
             <Input value={label} onChange={(e) => setLabel(e.target.value)} placeholder={`${providerCfg.label} Conta Principal`} />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">
-              {editing ? 'Chave (deixe em branco para manter)' : 'Chave de API'}
+              {editing ? 'Chave (deixe em branco para manter)' : 'Clave de API'}
             </Label>
             <Input
               type="password"
@@ -291,7 +291,7 @@ function KeyDialog({
           </div>
 
           <div className="space-y-1">
-            <Label className="text-xs">Modelo padrão</Label>
+            <Label className="text-xs">Modelo predeterminado</Label>
             {!useCustomModel ? (
               <Select
                 value={modelDefault}
@@ -304,7 +304,7 @@ function KeyDialog({
                   }
                 }}
               >
-                <SelectTrigger><SelectValue placeholder="Selecionar modelo..." /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Seleccionar modelo..." /></SelectTrigger>
                 <SelectContent>
                   {models.map((m) => (
                     <SelectItem key={m.id} value={m.id}>
@@ -322,7 +322,7 @@ function KeyDialog({
                     </SelectItem>
                   ))}
                   <SelectItem value={CUSTOM_MODEL_VALUE}>
-                    <span className="italic text-muted-foreground">Outro modelo... (digitar)</span>
+                    <span className="italic text-muted-foreground">Otro modelo... (digitar)</span>
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -341,7 +341,7 @@ function KeyDialog({
                     setModelDefault(getDefaultModel(provider, 'agent_chat') ?? '');
                   }}
                 >
-                  ← Voltar para lista
+                  ← Volver a la lista
                 </button>
               </div>
             )}
@@ -349,23 +349,23 @@ function KeyDialog({
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <Label className="text-xs">Prioridade (round-robin)</Label>
+              <Label className="text-xs">Prioridad (round-robin)</Label>
               <Input type="number" value={priority} onChange={(e) => setPriority(Number(e.target.value))} />
             </div>
             <div className="space-y-1">
-              <Label className="text-xs">Peso (random)</Label>
+              <Label className="text-xs">Peso (aleatorio)</Label>
               <Input type="number" value={weight} onChange={(e) => setWeight(Number(e.target.value))} />
             </div>
           </div>
           <div className="flex items-center justify-between rounded-md border p-3">
-            <Label className="text-sm">Ativa</Label>
+            <Label className="text-sm">Activa</Label>
             <Switch checked={isActive} onCheckedChange={setIsActive} />
           </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={submit} disabled={save.isPending}>
-            {save.isPending ? 'Salvando...' : 'Salvar e verificar'}
+            {save.isPending ? 'Guardando...' : 'Guardar y verificar'}
           </Button>
         </DialogFooter>
       </DialogContent>

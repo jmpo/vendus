@@ -37,8 +37,8 @@ export function AdminDashboard() {
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Dashboard Administrativo</h1>
-        <p className="text-muted-foreground">Visão geral da performance da sua operação</p>
+        <h1 className="text-2xl font-bold text-foreground">Panel Administrativo</h1>
+        <p className="text-muted-foreground">Vista general del rendimiento de su operación</p>
       </div>
 
       {/* KPI Cards */}
@@ -58,7 +58,7 @@ export function AdminDashboard() {
                     <TrendingDown className="h-4 w-4 text-destructive" />
                   )}
                   <span className={`text-sm ${(kpis?.salesGrowth || 0) >= 0 ? 'text-success' : 'text-destructive'}`}>
-                    {Math.abs(kpis?.salesGrowth || 0).toFixed(1)}% vs mês anterior
+                    {Math.abs(kpis?.salesGrowth || 0).toFixed(1)}% vs mes anterior
                   </span>
                 </div>
               </div>
@@ -93,12 +93,12 @@ export function AdminDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Taxa de Conversão</p>
+                <p className="text-sm text-muted-foreground">Tasa de Conversión</p>
                 <p className="text-2xl font-bold text-foreground mt-1">
                   {(kpis?.conversionRate || 0).toFixed(1)}%
                 </p>
                 <p className="text-xs text-muted-foreground mt-2">
-                  {kpis?.totalDeals || 0} deals fechados
+                  {kpis?.totalDeals || 0} deals cerrados
                 </p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-warning/20 flex items-center justify-center">
@@ -112,12 +112,12 @@ export function AdminDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Ticket Médio</p>
+                <p className="text-sm text-muted-foreground">Ticket Promedio</p>
                 <p className="text-2xl font-bold text-foreground mt-1">
                   {formatCurrency(kpis?.avgTicket || 0)}
                 </p>
                 <p className="text-xs text-muted-foreground mt-2">
-                  Baseado em {kpis?.totalDeals || 0} vendas
+                  Basado en {kpis?.totalDeals || 0} ventas
                 </p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
@@ -221,7 +221,7 @@ export function AdminDashboard() {
               </div>
             ) : topSellers?.length === 0 ? (
               <p className="text-center text-muted-foreground py-8">
-                Nenhuma venda este mês
+                Ninguna venta este mes
               </p>
             ) : (
               topSellers?.map((seller, index) => (
@@ -261,7 +261,7 @@ export function AdminDashboard() {
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <Users className="h-5 w-5 text-primary" />
-              Performance dos Squads
+              Rendimiento de los Squads
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -293,7 +293,7 @@ export function AdminDashboard() {
             </div>
             {(!squadsPerformance || squadsPerformance.length === 0) && (
               <p className="text-center text-muted-foreground py-8">
-                Nenhum squad cadastrado ainda
+                Ningún squad registrado aún
               </p>
             )}
           </CardContent>
@@ -311,7 +311,7 @@ export function AdminDashboard() {
               <div>
                 <p className="font-medium text-foreground">Comisiones Pendentes</p>
                 <p className="text-sm text-muted-foreground">
-                  {kpis?.pendingCommissionsCount} comissões aguardando aprovação
+                  {kpis?.pendingCommissionsCount} comisiones esperando aprobación
                 </p>
               </div>
             </div>

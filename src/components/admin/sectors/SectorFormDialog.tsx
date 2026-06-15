@@ -71,7 +71,7 @@ export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialo
 
   const handleSubmit = async () => {
     if (!form.name.trim()) {
-      toast.error('Informe o nome do setor');
+      toast.error('Ingrese el nombre del sector');
       return;
     }
     try {
@@ -80,10 +80,10 @@ export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialo
         ...form,
         member_ids: memberIds,
       });
-      toast.success(sector ? 'Setor atualizado!' : 'Setor criado!');
+      toast.success(sector ? '¡Sector actualizado!' : '¡Sector creado!');
       onOpenChange(false);
     } catch (err: any) {
-      toast.error(err?.message || 'Erro ao salvar setor');
+      toast.error(err?.message || 'Error al guardar sector');
     }
   };
 
@@ -110,18 +110,18 @@ export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialo
             >
               <PreviewIcon className="h-4 w-4" />
             </span>
-            {sector ? 'Editar Setor' : 'Adicionar Setor'}
+            {sector ? 'Editar Sector' : 'Agregar Sector'}
           </DialogTitle>
           <DialogDescription>
-            Configure o setor e atribua os membros que devem ter acesso.
+            Configure el sector y asigne los miembros que deben tener acceso.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5 py-2">
-          {/* Linha 1: Nome / Ordem / Ativo */}
+          {/* Linha 1: Nome / Orden / Activo */}
           <div className="grid grid-cols-1 md:grid-cols-[1fr_120px_auto] gap-3 items-end">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome *</Label>
+              <Label htmlFor="name">Nombre *</Label>
               <Input
                 id="name"
                 value={form.name}
@@ -130,7 +130,7 @@ export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialo
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="bot_order">Ordem</Label>
+              <Label htmlFor="bot_order">Orden</Label>
               <Input
                 id="bot_order"
                 type="number"
@@ -145,14 +145,14 @@ export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialo
                 onCheckedChange={(v) => setForm({ ...form, is_active: v })}
               />
               <Label htmlFor="active" className="cursor-pointer text-sm whitespace-nowrap">
-                {form.is_active ? 'Ativo' : 'Inativo'}
+                {form.is_active ? 'Activo' : 'Inactivo'}
               </Label>
             </div>
           </div>
 
-          {/* Cor */}
+          {/* Color */}
           <div className="space-y-2">
-            <Label>Cor</Label>
+            <Label>Color</Label>
             <div className="flex flex-wrap gap-2 p-3 border rounded-md bg-muted/30">
               {SECTOR_COLORS.map((c) => (
                 <button
@@ -163,15 +163,15 @@ export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialo
                     form.color === c ? 'ring-2 ring-offset-2 ring-foreground scale-110' : 'hover:scale-110'
                   }`}
                   style={{ backgroundColor: c }}
-                  aria-label={`Cor ${c}`}
+                  aria-label={`Color ${c}`}
                 />
               ))}
             </div>
           </div>
 
-          {/* Ícone */}
+          {/* Ícono */}
           <div className="space-y-2">
-            <Label>Ícone</Label>
+            <Label>Ícono</Label>
             <div className="grid grid-cols-7 sm:grid-cols-13 gap-2 p-3 border rounded-md bg-muted/30">
               {(Object.keys(SECTOR_ICONS) as IconName[]).map((name) => {
                 const Ico = SECTOR_ICONS[name];
@@ -187,7 +187,7 @@ export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialo
                         : 'hover:bg-background'
                     }`}
                     style={selected ? { backgroundColor: `${form.color}20`, color: form.color } : undefined}
-                    aria-label={`Ícone ${name}`}
+                    aria-label={`Ícono ${name}`}
                   >
                     <Ico className="h-5 w-5" />
                   </button>
@@ -200,7 +200,7 @@ export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialo
           <div className="space-y-2">
             <Label className="flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Membros do setor ({selectedMembers.length})
+              Miembros del sector ({selectedMembers.length})
             </Label>
 
             {selectedMembers.length > 0 && (
@@ -230,7 +230,7 @@ export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialo
                 onValueChange={(v) => v && setMemberIds([...memberIds, v])}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="+ Adicionar membro" />
+                  <SelectValue placeholder="+ Agregar miembro" />
                 </SelectTrigger>
                 <SelectContent>
                   {availableMembers.map((m) => (
@@ -255,7 +255,7 @@ export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialo
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSubmit} disabled={upsert.isPending}>
             {upsert.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {sector ? 'Salvar' : 'Adicionar'}
+            {sector ? 'Guardar' : 'Agregar'}
           </Button>
         </DialogFooter>
       </DialogContent>

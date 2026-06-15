@@ -65,22 +65,22 @@ export function ReportsManager() {
             <BarChart3 className="h-6 w-6 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Relatórios</h1>
+            <h1 className="text-2xl font-bold">Reportes</h1>
             <p className="text-muted-foreground text-sm">
-              Análise completa de performance e vendas
+              Análisis completo de rendimiento y ventas
             </p>
           </div>
         </div>
         
         <Select value={selectedProductId} onValueChange={setSelectedProductId}>
           <SelectTrigger className="w-[240px]">
-            <SelectValue placeholder="Filtrar por produto" />
+            <SelectValue placeholder="Filtrar por producto" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">
               <div className="flex items-center gap-2">
                 <Package className="h-4 w-4 text-muted-foreground" />
-                Todos os Produtos
+                Todos los Productos
               </div>
             </SelectItem>
             {products?.map((product) => (
@@ -106,7 +106,7 @@ export function ReportsManager() {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full justify-start flex-wrap">
-          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+          <TabsTrigger value="overview">Vista General</TabsTrigger>
           <TabsTrigger value="sales">Ventas</TabsTrigger>
           <TabsTrigger value="sellers">Vendedores</TabsTrigger>
           <TabsTrigger value="squads">Squads</TabsTrigger>
@@ -159,7 +159,7 @@ export function ReportsManager() {
                       {(kpis?.conversionRate || 0).toFixed(1)}%
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {kpis?.totalDeals || 0} deals fechados
+                      {kpis?.totalDeals || 0} deals cerrados
                     </p>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-warning/20 flex items-center justify-center">
@@ -330,21 +330,21 @@ export function ReportsManager() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium">{seller.name}</p>
-                      <p className="text-sm text-muted-foreground">{seller.dealsCount} deals fechados</p>
+                      <p className="text-sm text-muted-foreground">{seller.dealsCount} deals cerrados</p>
                     </div>
                     <div className="text-right">
                       <p className="font-semibold text-primary">
                         {formatCurrency(seller.totalValue)}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        Ticket médio: {formatCurrency(seller.totalValue / (seller.dealsCount || 1))}
+                        Ticket promedio: {formatCurrency(seller.totalValue / (seller.dealsCount || 1))}
                       </p>
                     </div>
                   </div>
                 ))}
                 {(!filteredSellers || filteredSellers.length === 0) && (
                   <p className="text-center text-muted-foreground py-8">
-                    Nenhuma venda registrada
+                    Ninguna venta registrada
                   </p>
                 )}
               </div>
@@ -358,7 +358,7 @@ export function ReportsManager() {
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <Users className="h-5 w-5 text-primary" />
-                Performance dos Squads
+                Rendimiento de los Squads
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -390,7 +390,7 @@ export function ReportsManager() {
               </div>
               {(!squadsPerformance || squadsPerformance.length === 0) && (
                 <p className="text-center text-muted-foreground py-8">
-                  Nenhum squad cadastrado ainda
+                  Ningún squad registrado aún
                 </p>
               )}
             </CardContent>

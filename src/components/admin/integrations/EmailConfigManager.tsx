@@ -43,31 +43,31 @@ export function EmailConfigManager() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">Configuração de Emails</h3>
+        <h3 className="text-lg font-semibold">Configuración de Emails</h3>
         <p className="text-sm text-muted-foreground">
-          Configure o remetente padrão e assinatura dos emails
+          Configure el remitente predeterminado y la firma de los correos electrónicos
         </p>
       </div>
 
       <Alert variant="default" className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950">
         <AlertTriangle className="h-4 w-4 text-amber-600" />
         <AlertDescription className="text-amber-800 dark:text-amber-200">
-          <strong>Domínio de teste:</strong> Emails estão sendo enviados com o domínio de teste do Resend (resend.dev). 
-          Para enviar com seu próprio domínio, verifique-o no painel do Resend.
+          <strong>Dominio de prueba:</strong> Los correos electrónicos se envían con el dominio de prueba de Resend (resend.dev). 
+          Para enviar con su propio dominio, verifíquelo en el panel de Resend.
         </AlertDescription>
       </Alert>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Remetente</CardTitle>
+          <CardTitle className="text-base">Remitente</CardTitle>
           <CardDescription>
-            Defina como seus emails aparecerão para os destinatários
+            Defina cómo aparecerán sus correos electrónicos para los destinatarios
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="senderName">Nome do Remetente</Label>
+              <Label htmlFor="senderName">Nome do Remitente</Label>
               <Input
                 id="senderName"
                 placeholder="Ex: Equipo de Ventas"
@@ -76,7 +76,7 @@ export function EmailConfigManager() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="senderEmail">Email de Resposta</Label>
+              <Label htmlFor="senderEmail">Email de Respuesta</Label>
               <Input
                 id="senderEmail"
                 type="email"
@@ -85,7 +85,7 @@ export function EmailConfigManager() {
                 onChange={(e) => setFormData(prev => ({ ...prev, senderEmail: e.target.value }))}
               />
               <p className="text-xs text-muted-foreground">
-                Este email será usado no Reply-To dos emails enviados
+                Este correo electrónico se utilizará en el Reply-To de los correos enviados
               </p>
             </div>
           </div>
@@ -94,9 +94,9 @@ export function EmailConfigManager() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Assinatura Padrão</CardTitle>
+          <CardTitle className="text-base">Firma Predeterminada</CardTitle>
           <CardDescription>
-            Texto que será incluído no rodapé dos emails
+            Texto que se incluirá en el pie de página de los correos electrónicos
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -118,7 +118,7 @@ export function EmailConfigManager() {
           ) : (
             <Save className="h-4 w-4 mr-2" />
           )}
-          Salvar Configurações
+          Guardar Configuraciones
         </Button>
       </div>
     </div>

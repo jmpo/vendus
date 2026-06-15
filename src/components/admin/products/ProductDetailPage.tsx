@@ -27,14 +27,14 @@ const statusOptions = [
 ];
 
 const productTabs = [
-  { id: 'settings', label: 'Configurações', icon: Settings },
-  { id: 'brain', label: 'Cérebro', icon: Brain },
+  { id: 'settings', label: 'Configuraciones', icon: Settings },
+  { id: 'brain', label: 'Cerebro', icon: Brain },
   
-  { id: 'objections', label: 'Objeções', icon: MessageSquare },
-  { id: 'cadence', label: 'Cadência', icon: Calendar },
-  { id: 'postsale', label: 'Pós-venda', icon: Zap },
+  { id: 'objections', label: 'Objeciones', icon: MessageSquare },
+  { id: 'cadence', label: 'Cadencia', icon: Calendar },
+  { id: 'postsale', label: 'Post-venta', icon: Zap },
   { id: 'playbook', label: 'Playbook', icon: BookOpen },
-  { id: 'materials', label: 'Materiais', icon: FileText },
+  { id: 'materials', label: 'Materiales', icon: FileText },
 ];
 
 export function ProductDetailPage({ productId, onBack }: ProductDetailPageProps) {
@@ -53,10 +53,10 @@ export function ProductDetailPage({ productId, onBack }: ProductDetailPageProps)
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <Package className="h-12 w-12 text-muted-foreground/50 mb-4" />
-        <h3 className="text-lg font-medium text-foreground mb-1">Produto não encontrado</h3>
+        <h3 className="text-lg font-medium text-foreground mb-1">Producto no encontrado</h3>
         <Button variant="outline" onClick={onBack} className="mt-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Voltar
+          Volver
         </Button>
       </div>
     );
@@ -113,7 +113,7 @@ export function ProductDetailPage({ productId, onBack }: ProductDetailPageProps)
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                {product.short_description || product.description?.slice(0, 60) || 'Sem descrição'}
+                {product.short_description || product.description?.slice(0, 60) || 'Sin descripción'}
               </p>
             </div>
           </div>

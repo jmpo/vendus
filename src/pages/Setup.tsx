@@ -44,10 +44,10 @@ export default function Setup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName.trim()) return toast.error('Informe seu nome');
+    if (!fullName.trim()) return toast.error('Ingrese su nombre');
     if (!/^\S+@\S+\.\S+$/.test(email)) return toast.error('Email inválido');
-    if (password.length < 8) return toast.error('A senha precisa ter no mínimo 8 caracteres');
-    if (password !== confirmPassword) return toast.error('As senhas não conferem');
+    if (password.length < 8) return toast.error('La contraseña debe tener al menos 8 caracteres');
+    if (password !== confirmPassword) return toast.error('Las contraseñas no coinciden');
 
     setLoading(true);
     try {
@@ -61,7 +61,7 @@ export default function Setup() {
         },
       });
       if (error) throw error;
-      if (!data?.ok) throw new Error(data?.error || 'Não foi possível concluir a configuração');
+      if (!data?.ok) throw new Error(data?.error || 'No se pudo completar la configuración');
 
       // Login automático
       const { error: signErr } = await supabase.auth.signInWithPassword({
@@ -69,14 +69,14 @@ export default function Setup() {
         password,
       });
       if (signErr) {
-        toast.success('Super Admin criado. Faça login para continuar.');
+        toast.success('Super Admin creado. Inicie sesión para continuar.');
         navigate('/login', { replace: true });
         return;
       }
-      toast.success('Configuração concluída!');
+      toast.success('¡Configuración completada!');
       navigate('/super-admin', { replace: true });
     } catch (err: any) {
-      toast.error(err?.message || 'Erro ao criar Super Admin');
+      toast.error(err?.message || 'Error al crear Super Admin');
     } finally {
       setLoading(false);
     }
@@ -97,15 +97,15 @@ export default function Setup() {
           <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
             <ShieldCheck className="h-7 w-7 text-primary" />
           </div>
-          <CardTitle className="text-2xl">Configuração Inicial</CardTitle>
+          <CardTitle className="text-2xl">Configuración Inicial</CardTitle>
           <CardDescription>
-            Crie sua conta de Super Admin para começar a usar a plataforma.
+            Cree su cuenta de Super Admin para comenzar a usar la plataforma.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="fullName">Seu nome *</Label>
+              <Label htmlFor="fullName">Su nombre *</Label>
               <Input
                 id="fullName"
                 value={fullName}
@@ -140,19 +140,19 @@ export default function Setup() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirmar senha *</Label>
+              <Label htmlFor="confirmPassword">Confirmar contraseña *</Label>
               <Input
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Repita a senha"
+                placeholder="Repita la contraseña"
                 autoComplete="new-password"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="companyName">Nome da empresa (opcional)</Label>
+              <Label htmlFor="companyName">Nombre de la empresa (opcional)</Label>
               <Input
                 id="companyName"
                 value={companyName}
@@ -161,7 +161,7 @@ export default function Setup() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Telefone (opcional)</Label>
+              <Label htmlFor="phone">Teléfono (opcional)</Label>
               <Input
                 id="phone"
                 value={phone}
@@ -171,7 +171,7 @@ export default function Setup() {
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Criar conta de Super Admin
+              Crear cuenta de Super Admin
             </Button>
           </form>
         </CardContent>

@@ -100,19 +100,19 @@ export function TemplateEditorDialog({ template, open, onClose }: TemplateEditor
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle>
-            {template ? 'Editar Template' : 'Novo Template'}
+            {template ? 'Editar Plantilla' : 'Nueva Plantilla'}
           </DialogTitle>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto space-y-6 py-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome do Template</Label>
+              <Label htmlFor="name">Nombre de la Plantilla</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Ex: Boas-vindas"
+                placeholder="Ej: Bienvenida"
               />
             </div>
             <div className="space-y-2">
@@ -128,17 +128,17 @@ export function TemplateEditorDialog({ template, open, onClose }: TemplateEditor
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="subject">Assunto do Email</Label>
+            <Label htmlFor="subject">Asunto del Email</Label>
             <Input
               id="subject"
               value={formData.subject}
               onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))}
-              placeholder="Ex: Bem-vindo(a) ao time, {{userName}}!"
+              placeholder="Ej: ¡Bienvenido/a al equipo, {{userName}}!"
             />
           </div>
 
           <div className="space-y-2">
-            <Label>Variáveis</Label>
+            <Label>Variables</Label>
             <div className="flex flex-wrap gap-2">
               {formData.variables.map((v) => (
                 <Badge 
@@ -155,7 +155,7 @@ export function TemplateEditorDialog({ template, open, onClose }: TemplateEditor
             {!template?.is_system && (
               <div className="flex gap-2 mt-2">
                 <Input
-                  placeholder="Nome da variável"
+                  placeholder="Nombre de la variable"
                   value={newVariable.name}
                   onChange={(e) => setNewVariable(prev => ({ ...prev, name: e.target.value }))}
                   className="flex-1"
@@ -167,7 +167,7 @@ export function TemplateEditorDialog({ template, open, onClose }: TemplateEditor
                   className="flex-1"
                 />
                 <Button type="button" variant="outline" onClick={addVariable}>
-                  Adicionar
+                  Agregar
                 </Button>
               </div>
             )}
@@ -189,7 +189,7 @@ export function TemplateEditorDialog({ template, open, onClose }: TemplateEditor
                 value={formData.html_content}
                 onChange={(e) => setFormData(prev => ({ ...prev, html_content: e.target.value }))}
                 className="font-mono text-sm min-h-[300px]"
-                placeholder="Cole o HTML do seu template aqui..."
+                placeholder="Pegue el HTML de su plantilla aquí..."
               />
             </TabsContent>
             <TabsContent value="preview" className="mt-4">
@@ -211,7 +211,7 @@ export function TemplateEditorDialog({ template, open, onClose }: TemplateEditor
             ) : (
               <Save className="h-4 w-4 mr-2" />
             )}
-            Salvar
+            Guardar
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -241,7 +241,7 @@ const defaultHtmlTemplate = `<!DOCTYPE html>
       <p>Seu conteúdo aqui...</p>
     </div>
     <div class="footer">
-      <p>Sua Empresa</p>
+      <p>Su Empresa</p>
     </div>
   </div>
 </body>

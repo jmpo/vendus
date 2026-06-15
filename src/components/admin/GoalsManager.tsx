@@ -39,7 +39,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 interface TeamMember {
   id: string;
@@ -80,7 +80,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
 
   const handleSubmit = async () => {
     if (!formData.user_id || !formData.period_start || !formData.period_end) {
-      toast.error('Preencha todos os campos obrigatórios');
+      toast.error('Complete todos los campos obligatorios');
       return;
     }
 
@@ -96,11 +96,11 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
         is_active: true,
         created_by: profile?.id || null
       });
-      toast.success('Meta criada com sucesso!');
+      toast.success('¡Meta creada con éxito!');
       setIsDialogOpen(false);
       resetForm();
     } catch (error) {
-      toast.error('Erro ao criar meta');
+      toast.error('Error al crear meta');
     }
   };
 
@@ -113,11 +113,11 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
   };
 
   const getUserName = (userId: string) => {
-    return teamMembers.find(m => m.id === userId)?.full_name || 'Usuário';
+    return teamMembers.find(m => m.id === userId)?.full_name || 'Usuario';
   };
 
   const getProductName = (productId: string | null) => {
-    if (!productId) return 'Todos os produtos';
+    if (!productId) return 'Todos los productos';
     return products?.find(p => p.id === productId)?.name || 'Produto';
   };
 
@@ -134,9 +134,9 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Gestão de Metas</h2>
+          <h2 className="text-2xl font-bold text-foreground">Gestión de Metas</h2>
           <p className="text-muted-foreground">
-            Defina metas de vendas para sua equipe
+            Defina metas de ventas para su equipo
           </p>
         </div>
         
@@ -144,12 +144,12 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
           <DialogTrigger asChild>
             <Button onClick={resetForm}>
               <Plus size={18} className="mr-2" />
-              Nova Meta
+              Nueva Meta
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Criar Meta de Ventas</DialogTitle>
+              <DialogTitle>Crear Meta de Ventas</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-4">
               <div className="space-y-2">
@@ -159,7 +159,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
                   onValueChange={(value) => setFormData({ ...formData, user_id: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione o vendedor" />
+                    <SelectValue placeholder="Seleccione el vendedor" />
                   </SelectTrigger>
                   <SelectContent>
                     {teamMembers.map(member => (
@@ -172,16 +172,16 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Produto (opcional)</label>
+                <label className="text-sm font-medium">Producto (opcional)</label>
                 <Select 
                   value={formData.product_id} 
                   onValueChange={(value) => setFormData({ ...formData, product_id: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Todos os produtos" />
+                    <SelectValue placeholder="Todos los productos" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos os produtos</SelectItem>
+                    <SelectItem value="">Todos los productos</SelectItem>
                     {products?.map(product => (
                       <SelectItem key={product.id} value={product.id}>
                         {product.name}
@@ -193,7 +193,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Início do Período *</label>
+                  <label className="text-sm font-medium">Inicio del Período *</label>
                   <Input
                     type="date"
                     value={formData.period_start}
@@ -201,7 +201,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Fim do Período *</label>
+                  <label className="text-sm font-medium">Fin del Período *</label>
                   <Input
                     type="date"
                     value={formData.period_end}
@@ -239,7 +239,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
                 {createGoal.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  'Criar Meta'
+                  'Crear Meta'
                 )}
               </Button>
             </div>
@@ -258,7 +258,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
                 <TableHead>Período</TableHead>
                 <TableHead>Meta Valor</TableHead>
                 <TableHead>Meta Deals</TableHead>
-                <TableHead>Progresso</TableHead>
+                <TableHead>Progreso</TableHead>
                 <TableHead>Status</TableHead>
               </TableRow>
             </TableHeader>
@@ -281,7 +281,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
                     <TableCell>
                       <div className="flex items-center gap-1 text-sm">
                         <Calendar size={12} className="text-muted-foreground" />
-                        {format(new Date(goal.period_start), "dd/MM", { locale: ptBR })} - {format(new Date(goal.period_end), "dd/MM/yy", { locale: ptBR })}
+                        {format(new Date(goal.period_start), "dd/MM", { locale: es })} - {format(new Date(goal.period_end), "dd/MM/yy", { locale: es })}
                       </div>
                     </TableCell>
                     <TableCell>{formatCurrency(goal.target_value)}</TableCell>
@@ -301,11 +301,11 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
                     </TableCell>
                     <TableCell>
                       {valueProgress >= 100 ? (
-                        <Badge className="bg-green-500">Atingida</Badge>
+                        <Badge className="bg-green-500">Alcanzada</Badge>
                       ) : isActive ? (
-                        <Badge variant="secondary">Em andamento</Badge>
+                        <Badge variant="secondary">En progreso</Badge>
                       ) : (
-                        <Badge variant="outline">Encerrada</Badge>
+                        <Badge variant="outline">Cerrada</Badge>
                       )}
                     </TableCell>
                   </TableRow>
@@ -319,14 +319,14 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
           <div className="flex flex-col items-center justify-center text-center">
             <Target className="h-16 w-16 text-muted-foreground/40 mb-4" />
             <h3 className="text-xl font-semibold text-foreground mb-2">
-              Nenhuma meta definida
+              Ninguna meta definida
             </h3>
             <p className="text-muted-foreground mb-6 max-w-md">
-              Crie metas para sua equipe acompanhar o desempenho e manter a motivação.
+              Cree metas para que su equipo siga el desempeño y mantenga la motivación.
             </p>
             <Button onClick={() => setIsDialogOpen(true)}>
               <Plus size={18} className="mr-2" />
-              Criar Primeira Meta
+              Crear Primera Meta
             </Button>
           </div>
         </Card>

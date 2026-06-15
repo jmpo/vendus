@@ -31,7 +31,7 @@ const FEATURE_LABELS: Record<string, string> = {
   feature_instagram: 'Instagram',
   feature_internal_chat: 'Chat interno',
   feature_kanban: 'Kanban de leads',
-  feature_pipeline: 'Pipeline de vendas',
+  feature_pipeline: 'Pipeline de ventas',
   feature_scheduling: 'Agendamientos',
   feature_campaigns: 'Campanhas',
   feature_outreach: 'Cadência de follow-up',
@@ -121,20 +121,20 @@ export function PlanSelector() {
     if (isCurrent) {
       return (
         <Button disabled className="w-full" variant="outline">
-          <Check className="h-4 w-4 mr-2" /> Plano Atual
+          <Check className="h-4 w-4 mr-2" /> Plan Actual
         </Button>
       );
     }
 
-    let label = 'Selecionar Plano';
+    let label = 'Seleccionar Plan';
     let Icon = ArrowRight;
     if (currentPrice !== null) {
       const planPrice = getPrice(plan);
       if (planPrice > currentPrice) {
-        label = 'Fazer Upgrade';
+        label = 'Realizar Upgrade';
         Icon = ArrowUpRight;
       } else if (planPrice < currentPrice) {
-        label = 'Fazer Downgrade';
+        label = 'Realizar Downgrade';
         Icon = ArrowDownRight;
       }
     }
@@ -157,7 +157,7 @@ export function PlanSelector() {
             <TooltipTrigger asChild>
               <span className="block w-full">{btn}</span>
             </TooltipTrigger>
-            <TooltipContent>Contratação indisponível, fale com o suporte</TooltipContent>
+            <TooltipContent>Contratación no disponible, hable con soporte</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       );
@@ -169,13 +169,13 @@ export function PlanSelector() {
     <div className="max-w-6xl mx-auto py-8 px-4">
       {/* Cabeçalho */}
       <div className="text-center mb-6 space-y-2">
-        <h1 className="text-3xl font-bold">Escolha seu Plano</h1>
+        <h1 className="text-3xl font-bold">Elija su Plan</h1>
         <p className="text-muted-foreground">
-          Potencialize seus projetos com as ferramentas certas para cada necessidade
+          Potencie sus proyectos con las herramientas adecuadas para cada necesidad
         </p>
       </div>
 
-      {/* Toggle Mensal / Anual */}
+      {/* Toggle Mensual / Anual */}
       <div className="flex justify-center mb-6">
         <div className="inline-flex items-center bg-muted rounded-full p-1">
           <button
@@ -188,7 +188,7 @@ export function PlanSelector() {
                 : 'text-muted-foreground hover:text-foreground'
             )}
           >
-            Mensal
+            Mensual
           </button>
           <button
             type="button"
@@ -202,7 +202,7 @@ export function PlanSelector() {
           >
             Anual
             <Badge className="bg-emerald-500 hover:bg-emerald-500 text-white text-[10px] px-1.5 py-0 h-4">
-              Economize
+              Ahorre
             </Badge>
           </button>
         </div>
@@ -213,7 +213,7 @@ export function PlanSelector() {
         <div className="flex justify-center mb-8">
           <Badge className="bg-emerald-500 hover:bg-emerald-500 text-white px-4 py-2 text-sm rounded-full">
             <Check className="h-4 w-4 mr-1.5" />
-            Plano Ativo: {effective.plan_name}
+            Plan Activo: {effective.plan_name}
           </Badge>
         </div>
       )}
@@ -228,7 +228,7 @@ export function PlanSelector() {
       ) : visiblePlans.length === 0 ? (
         <div className="text-center py-16 text-muted-foreground border rounded-2xl bg-card">
           <Building2 className="h-12 w-12 mx-auto mb-3 opacity-40" />
-          <p>Nenhum plano disponível no momento.</p>
+          <p>Ningún plan disponible en este momento.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -270,11 +270,11 @@ export function PlanSelector() {
                   </div>
                 )}
 
-                {/* Tag "Plano Ativo" no canto */}
+                {/* Tag "Plan Activo" no canto */}
                 {isCurrent && (
                   <div className="absolute -top-3 right-4">
                     <Badge className="bg-emerald-500 hover:bg-emerald-500 text-white px-3 py-1 rounded-full">
-                      Plano Ativo
+                      Plan Activo
                     </Badge>
                   </div>
                 )}
@@ -312,7 +312,7 @@ export function PlanSelector() {
                 {/* Limites do plano */}
                 <div className={cn('rounded-xl p-4 mb-5', theme.soft)}>
                   <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">
-                    O que está incluso
+                    Qué está incluido
                   </p>
                   <ul className="grid grid-cols-2 gap-x-3 gap-y-2">
                     {limits.map(({ icon: LIcon, label, value }) => (
@@ -335,7 +335,7 @@ export function PlanSelector() {
                   ))}
                   {features.length === 0 && (
                     <li className="text-xs text-muted-foreground italic text-center">
-                      Sem funcionalidades configuradas
+                      Sin funcionalidades configuradas
                     </li>
                   )}
                 </ul>

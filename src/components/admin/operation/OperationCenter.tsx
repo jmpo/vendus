@@ -25,9 +25,9 @@ export function OperationCenter() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Central de Operação</h1>
+        <h1 className="text-2xl font-bold text-foreground">Central de Operación</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Leads, atendimentos e ações importantes em tempo real.
+          Leads, atenciones y acciones importantes en tiempo real.
         </p>
       </div>
 

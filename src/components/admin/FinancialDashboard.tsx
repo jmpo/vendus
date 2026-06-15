@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DollarSign, TrendingUp, Clock, CheckCircle, Users, Briefcase, Check, CreditCard } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 export function FinancialDashboard() {
   const { data: products } = useProducts();
@@ -37,18 +37,18 @@ export function FinancialDashboard() {
   const handleApprove = async (id: string) => {
     try {
       await approveCommission.mutateAsync(id);
-      toast.success('Comissão aprovada');
+      toast.success('Comisión aprobada');
     } catch (error) {
-      toast.error('Erro ao aprovar comissão');
+      toast.error('Error al aprobar comisión');
     }
   };
 
   const handleMarkPaid = async (id: string) => {
     try {
       await markPaid.mutateAsync(id);
-      toast.success('Comissão marcada como paga');
+      toast.success('Comisión marcada como pagada');
     } catch (error) {
-      toast.error('Erro ao marcar como paga');
+      toast.error('Error al marcar como pagada');
     }
   };
 
@@ -56,10 +56,10 @@ export function FinancialDashboard() {
     if (selectedCommissions.length === 0) return;
     try {
       await bulkUpdate.mutateAsync({ ids: selectedCommissions, status: 'approved' });
-      toast.success(`${selectedCommissions.length} comissões aprovadas`);
+      toast.success(`${selectedCommissions.length} comisiones aprobadas`);
       setSelectedCommissions([]);
     } catch (error) {
-      toast.error('Erro ao aprovar comissões');
+      toast.error('Error al aprobar comisiones');
     }
   };
 
@@ -67,10 +67,10 @@ export function FinancialDashboard() {
     if (selectedCommissions.length === 0) return;
     try {
       await bulkUpdate.mutateAsync({ ids: selectedCommissions, status: 'paid' });
-      toast.success(`${selectedCommissions.length} comissões marcadas como pagas`);
+      toast.success(`${selectedCommissions.length} comisiones marcadas como pagadas`);
       setSelectedCommissions([]);
     } catch (error) {
-      toast.error('Erro ao marcar como pagas');
+      toast.error('Error al marcar como pagadas');
     }
   };
 
@@ -83,11 +83,11 @@ export function FinancialDashboard() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Pendente</Badge>;
+        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Pendiente</Badge>;
       case 'approved':
-        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Aprovada</Badge>;
+        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Aprobada</Badge>;
       case 'paid':
-        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Paga</Badge>;
+        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Pagada</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -100,16 +100,16 @@ export function FinancialDashboard() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Dashboard Financeiro</h2>
-          <p className="text-muted-foreground">Visão geral de vendas e comissões</p>
+          <h2 className="text-2xl font-bold">Panel Financiero</h2>
+          <p className="text-muted-foreground">Vista general de ventas y comisiones</p>
         </div>
         <div className="flex items-center gap-4">
           <Select value={selectedProductId} onValueChange={setSelectedProductId}>
             <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Todos os produtos" />
+              <SelectValue placeholder="Todos los productos" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos os produtos</SelectItem>
+              <SelectItem value="all">Todos los productos</SelectItem>
               {products?.map((product) => (
                 <SelectItem key={product.id} value={product.id}>
                   {product.name}
@@ -119,10 +119,10 @@ export function FinancialDashboard() {
           </Select>
           <Select value={selectedSellerId} onValueChange={setSelectedSellerId}>
             <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Todos os vendedores" />
+              <SelectValue placeholder="Todos los vendedores" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos os vendedores</SelectItem>
+              <SelectItem value="all">Todos los vendedores</SelectItem>
               {teamMembers?.map((member) => (
                 <SelectItem key={member.id} value={member.id}>
                   {member.full_name}
@@ -145,14 +145,14 @@ export function FinancialDashboard() {
               R$ {(dealsSummary?.monthlyWon || 0).toLocaleString('pt-BR')}
             </div>
             <p className="text-xs text-muted-foreground">
-              {dealsSummary?.monthlyDealsCount || 0} negócios fechados
+              {dealsSummary?.monthlyDealsCount || 0} negocios cerrados
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Comisiones Pendentes</CardTitle>
+            <CardTitle className="text-sm font-medium">Comisiones Pendientes</CardTitle>
             <Clock className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
@@ -160,14 +160,14 @@ export function FinancialDashboard() {
               R$ {(commissionsSummary?.pending || 0).toLocaleString('pt-BR')}
             </div>
             <p className="text-xs text-muted-foreground">
-              Aguardando aprovação
+              Esperando aprobación
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Comisiones Aprovadas</CardTitle>
+            <CardTitle className="text-sm font-medium">Comisiones Aprobadas</CardTitle>
             <CheckCircle className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
@@ -182,7 +182,7 @@ export function FinancialDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Comisiones Pagas</CardTitle>
+            <CardTitle className="text-sm font-medium">Comisiones Pagadas</CardTitle>
             <TrendingUp className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
@@ -190,7 +190,7 @@ export function FinancialDashboard() {
               R$ {(commissionsSummary?.paid || 0).toLocaleString('pt-BR')}
             </div>
             <p className="text-xs text-muted-foreground">
-              Total pago
+              Total pagado
             </p>
           </CardContent>
         </Card>
@@ -200,11 +200,11 @@ export function FinancialDashboard() {
         <TabsList>
           <TabsTrigger value="pending" className="gap-2">
             <Clock className="h-4 w-4" />
-            Pendentes ({pendingCommissions.length})
+            Pendientes ({pendingCommissions.length})
           </TabsTrigger>
           <TabsTrigger value="approved" className="gap-2">
             <CheckCircle className="h-4 w-4" />
-            Aprovadas ({approvedCommissions.length})
+            Aprobadas ({approvedCommissions.length})
           </TabsTrigger>
           <TabsTrigger value="deals" className="gap-2">
             <Briefcase className="h-4 w-4" />
@@ -217,20 +217,20 @@ export function FinancialDashboard() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Comisiones Pendentes</CardTitle>
-                  <CardDescription>Aprovar comissões para liberar pagamento</CardDescription>
+                  <CardTitle>Comisiones Pendientes</CardTitle>
+                  <CardDescription>Aprobar comisiones para liberar pago</CardDescription>
                 </div>
                 {selectedCommissions.length > 0 && (
                   <Button onClick={handleBulkApprove} disabled={bulkUpdate.isPending}>
                     <Check className="mr-2 h-4 w-4" />
-                    Aprovar Selecionadas ({selectedCommissions.length})
+                    Aprobar Seleccionadas ({selectedCommissions.length})
                   </Button>
                 )}
               </div>
             </CardHeader>
             <CardContent>
               {pendingCommissions.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">Nenhuma comissão pendente</p>
+                <p className="text-muted-foreground text-center py-8">Ninguna comisión pendiente</p>
               ) : (
                 <Table>
                   <TableHeader>
@@ -248,12 +248,12 @@ export function FinancialDashboard() {
                         />
                       </TableHead>
                       <TableHead>Vendedor</TableHead>
-                      <TableHead>Produto</TableHead>
+                      <TableHead>Producto</TableHead>
                       <TableHead>Lead</TableHead>
                       <TableHead>Valor de la Venta</TableHead>
                       <TableHead>Comissão</TableHead>
                       <TableHead>Data</TableHead>
-                      <TableHead className="text-right">Ações</TableHead>
+                      <TableHead className="text-right">Acciones</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -277,12 +277,12 @@ export function FinancialDashboard() {
                           R$ {Number(commission.amount).toLocaleString('pt-BR')}
                         </TableCell>
                         <TableCell>
-                          {format(new Date(commission.earned_at), 'dd/MM/yyyy', { locale: ptBR })}
+                          {format(new Date(commission.earned_at), 'dd/MM/yyyy', { locale: es })}
                         </TableCell>
                         <TableCell className="text-right">
                           <Button size="sm" onClick={() => handleApprove(commission.id)}>
                             <Check className="mr-1 h-3 w-3" />
-                            Aprovar
+                            Aprobar
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -299,20 +299,20 @@ export function FinancialDashboard() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Comisiones Aprovadas</CardTitle>
-                  <CardDescription>Marcar como pagas após efetuar o pagamento</CardDescription>
+                  <CardTitle>Comisiones Aprobadas</CardTitle>
+                  <CardDescription>Marcar como pagadas después de realizar el pago</CardDescription>
                 </div>
                 {selectedCommissions.length > 0 && (
                   <Button onClick={handleBulkPay} disabled={bulkUpdate.isPending}>
                     <CreditCard className="mr-2 h-4 w-4" />
-                    Marcar como Pagas ({selectedCommissions.length})
+                    Marcar como Pagadas ({selectedCommissions.length})
                   </Button>
                 )}
               </div>
             </CardHeader>
             <CardContent>
               {approvedCommissions.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">Nenhuma comissão aprovada</p>
+                <p className="text-muted-foreground text-center py-8">Ninguna comisión aprobada</p>
               ) : (
                 <Table>
                   <TableHeader>
@@ -330,10 +330,10 @@ export function FinancialDashboard() {
                         />
                       </TableHead>
                       <TableHead>Vendedor</TableHead>
-                      <TableHead>Produto</TableHead>
+                      <TableHead>Producto</TableHead>
                       <TableHead>Comissão</TableHead>
-                      <TableHead>Aprovada em</TableHead>
-                      <TableHead className="text-right">Ações</TableHead>
+                      <TableHead>Aprobada em</TableHead>
+                      <TableHead className="text-right">Acciones</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -354,14 +354,14 @@ export function FinancialDashboard() {
                         </TableCell>
                         <TableCell>
                           {commission.approved_at 
-                            ? format(new Date(commission.approved_at), 'dd/MM/yyyy', { locale: ptBR })
+                            ? format(new Date(commission.approved_at), 'dd/MM/yyyy', { locale: es })
                             : 'N/A'
                           }
                         </TableCell>
                         <TableCell className="text-right">
                           <Button size="sm" variant="outline" onClick={() => handleMarkPaid(commission.id)}>
                             <CreditCard className="mr-1 h-3 w-3" />
-                            Pagar
+                            Pagadar
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -376,19 +376,19 @@ export function FinancialDashboard() {
         <TabsContent value="deals">
           <Card>
             <CardHeader>
-              <CardTitle>Negocios Fechados</CardTitle>
-              <CardDescription>Histórico de vendas realizadas</CardDescription>
+              <CardTitle>Negocios Cerrados</CardTitle>
+              <CardDescription>Historial de ventas realizadas</CardDescription>
             </CardHeader>
             <CardContent>
               {deals?.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">Nenhum negócio registrado</p>
+                <p className="text-muted-foreground text-center py-8">Ningún negocio registrado</p>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Lead</TableHead>
                       <TableHead>Vendedor</TableHead>
-                      <TableHead>Produto</TableHead>
+                      <TableHead>Producto</TableHead>
                       <TableHead>Valor</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Data</TableHead>
@@ -409,7 +409,7 @@ export function FinancialDashboard() {
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          {format(new Date(deal.closed_at), 'dd/MM/yyyy', { locale: ptBR })}
+                          {format(new Date(deal.closed_at), 'dd/MM/yyyy', { locale: es })}
                         </TableCell>
                       </TableRow>
                     ))}

@@ -85,10 +85,10 @@ export function TeamManager() {
         userId: editingMember.id, 
         role: selectedRole 
       });
-      toast.success('Papel atualizado!');
+      toast.success('¡Rol actualizado!');
       setEditingMember(null);
     } catch (error) {
-      toast.error('Erro ao atualizar papel');
+      toast.error('Error al actualizar el rol');
     }
   };
 
@@ -164,9 +164,9 @@ export function TeamManager() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-semibold text-foreground">Equipe & Setores</h2>
+          <h2 className="text-xl font-semibold text-foreground">Equipo y Sectores</h2>
           <p className="text-sm text-muted-foreground">
-            Gerencie usuários, suas permissões e os setores de atendimento
+            Gestione usuarios, sus permisos y los sectores de atención
           </p>
         </div>
       </div>
@@ -174,10 +174,10 @@ export function TeamManager() {
       <Tabs defaultValue="members" className="w-full">
         <TabsList>
           <TabsTrigger value="members" className="gap-2">
-            <Users className="h-4 w-4" /> Usuários
+            <Users className="h-4 w-4" /> Usuarios
           </TabsTrigger>
           <TabsTrigger value="sectors" className="gap-2">
-            <LayoutGrid className="h-4 w-4" /> Setores
+            <LayoutGrid className="h-4 w-4" /> Sectores
           </TabsTrigger>
         </TabsList>
 
@@ -185,7 +185,7 @@ export function TeamManager() {
           <div className="flex justify-end">
             <Button onClick={handleAddUser}>
               <Plus className="h-4 w-4 mr-2" />
-              Adicionar Usuário
+              Agregar Usuario
             </Button>
           </div>
 
@@ -197,7 +197,7 @@ export function TeamManager() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar por nome ou email..."
+            placeholder="Buscar por nombre o email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
@@ -207,10 +207,10 @@ export function TeamManager() {
         <Select value={roleFilter} onValueChange={setRoleFilter}>
           <SelectTrigger className="w-full sm:w-[160px]">
             <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
-            <SelectValue placeholder="Papel" />
+            <SelectValue placeholder="Rol" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os papéis</SelectItem>
+            <SelectItem value="all">Todos los roles</SelectItem>
             <SelectItem value="seller">Vendedores</SelectItem>
             <SelectItem value="manager">Gestores</SelectItem>
             <SelectItem value="admin">Admins</SelectItem>
@@ -223,8 +223,8 @@ export function TeamManager() {
             <SelectValue placeholder="Squad" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os squads</SelectItem>
-            <SelectItem value="none">Sem squad</SelectItem>
+            <SelectItem value="all">Todos los squads</SelectItem>
+            <SelectItem value="none">Sin squad</SelectItem>
             {squads?.map((squad) => (
               <SelectItem key={squad.id} value={squad.id}>
                 <div className="flex items-center gap-2">
@@ -242,11 +242,11 @@ export function TeamManager() {
         <Select value={productFilter} onValueChange={setProductFilter}>
           <SelectTrigger className="w-full sm:w-[180px]">
             <Package className="h-4 w-4 mr-2 text-muted-foreground" />
-            <SelectValue placeholder="Produto" />
+            <SelectValue placeholder="Producto" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os produtos</SelectItem>
-            <SelectItem value="none">Sem produto</SelectItem>
+            <SelectItem value="all">Todos los productos</SelectItem>
+            <SelectItem value="none">Sin producto</SelectItem>
             {products?.map((product) => (
               <SelectItem key={product.id} value={product.id}>
                 {product.name}
@@ -276,13 +276,13 @@ export function TeamManager() {
               <Users className="h-12 w-12 text-muted-foreground/50 mb-4" />
               <h3 className="text-lg font-medium text-foreground mb-1">
                 {search || roleFilter !== 'all' || squadFilter !== 'all' || productFilter !== 'all'
-                  ? 'Nenhum membro encontrado' 
-                  : 'Nenhum membro'}
+                  ? 'No se encontró ningún miembro' 
+                  : 'Ningún miembro'}
               </h3>
               <p className="text-sm text-muted-foreground text-center max-w-sm">
                 {search || roleFilter !== 'all' || squadFilter !== 'all' || productFilter !== 'all'
-                  ? 'Tente ajustar os filtros de busca'
-                  : 'Convide membros para sua equipe usando o botão acima'}
+                  ? 'Intente ajustar los filtros de búsqueda'
+                  : 'Invite a miembros a su equipo usando el botón de arriba'}
               </p>
             </CardContent>
           </Card>
@@ -293,7 +293,7 @@ export function TeamManager() {
       <Dialog open={!!editingMember} onOpenChange={() => setEditingMember(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Alterar Papel do Usuário</DialogTitle>
+            <DialogTitle>Alterar Rol do Usuário</DialogTitle>
           </DialogHeader>
           
           {editingMember && (
@@ -312,7 +312,7 @@ export function TeamManager() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Novo Papel</label>
+                <label className="text-sm font-medium">Novo Rol</label>
                 <Select value={selectedRole} onValueChange={(v: 'admin' | 'manager' | 'seller') => setSelectedRole(v)}>
                   <SelectTrigger>
                     <SelectValue />
@@ -348,7 +348,7 @@ export function TeamManager() {
             </Button>
             <Button onClick={handleSaveRole} disabled={updateRole.isPending}>
               {updateRole.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Salvar
+              Guardar
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -373,10 +373,10 @@ export function TeamManager() {
       <AlertDialog open={!!memberToRemove} onOpenChange={(open) => !open && setMemberToRemove(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Apagar usuário</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar usuario</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja apagar <strong>{memberToRemove?.full_name}</strong> permanentemente?
-              Todos os dados do usuário (papel, squads, produtos, leads vinculados) serão removidos. Esta ação não pode ser desfeita.
+              ¿Está seguro de que desea eliminar <strong>{memberToRemove?.full_name}</strong> permanentemente?
+              Todos los datos del usuario (rol, squads, productos, leads vinculados) serán eliminados. Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -387,18 +387,18 @@ export function TeamManager() {
                 if (memberToRemove) {
                   removeMember.mutate(memberToRemove.id, {
                     onSuccess: () => {
-                      toast.success('Usuário apagado com sucesso');
+                      toast.success('Usuario eliminado con éxito');
                       setMemberToRemove(null);
                     },
                     onError: () => {
-                      toast.error('Erro ao apagar usuário');
+                      toast.error('Error al eliminar usuario');
                     },
                   });
                 }
               }}
             >
               {removeMember.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              Apagar
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

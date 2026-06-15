@@ -44,14 +44,14 @@ export function EmailTemplatesManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold">Templates de Email</h3>
+          <h3 className="text-lg font-semibold">Plantillas de Email</h3>
           <p className="text-sm text-muted-foreground">
-            Personalize os emails enviados pelo sistema
+            Personalice los correos electrónicos enviados por el sistema
           </p>
         </div>
         <Button onClick={() => setIsCreating(true)}>
           <Plus className="h-4 w-4 mr-2" />
-          Novo Template
+          Nueva Plantilla
         </Button>
       </div>
 
@@ -84,7 +84,7 @@ export function EmailTemplatesManager() {
             <CardContent className="pt-0">
               <div className="space-y-3">
                 <div>
-                  <p className="text-sm text-muted-foreground">Assunto:</p>
+                  <p className="text-sm text-muted-foreground">Asunto:</p>
                   <p className="text-sm font-medium">{template.subject}</p>
                 </div>
                 
@@ -152,9 +152,9 @@ export function EmailTemplatesManager() {
       <AlertDialog open={!!deletingTemplateId} onOpenChange={() => setDeletingTemplateId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir template?</AlertDialogTitle>
+            <AlertDialogTitle>¿Eliminar plantilla?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. O template será removido permanentemente.
+              Esta acción no se puede deshacer. La plantilla será eliminada permanentemente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

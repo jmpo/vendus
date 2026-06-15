@@ -21,13 +21,13 @@ const channelIcon = (ch: string | null) => {
 const tempBadge = (t: string | null) => {
   switch (t) {
     case 'hot':
-      return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100 border-0">Quente</Badge>;
+      return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100 border-0">Caliente</Badge>;
     case 'warm':
-      return <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-0">Morno</Badge>;
+      return <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-0">Tibio</Badge>;
     case 'cold':
-      return <Badge className="bg-sky-100 text-sky-700 hover:bg-sky-100 border-0">Frio</Badge>;
+      return <Badge className="bg-sky-100 text-sky-700 hover:bg-sky-100 border-0">Frío</Badge>;
     default:
-      return <Badge variant="secondary">Novo</Badge>;
+      return <Badge variant="secondary">Nuevo</Badge>;
   }
 };
 
@@ -46,12 +46,12 @@ export function RecentLeadsTable({ leads, onNavigate }: Props) {
   return (
     <Card className="border-border">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">Leads / Conversas Recentes</CardTitle>
+        <CardTitle className="text-base font-semibold">Leads / Conversaciones Recientes</CardTitle>
       </CardHeader>
       <CardContent>
         {list.length === 0 ? (
           <div className="py-10 text-center text-sm text-muted-foreground">
-            Nenhum lead ou conversa recente encontrado.
+            Ningún lead o conversación reciente encontrado.
           </div>
         ) : (
           <div className="overflow-x-auto -mx-2">
@@ -60,7 +60,7 @@ export function RecentLeadsTable({ leads, onNavigate }: Props) {
                 <tr className="text-xs text-muted-foreground border-b border-border">
                   <th className="text-left font-medium py-2 px-2">Lead</th>
                   <th className="text-left font-medium py-2 px-2">Canal</th>
-                  <th className="text-left font-medium py-2 px-2">Responsável</th>
+                  <th className="text-left font-medium py-2 px-2">Responsable</th>
                   <th className="text-left font-medium py-2 px-2">Status</th>
                 </tr>
               </thead>

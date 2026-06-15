@@ -52,8 +52,8 @@ interface ProductListPageProps {
 }
 
 const statusOptions = [
-  { value: 'draft', label: 'Rascunho', color: 'bg-muted text-muted-foreground' },
-  { value: 'review', label: 'Em Revisão', color: 'bg-warning/10 text-warning' },
+  { value: 'draft', label: 'Borrador', color: 'bg-muted text-muted-foreground' },
+  { value: 'review', label: 'En Revisión', color: 'bg-warning/10 text-warning' },
   { value: 'published', label: 'Publicado', color: 'bg-success/10 text-success' },
 ];
 
@@ -92,10 +92,10 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
         description: editForm.description,
         status: editForm.status as 'draft' | 'review' | 'published'
       });
-      toast.success('Produto atualizado!');
+      toast.success('¡Producto actualizado!');
       setEditDialogOpen(false);
     } catch (error) {
-      toast.error('Erro ao atualizar produto');
+      toast.error('Error al actualizar producto');
     }
   };
 
@@ -113,9 +113,9 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
         status: 'draft',
         organization_id: profile?.organization_id || '',
       });
-      toast.success('Produto clonado!');
+      toast.success('¡Producto clonado!');
     } catch (error) {
-      toast.error('Erro ao clonar produto');
+      toast.error('Error al clonar producto');
     }
   };
 
@@ -123,10 +123,10 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
     if (!selectedProduct) return;
     try {
       await deleteProduct.mutateAsync(selectedProduct.id);
-      toast.success('Produto excluído!');
+      toast.success('¡Producto eliminado!');
       setDeleteDialogOpen(false);
     } catch (error) {
-      toast.error('Erro ao excluir produto');
+      toast.error('Error al eliminar producto');
     }
   };
 
@@ -177,12 +177,12 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Produtos</h1>
           <p className="text-muted-foreground">
-            Gerencie seus produtos e acesse todas as configurações
+            Gestione sus productos y acceda a todas las configuraciones
           </p>
         </div>
         <Button onClick={() => setShowOnboarding(true)} size="lg">
           <Plus className="mr-2 h-4 w-4" />
-          Novo Produto
+          Nuevo Producto
         </Button>
       </div>
 
@@ -190,7 +190,7 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
       <div className="relative max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Buscar produto..."
+          placeholder="Buscar producto..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="pl-10"
@@ -238,7 +238,7 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
                         setDeleteDialogOpen(true); 
                       }}
                     >
-                      <Trash2 className="mr-2 h-4 w-4" /> Excluir
+                      <Trash2 className="mr-2 h-4 w-4" /> Eliminar
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -268,7 +268,7 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
                       </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-2">
-                      {product.short_description || product.description || 'Sem descrição'}
+                      {product.short_description || product.description || 'Sin descripción'}
                     </p>
                   </div>
                 </div>
@@ -313,17 +313,17 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
             <CardContent className="flex flex-col items-center justify-center py-12">
               <Package className="h-12 w-12 text-muted-foreground/50 mb-4" />
               <h3 className="text-lg font-medium text-foreground mb-1">
-                {searchTerm ? 'Nenhum produto encontrado' : 'Nenhum produto'}
+                {searchTerm ? 'Ningún producto encontrado' : 'Ningún producto'}
               </h3>
               <p className="text-sm text-muted-foreground mb-4">
                 {searchTerm 
-                  ? 'Tente buscar com outros termos' 
-                  : 'Crie seu primeiro produto para começar'}
+                  ? 'Intente buscar con otros términos' 
+                  : 'Cree su primer producto para comenzar'}
               </p>
               {!searchTerm && (
                 <Button onClick={() => setShowOnboarding(true)}>
                   <Plus className="mr-2 h-4 w-4" />
-                  Criar Produto
+                  Crear Producto
                 </Button>
               )}
             </CardContent>
@@ -339,14 +339,14 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Nome</Label>
+              <Label>Nombre</Label>
               <Input 
                 value={editForm.name} 
                 onChange={(e) => setEditForm({...editForm, name: e.target.value})} 
               />
             </div>
             <div className="space-y-2">
-              <Label>Descrição</Label>
+              <Label>Descripción</Label>
               <Textarea 
                 value={editForm.description} 
                 onChange={(e) => setEditForm({...editForm, description: e.target.value})}
@@ -363,8 +363,8 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="draft">Rascunho</SelectItem>
-                  <SelectItem value="review">Em Revisão</SelectItem>
+                  <SelectItem value="draft">Borrador</SelectItem>
+                  <SelectItem value="review">En Revisión</SelectItem>
                   <SelectItem value="published">Publicado</SelectItem>
                 </SelectContent>
               </Select>
@@ -374,7 +374,7 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
             <Button variant="outline" onClick={() => setEditDialogOpen(false)}>Cancelar</Button>
             <Button onClick={handleSaveEdit} disabled={updateProduct.isPending}>
               {updateProduct.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-              Salvar
+              Guardar
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -384,9 +384,9 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir Produto</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar Produto</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir "{selectedProduct?.name}"? Esta ação não pode ser desfeita.
+              ¿Está seguro de que desea eliminar "{selectedProduct?.name}"? Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -396,7 +396,7 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {deleteProduct.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-              Excluir
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

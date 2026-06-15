@@ -75,7 +75,7 @@ export function SquadMembersDialog({ squad, open, onOpenChange }: SquadMembersDi
                 {squad.name.charAt(0)}
               </div>
             )}
-            Membros do {squad.name}
+            Miembros de {squad.name}
           </DialogTitle>
         </DialogHeader>
 
@@ -84,12 +84,12 @@ export function SquadMembersDialog({ squad, open, onOpenChange }: SquadMembersDi
           <div className="flex gap-2">
             <Select value={selectedUserId} onValueChange={setSelectedUserId}>
               <SelectTrigger className="flex-1">
-                <SelectValue placeholder="Selecionar membro..." />
+                <SelectValue placeholder="Seleccionar miembro..." />
               </SelectTrigger>
               <SelectContent>
                 {availableMembers.length === 0 ? (
                   <div className="py-2 px-3 text-sm text-muted-foreground">
-                    Todos os membros já estão no squad
+                    Todos los miembros ya están en el squad
                   </div>
                 ) : (
                   availableMembers.map(member => (
@@ -120,7 +120,7 @@ export function SquadMembersDialog({ squad, open, onOpenChange }: SquadMembersDi
               </div>
             ) : members?.length === 0 ? (
               <p className="text-center text-muted-foreground py-8">
-                Nenhum membro no squad
+                Ningún miembro en el squad
               </p>
             ) : (
               members?.map(member => (
@@ -175,7 +175,7 @@ export function SquadMembersDialog({ squad, open, onOpenChange }: SquadMembersDi
               <Crown className="h-3 w-3 text-warning" /> Líder
             </span>
             <span className="flex items-center gap-1">
-              <User className="h-3 w-3" /> Membro
+              <User className="h-3 w-3" /> Miembro
             </span>
           </div>
         </div>

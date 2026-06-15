@@ -18,9 +18,9 @@ import {
 
 type RangeKey = '7d' | '30d' | '90d';
 const RANGES: { value: RangeKey; label: string; days: number }[] = [
-  { value: '7d', label: 'Últimos 7 dias', days: 7 },
-  { value: '30d', label: 'Últimos 30 dias', days: 30 },
-  { value: '90d', label: 'Últimos 90 dias', days: 90 },
+  { value: '7d', label: 'Últimos 7 días', days: 7 },
+  { value: '30d', label: 'Últimos 30 días', days: 30 },
+  { value: '90d', label: 'Últimos 90 días', days: 90 },
 ];
 
 const PROVIDERS = ['lovable', 'openai', 'anthropic', 'gemini'] as const;
@@ -99,7 +99,7 @@ export function PlatformAIUsageDashboard() {
       <div>
         <h2 className="text-2xl font-bold">Consumo de IA</h2>
         <p className="text-sm text-muted-foreground">
-          Acompanhe tokens, chamadas e custo estimado de todas as integrações de IA da plataforma.
+          Siga los tokens, llamadas y costo estimado de todas las integraciones de IA de la plataforma.
         </p>
       </div>
 
@@ -114,14 +114,14 @@ export function PlatformAIUsageDashboard() {
         <Select value={provider} onValueChange={setProvider}>
           <SelectTrigger className="w-[180px]"><SelectValue placeholder="Provedor" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os provedores</SelectItem>
+            <SelectItem value="all">Todos los proveedores</SelectItem>
             {PROVIDERS.map((p) => <SelectItem key={p} value={p}>{PROVIDER_LABELS[p]}</SelectItem>)}
           </SelectContent>
         </Select>
         <Select value={orgId} onValueChange={setOrgId}>
           <SelectTrigger className="w-[260px]"><SelectValue placeholder="Empresa" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas as empresas</SelectItem>
+            <SelectItem value="all">Todas las empresas</SelectItem>
             {orgs.map((o: any) => <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>)}
           </SelectContent>
         </Select>
@@ -130,7 +130,7 @@ export function PlatformAIUsageDashboard() {
       {/* KPIs coloridos */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <KpiCard
-          title="Chamadas"
+          title="Llamadas"
           value={(summary?.total_calls ?? 0).toLocaleString('pt-BR')}
           icon={<Activity className="h-5 w-5" />}
           gradient="from-violet-500 to-fuchsia-500"
@@ -142,20 +142,20 @@ export function PlatformAIUsageDashboard() {
           gradient="from-sky-500 to-cyan-500"
         />
         <KpiCard
-          title="Custo estimado"
+          title="Costo estimado"
           value={fmtUSD(totalCostUSD)}
           sub={fmtBRL(totalCostUSD * DEFAULT_USD_BRL)}
           icon={<Coins className="h-5 w-5" />}
           gradient="from-emerald-500 to-teal-500"
         />
         <KpiCard
-          title="Custo médio / chamada"
+          title="Costo promedio / llamada"
           value={fmtUSD(avgCostPerCall)}
           icon={<TrendingUp className="h-5 w-5" />}
           gradient="from-amber-500 to-orange-500"
         />
         <KpiCard
-          title="Empresas ativas"
+          title="Empresas activas"
           value={(summary?.unique_orgs ?? 0).toLocaleString('pt-BR')}
           icon={<Building2 className="h-5 w-5" />}
           gradient="from-pink-500 to-rose-500"
@@ -165,7 +165,7 @@ export function PlatformAIUsageDashboard() {
       {/* Timeseries + Donut */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
-          <CardHeader><CardTitle className="text-base">Tokens por dia</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-base">Tokens por día</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={tsData}>
@@ -192,7 +192,7 @@ export function PlatformAIUsageDashboard() {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-base">Distribuição por provedor</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-base">Distribución por proveedor</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -211,7 +211,7 @@ export function PlatformAIUsageDashboard() {
 
       {/* Top empresas */}
       <Card>
-        <CardHeader><CardTitle className="text-base">Top empresas por consumo</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Principales empresas por consumo</CardTitle></CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={Math.max(220, byOrg.length * 32)}>
             <BarChart data={byOrg} layout="vertical" margin={{ left: 120 }}>
@@ -235,7 +235,7 @@ export function PlatformAIUsageDashboard() {
                 <thead className="text-xs text-muted-foreground border-b">
                   <tr>
                     <th className="text-left py-2">Modelo</th>
-                    <th className="text-right py-2">Chamadas</th>
+                    <th className="text-right py-2">Llamadas</th>
                     <th className="text-right py-2">Tokens</th>
                     <th className="text-right py-2">Custo</th>
                   </tr>
@@ -275,7 +275,7 @@ export function PlatformAIUsageDashboard() {
                 <thead className="text-xs text-muted-foreground border-b">
                   <tr>
                     <th className="text-left py-2">Chave</th>
-                    <th className="text-right py-2">Chamadas</th>
+                    <th className="text-right py-2">Llamadas</th>
                     <th className="text-right py-2">Tokens</th>
                   </tr>
                 </thead>

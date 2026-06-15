@@ -38,11 +38,11 @@ import {
 } from '@/hooks/useEvolutionInstances';
 import { useQuery } from '@tanstack/react-query';
 
-function StatusBadge({ status }: { status: string }) {
+function EstadoBadge({ status }: { status: string }) {
   const map: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
     connected: { label: 'Conectado', variant: 'default' },
-    qr_pending: { label: 'Aguardando QR', variant: 'secondary' },
-    paired: { label: 'Pareado', variant: 'default' },
+    qr_pending: { label: 'Esperando QR', variant: 'secondary' },
+    paired: { label: 'Vinculado', variant: 'default' },
     disconnected: { label: 'Desconectado', variant: 'outline' },
   };
   const cfg = map[status] || { label: status, variant: 'outline' as const };
@@ -63,7 +63,7 @@ function useOrganizations() {
   });
 }
 
-export function EvolutionManager() {
+export function EvolutionGestor() {
   const { data: config, isLoading: cfgLoading } = usePlatformEvolutionConfig();
   const updateCfg = useUpdatePlatformEvolutionConfig();
   const testMut = useTestEvolutionConnection();
@@ -100,7 +100,7 @@ export function EvolutionManager() {
       <div>
         <h1 className="text-3xl font-bold">WhatsApp / Evolution Go</h1>
         <p className="text-muted-foreground mt-1">
-          Configure o servidor global e gerencie as instâncias de cada empresa.
+          Configure el servidor global y gestione las instancias de cada empresa.
         </p>
       </div>
 
@@ -113,11 +113,11 @@ export function EvolutionManager() {
               </div>
               <div>
                 <CardTitle className="text-lg">Servidor Evolution Go</CardTitle>
-                <CardDescription>Configuração global usada por todas as empresas</CardDescription>
+                <CardDescription>Configuración global utilizada por todas las empresas</CardDescription>
               </div>
             </div>
             <Badge variant={isConfigured ? 'default' : 'outline'}>
-              {isConfigured ? 'Configurado' : 'Não configurado'}
+              {isConfigured ? 'Configurado' : 'No configurado'}
             </Badge>
           </div>
         </CardHeader>
@@ -126,16 +126,16 @@ export function EvolutionManager() {
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="server" className="gap-2"><Server className="h-4 w-4" /> Servidor</TabsTrigger>
               <TabsTrigger value="instances" className="gap-2" disabled={!isConfigured}>
-                <Smartphone className="h-4 w-4" /> Instâncias
+                <Smartphone className="h-4 w-4" /> Instancias
               </TabsTrigger>
               <TabsTrigger value="manager" className="gap-2" disabled={!isConfigured}>
-                <Monitor className="h-4 w-4" /> Manager
+                <Monitor className="h-4 w-4" /> Gestor
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="server" className="space-y-4 mt-4">
               <div className="space-y-2">
-                <Label htmlFor="evo-url">URL do Evolution Go</Label>
+                <Label htmlFor="evo-url">URL de Evolution Go</Label>
                 <Input
                   id="evo-url"
                   placeholder="https://chatwoot-evogo.cftoys.easypanel.host"
@@ -146,7 +146,7 @@ export function EvolutionManager() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="evo-key">Global API Key</Label>
+                <Label htmlFor="evo-key">Clave API Global</Label>
                 <div className="relative">
                   <Input
                     id="evo-key"
@@ -182,11 +182,11 @@ export function EvolutionManager() {
               <div className="flex gap-2">
                 <Button variant="outline" onClick={handleTest} disabled={testMut.isPending || !cleanUrl || !globalApiKey}>
                   {testMut.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                  Testar Conexão
+                  Probar Conexión
                 </Button>
                 <Button onClick={handleSave} disabled={updateCfg.isPending || !cleanUrl || !globalApiKey}>
                   {updateCfg.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                  Salvar Configuração
+                  Guardar Configuración
                 </Button>
               </div>
             </TabsContent>
@@ -198,19 +198,19 @@ export function EvolutionManager() {
             <TabsContent value="manager" className="mt-4 space-y-3">
               <div className="rounded-lg border bg-muted/30 p-3 text-sm flex items-start justify-between gap-3">
                 <p className="text-muted-foreground">
-                  Manager nativo do Evolution Go para gestão técnica avançada.
+                  Gestor nativo do Evolution Go para gestão técnica avançada.
                 </p>
                 <Button variant="outline" size="sm" asChild>
                   <a href={`${cleanUrl}/manager`} target="_blank" rel="noopener noreferrer">
                     <ExternalLink className="h-4 w-4 mr-2" />
-                    Abrir em nova aba
+                    Abrir en una nueva pestaña
                   </a>
                 </Button>
               </div>
               <div className="rounded-lg border overflow-hidden bg-background" style={{ height: '70vh' }}>
                 <iframe
                   src={`${cleanUrl}/manager`}
-                  title="Evolution Go Manager"
+                  title="Evolution Go Gestor"
                   className="w-full h-full"
                   sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
                 />
@@ -269,12 +269,12 @@ function InstancesTable() {
           <Label className="text-sm">Filtrar:</Label>
           <Select value={filterOrgId} onValueChange={setFilterOrgId}>
             <SelectTrigger className="w-[240px]">
-              <SelectValue placeholder="Todas as empresas" />
+              <SelectValue placeholder="Todas las empresas" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todas as empresas</SelectItem>
+              <SelectItem value="all">Todas las empresas</SelectItem>
               <SelectItem value="orphan">
-                Sem empresa{orphanCount > 0 ? ` (${orphanCount})` : ''}
+                Sin empresa{orphanCount > 0 ? ` (${orphanCount})` : ''}
               </SelectItem>
               {orgs?.map((o) => (
                 <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>
@@ -290,34 +290,34 @@ function InstancesTable() {
             title="Importa instâncias do servidor Evolution Go. Novas chegam sem empresa atrelada — atribua manualmente depois."
           >
             {syncMut.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
-            Sincronizar do Servidor
+            Sincronizar desde el Servidor
           </Button>
           <Dialog open={openCreate} onOpenChange={setOpenCreate}>
             <DialogTrigger asChild>
-              <Button><Plus className="h-4 w-4 mr-2" /> Nova Instância</Button>
+              <Button><Plus className="h-4 w-4 mr-2" /> Nueva Instancia</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Criar nova instância</DialogTitle>
+                <DialogTitle>Crear nueva instancia</DialogTitle>
                 <DialogDescription>
-                  A instância será criada no servidor Evolution Go e atrelada à empresa escolhida.
+                  La instancia se creará en el servidor Evolution Go y se vinculará a la empresa elegida.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label>Nome da instância</Label>
+                  <Label>Nombre de la instancia</Label>
                   <Input
                     placeholder="ex: empresa-x-vendas"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                   />
-                  <p className="text-xs text-muted-foreground">Apenas letras, números e hífens. Sem espaços.</p>
+                  <p className="text-xs text-muted-foreground">Solo letras, números y guiones. Sin espacios.</p>
                 </div>
                 <div className="space-y-2">
                   <Label>Empresa</Label>
                   <Select value={newOrgId} onValueChange={setNewOrgId}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione a empresa" />
+                      <SelectValue placeholder="Seleccione la empresa" />
                     </SelectTrigger>
                     <SelectContent>
                       {orgs?.map((o) => (
@@ -331,7 +331,7 @@ function InstancesTable() {
                 <Button variant="outline" onClick={() => setOpenCreate(false)}>Cancelar</Button>
                 <Button onClick={handleCreate} disabled={createMut.isPending || !newName.trim() || !newOrgId}>
                   {createMut.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                  Criar
+                  Crear
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -343,7 +343,7 @@ function InstancesTable() {
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm flex items-start gap-2">
           <AlertCircle className="h-4 w-4 mt-0.5 shrink-0 text-amber-600" />
           <p className="text-amber-700 dark:text-amber-400">
-            <strong>{orphanCount}</strong> instância(s) sem empresa atrelada. Clique no ícone de editar para atribuir.
+            <strong>{orphanCount}</strong> instancia(s) sin empresa vinculada. Haga clic en el icono de editar para asignar.
           </p>
         </div>
       )}
@@ -356,9 +356,9 @@ function InstancesTable() {
         <Card>
           <CardContent className="py-12 text-center">
             <Smartphone className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-            <p className="text-muted-foreground">Nenhuma instância encontrada.</p>
+            <p className="text-muted-foreground">No se encontraron instancias.</p>
             <p className="text-sm text-muted-foreground mt-1">
-              Clique em <strong>Nova Instância</strong> para criar uma.
+              Clique em <strong>Nueva Instancia</strong> para criar uma.
             </p>
           </CardContent>
         </Card>
@@ -367,13 +367,13 @@ function InstancesTable() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nome</TableHead>
+                <TableHead>Nombre</TableHead>
                 <TableHead>Empresa</TableHead>
-                <TableHead>Telefone</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Teléfono</TableHead>
+                <TableHead>Estado</TableHead>
                 <TableHead>Webhook</TableHead>
-                <TableHead>Padrão</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
+                <TableHead>Predeterminado</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -385,17 +385,17 @@ function InstancesTable() {
                       inst.organization.name
                     ) : (
                       <Badge variant="outline" className="text-amber-600 border-amber-500/40 gap-1">
-                        <AlertCircle className="h-3 w-3" /> Sem empresa
+                        <AlertCircle className="h-3 w-3" /> Sin empresa
                       </Badge>
                     )}
                   </TableCell>
                   <TableCell className="text-sm">{inst.phone_number ? `+${inst.phone_number}` : '—'}</TableCell>
-                  <TableCell><StatusBadge status={inst.status} /></TableCell>
+                  <TableCell><EstadoBadge status={inst.status} /></TableCell>
                   <TableCell>
                     {inst.webhook_subscribed ? (
                       <Badge variant="default" className="gap-1"><CheckCircle2 className="h-3 w-3" /> OK</Badge>
                     ) : (
-                      <Badge variant="outline" className="text-amber-600 border-amber-500/40">Pendente</Badge>
+                      <Badge variant="outline" className="text-amber-600 border-amber-500/40">Pendiente</Badge>
                     )}
                   </TableCell>
                   <TableCell>
@@ -561,10 +561,10 @@ function AssignDialog({
             <Label>Empresa</Label>
             <Select value={orgId} onValueChange={setOrgId}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione a empresa" />
+                <SelectValue placeholder="Seleccione la empresa" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">Sem empresa (órfã)</SelectItem>
+                <SelectItem value="none">Sin empresa (órfã)</SelectItem>
                 {orgs.map((o) => (
                   <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>
                 ))}

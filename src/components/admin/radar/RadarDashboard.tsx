@@ -14,7 +14,7 @@ import { RadarLeadActions } from './RadarLeadActions';
 import { RadarLeadDetailSheet } from './RadarLeadDetailSheet';
 import type { ScanItem } from '@/hooks/useOpportunityScan';
 import { formatDistanceToNow } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 const COLORS = {
   hot: '#ef4444',
@@ -101,7 +101,7 @@ export function RadarDashboard({
   function copyMessage(id: string, msg: string) {
     navigator.clipboard.writeText(msg);
     setCopiedId(id);
-    toast.success('Mensagem copiada');
+    toast.success('Mensaje copiado');
     setTimeout(() => setCopiedId(null), 1500);
   }
 
@@ -111,14 +111,14 @@ export function RadarDashboard({
         <Card className="border-amber-500/30 bg-amber-500/5">
           <CardContent className="py-3 flex items-center justify-between gap-2">
             <div className="text-sm">
-              <span className="font-medium">Visualizando análise de </span>
+              <span className="font-medium">Visualizando análisis de </span>
               <span className="text-muted-foreground">
-                {formatDistanceToNow(new Date(scan.created_at), { addSuffix: true, locale: ptBR })}
+                {formatDistanceToNow(new Date(scan.created_at), { addSuffix: true, locale: es })}
               </span>
             </div>
             {onBackToLatest && (
               <Button size="sm" variant="ghost" className="gap-1" onClick={onBackToLatest}>
-                <ArrowLeft className="h-3 w-3" /> Voltar à atual
+                <ArrowLeft className="h-3 w-3" /> Volver a la actual
               </Button>
             )}
           </CardContent>
@@ -131,7 +131,7 @@ export function RadarDashboard({
             <div className="flex items-center justify-between text-sm">
               <span className="flex items-center gap-2 font-medium">
                 <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                Analisando conversas com IA...
+                Analizando conversaciones con IA...
               </span>
               <span className="text-muted-foreground">
                 {scan.total_analyzed} / {scan.total_candidates}
@@ -169,7 +169,7 @@ export function RadarDashboard({
       <div className="grid md:grid-cols-3 gap-3">
         <Card className="md:col-span-1">
           <CardHeader>
-            <CardTitle className="text-sm">Distribuição</CardTitle>
+            <CardTitle className="text-sm">Distribución</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
@@ -194,7 +194,7 @@ export function RadarDashboard({
 
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle className="text-sm">Distribuição de score</CardTitle>
+            <CardTitle className="text-sm">Distribución de score</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
@@ -214,13 +214,13 @@ export function RadarDashboard({
         <CardContent className="py-4 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2 text-sm">
             <TrendingUp className="h-4 w-4 text-primary" />
-            <span className="text-muted-foreground">Receita potencial:</span>
+            <span className="text-muted-foreground">Ingresos potenciales:</span>
             <span className="font-bold text-lg">
               R$ {Number(scan.potential_revenue || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </span>
           </div>
           <div className="text-xs text-muted-foreground">
-            {scan.total_analyzed} análises
+            {scan.total_analyzed} análisis
           </div>
         </CardContent>
       </Card>
@@ -230,7 +230,7 @@ export function RadarDashboard({
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-base">
-              {filter ? `Leads ${LABELS[filter as keyof typeof LABELS]}` : 'Todos os leads classificados'}
+              {filter ? `Leads ${LABELS[filter as keyof typeof LABELS]}` : 'Todos los leads clasificados'}
             </CardTitle>
             {filter && (
               <Button variant="ghost" size="sm" onClick={() => setFilter(null)}>Ver todos</Button>
@@ -240,7 +240,7 @@ export function RadarDashboard({
         <CardContent className="space-y-3 max-h-[600px] overflow-y-auto">
           {filteredItems.length === 0 && (
             <div className="text-center py-8 text-sm text-muted-foreground">
-              {isRunning ? 'Aguardando resultados...' : 'Nenhum lead nesta categoria'}
+              {isRunning ? 'Esperando resultados...' : 'Ningún lead en esta categoría'}
             </div>
           )}
           {filteredItems.map((item) => {
@@ -255,7 +255,7 @@ export function RadarDashboard({
                     <Icon className="h-4 w-4 shrink-0" style={{ color: COLORS[item.classification] }} />
                     <div className="min-w-0">
                       <div className="font-medium text-sm truncate">
-                        {item.lead_snapshot?.name || 'Sem nome'}
+                        {item.lead_snapshot?.name || 'Sin nombre'}
                       </div>
                       <div className="text-xs text-muted-foreground truncate">
                         {item.lead_snapshot?.phone || item.lead_snapshot?.email || '—'}
@@ -266,7 +266,7 @@ export function RadarDashboard({
                     <Badge variant="outline" style={{ borderColor: COLORS[item.classification], color: COLORS[item.classification] }}>
                       Score {item.score}
                     </Badge>
-                    {item.action_applied && <Badge variant="secondary" className="text-xs">✓ Ação</Badge>}
+                    {item.action_applied && <Badge variant="secondary" className="text-xs">✓ Acción</Badge>}
                   </div>
                 </div>
 
@@ -284,7 +284,7 @@ export function RadarDashboard({
 
                 {item.suggested_action && (
                   <div className="text-xs">
-                    <span className="font-medium">💡 Sugestão: </span>
+                    <span className="font-medium">💡 Sugerencia: </span>
                     <span className="text-muted-foreground">{item.suggested_action}</span>
                   </div>
                 )}
@@ -310,7 +310,7 @@ export function RadarDashboard({
                     className="h-8 gap-1.5 text-xs"
                     onClick={() => setDetailItem(item)}
                   >
-                    <FileText className="h-3.5 w-3.5" /> Ver detalhes
+                    <FileText className="h-3.5 w-3.5" /> Ver detalles
                   </Button>
                   <div className="flex-1 min-w-[200px]">
                     <RadarLeadActions item={item} onOpenConversation={onOpenConversation} />

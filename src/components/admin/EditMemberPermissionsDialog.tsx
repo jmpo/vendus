@@ -56,10 +56,10 @@ export function EditMemberPermissionsDialog({ member, open, onOpenChange }: Edit
     if (!member) return;
     try {
       await updatePermissions.mutateAsync({ userId: member.id, permissions: localPerms });
-      toast.success('Permissões atualizadas!');
+      toast.success('¡Permisos actualizados!');
       setHasChanges(false);
     } catch {
-      toast.error('Erro ao atualizar permissões');
+      toast.error('Error al actualizar los permisos');
     }
   };
 
@@ -71,9 +71,9 @@ export function EditMemberPermissionsDialog({ member, open, onOpenChange }: Edit
         organizationId: member.organization_id || '',
         role,
       });
-      toast.success('Permissões inicializadas!');
+      toast.success('¡Permisos inicializados!');
     } catch {
-      toast.error('Erro ao inicializar permissões');
+      toast.error('Error al inicializar los permisos');
     }
   };
 
@@ -93,7 +93,7 @@ export function EditMemberPermissionsDialog({ member, open, onOpenChange }: Edit
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Settings2 className="h-5 w-5" />
-            Permissões do Usuário
+            Permisos del Usuario
           </DialogTitle>
         </DialogHeader>
 
@@ -123,18 +123,18 @@ export function EditMemberPermissionsDialog({ member, open, onOpenChange }: Edit
         ) : !permissions ? (
           <div className="text-center py-8 space-y-3">
             <p className="text-sm text-muted-foreground">
-              Este usuário ainda não tem permissões configuradas.
+              Este usuario aún no tiene permisos configurados.
             </p>
             <Button onClick={handleInitialize} disabled={initPermissions.isPending}>
               {initPermissions.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Inicializar Permissões
+              Inicializar Permisos
             </Button>
           </div>
         ) : (
           <Tabs defaultValue="permissions" className="w-full">
             <TabsList className="w-full">
-              <TabsTrigger value="permissions" className="flex-1">Permissões</TabsTrigger>
-              <TabsTrigger value="notifications" className="flex-1" disabled>Notificações</TabsTrigger>
+              <TabsTrigger value="permissions" className="flex-1">Permisos</TabsTrigger>
+              <TabsTrigger value="notifications" className="flex-1" disabled>Notificaciones</TabsTrigger>
             </TabsList>
 
             <TabsContent value="permissions" className="space-y-6 mt-4">
@@ -162,7 +162,7 @@ export function EditMemberPermissionsDialog({ member, open, onOpenChange }: Edit
             </TabsContent>
 
             <TabsContent value="notifications">
-              <p className="text-sm text-muted-foreground text-center py-8">Em breve</p>
+              <p className="text-sm text-muted-foreground text-center py-8">Próximamente</p>
             </TabsContent>
           </Tabs>
         )}

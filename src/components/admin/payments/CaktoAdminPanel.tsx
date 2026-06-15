@@ -25,7 +25,7 @@ export function CaktoAdminPanel() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold">Pagos</h1>
-          <p className="text-sm text-muted-foreground">Acompanhe vendas de todas as plataformas conectadas (Cakto, Doppus e mais).</p>
+          <p className="text-sm text-muted-foreground">Siga las ventas de todas las plataformas conectadas (Cakto, Doppus y más).</p>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground">Plataforma</span>
@@ -49,9 +49,9 @@ export function CaktoAdminPanel() {
           <TabsTrigger value="orders">Pedidos</TabsTrigger>
           <TabsTrigger value="mapping">Mapear ofertas</TabsTrigger>
           {(provider === 'all' || provider === 'cakto') && (
-            <TabsTrigger value="recovery">Recuperação IA</TabsTrigger>
+            <TabsTrigger value="recovery">Recuperación IA</TabsTrigger>
           )}
-          <TabsTrigger value="settings">Configuração</TabsTrigger>
+          <TabsTrigger value="settings">Configuración</TabsTrigger>
         </TabsList>
 
         <TabsContent value="dashboard" className="space-y-4 pt-4">

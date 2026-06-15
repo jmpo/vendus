@@ -22,14 +22,14 @@ import { SquadDistributionConfig } from './SquadDistributionConfig';
 import { Plus, Loader2, UsersRound, Pencil, Trash2 } from 'lucide-react';
 
 const SQUAD_COLORS = [
-  { name: 'Roxo', value: '#6366F1' },
+  { name: 'Púrpura', value: '#6366F1' },
   { name: 'Azul', value: '#3B82F6' },
   { name: 'Verde', value: '#10B981' },
-  { name: 'Amarelo', value: '#F59E0B' },
-  { name: 'Vermelho', value: '#EF4444' },
+  { name: 'Amarillo', value: '#F59E0B' },
+  { name: 'Rojo', value: '#EF4444' },
   { name: 'Rosa', value: '#EC4899' },
   { name: 'Ciano', value: '#06B6D4' },
-  { name: 'Laranja', value: '#F97316' },
+  { name: 'Naranja', value: '#F97316' },
 ];
 
 export function SquadManager() {
@@ -93,7 +93,7 @@ export function SquadManager() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Tem certeza que deseja excluir este squad?')) {
+    if (confirm('¿Está seguro de que desea eliminar este squad?')) {
       await deleteSquad.mutateAsync(id);
     }
   };
@@ -113,12 +113,12 @@ export function SquadManager() {
             Squads
           </h2>
           <p className="text-muted-foreground">
-            Organize sua equipe em times de vendas
+            Organice su equipo en equipos de ventas
           </p>
         </div>
         <Button onClick={handleOpenCreate}>
           <Plus className="h-4 w-4 mr-2" />
-          Novo Squad
+          Nuevo Squad
         </Button>
       </div>
 
@@ -132,14 +132,14 @@ export function SquadManager() {
           <CardContent className="py-12 text-center">
             <UsersRound className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-medium text-foreground mb-2">
-              Nenhum squad criado
+              Ningún squad creado
             </h3>
             <p className="text-muted-foreground mb-4">
-              Crie squads para organizar sua equipe de vendas
+              Cree squads para organizar su equipo de ventas
             </p>
             <Button onClick={handleOpenCreate}>
               <Plus className="h-4 w-4 mr-2" />
-              Criar Primeiro Squad
+              Crear Primer Squad
             </Button>
           </CardContent>
         </Card>
@@ -189,13 +189,13 @@ export function SquadManager() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {editingSquad ? 'Editar Squad' : 'Novo Squad'}
+              {editingSquad ? 'Editar Squad' : 'Nuevo Squad'}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome do Squad</Label>
+              <Label htmlFor="name">Nombre del Squad</Label>
               <Input
                 id="name"
                 placeholder="Ex: Time Alpha"
@@ -205,10 +205,10 @@ export function SquadManager() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descrição</Label>
+              <Label htmlFor="description">Descripción</Label>
               <Textarea
                 id="description"
-                placeholder="Descreva o squad..."
+                placeholder="Describa el squad..."
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
@@ -222,7 +222,7 @@ export function SquadManager() {
             />
 
             <div className="space-y-2">
-              <Label>Cor do Squad</Label>
+              <Label>Color del Squad</Label>
               <div className="flex flex-wrap gap-2">
                 {SQUAD_COLORS.map(color => (
                   <button
@@ -242,16 +242,16 @@ export function SquadManager() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="product">Produto Associado (opcional)</Label>
+              <Label htmlFor="product">Producto Asociado (opcional)</Label>
               <Select
                 value={formData.product_id || 'none'}
                 onValueChange={(v) => setFormData({ ...formData, product_id: v === 'none' ? undefined : v })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecionar produto..." />
+                  <SelectValue placeholder="Seleccionar producto..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Nenhum produto</SelectItem>
+                  <SelectItem value="none">Ningún producto</SelectItem>
                   {products?.map(product => (
                     <SelectItem key={product.id} value={product.id}>
                       {product.name}
@@ -273,12 +273,12 @@ export function SquadManager() {
               {(createSquad.isPending || updateSquad.isPending) ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Salvando...
+                  Guardando...
                 </>
               ) : editingSquad ? (
                 'Salvar'
               ) : (
-                'Criar Squad'
+                'Crear Squad'
               )}
             </Button>
           </DialogFooter>

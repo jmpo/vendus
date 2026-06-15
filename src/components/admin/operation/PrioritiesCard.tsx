@@ -13,28 +13,28 @@ export function PrioritiesCard({ data, onNavigate }: Props) {
       icon: MessageCircle,
       iconBg: 'bg-red-50 text-red-500',
       count: data?.unansweredConversations ?? 0,
-      label: 'conversas sem resposta',
+      label: 'conversaciones sin respuesta',
       onClick: () => onNavigate('inbox'),
     },
     {
       icon: Flame,
       iconBg: 'bg-orange-50 text-orange-500',
       count: data?.hotLeadsUnassigned ?? 0,
-      label: 'leads quentes sem responsável',
+      label: 'leads calientes sin responsable',
       onClick: () => onNavigate('leads'),
     },
     {
       icon: Calendar,
       iconBg: 'bg-blue-50 text-blue-500',
       count: data?.pendingMeetings ?? 0,
-      label: 'reuniões pendentes de confirmação',
+      label: 'reuniones pendientes de confirmación',
       onClick: () => onNavigate('calendar'),
     },
     {
       icon: CheckSquare,
       iconBg: 'bg-violet-50 text-violet-500',
       count: data?.overdueTasks ?? 0,
-      label: 'tarefas atrasadas',
+      label: 'tareas atrasadas',
       onClick: () => onNavigate('leads'),
     },
   ];
@@ -44,12 +44,12 @@ export function PrioritiesCard({ data, onNavigate }: Props) {
   return (
     <Card className="border-border h-full">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">Prioridades de agora</CardTitle>
+        <CardTitle className="text-base font-semibold">Prioridades de ahora</CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
         {allZero ? (
           <div className="py-10 text-center text-sm text-muted-foreground">
-            Tudo em ordem por enquanto. Nenhuma ação urgente no momento.
+            Todo en orden por ahora. Ninguna acción urgente en el momento.
           </div>
         ) : (
           items.map((item) => {

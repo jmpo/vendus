@@ -44,7 +44,7 @@ import {
 import { useAllOrganizations, useUpdateOrganization, useCreateAuditLog, useCreateOrganization, useCreateSubscription, useDeleteOrganization } from '@/hooks/useSuperAdmin';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -57,7 +57,7 @@ interface OrganizationsManagerProps {
 
 export function OrganizationsManager({ onViewOrganization }: OrganizationsManagerProps) {
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setEstadoFilter] = useState<string>('all');
   const [planFilter, setPlanFilter] = useState<string>('all');
   const [editingOrg, setEditingOrg] = useState<any>(null);
   const [suspendingOrg, setSuspendingOrg] = useState<any>(null);
@@ -184,10 +184,10 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                          org.email?.toLowerCase().includes(search.toLowerCase()) ||
                          org.cnpj?.includes(search);
     
-    const matchesStatus = statusFilter === 'all' || org.status === statusFilter;
+    const matchesEstado = statusFilter === 'all' || org.status === statusFilter;
     const matchesPlan = planFilter === 'all' || org.subscriptions?.[0]?.plan_type === planFilter;
     
-    return matchesSearch && matchesStatus && matchesPlan;
+    return matchesSearch && matchesEstado && matchesPlan;
   }) || [];
 
   const handleSuspend = async () => {
@@ -293,12 +293,12 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
     }
   };
 
-  const getStatusBadge = (status: string) => {
+  const getEstadoBadge = (status: string) => {
     switch (status) {
       case 'active':
-        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">Ativo</Badge>;
+        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">Activo</Badge>;
       case 'suspended':
-        return <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20">Suspenso</Badge>;
+        return <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20">Suspendido</Badge>;
       case 'canceled':
         return <Badge className="bg-red-500/10 text-red-500 border-red-500/20">Cancelado</Badge>;
       default:
@@ -310,7 +310,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
     // Fonte da verdade: plan_id da organização
     if (org?.plan_id) {
       const plan = activePlans?.find((p) => p.id === org.plan_id);
-      const name = plan?.name || org.subscriptions?.[0]?.plan_type || 'Plano';
+      const name = plan?.name || org.subscriptions?.[0]?.plan_type || 'Plan';
       return <Badge className="bg-primary/10 text-primary border-primary/20">{name}</Badge>;
     }
     const planType = org?.subscriptions?.[0]?.plan_type;
@@ -324,7 +324,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
       case 'enterprise':
         return <Badge className="bg-violet-500/10 text-violet-500 border-violet-500/20">Enterprise</Badge>;
       default:
-        return <Badge variant="secondary">Sem plano</Badge>;
+        return <Badge variant="secondary">Sin plan</Badge>;
     }
   };
 
@@ -334,11 +334,11 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Empresas</h1>
-          <p className="text-muted-foreground">Gerencie todas as organizações da plataforma</p>
+          <p className="text-muted-foreground">Gestione todas las organizaciones de la plataforma</p>
         </div>
         <Button onClick={() => setIsCreating(true)}>
           <Plus className="h-4 w-4 mr-2" />
-          Nova Empresa
+          Nueva Empresa
         </Button>
       </div>
 
@@ -349,26 +349,26 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nome, e-mail ou CNPJ..."
+                placeholder="Buscar por nombre, correo electrónico o CNPJ..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-10"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select value={statusFilter} onValueChange={setEstadoFilter}>
               <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder="Estado" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="active">Ativo</SelectItem>
-                <SelectItem value="suspended">Suspenso</SelectItem>
+                <SelectItem value="active">Activo</SelectItem>
+                <SelectItem value="suspended">Suspendido</SelectItem>
                 <SelectItem value="canceled">Cancelado</SelectItem>
               </SelectContent>
             </Select>
             <Select value={planFilter} onValueChange={setPlanFilter}>
               <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Plano" />
+                <SelectValue placeholder="Plan" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos</SelectItem>
@@ -408,7 +408,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-semibold text-lg">{org.name}</h3>
-                        {getStatusBadge(org.status || 'active')}
+                        {getEstadoBadge(org.status || 'active')}
                         {getPlanBadge(org)}
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">
@@ -418,15 +418,15 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                       <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Users className="h-3.5 w-3.5" />
-                          {org.max_users || 10} usuários
+                          {org.max_users || 10} usuarios
                         </span>
                         <span className="flex items-center gap-1">
                           <Package className="h-3.5 w-3.5" />
-                          {org.max_products || 5} produtos
+                          {org.max_products || 5} productos
                         </span>
                         <span className="flex items-center gap-1">
                           <Calendar className="h-3.5 w-3.5" />
-                          Desde {format(new Date(org.created_at), "MMM/yyyy", { locale: ptBR })}
+                          Desde {format(new Date(org.created_at), "MMM/yyyy", { locale: es })}
                         </span>
                       </div>
                     </div>
@@ -463,7 +463,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                       ) : (
                         <>
                           <CheckCircle className="h-4 w-4 mr-1" />
-                          Reativar
+                          Reactivar
                         </>
                       )}
                     </Button>
@@ -529,7 +529,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                 />
               </div>
               <div className="space-y-2">
-                <Label>Plano</Label>
+                <Label>Plan</Label>
                 <Select
                   value={editingOrg.plan_id ?? 'none'}
                   onValueChange={(value) => {
@@ -548,10 +548,10 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                     <SelectValue placeholder="Selecione um plano" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">Sem plano (personalizado)</SelectItem>
+                    <SelectItem value="none">Sin plan (personalizado)</SelectItem>
                     {activePlans?.map((plan) => (
                       <SelectItem key={plan.id} value={plan.id}>
-                        {plan.name} — {plan.max_users} usuários · {plan.max_connections ?? 1} conexões
+                        {plan.name} — {plan.max_users} usuarios · {plan.max_connections ?? 1} conexões
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -617,7 +617,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
       >
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Nova Empresa</DialogTitle>
+            <DialogTitle>Nueva Empresa</DialogTitle>
             <DialogDescription>
               Cadastre uma nova organização na plataforma
             </DialogDescription>
@@ -639,12 +639,12 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {suspendingOrg?.status === 'active' ? 'Suspender empresa' : 'Reativar empresa'}
+              {suspendingOrg?.status === 'active' ? 'Suspender empresa' : 'Reactivar empresa'}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {suspendingOrg?.status === 'active'
-                ? `Ao suspender "${suspendingOrg?.name}", todos os usuários da empresa perderão acesso até a reativação. Deseja continuar?`
-                : `Reativar "${suspendingOrg?.name}" devolverá o acesso aos usuários. Deseja continuar?`}
+                ? `Ao suspender "${suspendingOrg?.name}", todos os usuarios da empresa perderão acesso até a reativação. Deseja continuar?`
+                : `Reactivar "${suspendingOrg?.name}" devolverá o acesso aos usuarios. Deseja continuar?`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -653,7 +653,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
               onClick={handleSuspend}
               className={suspendingOrg?.status === 'active' ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90' : ''}
             >
-              {suspendingOrg?.status === 'active' ? 'Suspender' : 'Reativar'}
+              {suspendingOrg?.status === 'active' ? 'Suspender' : 'Reactivar'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -667,7 +667,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
             <AlertDialogDescription asChild>
               <div className="space-y-3">
                 <p className="text-destructive font-medium">
-                  Esta ação é irreversível. Todos os dados da empresa (usuários, leads, conversas, produtos, integrações) serão removidos.
+                  Esta ação é irreversível. Todos os dados da empresa (usuarios, leads, conversas, productos, integrações) serão removidos.
                 </p>
                 <p>
                   Para confirmar, digite o nome exato da empresa: <strong>{deletingOrg?.name}</strong>

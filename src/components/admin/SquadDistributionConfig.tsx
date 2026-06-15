@@ -77,10 +77,10 @@ export function SquadDistributionConfig({ squadId, organizationId }: SquadDistri
       }, { onConflict: 'squad_id' });
 
     if (error) {
-      toast.error('Erro ao salvar configuração');
+      toast.error('Error al guardar configuración');
       console.error(error);
     } else {
-      toast.success('Configuração salva');
+      toast.success('Configuración guardada');
     }
   };
 
@@ -107,13 +107,13 @@ export function SquadDistributionConfig({ squadId, organizationId }: SquadDistri
           </Badge>
           <Badge variant="outline" className="gap-1.5">
             <Clock className="h-3 w-3 text-yellow-500" />
-            {pendingCount} pendentes
+            {pendingCount} pendientes
           </Badge>
         </div>
 
         {/* Distribution method */}
         <div className="space-y-2">
-          <Label>Método de Distribuição</Label>
+          <Label>Método de Distribución</Label>
           <Select
             value={config.method}
             onValueChange={(v) => updateConfig({ method: v })}
@@ -122,8 +122,8 @@ export function SquadDistributionConfig({ squadId, organizationId }: SquadDistri
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="round_robin">Round Robin - Sequencial equilibrado</SelectItem>
-              <SelectItem value="least_busy">Menor Carga - Menos leads ativos</SelectItem>
+              <SelectItem value="round_robin">Round Robin - Secuencial equilibrado</SelectItem>
+              <SelectItem value="least_busy">Menor Carga - Menos leads activos</SelectItem>
               <SelectItem value="performance">Performance - Ranking por resultados</SelectItem>
             </SelectContent>
           </Select>
@@ -132,9 +132,9 @@ export function SquadDistributionConfig({ squadId, organizationId }: SquadDistri
         {/* Auto reassign toggle */}
         <div className="flex items-center justify-between">
           <div>
-            <Label>Redistribuir automaticamente</Label>
+            <Label>Redistribuir automáticamente</Label>
             <p className="text-xs text-muted-foreground">
-              Atribuir leads pendentes quando alguém ficar online
+              Atribuir leads pendientes quando alguém ficar online
             </p>
           </div>
           <Switch
@@ -145,7 +145,7 @@ export function SquadDistributionConfig({ squadId, organizationId }: SquadDistri
 
         {/* Max accept time */}
         <div className="space-y-2">
-          <Label>Tempo máximo para aceite (min)</Label>
+          <Label>Tiempo máximo para aceptar (min)</Label>
           <Input
             type="number"
             min={1}

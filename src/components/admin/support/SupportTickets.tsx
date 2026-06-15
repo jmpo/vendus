@@ -9,7 +9,7 @@ import {
 import { NewTicketDialog } from './NewTicketDialog';
 import { TicketDetailDialog } from './TicketDetailDialog';
 import { formatDistanceToNow } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const STATUS_VARIANT: Record<string, 'default' | 'secondary' | 'outline'> = {
@@ -34,16 +34,16 @@ export function SupportTickets({ scope = 'admin' }: Props) {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold">{isSuper ? 'Soporte (todas as empresas)' : 'Soporte'}</h1>
+          <h1 className="text-2xl font-bold">{isSuper ? 'Soporte (todas las empresas)' : 'Soporte'}</h1>
           <p className="text-sm text-muted-foreground">
             {isSuper
-              ? 'Chamados abertos pelos administradores das empresas.'
-              : 'Abra chamados e converse diretamente com a equipe da plataforma.'}
+              ? 'Tickets abiertos por los administradores de las empresas.'
+              : 'Abra tickets y converse directamente con el equipo de la plataforma.'}
           </p>
         </div>
         {!isSuper && (
           <Button onClick={() => setNewOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" /> Abrir chamado
+            <Plus className="h-4 w-4 mr-2" /> Abrir ticket
           </Button>
         )}
       </div>
@@ -51,10 +51,10 @@ export function SupportTickets({ scope = 'admin' }: Props) {
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <LifeBuoy className="h-4 w-4" /> Chamados
+            <LifeBuoy className="h-4 w-4" /> Tickets
           </CardTitle>
           <CardDescription>
-            {tickets?.length ?? 0} {tickets?.length === 1 ? 'chamado' : 'chamados'}
+            {tickets?.length ?? 0} {tickets?.length === 1 ? 'ticket' : 'tickets'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -65,7 +65,7 @@ export function SupportTickets({ scope = 'admin' }: Props) {
           ) : !tickets || tickets.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <MessageSquare className="h-10 w-10 mx-auto mb-3 opacity-40" />
-              <p>{isSuper ? 'Nenhum chamado aberto.' : 'Você ainda não abriu nenhum chamado.'}</p>
+              <p>{isSuper ? 'Nenhum ticket aberto.' : 'Você ainda não abriu nenhum ticket.'}</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -77,7 +77,7 @@ export function SupportTickets({ scope = 'admin' }: Props) {
                     onClick={() => setSelected(t)}
                     className="w-full flex items-start gap-3 p-3 rounded-lg border border-border hover:bg-muted/40 transition-colors text-left"
                   >
-                    {unread && <span className="h-2 w-2 rounded-full bg-primary mt-2 shrink-0" aria-label="Não lido" />}
+                    {unread && <span className="h-2 w-2 rounded-full bg-primary mt-2 shrink-0" aria-label="No leído" />}
                     {!unread && <span className="h-2 w-2 mt-2 shrink-0" />}
                     <div className="flex-1 min-w-0 space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -93,9 +93,9 @@ export function SupportTickets({ scope = 'admin' }: Props) {
                       </div>
                       <p className="text-xs text-muted-foreground">
                         {isSuper && t.organization?.name && <span className="font-medium text-foreground">{t.organization.name} · </span>}
-                        Última mensagem {formatDistanceToNow(new Date(t.last_message_at), { addSuffix: true, locale: ptBR })}
-                        {t.last_message_by_role === 'super_admin' && ' · suporte'}
-                        {t.last_message_by_role === 'admin' && ' · você'}
+                        Última mensagem {formatDistanceToNow(new Date(t.last_message_at), { addSuffix: true, locale: es })}
+                        {t.last_message_by_role === 'super_admin' && ' · soporte'}
+                        {t.last_message_by_role === 'admin' && ' · usted'}
                       </p>
                     </div>
                   </button>

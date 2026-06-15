@@ -55,7 +55,7 @@ export function SquadPerformanceCard({ squad, onViewDetails, onManageMembers }: 
               <h3 className="font-semibold text-foreground">{squad.name}</h3>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Users className="h-3 w-3" />
-                <span>{squad.members_count || 0} membros</span>
+                <span>{squad.members_count || 0} miembros</span>
                 {squad.product?.name && (
                   <>
                     <span>•</span>
@@ -94,7 +94,7 @@ export function SquadPerformanceCard({ squad, onViewDetails, onManageMembers }: 
                 <p className="text-lg font-bold text-foreground">
                   {(performance?.conversionRate || 0).toFixed(0)}%
                 </p>
-                <p className="text-xs text-muted-foreground">Conversão</p>
+                <p className="text-xs text-muted-foreground">Conversión</p>
               </div>
             </div>
 
@@ -138,7 +138,7 @@ export function SquadPerformanceCard({ squad, onViewDetails, onManageMembers }: 
             onClick={onManageMembers}
           >
             <Users className="h-4 w-4 mr-2" />
-            Gerenciar Membros
+            Gestionar Miembros
           </Button>
         </div>
       </CardContent>
