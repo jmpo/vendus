@@ -116,7 +116,7 @@ export function AdminSidebar({ activeSection, onSectionChange }: AdminSidebarPro
             )}
           >
             <ArrowLeft className="h-4 w-4" />
-            {!collapsed && <span className="ml-2">Voltar ao App</span>}
+            {!collapsed && <span className="ml-2">Volver a la App</span>}
           </Button>
         </NavLink>
       </div>
