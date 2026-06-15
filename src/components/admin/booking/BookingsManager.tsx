@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, Clock, Video, Phone, MapPin, User, Mail, MoreHorizontal, X, Check } from 'lucide-react';
 import { useBookings, BookingRequest } from '@/hooks/useBookings';
 import { format, parseISO, isToday, isTomorrow, isPast } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -37,10 +37,10 @@ const locationIcons: Record<string, typeof Video> = {
 };
 
 const statusLabels: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-  pending: { label: 'Pendente', variant: 'secondary' },
+  pending: { label: 'Pendiente', variant: 'secondary' },
   confirmed: { label: 'Confirmado', variant: 'default' },
   cancelled: { label: 'Cancelado', variant: 'destructive' },
-  completed: { label: 'Concluído', variant: 'outline' },
+  completed: { label: 'Completado', variant: 'outline' },
 };
 
 export function BookingsManager() {
@@ -79,9 +79,9 @@ export function BookingsManager() {
 
   const formatDateHeader = (dateStr: string) => {
     const date = parseISO(dateStr);
-    if (isToday(date)) return 'Hoje';
-    if (isTomorrow(date)) return 'Amanhã';
-    return format(date, "EEEE, dd 'de' MMMM", { locale: ptBR });
+    if (isToday(date)) return 'Hoy';
+    if (isTomorrow(date)) return 'Mañana';
+    return format(date, "EEEE, dd 'de' MMMM", { locale: es });
   };
 
   const upcomingBookings = bookings.filter(b => 
@@ -118,16 +118,16 @@ export function BookingsManager() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Reuniões Agendadas</h2>
+        <h2 className="text-2xl font-bold">Reuniones Programadas</h2>
         <p className="text-muted-foreground">
-          Gerencie os agendamentos feitos pelos visitantes
+          Gestione las reservas realizadas por los visitantes
         </p>
       </div>
 
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
           <TabsTrigger value="upcoming">
-            Próximos ({upcomingBookings.length})
+            Próximas ({upcomingBookings.length})
           </TabsTrigger>
           <TabsTrigger value="past">
             Anteriores ({pastBookings.length})
@@ -140,12 +140,12 @@ export function BookingsManager() {
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <Calendar className="h-12 w-12 text-muted-foreground/50 mb-4" />
                 <h3 className="font-semibold text-lg mb-1">
-                  {tab === 'upcoming' ? 'Nenhuma reunião agendada' : 'Nenhuma reunião anterior'}
+                  {tab === 'upcoming' ? 'Ninguna reunión programada' : 'Ninguna reunión anterior'}
                 </h3>
                 <p className="text-muted-foreground text-center">
                   {tab === 'upcoming' 
-                    ? 'Quando visitantes agendarem reuniões, elas aparecerão aqui.'
-                    : 'Reuniões passadas e canceladas aparecerão aqui.'
+                    ? 'Cuando los visitantes programen reuniones, aparecerán aquí.'
+                    : 'Las reuniones pasadas y canceladas aparecerán aquí.'
                   }
                 </p>
               </CardContent>
@@ -219,13 +219,13 @@ export function BookingsManager() {
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end">
                                     <DropdownMenuItem onClick={() => openDetailDialog(booking)}>
-                                      Ver Detalhes
+                                      Ver Detalles
                                     </DropdownMenuItem>
                                     {booking.status === 'confirmed' && (
                                       <>
                                         <DropdownMenuItem onClick={() => handleMarkCompleted(booking)}>
                                           <Check className="h-4 w-4 mr-2" />
-                                          Marcar Concluído
+                                          Marcar como Completado
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem 
@@ -256,11 +256,11 @@ export function BookingsManager() {
       <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Cancelar Reunião</DialogTitle>
+            <DialogTitle>Cancelar Reunión</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Tem certeza que deseja cancelar a reunião com <strong>{selectedBooking?.guest_name}</strong>?
+              ¿Está seguro de que desea cancelar la reunión con <strong>{selectedBooking?.guest_name}</strong>?
             </p>
             <div className="space-y-2">
               <Label htmlFor="cancel-reason">Motivo (opcional)</Label>
@@ -268,13 +268,13 @@ export function BookingsManager() {
                 id="cancel-reason"
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
-                placeholder="Informe o motivo do cancelamento..."
+                placeholder="Informe el motivo del cancelación..."
               />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCancelDialogOpen(false)}>
-              Voltar
+              Volver
             </Button>
             <Button 
               variant="destructive" 
@@ -291,7 +291,7 @@ export function BookingsManager() {
       <Dialog open={detailDialogOpen} onOpenChange={setDetailDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Detalhes do Agendamento</DialogTitle>
+            <DialogTitle>Detalles de la Cita</DialogTitle>
           </DialogHeader>
           {selectedBooking && (
             <ScrollArea className="max-h-[60vh]">
@@ -314,37 +314,37 @@ export function BookingsManager() {
                     <span className="font-medium">{selectedBooking.event_type?.name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Data:</span>
+                    <span className="text-muted-foreground">Fecha:</span>
                     <span className="font-medium">
-                      {format(parseISO(selectedBooking.start_time), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                      {format(parseISO(selectedBooking.start_time), "dd 'de' MMMM 'de' yyyy", { locale: es })}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Horário:</span>
+                    <span className="text-muted-foreground">Horario:</span>
                     <span className="font-medium">
                       {format(parseISO(selectedBooking.start_time), 'HH:mm')} - {format(parseISO(selectedBooking.end_time), 'HH:mm')}
                     </span>
                   </div>
                   {selectedBooking.guest_phone && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Telefone:</span>
+                      <span className="text-muted-foreground">Teléfono:</span>
                       <span className="font-medium">{selectedBooking.guest_phone}</span>
                     </div>
                   )}
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Status:</span>
+                    <span className="text-muted-foreground">Estado:</span>
                     <BookingStatusBadge status={selectedBooking.status} />
                   </div>
                 </div>
 
                 <div className="pt-4 border-t">
-                  <h4 className="font-medium mb-2">Linha do tempo</h4>
+                  <h4 className="font-medium mb-2">Línea de tiempo</h4>
                   <BookingTimeline bookingId={selectedBooking.id} />
                 </div>
 
                 {selectedBooking.additional_info && Object.keys(selectedBooking.additional_info).length > 0 && (
                   <div className="pt-4 border-t">
-                    <h4 className="font-medium mb-2">Informações Adicionais</h4>
+                    <h4 className="font-medium mb-2">Información Adicional</h4>
                     <div className="space-y-2 text-sm">
                       {Object.entries(selectedBooking.additional_info).map(([key, value]) => (
                         <div key={key}>
@@ -358,7 +358,7 @@ export function BookingsManager() {
 
                 {selectedBooking.cancellation_reason && (
                   <div className="pt-4 border-t">
-                    <h4 className="font-medium text-destructive mb-1">Motivo do Cancelamento</h4>
+                    <h4 className="font-medium text-destructive mb-1">Motivo del Cancelamiento</h4>
                     <p className="text-sm">{selectedBooking.cancellation_reason}</p>
                   </div>
                 )}

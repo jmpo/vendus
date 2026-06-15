@@ -50,7 +50,7 @@ export function ConversationAnalysisPanel({
       if (error) throw error;
       setAnalysis(data);
     } catch {
-      toast({ title: 'Erro ao analisar conversa', variant: 'destructive' });
+      toast({ title: 'Error al analisar conversa', variant: 'destructive' });
     } finally {
       setIsLoading(false);
     }
@@ -68,7 +68,7 @@ export function ConversationAnalysisPanel({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <BarChart3 className="h-5 w-5" />
-            Análise da Conversa
+            Análisis de la conversación
           </DialogTitle>
         </DialogHeader>
 

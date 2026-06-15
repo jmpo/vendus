@@ -39,12 +39,12 @@ export function AIOptimizeButton({
       {isOptimizing ? (
         <>
           <Loader2 className="h-4 w-4 animate-spin" />
-          Otimizando...
+          Optimizando...
         </>
       ) : (
         <>
           <Sparkles className="h-4 w-4" />
-          Otimizar com IA
+          Optimizar con IA
         </>
       )}
     </Button>
@@ -78,10 +78,10 @@ export function AIOptimizeDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Sugestão da IA
+            Sugerencia de la IA
           </DialogTitle>
           <DialogDescription>
-            Compare a versão original com a otimizada e escolha qual usar.
+            Compare la versión original con la optimizada y elija cuál usar.
           </DialogDescription>
         </DialogHeader>
 
@@ -114,7 +114,7 @@ export function AIOptimizeDialog({
 
         {improvements.length > 0 && (
           <div className="space-y-2 pt-2 border-t border-border">
-            <h4 className="font-medium text-sm">Melhorias aplicadas:</h4>
+            <h4 className="font-medium text-sm">Mejoras aplicadas:</h4>
             <ul className="space-y-1">
               {improvements.map((improvement, index) => (
                 <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -129,11 +129,11 @@ export function AIOptimizeDialog({
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={onReject} disabled={isLoading}>
             <X className="h-4 w-4 mr-2" />
-            Manter Original
+            Mantener Original
           </Button>
           <Button onClick={onAccept} disabled={isLoading}>
             <Check className="h-4 w-4 mr-2" />
-            Usar Otimizado
+            Usar Optimizado
           </Button>
         </DialogFooter>
       </DialogContent>

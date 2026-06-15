@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { StickyNote, ArrowRight } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { useLeadNotes } from '@/hooks/useLeadNotes';
 
 interface Props {
@@ -20,7 +20,7 @@ export function LeadRecentNotes({ leadId, onSeeAll }: Props) {
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           <StickyNote className="h-4 w-4" />
-          Notas recentes
+          Notas recientes
         </CardTitle>
         {notes.length > 0 && onSeeAll && (
           <Button variant="ghost" size="sm" className="h-7 gap-1" onClick={onSeeAll}>
@@ -30,9 +30,9 @@ export function LeadRecentNotes({ leadId, onSeeAll }: Props) {
       </CardHeader>
       <CardContent className="pt-0 space-y-3">
         {isLoading ? (
-          <p className="text-sm text-muted-foreground">Carregando...</p>
+          <p className="text-sm text-muted-foreground">Cargando...</p>
         ) : recent.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Nenhuma nota registrada ainda</p>
+          <p className="text-sm text-muted-foreground">Ninguna nota registrada todavía</p>
         ) : (
           recent.map((n) => (
             <div key={n.id} className="flex gap-2.5">
@@ -44,10 +44,10 @@ export function LeadRecentNotes({ leadId, onSeeAll }: Props) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <span className="font-medium text-foreground truncate">
-                    {n.profiles?.full_name || 'Usuário'}
+                    {n.profiles?.full_name || 'Usuario'}
                   </span>
                   <span>·</span>
-                  <span>{format(parseISO(n.created_at), "dd/MM 'às' HH:mm", { locale: ptBR })}</span>
+                  <span>{format(parseISO(n.created_at), "dd/MM 'a las' HH:mm", { locale: es })}</span>
                 </div>
                 <p className="text-sm mt-0.5 line-clamp-3 whitespace-pre-wrap">{n.content}</p>
               </div>

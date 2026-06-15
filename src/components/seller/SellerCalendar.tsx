@@ -18,13 +18,13 @@ import { EventModal } from '@/components/calendar/EventModal';
 type ViewMode = 'month' | 'week' | 'day' | 'list';
 
 const EVENT_TYPES = [
-  { value: 'all', label: 'Todos os tipos' },
-  { value: 'meeting', label: 'Reunião' },
-  { value: 'call', label: 'Ligação' },
-  { value: 'demo', label: 'Demonstração' },
+  { value: 'all', label: 'Todos los tipos' },
+  { value: 'meeting', label: 'Reunión' },
+  { value: 'call', label: 'Llamada' },
+  { value: 'demo', label: 'Demostración' },
   { value: 'follow_up', label: 'Follow-up' },
-  { value: 'task', label: 'Tarefa' },
-  { value: 'other', label: 'Outro' },
+  { value: 'task', label: 'Tarea' },
+  { value: 'other', label: 'Otro' },
 ];
 
 interface SellerCalendarProps {
@@ -156,15 +156,15 @@ export function SellerCalendar({ userId, productId }: SellerCalendarProps) {
             <CalendarDays className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-foreground">Minha Agenda</h2>
+            <h2 className="text-xl font-semibold text-foreground">Mi Agenda</h2>
             <p className="text-sm text-muted-foreground">
-              {events.length} evento{events.length !== 1 ? 's' : ''} no período
+              {events.length} evento{events.length !== 1 ? 's' : ''} en el período
             </p>
           </div>
         </div>
         <Button onClick={handleNewEvent} className="gap-2">
           <Plus className="h-4 w-4" />
-          Novo Evento
+          Nuevo Evento
         </Button>
       </div>
 
@@ -179,7 +179,7 @@ export function SellerCalendar({ userId, productId }: SellerCalendarProps) {
                   <TabsList>
                     <TabsTrigger value="month" className="gap-2">
                       <Grid3X3 className="h-4 w-4" />
-                      <span className="hidden sm:inline">Mês</span>
+                      <span className="hidden sm:inline">Mes</span>
                     </TabsTrigger>
                     <TabsTrigger value="week" className="gap-2">
                       <Calendar className="h-4 w-4" />
@@ -187,7 +187,7 @@ export function SellerCalendar({ userId, productId }: SellerCalendarProps) {
                     </TabsTrigger>
                     <TabsTrigger value="day" className="gap-2">
                       <CalendarDays className="h-4 w-4" />
-                      <span className="hidden sm:inline">Dia</span>
+                      <span className="hidden sm:inline">Día</span>
                     </TabsTrigger>
                     <TabsTrigger value="list" className="gap-2">
                       <List className="h-4 w-4" />

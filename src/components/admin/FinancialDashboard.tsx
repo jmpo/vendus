@@ -152,7 +152,7 @@ export function FinancialDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Comissões Pendentes</CardTitle>
+            <CardTitle className="text-sm font-medium">Comisiones Pendentes</CardTitle>
             <Clock className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
@@ -167,7 +167,7 @@ export function FinancialDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Comissões Aprovadas</CardTitle>
+            <CardTitle className="text-sm font-medium">Comisiones Aprovadas</CardTitle>
             <CheckCircle className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
@@ -182,7 +182,7 @@ export function FinancialDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Comissões Pagas</CardTitle>
+            <CardTitle className="text-sm font-medium">Comisiones Pagas</CardTitle>
             <TrendingUp className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
@@ -217,7 +217,7 @@ export function FinancialDashboard() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Comissões Pendentes</CardTitle>
+                  <CardTitle>Comisiones Pendentes</CardTitle>
                   <CardDescription>Aprovar comissões para liberar pagamento</CardDescription>
                 </div>
                 {selectedCommissions.length > 0 && (
@@ -299,7 +299,7 @@ export function FinancialDashboard() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Comissões Aprovadas</CardTitle>
+                  <CardTitle>Comisiones Aprovadas</CardTitle>
                   <CardDescription>Marcar como pagas após efetuar o pagamento</CardDescription>
                 </div>
                 {selectedCommissions.length > 0 && (
@@ -405,7 +405,7 @@ export function FinancialDashboard() {
                         </TableCell>
                         <TableCell>
                           <Badge variant={deal.status === 'won' ? 'default' : 'secondary'}>
-                            {deal.status === 'won' ? 'Ganho' : deal.status === 'lost' ? 'Perdido' : 'Cancelado'}
+                            {deal.status === 'won' ? 'Ganado' : deal.status === 'lost' ? 'Perdido' : 'Cancelado'}
                           </Badge>
                         </TableCell>
                         <TableCell>

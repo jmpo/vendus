@@ -34,7 +34,7 @@ export function KanbanBoard() {
       toast.success('Lead movido');
       refetch();
     } catch (e) {
-      toast.error('Erro ao mover lead');
+      toast.error('Error al mover lead');
     }
   };
 
@@ -69,8 +69,8 @@ export function KanbanBoard() {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center">
         <LayoutGrid className="h-12 w-12 text-muted-foreground mb-4" />
-        <h3 className="text-lg font-medium mb-2">Nenhum produto encontrado</h3>
-        <p className="text-muted-foreground">Crie um produto para começar a gerenciar seu pipeline.</p>
+        <h3 className="text-lg font-medium mb-2">Ningún producto encontrado</h3>
+        <p className="text-muted-foreground">Cree un producto para comenzar a gestionar su pipeline.</p>
       </div>
     );
   }
@@ -82,16 +82,16 @@ export function KanbanBoard() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <LayoutGrid className="h-6 w-6" />
-            Pipeline de Vendas
+            Pipeline de Ventas
           </h1>
-          <p className="text-muted-foreground">Gestão visual de oportunidades</p>
+          <p className="text-muted-foreground">Gestión visual de oportunidades</p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Product Selector */}
           <Select value={selectedProductId} onValueChange={setSelectedProductId}>
             <SelectTrigger className="w-[220px]">
-              <SelectValue placeholder="Selecionar produto" />
+              <SelectValue placeholder="Seleccionar producto" />
             </SelectTrigger>
             <SelectContent>
               {products?.map((product) => (
@@ -105,7 +105,7 @@ export function KanbanBoard() {
           {/* Stage Manager */}
           <Button variant="outline" onClick={() => setStageManagerOpen(true)}>
             <Settings2 className="h-4 w-4 mr-2" />
-            Gerenciar Etapas
+            Gestionar Etapas
           </Button>
         </div>
       </div>
@@ -141,7 +141,7 @@ export function KanbanBoard() {
         </div>
         <div className="bg-card border rounded-lg p-4">
           <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1">
-            Ticket Médio
+            Ticket Promedio
           </div>
           <div className="text-2xl font-bold">
             {totalLeads > 0 ? formatCurrency(totalPipelineValue / totalLeads) : 'R$ 0'}

@@ -103,11 +103,11 @@ export function ChatCalendarPicker({
           >
             <div className="flex items-center gap-2 text-sm font-medium">
               <CalendarIcon className="h-4 w-4" />
-              <span>Selecione a data e horário</span>
+              <span>Seleccione la fecha y la hora</span>
             </div>
             <div className="flex items-center gap-1 text-xs opacity-80 mt-1">
               <Globe className="h-3 w-3" />
-              <span>Fuso: America/Sao_Paulo</span>
+              <span>Zona horaria: America/Sao_Paulo</span>
             </div>
           </div>
 
@@ -141,7 +141,7 @@ export function ChatCalendarPicker({
                 <div className="flex items-center gap-2 mb-3">
                   <Clock className="h-4 w-4" style={{ color: primaryColor }} />
                   <span className="text-sm font-medium">
-                    Horários - {format(selectedDate, 'dd/MM', { locale: ptBR })}
+                    Horarios - {format(selectedDate, 'dd/MM', { locale: ptBR })}
                   </span>
                 </div>
 
@@ -158,7 +158,7 @@ export function ChatCalendarPicker({
                       Sem horários disponíveis nesta data
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Selecione outra data
+                      Seleccione otra fecha
                     </p>
                   </div>
                 ) : (
@@ -198,7 +198,7 @@ export function ChatCalendarPicker({
                           className="w-full text-white"
                           style={{ backgroundColor: primaryColor }}
                         >
-                          Confirmar {format(selectedDate, 'dd/MM')} às {selectedSlot}
+                          Confirmar {format(selectedDate, 'dd/MM')} a las {selectedSlot}
                         </Button>
                       </motion.div>
                     )}

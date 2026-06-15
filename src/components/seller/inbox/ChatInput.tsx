@@ -50,8 +50,8 @@ interface ChatInputProps {
 }
 
 const EMOJI_CATEGORIES = {
-  'Frequentes': ['👍', '❤️', '😊', '🎉', '✅', '👋', '🙏', '💪'],
-  'Rostos': ['😀', '😃', '😄', '😁', '😅', '😂', '🤣', '😊', '😇', '🙂', '😉', '😍'],
+  'Frecuentes': ['👍', '❤️', '😊', '🎉', '✅', '👋', '🙏', '💪'],
+  'Caras': ['😀', '😃', '😄', '😁', '😅', '😂', '🤣', '😊', '😇', '🙂', '😉', '😍'],
   'Gestos': ['👍', '👎', '👏', '🙌', '🤝', '✌️', '🤞', '🤙', '👋', '💪', '🙏'],
   'Objetos': ['💼', '📱', '💻', '📧', '📝', '📋', '📊', '💰', '🎯', '🔥', '⭐', '✨'],
 };
@@ -69,7 +69,7 @@ export function ChatInput({
   onOpenQuickReplies,
   disabled = false,
   isSending = false,
-  placeholder = "Digite uma mensagem...",
+  placeholder = "Escriba un mensaje...",
   aiSuggestion,
   onClearSuggestion,
   onScheduleMessage,
@@ -118,7 +118,7 @@ export function ChatInput({
 
   useEffect(() => {
     if (uploadError) {
-      toast({ title: 'Falha no envio', description: uploadError, variant: 'destructive' });
+      toast({ title: 'Fallo en el envío', description: uploadError, variant: 'destructive' });
     }
   }, [uploadError, toast]);
 
@@ -237,7 +237,7 @@ export function ChatInput({
 
   const handlePollConfirm = ({ question, options }: { question: string; options: string[] }) => {
     const lines = options.map((o, i) => `${i + 1}) ${o}`).join('\n');
-    onSend(`📊 *Enquete:* ${question}\n\n${lines}\n\n_Responda com o número da opção_`);
+    onSend(`📊 *Encuesta:* ${question}\n\n${lines}\n\n_Responda con el número de la opción_`);
   };
 
   const handleMeetingLink = () => {
@@ -245,14 +245,14 @@ export function ChatInput({
     const slug = (profile as any)?.booking_slug;
     if (!slug) {
       toast({
-        title: 'Link de reunião indisponível',
-        description: 'Configure seu link de agendamento no seu perfil.',
+        title: 'Enlace de reunión no disponible',
+        description: 'Configure su enlace de programación en su perfil.',
         variant: 'destructive',
       });
       return;
     }
     const url = `${publicAppUrl}/agendar/${slug}`;
-    setInput((prev) => (prev ? `${prev}\n${url}` : `Olá! Agende um horário comigo: ${url}`));
+    setInput((prev) => (prev ? `${prev}\n${url}` : `¡Hola! Programe una cita conmigo: ${url}`));
     setTimeout(() => textareaRef.current?.focus(), 50);
   };
 
@@ -339,7 +339,7 @@ export function ChatInput({
                     size="icon"
                     className="h-8 w-8 text-muted-foreground hover:text-foreground"
                     disabled={composerDisabled || !!pending}
-                    title="Anexar / Mais ações"
+                    title="Adjuntar / Más acciones"
                   >
                     <Plus className="h-5 w-5" />
                   </Button>
@@ -363,7 +363,7 @@ export function ChatInput({
                     <span className="h-8 w-8 rounded-full bg-rose-500/15 flex items-center justify-center">
                       <Camera className="h-4 w-4 text-rose-500" />
                     </span>
-                    <span>Câmera</span>
+                    <span>Cámara</span>
                   </button>
                   <button
                     type="button"
@@ -373,7 +373,7 @@ export function ChatInput({
                     <span className="h-8 w-8 rounded-full bg-sky-500/15 flex items-center justify-center">
                       <UserIcon className="h-4 w-4 text-sky-500" />
                     </span>
-                    <span>Contato</span>
+                    <span>Contacto</span>
                   </button>
                   <button
                     type="button"
@@ -383,7 +383,7 @@ export function ChatInput({
                     <span className="h-8 w-8 rounded-full bg-fuchsia-500/15 flex items-center justify-center">
                       <ImageIcon className="h-4 w-4 text-fuchsia-500" />
                     </span>
-                    <span>Mídia</span>
+                    <span>Multimedia</span>
                   </button>
                   <button
                     type="button"
@@ -393,7 +393,7 @@ export function ChatInput({
                     <span className="h-8 w-8 rounded-full bg-emerald-500/15 flex items-center justify-center">
                       <VideoIcon className="h-4 w-4 text-emerald-500" />
                     </span>
-                    <span>Link de Reunião</span>
+                    <span>Enlace de reunión</span>
                   </button>
                   <button
                     type="button"
@@ -403,7 +403,7 @@ export function ChatInput({
                     <span className="h-8 w-8 rounded-full bg-amber-500/15 flex items-center justify-center">
                       <BarChart3 className="h-4 w-4 text-amber-500" />
                     </span>
-                    <span>Enquete</span>
+                    <span>Encuesta</span>
                   </button>
                 </PopoverContent>
               </Popover>
@@ -416,7 +416,7 @@ export function ChatInput({
                 value={input}
                 onChange={(e) => handleInputChange(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={pending ? 'Adicionar mensagem (opcional)…' : 'Mensagem'}
+                placeholder={pending ? 'Agregar mensaje (opcional)…' : 'Mensaje'}
                 disabled={composerDisabled}
                 className={cn(
                   "min-h-[44px] max-h-[150px] py-3 px-4 resize-none",
@@ -442,7 +442,7 @@ export function ChatInput({
                     <Clock className="h-5 w-5" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Agendar mensagem</TooltipContent>
+                <TooltipContent>Programar mensaje</TooltipContent>
               </Tooltip>
 
               <AnimatePresence mode="wait" initial={false}>

@@ -12,7 +12,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { useLeadTransferHistory } from '@/hooks/useLeadTransfer';
 import { LeadTransferModal } from './LeadTransferModal';
 import { RoleAssignmentCard } from './RoleAssignmentCard';
@@ -62,7 +62,7 @@ export function LeadWalletTab({ lead, assignee, squad, sdr, closer, isAdmin = fa
         <CardHeader>
           <CardTitle className="text-sm font-medium flex items-center gap-2">
             <User className="h-4 w-4" />
-            Responsável Atual
+            Responsable Actual
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -88,8 +88,8 @@ export function LeadWalletTab({ lead, assignee, squad, sdr, closer, isAdmin = fa
                   <UserX className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="font-semibold">Sem Atendimento</p>
-                  <p className="text-sm text-muted-foreground">Lead aguardando distribuição</p>
+                  <p className="font-semibold">Sin Atención</p>
+                  <p className="text-sm text-muted-foreground">Lead esperando distribución</p>
                 </div>
               </div>
             )}
@@ -111,7 +111,7 @@ export function LeadWalletTab({ lead, assignee, squad, sdr, closer, isAdmin = fa
             <div className="mt-4 pt-4 border-t border-border flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="h-4 w-4" />
               <span>
-                Desde {format(parseISO(lead.transferred_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                Desde el {format(parseISO(lead.transferred_at), "dd/MM/yyyy 'a las' HH:mm", { locale: es })}
               </span>
             </div>
           )}
@@ -141,7 +141,7 @@ export function LeadWalletTab({ lead, assignee, squad, sdr, closer, isAdmin = fa
                 </div>
                 <div>
                   <p className="font-semibold">{squad.name}</p>
-                  <p className="text-sm text-muted-foreground">Squad de vendas</p>
+                  <p className="text-sm text-muted-foreground">Squad de ventas</p>
                 </div>
               </div>
             ) : (
@@ -150,8 +150,8 @@ export function LeadWalletTab({ lead, assignee, squad, sdr, closer, isAdmin = fa
                   <Users className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-medium">Sem Squad</p>
-                  <p className="text-sm text-muted-foreground">Lead não atribuído a nenhum squad</p>
+                  <p className="font-medium">Sin Squad</p>
+                  <p className="text-sm text-muted-foreground">Lead no asignado a ningún squad</p>
                 </div>
               </div>
             )}
@@ -162,7 +162,7 @@ export function LeadWalletTab({ lead, assignee, squad, sdr, closer, isAdmin = fa
                 size="sm"
                 onClick={() => setIsTransferModalOpen(true)}
               >
-                Alterar
+                Cambiar
               </Button>
             )}
           </div>
@@ -195,7 +195,7 @@ export function LeadWalletTab({ lead, assignee, squad, sdr, closer, isAdmin = fa
       {/* Transfer history */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-medium">Histórico de Transferências</CardTitle>
+          <CardTitle className="text-sm font-medium">Historial de Transferencias</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -215,11 +215,11 @@ export function LeadWalletTab({ lead, assignee, squad, sdr, closer, isAdmin = fa
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 text-sm">
                       <span className="text-muted-foreground">
-                        {transfer.from_user?.full_name || 'Sem atendimento'}
+                        {transfer.from_user?.full_name || 'Sin atención'}
                       </span>
                       <ArrowRight className="h-3 w-3 text-muted-foreground" />
                       <span className="font-medium">
-                        {transfer.to_user?.full_name || 'Sem atendimento'}
+                        {transfer.to_user?.full_name || 'Sin atención'}
                       </span>
                     </div>
                     
@@ -232,7 +232,7 @@ export function LeadWalletTab({ lead, assignee, squad, sdr, closer, isAdmin = fa
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Clock className="h-3 w-3" />
                       <span>
-                        {format(parseISO(transfer.created_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                        {format(parseISO(transfer.created_at), "dd/MM/yyyy 'a las' HH:mm", { locale: es })}
                       </span>
                       {transfer.transferred_by_user && (
                         <>
@@ -247,7 +247,7 @@ export function LeadWalletTab({ lead, assignee, squad, sdr, closer, isAdmin = fa
             </div>
           ) : (
             <p className="text-sm text-muted-foreground text-center py-4">
-              Nenhuma transferência registrada
+              Ninguna transferencia registrada
             </p>
           )}
         </CardContent>

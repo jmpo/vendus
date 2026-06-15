@@ -62,7 +62,7 @@ export function ScheduleFollowupDialog({
       setNote('');
       onOpenChange(false);
     } catch {
-      toast({ title: 'Erro ao agendar follow-up', variant: 'destructive' });
+      toast({ title: 'Error al agendar follow-up', variant: 'destructive' });
     } finally {
       setIsSaving(false);
     }
@@ -74,7 +74,7 @@ export function ScheduleFollowupDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            Agendar Follow-up
+            Programar seguimiento
           </DialogTitle>
         </DialogHeader>
 

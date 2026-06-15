@@ -44,17 +44,17 @@ export function ForwardMessageDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Forward className="h-5 w-5" />
-            Encaminhar mensagem
+            Reenviar mensaje
           </DialogTitle>
           <DialogDescription>
-            Selecione a conversa para encaminhar
+            Seleccione la conversación para reenviar
           </DialogDescription>
         </DialogHeader>
 
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar conversa..."
+            placeholder="Buscar conversación..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
@@ -65,7 +65,7 @@ export function ForwardMessageDialog({
           <div className="space-y-1">
             {filteredConversations.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-6">
-                Nenhuma conversa ativa encontrada
+                No se encontró ninguna conversación activa
               </p>
             ) : (
               filteredConversations.map((conv) => (

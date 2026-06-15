@@ -70,7 +70,7 @@ export function EditVisitorDialog({
       onOpenChange(false);
     } catch (e: any) {
       console.error('[EditVisitor] erro:', e);
-      toast.error(e?.message || 'Erro ao atualizar');
+      toast.error(e?.message || 'Error al atualizar');
     } finally {
       setSaving(false);
     }
@@ -100,7 +100,7 @@ export function EditVisitorDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSave} disabled={saving}>
             {saving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            Salvar
+            Guardar
           </Button>
         </DialogFooter>
       </DialogContent>

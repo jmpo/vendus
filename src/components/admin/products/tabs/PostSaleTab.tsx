@@ -387,7 +387,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">—</SelectItem>
-                    <SelectItem value="won">Ganho</SelectItem>
+                    <SelectItem value="won">Ganado</SelectItem>
                     <SelectItem value="lost">Perdido</SelectItem>
                   </SelectContent>
                 </Select>

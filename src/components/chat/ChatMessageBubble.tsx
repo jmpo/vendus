@@ -28,7 +28,7 @@ export function ChatMessageBubble({
   content,
   primaryColor,
   agentAvatar,
-  agentName = 'Assistente',
+  agentName = 'Asistente',
   options,
   showOptions = false,
   onOptionClick,
@@ -156,7 +156,7 @@ export function ChatMessageBubble({
       {!isBot && (
         <Avatar className="h-8 w-8 shrink-0">
           <AvatarFallback className="bg-muted text-muted-foreground text-xs">
-            Eu
+            Yo
           </AvatarFallback>
         </Avatar>
       )}

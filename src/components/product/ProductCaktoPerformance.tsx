@@ -28,7 +28,7 @@ const ROLE_LABEL: Record<string, string> = {
   upsell: 'Upsell',
   downsell: 'Downsell',
   cross_sell: 'Cross-sell',
-  unmapped: 'Não mapeado',
+  unmapped: 'No mapeado',
 };
 
 const fmt = (v: number) =>
@@ -77,13 +77,13 @@ export function ProductCaktoPerformance({ productId, organizationId }: Props) {
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <DollarSign className="h-4 w-4" /> Performance Cakto
+            <DollarSign className="h-4 w-4" /> Desempeño Cakto
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Nenhuma venda Cakto vinculada a este produto ainda. Vincule as ofertas em{' '}
-            <span className="font-medium">Integrações → Cakto → Mapear ofertas</span>.
+            Ninguna venta de Cakto vinculada a este producto todavía. Vincule las ofertas en{' '}
+            <span className="font-medium">Integraciones → Cakto → Mapear ofertas</span>.
           </p>
         </CardContent>
       </Card>
@@ -91,18 +91,18 @@ export function ProductCaktoPerformance({ productId, organizationId }: Props) {
   }
 
   const stats = [
-    { label: 'Receita', value: fmt(data.revenue), icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-    { label: 'Vendas pagas', value: data.paid_count.toString(), icon: ShoppingCart, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-    { label: 'Pendentes', value: data.pending_count.toString(), icon: Clock, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+    { label: 'Ingresos', value: fmt(data.revenue), icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+    { label: 'Ventas pagadas', value: data.paid_count.toString(), icon: ShoppingCart, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    { label: 'Pendientes', value: data.pending_count.toString(), icon: Clock, color: 'text-amber-500', bg: 'bg-amber-500/10' },
     { label: 'Reembolsadas', value: data.refunded_count.toString(), icon: RotateCcw, color: 'text-rose-500', bg: 'bg-rose-500/10' },
-    { label: 'Ticket médio', value: fmt(data.avg_ticket), icon: TrendingUp, color: 'text-violet-500', bg: 'bg-violet-500/10' },
+    { label: 'Ticket promedio', value: fmt(data.avg_ticket), icon: TrendingUp, color: 'text-violet-500', bg: 'bg-violet-500/10' },
   ];
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
-          <DollarSign className="h-4 w-4" /> Performance Cakto
+          <DollarSign className="h-4 w-4" /> Desempeño Cakto
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -120,7 +120,7 @@ export function ProductCaktoPerformance({ productId, organizationId }: Props) {
 
         {data.roles && data.roles.length > 0 && (
           <div>
-            <h4 className="text-xs font-medium text-muted-foreground mb-2">Receita por papel da oferta</h4>
+            <h4 className="text-xs font-medium text-muted-foreground mb-2">Ingresos por rol de la oferta</h4>
             <div className="flex flex-wrap gap-2">
               {data.roles
                 .filter((r) => r.paid_count > 0)

@@ -88,19 +88,19 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
     try {
       if (currentStatus === 'completed') {
         await uncompleteTask.mutateAsync(taskId);
-        toast.success('Tarefa reaberta!');
+        toast.success('¡Tarea reabierta!');
       } else {
         await completeTask.mutateAsync(taskId);
-        toast.success('Tarefa concluída! 🎉');
+        toast.success('¡Tarea completada! 🎉');
       }
     } catch (error) {
-      toast.error('Erro ao atualizar tarefa');
+      toast.error('Error al actualizar tarea');
     }
   };
 
   const handleCreateTask = async () => {
     if (!newTask.title.trim()) {
-      toast.error('Título é obrigatório');
+      toast.error('El título es obligatorio');
       return;
     }
 
@@ -116,7 +116,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
         status: 'pending',
         type: 'manual'
       });
-      toast.success('Tarefa criada com sucesso!');
+      toast.success('¡Tarea creada con éxito!');
       setIsCreateModalOpen(false);
       setNewTask({
         title: '',
@@ -126,7 +126,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
         lead_id: ''
       });
     } catch (error) {
-      toast.error('Erro ao criar tarefa');
+      toast.error('Error al crear tarea');
     }
   };
 
@@ -143,8 +143,8 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
     switch (priority) {
       case 'urgent': return 'Urgente';
       case 'high': return 'Alta';
-      case 'medium': return 'Média';
-      default: return 'Baixa';
+      case 'medium': return 'Media';
+      default: return 'Baja';
     }
   };
 
@@ -226,7 +226,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
           
           {(!tasks || tasks.length === 0) && (
             <div className="text-center py-6 text-muted-foreground text-sm">
-              Nenhuma tarefa para hoje 🎉
+              Ninguna tarea para hoy 🎉
             </div>
           )}
         </div>
@@ -239,7 +239,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Central de Tarefas</h2>
+          <h2 className="text-2xl font-bold text-foreground">Central de Tareas</h2>
           <p className="text-muted-foreground mt-1">
             {format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}
           </p>
@@ -256,29 +256,29 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
             <DialogTrigger asChild>
               <Button>
                 <Plus size={18} className="mr-2" />
-                Nova Tarefa
+                Nueva Tarea
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Criar Nova Tarefa</DialogTitle>
+                <DialogTitle>Criar Nueva Tarea</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 pt-4">
                 <div className="space-y-2">
                   <Label htmlFor="title">Título *</Label>
                   <Input
                     id="title"
-                    placeholder="Ex: Ligar para lead, Enviar proposta..."
+                    placeholder="Ej: Llamar al lead, Enviar propuesta..."
                     value={newTask.title}
                     onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Descrição</Label>
+                  <Label htmlFor="description">Descripción</Label>
                   <Textarea
                     id="description"
-                    placeholder="Detalhes adicionais da tarefa..."
+                    placeholder="Detalles adicionales de la tarea..."
                     value={newTask.description}
                     onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
                     rows={3}
@@ -287,7 +287,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Prioridade</Label>
+                    <Label>Prioridad</Label>
                     <Select
                       value={newTask.priority}
                       onValueChange={(v) => setNewTask({ ...newTask, priority: v as any })}
@@ -305,7 +305,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="due_date">Data e Hora</Label>
+                    <Label htmlFor="due_date">Fecha y Hora</Label>
                     <Input
                       id="due_date"
                       type="datetime-local"
@@ -317,16 +317,16 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
                 
                 {leads && leads.length > 0 && (
                   <div className="space-y-2">
-                    <Label>Vincular a um Lead (opcional)</Label>
+                    <Label>Vincular a un Lead (opcional)</Label>
                     <Select
                       value={newTask.lead_id || "none"}
                       onValueChange={(v) => setNewTask({ ...newTask, lead_id: v === "none" ? "" : v })}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecionar lead..." />
+                        <SelectValue placeholder="Seleccionar lead..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="none">Nenhum</SelectItem>
+                        <SelectItem value="none">Ninguno</SelectItem>
                         {leads.map((lead) => (
                           <SelectItem key={lead.id} value={lead.id}>
                             {lead.name} {lead.company && `- ${lead.company}`}
@@ -347,7 +347,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
                   ) : (
                     <Plus className="h-4 w-4 mr-2" />
                   )}
-                  Criar Tarefa
+                  Crear Tarea
                 </Button>
               </div>
             </DialogContent>
@@ -367,7 +367,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
                 </div>
                 <div>
                   <p className="text-xl font-bold text-foreground">{completedToday}/{totalToday}</p>
-                  <p className="text-xs text-muted-foreground">Hoje</p>
+                  <p className="text-xs text-muted-foreground">Hoy/p>
                 </div>
               </div>
             </div>
@@ -379,7 +379,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
                 </div>
                 <div>
                   <p className="text-xl font-bold text-foreground">{completionRate}%</p>
-                  <p className="text-xs text-muted-foreground">Taxa conclusão</p>
+                  <p className="text-xs text-muted-foreground">Tasa de conclusión</p>
                 </div>
               </div>
             </div>
@@ -403,7 +403,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
           {/* Filter Tabs */}
           <Tabs value={filter} onValueChange={(v) => setFilter(v as any)}>
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="today">Hoje</TabsTrigger>
+              <TabsTrigger value="today">Hoy/TabsTrigger>
               <TabsTrigger value="all">Todas</TabsTrigger>
               <TabsTrigger value="overdue" className={overdueCount > 0 ? "text-destructive" : ""}>
                 Atrasadas {overdueCount > 0 && `(${overdueCount})`}
@@ -506,7 +506,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
                   <CheckCircle2 size={32} className="text-primary" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {filter === 'today' ? 'Nenhuma tarefa para hoje!' : 'Nenhuma tarefa encontrada'}
+                  {filter === 'today' ? 'Ninguna tarea para hoy!' : 'Ningunoa tarefa encontrada'}
                 </h3>
                 <p className="text-muted-foreground text-center max-w-md">
                   {filter === 'today' 

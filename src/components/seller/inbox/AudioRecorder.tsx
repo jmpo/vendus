@@ -143,7 +143,7 @@ export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderPr
         )} />
         <span className="text-sm font-mono tabular-nums">{formatTime(elapsed)}</span>
         <span className="text-xs text-muted-foreground hidden sm:inline">
-          {isStarting ? 'Iniciando microfone…' : 'Gravando — toque em enviar para concluir'}
+          {isStarting ? 'Iniciando microfone…' : 'Grabando...� toque em enviar para concluir'}
         </span>
       </div>
 

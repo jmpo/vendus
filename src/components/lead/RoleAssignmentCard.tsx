@@ -61,7 +61,7 @@ export function RoleAssignmentCard({ label, icon, currentUser, teamMembers, onAs
               <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
                 <UserX className="h-5 w-5" />
               </div>
-              <p className="text-sm">Nenhum {label} vinculado</p>
+              <p className="text-sm">Ningún {label} vinculado</p>
             </div>
             <Select onValueChange={(val) => onAssign(val)}>
               <SelectTrigger className="w-full">

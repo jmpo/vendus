@@ -357,7 +357,7 @@ export function ActionConfigDialog({
                       />
                     )}
                     <span>{stage.name}</span>
-                    {stage.is_won && <Badge variant="outline" className="text-xs">Ganho</Badge>}
+                    {stage.is_won && <Badge variant="outline" className="text-xs">Ganado</Badge>}
                     {stage.is_lost && <Badge variant="outline" className="text-xs">Perdido</Badge>}
                   </span>
                 </SelectItem>

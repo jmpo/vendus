@@ -21,7 +21,7 @@ import {
   Star,
 } from 'lucide-react';
 import { format, differenceInDays, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { EventModal } from '@/components/calendar/EventModal';
 import { LeadTagsBlock } from './summary/LeadTagsBlock';
 import { LeadRecentNotes } from './summary/LeadRecentNotes';
@@ -61,7 +61,7 @@ interface LeadSummaryTabProps {
 }
 
 const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('pt-BR', {
+  return new Intl.NumberFormat('es-ES', {
     style: 'currency',
     currency: 'BRL',
     minimumFractionDigits: 0,
@@ -87,9 +87,9 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
       setIsSaving(true);
       try {
         await onUpdateLead({ deal_value: plan.price });
-        toast.success(`Plano "${plan.name}" selecionado — valor atualizado`);
+        toast.success(`Plan "${plan.name}" seleccionado — valor actualizado`);
       } catch {
-        toast.error('Erro ao atualizar valor');
+        toast.error('Error al actualizar el valor');
       } finally {
         setIsSaving(false);
       }
@@ -126,10 +126,10 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
     setIsSaving(true);
     try {
       await onUpdateLead({ deal_value: numericValue });
-      toast.success('Valor atualizado com sucesso');
+      toast.success('Valor actualizado con éxito');
       setIsEditingValue(false);
     } catch {
-      toast.error('Erro ao atualizar valor');
+      toast.error('Error al actualizar el valor');
     } finally {
       setIsSaving(false);
     }
@@ -146,7 +146,7 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
         {onNavigateTab && (
           <Button variant="outline" size="sm" className="gap-2" onClick={() => onNavigateTab('notes')}>
             <Pencil className="h-4 w-4" />
-            Adicionar nota
+            Añadir nota
           </Button>
         )}
       </div>
@@ -157,9 +157,9 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
           <CardContent className="p-4 flex items-center gap-3">
             <AlertTriangle className="h-5 w-5 text-amber-500" />
             <div>
-              <p className="font-medium text-amber-500">Lead sem contato há {stats.daysSinceContact} dias</p>
+              <p className="font-medium text-amber-500">Lead sin contacto desde hace {stats.daysSinceContact} días</p>
               <p className="text-sm text-muted-foreground">
-                Considere entrar em contato para não perder o timing
+                Considere entrar en contacto para no perder el timing
               </p>
             </div>
           </CardContent>
@@ -178,21 +178,21 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
         <CardHeader className="pb-3">
           <CardTitle className="text-base font-medium text-muted-foreground flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-emerald-500" />
-            Valor da Negociação
+            Valor de la Negociación
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0 space-y-3">
           {hasPlans && onUpdateLead && (
             <div className="space-y-1.5">
-              <p className="text-xs font-medium text-muted-foreground">Plano do Cliente</p>
+              <p className="text-xs font-medium text-muted-foreground">Plan del Cliente</p>
               <Select value={selectedPlanId} onValueChange={handlePlanSelect} disabled={isSaving}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Selecione o plano contratado" />
+                  <SelectValue placeholder="Seleccione el plan contratado" />
                 </SelectTrigger>
                 <SelectContent>
                   {activePlans.map(plan => {
-                    const price = plan.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    const cycle = plan.billing_cycle !== 'unico' ? `/${plan.billing_cycle === 'mensal' ? 'mês' : plan.billing_cycle}` : '';
+                    const price = plan.price.toLocaleString('es-ES', { style: 'currency', currency: 'BRL' });
+                    const cycle = plan.billing_cycle !== 'unico' ? `/${plan.billing_cycle === 'mensal' ? 'mes' : plan.billing_cycle}` : '';
                     return (
                       <SelectItem key={plan.id} value={plan.id}>
                         <span className="flex items-center gap-1">
@@ -257,7 +257,7 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Target className="h-4 w-4" />
-              Estágio Atual
+              Etapa Actual
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -268,10 +268,10 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
                   <span className="font-semibold">{lead.pipeline_stages.name}</span>
                 </div>
                 <Progress value={stats.stageProgress} className="h-2" />
-                <p className="text-xs text-muted-foreground mt-1">{stats.stageProgress}% do funil</p>
+                <p className="text-xs text-muted-foreground mt-1">{stats.stageProgress}% del embudo</p>
               </>
             ) : (
-              <span className="text-muted-foreground">Sem estágio definido</span>
+              <span className="text-muted-foreground">Sin etapa definida</span>
             )}
           </CardContent>
         </Card>
@@ -280,13 +280,13 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Clock className="h-4 w-4" />
-              Tempo no Funil
+              Tiempo en el Embudo
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{stats.daysInFunnel} dias</p>
+            <p className="text-2xl font-bold">{stats.daysInFunnel} días</p>
             <p className="text-xs text-muted-foreground">
-              Desde {format(parseISO(lead.created_at), "dd 'de' MMM", { locale: ptBR })}
+              Desde el {format(parseISO(lead.created_at), "dd 'de' MMM", { locale: es })}
             </p>
           </CardContent>
         </Card>
@@ -295,24 +295,24 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <MessageCircle className="h-4 w-4" />
-              Último Contato
+              Último Contacto
             </CardTitle>
           </CardHeader>
           <CardContent>
             {stats.lastContact ? (
               <>
                 <p className="text-2xl font-bold">
-                  {stats.daysSinceContact === 0 ? 'Hoje' : `${stats.daysSinceContact} dias`}
+                  {stats.daysSinceContact === 0 ? 'Hoy' : `${stats.daysSinceContact} días`}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {format(stats.lastContact, "dd/MM 'às' HH:mm", { locale: ptBR })}
+                  {format(stats.lastContact, "dd/MM 'a las' HH:mm", { locale: es })}
                 </p>
               </>
             ) : (
-              <span className="text-muted-foreground">Nenhum contato</span>
+              <span className="text-muted-foreground">Ningún contacto</span>
             )}
             <Badge variant="outline" className="mt-2 text-[10px]">
-              {interactionsCount} {interactionsCount === 1 ? 'interação' : 'interações'}
+              {interactionsCount} {interactionsCount === 1 ? 'interacción' : 'interacciones'}
             </Badge>
           </CardContent>
         </Card>
@@ -334,13 +334,13 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
       {/* Conversa recente */}
       <LeadConversationPreview leadId={lead.id} />
 
-      {/* Cadência + Próxima ação */}
+      {/* Cadencia + Próxima acción */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Calendar className="h-4 w-4" />
-              Cadência
+              Cadencia
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -350,14 +350,14 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
                   <span className="text-xl font-bold text-primary">D{lead.cadence_day}</span>
                 </div>
                 <div>
-                  <p className="font-medium">Dia {lead.cadence_day}</p>
-                  <p className="text-sm text-muted-foreground">da cadência de vendas</p>
+                  <p className="font-medium">Día {lead.cadence_day}</p>
+                  <p className="text-sm text-muted-foreground">de la cadencia de ventas</p>
                 </div>
               </div>
             ) : (
               <div className="flex items-center gap-2 text-muted-foreground">
                 <CheckCircle2 className="h-4 w-4" />
-                <span>Cadência não iniciada</span>
+                <span>Cadencia no iniciada</span>
               </div>
             )}
           </CardContent>
@@ -367,14 +367,14 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
-              Próxima Ação
+              Próxima Acción
             </CardTitle>
           </CardHeader>
           <CardContent>
             {lead.next_action ? (
               <p className="text-sm">{lead.next_action}</p>
             ) : (
-              <span className="text-muted-foreground">Nenhuma ação definida</span>
+              <span className="text-muted-foreground">Ninguna acción definida</span>
             )}
           </CardContent>
         </Card>

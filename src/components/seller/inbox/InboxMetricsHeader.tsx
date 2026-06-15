@@ -29,26 +29,26 @@ export function InboxMetricsHeader({ conversations }: InboxMetricsHeaderProps) {
     <div className="flex items-center gap-3 flex-wrap">
       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <MessageSquare className="h-3.5 w-3.5" />
-        <span>{metrics.active} ativas</span>
+        <span>{metrics.active} activas</span>
       </div>
 
       {metrics.totalUnread > 0 && (
         <Badge variant="default" className="h-5 text-[10px] px-1.5 animate-pulse">
-          {metrics.totalUnread} não lidas
+          {metrics.totalUnread} no leídas
         </Badge>
       )}
 
       {metrics.waiting > 0 && (
         <div className="flex items-center gap-1.5 text-xs text-yellow-600 dark:text-yellow-400">
           <Clock className="h-3.5 w-3.5" />
-          <span>{metrics.waiting} aguardando</span>
+          <span>{metrics.waiting} esperando</span>
         </div>
       )}
 
       {metrics.waitingLong > 0 && (
         <div className="flex items-center gap-1.5 text-xs text-destructive animate-pulse">
           <AlertTriangle className="h-3.5 w-3.5" />
-          <span>{metrics.waitingLong} há +5min</span>
+          <span>{metrics.waitingLong} hace +5min</span>
         </div>
       )}
     </div>

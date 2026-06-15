@@ -127,7 +127,7 @@ export function ProductOnboarding({ onComplete, onCancel }: ProductOnboardingPro
                 autoFocus
               />
               <Button onClick={addListItem} disabled={!listInput.trim()}>
-                Adicionar
+                Añadir
               </Button>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -161,8 +161,8 @@ export function ProductOnboarding({ onComplete, onCancel }: ProductOnboardingPro
                   onClick={() => updateField('status', status)}
                   className="flex-1"
                 >
-                  {status === 'draft' && 'Rascunho'}
-                  {status === 'review' && 'Em Revisão'}
+                  {status === 'draft' && 'Borrador'}
+                  {status === 'review' && 'En Revisión'}
                   {status === 'published' && 'Publicado'}
                 </Button>
               ))}
@@ -191,9 +191,9 @@ export function ProductOnboarding({ onComplete, onCancel }: ProductOnboardingPro
               <Package className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Novo Produto</p>
+              <p className="text-sm text-muted-foreground">Nuevo Producto</p>
               <p className="text-xs text-muted-foreground">
-                Passo {currentStep + 1} de {totalSteps}
+                Paso {currentStep + 1} de {totalSteps}
               </p>
             </div>
           </div>
@@ -256,7 +256,7 @@ export function ProductOnboarding({ onComplete, onCancel }: ProductOnboardingPro
                 {currentStepData.type === 'textarea' ? (
                   'Ctrl + Enter para continuar'
                 ) : (
-                  'Pressione Enter para continuar'
+                  'Presione Enter para continuar'
                 )}
               </p>
             </motion.div>
@@ -285,12 +285,12 @@ export function ProductOnboarding({ onComplete, onCancel }: ProductOnboardingPro
               {isCreating ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Criando...
+                  Creando...
                 </>
               ) : (
                 <>
                   <Check className="h-4 w-4 mr-2" />
-                  Criar Produto
+                  Crear Producto
                 </>
               )}
             </Button>

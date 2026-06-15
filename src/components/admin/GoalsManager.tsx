@@ -149,7 +149,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Criar Meta de Vendas</DialogTitle>
+              <DialogTitle>Criar Meta de Ventas</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-4">
               <div className="space-y-2">

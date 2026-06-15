@@ -22,9 +22,9 @@ export function ConversionRateChart({ data, isLoading }: ConversionRateChartProp
 
     return {
       pieData: [
-        { name: 'Ganhos', value: data.wonLeads, color: 'hsl(142 71% 45%)' },
+        { name: 'Ganados', value: data.wonLeads, color: 'hsl(142 71% 45%)' },
         { name: 'Perdidos', value: data.lostLeads, color: 'hsl(0 72% 51%)' },
-        { name: 'Em Andamento', value: data.activeLeads, color: 'hsl(173 80% 45%)' },
+        { name: 'En Curso', value: data.activeLeads, color: 'hsl(173 80% 45%)' },
       ].filter(d => d.value > 0),
       conversionRate: Math.round(conversionRate),
       totalLeads: data.totalLeads,
@@ -40,12 +40,12 @@ export function ConversionRateChart({ data, isLoading }: ConversionRateChartProp
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
             <Target className="h-5 w-5 text-primary" />
-            Taxa de Conversão
+            Tasa de Conversión
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[280px] flex items-center justify-center">
-            <div className="animate-pulse text-muted-foreground">Carregando...</div>
+            <div className="animate-pulse text-muted-foreground">Cargando...</div>
           </div>
         </CardContent>
       </Card>
@@ -58,12 +58,12 @@ export function ConversionRateChart({ data, isLoading }: ConversionRateChartProp
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
             <Target className="h-5 w-5 text-primary" />
-            Taxa de Conversão
+            Tasa de Conversión
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[280px] flex items-center justify-center text-muted-foreground text-sm">
-            Nenhum lead registrado
+            Ningún lead registrado
           </div>
         </CardContent>
       </Card>
@@ -98,11 +98,11 @@ export function ConversionRateChart({ data, isLoading }: ConversionRateChartProp
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
             <Target className="h-5 w-5 text-primary" />
-            Taxa de Conversão
+            Tasa de Conversión
           </CardTitle>
           <div className="text-right">
             <span className="text-2xl font-bold text-foreground">{chartData.conversionRate}%</span>
-            <p className="text-xs text-muted-foreground">dos deals fechados</p>
+            <p className="text-xs text-muted-foreground">de los deals cerrados</p>
           </div>
         </div>
       </CardHeader>
@@ -134,7 +134,7 @@ export function ConversionRateChart({ data, isLoading }: ConversionRateChartProp
         <div className="mt-4 grid grid-cols-3 gap-2 text-center">
           <div className="bg-[hsl(142_71%_45%/0.1)] rounded-lg p-2">
             <p className="text-lg font-bold text-[hsl(142_71%_45%)]">{chartData.wonLeads}</p>
-            <p className="text-xs text-muted-foreground">Ganhos</p>
+            <p className="text-xs text-muted-foreground">Ganados</p>
           </div>
           <div className="bg-[hsl(0_72%_51%/0.1)] rounded-lg p-2">
             <p className="text-lg font-bold text-[hsl(0_72%_51%)]">{chartData.lostLeads}</p>
@@ -142,7 +142,7 @@ export function ConversionRateChart({ data, isLoading }: ConversionRateChartProp
           </div>
           <div className="bg-[hsl(173_80%_45%/0.1)] rounded-lg p-2">
             <p className="text-lg font-bold text-[hsl(173_80%_45%)]">{chartData.activeLeads}</p>
-            <p className="text-xs text-muted-foreground">Ativos</p>
+            <p className="text-xs text-muted-foreground">Activos</p>
           </div>
         </div>
       </CardContent>

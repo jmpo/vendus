@@ -11,13 +11,13 @@ export type BookingStatus =
   | "cancelado" | "no_show" | "concluido";
 
 const MAP: Record<BookingStatus, { label: string; cls: string; Icon: React.ComponentType<{ className?: string }> }> = {
-  pending:                  { label: "Pendente",          cls: "bg-amber-500/15 text-amber-400 border-amber-500/30", Icon: Clock },
-  agendado:                 { label: "Agendado",          cls: "bg-blue-500/15 text-blue-400 border-blue-500/30",     Icon: Calendar },
+  pending:                  { label: "Pendiente",          cls: "bg-amber-500/15 text-amber-400 border-amber-500/30", Icon: Clock },
+  agendado:                 { label: "Programado",          cls: "bg-blue-500/15 text-blue-400 border-blue-500/30",     Icon: Calendar },
   confirmed:                { label: "Confirmado",        cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", Icon: CheckCircle2 },
-  confirmacao_enviada:      { label: "Confirmação enviada", cls: "bg-sky-500/15 text-sky-400 border-sky-500/30",       Icon: MailCheck },
-  confirmado:               { label: "Confirmado pelo lead", cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", Icon: CheckCircle2 },
-  lembrete_enviado:         { label: "Lembrete enviado",  cls: "bg-violet-500/15 text-violet-400 border-violet-500/30", Icon: MessageCircle },
-  reagendamento_solicitado: { label: "Reagendar",         cls: "bg-orange-500/15 text-orange-400 border-orange-500/30", Icon: RotateCcw },
+  confirmacao_enviada:      { label: "Confirmación enviada", cls: "bg-sky-500/15 text-sky-400 border-sky-500/30",       Icon: MailCheck },
+  confirmado:               { label: "Confirmado por el lead", cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", Icon: CheckCircle2 },
+  lembrete_enviado:         { label: "Recordatorio enviado",  cls: "bg-violet-500/15 text-violet-400 border-violet-500/30", Icon: MessageCircle },
+  reagendamento_solicitado: { label: "Reprogramar",         cls: "bg-orange-500/15 text-orange-400 border-orange-500/30", Icon: RotateCcw },
   cancelled:                { label: "Cancelado",         cls: "bg-rose-500/15 text-rose-400 border-rose-500/30",     Icon: XCircle },
   cancelado:                { label: "Cancelado",         cls: "bg-rose-500/15 text-rose-400 border-rose-500/30",     Icon: XCircle },
   no_show:                  { label: "No-show",           cls: "bg-red-500/15 text-red-400 border-red-500/30",        Icon: AlertCircle },

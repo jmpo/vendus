@@ -204,8 +204,8 @@ export function TransferConversationModal({
   const handleTransfer = async () => {
     if (transferType === 'user' && !selectedUserId) {
       toast({
-        title: 'Selecione um usuário',
-        description: 'Escolha para quem deseja transferir a conversa.',
+        title: 'Seleccione un usuario',
+        description: 'Elija a quién desea transferir la conversación.',
         variant: 'destructive',
       });
       return;
@@ -213,8 +213,8 @@ export function TransferConversationModal({
 
     if (transferType === 'sector' && !selectedSectorId) {
       toast({
-        title: 'Selecione um setor',
-        description: 'Escolha para qual setor deseja transferir a conversa.',
+        title: 'Seleccione un sector',
+        description: 'Elija a qué sector desea transferir la conversación.',
         variant: 'destructive',
       });
       return;
@@ -222,8 +222,8 @@ export function TransferConversationModal({
 
     if (transferType === 'agent' && !selectedAgentId) {
       toast({
-        title: 'Selecione um agente de IA',
-        description: 'Escolha qual agente deve assumir a conversa.',
+        title: 'Seleccione un agente de IA',
+        description: 'Elija qué agente debe asumir la conversación.',
         variant: 'destructive',
       });
       return;
@@ -311,18 +311,18 @@ export function TransferConversationModal({
       const baseNote =
         transferType === 'agent'
           ? targetAgent?.agent_type === 'admin'
-            ? `🔒 Transferido para Agente Admin: ${targetAgent?.name} — teste/intervenção manual por ${profile?.full_name ?? 'gestor'}${
+            ? `🔒 Transferido al Agente Administrador: ${targetAgent?.name} — teste/intervenção manual por ${profile?.full_name ?? 'gestor'}${
                 internalNote ? ` — ${internalNote}` : ''
               }`
-            : `🤖 Transferido para Agente IA: ${targetAgent?.name ?? selectedAgentId}${
+            : `🤖 Transferido al Agente IA: ${targetAgent?.name ?? selectedAgentId}${
                 internalNote ? ` — ${internalNote}` : ''
               }`
           : transferType === 'sector'
-          ? `📂 Transferido para o setor: ${targetSector?.name ?? ''}${internalNote ? ` — ${internalNote}` : ''}`
+          ? `📂 Transferido al sector: ${targetSector?.name ?? ''}${internalNote ? ` — ${internalNote}` : ''}`
           : internalNote || null;
 
       const connectionNote = newInstance
-        ? `🔌 Conexão alterada para: ${newInstance.name}${newInstance.phone_number ? ` (${newInstance.phone_number})` : ''}`
+        ? `🔌 Conexión cambiada a: ${newInstance.name}${newInstance.phone_number ? ` (${newInstance.phone_number})` : ''}`
         : null;
 
       const composedNote = [baseNote, connectionNote].filter(Boolean).join(' • ') || null;
@@ -342,14 +342,14 @@ export function TransferConversationModal({
 
       const baseDesc =
         transferType === 'user'
-          ? 'A conversa foi transferida com sucesso.'
+          ? 'La conversación fue transferida con éxito.'
           : transferType === 'sector'
           ? `A conversa foi enviada para o setor "${targetSector?.name ?? ''}".`
           : `Agente IA "${targetAgent?.name ?? ''}" agora está atendendo.`;
       const fullDesc = newInstance
-        ? `${baseDesc} Conexão alterada para ${newInstance.name}.`
+        ? `${baseDesc} Conexión cambiada a ${newInstance.name}.`
         : baseDesc;
-      toast({ title: 'Conversa transferida', description: fullDesc });
+      toast({ title: 'Conversación transferida', description: fullDesc });
 
       onOpenChange(false);
       onTransfer?.();
@@ -365,8 +365,8 @@ export function TransferConversationModal({
     } catch (error) {
       console.error('Error transferring conversation:', error);
       toast({
-        title: 'Erro ao transferir',
-        description: 'Não foi possível transferir a conversa.',
+        title: 'Error al transferir',
+        description: 'No fue posible transferir la conversación.',
         variant: 'destructive',
       });
     } finally {
@@ -380,7 +380,7 @@ export function TransferConversationModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <ArrowRightLeft className="h-5 w-5 text-primary" />
-            Transferir Conversa
+            Transferir conversación
           </DialogTitle>
         </DialogHeader>
 
@@ -395,14 +395,14 @@ export function TransferConversationModal({
               <RadioGroupItem value="user" id="user" />
               <Label htmlFor="user" className="flex items-center gap-2 cursor-pointer">
                 <User className="h-4 w-4" />
-                Para usuário
+                Para usuario
               </Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="sector" id="sector" />
               <Label htmlFor="sector" className="flex items-center gap-2 cursor-pointer">
                 <Layers className="h-4 w-4" />
-                Para setor
+                Para sector
               </Label>
             </div>
             <div className="flex items-center space-x-2">
@@ -417,11 +417,11 @@ export function TransferConversationModal({
           {/* User Selection */}
           {transferType === 'user' && (
             <div className="space-y-3">
-              <Label>Selecionar usuário</Label>
+              <Label>Seleccionar usuario</Label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Buscar por nome ou email..."
+                  placeholder="Buscar por nombre o email..."
                   value={searchUser}
                   onChange={(e) => setSearchUser(e.target.value)}
                   className="pl-9"
@@ -434,7 +434,7 @@ export function TransferConversationModal({
                   </div>
                 ) : filteredTeam.length === 0 ? (
                   <div className="p-4 text-center text-muted-foreground text-sm">
-                    Nenhum usuário encontrado
+                    No se encontró ningún usuario
                   </div>
                 ) : (
                   <div className="p-2 space-y-1">
@@ -469,7 +469,7 @@ export function TransferConversationModal({
           {/* Sector Selection */}
           {transferType === 'sector' && (
             <div className="space-y-3">
-              <Label>Selecionar setor</Label>
+              <Label>Seleccionar setor</Label>
               <Select value={selectedSectorId || ''} onValueChange={setSelectedSectorId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Escolha um setor..." />
@@ -507,7 +507,7 @@ export function TransferConversationModal({
           {/* AI Agent Selection */}
           {transferType === 'agent' && (
             <div className="space-y-3">
-              <Label>Selecionar agente de IA</Label>
+              <Label>Seleccionar agente de IA</Label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -580,7 +580,7 @@ export function TransferConversationModal({
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <Smartphone className="h-4 w-4" />
-                Transferir para conexão
+                Transferir a conexão
               </Label>
               <Select value={selectedInstanceId} onValueChange={setSelectedInstanceId}>
                 <SelectTrigger>

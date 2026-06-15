@@ -41,12 +41,12 @@ interface CallWithAIDialogProps {
 }
 
 const OBJECTIVE_PRESETS = [
-  { value: 'agendar', label: 'Agendar reunião', text: 'Agendar uma reunião com o lead.' },
-  { value: 'retomar', label: 'Retomar conversa', text: 'Retomar a conversa de onde parou e dar continuidade ao atendimento.' },
-  { value: 'qualificar', label: 'Qualificar (BANT)', text: 'Qualificar o lead usando BANT (orçamento, autoridade, necessidade, prazo).' },
-  { value: 'oferta', label: 'Apresentar oferta', text: 'Apresentar a oferta principal e conduzir para o fechamento.' },
-  { value: 'recuperar', label: 'Recuperar carrinho', text: 'Recuperar carrinho abandonado e ajudar a finalizar a compra.' },
-  { value: 'custom', label: 'Outro (escrever)', text: '' },
+  { value: 'agendar', label: 'Programar reunión', text: 'Programar una reunión con el lead.' },
+  { value: 'retomar', label: 'Retomar conversación', text: 'Retomar la conversación donde se quedó y dar continuidad a la atención.' },
+  { value: 'qualificar', label: 'Calificar (BANT)', text: 'Calificar al lead usando BANT (presupuesto, autoridad, necesidad, plazo).' },
+  { value: 'oferta', label: 'Presentar oferta', text: 'Presentar la oferta principal y conducir al cierre.' },
+  { value: 'recuperar', label: 'Recuperar carrito', text: 'Recuperar carrito abandonado y ayudar a finalizar la compra.' },
+  { value: 'custom', label: 'Otro (escribir)', text: '' },
 ];
 
 export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext, initialObjective }: CallWithAIDialogProps) {
@@ -96,15 +96,15 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
 
   const handleSubmit = async () => {
     if (!profile?.organization_id) {
-      toast.error('Sessão inválida.');
+      toast.error('Sesión inválida.');
       return;
     }
     if (!lead.phone) {
-      toast.error('Lead sem telefone cadastrado.');
+      toast.error('Lead sin teléfono registrado.');
       return;
     }
     if (!agentId) {
-      toast.error('Selecione um agente de IA.');
+      toast.error('Seleccione un agente de IA.');
       return;
     }
 
@@ -112,7 +112,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
     const objective = objectivePreset === 'custom' ? customObjective.trim() : preset?.text || '';
 
     if (!objective) {
-      toast.error('Defina um objetivo para a IA.');
+      toast.error('Defina un objetivo para la IA.');
       return;
     }
 
@@ -133,11 +133,11 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
 
       const result = Array.isArray((data as any)?.results) ? (data as any).results[0] : null;
       if (result?.skipped) {
-        toast.info(`IA não disparou: ${result.reason || 'já existe outreach recente'}`);
+        toast.info(`La IA no se activó: ${result.reason || 'ya existe un outreach reciente'}`);
       } else if (result?.error) {
-        toast.error(`Erro: ${result.error}`);
+        toast.error(`Error: ${result.error}`);
       } else {
-        toast.success(`IA iniciou contato com ${lead.name}.`);
+        toast.success(`La IA inició contacto con ${lead.name}.`);
       }
 
       queryClient.invalidateQueries({ queryKey: ['interactions', lead.id] });
@@ -146,11 +146,11 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
       onOpenChange(false);
     } catch (err: any) {
       console.error('[CallWithAI] erro:', err);
-      const msg = err?.message || 'Erro ao iniciar atendimento com IA.';
+      const msg = err?.message || 'Error al iniciar la atención con IA.';
       if (msg.includes('402')) {
-        toast.error('Sem créditos de IA. Adicione créditos nas configurações.');
+        toast.error('Sin créditos de IA. Agregue créditos en las configuraciones.');
       } else if (msg.includes('429')) {
-        toast.error('Muitas requisições. Tente novamente em instantes.');
+        toast.error('Demasiadas solicitudes. Intente nuevamente en unos instantes.');
       } else {
         toast.error(msg);
       }
@@ -165,10 +165,10 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Chamar com IA
+            Llamar con IA
           </DialogTitle>
           <DialogDescription>
-            A IA entrará em contato e conduzirá o atendimento de forma autônoma.
+            La IA entrará en contacto y conducirá la atención de forma autónoma.
           </DialogDescription>
         </DialogHeader>
 
@@ -196,7 +196,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
             <Label>Agente de IA</Label>
             <Select value={agentId} onValueChange={setAgentId} disabled={loadingAgents || !agents?.length}>
               <SelectTrigger>
-                <SelectValue placeholder={loadingAgents ? 'Carregando...' : 'Selecione um agente'} />
+                <SelectValue placeholder={loadingAgents ? 'Cargando...' : 'Selecione um agente'} />
               </SelectTrigger>
               <SelectContent>
                 {agents?.map((a: any) => (
@@ -217,7 +217,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
             </Select>
             {!loadingAgents && !agents?.length && (
               <p className="text-xs text-destructive">
-                Nenhum agente de IA configurado{lead.product_id ? ' para este produto' : ''}.
+                Ningún agente de IA configurado{lead.product_id ? ' para este producto' : ''}.
               </p>
             )}
           </div>
@@ -241,7 +241,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
               <Input
                 value={customObjective}
                 onChange={(e) => setCustomObjective(e.target.value)}
-                placeholder="Ex: Convidar para o webinar de quinta-feira."
+                placeholder="Ej: Invitar al webinar del jueves."
               />
             )}
           </div>
@@ -252,34 +252,34 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
             <Textarea
               value={extraContext}
               onChange={(e) => setExtraContext(e.target.value)}
-              placeholder="Ex: Lead pediu para retornar amanhã sobre plano anual com desconto."
+              placeholder="Ej: El lead pidió que se le contacte mañana sobre el plan anual con descuento."
               rows={3}
             />
           </div>
 
           {/* Modo */}
           <div className="space-y-2">
-            <Label>Modo de contato</Label>
+            <Label>Modo de contacto</Label>
             <RadioGroup value={mode} onValueChange={(v) => setMode(v as 'direct' | 'conversational')} className="grid grid-cols-2 gap-2">
               <label className={`flex items-start gap-2 p-3 rounded-lg border cursor-pointer transition-colors ${mode === 'direct' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}>
                 <RadioGroupItem value="direct" className="mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium">Direto</p>
-                  <p className="text-xs text-muted-foreground">Já dispara a abordagem inicial.</p>
+                  <p className="text-sm font-medium">Directo</p>
+                  <p className="text-xs text-muted-foreground">Ya dispara el abordaje inicial.</p>
                 </div>
               </label>
               <label className={`flex items-start gap-2 p-3 rounded-lg border cursor-pointer transition-colors ${mode === 'conversational' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}>
                 <RadioGroupItem value="conversational" className="mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Conversacional</p>
-                  <p className="text-xs text-muted-foreground">Conduz com perguntas exploratórias.</p>
+                  <p className="text-xs text-muted-foreground">Conduce con preguntas exploratorias.</p>
                 </div>
               </label>
             </RadioGroup>
           </div>
 
           <p className="text-xs text-muted-foreground border-l-2 border-primary/40 pl-3">
-            A IA continuará o atendimento e fará follow-ups automáticos respeitando o horário comercial. A conversa aparecerá no Inbox.
+            La IA continuará la atención y hará seguimientos automáticos respetando el horario comercial. La conversación aparecerá en el Inbox.
           </p>
         </div>
 
@@ -289,7 +289,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
           </Button>
           <Button onClick={handleSubmit} disabled={isSending || !agentId || !lead.phone} className="gap-2">
             {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-            Iniciar atendimento com IA
+            Iniciar atención con IA
           </Button>
         </DialogFooter>
       </DialogContent>

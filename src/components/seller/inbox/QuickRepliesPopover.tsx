@@ -149,7 +149,7 @@ export function QuickRepliesPopover({
         <DialogHeader className="p-4 pb-0">
           <DialogTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-primary" />
-            Respostas Rápidas
+            Respuestas rápidas
           </DialogTitle>
         </DialogHeader>
 
@@ -176,7 +176,7 @@ export function QuickRepliesPopover({
           ) : Object.keys(displayGrouped).length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
               <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p className="text-sm">Nenhuma resposta encontrada</p>
+              <p className="text-sm">No se encontró ninguna respuesta</p>
             </div>
           ) : (
             <div className="p-2">

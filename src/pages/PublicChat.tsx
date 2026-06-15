@@ -166,7 +166,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       setMessages(prev => [...prev, {
         id: block.id,
         type: 'bot',
-        content: block.data.content || block.data.placeholder || 'Digite sua resposta',
+        content: block.data.content || block.data.placeholder || 'Escriba su respuesta',
         block,
       }]);
       
@@ -175,7 +175,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       setMessages(prev => [...prev, {
         id: block.id,
         type: 'bot',
-        content: block.data.content || 'Escolha uma opção:',
+        content: block.data.content || 'Elija una opción:',
         block,
         options: block.data.options,
       }]);
@@ -185,7 +185,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       setMessages(prev => [...prev, {
         id: block.id,
         type: 'bot',
-        content: block.data.success_message || 'Obrigado!',
+        content: block.data.success_message || '¡Gracias!',
         block,
         resultPayload: isResult
           ? { scoreTotal: scoreRef.current, tags: Array.from(tagsRef.current) }
@@ -344,7 +344,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
         setMessages(prev => [...prev, {
           id: `err-${Date.now()}`,
           type: 'bot',
-          content: 'Não foi possível conectar ao atendente agora. Envie sua mensagem novamente para tentar de novo.',
+          content: 'No fue posible conectar con el agente ahora. Envíe su mensaje nuevamente para intentar de nuevo.',
         }]);
         setTimeout(() => inputRef.current?.focus(), 100);
         return;
@@ -361,7 +361,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       const lastUserMsg = [...messages].reverse().find(m => m.type === 'user')?.content;
       const initialTrigger = lastUserMsg && lastUserMsg.trim().length > 0
         ? lastUserMsg
-        : 'Olá';
+        : 'Hola';
       await sendToAgent(initialTrigger, newMode, { skipUserBubble: true });
       setTimeout(() => inputRef.current?.focus(), 100);
     } catch (err) {
@@ -650,7 +650,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
               {a.bot_name || funnel.products?.name || funnel.name}
             </p>
             {a.show_online_status && (
-              <p className="text-sm" style={{ color: primaryFg, opacity: 0.75 }}>Online agora</p>
+              <p className="text-sm" style={{ color: primaryFg, opacity: 0.75 }}>En línea ahora</p>
             )}
           </div>
         </div>
@@ -813,7 +813,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
                 type={!aiMode && currentMessage?.block?.data.input_type === 'email' ? 'email' : 'text'}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder={aiMode ? (chatOpts.input_placeholder || 'Digite sua mensagem...') : (currentMessage?.block?.data.placeholder || chatOpts.input_placeholder || 'Digite aqui...')}
+                placeholder={aiMode ? (chatOpts.input_placeholder || 'Escriba su mensaje...') : (currentMessage?.block?.data.placeholder || chatOpts.input_placeholder || 'Escriba aquí...')}
 
                 className="flex-1 px-4 py-3 outline-none"
                 style={{
@@ -839,7 +839,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       {isComplete && (
         <div className="p-4 border-t text-center" style={{ backgroundColor: a.background_color }}>
           <p className="text-sm" style={{ color: a.text_color, opacity: 0.7 }}>
-            ✅ Conversa finalizada
+            ✅ Conversación finalizada
           </p>
         </div>
       )}

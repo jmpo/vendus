@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BookingCountdown } from './BookingCountdown';
 import { format, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
 interface WhatHappensItem {
@@ -51,15 +51,15 @@ const iconMap: Record<string, typeof Check> = {
 };
 
 const defaultWhatHappens: WhatHappensItem[] = [
-  { icon: 'target', title: 'Diagnóstico', description: 'Análise do seu cenário atual' },
-  { icon: 'sparkles', title: 'Oportunidades', description: 'Identificação de soluções ideais' },
-  { icon: 'trending-up', title: 'Plano', description: 'Roadmap personalizado para você' },
+  { icon: 'target', title: 'Diagnóstico', description: 'Análisis de su escenario actual' },
+  { icon: 'sparkles', title: 'Oportunidades', description: 'Identificación de soluciones ideales' },
+  { icon: 'trending-up', title: 'Plan', description: 'Roadmap personalizado para usted' },
 ];
 
 const defaultNextSteps: NextStep[] = [
-  { icon: 'check', text: 'Reunião confirmada' },
-  { icon: 'mail', text: 'Você receberá detalhes por e-mail' },
-  { icon: 'help', text: 'Prepare 1-2 desafios para discutirmos' },
+  { icon: 'check', text: 'Reunión confirmada' },
+  { icon: 'mail', text: 'Recibirá los detalles por correo electrónico' },
+  { icon: 'help', text: 'Prepare 1-2 desafíos para discutir' },
 ];
 
 export function BookingThankYou({
@@ -93,12 +93,12 @@ export function BookingThankYou({
 
     const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Booking//PT
+PRODID:-//Booking//ES
 BEGIN:VEVENT
 DTSTART:${formatDateForICS(startDate)}
 DTEND:${formatDateForICS(endDate)}
-SUMMARY:${eventName} com ${hostName}
-DESCRIPTION:Reunião agendada via link de booking.${meetLink ? `\\n\\nLink: ${meetLink}` : ''}
+SUMMARY:${eventName} con ${hostName}
+DESCRIPTION:Reunión programada a través del enlace de reserva.${meetLink ? `\\n\\nEnlace: ${meetLink}` : ''}
 ${meetLink ? `URL:${meetLink}` : ''}
 END:VEVENT
 END:VCALENDAR`;
@@ -154,7 +154,7 @@ END:VCALENDAR`;
                 transition={{ delay: 0.3 }}
                 className="text-2xl font-bold"
               >
-                {thankYouTitle || `Confirmado, ${firstName}!`}
+                {thankYouTitle || `¡Confirmado, ${firstName}!`}
               </motion.h1>
               
               <motion.p
@@ -163,7 +163,7 @@ END:VCALENDAR`;
                 transition={{ delay: 0.4 }}
                 className="text-muted-foreground mt-2"
               >
-                {thankYouMessage || 'Sua reunião está agendada'}
+                {thankYouMessage || 'Su reunión ha sido programada'}
               </motion.p>
             </div>
 
@@ -183,7 +183,7 @@ END:VCALENDAR`;
                 </div>
                 <div className="flex-1">
                   <p className="font-medium capitalize">
-                    {format(startDate, "EEEE, dd 'de' MMMM", { locale: ptBR })}
+                    {format(startDate, "EEEE, dd 'de' MMMM", { locale: es })}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     {format(startDate, 'HH:mm')} • {duration} minutos
@@ -191,7 +191,7 @@ END:VCALENDAR`;
                 </div>
                 <Button variant="outline" size="sm" onClick={generateICSFile} className="shrink-0">
                   <CalendarPlus className="h-4 w-4 sm:mr-1" />
-                  <span className="hidden sm:inline">Adicionar</span>
+                  <span className="hidden sm:inline">Añadir</span>
                 </Button>
               </motion.div>
 
@@ -203,7 +203,7 @@ END:VCALENDAR`;
                 className="text-center"
               >
                 <p className="text-sm text-muted-foreground mb-3 uppercase tracking-wide font-medium">
-                  Começa em
+                  Comienza en
                 </p>
                 <BookingCountdown targetDate={startDate} size="sm" />
               </motion.div>
@@ -215,7 +215,7 @@ END:VCALENDAR`;
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7 }}
                 >
-                  <h3 className="font-semibold mb-3 text-center">O que vai acontecer</h3>
+                  <h3 className="font-semibold mb-3 text-center">Qué pasará</h3>
                   <div className="space-y-2">
                     {whatHappens.map((item, index) => {
                       const Icon = iconMap[item.icon] || Target;
@@ -251,7 +251,7 @@ END:VCALENDAR`;
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.9 }}
                 >
-                  <h3 className="font-semibold mb-3 text-center">Próximos passos</h3>
+                  <h3 className="font-semibold mb-3 text-center">Próximos pasos</h3>
                   <div className="space-y-2">
                     {nextSteps.map((step, index) => {
                       const Icon = iconMap[step.icon] || Check;
@@ -285,7 +285,7 @@ END:VCALENDAR`;
                   <div className="flex items-center gap-3">
                     <Video className="h-5 w-5 text-primary" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">Link da reunião</p>
+                      <p className="text-sm font-medium">Enlace de la reunión</p>
                       <a 
                         href={meetLink}
                         target="_blank"
@@ -308,9 +308,9 @@ END:VCALENDAR`;
                   className="pt-4 border-t"
                 >
                   <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                    <span className="text-sm text-muted-foreground">Não vai participar?</span>
+                    <span className="text-sm text-muted-foreground">¿No puede asistir?</span>
                     <Button variant="ghost" size="sm" onClick={onReschedule}>
-                      Reagendar
+                      Reprogramar
                     </Button>
                   </div>
                 </motion.div>

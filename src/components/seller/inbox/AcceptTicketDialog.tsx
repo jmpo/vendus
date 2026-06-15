@@ -61,17 +61,17 @@ export function AcceptTicketDialog({
         force: isTakeover,
       });
       toast({
-        title: isTakeover ? 'Atendimento assumido' : 'Atendimento aceito',
+        title: isTakeover ? 'Atención asumida' : 'Atención aceptada',
         description: isTakeover
-          ? 'Você é o agente responsável agora.'
-          : 'A conversa está em sua fila.',
+          ? 'Usted es el agente responsable ahora.'
+          : 'La conversación está en su fila.',
       });
       onAccepted?.();
       onOpenChange(false);
     } catch (e: any) {
       toast({
-        title: 'Erro ao aceitar',
-        description: e?.message || 'Tente novamente.',
+        title: 'Error al aceptar',
+        description: e?.message || 'Intente nuevamente.',
         variant: 'destructive',
       });
     }
@@ -83,29 +83,29 @@ export function AcceptTicketDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {isTakeover ? <ShieldCheck className="h-5 w-5 text-amber-500" /> : null}
-            {isTakeover ? 'Assumir atendimento' : 'Aceitar atendimento'}
+            {isTakeover ? 'Asumir atención' : 'Aceptar atención'}
           </DialogTitle>
           <DialogDescription>
             {isTakeover && previousAssigneeName
-              ? `Você está prestes a assumir uma conversa atualmente com ${previousAssigneeName}. Selecione o setor para registrar o atendimento.`
-              : 'Escolha o setor responsável por este atendimento. Ele será vinculado à conversa.'}
+              ? `Está a punto de asumir una conversación que actualmente está con ${previousAssigneeName}. Seleccione el sector para registrar la atención.`
+              : 'Elija el sector responsable de esta atención. Se vinculará a la conversación.'}
           </DialogDescription>
         </DialogHeader>
 
         <div className="py-2">
-          <label className="text-sm font-medium mb-2 block">Setor</label>
+          <label className="text-sm font-medium mb-2 block">Sector</label>
           {loadingSectors ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" /> Carregando setores...
+              <Loader2 className="h-4 w-4 animate-spin" /> Cargando sectores...
             </div>
           ) : sectors.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Você não está associado a nenhum setor. Peça a um administrador para vinculá-lo.
+              No está asociado a ningún sector. Pida a un administrador que lo vincule.
             </p>
           ) : (
             <Select value={sectorId} onValueChange={setSectorId}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione um setor" />
+                <SelectValue placeholder="Seleccione un sector" />
               </SelectTrigger>
               <SelectContent>
                 {sectors.map((s) => (
@@ -133,7 +133,7 @@ export function AcceptTicketDialog({
             disabled={!sectorId || acceptMutation.isPending || sectors.length === 0}
           >
             {acceptMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            {isTakeover ? 'Assumir conversa' : 'Aceitar atendimento'}
+            {isTakeover ? 'Asumir conversación' : 'Aceptar atención'}
           </Button>
         </DialogFooter>
       </DialogContent>

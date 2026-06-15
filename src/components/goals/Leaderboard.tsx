@@ -79,7 +79,7 @@ export function Leaderboard({ productId, period, maxHeight = "400px" }: Leaderbo
           <div>
             <h3 className="font-semibold text-foreground">Ranking de Vendedores</h3>
             <p className="text-xs text-muted-foreground">
-              {period ? 'Período selecionado' : 'Todos os tempos'}
+              {period ? 'Período seleccionado' : 'Todos los tiempos'}
             </p>
           </div>
         </div>
@@ -117,7 +117,7 @@ export function Leaderboard({ productId, period, maxHeight = "400px" }: Leaderbo
                         {seller.name}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {seller.totalDeals} {seller.totalDeals === 1 ? 'venda' : 'vendas'}
+                        {seller.totalDeals} {seller.totalDeals === 1 ? 'venta' : 'ventas'}
                       </p>
                     </div>
                   </div>
@@ -148,9 +148,9 @@ export function Leaderboard({ productId, period, maxHeight = "400px" }: Leaderbo
         ) : (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <Trophy className="h-12 w-12 text-muted-foreground/40 mb-3" />
-            <h4 className="font-medium text-foreground mb-1">Sem dados ainda</h4>
+            <h4 className="font-medium text-foreground mb-1">Sin datos aún</h4>
             <p className="text-sm text-muted-foreground">
-              O ranking aparecerá quando houver vendas
+              El ranking aparecerá cuando haya ventas
             </p>
           </div>
         )}

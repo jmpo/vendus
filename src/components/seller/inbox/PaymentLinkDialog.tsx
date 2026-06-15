@@ -82,7 +82,7 @@ export function PaymentLinkDialog({
       toast({ title: 'Link de pagamento enviado' });
       onOpenChange(false);
     } catch (e: any) {
-      toast({ title: 'Erro ao enviar', description: e.message, variant: 'destructive' });
+      toast({ title: 'Error al enviar', description: e.message, variant: 'destructive' });
     } finally {
       setSaving(false);
     }

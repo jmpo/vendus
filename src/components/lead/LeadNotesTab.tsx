@@ -18,7 +18,7 @@ import { useUpdateLead } from '@/hooks/useLeads';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 interface LeadNotesTabProps {
   lead: {
@@ -72,9 +72,9 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
         role_label: detectRoleLabel()
       });
       setNoteContent('');
-      toast.success('Nota registrada com sucesso');
+      toast.success('Nota registrada con éxito');
     } catch {
-      toast.error('Erro ao registrar nota');
+      toast.error('Error al registrar la nota');
     }
   };
 
@@ -98,9 +98,9 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
       setTaskDueDate('');
       setTaskAssignee('');
       setIsTaskDialogOpen(false);
-      toast.success('Tarefa criada com sucesso');
+      toast.success('Tarea creada con éxito');
     } catch {
-      toast.error('Erro ao criar tarefa');
+      toast.error('Error al crear la tarea');
     }
   };
 
@@ -112,7 +112,7 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
         await completeTask.mutateAsync(taskId);
       }
     } catch {
-      toast.error('Erro ao atualizar tarefa');
+      toast.error('Error al actualizar la tarea');
     }
   };
 
@@ -122,9 +122,9 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
         id: lead.id,
         metadata: { ...lead.metadata, tags }
       });
-      toast.success('Etiquetas salvas');
+      toast.success('Etiquetas guardadas');
     } catch {
-      toast.error('Erro ao salvar etiquetas');
+      toast.error('Error al guardar las etiquetas');
     }
   };
 
@@ -144,7 +144,7 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
   };
 
   const priorityLabels: Record<string, string> = {
-    low: 'Baixa', medium: 'Média', high: 'Alta', urgent: 'Urgente'
+    low: 'Baja', medium: 'Media', high: 'Alta', urgent: 'Urgente'
   };
 
   return (
@@ -154,12 +154,12 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
         <CardHeader>
           <CardTitle className="text-sm font-medium flex items-center gap-2">
             <Send className="h-4 w-4" />
-            Nova Nota de Atendimento
+            Nueva Nota de Atención
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <Textarea
-            placeholder="Resuma o atendimento com este lead..."
+            placeholder="Resuma la atención con este lead..."
             value={noteContent}
             onChange={(e) => setNoteContent(e.target.value)}
             rows={4}
@@ -187,7 +187,7 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
         <CardHeader>
           <CardTitle className="text-sm font-medium flex items-center gap-2">
             <Clock className="h-4 w-4" />
-            Histórico de Atendimento
+            Historial de Atención
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -197,7 +197,7 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
             </div>
           ) : !notes?.length ? (
             <p className="text-sm text-muted-foreground text-center py-6">
-              Nenhuma nota registrada ainda. Seja o primeiro a documentar o atendimento.
+              Ninguna nota registrada todavía. Sea el primero en documentar la atención.
             </p>
           ) : (
             <div className="space-y-3">
@@ -211,13 +211,13 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
                           {(note.profiles?.full_name || '?').split(' ').map(n => n[0]).join('').slice(0, 2)}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-sm font-medium">{note.profiles?.full_name || 'Usuário'}</span>
+                      <span className="text-sm font-medium">{note.profiles?.full_name || 'Usuario'}</span>
                       {note.role_label && (
                         <Badge variant="secondary" className="text-xs">{note.role_label}</Badge>
                       )}
                     </div>
                     <span className="text-xs text-muted-foreground">
-                      {format(new Date(note.created_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                      {format(new Date(note.created_at), "dd/MM/yyyy 'a las' HH:mm", { locale: es })}
                     </span>
                   </div>
                   <p className="text-sm text-foreground whitespace-pre-wrap">{note.content}</p>
@@ -233,31 +233,31 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
             <ListTodo className="h-4 w-4" />
-            Tarefas deste Lead
+            Tareas de este Lead
           </CardTitle>
           <Dialog open={isTaskDialogOpen} onOpenChange={setIsTaskDialogOpen}>
             <DialogTrigger asChild>
               <Button size="sm" variant="outline" className="gap-1">
-                <Plus className="h-4 w-4" /> Nova Tarefa
+                <Plus className="h-4 w-4" /> Nueva Tarea
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Criar Tarefa para este Lead</DialogTitle>
+                <DialogTitle>Crear Tarea para este Lead</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 pt-2">
                 <div className="space-y-2">
                   <Label>Título *</Label>
                   <Input
-                    placeholder="Ex: Follow-up por WhatsApp"
+                    placeholder="Ej: Seguimiento por WhatsApp"
                     value={taskTitle}
                     onChange={(e) => setTaskTitle(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Descrição</Label>
+                  <Label>Descripción</Label>
                   <Textarea
-                    placeholder="Detalhes da tarefa..."
+                    placeholder="Detalles de la tarea..."
                     value={taskDescription}
                     onChange={(e) => setTaskDescription(e.target.value)}
                     rows={3}
@@ -265,19 +265,19 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Prioridade</Label>
+                    <Label>Prioridad</Label>
                     <Select value={taskPriority} onValueChange={setTaskPriority}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="low">Baixa</SelectItem>
-                        <SelectItem value="medium">Média</SelectItem>
+                        <SelectItem value="low">Baja</SelectItem>
+                        <SelectItem value="medium">Media</SelectItem>
                         <SelectItem value="high">Alta</SelectItem>
                         <SelectItem value="urgent">Urgente</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Data</Label>
+                    <Label>Fecha</Label>
                     <Input
                       type="datetime-local"
                       value={taskDueDate}
@@ -286,12 +286,12 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Atribuir a</Label>
+                  <Label>Asignar a</Label>
                   <Select value={taskAssignee} onValueChange={setTaskAssignee}>
-                    <SelectTrigger><SelectValue placeholder="Eu mesmo" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="A mí mismo" /></SelectTrigger>
                     <SelectContent>
                       {user && (
-                        <SelectItem value={user.id}>Eu mesmo</SelectItem>
+                        <SelectItem value={user.id}>A mí mismo</SelectItem>
                       )}
                       {teamMembers.filter(m => m.id !== user?.id).map(m => (
                         <SelectItem key={m.id} value={m.id}>{m.full_name}</SelectItem>
@@ -305,7 +305,7 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
                   disabled={!taskTitle.trim() || createTask.isPending}
                 >
                   {createTask.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                  Criar Tarefa
+                  Crear Tarea
                 </Button>
               </div>
             </DialogContent>
@@ -318,7 +318,7 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
             </div>
           ) : !leadTasks?.length ? (
             <p className="text-sm text-muted-foreground text-center py-4">
-              Nenhuma tarefa vinculada a este lead.
+              Ninguna tarea vinculada a este lead.
             </p>
           ) : (
             <div className="space-y-2">
@@ -350,7 +350,7 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
                         {task.due_date && (
                           <span className="text-xs text-muted-foreground flex items-center gap-1">
                             <CalendarIcon className="h-3 w-3" />
-                            {format(new Date(task.due_date), 'dd/MM', { locale: ptBR })}
+                            {format(new Date(task.due_date), 'dd/MM', { locale: es })}
                           </span>
                         )}
                         {task.profiles?.full_name && (
@@ -395,12 +395,12 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
                 </button>
               </Badge>
             )) : (
-              <p className="text-sm text-muted-foreground">Nenhuma etiqueta</p>
+              <p className="text-sm text-muted-foreground">Ninguna etiqueta</p>
             )}
           </div>
           <div className="flex gap-2">
             <Input
-              placeholder="Nova etiqueta..."
+              placeholder="Nueva etiqueta..."
               value={newTag}
               onChange={(e) => setNewTag(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddTag(); } }}

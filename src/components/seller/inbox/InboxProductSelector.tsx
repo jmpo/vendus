@@ -40,10 +40,10 @@ export function InboxProductSelector({
     >
       <SelectTrigger className="h-8 w-auto min-w-[180px] max-w-[260px] text-xs gap-1.5 bg-card">
         <Package className="h-3.5 w-3.5 text-primary shrink-0" />
-        <SelectValue placeholder="Todos os produtos" />
+        <SelectValue placeholder="Todos los productos" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">Todos os meus produtos</SelectItem>
+        <SelectItem value="all">Todos mis productos</SelectItem>
         {products.map((product) => (
           <SelectItem key={product.id} value={product.id}>
             {product.name}

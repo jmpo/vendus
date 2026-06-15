@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { format, isSameDay, isToday, isTomorrow, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { Clock, MapPin, User, Package, Trash2, Edit } from 'lucide-react';
 import { CalendarEvent, useDeleteEvent } from '@/hooks/useCalendarEvents';
 import { Button } from '@/components/ui/button';
@@ -25,11 +25,11 @@ interface CalendarListViewProps {
 }
 
 const EVENT_TYPE_LABELS: Record<string, { label: string; emoji: string }> = {
-  meeting: { label: 'Reunião', emoji: '🤝' },
-  call: { label: 'Ligação', emoji: '📞' },
+  meeting: { label: 'Reunión', emoji: '🤝' },
+  call: { label: 'Llamada', emoji: '📞' },
   demo: { label: 'Demo', emoji: '🎯' },
   follow_up: { label: 'Follow-up', emoji: '📋' },
-  other: { label: 'Outro', emoji: '📌' },
+  other: { label: 'Otro', emoji: '📌' },
 };
 
 export function CalendarListView({ events, onEventClick }: CalendarListViewProps) {
@@ -59,9 +59,9 @@ export function CalendarListView({ events, onEventClick }: CalendarListViewProps
 
   const formatDateHeader = (dateStr: string) => {
     const date = parseISO(dateStr);
-    if (isToday(date)) return 'Hoje';
-    if (isTomorrow(date)) return 'Amanhã';
-    return format(date, "EEEE, d 'de' MMMM", { locale: ptBR });
+    if (isToday(date)) return 'Hoy';
+    if (isTomorrow(date)) return 'Mañana';
+    return format(date, "EEEE, d 'de' MMMM", { locale: es });
   };
 
   const sortedDates = Object.keys(groupedEvents).sort();
@@ -70,9 +70,9 @@ export function CalendarListView({ events, onEventClick }: CalendarListViewProps
     return (
       <div className="bg-card rounded-lg border p-8 text-center">
         <div className="text-4xl mb-3">📅</div>
-        <h3 className="font-medium text-lg">Nenhum evento encontrado</h3>
+        <h3 className="font-medium text-lg">No se encontraron eventos</h3>
         <p className="text-sm text-muted-foreground">
-          Não há eventos agendados para este período.
+          No hay eventos programados para este periodo.
         </p>
       </div>
     );
@@ -177,9 +177,9 @@ export function CalendarListView({ events, onEventClick }: CalendarListViewProps
                           </AlertDialogTrigger>
                           <AlertDialogContent onClick={(e) => e.stopPropagation()}>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Excluir evento?</AlertDialogTitle>
+                              <AlertDialogTitle>¿Eliminar evento?</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Esta ação não pode ser desfeita. O evento "{event.title}" será removido permanentemente.
+                                Esta acción no se puede deshacer. El evento "{event.title}" será eliminado permanentemente.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

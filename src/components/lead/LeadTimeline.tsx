@@ -9,7 +9,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
@@ -31,10 +31,10 @@ const channelIcons: Record<string, React.ReactNode> = {
 const channelLabels: Record<string, string> = {
   whatsapp: 'WhatsApp',
   email: 'Email',
-  phone: 'Ligação',
+  phone: 'Llamada',
   instagram: 'Instagram',
   telegram: 'Telegram',
-  other: 'Outro',
+  other: 'Otro',
 };
 
 export function LeadTimeline({ leadId, maxHeight = "400px" }: LeadTimelineProps) {
@@ -52,8 +52,8 @@ export function LeadTimeline({ leadId, maxHeight = "400px" }: LeadTimelineProps)
     return (
       <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
         <MessageSquare className="h-10 w-10 mb-3 opacity-40" />
-        <p className="text-sm">Nenhuma interação registrada</p>
-        <p className="text-xs mt-1">Adicione notas ou registre contatos</p>
+        <p className="text-sm">Ninguna interacción registrada</p>
+        <p className="text-xs mt-1">Agregue notas o registre contactos</p>
       </div>
     );
   }
@@ -84,7 +84,7 @@ export function LeadTimeline({ leadId, maxHeight = "400px" }: LeadTimelineProps)
                     <div className="flex items-center gap-2 text-sm">
                       <ArrowRight className="h-4 w-4 text-primary" />
                       <span className="text-foreground font-medium">
-                        Movido para
+                        Movido a
                       </span>
                       <Badge 
                         variant="secondary" 
@@ -100,7 +100,7 @@ export function LeadTimeline({ leadId, maxHeight = "400px" }: LeadTimelineProps)
                     </div>
                     {item.daysInStage && (
                       <p className="text-xs text-muted-foreground mt-1">
-                        Ficou {item.daysInStage} dia(s) no stage anterior
+                        Permaneció {item.daysInStage} día(s) en la etapa anterior
                       </p>
                     )}
                   </div>
@@ -120,12 +120,12 @@ export function LeadTimeline({ leadId, maxHeight = "400px" }: LeadTimelineProps)
                           {channelLabels[item.channel]}
                         </span>
                         <Badge variant="outline" className="text-xs">
-                          {item.direction === 'inbound' ? 'Recebido' : 'Enviado'}
+                          {item.direction === 'inbound' ? 'Recibido' : 'Enviado'}
                         </Badge>
                       </div>
                       {item.cadenceDay && (
                         <Badge variant="secondary" className="text-xs bg-primary/10 text-primary">
-                          Dia {item.cadenceDay}
+                          Día {item.cadenceDay}
                         </Badge>
                       )}
                     </div>
@@ -136,7 +136,7 @@ export function LeadTimeline({ leadId, maxHeight = "400px" }: LeadTimelineProps)
                 )}
                 
                 <p className="text-xs text-muted-foreground mt-1">
-                  {format(new Date(item.timestamp), "dd MMM yyyy 'às' HH:mm", { locale: ptBR })}
+                  {format(new Date(item.timestamp), "dd MMM yyyy 'a las' HH:mm", { locale: es })}
                 </p>
               </div>
             </div>

@@ -309,7 +309,7 @@ export function AdminDashboard() {
                 <DollarSign className="h-5 w-5 text-warning" />
               </div>
               <div>
-                <p className="font-medium text-foreground">Comissões Pendentes</p>
+                <p className="font-medium text-foreground">Comisiones Pendentes</p>
                 <p className="text-sm text-muted-foreground">
                   {kpis?.pendingCommissionsCount} comissões aguardando aprovação
                 </p>

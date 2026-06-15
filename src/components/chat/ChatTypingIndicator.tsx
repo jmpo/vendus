@@ -10,7 +10,7 @@ interface ChatTypingIndicatorProps {
 export function ChatTypingIndicator({
   primaryColor,
   agentAvatar,
-  agentName = 'Assistente',
+  agentName = 'Asistente',
 }: ChatTypingIndicatorProps) {
   return (
     <motion.div

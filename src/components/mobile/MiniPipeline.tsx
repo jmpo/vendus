@@ -65,7 +65,7 @@ export function MiniPipeline({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <TrendingUp size={16} className="text-primary" />
-            <h3 className="font-semibold text-sm text-foreground">Pipeline Atual</h3>
+            <h3 className="font-semibold text-sm text-foreground">Pipeline Actual</h3>
           </div>
           {onViewFull && (
             <Button
@@ -127,7 +127,7 @@ export function MiniPipeline({
           >
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">
-                Valor Total no Pipeline
+                Valor Total en el Pipeline
               </span>
               <span className="text-sm font-bold text-primary">
                 {formatCurrency(totalValue)}

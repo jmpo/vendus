@@ -128,7 +128,7 @@ export function StageValueManager() {
                   <TableHead>Etapa</TableHead>
                   <TableHead>Cor</TableHead>
                   <TableHead>Valor Esperado (R$)</TableHead>
-                  <TableHead>Probabilidade (%)</TableHead>
+                  <TableHead>Probabilidad (%)</TableHead>
                   <TableHead>Valor Ponderado</TableHead>
                 </TableRow>
               </TableHeader>
