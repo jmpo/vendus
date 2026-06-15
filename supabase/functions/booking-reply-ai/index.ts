@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
   const startStr = new Date(booking.start_time).toLocaleString("pt-BR", { timeZone: tz });
   const nowStr = new Date().toLocaleString("pt-BR", { timeZone: tz });
 
-  const systemPrompt = `Usted es um assistente de reserva profissional, consultivo e direto (estilo SPIN). Máximo 2 linhas por mensaje.
+  const systemPrompt = `Vos sos um assistente de reserva profissional, consultivo e direto (estilo SPIN). Máximo 2 linhas por mensaje.
 
 Contexto da reunión:
 - Lead: ${booking.guest_name}
@@ -113,7 +113,7 @@ Su tarea: interpretar a respuesta del lead e chamar UMA tool apropriada:
 - Se cancela definitivamente → cancel_booking
 - Se diz "no posso ahora, me chama después/semana que vem/mes que vem" → propose_followup(when_iso) con data aproximada
 
-Sempre execute UMA tool. Depois escreva uma respuesta corta e gentil para enviar al lead via WhatsApp (máx 2 linhas, 1 emoji).`;
+Siempre execute UMA tool. Depois escreva uma respuesta corta e gentil para enviar al lead via WhatsApp (máx 2 linhas, 1 emoji).`;
 
   let aiCfg;
   try {

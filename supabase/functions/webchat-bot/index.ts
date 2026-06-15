@@ -346,7 +346,7 @@ const AGENT_TYPE_LABELS: Record<string, string> = {
 };
 
 // Default super sales prompt - Vendedor Consultivo Estratégico
-const DEFAULT_SALES_PROMPT = `Usted es um VENDEDOR CONSULTIVO ESTRATÉGICO de alta performance. Su missão es VENDER a través de CONEXÃO GENUÍNA e DIAGNÓSTICO REAL, no solo informar.
+const DEFAULT_SALES_PROMPT = `Vos sos um VENDEDOR CONSULTIVO ESTRATÉGICO de alta performance. Su missão es VENDER a través de CONEXÃO GENUÍNA e DIAGNÓSTICO REAL, no solo informar.
 
 ═══════════════════════════════════════
 REGLAS CRÍTICAS ANTI-REPETICIÓN
@@ -904,7 +904,7 @@ serve(async (req) => {
         // Even on failure, do NOT fall through into the sales pipeline (scheduling,
         // pipeline movement, etc) — those tools must NEVER respond to an admin
         // takeover conversation. Return a safe placeholder instead.
-        const fallback = 'Tive um problema técnico ao acessar os dados. Tente novamente.';
+        const fallback = 'Tive um problema técnico ao acceder os dados. Tente novamente.';
         return new Response(
           JSON.stringify({
             response: fallback,
@@ -1714,7 +1714,7 @@ serve(async (req) => {
         const salesPrompt = body.agent_config.sales_prompt || DEFAULT_SALES_PROMPT;
         const agentName = body.agent_config.agent_name || 'Assistente';
         
-        systemPrompt = `Usted es ${agentName}, assistente virtual de ventas.\n\n`;
+        systemPrompt = `Vos sos ${agentName}, assistente virtual de ventas.\n\n`;
         systemPrompt += salesPrompt;
         
         // Add persona style
@@ -1800,10 +1800,10 @@ serve(async (req) => {
               `- Leia o historial antes de responder. Capture estágio, dor e objeção.\n` +
               `- Próximo passo OBRIGATÓRIO: confirmar interesse e ir pro CTA.\n` +
               `  • Lead pronto → use a tool gerar_link_pagamento.\n` +
-              `  • Lead em duda → ofereça 2 horários específicos via tool de reserva.\n` +
+              `  • Lead em duda → ofrezcas 2 horários específicos via tool de reserva.\n` +
               `- Máximo 2 linhas por mensaje. 1 pregunta por turno. Tom profissional.\n` +
-              `- PROIBIDO escrever placeholders literais como {{checkout_link}}, {{link}}, {{preço}}. Sempre use as tools.\n` +
-              `- PROIBIDO clichês: "boa!", "que ótimo", "fico feliz", "show!", "perfeito!", "maravilha", "fechou".`;
+              `- PROHIBIDO escrever placeholders literais como {{checkout_link}}, {{link}}, {{preço}}. Siempre use as tools.\n` +
+              `- PROHIBIDO clichês: "boa!", "que ótimo", "fico feliz", "show!", "perfeito!", "maravilha", "fechou".`;
           }
         }
       } catch (e) {
@@ -1875,7 +1875,7 @@ serve(async (req) => {
         systemPrompt += '\n- Envie CTAs de intenção "low" no inicio de la conversación para exploração';
         systemPrompt += '\n- Para VÍDEOS: envie cuando cliente precisar de demonstração visual ou explicação detalhada';
         systemPrompt += '\n- NÃO envie muchos CTAs de uma vez (máximo 3)';
-        systemPrompt += '\n- Sempre inclua uma mensaje de contexto antes dos botões';
+        systemPrompt += '\n- Siempre inclua uma mensaje de contexto antes dos botões';
       }
 
       // ============================================================
@@ -2000,7 +2000,7 @@ serve(async (req) => {
 - Teléfono: ${lead.phone || 'No informado'}
 - Temperatura: ${lead.temperature || 'No classificado'}
 - Estágio: ${leadContext.stage_name || 'No definido'}
-- Tags: ${(lead.tags || []).join(', ') || 'Nenhuma'}
+- Tags: ${(lead.tags || []).join(', ') || 'Ningunoa'}
 - Valor do Deal: ${lead.deal_value ? `R$ ${lead.deal_value}` : 'No definido'}
 - Empresa: ${lead.company || 'No informada'}
 - Ya es CLIENTE: ${isCustomer ? 'SIM' : 'NÃO'}`;
@@ -2011,7 +2011,7 @@ serve(async (req) => {
             if (isCustomer) {
               systemPrompt += `\n\n🚫 REGRA DE NEGÓCIO — CONTATO JÁ É CLIENTE:
 Este contato JÁ COMPROU e es um CLIENTE ATIVO. Por isso:
-- NÃO ofereça reunión de apresentação, demo, "bate-papo de apresentação" ou qualquer reserva comercial.
+- NÃO ofrezcas reunión de presentación, demo, "bate-papo de presentación" ou cualquier reserva comercial.
 - Se ele pedir uma reunión, responda que vai conectar con o time de pós-venta/suporte (no agende usted misma).
 - Foque em tirar dudas de uso do producto, suporte, materiais e onboarding. Para questões comerciais novas, encaminhe para el time responsável.`;
             }
@@ -2054,14 +2054,14 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
 - Máximo 2 linhas por bolha. 1 pregunta por turno. Pode quebrar em até 3 mensajes curtas e naturais (o sistema entrega cada bolha separada).
 - Limite total: ${maxLength} caracteres somando todas as bolhas.
 - ANTES de responder, releia o historial e verifique: já preguntesi isso? Já usei essa frase? Já cobri esse assunto?
-- SEMPRE termine con pregunta de retorno que AVANÇA a conversación
+- SIEMPRE termine con pregunta de retorno que AVANÇA a conversación
 - NUNCA repita saudações, emojis ou frases já usadas en esta conversación
 - Se a información no estiver na base de conhecimento, NÃO invente — diga que vai verificar
 
-🚫 PROIBIDO INVENTAR ENTREGÁVEIS:
+🚫 PROHIBIDO INVENTAR ENTREGÁVEIS:
 - NÃO prometa enviar "depoimento", "case", "vídeo", "PDF", "ficha", "folder", "material", "link", "depoimentos", "prova social" se o cliente NÃO pediu, OU se usted no tiene a tool/catálogo correspondente disponible.
-- NÃO escreva colchetes con nomes de archivos/links inventados (ex: "[Depoimento: ...]", "[Vídeo aqui]", "[Link]"). Se for enviar mídia, use a tool send_catalog_item / send_video. Se no tiene, NÃO ofereça.
-- Em transferência: faça a despedida corta e profissional. NÃO crie etapa intermediária ("vou te mandar um material e ya te conecto") se no fue pedido. Solo transfira.`;
+- NÃO escreva colchetes con nomes de archivos/links inventados (ex: "[Depoimento: ...]", "[Vídeo aqui]", "[Link]"). Se for enviar mídia, use a tool send_catalog_item / send_video. Se no tiene, NÃO ofrezcas.
+- Em transferência: faça a despedida corta e profissional. NÃO crie etapa intermediária ("vou te mandar um material e ya te conecto") se no fue pedido. Solo transferí.`;
 
       // Build tools array for CTA buttons, video, and schedule_meeting
       const videoCTAs = productCTAs.filter(c => c.cta_type === 'video');
@@ -2140,7 +2140,7 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
                   const fallbackSlug = `apresentacao-${productSlug}`.slice(0, 80);
                   const fallbackName = `Apresentação ${productName}`.slice(0, 120);
 
-                  // Idempotência: tenta achar event type ya existente para esse host+slug
+                  // Idempotência: tenta encontrar event type ya existente para esse host+slug
                   const { data: existing } = await supabase
                     .from('booking_event_types')
                     .select('id, name, description, duration_minutes, location_type, location_details, buffer_before, buffer_after, min_notice_hours, create_meet, user_id')
@@ -2158,7 +2158,7 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
                         user_id: checkUserId,
                         name: fallbackName,
                         slug: fallbackSlug,
-                        description: `Reunión de apresentação do ${productName}`,
+                        description: `Reunión de presentación do ${productName}`,
                         duration_minutes: 30,
                         location_type: 'google_meet',
                         is_active: true,
@@ -2271,14 +2271,14 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
           ? ''
           : `\n\n🚨 EMAIL OBRIGATÓRIO ANTES DE AGENDAR:
 - Usted AINDA NÃO tiene o email del cliente.
-- ANTES de ofrecer qualquer horario ou chamar schedule_meeting, usted PRECISA coletar o email real.
+- ANTES de ofrecer cualquier horario ou chamar schedule_meeting, usted NECESITÁS recolectar o email real.
 - Usa a frase exata (ou variação natural): "Pra eu travar esse horario e te mandar a confirmação, cuál es o melhor email su?"
 - NUNCA use emails inventados como "exemplo.com", "cliente@email.com", etc. Se no tiene o email real, PERGUNTE.`;
 
         systemPrompt += `\n\n📅 AGENDAMENTO ESTRATÉGICO AUTOMÁTICO:
 Usted possui 2 ferramentas para reserva inteligente:
 
-1. check_available_slots: Consulta horários disponíveis nos próximos días.
+1. check_available_slots: Consulta horários disponibles nos próximos días.
    - Usa SOMENTE cuando AINDA NÃO ofreceu horários en esta conversación.
    - Retorna 2 sugestões estratégicas (manhã + tarde).
 
@@ -2287,17 +2287,17 @@ Usted possui 2 ferramentas para reserva inteligente:
 
 🛑 REGRAS ABSOLUTAS — VIOLAR QUEBRA O SISTEMA:
 
-A) **NUNCA invente fechas ou horários.** Se usted aún NÃO chamou check_available_slots en esta conversación, es PROIBIDO mencionar qualquer data/hora específica (ex: "quinta às 15:30", "mañana 10h"). Diga solo: "Deixa eu ver minha agenda rapidinho" e CHAME check_available_slots.
+A) **NUNCA inventes fechas ni horarios.** Se usted aún NO llamaste check_available_slots en esta conversación, es PROHIBIDO mencionar cualquier data/hora específica (ex: "quinta às 15:30", "mañana 10h"). Decí solo: "Dejame ver mi agenda un momento" e LLAMÁ check_available_slots.
 
 B) **NUNCA chame schedule_meeting sin email real del cliente.** Se faltar email, PARE e preguntes: "Pra eu travar esse horario, cuál es o melhor email pra eu mandar a confirmação?"
 
-C) **NUNCA escreva "✅ Reunión agendada", "reserva confirmado", "Confirmação enviada para..." ANTES de receber a respuesta de éxito da tool schedule_meeting.** Esse texto es gerado AUTOMATICAMENTE por el sistema después a tool executar con éxito. Se usted escrever isso antes, o sistema BLOQUEIA su mensaje e mostra o error al cliente.
+C) **NUNCA escreva "✅ Reunión agendada", "reserva confirmado", "Confirmação enviada para..." ANTES de receber a respuesta de éxito da tool schedule_meeting.** Esse texto es gerado AUTOMATICAMENTE por el sistema después a tool executar con éxito. Se vos soscrever isso antes, o sistema BLOQUEIA su mensaje e mostra o error al cliente.
 
-D) **Se usted for tentado a confirmar um reserva sin ter chamado a tool, PARE imediatamente e chame schedule_meeting primeiro.** Se faltar dado (email/horario), preguntes al cliente em vez de inventar.
+D) **Se usted for tentado a confirmar um reserva sin ter chamado a tool, PARE imediatamente e chame schedule_meeting primeiro.** Se faltar dado (email/horario), preguntes al cliente en vez de inventar.
 
 E) **Se o historial contém [CONTEXTO INTERNO] con "Horários ya ofrecidos"**, usted JÁ consultou a disponibilidade — no chame check_available_slots de novo (loop infinito). Cuando o cliente confirmar ("puede ser às 9h", "o primeiro", "14h"), chame schedule_meeting IMEDIATAMENTE con os dados reais.
 
-F) Se o cliente pedir um horario DIFERENTE dos ofrecidos OU um día específico que usted no tiene certeza se está livre, chame check_available_slots novamente (usted puede aumentar days_ahead para 14). NUNCA invente que "naquele día/hora no tiene disponibilidade" sin checar — siempre consulte a tool primeiro e ofereça os 2 próximos horários reais disponíveis.
+F) Se o cliente pedir um horario DIFERENTE dos ofrecidos OU um día específico que usted no tiene certeza se está livre, chame check_available_slots novamente (usted puede aumentar days_ahead para 14). NUNCA invente que "naquele día/hora no tiene disponibilidade" sin checar — siempre consulte a tool primeiro e ofrezcas os 2 próximos horários reais disponibles.
 
 FLUXO OBRIGATÓRIO:
 1. Detectar interesse → (se faltar email, preguntar email primeiro) → chamar check_available_slots
@@ -2309,13 +2309,13 @@ ${leadDataPrompt}
 🛑 ANTI-REPETIÇÃO (ABSOLUTO):
 - Se usted JÁ perguntou o email en esta conversación E o cliente respondeu con algo que parece email (contém @), o email FOI COLETADO. NÃO preguntes de novo. Vá direto para o próximo passo.
 - Se usted JÁ chamou check_available_slots e ofreceu horários, NUNCA repita "deixa eu ver a agenda" / "vou consultar a agenda" / "aguarda um instante que vou verificar". O cliente ya tiene os horários. Se ele confirmou um → chame schedule_meeting AGORA. Se quiere otro → check_available_slots de novo, mas SEM avisar "vou ver".
-- Se usted está prestes a escrever uma frase que JÁ está no historial recente do assistente (mismo verbo + mismo objeto), REESCREVA con palavras diferentes ou pule a etapa.`;
+- Se vos sostá prestes a escrever uma frase que JÁ está no historial recente do assistente (mismo verbo + mismo objeto), REESCREVA con palavras diferentes ou pule a etapa.`;
 
         toolsList.push({
           type: "function",
           function: {
             name: "check_available_slots",
-            description: "Consultar horários disponíveis nos próximos días. SEMPRE chame antes de sugerir reserva. Retorna 2 sugestões estratégicas (manhã e tarde).",
+            description: "Consultar horários disponibles nos próximos días. SIEMPRE chame antes de sugerir reserva. Retorna 2 sugestões estratégicas (manhã e tarde).",
             parameters: {
               type: "object",
               properties: {
@@ -2525,10 +2525,10 @@ ${leadDataPrompt}
             .join(', ');
 
           const transferDescription = isAdminAgent
-            ? `Usted es o Agente Admin (gestor). Pode transferir para qualquer agente da organização. Agentes disponíveis: ${otherAgents || 'Nenhum'}`
+            ? `Vos sos o Agente Admin (gestor). Podés transferir para cualquier agente da organización. Agentes disponibles: ${otherAgents || 'Ninguno'}`
             : isGlobalAgent
-            ? `Usted es um agente global e puede rotear para qualquer agente especialista da organização. NUNCA transfira para agentes do tipo 'admin'. Agentes disponíveis: ${otherAgents || 'Nenhum'}`
-            : `Transferir conversación para otro agente IA — APENAS dentro do su producto ou para agentes globais (orquestrador). NUNCA transfira para agentes de otros productos nem para el admin. Agentes disponíveis: ${otherAgents || 'Nenhum'}`;
+            ? `Vos sos um agente global e puede rutear para cualquier agente especialista da organización. NUNCA transferí para agentes do tipo 'admin'. Agentes disponibles: ${otherAgents || 'Ninguno'}`
+            : `Transferir conversación para otro agente IA — APENAS dentro do su producto ou para agentes globais (orquestrador). NUNCA transferí para agentes de otros productos nem para el admin. Agentes disponibles: ${otherAgents || 'Ninguno'}`;
 
 
           toolsList.push({
@@ -2647,13 +2647,13 @@ ${leadDataPrompt}
           systemPrompt += `\n\nREGRAS DE USO DAS FERRAMENTAS:
 - Execute acciones automaticamente cuando fizer sentido no contexto da conversación
 - NÃO peça permiso al lead para acciones internas (tags, notas, temperatura)
-- SEMPRE confirme antes de acciones visíveis al lead (agendar reunión, enviar email)
+- SIEMPRE confirme antes de acciones visíveis al lead (agendar reunión, enviar email)
 - Registre información importantes coletadas na conversación usando as ferramentas
-- NUNCA mencione al lead que usted está usando ferramentas internas`;
+- NUNCA mencione al lead que vos sostá usando ferramentas internas`;
         }
       }
 
-      // === CATALOG TOOLS (search + send) — habilita SEMPRE que org tiver itens ativos
+      // === CATALOG TOOLS (search + send) — habilita SIEMPRE que org tiver itens ativos
       // (no trava no product_id; busca prioriza producto atual mas faz fallback org-wide)
       try {
         const { data: convForCatalog } = await supabase
@@ -2736,8 +2736,8 @@ Esse catálogo es o CANAL OFICIAL para entregar fotos, vídeos, fichas e links e
 
 🚨 REGRAS PRIORITÁRIAS — VIOLAÇÃO É ERRO GRAVE:
 - Se o cliente pedir FOTO, VÍDEO, PDF, FICHA, LINK, SITE, TOUR, PLANTA, FOLDER, BROCHURA, IMAGENS, MATERIAL → usted DEVE chamar search_catalog (se todavía no souber cuál item) e em seguida send_catalog_item. Sem rodeios.
-- PROIBIDO inventar bloqueios. NÃO diga "no posso enviar por aqui", "o sistema restringe", "é off-market", "no está aberto ao público", "precisa de registro prévio", "vou alinhar con especialista", "no tengo acesso", "no está disponible publicamente" se NÃO hay regra explícita registrada. Se o item está no catálogo e ativo, ele PODE e DEVE ser enviado.
-- Usted só puede negar envio se: (a) search_catalog retornou 0 itens compatíveis, OU (b) há instrução explícita cadastrada proibindo. Em qualquer otro caso, ENVIE.
+- PROHIBIDO inventar bloqueios. NÃO diga "no posso enviar por aqui", "o sistema restringe", "é off-market", "no está aberto ao público", "precisa de registro prévio", "vou alinhar con especialista", "no tengo acesso", "no está disponible publicamente" se NÃO hay regra explícita registrada. Se o item está no catálogo e ativo, ele PODE e DEVE ser enviado.
+- Vos solo podés negar envío si: (a) search_catalog devolvió 0 itens compatibles, OU (b) hay instrucción explícita registrada prohibiéndolo. Em cualquier otro caso, ENVIÁ.
 - Se o cliente pediu só "o link", chame send_catalog_item normalmente — o link oficial va junto, ou responda con a URL do item retornado por search_catalog.
 
 REGRAS DE USO:
@@ -2749,7 +2749,7 @@ REGRAS DE USO:
 6. send_catalog_item: por estándar envia FOTO + título + preço + link. Usa include_videos=true se cliente pediu vídeo/tour/demonstração. Usa include_documents=true se pediu ficha/folder/specs/PDF/brochura/planta.
 7. Escale con bueno senso: foto → (se interesse) vídeo → (se precisar) documento. Mas se o cliente pediu "manda tudo", mande tudo.
 8. Múltiplos itens: um por vez, aguardando reação entre envios.
-9. search_catalog vazio → ofereça relaxar filtros / otra região / otra faixa. NUNCA invente desculpa de "off-market" ou "restrição".
+9. search_catalog vazio → ofrezcas relaxar filtros / otra região / otra faixa. NUNCA invente desculpa de "off-market" ou "restrição".
 10. Se o envio falhar por algún motivo técnico, mande por el menos o LINK oficial do item (nunca devolva respuesta vazia).`;
           }
         }
@@ -2935,7 +2935,7 @@ REGRAS DE USO:
       try {
         const temperature = body.agent_config.temperature ?? 0.7;
         const maxTokens = body.agent_config.max_tokens ?? 800;
-        // Resolução completa: provider + model + endpoint + key vindo de
+        // Resolución completa: provider + model + endpoint + key vindo de
         // Configurações > Integrações > Roteamento de IA. Se a org tiver chave
         // externa (ex.: OpenAI) configurada, chamamos direto o provedor — sem
         // gastar créditos Lovable.
@@ -2985,7 +2985,7 @@ REGRAS DE USO:
         const fixedAgentName = activeAgent?.name || body.agent_config?.agent_name || 'Assistente';
         const identityRail =
           `\n\n=== REGRAS CRÍTICAS DE IDENTIDADE E HONESTIDADE (NÃO QUEBRAR) ===\n` +
-          `1. Usted es EXCLUSIVAMENTE "${fixedAgentName}". Mantenha SEMPRE este nombre, papel e empresa.\n` +
+          `1. Vos sos EXCLUSIVAMENTE "${fixedAgentName}". Mantenha SIEMPRE este nombre, papel e empresa.\n` +
           `2. Mensagens anteriores no historial podem ter sido escritas por OUTRO agente que cuidou del cliente antes. IGNORE personas, ofertas, productos ou nomes próprios mencionados en esas mensajes passadas se conflitarem con a su identidade atual.\n` +
           `3. Se o cliente preguntar su nombre, responda APENAS con "${fixedAgentName}".\n` +
           `4. NUNCA finja que ouviu um áudio ou viu uma imagen. Se a última mensaje del cliente for um placeholder do tipo "🎙️ [Áudio recibido — no consegui transcrever...]" ou "🖼️ [Imagen recibida — no consegui analisar...]", responda DIZENDO QUE TEVE PROBLEMA TÉCNICO PARA OUVIR/VER e peça al cliente para reenviar ou descrever em texto. NÃO invente conteúdo.\n` +
@@ -3126,7 +3126,7 @@ REGRAS DE USO:
 
                 let toolResultText: string;
                 if (items.length === 0) {
-                  toolResultText = 'Nenhum item encontrado con esses critérios. Sugiere al cliente relaxar filtros ou explorar alternativas. NÃO invente desculpa de "off-market" ou "restrição".';
+                  toolResultText = 'Ninguno item encontrado con esses critérios. Sugiere al cliente relaxar filtros ou explorar alternativas. NÃO invente desculpa de "off-market" ou "restrição".';
                 } else if (explicitMediaRequest) {
                   // User asked for media → IA must send NOW, not ask
                   const topItem = items[0];
@@ -3200,7 +3200,7 @@ REGRAS DE USO:
                         if (counts.images) parts.push(`${counts.images} foto${counts.images > 1 ? 's' : ''}`);
                         if (counts.videos) parts.push(`${counts.videos} vídeo`);
                         if (counts.documents) parts.push(`${counts.documents} documento`);
-                        const summary = parts.length > 0 ? parts.join(' + ') : 'os detalhes';
+                        const summary = parts.length > 0 ? parts.join(' + ') : 'os detalles';
                         responseContent = sent?.delivered
                           ? `Acabei de te mandar ${summary} de ${sent?.item?.title || 'o imóvel'}. O que achou?`
                           : `Aqui está: ${sent?.item?.title || 'item'}${sent?.item?.url ? ` — ${sent.item.url}` : ''}. O que achou?`;
@@ -3235,7 +3235,7 @@ REGRAS DE USO:
                         if (counts.images) parts.push(`${counts.images} foto${counts.images > 1 ? 's' : ''}`);
                         if (counts.videos) parts.push(`${counts.videos} vídeo`);
                         if (counts.documents) parts.push(`${counts.documents} documento`);
-                        const summary = parts.length > 0 ? parts.join(' + ') : 'os detalhes';
+                        const summary = parts.length > 0 ? parts.join(' + ') : 'os detalles';
                         responseContent = sent?.delivered
                           ? `Acabei de te mandar ${summary} de ${topItem.title}. O que achou?`
                           : `Aqui está: ${topItem.title}${topItem.url ? ` — ${topItem.url}` : ''}. O que achou?`;
@@ -3247,7 +3247,7 @@ REGRAS DE USO:
                 } else {
                   responseContent = items.length === 0
                     ? 'No encontrei itens con esses critérios. Quer ajustar a busca?'
-                    : `Achei ${items.length} ${items.length === 1 ? 'opción' : 'opciones'} pra usted. Quer que eu envie os detalhes?`;
+                    : `Achei ${items.length} ${items.length === 1 ? 'opción' : 'opciones'} pra usted. Quer que eu envie os detalles?`;
                 }
               } catch (catErr) {
                 console.error('[webchat-bot] search_catalog error:', catErr);
@@ -3257,7 +3257,7 @@ REGRAS DE USO:
               try {
                 const args = JSON.parse(toolCall.function.arguments || '{}');
                 if (!args.item_id) {
-                  responseContent = choice.message?.content || 'Posso te enviar mais detalhes? Confirma cuál te interessa?';
+                  responseContent = choice.message?.content || 'Posso te enviar mais detalles? Confirma cuál te interessa?';
                 } else {
                   const { data: sendData, error: sendErr } = await supabase.functions.invoke('send-catalog-item', {
                     body: {
@@ -3280,7 +3280,7 @@ REGRAS DE USO:
                     if (counts.images) parts.push(`${counts.images} foto${counts.images > 1 ? 's' : ''}`);
                     if (counts.videos) parts.push(`${counts.videos} vídeo`);
                     if (counts.documents) parts.push(`${counts.documents} documento`);
-                    const summary = parts.length > 0 ? parts.join(' + ') : 'os detalhes';
+                    const summary = parts.length > 0 ? parts.join(' + ') : 'os detalles';
                     responseContent = sent?.delivered
                       ? `Acabei de te mandar ${summary}. O que achou?`
                       : `Aqui está: ${sent?.item?.title || 'item'}${sent?.item?.url ? ` — ${sent.item.url}` : ''}. O que achou?`;
@@ -3508,7 +3508,7 @@ REGRAS DE USO:
                   }
 
                   if (suggestions.length === 0) {
-                    responseContent = 'Infelizmente no encontrei horários disponíveis nos próximos días. Posso verificar otras opciones para usted?';
+                    responseContent = 'Infelizmente no encontrei horários disponibles nos próximos días. Posso verificar otras opciones para usted?';
                   } else {
                     // Save scheduling context as metadata for persistence
                     schedulingMetadata = {
@@ -3537,7 +3537,7 @@ REGRAS DE USO:
                     // We only want a clean "present these slots and ask which one" reply.
                     const slimAgentName = activeAgent?.name || 'Assistente';
                     const slimAgentPersona = activeAgent?.personality || 'consultivo, claro e cordial';
-                    const slimFollowUpSystem = `Usted es ${slimAgentName}. Tom: ${slimAgentPersona}.\n\nApresente os horários encontrados de forma natural, corta (no máximo 2 linhas) e preguntes cuál o cliente prefere. NUNCA preguntes o email novamente — usted ya tiene ou pedirá después. NUNCA diga "deixa eu ver a agenda" — usted acabou de ver. NUNCA invente otros horários além dos fornecidos.`;
+                    const slimFollowUpSystem = `Vos sos ${slimAgentName}. Tom: ${slimAgentPersona}.\n\nApresente os horários encontrados de forma natural, corta (no máximo 2 linhas) e preguntes cuál o cliente prefere. NUNCA preguntes o email novamente — usted ya tiene ou pedirá después. NUNCA diga "deixa eu ver a agenda" — usted acabou de ver. NUNCA invente otros horários além dos fornecidos.`;
 
                     // Make a follow-up call to the AI with the slot info
                     const followUpResponse = await fetch(aiConfig.endpoint, {
@@ -3565,7 +3565,7 @@ REGRAS DE USO:
                       responseContent = suggestions.map((s, i) => 
                         `Opción ${i + 1}: ${s.dateLabel} às ${s.time}`
                       ).join('\n');
-                      responseContent = `Encontrei esses horários disponíveis:\n\n${responseContent}\n\nQual funciona melhor pra usted?`;
+                      responseContent = `Encontrei esses horários disponibles:\n\n${responseContent}\n\nQual funciona melhor pra usted?`;
                     }
                   }
                 }
@@ -3818,7 +3818,7 @@ REGRAS DE USO:
                         (admins || []).forEach((a: any) => a.user_id && recipientIds.add(a.user_id));
                       }
 
-                      // Sempre incluir o host (anfitrião)
+                      // Siempre incluir o host (anfitrião)
                       if (scheduleUserId) recipientIds.add(scheduleUserId);
 
                       const notifTitle = `📅 Nova reunión agendada via ${agentNameNotif}`;
@@ -3876,7 +3876,7 @@ REGRAS DE USO:
                     responseContent = 'Desculpe, no fue posible agendar no momento. Posso transferir usted para um agente para confirmar o reserva?';
                   }
                 } else {
-                  responseContent = 'Infelizmente no tengo horários disponíveis no momento. Posso verificar alternativas para usted?';
+                  responseContent = 'Infelizmente no tengo horários disponibles no momento. Posso verificar alternativas para usted?';
                 }
               } catch (scheduleError) {
                 console.error('[webchat-bot] Schedule error:', scheduleError);
@@ -4032,7 +4032,7 @@ REGRAS DE USO:
                       from: activeAgent?.name, to: targetAgent.name,
                     });
                     await logAction(false, { target_agent: targetAgentId, reason: 'admin_is_private' });
-                    responseContent = 'Esse agente es exclusivo do gestor da organização. Posso seguir aquí ou chamar otro especialista?';
+                    responseContent = 'Esse agente es exclusivo do gestor da organización. Posso seguir aquí ou chamar otro especialista?';
                   } else if (!isAllowed) {
                     console.warn('[webchat-bot] ⛔ cross-product transfer blocked', {
                       from: `${activeAgent?.name} (product ${activeAgent?.product_id})`,
@@ -4243,7 +4243,7 @@ REGRAS DE USO:
                       choice.message?.content ||
                       registryResult.user_message ||
                       ''; // ← vazio força o follow-up completion (linhas abaixo) a gerar respuesta natural
-                                                                                          // em vez de mandar "Acción executada con éxito." pro cliente
+                                                                                          // en vez de mandar "Acción executada con éxito." pro cliente
 
                   }
                 } else {
@@ -4449,7 +4449,7 @@ REGRAS DE USO:
                   body: JSON.stringify(prepareAIRequestBody({
                     model: agentModel,
                     messages: [
-                      { role: 'system', content: `Usted es um editor. Reescreva a mensaje do assistente removendo qualquer frase parecida com: "${repeatedPhrase}". A nova mensaje debe AVANÇAR la conversación para el próximo passo, ser corta (máx 2 linhas) e NÃO repetir nada que ya fue dito. Responde solo con o novo texto, sin aspas.` },
+                      { role: 'system', content: `Vos sos um editor. Reescribí a mensaje do assistente quitando cualquier frase parecida a: "${repeatedPhrase}". A nova mensaje debe AVANZAR la conversación para el próximo passo, ser corta (máx 2 linhas) e NÃO repetir nada que ya se haya dicho. Respondé solo con el texto nuevo, sin comillas.` },
                       { role: 'user', content: responseContent },
                     ],
                     max_tokens: 200,
@@ -4519,7 +4519,7 @@ REGRAS DE USO:
         // 🔧 PRÉ-CORREÇÃO: se o modelo escreveu tags inventadas tipo [TRANSFER],
         // [TRANSFERIR], [HANDOFF] (sem role) ou [PASSAR PARA SONIA], converte
         // para [HANDOFF:closer] antes do parser oficial. Assim a transferência
-        // realmente acontece em vez de só ser limpa silenciosamente.
+        // realmente acontece en vez de só ser limpa silenciosamente.
         if (/\[\s*(?:transfer(?:ir)?|hand[\s_-]*off|passar(?:\s+para[^\]]*)?|enviar\s+para[^\]]*|transferir\s+para[^\]]*)\s*\]/i.test(responseContent)
             && !/\[HANDOFF:\s*(?:closer|sdr|cs|support|financial|humano|human)\s*\]/i.test(responseContent)) {
           // Default seguro: closer (cenário comercial). Se o agente atual ya es closer,
@@ -4637,8 +4637,8 @@ REGRAS DE USO:
               });
 
               // Schedule the incoming agent's auto-greeting in background.
-              // Sempre dispara: o greeter usa o template configurado OU o default interno
-              // (DEFAULT_TEMPLATE em agent-handoff-greeter), garantindo apresentação.
+              // Siempre dispara: o greeter usa o template configurado OU o default interno
+              // (DEFAULT_TEMPLATE em agent-handoff-greeter), garantindo presentación.
               try {
                 const greeterPayload = {
                   conversation_id: body.conversation_id,
@@ -4928,7 +4928,7 @@ function buildAgentSystemPrompt(
 ): string {
   const typeLabel = AGENT_TYPE_LABELS[agent.agent_type] || agent.agent_type;
   
-  let prompt = `IDENTIDADE: Usted es ${agent.name}, agente de ${typeLabel}.\n\n`;
+  let prompt = `IDENTIDADE: Vos sos ${agent.name}, agente de ${typeLabel}.\n\n`;
   
   // Primary objective
   prompt += `OBJETIVO PRINCIPAL:\n${agent.primary_objective}\n\n`;
@@ -4946,7 +4946,7 @@ function buildAgentSystemPrompt(
   prompt += `🚫 NUNCA reconheça verbalmente bugs, falhas, repetição de mensaje ou que o sinal "travou". Se algo parecer estranho, ignore e siga.\n`;
   prompt += `🚫 NUNCA se apresente de novo se ya se apresentou en esta conversación.\n`;
   if (agent.agent_type === 'sdr') {
-    prompt += `🎯 VOS É SDR: NÃO vende, NÃO faz pitch de producto, NÃO explica detalhes técnicos. Su papel es qualificar e levar pro próximo passo (grupo, live, reserva, closer).\n`;
+    prompt += `🎯 VOS É SDR: NÃO vende, NÃO faz pitch de producto, NÃO explica detalles técnicos. Su papel es qualificar e levar pro próximo passo (grupo, live, reserva, closer).\n`;
     prompt += `🎯 Se el lead JÁ realizou a CTA (entrou no grupo, agendou, comprou), PARE de qualificar e PARE de hacer preguntas novas — só reforce o próximo passo.\n`;
   }
   prompt += `📱 Estilo WhatsApp: frases curtas terminadas em ".", "?" ou "!". Cada ideia em uma frase. NUNCA mande parágrafo gigante.\n`;
@@ -4959,7 +4959,7 @@ REGRAS CRÍTICAS DE COMPORTAMENTO (OBRIGATÓRIAS)
 
 1. ANALISE o historial COMPLETO antes de CADA respuesta
 2. NUNCA repita saudações, frases ou emojis já usados no historial
-3. Se já realizou uma acción (agendou reunión, coletou dados, envió email), NÃO repita nem ofereça novamente
+3. Se já realizou uma acción (agendou reunión, coletou dados, envió email), NÃO repita nem ofrezcas novamente
 4. Adapte su estilo baseado nas respuestas e humor del cliente
 5. CADA mensaje debe PROGREDIR a conversación — nunca retroceda a pontos já cobertos
 6. Máximo 1 emoji por mensaje, NUNCA o mismo emoji em mensajes consecutivas
@@ -4967,12 +4967,12 @@ REGRAS CRÍTICAS DE COMPORTAMENTO (OBRIGATÓRIAS)
 FRASES ABSOLUTAMENTE PROIBIDAS:
 - "Tudo ótimo por aqui"
 - "Fechar con chave de ouro"
-- "Fico à disposição"
+- "Fico à disposición"
 - "Sem problemas"
 - "Fique à vontade"
 - "Com certeza!"
 - "Perfeito!"
-- Qualquer frase ou saludo que já apareceu en esta conversación
+- Cualquier frase ou saludo que já apareceu en esta conversación
 
 VARIAÇÃO OBRIGATÓRIA:
 - Alterne entre preguntas diretas, observaciones estratégicas e provocações construtivas
@@ -4981,7 +4981,7 @@ VARIAÇÃO OBRIGATÓRIA:
 - Adapte o tom: se o cliente es direto, seja direto; se es detalhista, explore
 
 TÉCNICA CONSULTIVA:
-1. Descubra a DOR real antes de apresentar qualquer solução
+1. Descubrí el DOLOR real antes de presentar cualquier solución
 2. Faça preguntas ABERTAS que revelam necessidades (no preguntas de sí/no)
 3. Conecte benefícios ESPECÍFICOS às dores ESPECÍFICAS mencionadas por el cliente
 4. Crea urgência baseada na REALIDADE del cliente, no urgência artificial
@@ -5002,7 +5002,7 @@ NUNCA AJA COMO SUPORTE (a menos que su agent_type seja explicitamente "support")
 - Usted NUNCA pede CPF, número de pedido, "motivo do su contato" ou age como agente de SAC/suporte técnico
 - Se o objetivo principal menciona "transferir pra suporte", isso es uma INSTRUÇÃO DE ROTEAMENTO, no um exemplo de fala — no copie esse tom
 - Se o lead pedir suporte explicitamente E for um cliente atual con problema técnico, use a tool transfer_to_human ou transfer_to_agent (nunca finja ser suporte)
-- Para qualquer otra intenção (compra, duda comercial, reserva), siga su papel de ventas/SDR normalmente
+- Para cualquier otra intenção (compra, duda comercial, reserva), seguí tu rol de ventas/SDR normalmente
 
 ═══════════════════════════════════════\n\n`;
 
@@ -5039,7 +5039,7 @@ NUNCA AJA COMO SUPORTE (a menos que su agent_type seja explicitamente "support")
   
   // Required phrases
   if (agent.required_phrases && agent.required_phrases.length > 0) {
-    prompt += `📝 INCLUA SEMPRE: ${agent.required_phrases.join(', ')}\n\n`;
+    prompt += `📝 INCLUA SIEMPRE: ${agent.required_phrases.join(', ')}\n\n`;
   }
   
   // Prohibited phrases - merge with built-in blacklist
@@ -5047,7 +5047,7 @@ NUNCA AJA COMO SUPORTE (a menos que su agent_type seja explicitamente "support")
     ...(agent.prohibited_phrases || []),
     'Tudo ótimo por aqui',
     'Fechar con chave de ouro', 
-    'Fico à disposição',
+    'Fico à disposición',
     'Sem problemas',
   ];
   const uniqueProhibited = [...new Set(allProhibited)];
@@ -5103,7 +5103,7 @@ NUNCA AJA COMO SUPORTE (a menos que su agent_type seja explicitamente "support")
   prompt += ' ANTES de responder, releia o historial e verifique se no está repetindo nada.';
   
   if (agent.always_end_with_question) {
-    prompt += ' SEMPRE termine con uma pregunta que AVANÇA la conversación para el objetivo.';
+    prompt += ' SIEMPRE termine con uma pregunta que AVANÇA la conversación para el objetivo.';
   }
   
   return prompt;

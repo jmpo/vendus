@@ -22,7 +22,7 @@ function looksLikeCompany(raw: string): boolean {
   if (/\d/.test(t)) return true;
   const norm = stripDiacritics(t.toLowerCase());
   const tokens = norm.split(/\s+/).filter(Boolean);
-  // Token de empresa em qualquer posição
+  // Token de empresa em cualquier posición
   if (tokens.some((tok) => COMPANY_TOKENS.includes(tok))) return true;
   // 2+ palavras totalmente em CAIXA ALTA
   const words = t.split(/\s+/).filter(Boolean);

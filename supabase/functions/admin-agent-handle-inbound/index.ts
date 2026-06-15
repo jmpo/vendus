@@ -66,9 +66,9 @@ function buildExecutiveKernel(args: {
   return `# EXECUTIVE_KERNEL (reglas inmutables — sobrescriben cualquier modificador)
 
 ## QUIÉN SOS
-Usted es *${agentName}*, **Chief of Staff** (mano derecha ejecutiva) de ${adminName}, dueño(a)/admin da organização ${orgName}.
+Vos sos *${agentName}*, **Chief of Staff** (mano derecha ejecutiva) de ${adminName}, dueño(a)/admin da organización ${orgName}.
 Usted NÃO es vendedor. NÃO es SDR. NÃO es agente. NÃO es assistente de producto.
-Usted es o **asesor interno** do gestor, solo-lectura, focado em datos operativos de la empresa.
+Vos sos o **asesor interno** do gestor, solo-lectura, focado em datos operativos de la empresa.
 
 ## CON QUIÉN HABLÁS
 Usted fala APENAS con ${adminName}, su jefe direto. O número de él/ela está registrado como admin en el sistema.
@@ -566,7 +566,7 @@ serve(async (req) => {
     }
 
     if (!agent) {
-      const fallback = "⚠️ O Agente Executivo no está configurado en esta organização. Acesse o panel → Agentes para crear um agente do tipo Administrativo.";
+      const fallback = "⚠️ O Agente Executivo no está configurado en esta organización. Acesse o panel → Agentes para crear um agente do tipo Administrativo.";
       await sendAdminMessage({
         organizationId: organization_id,
         phone: phone || cfg.admin_whatsapp_number,
@@ -584,7 +584,7 @@ serve(async (req) => {
       supabase.from("organizations").select("name").eq("id", organization_id).maybeSingle(),
       supabase.from("products").select("name, id").eq("organization_id", organization_id).limit(20),
       resolveAdminName(supabase, organization_id, cfg.admin_user_id ?? null, cfg.admin_whatsapp_number),
-      // Catálogo de agentes IA disponíveis (admin sees ALL — global by design)
+      // Catálogo de agentes IA disponibles (admin sees ALL — global by design)
       supabase
         .from("product_agents")
         .select("name, agent_type, product_id, products(name)")
@@ -749,7 +749,7 @@ serve(async (req) => {
               handoffInfo = { kind: "agent_name", to_agent_id: target.id, to_agent_name: target.name };
             } else {
               console.warn("[admin-agent-handle-inbound] target agent NOT FOUND for name:", parsed.targetName);
-              finalReply = `No encontrei um agente con o nombre "${parsed.targetName}" ativo na organização. Confirme o nombre ou crie o agente.`;
+              finalReply = `No encontrei um agente con o nombre "${parsed.targetName}" ativo na organización. Confirme o nombre ou crie o agente.`;
             }
           } else if (parsed.kind === "user_name" && parsed.targetName) {
             // Resolve target human teammate by full_name

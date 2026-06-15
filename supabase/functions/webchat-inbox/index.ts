@@ -325,7 +325,7 @@ serve(async (req) => {
         .from('webchat_conversations')
         .select('*')
         .eq('id', conversationId);
-      // Super admin puede acessar conversaciones de qualquer organização
+      // Super admin puede acceder conversaciones de cualquier organización
       if (orgId) convQuery.eq('organization_id', orgId);
 
       const [convRes, msgsRes] = await Promise.all([
@@ -401,7 +401,7 @@ serve(async (req) => {
         }
       }
 
-      // 2) Hidrata joins de forma defensiva (qualquer fala vira null em vez de derrubar la conversación)
+      // 2) Hidrata joins de forma defensiva (cualquier fala queda null en vez de tirar la conversación)
       const [widgetRes, assignedRes, agentRes, leadRes, sectorRes, productOverrideRes] = await Promise.all([
         conversation.widget_id
           ? supabase.from('webchat_widgets').select('id, name, primary_color, product_id, products(id, name)').eq('id', conversation.widget_id).maybeSingle()
@@ -690,7 +690,7 @@ serve(async (req) => {
                 metadata: {
                   ...baseMeta,
                   delivery_status: 'failed',
-                  error: 'Nenhuma instância WhatsApp conectada. Conecte uma instância em Configurações → WhatsApp.',
+                  error: 'Ningunoa instância WhatsApp conectada. Conecte uma instância em Configurações → WhatsApp.',
                   failed_at: new Date().toISOString(),
                 },
               })
@@ -865,7 +865,7 @@ serve(async (req) => {
       }
       if (!finalSectorId) {
         return new Response(
-          JSON.stringify({ error: 'Nenhum sector configurado para esta organização. Crea um sector antes de aceitar conversaciones.' }),
+          JSON.stringify({ error: 'Ninguno sector configurado para esta organización. Crea um sector antes de aceitar conversaciones.' }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
@@ -990,7 +990,7 @@ serve(async (req) => {
         conversation_id: body.conversation_id,
         direction: 'outbound',
         sender_type: 'bot',
-        content: `📋 Conversación reaberta por ${profile?.full_name || 'agente'}`,
+        content: `📋 Conversación reabierta por ${profile?.full_name || 'agente'}`,
       });
 
       return new Response(
@@ -1153,7 +1153,7 @@ serve(async (req) => {
           .eq('id', body.conversation_id);
       }
 
-      // Broadcast: notifica clientes que o detalhe de la conversación mudou
+      // Broadcast: notifica clientes que o detalle de la conversación mudou
       try {
         const ch = supabase.channel(`conversation:${body.conversation_id}`);
         await ch.send({ type: 'broadcast', event: 'conversation_updated', payload: { lead_id: leadId } });
@@ -1493,7 +1493,7 @@ serve(async (req) => {
             },
             body: JSON.stringify({
               conversation_id: body.conversation_id,
-              message: `[SISTEMA] Usted es um agente de reativação. Analiza o historial abaixo e envie UMA mensaje corta e estratégica para retomar la conversación con ${visitorName}. Sé natural, faça referência ao último assunto discutido e inclua uma pregunta aberta para reengajar. NÃO se apresente novamente. NÃO repita información ya fornecidas.\n\nHistórico:\n${historySummary}`,
+              message: `[SISTEMA] Vos sos um agente de reativação. Analiza o historial abaixo e envie UMA mensaje corta e estratégica para retomar la conversación con ${visitorName}. Sé natural, faça referência ao último assunto discutido e inclua uma pregunta abierta para reengajar. NÃO se apresente novamente. NÃO repita información ya fornecidas.\n\nHistórico:\n${historySummary}`,
               product_id: productId,
               visitor_name: visitorName,
               agent_id: agentId,
@@ -1513,7 +1513,7 @@ serve(async (req) => {
         }
       } else {
         // No history - send default reactivation message
-        reactivationMessage = `Hola ${visitorName}! Percebi que usted demonstrou interesse em nossa solução, mas no avançamos en la conversación. Usted aún tiene interesse? Posso te enviar a demonstração pra usted testar! 😊`;
+        reactivationMessage = `Hola ${visitorName}! Percebi que usted demonstrou interesse em nossa solución, mas no avançamos en la conversación. Usted aún tiene interesse? Posso te enviar a demonstração pra usted testar! 😊`;
       }
 
       // Save message as bot outbound (status stays the same)

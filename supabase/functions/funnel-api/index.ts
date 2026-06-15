@@ -170,7 +170,7 @@ Deno.serve(async (req) => {
           const can = Array.isArray(agent.can_do) ? agent.can_do.join('; ') : '';
           const cannot = Array.isArray(agent.cannot_do) ? agent.cannot_do.join('; ') : '';
           const systemPrompt = [
-            `Usted es ${agent.name}, agente de ventas consultivo profissional (SPIN Selling).`,
+            `Vos sos ${agent.name}, agente de ventas consultivo profissional (SPIN Selling).`,
             agent.primary_objective ? `Objetivo: ${agent.primary_objective}` : '',
             agent.description ? `Descripción: ${agent.description}` : '',
             can ? `Pode hacer: ${can}` : '',

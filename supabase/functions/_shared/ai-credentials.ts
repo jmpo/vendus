@@ -1,5 +1,5 @@
-// Helper compartilhado para resolver a chave de IA de uma organização.
-// Cada organização puede ter chaves próprias da OpenAI / Anthropic / Gemini
+// Helper compartilhado para resolver a chave de IA de uma organización.
+// Cada organización puede ter chaves próprias da OpenAI / Anthropic / Gemini
 // salvas em `org_ai_credentials` (modelo white-label).
 // O roteador `org_ai_routing` decide cuál provedor usar para cada capacidade.
 
@@ -101,7 +101,7 @@ export async function resolveAIProvider(
     }
   }
 
-  throw new Error(`Provedor ${wanted.provider} no tiene chave configurada para la organização ${organizationId}`);
+  throw new Error(`Provedor ${wanted.provider} no tiene chave configurada para la organización ${organizationId}`);
 }
 
 export async function logRouterFailure(

@@ -1,5 +1,5 @@
 // Gera um link de pago para el lead. Inicialmente integra con Cakto (suportado por la plataforma);
-// no futuro puede rotear para Asaas/Stripe baseado na configuración da organização.
+// no futuro puede rutear para Asaas/Stripe baseado na configuración da organización.
 import type { ToolDefinition } from '../types.ts';
 
 export const gerarLinkPagamentoTool: ToolDefinition = {

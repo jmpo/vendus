@@ -149,7 +149,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Para escopo platform: tenta vincular pedido a uma organização por el email del cliente
+    // Para escopo platform: tenta vincular pedido a uma organización por el email del cliente
     if (scopeParam === 'platform' && row.customer_email) {
       const { data: org } = await admin
         .from('organizations')
@@ -224,7 +224,7 @@ async function resolveOrCreateLead(admin: any, row: any): Promise<string | null>
   const phone = row.customer_phone?.replace(/\D/g, '') || null;
   if (!orgId || (!email && !phone)) return null;
 
-  // Tenta achar lead existente por email primeiro, después teléfono
+  // Tenta encontrar lead existente por email primeiro, después teléfono
   let lead: { id: string } | null = null;
   if (email) {
     const { data } = await admin

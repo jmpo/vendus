@@ -279,7 +279,7 @@ Deno.serve(async (req) => {
   // 6) (provider WhatsApp eliminado — siempre Evolution Go)
 
   // 7) Gera a mensaje inicial
-  // Monta a descripción da composição do pedido (principal + orderbumps)
+  // Monta a descripción da composición do pedido (principal + orderbumps)
   const items = Array.isArray(order.items) ? order.items : [];
   const mainItems = items.filter((i) => i.role === 'main');
   const bumpItems = items.filter((i) => i.role === 'orderbump');
@@ -304,12 +304,12 @@ Deno.serve(async (req) => {
 
   const eventBriefing =
     event === 'abandoned'
-      ? `O cliente acabou de gerar um ${order.payment_method || 'pago'} no valor de R$ ${order.amount?.toFixed(2) ?? '?'} para "${productLabel}" mas AINDA NÃO PAGOU.${cartDescription}\n\nSua missão: tirar dudas, crear urgência leve e ajudar a finalizar. Se útil, ofereça reenviar o link/Pix. Se hay order bumps, mencione o conjunto, no só o principal.`
+      ? `O cliente acabou de gerar um ${order.payment_method || 'pago'} no valor de R$ ${order.amount?.toFixed(2) ?? '?'} para "${productLabel}" mas AINDA NÃO PAGOU.${cartDescription}\n\nSua missão: tirar dudas, crear urgência leve e ajudar a finalizar. Se útil, ofrezcas reenviar o link/Pix. Se hay order bumps, mencione o conjunto, no só o principal.`
       : event === 'paid'
-        ? `O cliente acabou de PAGAR R$ ${order.amount?.toFixed(2) ?? '?'} por "${productLabel}".${cartDescription}\n\nSua missão: agradecer, confirmar a compra, orientar próximos passos e — se fizer sentido — apresentar um upsell/cross-sell de algo que ele AINDA NÃO levou.`
+        ? `O cliente acabou de PAGAR R$ ${order.amount?.toFixed(2) ?? '?'} por "${productLabel}".${cartDescription}\n\nSua missão: agradecer, confirmar a compra, orientar próximos passos e — se fizer sentido — presentar um upsell/cross-sell de algo que ele AINDA NÃO levou.`
         : `O cliente tuvo um pedido REEMBOLSADO/ESTORNADO no valor de R$ ${order.amount?.toFixed(2) ?? '?'} ("${productLabel}").${cartDescription}\n\nSua missão: ser empático, entender o motivo, recuperar a relação e — se posible — propor uma alternativa.`;
 
-  const systemPrompt = `Usted es ${agent.name}, agente de ${agent.agent_type} de la empresa.
+  const systemPrompt = `Vos sos ${agent.name}, agente de ${agent.agent_type} de la empresa.
 MISSÃO PRINCIPAL: ${agent.primary_objective}
 TOM: ${agent.tone_style || 'Consultivo, próximo, sin pressão'}
 ESTILO: ${agent.message_style || 'Curta, direta, humana'}
@@ -327,7 +327,7 @@ ${
           (s, idx) =>
             `\n[Cenário ${idx + 1} — ${s.name}]\nInstrução: ${s.instruction}${
               s.links?.length
-                ? `\nLinks disponíveis:\n${s.links.map((l) => `  • ${l.label}: ${l.url}${l.when_to_offer ? ` (ofrecer cuando: ${l.when_to_offer})` : ''}`).join('\n')}`
+                ? `\nLinks disponibles:\n${s.links.map((l) => `  • ${l.label}: ${l.url}${l.when_to_offer ? ` (ofrecer cuando: ${l.when_to_offer})` : ''}`).join('\n')}`
                 : ''
             }`,
         )
@@ -336,7 +336,7 @@ ${
 }
 
 REGRAS DA MENSAGEM INICIAL:
-- Genera APENAS a mensaje (sem prefixos, sin aspas, sin explicações)
+- Genera APENAS a mensaje (sem prefixos, sin comillas, sin explicações)
 - Usa o nombre del cliente: ${order.customer_name || 'cliente'}
 - Mencione o que ele estava levando: ${productLabel}
 - WhatsApp: corta (máx 2 parágrafos), sin markdown, sin emoji exagerado (1 só)

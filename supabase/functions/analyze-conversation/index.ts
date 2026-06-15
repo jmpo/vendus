@@ -71,7 +71,7 @@ Retorne a análise usando a ferramenta analyze_conversation.`;
         messages: [
           {
             role: "system",
-            content: `Usted es um analista de qualidade de ventas. Analiza conversaciones de atención e forneça feedback detalhado. Avalie:
+            content: `Vos sos um analista de qualidade de ventas. Analiza conversaciones de atención e forneça feedback detalhado. Avalie:
 - Tempo de respuesta (rápido, adequado, lento)
 - Tom da conversación (profissional, amigável, frio)
 - Técnicas de ventas utilizadas (rapport, SPIN, gatilhos mentais, etc.)

@@ -130,7 +130,7 @@ serve(async (req) => {
     }
     if (extracted.length > 20000) extracted = extracted.slice(0, 20000);
 
-    const systemPrompt = `Usted es especialista em projetar agentes de IA conversacionais para ventas e atención.
+    const systemPrompt = `Vos sos especialista em projetar agentes de IA conversacionais para ventas e atención.
 A partir do briefing/documento abaixo, extraia uma configuración completa de agente.
 
 REGRAS:
@@ -215,7 +215,7 @@ Crea a configuración completa del agente baseada nisso.`;
     const data = await aiResp.json();
     await recordLovableUsage(supabase, billingOrgId, 'content_generation', 'google/gemini-2.5-flash', data?.usage, 'import-agent-from-document');
     const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall?.function?.arguments) throw new Error("IA no retornou estrutura válida");
+    if (!toolCall?.function?.arguments) throw new Error("IA no devolvió estrutura válida");
     const agent = JSON.parse(toolCall.function.arguments);
 
     return new Response(JSON.stringify({ agent }), {

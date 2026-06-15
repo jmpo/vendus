@@ -172,7 +172,7 @@ Deno.serve(async (req) => {
       console.error("[create-organization-admin] role error:", roleError);
     }
 
-    // Remove qualquer otro role (ex: 'seller' inserido por trigger handle_new_user)
+    // Remove cualquier otro role (ex: 'seller' insertado por trigger handle_new_user)
     // garantindo que admin de empresa tenga somente o papel 'admin'
     const { error: cleanupError } = await admin
       .from("user_roles")

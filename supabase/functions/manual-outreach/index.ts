@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
 
     if (!agent) throw new Error("Agent not found");
 
-    // Resolve widget ativo da organização (necessário para crear conversación no inbox)
+    // Resolve widget ativo da organización (necessário para crear conversación no inbox)
     let outreachWidgetId: string | null = null;
     {
       const { data: existingWidget } = await supabase
@@ -174,13 +174,13 @@ Deno.serve(async (req) => {
 - Genera APENAS uma abertura corta (1–2 linhas, no máx. 25 palavras).
 - Faça UMA pregunta provocativa referenciando o evento (ex.: "Vi que usted gerou um Pix, conseguiu finalizar?").
 - NÃO entregue Pix, link, código, instruções ou dados do evento ahora — só preguntes.
-- Aguarde a respuesta del lead antes de ofrecer qualquer detalhe.`
+- Esperá la respuesta del lead antes de ofrecer cualquier detalle.`
           : `MODO: MENSAGEM DIRETA
 - Genera uma mensaje completa, mas em no máx. 2 parágrafos curtos.
 - Se hay Pix/link, coloque cada um em linha própria, sin texto extra junto.
 - Sem despedidas longas. Termine con UMA pregunta ou CTA claro.`;
 
-        const systemPrompt = `Usted es ${agent.name}, um agente de ${agent.agent_type} de la empresa.
+        const systemPrompt = `Vos sos ${agent.name}, um agente de ${agent.agent_type} de la empresa.
 MISSÃO: ${agent.primary_objective}
 TOM DE VOZ: ${agent.tone_style || "Consultivo"}
 ESTILO DE MENSAGEM: ${agent.message_style || "Curta e objetiva"}

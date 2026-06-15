@@ -212,7 +212,7 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  // Sempre 200 — Meta reenvia se receber qualquer otro código
+  // Siempre 200 — Meta reenvia se receber cualquier otro código
   return new Response('ok', { status: 200, headers: { ...corsHeaders, 'Content-Type': 'text/plain' } });
 });
 
@@ -246,7 +246,7 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
       })
       .eq('id', conversationId);
   } else {
-    // achar widget ativo da org (compat con webchat schema)
+    // encontrar widget ativo da org (compat con webchat schema)
     const { data: widget } = await sb
       .from('webchat_widgets')
       .select('id')

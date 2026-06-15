@@ -9,24 +9,24 @@ const corsHeaders = {
 };
 
 const fieldPrompts: Record<string, string> = {
-  description: `Usted es um especialista em copywriting para ventas B2B. 
-Reescreva a descripción do producto para ser mais clara, profissional e persuasiva.
+  description: `Vos sos um especialista em copywriting para ventas B2B. 
+Reescribí a descripción do producto para ser mais clara, profissional e persuasiva.
 Mantenha a essência, mas torne-a mais impactante para vendedores usarem.`,
   
-  icp: `Usted es um especialista em definição de ICP (Ideal Customer Profile).
-Reescreva o perfil del cliente ideal para ser mais detalhado e acionável.
+  icp: `Vos sos um especialista em definição de ICP (Ideal Customer Profile).
+Reescribí o perfil del cliente ideal para ser mais detalhado e acionável.
 Inclua características demográficas, comportamentais e sinais de compra.`,
   
-  pitch_15s: `Usted es um especialista em elevator pitch.
-Reescreva este pitch de 15 segundos para ser memorável, impactante e gerar curiosidade.
-Deve ser algo que um vendedor puede falar naturalmente em una conversación.`,
+  pitch_15s: `Vos sos um especialista em elevator pitch.
+Reescribí este pitch de 15 segundos para ser memorável, impactante e gerar curiosidade.
+Deve ser algo que um vendedor puede hablar naturalmente em una conversación.`,
   
-  pitch_30s: `Usted es um especialista em apresentações de ventas.
-Reescreva este pitch de 30 segundos para incluir problema, solução e valor.
+  pitch_30s: `Vos sos um especialista em apresentações de ventas.
+Reescribí este pitch de 30 segundos para incluir problema, solución e valor.
 Mantenha natural e conversacional, mas persuasivo.`,
   
-  pitch_2min: `Usted es um especialista em storytelling para ventas.
-Reescreva este pitch de 2 minutos usando a estrutura: Problema → Impacto → Solução → Resultados.
+  pitch_2min: `Vos sos um especialista em storytelling para ventas.
+Reescribí este pitch de 2 minutos usando a estrutura: Problema → Impacto → Solução → Resultados.
 Inclua elementos de prova social e urgência cuando apropriado.`,
 };
 
@@ -63,8 +63,8 @@ serve(async (req) => {
       }
     } catch (_) {}
 
-    const systemPrompt = fieldPrompts[field] || `Usted es um especialista em ventas B2B.
-Reescreva o conteúdo para ser mais profissional, claro e persuasivo.
+    const systemPrompt = fieldPrompts[field] || `Vos sos um especialista em ventas B2B.
+Reescribí o conteúdo para ser mais profissional, claro e persuasivo.
 Mantenha a essência original, mas torne-o mais impactante.`;
 
     const contextInfo = productContext ? `

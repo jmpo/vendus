@@ -30,7 +30,7 @@ export interface OrchestratorRunInput {
   customPrompt?: string | null; // overrides the default prompt template
 }
 
-const DEFAULT_ORCHESTRATOR_TEMPLATE = `Usted es o orquestrador de atención da {{organization_name}}.
+const DEFAULT_ORCHESTRATOR_TEMPLATE = `Vos sos o orquestrador de atención da {{organization_name}}.
 
 Su ÚNICA função es ler a mensaje recibida, classificar producto e intenção,
 e retornar um JSON estruturado. Usted no vende, no explica productos,
@@ -49,7 +49,7 @@ INTENÇÕES QUE VOS DEVE IDENTIFICAR
 - compra     → lead quer contratar, saber preço, condições
 - suporte    → lead já es cliente e tiene problema técnico
 - financiero → boleto, reembolso, cobrança, nota fiscal
-- humano     → lead pediu explicitamente para falar con humano
+- humano     → lead pediu explicitamente para hablar con humano
 - indefinida → no fue possível classificar con confiança
 
 CONTEXTO ACUMULADO
@@ -60,10 +60,10 @@ MENSAGEM RECEBIDA
 "{{message}}"
 
 REGRAS
-1. Se el lead falar "humano", "agente", "pessoa", "vendedor", "falar con alguém"
+1. Se el lead hablar "humano", "agente", "pessoa", "vendedor", "hablar con alguém"
    → intencao = "humano" imediatamente.
 2. Se a confiança for menor que 0.6 para identificar o producto → produto_id = null.
-3. Se produto_id for null e ainda hay preguntas disponíveis,
+3. Se produto_id for null e ainda hay preguntas disponibles,
    → intencao = "indefinida" e escreva UMA pregunta corta em resposta_orquestrador.
 4. Se produto_id continuar null e o limite de preguntas for atingido,
    → intencao = "humano" e resposta_orquestrador = "Vou te conectar con um dos nossos atendentes ahora."
@@ -154,7 +154,7 @@ export async function runOrchestrator(input: OrchestratorRunInput): Promise<Orch
       console.error('[orchestrator] provider error:', config.provider, resp.status, text);
       return safeOutput({
         intencao: 'indefinida',
-        resposta_orquestrador: 'Podés explicar con mais detalhes o que usted precisa?',
+        resposta_orquestrador: 'Podés explicar con mais detalles o que usted precisa?',
       });
     }
 

@@ -188,7 +188,7 @@ interface EnsureAdminArgs {
 }
 
 /**
- * Garante usuario admin para a organização e dispara e-mail de boas-vindas idempotente.
+ * Garante usuario admin para a organización e dispara e-mail de boas-vindas idempotente.
  */
 export async function ensureAdminUser(
   admin: SupabaseClient,
@@ -198,7 +198,7 @@ export async function ensureAdminUser(
   const email = args.email.trim().toLowerCase();
   if (!email) return { ok: false, errors: ['missing email'] };
 
-  // 1) Tenta achar usuario existente
+  // 1) Tenta encontrar usuario existente
   let userId: string | null = null;
   const { data: foundId, error: rpcErr } = await admin.rpc('get_auth_user_id_by_email', {
     _email: email,

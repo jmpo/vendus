@@ -250,7 +250,7 @@ ${orgSupportMaterials ? `📚 MATERIAIS DE SUPORTE GLOBAIS:\n${orgSupportMateria
     // ================== Optimize single field ==================
     if (optimize_field && current_value) {
       const fieldPrompts: Record<string, string> = {
-        primary_objective: "Reescreva o objetivo principal del agente para ser mais claro, estratégico e acionável.",
+        primary_objective: "Reescribí o objetivo principal del agente para ser mais claro, estratégico e acionável.",
         additional_prompt: "Melhore as instruções adicionais para serem mais detalhadas, específicas e blindadas contra desvios.",
         can_do: "Sugiere 3-5 capacidades que este agente debe ter, baseado no contexto.",
         cannot_do: "Sugiere 3-5 restrições importantes para garantir que no ultrapasse su papel.",
@@ -268,7 +268,7 @@ ${orgSupportMaterials ? `📚 MATERIAIS DE SUPORTE GLOBAIS:\n${orgSupportMateria
           messages: [
             {
               role: "system",
-              content: `Usted es especialista em design de agentes de IA conversacionais.
+              content: `Vos sos especialista em design de agentes de IA conversacionais.
 Missão de este agente: ${mission}
 
 CONTEXTO REAL:
@@ -339,12 +339,12 @@ Devuelve una versão otimizada que respeite o tipo del agente e o contexto real.
     const isOrchestrator = agent_type === 'orchestrator';
     const isSupport = agent_type === 'support';
 
-    const systemPrompt = `Usted es um especialista em design de agentes de IA conversacionais.
+    const systemPrompt = `Vos sos um especialista em design de agentes de IA conversacionais.
 
 🎯 TIPO DE AGENTE A CRIAR: ${agent_type.toUpperCase()}
 📋 MISSÃO DESTE TIPO: ${mission}
 
-⚠️ REGRA CRÍTICA: Usted está criando um agente do tipo "${agent_type}" — ele NÃO puede agir como otro tipo.
+⚠️ REGRA CRÍTICA: Vos sostá criando um agente do tipo "${agent_type}" — ele NÃO puede agir como otro tipo.
 ${isAdmin ? '- Admin: Chief of Staff INTERNO. NUNCA tenta vender, agendar reunión con o admin, ou tratá-lo comel lead.' : ''}
 ${isOrchestrator ? '- Orquestrador: APENAS classifica e roteia. NUNCA explica producto, NUNCA dá preço, NUNCA negocia.' : ''}
 ${isSupport ? '- Suporte: Resolve dudas técnicas. NUNCA vende producto adicional. Usa APENAS materiais cadastrados.' : ''}
@@ -372,11 +372,11 @@ PRINCÍPIOS DE DESIGN:
 
 🎭 HUMANIZAÇÃO (campo "humanization") — OBRIGATÓRIO para sdr/closer/custom/support:
 - persona.age: 25–45. persona.city: "Cidade, UF" coerente con a região do ICP.
-- persona.backstory: 1ª pessoa, ATÉ 500 chars, conectada à dor do ICP do producto. Se ICP es "gestor de tráfego", a backstory reflete alguém que viveu essa dor. Se es "dueño de loja", alguém que trabalhou no varejo. SEM clichês de marketing.
+- persona.backstory: 1ª pessoa, ATÉ 500 chars, conectada à dor do ICP do producto. Se ICP es "gestor de tráfego", a backstory reflete alguém que viveu essa dor. Se es "dueño de loja", alguém que trabajou no varejo. SEM clichês de marketing.
 - persona.hobbies: 3–5 plausíveis (ex: "rodar bike no fin de semana", "torcer pro Palmeiras", "café especial").
 - persona.stories: 3–5 micro-histórias { title, description }. Cada description es uma FRASE REAL que o agente usaria, em 1ª pessoa, espelhando uma objeção/dor do producto. Ex: title "Cuando travei con o ROAS", description "Eu tava igualzinho — torrava grana e no saía do lugar, hasta que descobri que o problema no era a campaña, era o embudo".
 - persona.loved_words: 6–12 jargões/gírias do nicho (ex pra tráfego: "ROAS", "CPL", "criativo cansado").
-- persona.forbidden_words: 6–12 itens. SEMPRE inclua: "incrível", "fantástico", "maravilhoso", "revolucionário", "atenciosamente", "prezado", "estamos à disposição", "agradecemos o contato", "como podemos ajudar".
+- persona.forbidden_words: 6–12 itens. SIEMPRE inclua: "incrível", "fantástico", "maravilhoso", "revolucionário", "atenciosamente", "prezado", "estamos à disposición", "agradecemos o contato", "como podemos ajudar".
 - tics.region: elegí coerente con persona.city. tics.slang/openers/connectors/fillers: 2–6 itens cada, sutis, sin caricatura.
 - reactions.enabled: true (exceto admin/orchestrator/financial). reactions.rules: 3–6 regras.
   • SDR: regra keyword "preço/valor/quanto custa" → action "context" transferindo pro Closer real (use o nombre em routing_matrix). Regra keyword "quiero comprar/fechar" → context pro Closer.
@@ -387,11 +387,11 @@ PRINCÍPIOS DE DESIGN:
 NÃO retorne timing, splitting nem style — esses ficam no default do front (ya curados).`;
 
     const userInstruction = isAdmin
-      ? `Crea o agente Chief of Staff (admin executivo) ${adminName ? `para ${adminName}` : ''} da ${orgName}. O additional_prompt DEVE conter o EXECUTIVE_KERNEL completo do template, con nombre do admin e productos da organização preenchidos. Tom executivo, mensajes curtas (4 linhas), nunca vendedor.`
+      ? `Crea o agente Chief of Staff (admin executivo) ${adminName ? `para ${adminName}` : ''} da ${orgName}. O additional_prompt DEVE conter o EXECUTIVE_KERNEL completo do template, con nombre do admin e productos da organización preenchidos. Tom executivo, mensajes curtas (4 linhas), nunca vendedor.`
       : isOrchestrator
       ? `Crea o agente Orquestrador da ${orgName}. O additional_prompt DEVE conter a matriz de roteamento real e regras claras de "se intenção X + producto Y → [HANDOFF:role]". Mensagens ultra curtas (1-2 linhas).`
       : isSupport
-      ? `Crea o agente de Suporte global da ${orgName}. O additional_prompt DEVE referenciar os materiais cadastrados e o protocolo de 3 passos (confirmar → resolver → confirmar resolução). NUNCA inventa solução.`
+      ? `Crea o agente de Suporte global da ${orgName}. O additional_prompt DEVE referenciar os materiais cadastrados e o protocolo de 3 passos (confirmar → resolver → confirmar resolución). NUNCA inventa solución.`
       : agent_type === 'financial'
       ? `Crea o agente Financeiro global da ${orgName}. O additional_prompt DEVE listar os assuntos que resolve (boleto, NF, reembolso, segunda via) e os protocolos. Tom profissional, claro.`
       : productCtx
@@ -462,7 +462,7 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (ya
                            forbidden_words: {
                              type: "array",
                              items: { type: "string" },
-                             description: "6 a 12 clichês proibidos. SEMPRE inclua: incrível, fantástico, maravilhoso, revolucionário, atenciosamente, prezado, estamos à disposição, agradecemos o contato, como podemos ajudar",
+                             description: "6 a 12 clichês proibidos. SIEMPRE inclua: incrível, fantástico, maravilhoso, revolucionário, atenciosamente, prezado, estamos à disposición, agradecemos o contato, como podemos ajudar",
                            },
                          },
                        },

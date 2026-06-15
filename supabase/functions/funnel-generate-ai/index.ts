@@ -96,8 +96,8 @@ Problemas que resolve: ${product.problems_solved || 'N/A'}
       technical: 'Usá términos técnicos relevantes. Sé preciso y objetivo.',
     };
 
-    const systemPrompt = `Usted es um especialista em crear funis de captação de leads de alta conversão.
-Su trabalho es transformar a descripción do usuario em um flujo de blocos estruturados que serão renderizados como uma landing page interativa.
+    const systemPrompt = `Vos sos um especialista em crear funis de captação de leads de alta conversão.
+Su trabajo es transformar a descripción do usuario em um flujo de blocos estruturados que serão renderizados como uma landing page interativa.
 
 CONTEXTO DO PRODUTO:
 ${productContext}
@@ -145,7 +145,7 @@ REGRAS DE CONEXÃO:
 REGRAS DE POSIÇÃO (X/Y no canvas):
 - Blocos em sequência linear: incrementar Y em 150, manter X constante
 - Quando hay ramificação (buttons con N opciones): 
-  - O bloco buttons fica na posição atual
+  - O bloco buttons fica na posición atual
   - Os caminhos ramificam horizontalmente: primeiro caminho em X=100, segundo em X=450, terceiro em X=800
   - Cada caminho continua incrementando Y normalmente
 - Usa X base = 250 para o flujo principal

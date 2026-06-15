@@ -10,7 +10,7 @@
 //
 // Audio  -> OpenAI Whisper (whisper-1) -> transcription text
 // Image  -> OpenAI gpt-4o-mini (Vision) -> short, factual description
-// Both use OPENAI_API_KEY (centralizado em uma única chave da organização).
+// Both use OPENAI_API_KEY (centralizado em uma única chave da organización).
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -149,7 +149,7 @@ async function describeImage(
         {
           role: "system",
           content:
-            "Usted es um analisador visual de mensajes de WhatsApp em um CRM de ventas. " +
+            "Vos sos um analisador visual de mensajes de WhatsApp em um CRM de ventas. " +
             "Su respuesta vira o conteúdo textual da mensaje que um agente IA va ler. " +
             "Sé factual, objetivo e direto.",
         },
@@ -180,7 +180,7 @@ Deno.serve(async (req) => {
       return jsonResponse({ success: false, error: "kind must be 'audio' or 'image'" }, 400);
     }
 
-    // Resolve a chave da OpenAI: prioriza chave da organização (white-label),
+    // Resolve a chave da OpenAI: prioriza chave da organización (white-label),
     // cai para la secret global como fallback.
     let apiKey = Deno.env.get("OPENAI_API_KEY") || "";
     const orgId: string | undefined = body?.organization_id;

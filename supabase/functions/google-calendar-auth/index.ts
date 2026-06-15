@@ -41,7 +41,7 @@ serve(async (req) => {
 
     if (configError || !oauthConfig?.settings) {
       console.error("OAuth config not found:", configError);
-      throw new Error("Google Calendar no está configurado para esta organização. O administrador precisa configurar as credenciais OAuth primeiro.");
+      throw new Error("Google Calendar no está configurado para esta organización. O administrador precisa configurar as credenciais OAuth primeiro.");
     }
 
     const settings = oauthConfig.settings as { clientId?: string; clientSecret?: string };

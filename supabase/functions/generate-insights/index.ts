@@ -149,7 +149,7 @@ serve(async (req) => {
     }
 
     // Build prompt for AI analysis
-    const analysisPrompt = `Usted es um coach de ventas experiente analisando o pipeline de um vendedor.
+    const analysisPrompt = `Vos sos um coach de ventas experiente analisando o pipeline de um vendedor.
 
 DADOS DO PIPELINE:
 - Total de leads: ${analysis.totalLeads}

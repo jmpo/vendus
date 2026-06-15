@@ -753,7 +753,7 @@ async function executeAction(
       }
 
       if (!tagIds || tagIds.length === 0) {
-        return { lead_id: existingLeadId, tags_applied: [], warning: 'Nenhuma etiqueta resolvida' };
+        return { lead_id: existingLeadId, tags_applied: [], warning: 'Ningunoa etiqueta resolvida' };
       }
 
       const rows = tagIds.map((tid) => ({
@@ -1250,7 +1250,7 @@ async function executeAction(
         .join('\n');
 
       // 5. Build AI prompt
-      const systemPrompt = `Usted es ${agent.name}, um agente de ${agent.agent_type} de la empresa.
+      const systemPrompt = `Vos sos ${agent.name}, um agente de ${agent.agent_type} de la empresa.
 
 MISSÃO: ${agent.primary_objective}
 
@@ -1344,7 +1344,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
         const instance = instances?.[0];
 
         if (instErr || !instance) {
-          throw new Error(`Evolution Go: ninguna instância conectada encontrada para esta organização (${instErr?.message || 'sem registros'})`);
+          throw new Error(`Evolution Go: ninguna instância conectada encontrada para esta organización (${instErr?.message || 'sem registros'})`);
         }
 
         console.log(`[Webhook/AIOutreach] Sending via Evolution Go instance ${instance.name} (${instance.id}) to ${leadPhone}`);
@@ -1559,7 +1559,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
         .maybeSingle();
       if (!funnel) throw new Error('Embudo no encontrado');
       if (funnel.organization_id !== webhook.organization_id) {
-        throw new Error('Embudo pertence a otra organização');
+        throw new Error('Embudo pertence a otra organización');
       }
 
       if (agentId) {
@@ -1570,7 +1570,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           .maybeSingle();
         if (!agent) throw new Error('Agente no encontrado');
         if (agent.organization_id !== webhook.organization_id) {
-          throw new Error('Agente pertence a otra organização');
+          throw new Error('Agente pertence a otra organización');
         }
       }
 
@@ -1587,7 +1587,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
         return { lead_id: existingLeadId, skipped: true, reason: 'Lead sin teléfono para WhatsApp' };
       }
 
-      // 4. Resolve um widget ativo da organização (coluna widget_id es NOT NULL)
+      // 4. Resolve um widget ativo da organización (coluna widget_id es NOT NULL)
       let widgetRow = (await supabase
         .from('webchat_widgets')
         .select('id')
@@ -1698,7 +1698,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           const { data: instances } = await instanceQuery;
           const instance = instances?.[0];
           if (!instance) {
-            throw new Error('Nenhuma instância WhatsApp conectada para la organização');
+            throw new Error('Ningunoa instância WhatsApp conectada para la organización');
           }
 
           const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {

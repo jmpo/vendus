@@ -28,7 +28,7 @@ serve(async (req) => {
     if (messages.length === 0) {
       console.warn("[sales-copilot] empty messages. body keys:", Object.keys(body || {}), "rawLen:", rawMessages.length);
       return new Response(
-        JSON.stringify({ error: "Nenhuma mensaje enviada ao copiloto." }),
+        JSON.stringify({ error: "Ningunoa mensaje enviada ao copiloto." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -176,7 +176,7 @@ serve(async (req) => {
       }
     }
 
-    const systemPrompt = `Usted es o COPILOTO DE VENDAS — estrategista que ajuda vendedores a responder clientes.
+    const systemPrompt = `Vos sos o COPILOTO DE VENDAS — estrategista que ajuda vendedores a responder clientes.
 
 ${productName ? `PRODUTO: ${productName}` : ""}
 
@@ -186,7 +186,7 @@ ${knowledgeContext ? knowledgeContext : ""}
 COMO USAR A BASE DE CONHECIMENTO
 ═══════════════════════════════════════
 
-- Para DADOS DO PRODUTO (preços, funcionalidades, prazos, specs): use SOMENTE o que está no contexto acima. Se no tiver, diga: "Sobre esse detalhe específico do producto, sugiro confirmar con o gestor antes de responder al cliente."
+- Para DADOS DO PRODUTO (preços, funcionalidades, prazos, specs): use SOMENTE o que está no contexto acima. Se no tiver, diga: "Sobre esse detalle específico do producto, sugiro confirmar con o gestor antes de responder al cliente."
 - Para ESTRATÉGIA DE VENDAS (como abordar, como reativar, como negociar, como contornar objeções): use su conhecimento de ventas consultivas livremente, adaptando ao contexto do producto cuando hay información disponível
 - Quando existir uma FAQ ou treinamento que responda à pregunta, USE como base
 - NUNCA invente preços, custos ou dados técnicos do producto
@@ -238,7 +238,7 @@ O QUE NUNCA FAZER
 - Inventar preços, custos ou dados técnicos do producto
 - Recusar preguntas estratégicas de ventas alegando falta de información`;
 
-    // Resolve provedor via roteamento da organização (OpenAI direta ou Lovable Gateway)
+    // Resolve provedor via roteamento da organización (OpenAI direta ou Lovable Gateway)
     const cfg = await resolveAIConfig(supabase, organizationId, 'sales_copilot', 'google/gemini-2.5-flash');
     logAIConfig('sales-copilot', cfg);
 
@@ -267,7 +267,7 @@ O QUE NUNCA FAZER
     let response = await doCall(false);
 
     // No fazemos fallback automático para Lovable aqui: se a org escolheu OpenAI,
-    // qualquer error debe aparecer como error OpenAI, sin consumir créditos Lovable.
+    // cualquier error debe aparecer como error OpenAI, sin consumir créditos Lovable.
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => '');

@@ -134,7 +134,7 @@ Garantia: ${product.guarantee || 'N/A'}
       diagnostic: 'Diagnosticar necessidades e dores del lead para personalizar a abordagem comercial. Foque em entender o cenário atual e desafios.',
       capture: 'Captar información básicas de contato de forma rápida e no-invasiva. Mantenha o formulário corto e direto.',
       presale: 'Preparar el lead para uma reunión de ventas coletando información detalhadas sobre expectativas e orçamento.',
-      feedback: 'Coletar feedback sobre o producto ou processo de ventas. Usa escalas e preguntas abertas.',
+      feedback: 'Coletar feedback sobre o producto ou processo de ventas. Usa escalas e preguntas abiertas.',
     };
 
     const toneDescriptions = {
@@ -144,7 +144,7 @@ Garantia: ${product.guarantee || 'N/A'}
     };
 
     // Build enhanced system prompt
-    const systemPrompt = `Usted es um especialista em creación de formulários de captação de leads para ventas B2B.
+    const systemPrompt = `Vos sos um especialista em creación de formulários de captação de leads para ventas B2B.
 Su objetivo es gerar um formulário otimizado para conversão, baseado no contexto completo do producto e da campaña.
 
 CONTEXTO DO PRODUTO:
@@ -268,7 +268,7 @@ IMPORTANTE: O array debe conter exatamente ${num_questions} blocos de pregunta +
 
     if (!Array.isArray(blocks) || blocks.length === 0) {
       return new Response(
-        JSON.stringify({ error: 'IA no retornou blocos válidos' }),
+        JSON.stringify({ error: 'IA no devolvió blocos válidos' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

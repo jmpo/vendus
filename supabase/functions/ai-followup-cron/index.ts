@@ -227,7 +227,7 @@ Deno.serve(async (req) => {
         const isLastAttempt = attemptNumber >= maxFollowups;
 
         // Build follow-up prompt
-        const systemPrompt = `Usted es ${agent.name}, um agente de ${agent.agent_type}.
+        const systemPrompt = `Vos sos ${agent.name}, um agente de ${agent.agent_type}.
 TOM DE VOZ: ${agent.tone_style || 'Consultivo'}
 ESTILO: ${agent.message_style || 'Curta e objetiva'}
 OBJETIVO: ${item.objective || agent.primary_objective}

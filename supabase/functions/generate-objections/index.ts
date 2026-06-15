@@ -68,7 +68,7 @@ PRICING: ${JSON.stringify(product.pricing) || "No definido"}
         .join("\n\n");
     }
 
-    const systemPrompt = `Usted es um especialista em ventas via WhatsApp. Genera objeções prováveis con respuestas CURTAS e DIRETAS, otimizadas para mensajes de texto.
+    const systemPrompt = `Vos sos um especialista em ventas via WhatsApp. Genera objeções prováveis con respuestas CURTAS e DIRETAS, otimizadas para mensajes de texto.
 
 ${productContext}
 ${knowledgeContext}
@@ -78,8 +78,8 @@ CATEGORIAS:
 - timing: "No es o momento"  
 - trust: Falta de confiança
 - thinking: "Vou pensar"
-- partner: "Preciso falar con sócio"
-- competitor: "Ya uso otra solução"
+- partner: "Preciso hablar con sócio"
+- competitor: "Ya uso otra solución"
 
 ⚠️ REGRAS CRÍTICAS - RESPOSTAS PARA WHATSAPP:
 1. SIGNIFICADO: Máximo 1 linha (20-30 palavras)

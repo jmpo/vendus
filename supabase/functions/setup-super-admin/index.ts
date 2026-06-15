@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
         { onConflict: "id" },
       );
 
-    // Organização opcional
+    // Organización opcional
     let organizationId: string | null = null;
     if (companyName) {
       const { data: org, error: orgErr } = await admin

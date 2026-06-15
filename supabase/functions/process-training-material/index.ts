@@ -198,7 +198,7 @@ async function extractDocumentFaithfully(fileData: Blob, mimeType: string, filen
       messages: [
         {
           role: 'system',
-          content: `Usted es um extrator de texto de documentos.
+          content: `Vos sos um extrator de texto de documentos.
 
 REGRAS ABSOLUTAS:
 1. Extraia TODO o texto do documento de forma FIEL e COMPLETA

@@ -44,7 +44,7 @@ async function llmFallback(
     .join("\n");
 
   const systemPrompt =
-    `Usted es um supervisor de IA que roteia conversaciones para el agente especialista mais adequado. ` +
+    `Vos sos um supervisor de IA que roteia conversaciones para el agente especialista mais adequado. ` +
     `Analiza o contexto e elegí UM especialista da lista. Responde solo via tool call.`;
 
   const userPrompt = `Contexto:
@@ -56,7 +56,7 @@ async function llmFallback(
 Últimas mensajes:
 ${conversationSnippet || "(sem historial)"}
 
-Especialistas disponíveis:
+Especialistas disponibles:
 ${
     specialists
       .map(

@@ -973,7 +973,7 @@ Deno.serve(async (req) => {
             convOut = existingConvOut as any;
           }
 
-          // Fallback: só temos LID — tenta achar conversación que ya tenga esse LID guardado.
+          // Fallback: só temos LID — tenta encontrar conversación que ya tenga esse LID guardado.
           if (!convOut?.id && lidId) {
             const { data: convByLid } = await supabase
               .from("webchat_conversations")
@@ -1187,8 +1187,8 @@ Deno.serve(async (req) => {
 
       // Find or create conversation for this phone + org.
       // Estratégia tolerante a troca de instância:
-      //   1) Tenta achar conversación aberta con a MESMA instância.
-      //   2) Se no achar, busca qualquer conversación aberta do mismo (org, teléfono, whatsapp)
+      //   1) Tenta encontrar conversación abierta con a MESMA instância.
+      //   2) Se no encontrar, busca cualquier conversación abierta do mismo (org, teléfono, whatsapp)
       //      sin filtrar instância — assim PRESERVAMOS o historial do contato mismo
       //      cuando o número es reconectado/migrado para otra instância.
       // NÃO fechamos conversaciones duplicadas automaticamente: o historial del agente
@@ -1216,7 +1216,7 @@ Deno.serve(async (req) => {
       if (existingByPhone?.id) {
         existing = { id: existingByPhone.id };
         if ((existingByPhone as any).status === "closed") {
-          // Reabre a mismla conversación em vez de crear uma nova: preserva historial
+          // Reabre a mismla conversación en vez de crear uma nova: preserva historial
           await supabase
             .from("webchat_conversations")
             .update({ status: "waiting_human", closed_at: null })
@@ -1225,7 +1225,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Telemetria: se hay mais de una conversación aberta, solo logamos.
+      // Telemetria: se hay mais de una conversación abierta, solo logamos.
       try {
         const { count: openCount } = await supabase
           .from("webchat_conversations")
@@ -1523,7 +1523,7 @@ Deno.serve(async (req) => {
           console.warn("[evolution-webhook] funnel lookup error:", e?.message || String(e));
         }
 
-        // Resolve sector estándar da organização (fallback "Sem Sector")
+        // Resolve sector estándar da organización (fallback "Sem Sector")
         let defaultSectorId: string | null = null;
         try {
           const { data: defSec } = await supabase
@@ -1663,7 +1663,7 @@ Deno.serve(async (req) => {
           console.warn("[evolution-webhook] profile pic lookup failed (non-fatal):", picErr);
         }
 
-        // Safety net: data qualquer otrla conversación aberta do mismo teléfono normalizado
+        // Safety net: cualquier cualquier otrla conversación abierta do mismo teléfono normalizado
         const { error: closeErr } = await supabase
           .from("webchat_conversations")
           .update({ status: "closed", closed_at: new Date().toISOString() })
@@ -1880,9 +1880,9 @@ Deno.serve(async (req) => {
               }
             } else {
               if (norm.media.type === "audio") {
-                processedContent = `🎙️ [Áudio recibido — sin dados disponíveis para transcrição.]`;
+                processedContent = `🎙️ [Áudio recibido — sin dados disponibles para transcrição.]`;
               } else {
-                processedContent = `🖼️ [Imagen recibida — sin dados disponíveis para análise.]`;
+                processedContent = `🖼️ [Imagen recibida — sin dados disponibles para análise.]`;
               }
               console.warn(`[evolution-webhook] media has no b64 nor url; using fallback placeholder`);
             }
@@ -1928,7 +1928,7 @@ Deno.serve(async (req) => {
       // INBOUND DEDUP — Evolution Go puede reentregar o mismo webhook
       // várias vezes (timeout do nosso handler). Camadas:
       //  1) processed_messages (UNIQUE instance_id+message_id) → barra retries
-      //     antes de qualquer trabalho pesado. TTL de 24h.
+      //     antes de cualquier trabajo pesado. TTL de 24h.
       //  2) webchat_messages.metadata->>evolution_message_id → 2ª barreira.
       // ============================================================
       if (norm.messageId) {
@@ -2469,7 +2469,7 @@ Deno.serve(async (req) => {
             if (instanceLockAgent.product_id) resolvedProductId = instanceLockAgent.product_id;
             // Se la conversación ya está con OUTRO agente ATIVO da misma org (típico
             // después handoff Maria→Sonia), respeite — NÃO force voltar pro instance lock.
-            // Só sobrescreve se current_agent_id for null/inválido.
+            // Só sobrescribe se current_agent_id for null/inválido.
             const currentAgentId = (conv as any).current_agent_id || null;
             if (currentAgentId && currentAgentId !== agentId) {
               const { data: currentAgentRow } = await supabase
@@ -2873,7 +2873,7 @@ Deno.serve(async (req) => {
         // Never break the webhook because of bot errors — Evolution Go would retry
         console.error("[evolution-webhook] bot_call: exception", botErr?.message || String(botErr));
       } finally {
-        // Sempre libera o lock por conversación (best-effort)
+        // Siempre libera o lock por conversación (best-effort)
         try { await releaseConversationLock(supabase, conversationId); } catch (_) { /* noop */ }
       }
 

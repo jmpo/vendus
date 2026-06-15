@@ -71,13 +71,13 @@ Deno.serve(async (req) => {
     let organizationId: string | null = null;
 
     if (body.scope === 'platform' || (isSuper && !body.scope)) {
-      if (!isSuper) return json({ error: 'Solo super admin puede acessar o escopo platform' }, 403);
+      if (!isSuper) return json({ error: 'Solo super admin puede acceder o escopo platform' }, 403);
       scope = 'platform';
     } else {
       scope = 'organization';
       const { data: profile } = await admin.from('profiles').select('organization_id').eq('id', userId).maybeSingle();
       organizationId = profile?.organization_id ?? null;
-      if (!organizationId) return json({ error: 'Usuario sin organização' }, 400);
+      if (!organizationId) return json({ error: 'Usuario sin organización' }, 400);
       if (!isAdminOrManager && !isSuper) return json({ error: 'Permissão negada' }, 403);
     }
 

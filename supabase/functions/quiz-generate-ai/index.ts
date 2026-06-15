@@ -101,7 +101,7 @@ Problemas que resolve: ${product.problems_solved || 'N/A'}
     if (capture_whatsapp) captureFields.push('WhatsApp (input_type:"phone", variable_name:"whatsapp")');
     if (capture_email) captureFields.push('E-mail (input_type:"email", variable_name:"email")');
 
-    const systemPrompt = `Usted es especialista em crear QUIZZES de calificación de leads de alta conversão.
+    const systemPrompt = `Vos sos especialista em crear QUIZZES de calificación de leads de alta conversão.
 
 ${productContext ? `CONTEXTO DO PRODUTO:\n${productContext}\n` : ''}
 ${knowledgeContext ? `CONHECIMENTO DO PRODUTO (Cérebro):\n${knowledgeContext}\n` : ''}

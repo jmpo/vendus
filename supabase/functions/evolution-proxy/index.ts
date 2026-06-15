@@ -354,7 +354,7 @@ Deno.serve(async (req) => {
         return new Response(
           JSON.stringify({
             ok: false,
-            error: "Servidor criou a instância mas no retornou UUID. Verifique a versão do Evolution Go.",
+            error: "Servidor criou a instância mas no devolvió UUID. Verifique a versão do Evolution Go.",
             response: createRes.body,
           }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -414,7 +414,7 @@ Deno.serve(async (req) => {
     // ---- CREATE INSTANCE SELF-SERVICE (admin/manager da org) ----
     // Cliente cria instância para la própria empresa, respeitando o limite do plano.
     if (action === "create_instance_self") {
-      // Authorization: precisa ser admin ou manager da organização
+      // Authorization: precisa ser admin ou manager da organización
       if (!profile?.organization_id) {
         return new Response(JSON.stringify({ error: "Usuario sin empresa vinculada." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -523,7 +523,7 @@ Deno.serve(async (req) => {
       if (!uuid) {
         return new Response(JSON.stringify({
           ok: false,
-          error: "Servidor criou a instância mas no retornou UUID.",
+          error: "Servidor criou a instância mas no devolvió UUID.",
           response: createRes.body,
         }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
@@ -623,7 +623,7 @@ Deno.serve(async (req) => {
     }
 
     // ---- DELETE INSTANCE SELF (org admin/manager) ----
-    // Mesma lógica de delete_instance, mas escopada à organização do usuario.
+    // Mesma lógica de delete_instance, mas escopada à organización do usuario.
     if (action === "delete_instance_self") {
       if (!profile?.organization_id && !isSuperAdmin) {
         return new Response(JSON.stringify({ error: "Usuario sin empresa vinculada." }), {
@@ -868,9 +868,9 @@ Deno.serve(async (req) => {
 
         let webhookRes: { ok: boolean; error?: string; status?: number; response?: any };
         if (!parsed.uuid) {
-          webhookRes = { ok: false, error: "Servidor no retornou UUID." };
+          webhookRes = { ok: false, error: "Servidor no devolvió UUID." };
         } else if (!parsed.token) {
-          webhookRes = { ok: false, error: "Servidor no retornou token da instância." };
+          webhookRes = { ok: false, error: "Servidor no devolvió token da instância." };
         } else {
           webhookRes = await configureWebhook(config, parsed.uuid, parsed.token, webhookUrl);
         }

@@ -1,4 +1,4 @@
-// Salva (ou atualiza) a chave de API de um provedor de IA da organização.
+// Salva (ou atualiza) a chave de API de um provedor de IA da organización.
 // Faz uma verificação real chamando o provedor antes de gravar.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 

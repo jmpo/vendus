@@ -75,7 +75,7 @@ PRICING: ${JSON.stringify(product.pricing) || "No definido"}
         .join("\n");
     }
 
-    const systemPrompt = `Usted es um especialista em ventas via WhatsApp. Genera respuestas CURTAS e DIRETAS para copiar e enviar.
+    const systemPrompt = `Vos sos um especialista em ventas via WhatsApp. Genera respuestas CURTAS e DIRETAS para copiar e enviar.
 
 ${productContext}
 ${knowledgeContext}

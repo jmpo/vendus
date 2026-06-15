@@ -113,7 +113,7 @@ async function logExecution(
   }
 }
 
-// Verifica se a organização ultrapassou limites de segurança (ex: muchas execuções/día).
+// Verifica se a organización ultrapassou limites de segurança (ex: muchas execuções/día).
 // Retorna { allowed, reason } — chamar antes de executeTool em loops del agente.
 export async function checkSafetyLimits(
   ctx: ToolContext,

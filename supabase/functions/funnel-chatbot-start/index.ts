@@ -60,7 +60,7 @@ serve(async (req) => {
       });
     }
 
-    // Reaproveitla conversación recente do mismo visitor (mismo embudo) se aún aberta.
+    // Reaproveitla conversación recente do mismo visitor (mismo embudo) se aún abierta.
     const { data: existing } = await supabase
       .from('webchat_conversations')
       .select('id, lead_id, status')

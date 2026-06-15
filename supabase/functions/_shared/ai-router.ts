@@ -91,7 +91,7 @@ export async function resolveAIConfig(
 ): Promise<ResolvedAIConfig> {
   const envLovableKey = Deno.env.get('LOVABLE_API_KEY') || '';
 
-  /** Lê um plano efetivo da organização (provider/strategy/allow). */
+  /** Lê um plano efetivo da organización (provider/strategy/allow). */
   async function readPlan(): Promise<{ allow: boolean; provider: string; strategy: string }> {
     if (!organizationId) return { allow: true, provider: 'lovable', strategy: 'random' };
     try {
@@ -263,7 +263,7 @@ export async function recordAIUsage(
 }
 
 /**
- * Atalho para chamadas diretas ao Lovable Gateway (raw fetch).
+ * Atajo para chamadas diretas ao Lovable Gateway (raw fetch).
  * Equivale a recordAIUsage con cfg sintético source='gateway'.
  */
 export async function recordLovableUsage(
@@ -310,7 +310,7 @@ export async function resolveEmbeddingsConfig(
       apiKey: fallbackKey,
     };
   }
-  throw new Error('Embeddings requerem uma chave OpenAI configurada na organização ou na plataforma.');
+  throw new Error('Embeddings requerem uma chave OpenAI configurada na organización ou na plataforma.');
 }
 
 /**
