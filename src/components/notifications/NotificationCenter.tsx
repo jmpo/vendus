@@ -142,7 +142,7 @@ export function NotificationCenter() {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border">
-          <h3 className="font-semibold text-foreground">Notificações</h3>
+          <h3 className="font-semibold text-foreground">Notificaciones</h3>
           {unreadCount && unreadCount > 0 && (
             <Button 
               variant="ghost" 
