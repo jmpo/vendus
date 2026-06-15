@@ -91,8 +91,8 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
       <div>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-lg font-semibold text-foreground">Seus Produtos</h3>
-            <p className="text-sm text-muted-foreground">Selecione um produto para começar a vender</p>
+            <h3 className="text-lg font-semibold text-foreground">Tus Productos</h3>
+            <p className="text-sm text-muted-foreground">Seleccioná un producto para empezar a vender</p>
           </div>
           <Button variant="ghost" className="text-primary">
             Ver todos
