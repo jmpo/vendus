@@ -35,11 +35,11 @@ export default function Login() {
       if (error) {
         toast.error(translateAuthError(error.message));
       } else {
-        toast.success('Bem-vindo de volta!');
+        toast.success('¡Bienvenido de vuelta!');
         navigate('/');
       }
     } catch (error) {
-      toast.error('Ocorreu um erro inesperado');
+      toast.error('Ocurrió un error inesperado');
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +48,7 @@ export default function Login() {
   const handleForgotSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
-      toast.error('Digite seu email');
+      toast.error('Ingresá tu email');
       return;
     }
     setIsLoading(true);
@@ -56,7 +56,7 @@ export default function Login() {
       await supabase.auth.resetPasswordForEmail(email.trim(), {
         redirectTo: `${window.location.origin}/reset-password`,
       });
-      // Mensagem genérica — não expõe se o email existe (anti-enumeração)
+      // Mensaje genérico — no expone si el email existe (anti-enumeración)
       setForgotSent(true);
     } catch {
       setForgotSent(true);
