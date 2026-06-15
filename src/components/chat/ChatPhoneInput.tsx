@@ -42,7 +42,7 @@ export function ChatPhoneInput({
   value,
   onChange,
   onSubmit,
-  placeholder = '(11) 99999-9999',
+  placeholder = '981 234 567',
   primaryColor = '#6366f1',
   className,
 }: ChatPhoneInputProps) {
@@ -56,19 +56,25 @@ export function ChatPhoneInput({
   };
 
   const formatPhone = (input: string): string => {
-    // Remove non-digits
     const digits = input.replace(/\D/g, '');
-    
+
+    // Paraguay: 9XX XXX XXX (mobile)
+    if (country.code === '+595') {
+      if (digits.length <= 3) return digits;
+      if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+      return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 9)}`;
+    }
+
     // Brazilian format: (XX) XXXXX-XXXX
     if (country.code === '+55') {
       if (digits.length <= 2) return digits;
       if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
       return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
     }
-    
-    // Default format
+
     return digits;
   };
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatPhone(e.target.value);
