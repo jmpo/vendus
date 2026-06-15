@@ -164,11 +164,11 @@ export default function Login() {
               <div className="flex gap-8 pt-8">
                 <div>
                   <p className="text-3xl font-bold text-white">+40%</p>
-                  <p className="text-sm text-white/80">Conversão</p>
+                  <p className="text-sm text-white/80">Conversión</p>
                 </div>
                 <div>
                   <p className="text-3xl font-bold text-white">-50%</p>
-                  <p className="text-sm text-white/80">Tempo resposta</p>
+                  <p className="text-sm text-white/80">Tiempo respuesta</p>
                 </div>
                 <div>
                   <p className="text-3xl font-bold text-white">15+</p>
@@ -179,7 +179,7 @@ export default function Login() {
           </div>
 
           <p className="text-sm text-white/80 relative">
-            {footerText || `© ${new Date().getFullYear()} ${platformName}. Todos os direitos reservados.`}
+            {footerText || `© ${new Date().getFullYear()} ${platformName}. Todos los derechos reservados.`}
           </p>
         </div>
       )}
