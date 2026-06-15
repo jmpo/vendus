@@ -39,18 +39,18 @@ interface SidebarProps {
   onCollapsedChange?: (collapsed: boolean) => void;
 }
 
-// Menu quando tem produto selecionado
+// Menú cuando hay producto seleccionado
 const productNavItems = [
-  { id: 'product-dashboard', label: 'Visão Geral', icon: LayoutDashboard },
+  { id: 'product-dashboard', label: 'Resumen', icon: LayoutDashboard },
   { id: 'leads', label: 'Pipeline', icon: Users },
-  { id: 'inbox', label: 'Conversas', icon: MessageSquare },
-  { id: 'tasks', label: 'Tarefas', icon: CheckSquare },
-  { id: 'bookings', label: 'Agendamentos', icon: CalendarCheck },
-  { id: 'financial', label: 'Financeiro', icon: DollarSign },
-  { id: 'cadence', label: 'Cadência', icon: Calendar },
+  { id: 'inbox', label: 'Conversaciones', icon: MessageSquare },
+  { id: 'tasks', label: 'Tareas', icon: CheckSquare },
+  { id: 'bookings', label: 'Agenda', icon: CalendarCheck },
+  { id: 'financial', label: 'Financiero', icon: DollarSign },
+  { id: 'cadence', label: 'Cadencia', icon: Calendar },
   { id: 'playbook', label: 'Playbook', icon: BookOpen },
-  { id: 'objections', label: 'Objeções', icon: MessageSquareWarning },
-  { id: 'materials', label: 'Materiais', icon: FolderOpen },
+  { id: 'objections', label: 'Objeciones', icon: MessageSquareWarning },
+  { id: 'materials', label: 'Materiales', icon: FolderOpen },
   { id: 'ai', label: 'IA Copiloto', icon: Bot },
 ];
 
@@ -141,13 +141,13 @@ export function Sidebar({
               <div className="px-3 py-8 text-center">
                 <Package className="h-8 w-8 mx-auto text-muted-foreground/50 mb-3" />
                 <p className="text-sm text-muted-foreground">
-                  Nenhum produto atribuído
+                  Ningún producto asignado
                 </p>
               </div>
             ) : (
               <>
                 <p className="px-3 mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Meus Produtos
+                  Mis Productos
                 </p>
                 <div className="space-y-1">
                   {assignedProducts.map((product) => (
@@ -189,7 +189,7 @@ export function Sidebar({
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
           >
             <Shield size={20} />
-            {!collapsed && <span className="text-sm">Painel Admin</span>}
+            {!collapsed && <span className="text-sm">Panel Admin</span>}
           </Link>
         )}
         <Link
@@ -197,7 +197,7 @@ export function Sidebar({
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
         >
           <Settings size={20} />
-          {!collapsed && <span className="text-sm">Configurações</span>}
+          {!collapsed && <span className="text-sm">Configuración</span>}
         </Link>
       </div>
     </aside>

@@ -35,11 +35,11 @@ export default function Login() {
       if (error) {
         toast.error(translateAuthError(error.message));
       } else {
-        toast.success('Bem-vindo de volta!');
+        toast.success('¡Bienvenido de vuelta!');
         navigate('/');
       }
     } catch (error) {
-      toast.error('Ocorreu um erro inesperado');
+      toast.error('Ocurrió un error inesperado');
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +48,7 @@ export default function Login() {
   const handleForgotSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
-      toast.error('Digite seu email');
+      toast.error('Ingresá tu email');
       return;
     }
     setIsLoading(true);
@@ -56,7 +56,7 @@ export default function Login() {
       await supabase.auth.resetPasswordForEmail(email.trim(), {
         redirectTo: `${window.location.origin}/reset-password`,
       });
-      // Mensagem genérica — não expõe se o email existe (anti-enumeração)
+      // Mensaje genérico — no expone si el email existe (anti-enumeración)
       setForgotSent(true);
     } catch {
       setForgotSent(true);
@@ -76,9 +76,9 @@ export default function Login() {
       if (result.error) {
         toast.error(translateAuthError(result.error.message));
       }
-      // Se result.redirected === true, o navegador será redirecionado automaticamente
+      // Si result.redirected === true, el navegador será redirigido automáticamente
     } catch (error) {
-      toast.error('Ocorreu um erro inesperado');
+      toast.error('Ocurrió un error inesperado');
     } finally {
       setIsGoogleLoading(false);
     }
@@ -164,11 +164,11 @@ export default function Login() {
               <div className="flex gap-8 pt-8">
                 <div>
                   <p className="text-3xl font-bold text-white">+40%</p>
-                  <p className="text-sm text-white/80">Conversão</p>
+                  <p className="text-sm text-white/80">Conversión</p>
                 </div>
                 <div>
                   <p className="text-3xl font-bold text-white">-50%</p>
-                  <p className="text-sm text-white/80">Tempo resposta</p>
+                  <p className="text-sm text-white/80">Tiempo respuesta</p>
                 </div>
                 <div>
                   <p className="text-3xl font-bold text-white">15+</p>
@@ -179,7 +179,7 @@ export default function Login() {
           </div>
 
           <p className="text-sm text-white/80 relative">
-            {footerText || `© ${new Date().getFullYear()} ${platformName}. Todos os direitos reservados.`}
+            {footerText || `© ${new Date().getFullYear()} ${platformName}. Todos los derechos reservados.`}
           </p>
         </div>
       )}
@@ -204,12 +204,12 @@ export default function Login() {
 
           <div className="text-center lg:text-left">
             <h2 className="text-2xl font-bold text-foreground">
-              {view === 'login' ? 'Entrar na conta' : 'Recuperar senha'}
+              {view === 'login' ? 'Iniciar sesión' : 'Recuperar contraseña'}
             </h2>
             <p className="text-muted-foreground mt-2">
               {view === 'login'
-                ? 'Entre com suas credenciais para acessar'
-                : 'Digite seu email e enviaremos um link para redefinir sua senha'}
+                ? 'Ingresá tus credenciales para acceder'
+                : 'Ingresá tu email y te enviaremos un enlace para restablecer tu contraseña'}
             </p>
           </div>
 
@@ -233,7 +233,7 @@ export default function Login() {
                       <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                       <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                     </svg>
-                    Continuar com Google
+                    Continuar con Google
                   </>
                 )}
               </Button>
@@ -244,7 +244,7 @@ export default function Login() {
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="bg-background px-2 text-muted-foreground">
-                    ou continue com email
+                    o continuá con email
                   </span>
                 </div>
               </div>
@@ -267,7 +267,7 @@ export default function Login() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password">Senha</Label>
+                  <Label htmlFor="password">Contraseña</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <Input
@@ -288,7 +288,7 @@ export default function Login() {
                     <Loader2 className="h-5 w-5 animate-spin" />
                   ) : (
                     <>
-                      Entrar
+                      Ingresar
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </>
                   )}
@@ -304,7 +304,7 @@ export default function Login() {
                   }}
                   className="text-primary hover:underline text-sm"
                 >
-                  Esqueci minha senha
+                  Olvidé mi contraseña
                 </button>
               </div>
             </>
@@ -315,7 +315,7 @@ export default function Login() {
               {forgotSent ? (
                 <div className="space-y-4">
                   <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
-                    Se este email estiver cadastrado, enviaremos um link de recuperação em alguns instantes. Verifique sua caixa de entrada e a pasta de spam.
+                    Si este email está registrado, te enviaremos un enlace de recuperación en unos instantes. Revisá tu bandeja de entrada y la carpeta de spam.
                   </div>
                   <Button
                     type="button"
@@ -325,7 +325,7 @@ export default function Login() {
                       setForgotSent(false);
                     }}
                   >
-                    Voltar ao login
+                    Volver al login
                   </Button>
                 </div>
               ) : (
@@ -337,7 +337,7 @@ export default function Login() {
                       <Input
                         id="forgot-email"
                         type="email"
-                        placeholder="seu@email.com"
+                        placeholder="tu@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="pl-10 h-12 bg-card border-border"
@@ -351,7 +351,7 @@ export default function Login() {
                       <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
                       <>
-                        Enviar link de recuperação
+                        Enviar enlace de recuperación
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </>
                     )}
@@ -363,7 +363,7 @@ export default function Login() {
                       onClick={() => setView('login')}
                       className="text-primary hover:underline text-sm"
                     >
-                      Voltar ao login
+                      Volver al login
                     </button>
                   </div>
                 </form>

@@ -78,12 +78,12 @@ export function Header({
           )}
 
           {/* Help */}
-          <Button variant="ghost" size="icon" onClick={() => navigate('/ajuda')} title="Central de Ajuda">
+          <Button variant="ghost" size="icon" onClick={() => navigate('/ajuda')} title="Centro de Ayuda">
             <HelpCircle className="h-5 w-5" />
           </Button>
 
           {/* Updates */}
-          <Button variant="ghost" size="icon" onClick={() => navigate('/novidades')} title="Novidades" className="relative">
+          <Button variant="ghost" size="icon" onClick={() => navigate('/novidades')} title="Novedades" className="relative">
             <Sparkles className="h-5 w-5" />
             {unreadReleases > 0 && (
               <Badge variant="default" className="absolute -top-1 -right-1 h-4 min-w-[1rem] px-1 text-[10px] flex items-center justify-center">
@@ -116,23 +116,23 @@ export function Header({
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>
                 <div className="flex flex-col">
-                  <span>{profile?.full_name || 'Usuário'}</span>
+                  <span>{profile?.full_name || 'Usuario'}</span>
                   <span className="text-xs font-normal text-muted-foreground">{profile?.email}</span>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => navigate('/perfil')}>
                 <User size={16} />
-                Meu Perfil
+                Mi Perfil
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/configuracoes')}>
                 <Settings size={16} />
-                Configurações
+                Configuración
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
                 <LogOut size={16} />
-                Sair
+                Cerrar sesión
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

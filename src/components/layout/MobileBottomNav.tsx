@@ -12,11 +12,11 @@ interface MobileBottomNavProps {
 }
 
 const navItems = [
-  { id: 'product-dashboard', label: 'Home', icon: LayoutDashboard },
+  { id: 'product-dashboard', label: 'Inicio', icon: LayoutDashboard },
   { id: 'leads', label: 'Leads', icon: Users },
-  { id: 'inbox', label: 'Conversas', icon: MessageSquare },
+  { id: 'inbox', label: 'Conversaciones', icon: MessageSquare },
   { id: 'ai', label: 'IA', icon: Bot },
-  { id: 'more', label: 'Mais', icon: Menu },
+  { id: 'more', label: 'Más', icon: Menu },
 ];
 
 export function MobileBottomNav({ activeTab, onTabChange, onMoreClick, hasProduct }: MobileBottomNavProps) {

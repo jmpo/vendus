@@ -28,7 +28,7 @@ import {
   X
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -142,7 +142,7 @@ export function NotificationCenter() {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border">
-          <h3 className="font-semibold text-foreground">Notificações</h3>
+          <h3 className="font-semibold text-foreground">Notificaciones</h3>
           {unreadCount && unreadCount > 0 && (
             <Button 
               variant="ghost" 
@@ -206,7 +206,7 @@ export function NotificationCenter() {
                         <p className="text-xs text-muted-foreground mt-2">
                           {formatDistanceToNow(new Date(notification.created_at), { 
                             addSuffix: true, 
-                            locale: ptBR 
+                            locale: es 
                           })}
                         </p>
                       </div>
@@ -222,7 +222,7 @@ export function NotificationCenter() {
                         "opacity-0 group-hover:opacity-100",
                         "hover:bg-muted text-muted-foreground hover:text-foreground"
                       )}
-                      title="Remover notificação"
+                      title="Quitar notificación"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -233,8 +233,8 @@ export function NotificationCenter() {
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
               <Bell className="h-10 w-10 mb-3 opacity-40" />
-              <p className="text-sm">Nenhuma notificação</p>
-              <p className="text-xs mt-1">Você está em dia!</p>
+              <p className="text-sm">No hay notificaciones</p>
+              <p className="text-xs mt-1">¡Estás al día!</p>
             </div>
           )}
         </ScrollArea>

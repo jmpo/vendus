@@ -42,9 +42,9 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
   const { funnelData, conversionData, commissions, stats, isLoading } = useDashboardData(product.id, userId);
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat('es', {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'USD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value);
@@ -52,7 +52,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
 
   const statsCards = [
     { 
-      label: 'Leads Ativos', 
+      label: 'Leads Activos', 
       value: stats.activeLeadsCount.toString(), 
       change: `${stats.wonDealsCount} convertidos`,
       icon: Users,
@@ -60,25 +60,25 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
       bg: 'bg-blue-500/10'
     },
     { 
-      label: 'Taxa de Conversão', 
+      label: 'Tasa de Conversión', 
       value: `${stats.conversionRate}%`, 
-      change: 'dos deals fechados',
+      change: 'de deals cerrados',
       icon: TrendingUp,
       color: 'text-emerald-500',
       bg: 'bg-emerald-500/10'
     },
     { 
-      label: 'Valor Ganho', 
+      label: 'Valor Ganado', 
       value: formatCurrency(stats.wonDealsValue), 
-      change: `${stats.wonDealsCount} negócios`,
+      change: `${stats.wonDealsCount} negocios`,
       icon: Target,
       color: 'text-violet-500',
       bg: 'bg-violet-500/10'
     },
     { 
-      label: 'Comissões', 
+      label: 'Comisiones', 
       value: formatCurrency(stats.totalCommissions), 
-      change: `${formatCurrency(stats.pendingCommissions)} pendente`,
+      change: `${formatCurrency(stats.pendingCommissions)} pendiente`,
       icon: DollarSign,
       color: 'text-amber-500',
       bg: 'bg-amber-500/10'
@@ -96,7 +96,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
           )}
         </div>
         <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
-          Ativo
+          Activo
         </Badge>
       </div>
 
@@ -140,7 +140,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-lg font-semibold flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-amber-500" />
-              Leads em Risco
+              Leads en Riesgo
             </CardTitle>
             <Button variant="ghost" size="sm" onClick={() => onNavigate('leads')}>
               Ver pipeline
@@ -150,7 +150,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
           <CardContent className="space-y-3">
             {isLoading ? (
               <div className="text-center py-6 text-muted-foreground text-sm animate-pulse">
-                Carregando...
+                Cargando...
               </div>
             ) : stats.atRiskLeads.length > 0 ? (
               stats.atRiskLeads.map((lead) => (
@@ -165,7 +165,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
                     <div>
                       <p className="text-sm font-medium text-foreground">{lead.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {lead.company || 'Sem empresa'} • {lead.daysWithoutContact} dias sem contato
+                        {lead.company || 'Sin empresa'} • {lead.daysWithoutContact} días sin contacto
                       </p>
                     </div>
                   </div>
@@ -176,7 +176,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
               ))
             ) : (
               <div className="text-center py-6 text-muted-foreground text-sm">
-                Nenhum lead em risco 🎉
+                Sin leads en riesgo 🎉
               </div>
             )}
           </CardContent>
@@ -204,7 +204,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <ListTodo className="h-5 w-5 text-primary" />
-                Tarefas do Dia
+                Tareas del Día
               </CardTitle>
               <Button variant="ghost" size="sm" onClick={() => onNavigate('tasks')}>
                 Ver central
@@ -233,7 +233,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
           <Users className="h-5 w-5 mr-3 text-primary" />
           <div className="text-left">
             <div className="font-medium">Pipeline de Leads</div>
-            <div className="text-xs text-muted-foreground">Gerenciar oportunidades</div>
+            <div className="text-xs text-muted-foreground">Gestionar oportunidades</div>
           </div>
         </Button>
         <Button 
@@ -243,8 +243,8 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
         >
           <Calendar className="h-5 w-5 mr-3 text-primary" />
           <div className="text-left">
-            <div className="font-medium">Cadência</div>
-            <div className="text-xs text-muted-foreground">Roteiro de follow-up</div>
+            <div className="font-medium">Cadencia</div>
+            <div className="text-xs text-muted-foreground">Guion de follow-up</div>
           </div>
         </Button>
         <Button 
@@ -255,7 +255,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
           <MessageSquare className="h-5 w-5 mr-3 text-primary" />
           <div className="text-left">
             <div className="font-medium">IA Copiloto</div>
-            <div className="text-xs text-muted-foreground">Assistente de vendas</div>
+            <div className="text-xs text-muted-foreground">Asistente de ventas</div>
           </div>
         </Button>
       </div>

@@ -6,7 +6,7 @@ import { useTodaysTasks } from '@/hooks/useTasks';
 import { useTaskStats } from '@/hooks/useTaskAutomation';
 import { useAuth } from '@/hooks/useAuth';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { UpcomingEvents } from '@/components/calendar/UpcomingEvents';
 import { useNavigate } from 'react-router-dom';
@@ -33,10 +33,10 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
   };
 
   const stats = [
-    { label: 'Leads Ativos', value: '127', change: '+12%', icon: Users, trend: 'up' },
-    { label: 'Taxa Conversão', value: '32%', change: '+5%', icon: TrendingUp, trend: 'up' },
-    { label: 'Meta do Mês', value: '68%', change: 'R$ 45k restante', icon: Target, trend: 'neutral' },
-    { label: 'Tempo Resposta', value: '4min', change: '-2min', icon: Clock, trend: 'up' },
+    { label: 'Leads Activos', value: '127', change: '+12%', icon: Users, trend: 'up' },
+    { label: 'Tasa de Conversión', value: '32%', change: '+5%', icon: TrendingUp, trend: 'up' },
+    { label: 'Meta del Mes', value: '68%', change: '$ 45k restante', icon: Target, trend: 'neutral' },
+    { label: 'Tiempo Respuesta', value: '4min', change: '-2min', icon: Clock, trend: 'up' },
   ];
 
   return (
@@ -44,9 +44,9 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
       {/* Welcome Section */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Bom dia, Vendedor! 👋</h2>
+          <h2 className="text-2xl font-bold text-foreground">¡Buen día, Vendedor! 👋</h2>
           <p className="text-muted-foreground mt-1">
-            Você tem <span className="text-primary font-medium">{pendingTasks.length} tarefa{pendingTasks.length !== 1 ? 's' : ''}</span> pendente{pendingTasks.length !== 1 ? 's' : ''} hoje
+            Tenés <span className="text-primary font-medium">{pendingTasks.length} tarea{pendingTasks.length !== 1 ? 's' : ''}</span> pendiente{pendingTasks.length !== 1 ? 's' : ''} hoy
             {overdueCount > 0 && (
               <span className="text-destructive font-medium ml-2">
                 • {overdueCount} atrasada{overdueCount !== 1 ? 's' : ''}
@@ -56,7 +56,7 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
         </div>
         <Button variant="soft">
           <Plus size={18} className="mr-2" />
-          Novo Produto
+          Nuevo Producto
         </Button>
       </div>
 
@@ -91,8 +91,8 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
       <div>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-lg font-semibold text-foreground">Seus Produtos</h3>
-            <p className="text-sm text-muted-foreground">Selecione um produto para começar a vender</p>
+            <h3 className="text-lg font-semibold text-foreground">Tus Productos</h3>
+            <p className="text-sm text-muted-foreground">Seleccioná un producto para empezar a vender</p>
           </div>
           <Button variant="ghost" className="text-primary">
             Ver todos
@@ -118,7 +118,7 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
         {/* Today's Tasks Preview - Real Data */}
         <div className="lg:col-span-2 p-6 rounded-xl bg-card border border-border">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-foreground">Trabalho de Hoje</h3>
+            <h3 className="text-lg font-semibold text-foreground">Trabajo de Hoy</h3>
             {overdueCount > 0 && (
               <span className="flex items-center gap-1 text-sm text-destructive">
                 <AlertTriangle size={14} />
@@ -152,7 +152,7 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
                   <div>
                     <p className="font-medium text-foreground">{task.title}</p>
                     <p className="text-sm text-muted-foreground">
-                      {(task.products as any)?.name || 'Produto'} • {task.due_date && format(new Date(task.due_date), 'HH:mm', { locale: ptBR })}
+                      {(task.products as any)?.name || 'Producto'} • {task.due_date && format(new Date(task.due_date), 'HH:mm', { locale: es })}
                     </p>
                   </div>
                 </div>
@@ -161,7 +161,7 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
                     "text-sm font-medium",
                     task.status === 'overdue' ? "text-destructive" : "text-primary"
                   )}>
-                    {task.type === 'cadence' ? 'Cadência' : 'Follow-up'}
+                    {task.type === 'cadence' ? 'Cadencia' : 'Follow-up'}
                   </span>
                 </div>
               </div>
@@ -172,7 +172,7 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
                 <div className="h-12 w-12 rounded-xl bg-success/10 flex items-center justify-center mb-3">
                   <CheckCircle2 size={24} className="text-success" />
                 </div>
-                <p className="text-muted-foreground">Nenhuma tarefa pendente para hoje! 🎉</p>
+                <p className="text-muted-foreground">¡Sin tareas pendientes para hoy! 🎉</p>
               </div>
             )}
           </div>
