@@ -214,7 +214,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
                       value={newSlug}
                       onChange={(e) => setNewSlug(e.target.value)}
                       className="border-0 bg-transparent focus-visible:ring-0 px-0"
-                      placeholder="seu-nome"
+                      placeholder="tu-nome"
                     />
                   </div>
                 </div>
@@ -222,7 +222,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
               <div className="flex gap-2">
                 <Button onClick={handleSaveSlug} disabled={isSaving}>
                   {isSaving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                  Salvar
+                  Guardar
                 </Button>
                 <Button variant="outline" onClick={() => { setIsEditing(false); setNewSlug(bookingSlug); }}>
                   Cancelar

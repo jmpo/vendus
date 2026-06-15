@@ -85,7 +85,7 @@ export function MessageBubble({
   const [editContent, setEditContent] = useState(content);
   const [showActions, setShowActions] = useState(false);
 
-  // Deriva status real considerando metadata.delivery_status (mensagens WhatsApp falhas)
+  // Deriva status real considerando metadata.delivery_status (mensajes WhatsApp falhas)
   const deliveryStatus = (metadata as any)?.delivery_status as string | undefined;
   const deliveryError = (metadata as any)?.error as string | undefined;
   const effectiveStatus = deliveryStatus === 'failed' ? 'failed' : status;
@@ -266,7 +266,7 @@ export function MessageBubble({
           </p>
         )}
 
-        {/* Sender name (oculto quando for a própria mensagem do agente — reduz ruído visual) */}
+        {/* Sender name (oculto quando for a própria mensaje do agente — reduz ruído visual) */}
         {!isVisitor && isFirstInGroup && !isDeleted && !isOwnMessage && (
           <p className="text-[10px] opacity-70 mb-1 font-medium">
             {formatSenderLabel({
@@ -390,7 +390,7 @@ export function MessageBubble({
 }
 
 /**
- * Renderiza conteúdo da mensagem com formatação WhatsApp -> Markdown.
+ * Renderiza conteúdo da mensaje com formatação WhatsApp -> Markdown.
  * Restringe os elementos permitidos para evitar HTML arbitrário.
  */
 function MessageMarkdown({ content, isVisitor }: { content: string; isVisitor: boolean }) {

@@ -1,7 +1,7 @@
 {
   "name": "Vendus",
   "short_name": "Vendus",
-  "description": "Vendus — Plataforma de vendas com IA",
+  "description": "Vendus — Plataforma de ventas con IA",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
@@ -58,5 +58,5 @@
     }
   ],
   "categories": ["business", "productivity"],
-  "lang": "pt-BR"
+  "lang": "es-PY"
 }

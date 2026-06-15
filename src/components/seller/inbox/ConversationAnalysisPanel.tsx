@@ -75,7 +75,7 @@ export function ConversationAnalysisPanel({
         {!analysis && !isLoading ? (
           <div className="text-center py-8 space-y-4">
             <p className="text-sm text-muted-foreground">
-              A IA irá analisar toda a conversa e avaliar a qualidade do atendimento.
+              A IA irá analisar toda a conversa e avaliar a qualidade do atención.
             </p>
             <Button onClick={runAnalysis}>
               <BarChart3 className="h-4 w-4 mr-2" />
@@ -114,7 +114,7 @@ export function ConversationAnalysisPanel({
                   <p className="text-sm font-medium">{analysis.metrics.objectionsHandled}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-muted/50">
-                  <p className="text-xs text-muted-foreground">Técnicas de vendas</p>
+                  <p className="text-xs text-muted-foreground">Técnicas de ventas</p>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {analysis.metrics.salesTechniques.map((t, i) => (
                       <Badge key={i} variant="secondary" className="text-[10px]">{t}</Badge>

@@ -159,7 +159,7 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
             <div>
               <p className="font-medium text-amber-500">Lead sin contacto desde hace {stats.daysSinceContact} días</p>
               <p className="text-sm text-muted-foreground">
-                Considere entrar en contacto para no perder el timing
+                Considere ingresar en contacto para no perder el timing
               </p>
             </div>
           </CardContent>
@@ -334,7 +334,7 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
       {/* Conversa recente */}
       <LeadConversationPreview leadId={lead.id} />
 
-      {/* Cadencia + Próxima acción */}
+      {/* Cadencia + Siguiente acción */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <CardHeader className="pb-2">
@@ -367,7 +367,7 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
-              Próxima Acción
+              Siguiente Acción
             </CardTitle>
           </CardHeader>
           <CardContent>

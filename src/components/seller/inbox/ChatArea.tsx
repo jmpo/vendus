@@ -117,7 +117,7 @@ interface ChatAreaProps {
   onCreateDeal?: () => void;
   /** Abre os "Dados do Contato" (no mobile, abre o drawer). */
   onViewLead?: () => void;
-  /** Move o lead para um novo estágio do funil (popover rápido). */
+  /** Move o lead para um novo estágio do embudo (popover rápido). */
   onMoveStageQuick?: (stageId: string) => void;
   pipelineStages?: { id: string; name: string; color: string | null }[];
   currentStageId?: string | null;
@@ -125,7 +125,7 @@ interface ChatAreaProps {
   onTyping?: (isTyping: boolean) => void;
   /** Whether the visitor is currently connected/online on the channel. */
   peerOnline?: boolean;
-  /** Abre o seletor de catálogo (envia produto rico no chat). */
+  /** Abre o seletor de catálogo (envia producto rico no chat). */
   onPickCatalog?: () => void;
   /** Abre o dialog de geração de link de pagamento. */
   onSendPaymentLink?: () => void;
@@ -207,8 +207,8 @@ export function ChatArea({
 
   // Group messages by date
   const groupedMessages = useMemo(() => {
-    // Dedup visual: quando a mesma mensagem outbound aparece em duplicidade
-    // (ex.: bolha "Agente" + bolha "Agente IA", ou eco "via aparelho"),
+    // Dedup visual: quando a mesma mensaje outbound aparece em duplicidade
+    // (ex.: bolha "Agente" + bolha "Agente IA", o eco "via aparelho"),
     // mantém apenas UMA bolha — a de maior prioridade visual.
     const WINDOW_MS = 5 * 60 * 1000;
     const normalize = (s: string | null | undefined) =>
@@ -218,7 +218,7 @@ export function ChatArea({
     const isOutbound = (m: any) =>
       m?.direction === 'outbound' || m?.sender_type === 'agent' || m?.sender_type === 'bot';
 
-    // Prioridade: 1) agent (verde) 2) plataforma (não-device) 3) device 4) bot/IA
+    // Prioridade: 1) agent (verde) 2) plataforma (no-device) 3) device 4) bot/IA
     const priority = (m: any): number => {
       if (m?.sender_type === 'agent' && !isFromDevice(m)) return 4;
       if (m?.sender_type === 'agent' && isFromDevice(m)) return 2;
@@ -244,7 +244,7 @@ export function ChatArea({
         // duplicata — esconde a de menor prioridade
         const loser = priority(a) >= priority(b) ? b : a;
         hidden.add(loser.id);
-        if (loser.id === a.id) break; // a foi escondido, segue p/ próximo i
+        if (loser.id === a.id) break; // a foi escondido, segue p/ siguiente i
       }
     }
 
@@ -266,7 +266,7 @@ export function ChatArea({
     return groups;
   }, [messages]);
 
-  // Auto-scroll suave: dispara só quando muda o nº de mensagens ou estado de digitação
+  // Auto-scroll suave: dispara só quando muda o nº de mensajes o estado de digitação
   useEffect(() => {
     if (scrollRef.current) {
       const scrollElement = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
@@ -276,7 +276,7 @@ export function ChatArea({
     }
   }, [messages.length, isTyping]);
 
-  // Helper: formata o label do separador de dia (Hoje, Ontem, dia da semana, ou data completa)
+  // Helper: formata o label do separador de día (Hoy, Ayer, día da semana, o data completa)
   const formatDayLabel = (dateStr: string) => {
     const d = new Date(dateStr);
     if (isToday(d)) return 'Hoy';
@@ -337,7 +337,7 @@ export function ChatArea({
     switch (status) {
       case 'active': return 'Conversación activa';
       case 'waiting': return 'Esperando atención';
-      case 'bot_active': return 'Atención por IA';
+      case 'bot_active': return 'Atendiendo con IA';
       case 'closed': return 'Conversación finalizada';
       default: return status;
     }
@@ -425,7 +425,7 @@ export function ChatArea({
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Mais">
+                <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Más">
                   <MoreVertical className="h-[18px] w-[18px]" />
                 </Button>
               </DropdownMenuTrigger>
@@ -469,7 +469,7 @@ export function ChatArea({
         </div>
       )}
 
-      {/* ─────────── Header DESKTOP (mantém o layout antigo, mais informações) ─────────── */}
+      {/* ─────────── Header DESKTOP (mantém o layout antigo, más informações) ─────────── */}
       {!isMobile && (
       <div
         className="h-16 min-w-0 flex-shrink-0 px-3 sm:px-4 border-b border-border flex items-center justify-between bg-background relative gap-2 overflow-hidden"
@@ -503,7 +503,7 @@ export function ChatArea({
                 {visitorName || 'Visitante'}
               </span>
               {peerOnline && (
-                <span className="relative flex h-2 w-2 flex-shrink-0" title="Online agora">
+                <span className="relative flex h-2 w-2 flex-shrink-0" title="Online ahora">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-60" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
                 </span>
@@ -709,8 +709,8 @@ export function ChatArea({
             </div>
           ) : messages.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              <p className="text-sm">Nenhuma mensagem ainda</p>
-              <p className="text-xs mt-1">Envie uma mensagem para iniciar</p>
+              <p className="text-sm">Ninguna mensaje ainda</p>
+              <p className="text-xs mt-1">Envie uma mensaje para iniciar</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -770,14 +770,14 @@ export function ChatArea({
         </div>
       </ScrollArea>
 
-      {/* Footer — Aceitar atendimento OU modo espectador OU composer OU encerrada */}
+      {/* Footer — Aceitar atención OU modo espectador OU composer OU encerrada */}
       {needsAccept && onAcceptTicket ? (
         <AcceptTicketBar onAccept={onAcceptTicket} loading={!!isAccepting} />
       ) : viewerMode ? (
             <div className="border-t border-border bg-amber-50 dark:bg-amber-950/30 px-4 py-3 flex items-center justify-between gap-3 flex-shrink-0 min-w-0">
           <div className="text-sm">
             <span className="font-medium text-amber-900 dark:text-amber-200">
-              Você está visualizando este atendimento{attendantName ? ` de ${attendantName}` : ''}.
+              Estás visualizando esta atención{attendantName ? ` de ${attendantName}` : ''}.
             </span>
             <p className="text-xs text-amber-700 dark:text-amber-300">Para responder, assuma a conversa.</p>
           </div>
@@ -789,7 +789,7 @@ export function ChatArea({
         </div>
       ) : status !== 'closed' ? (
         <>
-          {/* QuickActionBar só no desktop — mobile ganha mais área útil para mensagens */}
+          {/* QuickActionBar só no desktop — mobile ganha más área útil para mensajes */}
           {!isMobile && (
             <QuickActionBar
               onSuggestReply={onAiSuggest ? handleAiSuggest : undefined}

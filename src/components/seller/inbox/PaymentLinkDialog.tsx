@@ -137,7 +137,7 @@ export function PaymentLinkDialog({
               type="url"
             />
             <p className="text-[11px] text-muted-foreground">
-              Cole o link gerado no Cakto, Stripe, Mercado Pago, Pix QR ou qualquer gateway.
+              Cole o link gerado no Cakto, Stripe, Mercado Pago, Pix QR o qualquer gateway.
             </p>
           </div>
 

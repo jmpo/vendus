@@ -48,7 +48,7 @@ export function ConversationHistoryList({
   if (!data?.length) {
     return (
       <p className="text-xs text-muted-foreground text-center py-4">
-        Nenhum atendimento anterior deste contato.
+        Ninguno atención anterior deste contato.
       </p>
     );
   }
@@ -79,7 +79,7 @@ export function ConversationHistoryList({
                     </Badge>
                   </div>
                   <p className="text-xs text-foreground/90 truncate mt-0.5">
-                    {previewWithMedia(c.last_message, (c as any).last_message_metadata, 70) || 'Sem mensagens'}
+                    {previewWithMedia(c.last_message, (c as any).last_message_metadata, 70) || 'Sem mensajes'}
                   </p>
                 </div>
               </div>

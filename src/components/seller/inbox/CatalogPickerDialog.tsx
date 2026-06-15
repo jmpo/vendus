@@ -102,7 +102,7 @@ export function CatalogPickerDialog({ open, onOpenChange, productId, onSend }: C
         <DialogHeader className="p-4 pb-0">
           <DialogTitle className="flex items-center gap-2">
             <Package className="h-5 w-5 text-primary" />
-            Catálogo de produtos
+            Catálogo de productos
           </DialogTitle>
         </DialogHeader>
 
@@ -110,7 +110,7 @@ export function CatalogPickerDialog({ open, onOpenChange, productId, onSend }: C
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar por nome, descrição ou etiqueta..."
+              placeholder="Buscar por nome, descrição o etiqueta..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9"
@@ -125,10 +125,10 @@ export function CatalogPickerDialog({ open, onOpenChange, productId, onSend }: C
           ) : filtered.length === 0 ? (
             <div className="p-12 text-center text-muted-foreground">
               <Package className="h-10 w-10 mx-auto mb-2 opacity-40" />
-              <p className="text-sm font-medium">{items.length === 0 ? 'Nenhum item no catálogo' : 'Nada encontrado'}</p>
+              <p className="text-sm font-medium">{items.length === 0 ? 'Ninguno item no catálogo' : 'Nada encontrado'}</p>
               <p className="text-xs mt-1">
                 {items.length === 0
-                  ? 'Cadastre produtos no catálogo para enviá-los rapidamente no chat.'
+                  ? 'Cadastre productos no catálogo para enviá-los rapidamente no chat.'
                   : 'Tente outros termos de busca.'}
               </p>
             </div>

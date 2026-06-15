@@ -146,7 +146,7 @@ export function ConversationList({
   // Contadores: usar os do backend (totais reais por aba) quando vierem; caso
   // contrário, calcular a partir do que está em tela.
   // "Atendendo" = humano. "Aguardando" inclui IA atendendo (bot_active) +
-  // sem ninguém (waiting_human) — em ambos os casos, ainda não há humano.
+  // sem ninguém (waiting_human) — em ambos os casos, ainda no há humano.
   const counts = useMemo(() => {
     if (tabCounts) return tabCounts;
     return {
@@ -189,14 +189,14 @@ export function ConversationList({
     return 'V';
   };
 
-  // Data BR como na referência: hoje → "HH:mm", ontem → "Ontem",
-  // mesma semana → "EEE HH:mm", mais antigo → "dd/MM/yyyy".
+  // Data BR como na referência: hoy → "HH:mm", ayer → "Ayer",
+  // mesma semana → "EEE HH:mm", más antigo → "dd/MM/yyyy".
   const formatDate = (date: string | null) => {
     if (!date) return '';
     const d = new Date(date);
     if (Number.isNaN(d.getTime())) return '';
     if (isToday(d)) return format(d, 'HH:mm');
-    if (isYesterday(d)) return 'Ontem';
+    if (isYesterday(d)) return 'Ayer';
     const diff = Math.abs(differenceInDays(new Date(), d));
     if (diff < 7) return format(d, 'EEE HH:mm', { locale: ptBR });
     return format(d, 'dd/MM/yyyy');
@@ -398,7 +398,7 @@ export function ConversationList({
                       </span>
                     </div>
 
-                    {/* Linha 2: preview da última mensagem real */}
+                    {/* Linha 2: preview da última mensaje real */}
                     <p
                       className={cn(
                         'text-[13px] truncate mt-1 min-w-0',
@@ -414,7 +414,7 @@ export function ConversationList({
                       )}
                     </p>
 
-                    {/* Linha 3: tags (setor + produto + atendente) */}
+                    {/* Linha 3: tags (setor + producto + atendente) */}
                     {(conv.sector_name || conv.product_name || (showAssignedUser && conv.assigned_user_name) || conv.current_agent_name) && (
                       <div className="flex items-center gap-1 flex-wrap mt-1.5 min-w-0">
                         {conv.sector_name && (
@@ -461,7 +461,7 @@ export function ConversationList({
                     )}
                   </div>
 
-                  {/* Coluna direita fixa: data + canal + badge de não-lidas */}
+                  {/* Coluna direita fixa: data + canal + badge de no-lidas */}
                   <div className="flex flex-col items-end gap-1 flex-shrink-0 pl-1">
                     <span
                       className={cn(

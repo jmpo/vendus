@@ -55,7 +55,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
   const productAgentsQuery = useProductAgents(lead.product_id || '');
   const allAgentsQuery = useAllAgents();
 
-  // Se o lead tem produto, usa agentes do produto; senão fallback p/ todos da org.
+  // Se o lead tem producto, usa agentes do producto; senão fallback p/ todos da org.
   const agents = lead.product_id ? productAgentsQuery.data : allAgentsQuery.data;
   const loadingAgents = lead.product_id ? productAgentsQuery.isLoading : allAgentsQuery.isLoading;
 
@@ -145,7 +145,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
       queryClient.invalidateQueries({ queryKey: ['lead', lead.id] });
       onOpenChange(false);
     } catch (err: any) {
-      console.error('[CallWithAI] erro:', err);
+      console.error('[CallWithAI] error:', err);
       const msg = err?.message || 'Error al iniciar la atención con IA.';
       if (msg.includes('402')) {
         toast.error('Sin créditos de IA. Agregue créditos en las configuraciones.');

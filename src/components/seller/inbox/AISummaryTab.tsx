@@ -53,7 +53,7 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
     return (
       <div className="text-center py-6 space-y-3">
         <p className="text-xs text-muted-foreground">
-          Não foi possível gerar o resumo agora.
+          No foi possível gerar o resumo ahora.
         </p>
         <Button size="sm" variant="outline" onClick={() => refetch()}>
           <RefreshCw className="h-3.5 w-3.5 mr-1.5" />

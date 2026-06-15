@@ -261,7 +261,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Criar Nueva Tarea</DialogTitle>
+                <DialogTitle>Crear Nueva Tarea</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 pt-4">
                 <div className="space-y-2">
@@ -510,8 +510,8 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
                 </h3>
                 <p className="text-muted-foreground text-center max-w-md">
                   {filter === 'today' 
-                    ? 'Aproveite para revisar seus leads ou explorar o playbook.'
-                    : 'Suas tarefas aparecerão aqui conforme você avançar com os leads.'}
+                    ? 'Aproveite para revisar tus leads o explorar o playbook.'
+                    : 'Tus tarefas aparecerão aqui conforme tú avançar com os leads.'}
                 </p>
               </div>
             )}

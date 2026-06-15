@@ -89,7 +89,7 @@ export function InternalNotes({ conversationId, className }: InternalNotesProps)
     },
     onError: () => {
       toast({
-        title: 'Erro',
+        title: 'Error',
         description: 'No fue posible agregar la nota.',
         variant: 'destructive',
       });
@@ -181,7 +181,7 @@ export function InternalNotes({ conversationId, className }: InternalNotesProps)
                       {note.user?.full_name?.charAt(0) || <User className="h-3 w-3" />}
                     </AvatarFallback>
                   </Avatar>
-                  <span>{note.user?.full_name || 'Usuário'}</span>
+                  <span>{note.user?.full_name || 'Usuario'}</span>
                   <span>•</span>
                   <span>
                     {format(new Date(note.created_at), "d 'de' MMM 'às' HH:mm", { locale: ptBR })}

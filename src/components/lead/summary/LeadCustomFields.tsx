@@ -48,7 +48,7 @@ function renderValue(value: any, type?: CustomField['field_type']) {
           <ul className="list-disc list-inside space-y-0.5">
             {value.slice(0, 5).map((item, i) => (
               <li key={i} className="text-sm truncate">
-                {typeof item === 'object' ? (item?.mensagem || item?.message || item?.text || JSON.stringify(item)) : String(item)}
+                {typeof item === 'object' ? (item?.mensaje || item?.message || item?.text || JSON.stringify(item)) : String(item)}
               </li>
             ))}
             {value.length > 5 && <li className="text-xs text-muted-foreground">+{value.length - 5} más</li>}

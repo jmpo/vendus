@@ -55,7 +55,7 @@ export function ScheduleMessageDialog({
       setContent('');
       onOpenChange(false);
     } catch {
-      toast({ title: 'Error al agendar mensagem', variant: 'destructive' });
+      toast({ title: 'Error al agendar mensaje', variant: 'destructive' });
     } finally {
       setIsSaving(false);
     }
@@ -78,7 +78,7 @@ export function ScheduleMessageDialog({
               id="msg-content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Digite a mensagem a ser enviada..."
+              placeholder="Digite a mensaje a ser enviada..."
               rows={4}
             />
           </div>

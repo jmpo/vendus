@@ -86,7 +86,7 @@ export function SquadQueueBanner({ productId }: SquadQueueBannerProps) {
               ) : (
                 <UserCheck size={14} />
               )}
-              Asumir próximo
+              Asumir siguiente
             </Button>
             <Button
               variant="ghost"

@@ -64,10 +64,10 @@ export function SendFlowDialog({
           flowId: selectedFlowId,
         },
       });
-      toast({ title: 'Fluxo enviado com sucesso!' });
+      toast({ title: 'Flujo enviado com éxito!' });
       onOpenChange(false);
     } catch {
-      toast({ title: 'Error al enviar fluxo', variant: 'destructive' });
+      toast({ title: 'Error al enviar flujo', variant: 'destructive' });
     } finally {
       setIsSending(false);
     }
@@ -90,7 +90,7 @@ export function SendFlowDialog({
             </div>
           ) : flows?.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              Nenhum fluxo ativo encontrado.
+              Ninguno flujo ativo encontrado.
             </p>
           ) : (
             <div className="space-y-2">

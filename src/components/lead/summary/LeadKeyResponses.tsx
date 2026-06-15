@@ -12,7 +12,7 @@ const HIDDEN_KEYS = new Set([
   'gclid', 'fbclid', 'referrer', 'page', 'user_agent', 'ip',
 ]);
 
-const PRIORITY_HINTS = ['nome', 'name', 'email', 'whatsapp', 'phone', 'telefone', 'empresa', 'company', 'cargo', 'objetivo', 'orcamento', 'budget'];
+const PRIORITY_HINTS = ['nome', 'name', 'email', 'whatsapp', 'phone', 'teléfono', 'empresa', 'company', 'cargo', 'objetivo', 'orcamento', 'budget'];
 
 function pickKeyResponses(responses: Record<string, any>): [string, any][] {
   const entries = Object.entries(responses).filter(

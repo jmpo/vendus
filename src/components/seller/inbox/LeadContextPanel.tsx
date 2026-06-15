@@ -344,7 +344,7 @@ export function LeadContextPanel({
                         { conversationId, sectorId: val === 'none' ? null : val },
                         {
                           onSuccess: () => toast({ title: 'Sector actualizado' }),
-                          onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+                          onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
                         },
                       );
                     }}
@@ -488,7 +488,7 @@ export function LeadContextPanel({
                   <div className="p-3 bg-muted/30 rounded-lg text-center">
                     <User className="h-7 w-7 mx-auto mb-2 text-muted-foreground/50" />
                     <p className="text-xs text-muted-foreground">
-                      Carregando dados do lead…
+                      Cargando dados do lead…
                     </p>
                   </div>
                 </div>
@@ -539,7 +539,7 @@ export function LeadContextPanel({
               <div className="grid grid-cols-2 gap-2">
                 <div className="p-2.5 bg-muted/50 rounded-lg text-center">
                   <p className="text-xl font-bold">{messageCount}</p>
-                  <p className="text-[10px] text-muted-foreground">Mensagens</p>
+                  <p className="text-[10px] text-muted-foreground">Mensajes</p>
                 </div>
                 <div className="p-2.5 bg-muted/50 rounded-lg text-center">
                   <p className="text-sm font-bold leading-tight pt-1">

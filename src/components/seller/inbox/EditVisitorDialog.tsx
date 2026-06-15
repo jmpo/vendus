@@ -64,13 +64,13 @@ export function EditVisitorDialog({
         })
         .eq('id', conversationId);
       if (error) throw error;
-      toast.success('Contato atualizado');
+      toast.success('Contato actualizado');
       queryClient.invalidateQueries({ queryKey: ['webchat-conversation', conversationId] });
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
       onOpenChange(false);
     } catch (e: any) {
-      console.error('[EditVisitor] erro:', e);
-      toast.error(e?.message || 'Error al atualizar');
+      console.error('[EditVisitor] error:', e);
+      toast.error(e?.message || 'Error al actualizar');
     } finally {
       setSaving(false);
     }
@@ -92,7 +92,7 @@ export function EditVisitorDialog({
             <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@exemplo.com" />
           </div>
           <div>
-            <Label>Telefone</Label>
+            <Label>Teléfono</Label>
             <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="55 11 99999-9999" />
           </div>
         </div>

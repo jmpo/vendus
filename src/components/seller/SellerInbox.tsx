@@ -40,7 +40,7 @@ interface SellerInboxProps {
   productId?: string;
   pendingConversationId?: string | null;
   onConversationSelected?: () => void;
-  /** "admin" exibe TODAS as conversas da org e libera filtros por usuário/encerrar em massa */
+  /** "admin" exibe TODAS as conversas da org e libera filtros por usuario/encerrar em massa */
   mode?: 'seller' | 'admin';
 }
 
@@ -55,8 +55,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const { data: evolutionInstances } = useEvolutionInstances();
 
   /**
-   * Resolve label da conexão DO BOT (não o telefone do lead).
-   * - WhatsApp: instância Evolution vinculada à conversa, ou a padrão da org.
+   * Resolve label da conexão DO BOT (no o teléfono do lead).
+   * - WhatsApp: instância Evolution vinculada à conversa, o a padrão da org.
    * - Outros canais: nome do canal.
    */
   const buildConnectionLabel = useCallback((conv: any): string | null => {
@@ -120,14 +120,14 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     enabled: !!selectedConversation?.id,
   });
 
-  // Produtos atribuídos ao vendedor — fonte para o seletor
+  // Productos atribuídos ao vendedor — fonte para o seletor
   const { data: assignedProductsData } = useAssignedProducts(user?.id || '');
   const assignedProducts = useMemo(
     () => (assignedProductsData?.map((ap: any) => ap.products).filter(Boolean) || []),
     [assignedProductsData]
   );
 
-  // Filtro de produto: prioridade — localStorage > productId vindo da rota > null
+  // Filtro de producto: prioridade — localStorage > productId vindo da rota > null
   const [selectedProductFilter, setSelectedProductFilter] = useState<string | null>(() => {
     try {
       const stored = localStorage.getItem('inbox.selectedProductId');
@@ -143,8 +143,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     }
   }, [productId]);
 
-  // Auto-correção: se o filtro persistido não bate com nenhum produto atribuído
-  // (e não estamos em admin), limpa para evitar lista vazia "fantasma".
+  // Auto-correção: se o filtro persistido no bate com ninguno producto atribuído
+  // (e no estamos em admin), limpa para evitar lista vazia "fantasma".
   useEffect(() => {
     if (isAdminMode) return;
     if (!selectedProductFilter) return;
@@ -162,8 +162,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     } catch {}
   }, [selectedProductFilter]);
 
-  // Produto do header/rota NÃO filtra a inbox — afeta apenas dashboards.
-  // A inbox só é filtrada por produto quando o usuário escolhe explicitamente
+  // Producto do header/rota NÃO filtra a inbox — afeta apenas dashboards.
+  // A inbox só é filtrada por producto quando o usuario escolhe explicitamente
   // dentro do drawer "Filtros".
   const inboxFilters: InboxBackendFilters = useMemo(() => {
     return {
@@ -191,7 +191,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   );
 
   // Se a conversa selecionada retornar 404/403 (apagada, transferida, fora do escopo),
-  // limpa a seleção e atualiza a lista em vez de deixar a tela em estado de erro.
+  // limpa a seleção e atualiza a lista em vez de deixar a tela em estado de error.
   useEffect(() => {
     const status = (conversationError as any)?.status;
     if (!status || (status !== 404 && status !== 403)) return;
@@ -223,7 +223,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const starMessageMutation = useStarMessage();
   const forwardMessageMutation = useForwardMessage();
 
-  // Mapa global de produtos da org (para resolver o nome quando vier só do lead)
+  // Mapa global de productos da org (para resolver o nome quando vier só do lead)
   const { data: allProducts = [] } = useProducts();
   const productNameById = useMemo(() => {
     const m = new Map<string, string>();
@@ -235,7 +235,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const conversations: Conversation[] = useMemo(
     () =>
       (conversationsData || []).map((conv: any) => {
-        // Produto efetivo: override manual da conversa > produto do lead vinculado > produto do widget
+        // Producto efetivo: override manual da conversa > producto do lead vinculado > producto do widget
         const effectiveProductId =
           conv.product_id
           || conv.leads?.product_id
@@ -256,8 +256,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
           channel: conv.channel || 'webchat',
           status: conv.status,
           unread_count: conv.unread_count_agents || conv.unread_count || 0,
-          // Prefere o timestamp da última mensagem real (vinda do histórico via RPC),
-          // caindo para last_message_at da conversa em conversas sem mensagens.
+          // Prefere o timestamp da última mensaje real (vinda do histórico via RPC),
+          // caindo para last_message_at da conversa em conversas sem mensajes.
           last_message_at:
             (conv as any).last_message_created_at
             || conv.last_message_at
@@ -282,7 +282,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     [conversationsData, productNameById],
   );
 
-  // Backend já entrega filtrado/paginado/visibilidade — não refiltrar client-side.
+  // Backend já entrega filtrado/paginado/visibilidade — no refiltrar client-side.
   const filteredConversations = conversations;
 
   // Auto-select pending conversation from navigation.
@@ -399,7 +399,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     if (!linkedLead?.id) return;
     await supabase.from('leads').update({ current_stage_id: stageId }).eq('id', linkedLead.id);
     queryClient.invalidateQueries({ queryKey: ['linked-lead', selectedConversation?.lead_id] });
-    toast({ title: 'Estágio atualizado' });
+    toast({ title: 'Estágio actualizado' });
   }, [linkedLead?.id, selectedConversation?.lead_id, queryClient, toast]);
 
   // AI suggestion handler (defined after messages below)
@@ -445,7 +445,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     const lastMessages = messages.slice(-5).map(m => `${m.sender_type}: ${m.content}`).join('\n');
     const { data, error } = await supabase.functions.invoke('sales-copilot', {
       body: {
-        question: `Baseado na conversa abaixo, sugira uma resposta profissional para o visitante. Seja direto e estratégico.\n\nConversa:\n${lastMessages}\n\nSugira a melhor resposta para enviar agora:`,
+        question: `Baseado na conversa abaixo, sugira uma resposta profissional para o visitante. Seja direto e estratégico.\n\nConversa:\n${lastMessages}\n\nSugira a melhor resposta para enviar ahora:`,
         organizationId: profile.organization_id,
       },
     });
@@ -470,8 +470,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       });
     } catch (error) {
       toast({
-        title: 'Erro ao enviar',
-        description: 'Não foi possível enviar a mensagem.',
+        title: 'Error al enviar',
+        description: 'No foi possível enviar a mensaje.',
         variant: 'destructive',
       });
     }
@@ -481,18 +481,18 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const handleEditMessage = async (messageId: string, newContent: string) => {
     try {
       await editMessageMutation.mutateAsync({ message_id: messageId, new_content: newContent });
-      toast({ title: 'Mensagem editada' });
+      toast({ title: 'Mensaje editada' });
     } catch {
-      toast({ title: 'Erro ao editar', variant: 'destructive' });
+      toast({ title: 'Error ao editar', variant: 'destructive' });
     }
   };
 
   const handleDeleteMessage = async (messageId: string) => {
     try {
       await deleteMessageMutation.mutateAsync({ message_id: messageId });
-      toast({ title: 'Mensagem apagada' });
+      toast({ title: 'Mensaje apagada' });
     } catch {
-      toast({ title: 'Erro ao apagar', variant: 'destructive' });
+      toast({ title: 'Error ao apagar', variant: 'destructive' });
     }
   };
 
@@ -500,16 +500,16 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     try {
       await starMessageMutation.mutateAsync({ message_id: messageId });
     } catch {
-      toast({ title: 'Erro ao favoritar', variant: 'destructive' });
+      toast({ title: 'Error ao favoritar', variant: 'destructive' });
     }
   };
 
   const handleForwardMessage = async (messageId: string, targetConversationId: string) => {
     try {
       await forwardMessageMutation.mutateAsync({ message_id: messageId, target_conversation_id: targetConversationId });
-      toast({ title: 'Mensagem encaminhada' });
+      toast({ title: 'Mensaje encaminhada' });
     } catch {
-      toast({ title: 'Erro ao encaminhar', variant: 'destructive' });
+      toast({ title: 'Error ao encaminhar', variant: 'destructive' });
     }
   };
 
@@ -522,12 +522,12 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       setSelectedConversation(null);
       toast({
         title: 'Conversa encerrada',
-        description: 'A conversa foi encerrada com sucesso.',
+        description: 'A conversa foi encerrada com éxito.',
       });
     } catch (error) {
       toast({
-        title: 'Erro',
-        description: 'Não foi possível encerrar a conversa.',
+        title: 'Error',
+        description: 'No foi possível encerrar a conversa.',
         variant: 'destructive',
       });
     }
@@ -539,7 +539,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     try {
       await reopenConversation.mutateAsync(selectedConversation.id);
       toast({ title: 'Conversa reaberta' });
-    } catch { toast({ title: 'Erro', description: 'Não foi possível reabrir.', variant: 'destructive' }); }
+    } catch { toast({ title: 'Error', description: 'No foi possível reabrir.', variant: 'destructive' }); }
   };
 
   // Handle return to queue
@@ -549,7 +549,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       await returnToQueueMutation.mutateAsync(selectedConversation.id);
       setSelectedConversation(null);
       toast({ title: 'Devolvida à fila' });
-    } catch { toast({ title: 'Erro', description: 'Não foi possível devolver.', variant: 'destructive' }); }
+    } catch { toast({ title: 'Error', description: 'No foi possível devolver.', variant: 'destructive' }); }
   };
 
   // Handle resume
@@ -557,16 +557,16 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     if (!selectedConversation) return;
     try {
       await resumeConversation.mutateAsync(selectedConversation.id);
-      toast({ title: 'Atendimento retomado' });
-    } catch { toast({ title: 'Erro', description: 'Não foi possível retomar.', variant: 'destructive' }); }
+      toast({ title: 'Atención retomada' });
+    } catch { toast({ title: 'Error', description: 'No foi possível retomar.', variant: 'destructive' }); }
   };
 
   const handleActivateBot = async () => {
     if (!selectedConversation) return;
     try {
       await activateBotMutation.mutateAsync(selectedConversation.id);
-      toast({ title: 'Bot ativado', description: 'A IA vai enviar uma mensagem estratégica.' });
-    } catch { toast({ title: 'Erro', description: 'Não foi possível ativar o bot.', variant: 'destructive' }); }
+      toast({ title: 'Bot ativado', description: 'A IA vai enviar uma mensaje estratégica.' });
+    } catch { toast({ title: 'Error', description: 'No foi possível ativar o bot.', variant: 'destructive' }); }
   };
 
   // Handle transfer
@@ -577,9 +577,9 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
 
   // Global subscription for conversation list updates.
   // Removido o filtro `assigned_user_id=eq.${user.id}` para que mudanças em conversas
-  // não atribuídas (em fila, IA) ou de outros vendedores também atualizem a lista.
+  // no atribuídas (em fila, IA) o de outros vendedores também atualizem a lista.
   // RLS já garante que só recebemos eventos de conversas que podemos ver.
-  // 🔧 IMPORTANTE: a tabela é atualizada a cada mensagem (last_message_at,
+  // 🔧 IMPORTANTE: a tabela é actualizada a cada mensaje (last_message_at,
   // unread_count_agents). Sem debounce isso causa chuva de refetch e o
   // "sistema girando". Agrupamos os eventos em janelas de 1.5s.
   const refetchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -655,7 +655,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
             }
           }
 
-          // Mensagem nova de fato
+          // Mensaje nova de fato
           return { ...old, messages: [...msgs, incoming] };
         });
       })
@@ -666,21 +666,21 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         }
       })
       .on('broadcast', { event: 'conversation_updated' }, () => {
-        // Mudança de produto / lead vinculado / etiqueta — recarrega detalhe e lista
+        // Mudança de producto / lead vinculado / etiqueta — recarrega detalhe e lista
         queryClient.invalidateQueries({ queryKey: ['webchat-conversation', conversationId] });
         queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
       })
       .subscribe();
 
-    // NOTA: Não escutamos `postgres_changes` em `webchat_messages` aqui de propósito.
-    // O broadcast `new_message` acima já entrega cada mensagem nova exatamente uma vez
+    // NOTA: No escutamos `postgres_changes` em `webchat_messages` aqui de propósito.
+    // O broadcast `new_message` acima já entrega cada mensaje nova exatamente uma vez
     // (tanto inbound do whatsapp-webhook quanto outbound do webchat-inbox emitem o
     // broadcast). Escutar postgres_changes em paralelo causava DUPLICAÇÃO visual das
-    // mensagens no Inbox.
+    // mensajes no Inbox.
 
     // Postgres changes — a própria conversa selecionada (status, sector, assigned_user, etc.)
     // Garante que reabrir / encerrar / transferir / aceitar reflitam imediatamente,
-    // mesmo quando a ação vem de outro agente ou de uma edge function.
+    // mesmo quando a ação vem de outro agente o de uma edge function.
     const conversationChannel = supabase
       .channel(`conversation-row:${conversationId}`)
       .on(
@@ -783,7 +783,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         });
         if (error) throw error;
         if (data?.error) throw new Error(data.error);
-        toast({ title: 'Atendimento aceito' });
+        toast({ title: 'Atención aceptada' });
         queryClient.invalidateQueries({ queryKey: detailKey, refetchType: 'active' });
         refetchConversations();
       } catch (e: any) {
@@ -791,7 +791,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         if (previousDetail !== undefined) {
           queryClient.setQueryData(detailKey, previousDetail);
         }
-        toast({ title: 'Erro ao aceitar', description: e?.message, variant: 'destructive' });
+        toast({ title: 'Error ao aceitar', description: e?.message, variant: 'destructive' });
       }
     }
   }, [selectedConversation, conversationDetail, toast, refetchConversations, queryClient, user?.id]);
@@ -809,7 +809,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const handleCloseAllTickets = useCallback(async () => {
     const open = filteredConversations.filter(c => c.status !== 'closed');
     await Promise.allSettled(open.map(c => closeConversation.mutateAsync(c.id)));
-    toast({ title: `${open.length} atendimentos encerrados` });
+    toast({ title: `${open.length} atenciones encerrados` });
     refetchConversations();
   }, [filteredConversations, closeConversation, toast, refetchConversations]);
 
@@ -820,19 +820,19 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     (filters.selectedProductIds.length > 0 ? 1 : 0) +
     (filters.showResolved ? 1 : 0);
 
-  // Backend já aplica todos os filtros (produto/setor/usuário/etiqueta/busca/aba)
+  // Backend já aplica todos os filtros (producto/setor/usuario/etiqueta/busca/aba)
   // e a visibilidade por permissões. Aqui só repassamos a lista para a UI.
   const visibleConversations = filteredConversations;
 
-  // Nome do produto atualmente filtrado (para exibição na faixa) — usa só o
-  // produto da rota como sugestão visual; não há mais "trava" de produto.
+  // Nome do producto atualmente filtrado (para exibição na faixa) — usa só o
+  // producto da rota como sugestão visual; no há más "trava" de producto.
   const activeProductName = useMemo(() => {
     if (!selectedProductFilter) return null;
     const p = assignedProducts.find((p: any) => p.id === selectedProductFilter);
     return p?.name || null;
   }, [selectedProductFilter, assignedProducts]);
 
-  const showProductBanner = false; // Produto da rota/header não trava mais a inbox
+  const showProductBanner = false; // Producto da rota/header no trava más a inbox
 
   if (loadingConversations) {
     return (
@@ -1146,7 +1146,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
             conversationId={selectedConversation.id}
           />
 
-          {/* Criar evento de calendário direto da conversa */}
+          {/* Crear evento de calendário direto da conversa */}
           <EventModal
             open={showCreateEvent}
             onOpenChange={setShowCreateEvent}
@@ -1154,7 +1154,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
             defaultProductId={linkedLead?.product_id || selectedConversation.product_id || undefined}
           />
 
-          {/* Criar oportunidade direto da conversa (somente com lead vinculado) */}
+          {/* Crear oportunidade direto da conversa (somente com lead vinculado) */}
           {linkedLead?.id && profile?.organization_id && (
             <DealModal
               isOpen={showCreateDeal}
