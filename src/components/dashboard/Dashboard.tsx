@@ -118,7 +118,7 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
         {/* Today's Tasks Preview - Real Data */}
         <div className="lg:col-span-2 p-6 rounded-xl bg-card border border-border">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-foreground">Trabalho de Hoje</h3>
+            <h3 className="text-lg font-semibold text-foreground">Trabajo de Hoy</h3>
             {overdueCount > 0 && (
               <span className="flex items-center gap-1 text-sm text-destructive">
                 <AlertTriangle size={14} />
@@ -152,7 +152,7 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
                   <div>
                     <p className="font-medium text-foreground">{task.title}</p>
                     <p className="text-sm text-muted-foreground">
-                      {(task.products as any)?.name || 'Produto'} • {task.due_date && format(new Date(task.due_date), 'HH:mm', { locale: ptBR })}
+                      {(task.products as any)?.name || 'Producto'} • {task.due_date && format(new Date(task.due_date), 'HH:mm', { locale: es })}
                     </p>
                   </div>
                 </div>
@@ -161,7 +161,7 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
                     "text-sm font-medium",
                     task.status === 'overdue' ? "text-destructive" : "text-primary"
                   )}>
-                    {task.type === 'cadence' ? 'Cadência' : 'Follow-up'}
+                    {task.type === 'cadence' ? 'Cadencia' : 'Follow-up'}
                   </span>
                 </div>
               </div>
@@ -172,7 +172,7 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
                 <div className="h-12 w-12 rounded-xl bg-success/10 flex items-center justify-center mb-3">
                   <CheckCircle2 size={24} className="text-success" />
                 </div>
-                <p className="text-muted-foreground">Nenhuma tarefa pendente para hoje! 🎉</p>
+                <p className="text-muted-foreground">¡Sin tareas pendientes para hoy! 🎉</p>
               </div>
             )}
           </div>
