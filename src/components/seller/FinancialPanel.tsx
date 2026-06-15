@@ -66,7 +66,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
           </CardHeader>
           <CardContent className={isMobile ? "p-4 pt-0" : ""}>
             <div className={cn("font-bold text-green-600", isMobile ? "text-xl" : "text-2xl")}>
-              R$ {(commissionsSummary?.paid || 0).toLocaleString('pt-BR')}
+              ₲ {(commissionsSummary?.paid || 0).toLocaleString('es-PY')}
             </div>
             <p className="text-xs text-muted-foreground">Este mes</p>
           </CardContent>
@@ -79,7 +79,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
           </CardHeader>
           <CardContent className={isMobile ? "p-4 pt-0" : ""}>
             <div className={cn("font-bold text-blue-600", isMobile ? "text-xl" : "text-2xl")}>
-              R$ {((commissionsSummary?.pending || 0) + (commissionsSummary?.approved || 0)).toLocaleString('pt-BR')}
+              ₲ {((commissionsSummary?.pending || 0) + (commissionsSummary?.approved || 0)).toLocaleString('es-PY')}
             </div>
             <p className="text-xs text-muted-foreground">Pendientes + Aprobadas</p>
           </CardContent>
@@ -92,7 +92,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
           </CardHeader>
           <CardContent className={isMobile ? "p-4 pt-0" : ""}>
             <div className={cn("font-bold text-purple-600", isMobile ? "text-xl" : "text-2xl")}>
-              R$ {(pipelineSummary?.totalWeightedValue || 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}
+              ₲ {(pipelineSummary?.totalWeightedValue || 0).toLocaleString('es-PY', { maximumFractionDigits: 0 })}
             </div>
             <p className="text-xs text-muted-foreground">{pipelineSummary?.totalLeads || 0} leads</p>
           </CardContent>
@@ -109,7 +109,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
             </div>
             <Progress value={Math.min(goalProgress, 100)} className="mt-2 h-2" />
             <p className="text-xs text-muted-foreground mt-1">
-              R$ {(dealsSummary?.monthlyWon || 0).toLocaleString('pt-BR')} / R$ {monthlyGoal.toLocaleString('pt-BR')}
+              ₲ {(dealsSummary?.monthlyWon || 0).toLocaleString('es-PY')} / ₲ {monthlyGoal.toLocaleString('es-PY')}
             </p>
           </CardContent>
         </Card>
@@ -150,7 +150,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
                         className="flex-1 h-2"
                       />
                       <span className={cn("font-medium text-right", isMobile ? "text-xs w-20" : "text-sm w-28")}>
-                        R$ {stage.weightedValue.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}
+                        ₲ {stage.weightedValue.toLocaleString('es-PY', { maximumFractionDigits: 0 })}
                       </span>
                     </div>
                   </div>
@@ -160,7 +160,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
               <div className="pt-4 border-t flex items-center justify-between">
                 <span className="font-medium">Total Ponderado</span>
                 <span className={cn("font-bold", isMobile ? "text-base" : "text-lg")}>
-                  R$ {pipelineSummary.totalWeightedValue.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}
+                  ₲ {pipelineSummary.totalWeightedValue.toLocaleString('es-PY', { maximumFractionDigits: 0 })}
                 </span>
               </div>
             </div>
@@ -215,13 +215,13 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
                     <div>
                       <p className="text-xs text-muted-foreground">Venta</p>
                       <p className="text-sm font-medium">
-                        R$ {(commission.deals?.deal_value || 0).toLocaleString('pt-BR')}
+                        ₲ {(commission.deals?.deal_value || 0).toLocaleString('es-PY')}
                       </p>
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-muted-foreground">Comisión</p>
                       <p className="text-sm font-bold text-green-600">
-                        R$ {Number(commission.amount).toLocaleString('pt-BR')}
+                        ₲ {Number(commission.amount).toLocaleString('es-PY')}
                       </p>
                     </div>
                   </div>
@@ -255,10 +255,10 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
                       )}
                     </TableCell>
                     <TableCell>
-                      R$ {(commission.deals?.deal_value || 0).toLocaleString('pt-BR')}
+                      ₲ {(commission.deals?.deal_value || 0).toLocaleString('es-PY')}
                     </TableCell>
                     <TableCell className="font-medium text-green-600">
-                      R$ {Number(commission.amount).toLocaleString('pt-BR')}
+                      ₲ {Number(commission.amount).toLocaleString('es-PY')}
                     </TableCell>
                     <TableCell>
                       {getStatusBadge(commission.status)}

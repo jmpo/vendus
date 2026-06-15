@@ -285,7 +285,7 @@ export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
                               {training.extracted_content}
                             </p>
                             <Badge variant="secondary" className="text-xs mt-2">
-                              {new Date(training.created_at).toLocaleDateString('pt-BR')}
+                              {new Date(training.created_at).toLocaleDateString('es-PY')}
                             </Badge>
                           </div>
                           <Button

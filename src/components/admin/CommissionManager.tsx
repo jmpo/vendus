@@ -317,14 +317,14 @@ export function CommissionManager() {
                               <Badge variant="outline">
                                 {rule.rule_type === 'percentage' 
                                   ? `${rule.base_value}%` 
-                                  : `R$ ${rule.base_value.toLocaleString('pt-BR')}`
+                                  : `₲ ${rule.base_value.toLocaleString('es-PY')}`
                                 }
                               </Badge>
                             </TableCell>
                             <TableCell className="text-sm text-muted-foreground">
-                              {rule.min_value ? `Min: R$ ${rule.min_value.toLocaleString('pt-BR')}` : ''}
+                              {rule.min_value ? `Min: ₲ ${rule.min_value.toLocaleString('es-PY')}` : ''}
                               {rule.min_value && rule.max_value ? ' | ' : ''}
-                              {rule.max_value ? `Max: R$ ${rule.max_value.toLocaleString('pt-BR')}` : ''}
+                              {rule.max_value ? `Max: ₲ ${rule.max_value.toLocaleString('es-PY')}` : ''}
                               {!rule.min_value && !rule.max_value ? 'Sin límites' : ''}
                             </TableCell>
                             <TableCell className="text-right">

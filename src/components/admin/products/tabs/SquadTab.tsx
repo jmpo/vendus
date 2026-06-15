@@ -107,9 +107,9 @@ export function SquadTab({ productId }: SquadTabProps) {
   };
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat('es-PY', {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'PYG',
       minimumFractionDigits: 0,
     }).format(value);
   };

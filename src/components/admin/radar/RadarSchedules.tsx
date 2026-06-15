@@ -72,7 +72,7 @@ export function RadarSchedules({ defaultFilters, defaultActions }: { defaultFilt
               </div>
               <div className="text-xs text-muted-foreground mt-1">
                 {FREQ_OPTIONS.find((f) => f.id === s.cron_expression)?.label || s.cron_expression}
-                {s.last_run_at && ` • Última: ${new Date(s.last_run_at).toLocaleString('pt-BR')}`}
+                {s.last_run_at && ` • Última: ${new Date(s.last_run_at).toLocaleString('es-PY')}`}
               </div>
             </div>
             <div className="flex gap-1">

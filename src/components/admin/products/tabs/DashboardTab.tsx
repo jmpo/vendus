@@ -64,9 +64,9 @@ export function DashboardTab({ productId }: DashboardTabProps) {
     : 0;
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat('es-PY', {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'PYG',
       minimumFractionDigits: 0,
     }).format(value);
   };
@@ -192,7 +192,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
                       <p className="font-medium text-foreground">{lead.name}</p>
                       <p className="text-xs text-muted-foreground">
                         {lead.last_contact_at 
-                          ? `Último contato: ${new Date(lead.last_contact_at).toLocaleDateString('pt-BR')}`
+                          ? `Último contato: ${new Date(lead.last_contact_at).toLocaleDateString('es-PY')}`
                           : 'Nunca contatado'}
                       </p>
                     </div>
@@ -238,7 +238,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
                           {formatCurrency(commission.amount)}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {new Date(commission.created_at || '').toLocaleDateString('pt-BR')}
+                          {new Date(commission.created_at || '').toLocaleDateString('es-PY')}
                         </p>
                       </div>
                       <Badge variant="outline" className="bg-warning/10 text-warning">

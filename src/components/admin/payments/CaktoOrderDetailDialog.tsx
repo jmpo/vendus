@@ -31,7 +31,7 @@ const STATUS_LABELS: Record<string, { label: string; className: string }> = {
 };
 
 const fmtBRL = (v: number | null | undefined) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(v ?? 0));
+  new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG' }).format(Number(v ?? 0));
 
 const fmtDate = (d?: string | null) =>
   d ? format(new Date(d), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : '—';

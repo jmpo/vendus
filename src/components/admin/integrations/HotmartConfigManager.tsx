@@ -217,7 +217,7 @@ export function HotmartConfigManager() {
 
           {cred?.last_verified_at && (
             <p className="text-xs text-muted-foreground">
-              Última verificação: {new Date(cred.last_verified_at).toLocaleString('pt-BR')}
+              Última verificação: {new Date(cred.last_verified_at).toLocaleString('es-PY')}
             </p>
           )}
         </TabsContent>
@@ -318,7 +318,7 @@ export function HotmartConfigManager() {
                       <span className="truncate max-w-[200px]">{o.buyer_email || o.buyer_name || o.transaction_id}</span>
                       <Badge variant="outline" className="text-xs">{o.status}</Badge>
                       <span className="text-muted-foreground">
-                        {o.amount ? `R$ ${Number(o.amount).toFixed(2)}` : '-'}
+                        {o.amount ? `₲ ${Number(o.amount).toFixed(2)}` : '-'}
                       </span>
                     </div>
                   ))}

@@ -76,7 +76,7 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
               <span className="text-green-700 dark:text-green-400">
                 Llave verificada {current?.api_key_masked ? `(${current.api_key_masked})` : ''}
                 {current?.last_verified_at
-                  ? ` em ${new Date(current.last_verified_at).toLocaleDateString('pt-BR')}`
+                  ? ` em ${new Date(current.last_verified_at).toLocaleDateString('es-PY')}`
                   : ''}
               </span>
             </div>

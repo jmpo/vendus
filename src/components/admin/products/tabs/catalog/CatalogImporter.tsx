@@ -120,7 +120,7 @@ export function CatalogImporter({ productId }: Props) {
               {preview.slice(0, 5).map((it, i) => (
                 <div key={i} className="py-1 border-b last:border-0">
                   <strong>{it.title}</strong>
-                  {it.price && <span> · R$ {it.price}</span>}
+                  {it.price && <span> · ₲ {it.price}</span>}
                   {Object.keys(it.attributes).length > 0 && (
                     <span className="text-muted-foreground"> · {Object.entries(it.attributes).slice(0, 3).map(([k, v]) => `${k}=${v}`).join(', ')}</span>
                   )}

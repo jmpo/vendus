@@ -45,7 +45,7 @@ export function RadarHistory({ onSelect }: { onSelect: (id: string) => void }) {
                     <span>❄️ {s.cold_count}</span>
                     <span>💀 {s.lost_count}</span>
                     <span>•</span>
-                    <span>R$ {Number(s.potential_revenue || 0).toLocaleString('pt-BR')}</span>
+                    <span>₲ {Number(s.potential_revenue || 0).toLocaleString('es-PY')}</span>
                   </div>
                 </div>
               </div>

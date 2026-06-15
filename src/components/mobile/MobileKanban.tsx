@@ -39,9 +39,9 @@ interface MobileKanbanProps {
 }
 
 const formatCurrency = (value: number) => {
-  if (value >= 1000000) return `R$ ${(value / 1000000).toFixed(1)}M`;
-  if (value >= 1000) return `R$ ${(value / 1000).toFixed(0)}k`;
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 }).format(value);
+  if (value >= 1000000) return `₲ ${(value / 1000000).toFixed(1)}M`;
+  if (value >= 1000) return `₲ ${(value / 1000).toFixed(0)}k`;
+  return new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG', minimumFractionDigits: 0 }).format(value);
 };
 
 const TemperatureIcon = ({ temp }: { temp: string | null }) => {

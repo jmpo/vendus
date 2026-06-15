@@ -262,10 +262,10 @@ function tplEmpresarial() {
     block('text', { content: '💼 Em 1 minuto vamos entender a maturidade do seu negócio.' }),
     block('buttons', { label: 'Qual seu faturamento mensal?', variable_name: 'faturamento',
       options: [
-        { id: '1', letter: 'A', label: 'Até R$ 10k', score: 5 },
-        { id: '2', letter: 'B', label: 'R$ 10k a R$ 50k', score: 15 },
-        { id: '3', letter: 'C', label: 'R$ 50k a R$ 200k', score: 25 },
-        { id: '4', letter: 'D', label: 'Acima de R$ 200k', score: 35, tag: 'faixa-premium' },
+        { id: '1', letter: 'A', label: 'Até ₲ 10k', score: 5 },
+        { id: '2', letter: 'B', label: '₲ 10k a ₲ 50k', score: 15 },
+        { id: '3', letter: 'C', label: '₲ 50k a ₲ 200k', score: 25 },
+        { id: '4', letter: 'D', label: 'Acima de ₲ 200k', score: 35, tag: 'faixa-premium' },
       ] }),
     block('buttons', { label: 'Tamanho da equipe?', variable_name: 'equipe',
       options: [
@@ -314,9 +314,9 @@ function tplPerfilCliente() {
       ] }),
     block('buttons', { label: 'Quanto pretende investir?', variable_name: 'investimento',
       options: [
-        { id: '1', letter: 'A', label: 'Até R$ 500/mês', score: 5 },
-        { id: '2', letter: 'B', label: 'R$ 500 a R$ 5k', score: 20 },
-        { id: '3', letter: 'C', label: 'Acima de R$ 5k', score: 35, tag: 'budget-alto' },
+        { id: '1', letter: 'A', label: 'Até ₲ 500/mês', score: 5 },
+        { id: '2', letter: 'B', label: '₲ 500 a ₲ 5k', score: 20 },
+        { id: '3', letter: 'C', label: 'Acima de ₲ 5k', score: 35, tag: 'budget-alto' },
       ] }),
     block('buttons', { label: 'Qual sua urgência?', variable_name: 'urgencia',
       options: [
@@ -387,9 +387,9 @@ function tplImobiliario() {
       ] }),
     block('buttons', { label: 'Faixa de investimento?', variable_name: 'budget',
       options: [
-        { id: '1', letter: 'A', label: 'Até R$ 300k', score: 10 },
-        { id: '2', letter: 'B', label: 'R$ 300k a R$ 1M', score: 25 },
-        { id: '3', letter: 'C', label: 'Acima de R$ 1M', score: 35, tag: 'alto-padrao' },
+        { id: '1', letter: 'A', label: 'Até ₲ 300k', score: 10 },
+        { id: '2', letter: 'B', label: '₲ 300k a ₲ 1M', score: 25 },
+        { id: '3', letter: 'C', label: 'Acima de ₲ 1M', score: 35, tag: 'alto-padrao' },
       ] }),
     block('buttons', { label: 'Comprar para?', variable_name: 'finalidade',
       options: [

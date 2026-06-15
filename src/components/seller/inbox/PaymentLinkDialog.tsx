@@ -19,11 +19,11 @@ interface PaymentLinkDialogProps {
   onSend: (text: string) => void;
 }
 
-function formatMoney(value: number, currency = 'BRL') {
+function formatMoney(value: number, currency = 'PYG') {
   try {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency }).format(value);
+    return new Intl.NumberFormat('es-PY', { style: 'currency', currency }).format(value);
   } catch {
-    return `R$ ${value.toFixed(2)}`;
+    return `₲ ${value.toFixed(2)}`;
   }
 }
 
@@ -66,7 +66,7 @@ export function PaymentLinkDialog({
         title: title.trim(),
         description: description.trim() || null,
         amount,
-        currency: 'BRL',
+        currency: 'PYG',
         url: url.trim(),
       });
       if (error) throw error;
@@ -122,7 +122,7 @@ export function PaymentLinkDialog({
             </div>
             <div className="space-y-2">
               <Label className="text-muted-foreground">Moeda</Label>
-              <Input value="BRL" disabled />
+              <Input value="PYG" disabled />
             </div>
           </div>
 

@@ -132,7 +132,7 @@ export function WebhookRequestsPanel({ webhookId, samples }: WebhookRequestsPane
                 <SelectContent>
                   {samples.map((sample) => (
                     <SelectItem key={sample.id} value={sample.id}>
-                      {sample.name || 'Requisição'} - {new Date(sample.created_at).toLocaleString('pt-BR')}
+                      {sample.name || 'Requisição'} - {new Date(sample.created_at).toLocaleString('es-PY')}
                     </SelectItem>
                   ))}
                 </SelectContent>

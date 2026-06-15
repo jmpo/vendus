@@ -216,7 +216,7 @@ export function RadarDashboard({
             <TrendingUp className="h-4 w-4 text-primary" />
             <span className="text-muted-foreground">Ingresos potenciales:</span>
             <span className="font-bold text-lg">
-              R$ {Number(scan.potential_revenue || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              ₲ {Number(scan.potential_revenue || 0).toLocaleString('es-PY', { minimumFractionDigits: 2 })}
             </span>
           </div>
           <div className="text-xs text-muted-foreground">

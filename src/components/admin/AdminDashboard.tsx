@@ -8,9 +8,9 @@ import { TrendingUp, TrendingDown, DollarSign, Target, Users, ShoppingCart, Awar
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('pt-BR', {
+  return new Intl.NumberFormat('es-PY', {
     style: 'currency',
-    currency: 'BRL',
+    currency: 'PYG',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   }).format(value);

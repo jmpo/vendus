@@ -45,7 +45,7 @@ export function SubscriptionsManager() {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat( 'es' , {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'PYG',
     }).format(value);
   };
 

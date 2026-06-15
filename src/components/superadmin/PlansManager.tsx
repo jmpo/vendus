@@ -32,7 +32,7 @@ import {
 import { PlanFormDialog } from './plans/PlanFormDialog';
 
 const formatCurrency = (value: number) =>
-  new Intl.NumberFormat( 'es' , { style: 'currency', currency: 'BRL' }).format(value || 0);
+  new Intl.NumberFormat( 'es' , { style: 'currency', currency: 'PYG' }).format(value || 0);
 
 export function PlansManager() {
   const { data: plans, isLoading } = useAllPlans();

@@ -80,7 +80,7 @@ export function fmtUSD(n: number): string {
 }
 
 export function fmtBRL(n: number): string {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
+  return new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG' }).format(n);
 }
 
 export const PROVIDER_COLORS: Record<string, string> = {

@@ -475,8 +475,8 @@ export function LeadContextPanel({
                       <div>
                         <p className="text-[10px] text-muted-foreground">Valor do negócio</p>
                         <p className="text-sm font-semibold">
-                          {new Intl.NumberFormat('pt-BR', {
-                            style: 'currency', currency: 'BRL',
+                          {new Intl.NumberFormat('es-PY', {
+                            style: 'currency', currency: 'PYG',
                           }).format(lead.deal_value)}
                         </p>
                       </div>

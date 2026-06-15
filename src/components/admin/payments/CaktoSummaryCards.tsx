@@ -10,7 +10,7 @@ interface Props {
 
 export function CaktoSummaryCards({ scope, provider = 'all' }: Props) {
   const { data: summary } = usePaymentsSummary(scope, provider);
-  const fmtBRL = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
+  const fmtBRL = (v: number) => new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG' }).format(v);
 
   const items = [
     { icon: DollarSign, label: 'Receita total (pago)', value: fmtBRL(summary?.totalRevenue ?? 0), color: 'text-emerald-600 bg-emerald-500/10' },
