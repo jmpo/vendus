@@ -42,9 +42,9 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
   const { funnelData, conversionData, commissions, stats, isLoading } = useDashboardData(product.id, userId);
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat('es', {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'USD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value);
@@ -52,7 +52,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
 
   const statsCards = [
     { 
-      label: 'Leads Ativos', 
+      label: 'Leads Activos', 
       value: stats.activeLeadsCount.toString(), 
       change: `${stats.wonDealsCount} convertidos`,
       icon: Users,
@@ -60,25 +60,25 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
       bg: 'bg-blue-500/10'
     },
     { 
-      label: 'Taxa de Conversão', 
+      label: 'Tasa de Conversión', 
       value: `${stats.conversionRate}%`, 
-      change: 'dos deals fechados',
+      change: 'de deals cerrados',
       icon: TrendingUp,
       color: 'text-emerald-500',
       bg: 'bg-emerald-500/10'
     },
     { 
-      label: 'Valor Ganho', 
+      label: 'Valor Ganado', 
       value: formatCurrency(stats.wonDealsValue), 
-      change: `${stats.wonDealsCount} negócios`,
+      change: `${stats.wonDealsCount} negocios`,
       icon: Target,
       color: 'text-violet-500',
       bg: 'bg-violet-500/10'
     },
     { 
-      label: 'Comissões', 
+      label: 'Comisiones', 
       value: formatCurrency(stats.totalCommissions), 
-      change: `${formatCurrency(stats.pendingCommissions)} pendente`,
+      change: `${formatCurrency(stats.pendingCommissions)} pendiente`,
       icon: DollarSign,
       color: 'text-amber-500',
       bg: 'bg-amber-500/10'
