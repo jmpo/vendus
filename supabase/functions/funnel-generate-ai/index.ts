@@ -171,7 +171,7 @@ IMPORTANTE:
 - Todas as conexões next_block_id devem referenciar IDs existentes
 - Cada caminho de ramificação DEVE terminar com um bloco "end"
 - Usa emojis nos botões para tornar a experiência mais visual
-- Crea copies curtas e conversacionais, otimizadas para mobile
+- Creá copys cortos y conversacionales, optimizados para mobile
 - Se o usuario mencionar vídeos, use blocos video com video_url: "URL_PLACEHOLDER"
 - Se o usuario mencionar planos/preços, crie botões com as opciones e blocos end com redirect_url vazio`;
 
