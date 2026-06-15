@@ -140,7 +140,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-lg font-semibold flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-amber-500" />
-              Leads em Risco
+              Leads en Riesgo
             </CardTitle>
             <Button variant="ghost" size="sm" onClick={() => onNavigate('leads')}>
               Ver pipeline
@@ -150,7 +150,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
           <CardContent className="space-y-3">
             {isLoading ? (
               <div className="text-center py-6 text-muted-foreground text-sm animate-pulse">
-                Carregando...
+                Cargando...
               </div>
             ) : stats.atRiskLeads.length > 0 ? (
               stats.atRiskLeads.map((lead) => (
@@ -165,7 +165,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
                     <div>
                       <p className="text-sm font-medium text-foreground">{lead.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {lead.company || 'Sem empresa'} • {lead.daysWithoutContact} dias sem contato
+                        {lead.company || 'Sin empresa'} • {lead.daysWithoutContact} días sin contacto
                       </p>
                     </div>
                   </div>
@@ -176,7 +176,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
               ))
             ) : (
               <div className="text-center py-6 text-muted-foreground text-sm">
-                Nenhum lead em risco 🎉
+                Sin leads en riesgo 🎉
               </div>
             )}
           </CardContent>
