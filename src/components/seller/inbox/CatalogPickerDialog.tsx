@@ -33,7 +33,7 @@ interface CatalogPickerDialogProps {
   onSend: (text: string, media?: MediaPayload) => void;
 }
 
-function formatMoney(value: number | null, currency = 'BRL') {
+function formatMoney(value: number | null, currency = 'PYG') {
   if (value == null) return '';
   try {
     return new Intl.NumberFormat('es-PY', { style: 'currency', currency }).format(value);
@@ -75,7 +75,7 @@ export function CatalogPickerDialog({ open, onOpenChange, productId, onSend }: C
   const handleSend = async (item: CatalogItem) => {
     setSendingId(item.id);
     const lines: string[] = [`*${item.title}*`];
-    if (item.price != null) lines.push(formatMoney(item.price, item.currency || 'BRL'));
+    if (item.price != null) lines.push(formatMoney(item.price, item.currency || 'PYG'));
     if (item.description) lines.push('', item.description.slice(0, 280));
     if (item.url) lines.push('', `🔗 ${item.url}`);
     const text = lines.join('\n');
@@ -152,7 +152,7 @@ export function CatalogPickerDialog({ open, onOpenChange, productId, onSend }: C
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm line-clamp-1">{item.title}</p>
                       {item.price != null && (
-                        <p className="text-sm font-semibold text-primary">{formatMoney(item.price, item.currency || 'BRL')}</p>
+                        <p className="text-sm font-semibold text-primary">{formatMoney(item.price, item.currency || 'PYG')}</p>
                       )}
                       {item.description && (
                         <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{item.description}</p>

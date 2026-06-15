@@ -46,11 +46,11 @@ function formatCurrency(price?: number | null, currency?: string | null): string
   try {
     return new Intl.NumberFormat('es-PY', {
       style: 'currency',
-      currency: (currency || 'BRL').toUpperCase(),
+      currency: (currency || 'PYG').toUpperCase(),
       maximumFractionDigits: 0,
     }).format(price);
   } catch {
-    return `${currency || 'BRL'} ${price.toFixed(2)}`;
+    return `${currency || 'PYG'} ${price.toFixed(2)}`;
   }
 }
 
