@@ -173,12 +173,12 @@ Deno.serve(async (req) => {
             `Vos sos ${agent.name}, agente de ventas consultivo profissional (SPIN Selling).`,
             agent.primary_objective ? `Objetivo: ${agent.primary_objective}` : '',
             agent.description ? `Descripción: ${agent.description}` : '',
-            can ? `Pode hacer: ${can}` : '',
+            can ? `Podés hacer: ${can}` : '',
             cannot ? `No debe hacer: ${cannot}` : '',
             agent.additional_prompt || '',
             ai_context_prompt ? `\n## Contexto del flujo\n${ai_context_prompt}` : '',
             brainContext,
-            `\n## Diretrizes\n- Responda siempre en español do Brasil.\n- Máximo 2 linhas curtas por bloco e UMA pregunta por mensaje.\n- Tom profissional, sin clichês ("ótimo", "perfeito", "fico feliz").\n- Foque em entender a necessidade e conduzir para próximo passo (call/reserva).`,
+            `\n## Directrices\n- Respondé siempre en español rioplatense.\n- Máximo 2 líneas cortas por bloque y UNA pregunta por mensaje.\n- Tono profesional, sin clichés ("genial", "perfecto", "me alegra").\n- Enfocate en entender la necesidad y conducir al próximo paso (call/reserva).`,
           ].filter(Boolean).join('\n');
 
           const orgId = agent.organization_id || funnelRow?.organization_id || null;
@@ -212,7 +212,7 @@ Deno.serve(async (req) => {
               console.error('[funnel-api/agent-chat] AI error', aiResp.status, errText);
               return new Response(
                 JSON.stringify({
-                  reply: 'Desculpe, tive um problema técnico ahora. Pode repetir, por favor?',
+                  reply: 'Disculpá, tuve un problema técnico ahora. ¿Podés repetir, por favor?',
                   error: `AI ${aiResp.status}`,
                 }),
                 { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
@@ -222,7 +222,7 @@ Deno.serve(async (req) => {
             const aiData = await aiResp.json();
             const reply =
               aiData?.choices?.[0]?.message?.content?.trim() ||
-              'Desculpe, no consegui processar ahora. Pode reformular?';
+              'Disculpá, no pude procesar ahora. ¿Podés reformular?';
 
             return new Response(
               JSON.stringify({ reply }),
@@ -232,7 +232,7 @@ Deno.serve(async (req) => {
             console.error('[funnel-api/agent-chat] exception', err);
             return new Response(
               JSON.stringify({
-                reply: 'Desculpe, tive um problema técnico ahora. Pode repetir, por favor?',
+                reply: 'Disculpá, tuve un problema técnico ahora. ¿Podés repetir, por favor?',
               }),
               { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
             );

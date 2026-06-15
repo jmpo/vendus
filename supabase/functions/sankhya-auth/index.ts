@@ -104,7 +104,7 @@ serve(async (req: Request): Promise<Response> => {
     const bearerToken = authData.responseBody?.jsessionid?.$;
     
     if (!bearerToken && action === 'authenticate') {
-      throw new Error("Token de sessão no retornado");
+      throw new Error("Token de sessão no devuelto");
     }
 
     return new Response(

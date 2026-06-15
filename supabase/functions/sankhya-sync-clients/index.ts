@@ -60,7 +60,7 @@ async function getAuthToken(organizationId: string, supabaseUrl: string, supabas
   const token = authData.responseBody?.jsessionid?.$;
 
   if (!token) {
-    throw new Error("Token de sessão no retornado");
+    throw new Error("Token de sessão no devuelto");
   }
 
   return { token, xToken: config.x_token };

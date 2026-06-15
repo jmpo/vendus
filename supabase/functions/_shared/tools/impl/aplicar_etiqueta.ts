@@ -1,10 +1,10 @@
-// Aplica uma etiqueta (tag) al lead atual. Pode crear a etiqueta automaticamente se no existir.
+// Aplica uma etiqueta (tag) al lead atual. Podés crear a etiqueta automaticamente se no existir.
 import type { ToolDefinition } from '../types.ts';
 
 export const aplicarEtiquetaTool: ToolDefinition = {
   name: 'aplicar_etiqueta',
   description:
-    'Aplica uma etiqueta (tag) al lead atual para classificá-lo. Usa para marcar status como "interessado_premium", "objecao_preco", "abandueñou_checkout", "comprou_produto_x" etc. Se a etiqueta no existir, será creada automaticamente.',
+    'Aplica uma etiqueta (tag) al lead atual para classificá-lo. Usa para marcar status como "interesado_premium", "objecao_preco", "abandueñou_checkout", "comprou_produto_x" etc. Se a etiqueta no existir, será creada automaticamente.',
   categories: ['crm', 'marketing'],
   estimated_cost_cents: 0,
   parameters: {
@@ -12,7 +12,7 @@ export const aplicarEtiquetaTool: ToolDefinition = {
     properties: {
       tag_name: {
         type: 'string',
-        description: 'Nombre da etiqueta (ex: "interessado_premium"). Usa snake_case.',
+        description: 'Nombre da etiqueta (ex: "interesado_premium"). Usa snake_case.',
       },
       color: {
         type: 'string',

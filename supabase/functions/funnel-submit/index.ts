@@ -311,7 +311,7 @@ Deno.serve(async (req) => {
         }).catch((e) => console.error('[funnel-submit] cadence-enroll error:', e));
       }
 
-      // 7.3 Vincular agente de IA (para próxima interação inbound)
+      // 7.3 Vincular agente de IA (para la próxima interacción inbound)
       if (funnel.post_quiz_agent_id) {
         await supabase
           .from('leads')

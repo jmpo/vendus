@@ -1,5 +1,5 @@
 // meta-whatsapp-send
-// Envia mensaje via Cloud API. Detecta janela 24h:
+// Enviel mensaje via Cloud API. Detecta janela 24h:
 //  - dentro: texto/mídia livre
 //  - fora: exige template HSM aprovado
 
@@ -52,7 +52,7 @@ Deno.serve(async (req: Request) => {
   if (conversation_id && type !== 'template') {
     const { data: ok } = await sbAdmin.rpc('is_within_24h_window', { _conversation_id: conversation_id });
     if (!ok) {
-      return json({ error: 'OUT_OF_WINDOW', message: 'Fora da janela 24h — envie um template HSM aprovado.' }, 422);
+      return json({ error: 'OUT_OF_WINDOW', message: 'Fuera de la ventana 24h — enviá un template HSM aprobado.' }, 422);
     }
   }
 

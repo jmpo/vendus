@@ -23,7 +23,7 @@ interface OrgCfg {
   alert_goal_achieved: boolean;
 }
 
-const fmtBRL = (n: number) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const fmtBRL = (n: number) => n.toLocaleString("es-PY", { style: "currency", currency: "BRL" });
 
 async function checkHighValueLeads(cfg: OrgCfg) {
   const supabase = getServiceSupabase();
@@ -69,7 +69,7 @@ async function checkUnattendedChats(cfg: OrgCfg) {
     if (await alreadySentByKind(cfg.organization_id, "unattended_chat", c.id, 6)) continue;
     const msg = `⏰ *Conversación sin atención*\n\n` +
       `👤 ${c.visitor_name || "Visitante"}\n` +
-      `🕐 Última mensaje há *${cfg.alert_unattended_minutes}+ min*`;
+      `🕐 Últimel mensaje há *${cfg.alert_unattended_minutes}+ min*`;
     await sendAdminMessage({
       organizationId: cfg.organization_id,
       phone: cfg.admin_whatsapp_number,
@@ -170,7 +170,7 @@ async function checkMeetingChanges(cfg: OrgCfg) {
     if (await alreadySentByKind(cfg.organization_id, `meeting_${ev.status}`, refUuid, 24)) continue;
     const icon = ev.status === "confirmed" ? "✅" : "❌";
     const verb = ev.status === "confirmed" ? "confirmada" : "cancelada";
-    const dt = new Date(ev.start_time).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+    const dt = new Date(ev.start_time).toLocaleString("es-PY", { timeZone: "America/Sao_Paulo" });
     const msg = `${icon} *Reunión ${verb}*\n\n📅 ${ev.title}\n🕐 ${dt}`;
     await sendAdminMessage({
       organizationId: cfg.organization_id,

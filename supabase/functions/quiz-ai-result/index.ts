@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
 
     const tagLine = body.tags?.length ? `Tags: ${body.tags.join(', ')}` : '';
 
-    const system = body.custom_prompt?.trim() || `Vos sos um consultor sênior. Com base nas respuestas de um quiz de diagnóstico, gere um relatório corto, objetivo e personalizado en español do Brasil. Tom profissional, direto, sin clichês. NUNCA invente dados.`;
+    const system = body.custom_prompt?.trim() || `Vos sos um consultor sênior. Com base nas respuestas de um quiz de diagnóstico, gere um relatório corto, objetivo e personalizado en español. Tom profissional, direto, sin clichés. NUNCA invente dados.`;
 
     const user = `${productCtx}
 
@@ -58,7 +58,7 @@ ${tagLine}
 Respostas:
 ${respLines}
 
-Retorne APENAS um JSON válido con este formato exato:
+Retorne SOLO um JSON válido con este formato exato:
 {
   "diagnostico": "2-3 frases sobre o cenário atual do respondente",
   "oportunidades": ["item 1", "item 2", "item 3"],
@@ -85,7 +85,7 @@ Retorne APENAS um JSON válido con este formato exato:
       const errText = await aiResp.text();
       console.error('[quiz-ai-result] AI error:', aiResp.status, errText);
       return new Response(JSON.stringify({
-        error: aiResp.status === 429 ? 'Limite de uso da IA atingido. Tente novamente em instantes.'
+        error: aiResp.status === 429 ? 'Límite de uso da IA atingido. Probá novamente em instantes.'
           : aiResp.status === 402 ? 'Créditos de IA esgotados.'
           : 'Falha ao gerar resultado IA.',
       }), { status: aiResp.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });

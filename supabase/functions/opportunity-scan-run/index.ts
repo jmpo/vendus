@@ -317,7 +317,7 @@ async function classifyConversation(supabase: any, orgId: string, conv: any, api
       return {
         conversation_id: conv.id, lead_id: conv.lead_id,
         classification: 'cold', score: 10,
-        reason: 'Ningunoa mensaje del cliente — solo mensajes iniciais sin engajamento.',
+        reason: 'Ningunoel mensaje del cliente — solo mensajes iniciais sin engajamento.',
         signals: ['sem_resposta_cliente'],
         suggested_action: 'Considerar arquivar ou tentar abordagem nova.',
         followup_message: '',
@@ -340,21 +340,21 @@ CONVERSA (últimas mensajes):
 ${transcript}
 
 CONTEXTO:
-- Dias desde última mensaje: ${daysSince}
-- Última mensaje fue del cliente: ${lastMsgFromClient}
+- Dias desde últimel mensaje: ${daysSince}
+- Últimel mensaje fue del cliente: ${lastMsgFromClient}
 - Total de mensajes del cliente: ${clientMsgs}
 
 Clasifica como:
-- "hot": demonstrou forte interesse, pediu detalles/preço, parou de responder mas estava engajado, OU última msg del cliente sin respuesta de la empresa
-- "warm": interesse moderado, fez algunas preguntas, conversación em andamento
+- "hot": demostró fuerte interés, pidió detalles/precio, dejó de responder pero estaba enganchado, O último msg del cliente sin respuesta de la empresa
+- "warm": interés moderado, fez algunas preguntas, conversación em andamento
 - "cold": poco engajamento, sin sinais claros de compra
-- "lost": demonstrou desinteresse, rejeição, ou tempo demais sin atividade
+- "lost": demonstrou desinterés, rejeição, ou tempo demais sin atividade
 
 Retorne JSON estrito:
 {
   "classification": "hot|warm|cold|lost",
   "score": 0-100,
-  "reason": "explicação corta em 1-2 frases",
+  "reason": "explicación corta em 1-2 frases",
   "signals": ["sinal1", "sinal2"],
   "suggested_action": "acción concreta recomendada",
   "followup_message": "mensaje pronta de follow-up que o vendedor puede enviar (máx 2 linhas, tom profissional, en español)"

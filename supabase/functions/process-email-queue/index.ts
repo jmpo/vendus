@@ -10,7 +10,7 @@ const DEFAULT_TRANSACTIONAL_TTL_MINUTES = 60
 // Check if an error is a rate-limit (429) response.
 // Uses EmailAPIError.status when available (email-js >=0.x with structured errors),
 // falls back to parsing the error message for older versions.
-function isRateLimited(error: unknown): boolean {
+function isRateLímited(error: unknown): boolean {
   if (error && typeof error === 'object' && 'status' in error) {
     return (error as { status: number }).status === 429
   }
@@ -297,7 +297,7 @@ Deno.serve(async (req) => {
           error: errorMsg,
         })
 
-        if (isRateLimited(error)) {
+        if (isRateLímited(error)) {
           await supabase.from('email_send_log').insert({
             message_id: payload.message_id,
             template_name: payload.label || queue,

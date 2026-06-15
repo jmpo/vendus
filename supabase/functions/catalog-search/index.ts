@@ -20,9 +20,9 @@ interface SearchBody {
 }
 
 /**
- * Expande filtros de preço cuando o usuario menciona um valor exato.
+ * Expande filtros de precio cuando o usuario menciona um valor exato.
  * Ex: cliente diz "13.5 milhões" → busca entre 11.5M e 15.5M (±15%).
- * Isso evita zero resultados cuando o catálogo tiene item próximo mas no exato.
+ * Esto evita cero resultados cuando el catálogo tiene un ítem cercano pero no exacto.
  */
 function expandPriceRange(
   filters: SearchBody["filters"]

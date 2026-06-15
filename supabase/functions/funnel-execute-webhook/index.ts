@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
       if (cfg.body_template && cfg.body_template.trim()) {
         body = substituteVariables(cfg.body_template, vars);
       } else {
-        // Default: envia todo coletado
+        // Default: envía todo coletado
         body = JSON.stringify({
           funnel_id: input.funnel_id,
           funnel_name: funnel.name,

@@ -55,9 +55,9 @@ async function verifyKey(provider: string, apiKey: string): Promise<{ ok: boolea
       if (!r.ok) return { ok: false, error: `Gemini respondeu ${r.status}: ${(await r.text()).slice(0, 200)}` };
       return { ok: true };
     }
-    return { ok: false, error: `Provedor desconhecido: ${provider}` };
+    return { ok: false, error: `Provedor desconocido: ${provider}` };
   } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : "error desconhecido" };
+    return { ok: false, error: e instanceof Error ? e.message : "error desconocido" };
   }
 }
 

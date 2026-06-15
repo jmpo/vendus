@@ -62,7 +62,7 @@ export type LinguisticRegion =
 
 export interface TicsConfig {
   region?: LinguisticRegion;
-  slang?: string[];           // gírias específicas
+  slang?: string[];           // modismos específicas
   openers?: string[];         // interjeições de abertura
   connectors?: string[];      // conectivos casuais
   fillers?: string[];         // frases de muleta
@@ -190,7 +190,7 @@ export function applyStyle(input: string, style: StyleConfig = {}): string {
 
   // 4. Laughter — só em contextos leves de verdade (evita "kkk" colado em frase neutra).
   if ((style.laughter_prob ?? 0) > 0 && chance(style.laughter_prob!)) {
-    const lightSignals = /(\p{Extended_Pictographic}|!|nossa|cara|véi|vei|kkk|haha|engraçad|doido|loucura|de boa|tranqui|sussa|massa)/iu;
+    const lightSignals = /(\p{Extended_Pictographic}|!|nuestra|cara|véi|vei|kkk|haha|engraçad|doido|loucura|de boa|tranqui|sussa|massa)/iu;
     const alreadyHasLaughter = /(kkk|haha|rs|kk)\s*[.!?]?\s*$/i.test(text);
     if (lightSignals.test(text) && !alreadyHasLaughter) {
       const styleChoice = (() => {
@@ -468,7 +468,7 @@ const REGION_HINTS: Record<LinguisticRegion, string> = {
   nordestino: 'sotaque nordestino (oxe, vixe, massa, arretado)',
   sulista: 'sotaque sulista/gaúcho (tchê, bah, guri, capaz)',
   mineiro: 'sotaque mineiro (uai, sô, trem, dimais)',
-  custom: 'estilo regional customizado conforme as gírias listadas',
+  custom: 'estilo regional customizado conforme as modismos listadas',
 };
 
 function bulletList(items?: string[], max = 12): string {

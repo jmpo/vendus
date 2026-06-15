@@ -71,7 +71,7 @@ Usted NÃO es vendedor. NÃO es SDR. NÃO es agente. NÃO es assistente de produ
 Vos sos o **asesor interno** do gestor, solo-lectura, focado em datos operativos de la empresa.
 
 ## CON QUIÉN HABLÁS
-Usted fala APENAS con ${adminName}, su jefe direto. O número de él/ela está registrado como admin en el sistema.
+Usted fala SOLO con ${adminName}, su jefe direto. O número de él/ela está registrado como admin en el sistema.
 Tratalo/a como gestor de la casa, NUNCA como lead, prospecto ou cliente.
 
 ## CONTEXTO DE LA EMPRESA
@@ -79,7 +79,7 @@ ${productsLine}
 ${scopeLine}
 
 ## LO QUE NUNCA HACÉS (reglas absolutas)
-- ❌ NUNCA tenta agendar reunión con ${adminName} (él/ela es tu jefe, no un lead)
+- ❌ NUNCA tentla agendar reunión con ${adminName} (él/ela es tu jefe, no un lead)
 - ❌ NUNCA pregunta "cómo puedo ayudarte con [producto]" ou "tiene interés en [producto]"
 - ❌ NUNCA uses pitch comercial: "implementación", "recorrido", "vamos a avanzar", "ICP", "calificación"
 - ❌ NUNCA pidas nombre, teléfono, email, segmento — vos ya sabés quién es
@@ -90,7 +90,7 @@ ${scopeLine}
 ## LO QUE SIEMPRE HACÉS
 - ✅ Antes de responder cualquier pregunta sobre datos, USÁ una tool. Sin adivinar.
 - ✅ Si el admin pide "resumen", "cómo está hoy", "briefing", "situación", "panorama" → usá SIEMPRE \`get_today_briefing\` PRIMERO. Nunca preguntes "cuál resumen".
-- ✅ "¿Hay reservas hoy?" / "¿Reuniones hoy?" → \`get_bookings range=today\` (consulta la agenda DEL EQUIPO, no intentes marcar reunión con vos).
+- ✅ "¿Hay reservas hoy?" / "¿Reuniones hoy?" → \`get_bookings range=today\` (consulta lla agenda DEL EQUIPO, no intentes marcar reunión con vos).
 - ✅ "¿Cómo está [nombre de vendedor]?" → \`get_team_status\` y respondé solo sobre esa persona.
 - ✅ "Pipeline / embudo / negocios" → \`get_pipeline_summary\`.
 - ✅ "Inbox / atención / sin respuesta" → \`get_inbox_status\`.
@@ -457,17 +457,17 @@ async function callAI(
       }),
     });
 
-    if (resp.status === 429) return "Estou sobrecarregado ahora. Tente em 1 min.";
+    if (resp.status === 429) return "Estoy sobrecarregado ahora. Probá em 1 min.";
     if (resp.status === 402) return "Créditos da plataforma esgotados. Avise o time.";
     if (!resp.ok) {
       console.error("[admin-handle-inbound] ai error", resp.status, await resp.text());
-      return "Tive um problema técnico. Tente novamente.";
+      return "Tive um problema técnico. Probá novamente.";
     }
     const data = await resp.json();
     await recordLovableUsage(getServiceSupabase(), orgId, 'agent_chat', 'google/gemini-2.5-flash', data?.usage, 'admin-agent-handle-inbound');
     const choice = data.choices?.[0];
     const msg = choice?.message;
-    if (!msg) return "No consegui processar su mensaje.";
+    if (!msg) return "No pude procesar tu mensaje.";
 
     if (msg.tool_calls?.length) {
       messages.push(msg);
@@ -480,7 +480,7 @@ async function callAI(
     }
     return msg.content || "Sem respuesta.";
   }
-  return "No consegui completar su solicitação. Tente reformular.";
+  return "No pude completar tu solicitud. Probá reformularlo.";
 }
 
 // Resolve nombre do admin a partir da config (admin_user_id) con fallback
@@ -775,7 +775,7 @@ serve(async (req) => {
               handoffInfo = { kind: "user_name", to_user_id: targetUser.id, to_user_name: targetUser.full_name };
             } else {
               console.warn("[admin-agent-handle-inbound] target user NOT FOUND for name:", parsed.targetName);
-              finalReply = `No encontrei "${parsed.targetName}" no time. Verifique o nombre no panel da equipo.`;
+              finalReply = `No encontrei "${parsed.targetName}" no time. Verificá o nombre no panel da equipo.`;
             }
           } else if (parsed.kind === "role" && parsed.handoffTo === "humano") {
             await supabase

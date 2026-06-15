@@ -133,7 +133,7 @@ Autor: ${videoInfo.author_name}
 URL: https://www.youtube.com/watch?v=${videoId}
 
 Crea seções para:
-1. Resumen geral do conteúdo
+1. Resumen geral do contenido
 2. Pontos-chave principais
 3. Argumentos de venta mencionados
 4. Objeções e como foram tratadas

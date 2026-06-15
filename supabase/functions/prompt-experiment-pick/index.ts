@@ -73,7 +73,7 @@ Deno.serve(async (req) => {
 
     const variant = variants[0];
 
-    // registra impressão
+    // registra impresión
     await supabase.rpc("record_variant_impression", {
       p_variant_id: variant.variant_id,
     });

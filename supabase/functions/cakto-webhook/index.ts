@@ -103,7 +103,7 @@ Deno.serve(async (req) => {
               p_organization_id: row.organization_id,
             });
 
-            // Em compra aprovada, remove tags transitórias DESTE producto (PIX/Boleto/Aguardando/Abandonado)
+            // Em compra aprovada, remove tags transitórias DESTE producto (PIX/Boleto/Esperando/Abandonado)
             // — preserva tags permanentes (Cliente) e tags de OUTROS productos.
             if (tagEventType === 'compra_aprovada') {
               await admin.rpc('remove_lifecycle_tags_on_event', {
@@ -182,7 +182,7 @@ Deno.serve(async (req) => {
 
 /**
  * Traduz event/status/payment_method da Cakto para o tipo de evento das tag_automations.
- * Retorna null se o evento no dispara ninguna automação de tag.
+ * Retorna null se el evento no dispara ninguna automação de tag.
  */
 function mapCaktoToTagEvent(
   event: string | null,

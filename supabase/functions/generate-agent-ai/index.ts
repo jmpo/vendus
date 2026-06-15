@@ -251,7 +251,7 @@ ${orgSupportMaterials ? `📚 MATERIAIS DE SUPORTE GLOBAIS:\n${orgSupportMateria
     if (optimize_field && current_value) {
       const fieldPrompts: Record<string, string> = {
         primary_objective: "Reescribí o objetivo principal del agente para ser mais claro, estratégico e acionável.",
-        additional_prompt: "Melhore as instruções adicionais para serem mais detalhadas, específicas e blindadas contra desvios.",
+        additional_prompt: "Melhore as instruções adicionais para serem mais detalladas, específicas e blindadas contra desvios.",
         can_do: "Sugiere 3-5 capacidades que este agente debe ter, baseado no contexto.",
         cannot_do: "Sugiere 3-5 restrições importantes para garantir que no ultrapasse su papel.",
         handoff_triggers: "Sugiere 3-5 situações em que o agente debe transferir para um humano.",
@@ -346,9 +346,9 @@ Devuelve una versão otimizada que respeite o tipo del agente e o contexto real.
 
 ⚠️ REGRA CRÍTICA: Vos sostá criando um agente do tipo "${agent_type}" — ele NÃO puede agir como otro tipo.
 ${isAdmin ? '- Admin: Chief of Staff INTERNO. NUNCA tenta vender, agendar reunión con o admin, ou tratá-lo comel lead.' : ''}
-${isOrchestrator ? '- Orquestrador: APENAS classifica e roteia. NUNCA explica producto, NUNCA dá preço, NUNCA negocia.' : ''}
-${isSupport ? '- Suporte: Resolve dudas técnicas. NUNCA vende producto adicional. Usa APENAS materiais cadastrados.' : ''}
-${agent_type === 'sdr' ? '- SDR: Qualifica e identifica intenção. NUNCA dá preço fechado, NUNCA data venta — passa para Closer. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que el cliente pedir material visual — esse es o canal oficial. NUNCA invente bloqueios como "no posso enviar por aqui", "off-market", "restrição de segurança".' : ''}
+${isOrchestrator ? '- Orquestrador: SOLO classifica e roteia. NUNCA explica producto, NUNCA dá precio, NUNCA negocia.' : ''}
+${isSupport ? '- Suporte: Resolve dudas técnicas. NUNCA vende producto adicional. Usa SOLO materiais cadastrados.' : ''}
+${agent_type === 'sdr' ? '- SDR: Qualifica e identifica intenção. NUNCA dá precio fechado, NUNCA data venta — passa para Closer. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que el cliente pedir material visual — esse es o canal oficial. NUNCA invente bloqueios como "no posso enviar por aqui", "off-market", "restrição de segurança".' : ''}
 ${agent_type === 'closer' ? '- Closer: Apresenta oferta e data. NUNCA dá descuento sin política autorizada. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO direto no WhatsApp cuando o cliente pedir — no desvia, no inventa restrição.' : ''}
 ${agent_type === 'financial' ? '- Financeiro: Lida con boletos/NF/cobrança. NUNCA negocia dívida sin autorização.' : ''}
 ${agent_type === 'custom' ? '- Custom: Se for foco comercial, ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que pedido — canal oficial de mídia.' : ''}
@@ -372,14 +372,14 @@ PRINCÍPIOS DE DESIGN:
 
 🎭 HUMANIZAÇÃO (campo "humanization") — OBRIGATÓRIO para sdr/closer/custom/support:
 - persona.age: 25–45. persona.city: "Cidade, UF" coerente con a região do ICP.
-- persona.backstory: 1ª pessoa, ATÉ 500 chars, conectada à dor do ICP do producto. Se ICP es "gestor de tráfego", a backstory reflete alguém que viveu essa dor. Se es "dueño de loja", alguém que trabajou no varejo. SEM clichês de marketing.
+- persona.backstory: 1ª pessoa, ATÉ 500 chars, conectada à dor do ICP do producto. Se ICP es "gestor de tráfego", a backstory reflete alguém que viveu essa dor. Se es "dueño de loja", alguém que trabajou no varejo. SEM clichés de marketing.
 - persona.hobbies: 3–5 plausíveis (ex: "rodar bike no fin de semana", "torcer pro Palmeiras", "café especial").
 - persona.stories: 3–5 micro-histórias { title, description }. Cada description es uma FRASE REAL que o agente usaria, em 1ª pessoa, espelhando uma objeção/dor do producto. Ex: title "Cuando travei con o ROAS", description "Eu tava igualzinho — torrava grana e no saía do lugar, hasta que descobri que o problema no era a campaña, era o embudo".
-- persona.loved_words: 6–12 jargões/gírias do nicho (ex pra tráfego: "ROAS", "CPL", "criativo cansado").
-- persona.forbidden_words: 6–12 itens. SIEMPRE inclua: "incrível", "fantástico", "maravilhoso", "revolucionário", "atenciosamente", "prezado", "estamos à disposición", "agradecemos o contato", "como podemos ajudar".
-- tics.region: elegí coerente con persona.city. tics.slang/openers/connectors/fillers: 2–6 itens cada, sutis, sin caricatura.
+- persona.loved_words: 6–12 jargões/modismos do nicho (ex pra tráfego: "ROAS", "CPL", "criativo cansado").
+- persona.forbidden_words: 6–12 ítems. SIEMPRE inclua: "incrível", "fantástico", "maravilhoso", "revolucionário", "atenciosamente", "prezado", "estamos à disposición", "agradecemos o contato", "como podemos ajudar".
+- tics.region: elegí coerente con persona.city. tics.slang/openers/connectors/fillers: 2–6 ítems cada, sutis, sin caricatura.
 - reactions.enabled: true (exceto admin/orchestrator/financial). reactions.rules: 3–6 regras.
-  • SDR: regra keyword "preço/valor/quanto custa" → action "context" transferindo pro Closer real (use o nombre em routing_matrix). Regra keyword "quiero comprar/fechar" → context pro Closer.
+  • SDR: regra keyword "precio/valor/quanto custa" → action "context" transferindo pro Closer real (use o nombre em routing_matrix). Regra keyword "quiero comprar/fechar" → context pro Closer.
   • Closer: regra keyword "tá caro/descuento" → context con instrução de objeção. Regra keyword "vou pensar" → context de follow-up.
   • Suporte: regra keyword "urgente/parou/no funciona" → context de priorização.
   • Admin/Orchestrator/Financial: puede omitir humanization OU mandar reactions.enabled=false.
@@ -424,12 +424,12 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (ya
                   primary_objective: { type: "string", description: "Objetivo principal claro e estratégico, ALINHADO ao tipo" },
                   additional_prompt: {
                     type: "string",
-                    description: "Instruções detalhadas — DEVE incorporar o template blindado fornecido, populado con dados reais (org/producto/admin/matriz). 3-8 parágrafos.",
+                    description: "Instruções detalladas — DEVE incorporar o template blindado fornecido, populado con dados reais (org/producto/admin/matriz). 3-8 parágrafos.",
                   },
                   can_do: { type: "array", items: { type: "string" }, description: "4-6 capacidades específicas do tipo" },
-                  cannot_do: { type: "array", items: { type: "string" }, description: "3-5 restrições críticas do tipo (ex: admin nunca vende, orquestrador nunca dá preço)" },
+                  cannot_do: { type: "array", items: { type: "string" }, description: "3-5 restrições críticas do tipo (ex: admin nunca vende, orquestrador nunca dá precio)" },
                   handoff_triggers: { type: "array", items: { type: "string" }, description: "3-5 situações para transferir/escalar" },
-                  end_conversation_triggers: { type: "array", items: { type: "string" }, description: "2-3 situações para encerrar" },
+                  end_conversation_triggers: { type: "array", items: { type: "string" }, description: "2-3 situações para cierrar" },
                   tone_style: { type: "string", enum: ["formal", "consultive", "friendly", "technical"] },
                   message_style: { type: "string", enum: ["short", "balanced", "detailed"] },
                   required_phrases: { type: "array", items: { type: "string" }, description: "0-3 frases recorrentes" },
@@ -440,7 +440,7 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (ya
                      properties: {
                        persona: {
                          type: "object",
-                         description: "Persona humana adaptada ao ICP do producto. Backstory em 1ª pessoa, sin clichês de marketing.",
+                         description: "Persona humana adaptada ao ICP do producto. Backstory em 1ª pessoa, sin clichés de marketing.",
                          properties: {
                            age: { type: "number", description: "Idade entre 25 e 45" },
                            city: { type: "string", description: "'Cidade, UF' (ex: 'Son Paulo, SP')" },
@@ -458,11 +458,11 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (ya
                                required: ["title", "description"],
                              },
                            },
-                           loved_words: { type: "array", items: { type: "string" }, description: "6 a 12 gírias/jargões do nicho que o agente usa naturalmente" },
+                           loved_words: { type: "array", items: { type: "string" }, description: "6 a 12 modismos/jargões do nicho que o agente usa naturalmente" },
                            forbidden_words: {
                              type: "array",
                              items: { type: "string" },
-                             description: "6 a 12 clichês proibidos. SIEMPRE inclua: incrível, fantástico, maravilhoso, revolucionário, atenciosamente, prezado, estamos à disposición, agradecemos o contato, como podemos ajudar",
+                             description: "6 a 12 clichés proibidos. SIEMPRE inclua: incrível, fantástico, maravilhoso, revolucionário, atenciosamente, prezado, estamos à disposición, agradecemos o contato, como podemos ajudar",
                            },
                          },
                        },
@@ -471,7 +471,7 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (ya
                          description: "Maneirismos regionais sutis",
                          properties: {
                            region: { type: "string", enum: ["neutral", "paulista", "carioca", "nordestino", "sulista", "mineiro"] },
-                           slang: { type: "array", items: { type: "string" }, description: "3 a 6 gírias regionais sutis" },
+                           slang: { type: "array", items: { type: "string" }, description: "3 a 6 modismos regionais sutis" },
                            openers: { type: "array", items: { type: "string" }, description: "2 a 4 abridores curtos (ex: 'Opa', 'Eai')" },
                            connectors: { type: "array", items: { type: "string" }, description: "2 a 4 conectores (ex: 'então', 'aí')" },
                            fillers: { type: "array", items: { type: "string" }, description: "2 a 4 muletas curtas" },
@@ -479,7 +479,7 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (ya
                        },
                        reactions: {
                          type: "object",
-                         description: "Reações automáticas a gatilhos. Para SDR/Closer gere regras de keyword 'preço/valor' e 'quiero comprar' que transferem al agente certo (use a matriz de roteamento). Suporte: regra para 'urgente'. Admin: deixe vazio.",
+                         description: "Reações automáticas a gatilhos. Para SDR/Closer gere regras de keyword 'precio/valor' e 'quiero comprar' que transferem al agente certo (use a matriz de roteamento). Suporte: regra para 'urgente'. Admin: deixe vazio.",
                          properties: {
                            enabled: { type: "boolean" },
                            rules: {

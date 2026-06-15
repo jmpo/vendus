@@ -163,11 +163,11 @@ serve(async (req) => {
       });
     }
 
-    // Usa template configurado, ou um estándar amigável se vazio.
+    // Usa template configurado, ou um defecto amigable se vazio.
     // Garantiza que el nuevo agente SIEMPRE se presenta después del handoff,
     // evitando que a primeira fala de él seja uma respuesta robótica.
     const DEFAULT_TEMPLATE =
-      "Oi {{nombre}}, aquí es a {{agent_name}} do time. Vou continuar de aquí — me cuenta um poco mais do que vos sostá pensando? 😊";
+      "Oi {{nombre}}, aquí es a {{agent_name}} do time. Voy a continuar de aquí — me cuenta um poco mais do que vos sostá pensando? 😊";
     const template = (agent.handoff_incoming_message || "").trim() || DEFAULT_TEMPLATE;
 
     const delaySec =

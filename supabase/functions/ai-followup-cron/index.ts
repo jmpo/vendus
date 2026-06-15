@@ -234,7 +234,7 @@ OBJETIVO: ${item.objective || agent.primary_objective}
 ${item.extra_context ? `CONTEXTO: ${item.extra_context}` : ''}
 
 REGRAS:
-- Genera APENAS a mensaje, sin explicações
+- Genera SOLO el mensaje, sin explicações
 - Sé natural e humano
 - Mensaje para WhatsApp (corta, direta)
 - DIFERENTE das mensajes anteriores
@@ -243,13 +243,13 @@ ${isLastAttempt ? '- Esta es a ÚLTIMA tentativa. Crea urgência sutil sin ser a
 
         const userPrompt = `Usted ya envió ${item.followups_sent + 1} mensajes para este lead sin respuesta.
 
-Histórico:
+Historial:
 ${previousMessages.join('\n')}
 
 Lead: ${item.lead_data?.name || 'Lead'}
 Tentativa ${attemptNumber + 1} de ${maxFollowups}
 
-Genera uma mensaje de follow-up estratégica DIFERENTE das anteriores.`;
+Genera umel mensaje de follow-up estratégica DIFERENTE das anteriores.`;
 
         // Call AI
         const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {

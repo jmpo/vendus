@@ -196,7 +196,7 @@ Deno.serve(async (req) => {
           });
           if (upErr) return json({ error: upErr.message }, 500);
           synced += rows.length;
-          // Cakto retorna URLs absolutas; convertemos para path para próximo loop
+          // Cakto devuelve URLs absolutas; las convertimos a path para el próximo loop
           if (data.next) {
             try {
               const u = new URL(data.next);

@@ -109,7 +109,7 @@ ${knowledgeContext}
 
 TIPOS DE BLOCOS DISPONÍVEIS:
 
-1. **message** - Exibir texto/conteúdo para el lead
+1. **message** - Exibir texto/contenido para el lead
    Campos: { content: "texto con suporte a markdown" }
    Usa para: boas-vindas, explicações, transições entre seções
 
@@ -136,9 +136,9 @@ TIPOS DE BLOCOS DISPONÍVEIS:
    Campos: { apply_tags: ["tag1", "tag2"] }
 
 REGRAS DE CONEXÃO:
-- Blocos lineares: use "next_block_id" no bloco para apontar para el próximo
+- Bloques lineales: usá "next_block_id" en el bloque para apuntar al próximo
 - Blocos buttons: cada option tiene su próprio "next_block_id" (ramificação)
-- Blocos score/tag: son invisíveis, conecte-os ao próximo bloco visível via next_block_id
+- Bloques score/tag: son invisibles, conectalos al próximo bloque visible vía next_block_id
 - Blocos end: NÃO têm next_block_id (son terminais)
 - Genera IDs usando formato UUID v4
 
@@ -166,20 +166,20 @@ FORMATO DE RESPOSTA (JSON):
 }
 
 IMPORTANTE:
-- Retorne APENAS JSON válido, sin markdown ou explicações
+- Retorne SOLO JSON válido, sin markdown ou explicações
 - Todos os IDs devem ser UUIDs v4 únicos
 - Todas as conexões next_block_id devem referenciar IDs existentes
 - Cada caminho de ramificação DEVE terminar con um bloco "end"
 - Usa emojis nos botões para tornar a experiência mais visual
 - Creá copys cortos y conversacionales, optimizados para mobile
 - Se o usuario mencionar vídeos, use blocos video con video_url: "URL_PLACEHOLDER"
-- Se o usuario mencionar planos/preços, crie botões con as opciones e blocos end con redirect_url vazio`;
+- Se o usuario mencionar planos/precios, crie botões con as opciones e blocos end con redirect_url vazio`;
 
     const userPrompt = `Crea o embudo de captação seguindo esta descripción:
 
 ${prompt}
 
-Retorne APENAS o JSON no formato especificado, sin explicações.`;
+Retorne SOLO o JSON no formato especificado, sin explicações.`;
 
     console.log('Calling AI to generate funnel...');
 
@@ -206,7 +206,7 @@ Retorne APENAS o JSON no formato especificado, sin explicações.`;
       
       if (aiResponse.status === 429) {
         return new Response(
-          JSON.stringify({ error: 'Limite de requisições excedido. Tente novamente em algunos segundos.' }),
+          JSON.stringify({ error: 'Límite de requisições excedido. Probá novamente em algunos segundos.' }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
@@ -242,7 +242,7 @@ Retorne APENAS o JSON no formato especificado, sin explicações.`;
     } catch (parseError) {
       console.error('Failed to parse AI response:', aiContent);
       return new Response(
-        JSON.stringify({ error: 'Error ao processar respuesta da IA. Tente novamente.' }),
+        JSON.stringify({ error: 'Error ao processar respuesta da IA. Probá novamente.' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -250,7 +250,7 @@ Retorne APENAS o JSON no formato especificado, sin explicações.`;
     // Validate structure
     if (!parsed.flow_blocks || !Array.isArray(parsed.flow_blocks) || parsed.flow_blocks.length === 0) {
       return new Response(
-        JSON.stringify({ error: 'IA no gerou blocos válidos. Tente con uma descripción mais detalhada.' }),
+        JSON.stringify({ error: 'IA no gerou blocos válidos. Probá con uma descripción mais detallada.' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

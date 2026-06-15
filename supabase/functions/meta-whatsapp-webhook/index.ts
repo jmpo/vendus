@@ -67,7 +67,7 @@ Deno.serve(async (req: Request) => {
       console.log('[verify] reject', { has_path_id: !!pathConnectionId });
       return new Response('forbidden', { status: 403 });
     }
-    // Marca que a Meta validou o webhook de esta conexão.
+    // Marca que a Meta validou o webhook de esta conexión.
     await sb
       .from('whatsapp_meta_connections')
       .update({ webhook_subscribed_at: new Date().toISOString() })
@@ -127,7 +127,7 @@ Deno.serve(async (req: Request) => {
       const value = change?.value ?? {};
       const phoneNumberId = value?.metadata?.phone_number_id;
 
-      // Resolve conexão: pinned (path) tiene prioridade; fallback por phone_number_id.
+      // Resolve conexión: pinned (path) tiene prioridade; fallback por phone_number_id.
       let conn: any = pinnedConn;
       if (!conn) {
         if (!phoneNumberId) continue;
@@ -175,7 +175,7 @@ Deno.serve(async (req: Request) => {
       }
 
 
-      // mensajes recebidas
+      // mensajes recibídas
       const contacts = Array.isArray(value.contacts) ? value.contacts : [];
       const messages = Array.isArray(value.messages) ? value.messages : [];
       for (const msg of messages) {
@@ -212,7 +212,7 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  // Siempre 200 — Meta reenvia se receber cualquier otro código
+  // Siempre 200 — Meta reenvía se receber cualquier otro código
   return new Response('ok', { status: 200, headers: { ...corsHeaders, 'Content-Type': 'text/plain' } });
 });
 
@@ -275,7 +275,7 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
     conversationId = created.id;
   }
 
-  // 2) extrair conteúdo
+  // 2) extrair contenido
   const { content, contentType, metadata } = await extractContent(msg, conn);
 
   // 3) inserir mensaje (idempotente por meta_message_id)

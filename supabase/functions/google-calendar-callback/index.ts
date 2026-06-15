@@ -163,7 +163,7 @@ serve(async (req) => {
     }
 
     return new Response(
-      `<html><body><h1>Error na conexão</h1><p>${errorMessage}</p><a href="/">Voltar</a></body></html>`,
+      `<html><body><h1>Error na conexión</h1><p>${errorMessage}</p><a href="/">Voltar</a></body></html>`,
       { 
         headers: { "Content-Type": "text/html" },
         status: 400

@@ -46,7 +46,7 @@ export const criarDealTool: ToolDefinition = {
       return { success: false, error: 'Lead no encontrado' };
     }
 
-    // Se no há vendedor atribuído, usa um placeholder (deal "del agente")
+    // Se no há vendedor atribuído, usa un placeholder (deal "del agente")
     // — mas a tabela exige seller_id NOT NULL, entonces usamos o assigned_to del lead.
     const sellerId = lead.assigned_to;
     if (!sellerId) {

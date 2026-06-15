@@ -74,7 +74,7 @@ export function buildBookingVars(input: {
  */
 export const DEFAULT_TEMPLATES = {
   confirmation_whatsapp:
-    "¡Hola, {{nome_lead}}! 👋\n\nPaso para confirmar la *{{nome_evento}}* de *{{empresa}}*.\n\n📅 {{data}}\n⏰ {{hora}}\n📍 {{modalidade}}\n\n¿Puedo confirmar esta agenda? Respondé:\n1️⃣ Confirmar\n2️⃣ Reagendar\n3️⃣ Cancelar",
+    "¡Hola, {{nome_lead}}! 👋\n\nPaso para confirmar la *{{nome_evento}}* de *{{empresa}}*.\n\n📅 {{data}}\n⏰ {{hora}}\n📍 {{modalidade}}\n\n¿Puedo confirmar estla agenda? Respondé:\n1️⃣ Confirmar\n2️⃣ Reagendar\n3️⃣ Cancelar",
   confirmation_email_subject:
     "Confirmación: {{nome_evento}} — {{data}} a las {{hora}}",
   reminder_whatsapp:

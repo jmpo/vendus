@@ -64,7 +64,7 @@ async function getAuthToken(organizationId: string, supabaseUrl: string, supabas
   const token = authData.responseBody?.jsessionid?.$;
 
   if (!token) {
-    throw new Error("Token de sessão no retornado");
+    throw new Error("Token de sessão no devuelto");
   }
 
   return { token, xToken: config.x_token, appKey: config.client_id };
@@ -152,9 +152,9 @@ serve(async (req: Request): Promise<Response> => {
               DTNEG: { $: new Date().toISOString().split('T')[0] },
               CODTIPOPER: { $: "1100" }, // Tipo de operação - ajustar conforme configuración del cliente
               CODTIPVENDA: { $: "0" },
-              CODEMP: { $: "1" }, // Empresa estándar - ajustar conforme configuración
+              CODEMP: { $: "1" }, // Empresa defecto - ajustar conforme configuración
             },
-            itens: {
+            ítems: {
               NUNOTA: { $: "" },
               item: sankhyaProductId ? [{
                 CODPROD: { $: sankhyaProductId },

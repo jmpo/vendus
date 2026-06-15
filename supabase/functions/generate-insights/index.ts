@@ -171,7 +171,7 @@ Genera 3-5 insights acionáveis e específicos para este vendedor. Cada insight 
 3. Sugerir uma acción específica
 4. Indicar a prioridade (high, medium, low)
 
-Responda APENAS no formato JSON abaixo, sin texto adicional:
+Responda SOLO no formato JSON abaixo, sin texto adicional:
 {
   "insights": [
     {
@@ -200,13 +200,13 @@ Responda APENAS no formato JSON abaixo, sin texto adicional:
     if (!response.ok) {
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em algunos segundos." }),
+          JSON.stringify({ error: "Límite de requisições excedido. Probá novamente em algunos segundos." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       if (response.status === 402) {
         const msg = aiConfig.source === 'external_key'
-          ? `Créditos esgotados na su cuenta ${aiConfig.provider}. Verifique o saldo do provedor externo.`
+          ? `Créditos esgotados na su cuenta ${aiConfig.provider}. Verificá o saldo do provedor externo.`
           : "Créditos de IA esgotados. Configure uma chave externa (OpenAI) em Configurações > IA Roteamento ou adicione créditos Lovable.";
         return new Response(
           JSON.stringify({ error: msg }),
@@ -236,7 +236,7 @@ Responda APENAS no formato JSON abaixo, sin texto adicional:
       insights = [
         {
           title: "Análise em andamento",
-          insight: "No fue posible gerar insights automáticos no momento. Tente novamente.",
+          insight: "No fue posible gerar insights automáticos no momento. Probá novamente.",
           type: "tip",
           priority: "low"
         }
@@ -283,7 +283,7 @@ Responda APENAS no formato JSON abaixo, sin texto adicional:
   } catch (error) {
     console.error("Generate insights error:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Error desconhecido" }),
+      JSON.stringify({ error: error instanceof Error ? error.message : "Error desconocido" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

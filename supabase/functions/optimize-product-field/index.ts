@@ -27,7 +27,7 @@ Mantenha natural e conversacional, mas persuasivo.`,
   
   pitch_2min: `Vos sos um especialista em storytelling para ventas.
 Reescribí este pitch de 2 minutos usando a estrutura: Problema → Impacto → Solução → Resultados.
-Inclua elementos de prova social e urgência cuando apropriado.`,
+Inclua elementos de prova social e urgência cuando apropiado.`,
 };
 
 serve(async (req) => {
@@ -64,7 +64,7 @@ serve(async (req) => {
     } catch (_) {}
 
     const systemPrompt = fieldPrompts[field] || `Vos sos um especialista em ventas B2B.
-Reescribí o conteúdo para ser mais profissional, claro e persuasivo.
+Reescribí o contenido para ser mais profissional, claro e persuasivo.
 Mantenha a essência original, mas torne-o mais impactante.`;
 
     const contextInfo = productContext ? `
@@ -83,7 +83,7 @@ Contexto do producto:
       body: {
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `${contextInfo}\n\nTexto original para otimizar:\n"${value}"\n\nRetorne APENAS o texto otimizado, sin explicações ou marcadores.` },
+          { role: "user", content: `${contextInfo}\n\nTexto original para otimizar:\n"${value}"\n\nRetorne SOLO o texto otimizado, sin explicações ou marcadores.` },
         ],
         tools: [{
           type: "function",

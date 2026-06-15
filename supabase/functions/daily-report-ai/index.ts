@@ -270,7 +270,7 @@ async function generateAIReport(context: SellerContext, sellerName: string): Pro
 ☀️ ¡Buen día, ${firstName}!
 
 📊 RESUMEN DEL DÍA
-${taskCount > 0 ? `• ${taskCount} tarea${taskCount > 1 ? 's' : ''} agendada${taskCount > 1 ? 's' : ''} para hoy` : '• Ninguna tarea agendada'}
+${taskCount > 0 ? `• ${taskCount} tarea${taskCount > 1 ? 's' : ''} agendada${taskCount > 1 ? 's' : ''} para hoy` : '• Ninguna tarela agendada'}
 ${overdueCount > 0 ? `• ⚠️ ${overdueCount} tarea${overdueCount > 1 ? 's' : ''} atrasada${overdueCount > 1 ? 's' : ''}` : ''}
 ${stalledCount > 0 ? `• ${stalledCount} lead${stalledCount > 1 ? 's' : ''} requiere${stalledCount > 1 ? 'n' : ''} atención` : ''}
 ${goalSummary ? `• ${goalSummary}` : ''}
@@ -288,7 +288,7 @@ Boas ventas! 🚀
 }
 
 function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('pt-BR', {
+  return new Intl.NumberFormat('es-PY', {
     style: 'currency',
     currency: 'BRL',
   }).format(value);
@@ -345,7 +345,7 @@ async function sendReportEmail(email: string, name: string, report: { summary: s
       body: JSON.stringify({
         from: 'Assistente de Vendas <noreply@resend.dev>',
         to: [email],
-        subject: `☀️ Su briefing del día - ${new Date().toLocaleDateString('pt-BR')}`,
+        subject: `☀️ Su briefing del día - ${new Date().toLocaleDateString('es-PY')}`,
         html: htmlContent,
       }),
     });

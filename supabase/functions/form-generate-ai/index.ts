@@ -133,13 +133,13 @@ Garantia: ${product.guarantee || 'N/A'}
       qualification: 'Qualificar leads identificando fit con o producto e maturidade de compra. Crea preguntas que identifiquem se el lead es um ICP qualificado.',
       diagnostic: 'Diagnosticar necessidades e dores del lead para personalizar a abordagem comercial. Foque em entender o cenário atual e desafios.',
       capture: 'Captar información básicas de contato de forma rápida e no-invasiva. Mantenha o formulário corto e direto.',
-      presale: 'Preparar el lead para uma reunión de ventas coletando información detalhadas sobre expectativas e orçamento.',
+      presale: 'Preparar el lead para uma reunión de ventas coletando información detalladas sobre expectativas e orçamento.',
       feedback: 'Coletar feedback sobre o producto ou processo de ventas. Usa escalas e preguntas abiertas.',
     };
 
     const toneDescriptions = {
-      formal: 'Usa linguagem formal e profissional, adequada para B2B corporativo. Evita gírias e mantenha tom respeitoso.',
-      informal: 'Usa linguagem amigável e descontraída, como una conversación casual. Sé acolhedor e empático.',
+      formal: 'Usa lenguaje formal e profissional, adequada para B2B corporativo. Evita modismos e mantenha tom respeitoso.',
+      informal: 'Usa lenguaje amigable e descontraída, como una conversación casual. Sé cálido e empático.',
       technical: 'Usa termos técnicos relevantes ao sector, assumindo conhecimento prévio. Sé preciso e objetivo.',
     };
 
@@ -167,22 +167,22 @@ TOM DE COMUNICAÇÃO: ${toneDescriptions[tone]}
 
 REGRAS IMPORTANTES:
 1. Crea preguntas claras e objetivas que qualifiquem o lead
-2. Usa a linguagem adequada ao tom solicitado
-3. ${use_objections && objectionsContext ? 'Usa as objeções para crear preguntas inteligentes de calificación (ex: se objeção es preço, preguntes sobre orçamento disponible)' : 'Inclua preguntas que ajudem a entender o perfil del lead'}
+2. Usa a lenguaje adequada ao tom solicitado
+3. ${use_objections && objectionsContext ? 'Usa as objeções para crear preguntas inteligentes de calificación (ex: se objeção es precio, preguntes sobre orçamento disponible)' : 'Inclua preguntas que ajudem a entender o perfil del lead'}
 4. ${use_brain && knowledgeContext ? 'Baseie as preguntas no conhecimento real do producto e sus diferenciais' : 'Foque nas necessidades típicas do ICP descrito'}
 5. ${user_context ? 'Personalize as preguntas para el contexto da campaña descrito acima — no ignore esse contexto' : 'Foque em capturar dados que ajudem o time de ventas'}
-6. Limite ao número de preguntas solicitado (${num_questions} preguntas + telas de boas-vindas e agradecimento)
-7. Retorne APENAS um JSON válido, sin explicações ou markdown
+6. Límite ao número de preguntas solicitado (${num_questions} preguntas + telas de boas-vindas e agradecimento)
+7. Retorne SOLO um JSON válido, sin explicações ou markdown
 
-TIPOS DE BLOCOS VÁLIDOS (use APENAS estes valores em block_type):
+TIPOS DE BLOCOS VÁLIDOS (use SOLO estes valores em block_type):
 - welcome_screen: Pantalla de bienvenida (SIEMPRE el primer bloque)
-- text: Pergunta de texto corto. Para nombre/empresa/cargo, use "text" con maps_to apropriado ("name", "company")
+- text: Pergunta de texto corto. Para nombre/empresa/cargo, use "text" con maps_to apropiado ("name", "company")
 - textarea: Texto largo (descripción, dor, expectativa)
 - email: Email (use maps_to: "email")
 - phone: Teléfono/WhatsApp (use maps_to: "phone")
 - number: Número
 - select: Seleção única (inclua "options" como array de {label, value})
-- multi_select: Seleção múltipla (inclua "options" como array de {label, value})
+- multi_select: Seleção múltiple (inclua "options" como array de {label, value})
 - yes_no: Sí/No
 - scale: Escala numérica — IMPORTANTE: coloque a configuración em "options" como objeto {"min":1,"max":10,"min_label":"...","max_label":"..."}
 - end_screen: Pantalla final/agradecimiento (SIEMPRE el último bloque)
@@ -191,18 +191,18 @@ NÃO use "name", "company" ou "thank_you_screen" como block_type — esses valor
 
 FORMATO DE RESPOSTA (JSON ARRAY puro, sin markdown):
 [
-  {"block_type":"welcome_screen","label":"Título acolhedor","description":"Subtítulo"},
+  {"block_type":"welcome_screen","label":"Título cálido","description":"Subtítulo"},
   {"block_type":"text","label":"Qual su nombre?","placeholder":"Su nombre","required":true,"maps_to":"name"},
   {"block_type":"text","label":"Empresa?","required":true,"maps_to":"company"},
   {"block_type":"select","label":"Principal desafio?","options":[{"label":"Opción A","value":"a"},{"label":"Opción B","value":"b"}],"required":true},
-  {"block_type":"scale","label":"De 1 a 10, urgência?","options":{"min":1,"max":10,"min_label":"Pode esperar","max_label":"Urgente"},"required":true},
+  {"block_type":"scale","label":"De 1 a 10, urgência?","options":{"min":1,"max":10,"min_label":"Podés esperar","max_label":"Urgente"},"required":true},
   {"block_type":"email","label":"Su melhor email?","required":true,"maps_to":"email"},
   {"block_type":"end_screen","label":"Gracias!","description":"Entraremos em contato."}
 ]
 
 IMPORTANTE: O array debe conter exatamente ${num_questions} blocos de pregunta + welcome_screen + end_screen (total: ${num_questions + 2} blocos).`;
 
-    const userPrompt = `Genera o formulário de ${num_questions} preguntas seguindo as instruções acima. Retorne APENAS o JSON array, sin explicações ou código markdown.`;
+    const userPrompt = `Genera o formulário de ${num_questions} preguntas seguindo as instruções acima. Retorne SOLO o JSON array, sin explicações ou código markdown.`;
 
     console.log('Calling AI to generate form with enriched context...');
 

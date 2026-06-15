@@ -1,5 +1,5 @@
 // Hotmart Postback (Webhook) — público, valida hottok por organización
-// Mapeia eventos da Hotmart para nossa engine de tag automations
+// Mapeia eventos da Hotmart para nuestra engine de tag automations
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
 const corsHeaders = {
@@ -14,7 +14,7 @@ function json(body: unknown, status = 200) {
   });
 }
 
-// Hotmart event → nosso event_type para tag_automations
+// Hotmart event → nuestro event_type para tag_automations
 const EVENT_MAP: Record<string, string> = {
   PURCHASE_APPROVED: 'compra_aprovada',
   PURCHASE_COMPLETE: 'compra_aprovada',

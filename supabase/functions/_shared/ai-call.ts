@@ -86,14 +86,14 @@ export async function aiChat(opts: AICallOptions): Promise<{
 /** Friendly error message helper for non-ok responses. */
 export async function describeAIError(response: Response, providerLabel: string): Promise<string> {
   const text = await response.text().catch(() => '');
-  if (response.status === 429) return 'Limite de requisições excedido. Tente novamente em algunos segundos.';
+  if (response.status === 429) return 'Límite de requisições excedido. Probá novamente em algunos segundos.';
   if (response.status === 402) {
     return providerLabel === 'openai'
-      ? 'Su cuenta OpenAI está sin créditos ou bloqueada. Verifique em platform.openai.com/billing.'
+      ? 'Su cuenta OpenAI está sin créditos ou bloqueada. Verificá em platform.openai.com/billing.'
       : 'Créditos de IA esgotados. Adicione créditos na su cuenta Lovable.';
   }
   if (response.status === 401 || response.status === 403) {
-    return `Chave do provedor "${providerLabel}" inválida ou sin permiso. Verifique em Integrações → IA.`;
+    return `Chave do provedor "${providerLabel}" inválida ou sin permiso. Verificá em Integrações → IA.`;
   }
   return `Error do provedor ${providerLabel} (${response.status}): ${text.slice(0, 200) || response.statusText}`;
 }

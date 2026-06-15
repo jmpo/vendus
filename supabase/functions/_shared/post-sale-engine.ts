@@ -222,7 +222,7 @@ export async function runPostSaleActions(
     }
   }
 
-  // Delay: se configurado, enfileira mensaje/agente/email para mais tarde.
+  // Delay: se configurado, enfileirel mensaje/agente/email para mais tarde.
   const delayMin = Number(action.delay_minutes ?? 0) || 0;
   const hasDelayedWork = !!(action.inline_message || action.agent_id || action.email_template_id);
   const isDelayed = delayMin > 0 && hasDelayedWork;
