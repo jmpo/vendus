@@ -322,7 +322,7 @@ async function sendReportEmail(email: string, name: string, report: { summary: s
       <body>
         <div class="header">
           <h1 style="margin: 0; font-size: 24px;">☀️ Su Briefing do Dia</h1>
-          <p style="margin: 10px 0 0; opacity: 0.9;">Bom día, ${name.split(' ')[0]}!</p>
+          <p style="margin: 10px 0 0; opacity: 0.9;">¡Buen día, ${name.split(' ')[0]}!</p>
         </div>
         <div class="content">
           <div class="section">
