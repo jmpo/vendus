@@ -39,18 +39,18 @@ interface SidebarProps {
   onCollapsedChange?: (collapsed: boolean) => void;
 }
 
-// Menu quando tem produto selecionado
+// Menú cuando hay producto seleccionado
 const productNavItems = [
-  { id: 'product-dashboard', label: 'Visão Geral', icon: LayoutDashboard },
+  { id: 'product-dashboard', label: 'Resumen', icon: LayoutDashboard },
   { id: 'leads', label: 'Pipeline', icon: Users },
-  { id: 'inbox', label: 'Conversas', icon: MessageSquare },
-  { id: 'tasks', label: 'Tarefas', icon: CheckSquare },
-  { id: 'bookings', label: 'Agendamentos', icon: CalendarCheck },
-  { id: 'financial', label: 'Financeiro', icon: DollarSign },
-  { id: 'cadence', label: 'Cadência', icon: Calendar },
+  { id: 'inbox', label: 'Conversaciones', icon: MessageSquare },
+  { id: 'tasks', label: 'Tareas', icon: CheckSquare },
+  { id: 'bookings', label: 'Agenda', icon: CalendarCheck },
+  { id: 'financial', label: 'Financiero', icon: DollarSign },
+  { id: 'cadence', label: 'Cadencia', icon: Calendar },
   { id: 'playbook', label: 'Playbook', icon: BookOpen },
-  { id: 'objections', label: 'Objeções', icon: MessageSquareWarning },
-  { id: 'materials', label: 'Materiais', icon: FolderOpen },
+  { id: 'objections', label: 'Objeciones', icon: MessageSquareWarning },
+  { id: 'materials', label: 'Materiales', icon: FolderOpen },
   { id: 'ai', label: 'IA Copiloto', icon: Bot },
 ];
 
