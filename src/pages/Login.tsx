@@ -315,7 +315,7 @@ export default function Login() {
               {forgotSent ? (
                 <div className="space-y-4">
                   <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
-                    Se este email estiver cadastrado, enviaremos um link de recuperação em alguns instantes. Verifique sua caixa de entrada e a pasta de spam.
+                    Si este email está registrado, te enviaremos un enlace de recuperación en unos instantes. Revisá tu bandeja de entrada y la carpeta de spam.
                   </div>
                   <Button
                     type="button"
@@ -325,7 +325,7 @@ export default function Login() {
                       setForgotSent(false);
                     }}
                   >
-                    Voltar ao login
+                    Volver al login
                   </Button>
                 </div>
               ) : (
@@ -337,7 +337,7 @@ export default function Login() {
                       <Input
                         id="forgot-email"
                         type="email"
-                        placeholder="seu@email.com"
+                        placeholder="tu@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="pl-10 h-12 bg-card border-border"
@@ -351,7 +351,7 @@ export default function Login() {
                       <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
                       <>
-                        Enviar link de recuperação
+                        Enviar enlace de recuperación
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </>
                     )}
@@ -363,7 +363,7 @@ export default function Login() {
                       onClick={() => setView('login')}
                       className="text-primary hover:underline text-sm"
                     >
-                      Voltar ao login
+                      Volver al login
                     </button>
                   </div>
                 </form>
