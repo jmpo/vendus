@@ -33,10 +33,10 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
   };
 
   const stats = [
-    { label: 'Leads Ativos', value: '127', change: '+12%', icon: Users, trend: 'up' },
-    { label: 'Taxa Conversão', value: '32%', change: '+5%', icon: TrendingUp, trend: 'up' },
-    { label: 'Meta do Mês', value: '68%', change: 'R$ 45k restante', icon: Target, trend: 'neutral' },
-    { label: 'Tempo Resposta', value: '4min', change: '-2min', icon: Clock, trend: 'up' },
+    { label: 'Leads Activos', value: '127', change: '+12%', icon: Users, trend: 'up' },
+    { label: 'Tasa de Conversión', value: '32%', change: '+5%', icon: TrendingUp, trend: 'up' },
+    { label: 'Meta del Mes', value: '68%', change: '$ 45k restante', icon: Target, trend: 'neutral' },
+    { label: 'Tiempo Respuesta', value: '4min', change: '-2min', icon: Clock, trend: 'up' },
   ];
 
   return (
@@ -44,9 +44,9 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
       {/* Welcome Section */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Bom dia, Vendedor! 👋</h2>
+          <h2 className="text-2xl font-bold text-foreground">¡Buen día, Vendedor! 👋</h2>
           <p className="text-muted-foreground mt-1">
-            Você tem <span className="text-primary font-medium">{pendingTasks.length} tarefa{pendingTasks.length !== 1 ? 's' : ''}</span> pendente{pendingTasks.length !== 1 ? 's' : ''} hoje
+            Tenés <span className="text-primary font-medium">{pendingTasks.length} tarea{pendingTasks.length !== 1 ? 's' : ''}</span> pendiente{pendingTasks.length !== 1 ? 's' : ''} hoy
             {overdueCount > 0 && (
               <span className="text-destructive font-medium ml-2">
                 • {overdueCount} atrasada{overdueCount !== 1 ? 's' : ''}
@@ -56,7 +56,7 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
         </div>
         <Button variant="soft">
           <Plus size={18} className="mr-2" />
-          Novo Produto
+          Nuevo Producto
         </Button>
       </div>
 
