@@ -41,7 +41,7 @@ interface TrainingMaterial {
 }
 
 const CATEGORIES = [
-  { value: 'sales_techniques', label: '🎯 Técnicas de Vendas', description: 'SPIN Selling, Challenger, etc.' },
+  { value: 'sales_techniques', label: '🎯 Técnicas de Ventas', description: 'SPIN Selling, Challenger, etc.' },
   { value: 'communication', label: '💬 Comunicação', description: 'Rapport, escuta ativa, linguagem corporal' },
   { value: 'objections', label: '🛡️ Objeções', description: 'Técnicas de contorno de objeções' },
   { value: 'closing', label: '✅ Fechamento', description: 'Técnicas de fechamento de vendas' },
@@ -268,7 +268,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
               <Input
                 value={newMaterial.title}
                 onChange={(e) => setNewMaterial({ ...newMaterial, title: e.target.value })}
-                placeholder="Ex: Script de Vendas"
+                placeholder="Ex: Script de Ventas"
                 className="h-8 text-sm"
               />
             </div>

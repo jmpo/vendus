@@ -34,7 +34,7 @@ export function SupportTickets({ scope = 'admin' }: Props) {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold">{isSuper ? 'Suporte (todas as empresas)' : 'Suporte'}</h1>
+          <h1 className="text-2xl font-bold">{isSuper ? 'Soporte (todas as empresas)' : 'Soporte'}</h1>
           <p className="text-sm text-muted-foreground">
             {isSuper
               ? 'Chamados abertos pelos administradores das empresas.'

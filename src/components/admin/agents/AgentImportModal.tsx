@@ -444,7 +444,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
                   <SelectItem value="custom">Personalizado</SelectItem>
                   <SelectItem value="sdr">SDR</SelectItem>
                   <SelectItem value="closer">Closer</SelectItem>
-                  <SelectItem value="support">Suporte</SelectItem>
+                  <SelectItem value="support">Soporte</SelectItem>
                   <SelectItem value="financial">Financeiro</SelectItem>
                   <SelectItem value="admin">Administrativo</SelectItem>
                   <SelectItem value="orchestrator">Orquestrador</SelectItem>

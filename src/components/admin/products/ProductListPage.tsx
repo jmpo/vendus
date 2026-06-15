@@ -299,7 +299,7 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
                         compactDisplay: 'short'
                       }).format(stats.mrr)}
                     </p>
-                    <p className="text-xs text-muted-foreground">Vendas</p>
+                    <p className="text-xs text-muted-foreground">Ventas</p>
                   </div>
                 </div>
               </CardContent>

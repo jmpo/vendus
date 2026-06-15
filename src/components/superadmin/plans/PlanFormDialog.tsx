@@ -46,7 +46,7 @@ const FEATURE_GROUPS: { title: string; items: { key: keyof PlatformPlan; label: 
     items: [
       { key: 'feature_kanban', label: 'Kanban' },
       { key: 'feature_pipeline', label: 'Pipeline' },
-      { key: 'feature_scheduling', label: 'Agendamentos' },
+      { key: 'feature_scheduling', label: 'Agendamientos' },
       { key: 'feature_campaigns', label: 'Campanhas' },
       { key: 'feature_outreach', label: 'Outreach (cadência)' },
     ],

@@ -63,7 +63,7 @@ export function CaktoRecoveryPanel() {
         <CardHeader>
           <div className="flex items-start justify-between gap-4">
             <div>
-              <CardTitle>Recuperação Automática de Vendas</CardTitle>
+              <CardTitle>Recuperación Automática de Ventas</CardTitle>
               <CardDescription className="mt-1">
                 Quando a Cakto enviar um evento (Pix gerado, pagamento, reembolso),
                 o agente escolhido envia uma mensagem no WhatsApp do cliente — sem
@@ -117,7 +117,7 @@ export function CaktoRecoveryPanel() {
                 onChange={(v) => update('trigger_on_abandoned', v)}
               />
               <ToggleRow
-                title="Pagamento confirmado"
+                title="Pago confirmado"
                 description="Cliente pagou. Mensagem de boas-vindas, próximo passo e upsell."
                 checked={draft.trigger_on_paid}
                 onChange={(v) => update('trigger_on_paid', v)}

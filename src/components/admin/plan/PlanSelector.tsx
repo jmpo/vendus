@@ -32,7 +32,7 @@ const FEATURE_LABELS: Record<string, string> = {
   feature_internal_chat: 'Chat interno',
   feature_kanban: 'Kanban de leads',
   feature_pipeline: 'Pipeline de vendas',
-  feature_scheduling: 'Agendamentos',
+  feature_scheduling: 'Agendamientos',
   feature_campaigns: 'Campanhas',
   feature_outreach: 'Cadência de follow-up',
   feature_ai_agents: 'Agentes de IA',

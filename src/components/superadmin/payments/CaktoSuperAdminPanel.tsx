@@ -14,7 +14,7 @@ export function CaktoSuperAdminPanel() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-3">
-            <CaktoLogo /> Pagamentos
+            <CaktoLogo /> Pagos
           </h1>
           <p className="text-sm text-muted-foreground">Conta Cakto da plataforma — recebimentos e mapeamento dos planos.</p>
         </div>

@@ -95,37 +95,37 @@ export function QuickRepliesPopover({
   const defaultReplies: QuickReply[] = [
     {
       id: 'default-1',
-      category: 'Saudações',
-      title: 'Boas-vindas',
-      content: 'Olá {{nome}}! 👋\n\nSeja bem-vindo(a)! Como posso ajudar você hoje?',
+      category: 'Saludos',
+      title: 'Bienvenida',
+      content: '¡Hola {{nome}}! 👋\n\n¡Bienvenido(a)! ¿Cómo puedo ayudarte hoy?',
       shortcut: '/ola',
     },
     {
       id: 'default-2',
-      category: 'Saudações',
-      title: 'Bom dia',
-      content: 'Bom dia, {{nome}}! ☀️\n\nEspero que esteja tendo um ótimo dia. Em que posso ajudar?',
+      category: 'Saludos',
+      title: 'Buenos días',
+      content: '¡Buenos días, {{nome}}! ☀️\n\nEspero que estés teniendo un gran día. ¿En qué puedo ayudarte?',
       shortcut: '/bomdia',
     },
     {
       id: 'default-3',
-      category: 'Vendas',
-      title: 'Apresentação do produto',
-      content: 'O {{produto}} é a solução perfeita para você! 🎯\n\nPosso te mostrar como ele pode ajudar no seu caso específico?',
+      category: 'Ventas',
+      title: 'Presentación del producto',
+      content: '¡{{produto}} es la solución perfecta para ti! 🎯\n\n¿Te puedo mostrar cómo puede ayudarte en tu caso específico?',
       shortcut: '/produto',
     },
     {
       id: 'default-4',
-      category: 'Vendas',
-      title: 'Próximos passos',
-      content: 'Perfeito, {{nome}}! ✅\n\nVamos agendar uma demonstração para você conhecer melhor o {{produto}}?\n\nQual seria o melhor horário para você?',
+      category: 'Ventas',
+      title: 'Próximos pasos',
+      content: '¡Perfecto, {{nome}}! ✅\n\n¿Agendamos una demostración para que conozcas mejor {{produto}}?\n\n¿Cuál sería el mejor horario para ti?',
       shortcut: '/demo',
     },
     {
       id: 'default-5',
-      category: 'Encerramento',
+      category: 'Cierre',
       title: 'Despedida',
-      content: 'Obrigado pelo contato, {{nome}}! 🙏\n\nFico à disposição para qualquer dúvida. Até mais!',
+      content: '¡Gracias por el contacto, {{nome}}! 🙏\n\nQuedo a disposición para cualquier duda. ¡Hasta luego!',
       shortcut: '/tchau',
     },
   ];
@@ -158,7 +158,7 @@ export function QuickRepliesPopover({
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar resposta ou atalho..."
+              placeholder="Buscar respuesta o atajo..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9"
@@ -222,8 +222,8 @@ export function QuickRepliesPopover({
         {/* Footer */}
         <div className="p-3 border-t bg-muted/30">
           <p className="text-xs text-muted-foreground text-center">
-            Use <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px] font-mono">{'{{nome}}'}</kbd> e{' '}
-            <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px] font-mono">{'{{produto}}'}</kbd> para variáveis dinâmicas
+            Usa <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px] font-mono">{'{{nome}}'}</kbd> e{' '}
+            <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px] font-mono">{'{{produto}}'}</kbd> para variables dinámicas
           </p>
         </div>
       </DialogContent>

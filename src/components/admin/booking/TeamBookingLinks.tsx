@@ -167,7 +167,7 @@ export function TeamBookingLinks() {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Links de Agendamento da Equipe
+                Links de Agendamiento da Equipe
               </CardTitle>
               <CardDescription>
                 Copie e envie o link individual de cada vendedor — sem precisar acessar a

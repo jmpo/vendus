@@ -126,7 +126,7 @@ export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialo
                 id="name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="Ex: Suporte Premium"
+                placeholder="Ex: Soporte Premium"
               />
             </div>
             <div className="space-y-2">

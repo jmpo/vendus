@@ -37,7 +37,7 @@ import { Bot, Plus, Trash2, GitBranch, Users, Zap } from 'lucide-react';
 const ROLE_OPTIONS = [
   { value: 'sdr', label: 'SDR (Qualificação)' },
   { value: 'closer', label: 'Closer (Fechamento)' },
-  { value: 'support', label: 'Suporte' },
+  { value: 'support', label: 'Soporte' },
   { value: 'retention', label: 'Retenção' },
   { value: 'recovery', label: 'Recuperação' },
   { value: 'custom', label: 'Outro' },

@@ -146,7 +146,7 @@ export function PaymentLinkDialog({
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Pagamento via Pix com 5% de desconto à vista"
+              placeholder="Pago via Pix com 5% de desconto à vista"
               rows={2}
               maxLength={300}
             />

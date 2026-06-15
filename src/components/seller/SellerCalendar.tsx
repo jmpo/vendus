@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addMonths, subMonths, addWeeks, subWeeks, addDays, subDays } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { CalendarDays, ChevronLeft, ChevronRight, Plus, List, Calendar, Grid3X3 } from 'lucide-react';
 import { GoogleCalendarConnect } from '@/components/calendar/GoogleCalendarConnect';
 import { Button } from '@/components/ui/button';
@@ -49,13 +49,13 @@ export function SellerCalendar({ userId, productId }: SellerCalendarProps) {
         const monthStart = startOfMonth(currentDate);
         const monthEnd = endOfMonth(currentDate);
         return {
-          startDate: startOfWeek(monthStart, { locale: ptBR }),
-          endDate: endOfWeek(monthEnd, { locale: ptBR }),
+          startDate: startOfWeek(monthStart, { locale: es }),
+          endDate: endOfWeek(monthEnd, { locale: es }),
         };
       case 'week':
         return {
-          startDate: startOfWeek(currentDate, { locale: ptBR }),
-          endDate: endOfWeek(currentDate, { locale: ptBR }),
+          startDate: startOfWeek(currentDate, { locale: es }),
+          endDate: endOfWeek(currentDate, { locale: es }),
         };
       case 'day': {
         const dayStart = new Date(currentDate);
@@ -135,15 +135,15 @@ export function SellerCalendar({ userId, productId }: SellerCalendarProps) {
   const getCurrentTitle = () => {
     switch (viewMode) {
       case 'month':
-        return format(currentDate, 'MMMM yyyy', { locale: ptBR });
+        return format(currentDate, 'MMMM yyyy', { locale: es });
       case 'week':
-        const weekStart = startOfWeek(currentDate, { locale: ptBR });
-        const weekEnd = endOfWeek(currentDate, { locale: ptBR });
-        return `${format(weekStart, 'd', { locale: ptBR })} - ${format(weekEnd, 'd MMM yyyy', { locale: ptBR })}`;
+        const weekStart = startOfWeek(currentDate, { locale: es });
+        const weekEnd = endOfWeek(currentDate, { locale: es });
+        return `${format(weekStart, 'd', { locale: es })} - ${format(weekEnd, 'd MMM yyyy', { locale: es })}`;
       case 'day':
-        return format(currentDate, "EEEE, d 'de' MMMM", { locale: ptBR });
+        return format(currentDate, "EEEE, d 'de' MMMM", { locale: es });
       default:
-        return format(currentDate, 'MMMM yyyy', { locale: ptBR });
+        return format(currentDate, 'MMMM yyyy', { locale: es });
     }
   };
 
@@ -223,7 +223,7 @@ export function SellerCalendar({ userId, productId }: SellerCalendarProps) {
                   <ChevronRight className="h-4 w-4" />
                 </Button>
                 <Button variant="ghost" size="sm" onClick={goToToday}>
-                  Hoje
+                  Hoy
                 </Button>
               </div>
               <h3 className="text-lg font-medium capitalize">{getCurrentTitle()}</h3>

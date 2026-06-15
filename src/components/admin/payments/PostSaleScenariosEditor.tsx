@@ -39,7 +39,7 @@ import {
 } from '@/hooks/usePostSaleScenarios';
 
 const EVENT_LABEL: Record<PostSaleEvent, { label: string; color: string; emoji: string }> = {
-  paid: { label: 'Pagamento confirmado', color: 'bg-green-500/10 text-green-700', emoji: '✅' },
+  paid: { label: 'Pago confirmado', color: 'bg-green-500/10 text-green-700', emoji: '✅' },
   abandoned: {
     label: 'Checkout abandonado',
     color: 'bg-yellow-500/10 text-yellow-700',

@@ -146,7 +146,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
       ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
       
       const link = document.createElement('a');
-      link.download = `qrcode-agendamento-${bookingSlug}.png`;
+      link.download = `qrcode-reserva-${bookingSlug}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     };
@@ -194,7 +194,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Link2 className="h-5 w-5" />
-            Tu Enlace de Agendamiento
+            Tu Enlace de Reserva
           </CardTitle>
           <CardDescription>
             Comparte este enlace para que los clientes agenden reuniones directamente contigo
@@ -287,10 +287,10 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Share2 className="h-5 w-5" />
-            Compartilhar
+            Compartir
           </CardTitle>
           <CardDescription>
-            Envía tu enlace de agendamiento por diferentes canales
+            Envía tu enlace de reserva por diferentes canales
           </CardDescription>
         </CardHeader>
         <CardContent>

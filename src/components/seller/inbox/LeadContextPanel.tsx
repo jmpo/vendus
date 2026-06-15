@@ -435,7 +435,7 @@ export function LeadContextPanel({
               {lead ? (
                 <div className="space-y-2.5">
                   <h5 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                    Funil de Vendas
+                    Embudo de Ventas
                   </h5>
 
                   {lead.temperature && (

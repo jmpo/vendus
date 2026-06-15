@@ -141,7 +141,7 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
       <div className="flex gap-2 flex-wrap">
         <Button onClick={() => setIsEventModalOpen(true)} className="gap-2" size="sm">
           <CalendarPlus className="h-4 w-4" />
-          Agendar Evento
+          Programar Evento
         </Button>
         {onNavigateTab && (
           <Button variant="outline" size="sm" className="gap-2" onClick={() => onNavigateTab('notes')}>

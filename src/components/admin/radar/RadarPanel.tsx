@@ -98,7 +98,7 @@ export function RadarPanel({ onOpenConversation }: { onOpenConversation?: (id: s
             <Play className="h-4 w-4" /> Rodar Análise
           </TabsTrigger>
           <TabsTrigger value="schedules" className="gap-2">
-            <CalendarClock className="h-4 w-4" /> Agendamentos
+            <CalendarClock className="h-4 w-4" /> Agendamientos
           </TabsTrigger>
           <TabsTrigger value="history" className="gap-2">
             <History className="h-4 w-4" /> Histórico

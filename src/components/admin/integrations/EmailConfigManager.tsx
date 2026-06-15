@@ -70,7 +70,7 @@ export function EmailConfigManager() {
               <Label htmlFor="senderName">Nome do Remetente</Label>
               <Input
                 id="senderName"
-                placeholder="Ex: Equipe de Vendas"
+                placeholder="Ex: Equipo de Ventas"
                 value={formData.senderName}
                 onChange={(e) => setFormData(prev => ({ ...prev, senderName: e.target.value }))}
               />
@@ -102,7 +102,7 @@ export function EmailConfigManager() {
         <CardContent>
           <div className="space-y-2">
             <Textarea
-              placeholder="Ex: Atenciosamente,&#10;Equipe de Vendas&#10;contato@empresa.com"
+              placeholder="Ex: Atenciosamente,&#10;Equipo de Ventas&#10;contato@empresa.com"
               rows={4}
               value={formData.signature}
               onChange={(e) => setFormData(prev => ({ ...prev, signature: e.target.value }))}

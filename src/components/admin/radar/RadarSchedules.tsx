@@ -50,7 +50,7 @@ export function RadarSchedules({ defaultFilters, defaultActions }: { defaultFilt
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-base">Agendamentos automáticos</CardTitle>
+            <CardTitle className="text-base">Agendamientos automáticos</CardTitle>
             <CardDescription>Configure o radar para rodar automaticamente</CardDescription>
           </div>
           <Button onClick={openNew} size="sm" className="gap-1"><Plus className="h-4 w-4" />Novo</Button>

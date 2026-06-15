@@ -125,7 +125,7 @@ export function ReportsTab({ productId }: ReportsTabProps) {
                 <p className="text-2xl font-bold text-foreground">
                   {wonDeals.length}
                 </p>
-                <p className="text-sm text-muted-foreground">Vendas Fechadas</p>
+                <p className="text-sm text-muted-foreground">Ventas Cerradas</p>
               </div>
             </div>
           </CardContent>
@@ -185,7 +185,7 @@ export function ReportsTab({ productId }: ReportsTabProps) {
                 <TableRow>
                   <TableHead>Vendedor</TableHead>
                   <TableHead className="text-center">Leads</TableHead>
-                  <TableHead className="text-center">Vendas</TableHead>
+                  <TableHead className="text-center">Ventas</TableHead>
                   <TableHead className="text-center">Conversão</TableHead>
                   <TableHead className="text-right">Valor Total</TableHead>
                 </TableRow>

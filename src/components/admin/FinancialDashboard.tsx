@@ -137,7 +137,7 @@ export function FinancialDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Vendas do Mês</CardTitle>
+            <CardTitle className="text-sm font-medium">Ventas del Mes</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -208,7 +208,7 @@ export function FinancialDashboard() {
           </TabsTrigger>
           <TabsTrigger value="deals" className="gap-2">
             <Briefcase className="h-4 w-4" />
-            Negócios
+            Negocios
           </TabsTrigger>
         </TabsList>
 
@@ -250,7 +250,7 @@ export function FinancialDashboard() {
                       <TableHead>Vendedor</TableHead>
                       <TableHead>Produto</TableHead>
                       <TableHead>Lead</TableHead>
-                      <TableHead>Valor do Negócio</TableHead>
+                      <TableHead>Valor de la Venta</TableHead>
                       <TableHead>Comissão</TableHead>
                       <TableHead>Data</TableHead>
                       <TableHead className="text-right">Ações</TableHead>
@@ -376,7 +376,7 @@ export function FinancialDashboard() {
         <TabsContent value="deals">
           <Card>
             <CardHeader>
-              <CardTitle>Negócios Fechados</CardTitle>
+              <CardTitle>Negocios Fechados</CardTitle>
               <CardDescription>Histórico de vendas realizadas</CardDescription>
             </CardHeader>
             <CardContent>

@@ -305,7 +305,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                   <Input
                     value={form.display_name}
                     onChange={(e) => setForm({ ...form, display_name: e.target.value })}
-                    placeholder="WhatsApp Oficial — Vendas"
+                    placeholder="WhatsApp Oficial — Ventas"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
                     Usado apenas para identificar essa conexão no Vendus.
@@ -431,7 +431,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                   <Input
                     value={form.display_name}
                     onChange={(e) => setForm({ ...form, display_name: e.target.value })}
-                    placeholder="WhatsApp Oficial — Vendas"
+                    placeholder="WhatsApp Oficial — Ventas"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">

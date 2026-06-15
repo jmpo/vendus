@@ -170,7 +170,7 @@ REGRAS
 Tag de handoff sozinha na ÚLTIMA linha.`,
   },
   support: {
-    label: 'Suporte Técnico',
+    label: 'Soporte Técnico',
     description: 'Resolve dúvidas técnicas e problemas de uso',
     template: `Você é o agente de suporte técnico da {{organization_name}}.
 

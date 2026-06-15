@@ -49,8 +49,8 @@ export function AgentSupportTab({ formData, onChange, agentId }: Props) {
         <div className="flex items-start gap-2">
           <BookOpen className="h-4 w-4 text-muted-foreground mt-0.5" />
           <div className="text-sm text-muted-foreground">
-            <p className="font-medium text-foreground">Base de Suporte deste Agente</p>
-            <p>Materiais técnicos, links úteis e respostas rápidas que serão usados <strong>exclusivamente por este agente de Suporte</strong> ao responder dúvidas.</p>
+            <p className="font-medium text-foreground">Base de Soporte deste Agente</p>
+            <p>Materiais técnicos, links úteis e respostas rápidas que serão usados <strong>exclusivamente por este agente de Soporte</strong> ao responder dúvidas.</p>
           </div>
         </div>
       </div>

@@ -224,7 +224,7 @@ export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProp
                 onClick={() => setIsAddingInteraction(true)}
               >
                 <Plus size={16} className="mr-2" />
-                Registrar Interação
+                Registrar Interacción
               </Button>
             ) : (
               <div className="bg-secondary/30 rounded-lg p-4 mb-4 space-y-3 border border-border">
