@@ -337,7 +337,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
               ) : (
                 <Send className="h-4 w-4 mr-2" />
               )}
-              Enviar Notificação
+              Enviar Notificación
             </Button>
           </div>
         </DialogFooter>

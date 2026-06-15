@@ -72,16 +72,16 @@ export function CaktoPlanMapping() {
   };
 
   if (isLoading) {
-    return <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Carregando planos…</div>;
+    return <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Cargando planes…</div>;
   }
 
   return (
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Vínculo dos planos com produtos Cakto</CardTitle>
+          <CardTitle className="text-base">Vinculación de planes con productos Cakto</CardTitle>
           <CardDescription>
-            Para cada plano da plataforma, informe o ID do produto Cakto correspondente e a URL de checkout. Assim conseguimos identificar automaticamente qual plano cada empresa pagou.
+            Para cada plan de la plataforma, ingrese el ID del producto Cakto correspondiente y la URL de pago. Así podremos identificar automáticamente qué plan pagó cada empresa.
           </CardDescription>
         </CardHeader>
       </Card>
@@ -100,7 +100,7 @@ export function CaktoPlanMapping() {
                 </div>
                 <div className="grid sm:grid-cols-3 gap-3">
                   <div>
-                    <Label>ID do produto Cakto</Label>
+                    <Label>ID del producto Cakto</Label>
                     <Input
                       value={e.product ?? ''}
                       onChange={(ev) => setEdits((p) => ({ ...p, [plan.id]: { ...p[plan.id], product: ev.target.value } }))}
@@ -108,7 +108,7 @@ export function CaktoPlanMapping() {
                     />
                   </div>
                   <div>
-                    <Label>Slug da oferta</Label>
+                    <Label>Slug de la oferta</Label>
                     <Input
                       value={e.slug ?? ''}
                       onChange={(ev) => setEdits((p) => ({ ...p, [plan.id]: { ...p[plan.id], slug: ev.target.value } }))}
@@ -116,7 +116,7 @@ export function CaktoPlanMapping() {
                     />
                   </div>
                   <div>
-                    <Label>URL de checkout</Label>
+                    <Label>URL de pago</Label>
                     <Input
                       value={e.url ?? ''}
                       onChange={(ev) => setEdits((p) => ({ ...p, [plan.id]: { ...p[plan.id], url: ev.target.value } }))}
@@ -127,7 +127,7 @@ export function CaktoPlanMapping() {
                 <div className="flex justify-end mt-3">
                   <Button size="sm" onClick={() => handleSave(plan.id)} disabled={savingId === plan.id}>
                     {savingId === plan.id ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-                    Salvar
+                    Guardar
                   </Button>
                 </div>
               </CardContent>

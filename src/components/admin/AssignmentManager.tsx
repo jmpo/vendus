@@ -46,7 +46,7 @@ export function AssignmentManager() {
         monthlyGoal: monthlyGoal ? parseFloat(monthlyGoal) : 0,
         assignedBy: user?.id,
       });
-      toast.success('Produto atribuído!');
+      toast.success('¡Producto asignado!');
       setIsDialogOpen(false);
       setSelectedUserId('');
       setSelectedProductId('');
@@ -54,7 +54,7 @@ export function AssignmentManager() {
     } catch (error: any) {
       // Handle duplicate key error gracefully
       if (error?.code === '23505') {
-        toast.error('Este vendedor já está atribuído a este produto');
+        toast.error('Este vendedor ya está asignado a este producto');
       } else {
         toast.error('Erro ao atribuir produto');
       }
@@ -64,7 +64,7 @@ export function AssignmentManager() {
   const handleUnassign = async (assignmentId: string) => {
     try {
       await unassignProduct.mutateAsync(assignmentId);
-      toast.success('Atribuição removida!');
+      toast.success('¡Asignación eliminada!');
     } catch (error) {
       toast.error('Erro ao remover atribuição');
     }
@@ -73,7 +73,7 @@ export function AssignmentManager() {
   const handleUpdateGoal = async (assignmentId: string, newGoal: number) => {
     try {
       await updateAssignment.mutateAsync({ id: assignmentId, monthlyGoal: newGoal });
-      toast.success('Meta atualizada!');
+      toast.success('¡Meta actualizada!');
     } catch (error) {
       toast.error('Erro ao atualizar meta');
     }
@@ -135,19 +135,19 @@ export function AssignmentManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-foreground">Atribuições</h2>
+          <h2 className="text-xl font-semibold text-foreground">Atribuciones</h2>
           <p className="text-sm text-muted-foreground">
-            Vincule vendedores aos produtos e defina metas
+            Vincule vendedores a los productos y defina metas
           </p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <Button onClick={() => setIsDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            Nova Atribuição
+            Nueva Atribución
           </Button>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Atribuir Produto</DialogTitle>
+              <DialogTitle>Asignar Producto</DialogTitle>
             </DialogHeader>
             
             <div className="space-y-4 py-4">
@@ -155,7 +155,7 @@ export function AssignmentManager() {
                 <label className="text-sm font-medium">Vendedor</label>
                 <Select value={selectedUserId} onValueChange={setSelectedUserId}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione um vendedor" />
+                    <SelectValue placeholder="Seleccione un vendedor" />
                   </SelectTrigger>
                   <SelectContent>
                     {sellers.map(seller => (
@@ -179,7 +179,7 @@ export function AssignmentManager() {
                 <label className="text-sm font-medium">Produto</label>
                 <Select value={selectedProductId} onValueChange={setSelectedProductId}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione um produto" />
+                    <SelectValue placeholder="Seleccione un producto" />
                   </SelectTrigger>
                   <SelectContent>
                     {products?.map(product => (
@@ -195,7 +195,7 @@ export function AssignmentManager() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Meta Mensal (opcional)</label>
+                <label className="text-sm font-medium">Meta Mensual (opcional)</label>
                 <Input
                   type="number"
                   value={monthlyGoal}
@@ -211,7 +211,7 @@ export function AssignmentManager() {
               </Button>
               <Button onClick={handleAssign} disabled={assignProduct.isPending}>
                 {assignProduct.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Atribuir
+                Asignar
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -229,7 +229,7 @@ export function AssignmentManager() {
                 <div>
                   <CardTitle className="text-base">{product.name}</CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    {assignments.length} vendedor{assignments.length !== 1 ? 'es' : ''} atribuído{assignments.length !== 1 ? 's' : ''}
+                    {assignments.length} vendedor{assignments.length !== 1 ? 'es' : ''} asignado{assignments.length !== 1 ? 's' : ''}
                   </p>
                 </div>
               </div>
@@ -279,9 +279,9 @@ export function AssignmentManager() {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Remover atribuição?</AlertDialogTitle>
+                              <AlertDialogTitle>¿Eliminar asignación?</AlertDialogTitle>
                               <AlertDialogDescription>
-                                O vendedor perderá acesso a este produto.
+                                El vendedor perderá el acceso a este producto.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -302,7 +302,7 @@ export function AssignmentManager() {
               ) : (
                 <div className="text-center py-6 text-muted-foreground text-sm">
                   <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  Nenhum vendedor atribuído
+                  Nenhum vendedor asignado
                 </div>
               )}
             </CardContent>
@@ -313,9 +313,9 @@ export function AssignmentManager() {
           <Card className="bg-card">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <Package className="h-12 w-12 text-muted-foreground/50 mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-1">Nenhum produto</h3>
+              <h3 className="text-lg font-medium text-foreground mb-1">Ningún producto</h3>
               <p className="text-sm text-muted-foreground">
-                Crie produtos primeiro para fazer atribuições
+                Cree productos primero para realizar asignaciones
               </p>
             </CardContent>
           </Card>

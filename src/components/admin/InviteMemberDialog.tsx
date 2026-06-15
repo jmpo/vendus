@@ -57,7 +57,7 @@ export function InviteMemberDialog({ open, onOpenChange }: InviteMemberDialogPro
   };
 
   const inviteLink = createdInvite 
-    ? `${getPublicAppUrl()}/aceitar-convite?token=${createdInvite.token}`
+    ? `${getPublicAppUrl()}/aceptar-invitacion?token=${createdInvite.token}`
     : '';
 
   const copyLink = async () => {

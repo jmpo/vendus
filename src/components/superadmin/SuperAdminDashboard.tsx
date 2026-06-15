@@ -13,7 +13,7 @@ import { useSuperAdminStats, useAuditLogs, useAllOrganizations } from '@/hooks/u
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 
 interface SuperAdminDashboardProps {
@@ -26,7 +26,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
   const { data: orgs, isLoading: orgsLoading } = useAllOrganizations();
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat( 'es' , {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
@@ -39,7 +39,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-foreground">Dashboard Administrativo</h1>
-        <p className="text-muted-foreground">Visão geral da plataforma</p>
+        <p className="text-muted-foreground">Visión general de la plataforma</p>
       </div>
 
       
@@ -57,7 +57,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
             ) : (
               <>
                 <div className="text-2xl font-bold">{formatCurrency(stats?.mrr || 0)}</div>
-                <p className="text-xs text-muted-foreground">Receita recorrente mensal</p>
+                <p className="text-xs text-muted-foreground">Ingresos recurrentes mensuales</p>
               </>
             )}
           </CardContent>
@@ -74,7 +74,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
             ) : (
               <>
                 <div className="text-2xl font-bold">{formatCurrency(stats?.arr || 0)}</div>
-                <p className="text-xs text-muted-foreground">Receita recorrente anual</p>
+                <p className="text-xs text-muted-foreground">Ingresos recurrentes anuales</p>
               </>
             )}
           </CardContent>
@@ -82,7 +82,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Volume de Deals</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Volumen de Negocios</CardTitle>
             <Target className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
@@ -91,7 +91,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
             ) : (
               <>
                 <div className="text-2xl font-bold">{formatCurrency(stats?.totalDealsValue || 0)}</div>
-                <p className="text-xs text-muted-foreground">Total processado</p>
+                <p className="text-xs text-muted-foreground">Total procesado</p>
               </>
             )}
           </CardContent>
@@ -99,7 +99,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Leads na Plataforma</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Leads en la Plataforma</CardTitle>
             <Users className="h-4 w-4 text-violet-500" />
           </CardHeader>
           <CardContent>
@@ -107,7 +107,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
               <Skeleton className="h-8 w-32" />
             ) : (
               <>
-                <div className="text-2xl font-bold">{stats?.leads?.toLocaleString('pt-BR') || 0}</div>
+                <div className="text-2xl font-bold">{stats?.leads?.toLocaleString( 'es' ) || 0}</div>
                 <p className="text-xs text-muted-foreground">Total de leads</p>
               </>
             )}
@@ -128,7 +128,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
             ) : (
               <>
                 <div className="text-2xl font-bold">{stats?.organizations || 0}</div>
-                <p className="text-xs text-muted-foreground">Organizações ativas</p>
+                <p className="text-xs text-muted-foreground">Organizaciones activas</p>
               </>
             )}
           </CardContent>
@@ -136,7 +136,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Usuários</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Usuarios</CardTitle>
             <Users className="h-4 w-4 text-cyan-500" />
           </CardHeader>
           <CardContent>
@@ -145,7 +145,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
             ) : (
               <>
                 <div className="text-2xl font-bold">{stats?.users || 0}</div>
-                <p className="text-xs text-muted-foreground">Cadastrados</p>
+                <p className="text-xs text-muted-foreground">Registrados</p>
               </>
             )}
           </CardContent>
@@ -153,7 +153,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Assinaturas</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Suscripciones</CardTitle>
             <CreditCard className="h-4 w-4 text-pink-500" />
           </CardHeader>
           <CardContent>
@@ -162,7 +162,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
             ) : (
               <>
                 <div className="text-2xl font-bold">{stats?.activeSubscriptions || 0}</div>
-                <p className="text-xs text-muted-foreground">Ativas</p>
+                <p className="text-xs text-muted-foreground">Activas</p>
               </>
             )}
           </CardContent>
@@ -170,7 +170,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Saúde</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Salud</CardTitle>
             <Activity className="h-4 w-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
@@ -178,7 +178,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
               <CheckCircle className="h-5 w-5 text-emerald-500" />
               <span className="text-lg font-semibold text-emerald-500">Operacional</span>
             </div>
-            <p className="text-xs text-muted-foreground">Todos os serviços ok</p>
+            <p className="text-xs text-muted-foreground">Todos los servicios ok</p>
           </CardContent>
         </Card>
       </div>
@@ -188,8 +188,8 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
         {/* Plan Distribution */}
         <Card>
           <CardHeader>
-            <CardTitle>Distribuição de Planos</CardTitle>
-            <CardDescription>Assinaturas por tipo de plano</CardDescription>
+            <CardTitle>Distribución de Planes</CardTitle>
+            <CardDescription>Suscripciones por tipo de plano</CardDescription>
           </CardHeader>
           <CardContent>
             {statsLoading ? (
@@ -222,8 +222,8 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
         {/* Recent Organizations */}
         <Card>
           <CardHeader>
-            <CardTitle>Empresas Recentes</CardTitle>
-            <CardDescription>Últimas organizações cadastradas</CardDescription>
+            <CardTitle>Empresas Recientes</CardTitle>
+            <CardDescription>Últimas organizaciones registradas</CardDescription>
           </CardHeader>
           <CardContent>
             {orgsLoading ? (
@@ -250,7 +250,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
                       <div>
                         <p className="font-medium">{org.name}</p>
                         <p className="text-xs text-muted-foreground">
-                          {format(new Date(org.created_at), "dd MMM yyyy", { locale: ptBR })}
+                          {format(new Date(org.created_at), "dd MMM yyyy", { locale: es })}
                         </p>
                       </div>
                     </div>
@@ -258,7 +258,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
                       variant={org.status === 'active' ? 'default' : 'secondary'}
                       className={org.status === 'active' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : ''}
                     >
-                      {org.status === 'active' ? 'Ativo' : org.status}
+                      {org.status === 'active' ? 'Activo' : org.status}
                     </Badge>
                   </div>
                 ))}
@@ -271,8 +271,8 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
       {/* Recent Activity */}
       <Card>
         <CardHeader>
-          <CardTitle>Atividade Recente</CardTitle>
-          <CardDescription>Últimas ações na plataforma</CardDescription>
+          <CardTitle>Actividad Reciente</CardTitle>
+          <CardDescription>Últimas acciones en la plataforma</CardDescription>
         </CardHeader>
         <CardContent>
           {logsLoading ? (
@@ -302,7 +302,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
                     </div>
                   </div>
                   <span className="text-xs text-muted-foreground">
-                    {format(new Date(log.created_at), "dd/MM HH:mm", { locale: ptBR })}
+                    {format(new Date(log.created_at), "dd/MM HH:mm", { locale: es })}
                   </span>
                 </div>
               ))}

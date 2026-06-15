@@ -28,7 +28,7 @@ import {
 import { useAllUsers } from '@/hooks/useSuperAdmin';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 export function UsersManager() {
   const [search, setSearch] = useState('');
@@ -76,8 +76,8 @@ export function UsersManager() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Usuários</h1>
-        <p className="text-muted-foreground">Visualize todos os usuários da plataforma</p>
+        <h1 className="text-2xl font-bold text-foreground">Usuarios</h1>
+        <p className="text-muted-foreground">Vea todos los usuarios de la plataforma</p>
       </div>
 
       {/* Stats */}
@@ -133,7 +133,7 @@ export function UsersManager() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nome, e-mail ou empresa..."
+                placeholder="Buscar por nombre, correo electrónico o empresa..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-10"
@@ -167,16 +167,16 @@ export function UsersManager() {
           ) : filteredUsers.length === 0 ? (
             <div className="text-center py-12">
               <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">Nenhum usuário encontrado</p>
+              <p className="text-muted-foreground">Ningún usuario encontrado</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Usuário</TableHead>
+                  <TableHead>Usuario</TableHead>
                   <TableHead>Empresa</TableHead>
                   <TableHead>Cargo</TableHead>
-                  <TableHead>Cadastro</TableHead>
+                  <TableHead>Registro</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -189,7 +189,7 @@ export function UsersManager() {
                           <AvatarFallback>{getInitials(user.full_name)}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium">{user.full_name || 'Sem nome'}</p>
+                          <p className="font-medium">{user.full_name || 'Sin nombre'}</p>
                           <p className="text-sm text-muted-foreground flex items-center gap-1">
                             <Mail className="h-3 w-3" />
                             {user.email}
@@ -200,18 +200,18 @@ export function UsersManager() {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Building2 className="h-4 w-4 text-muted-foreground" />
-                        {user.organizations?.name || 'Sem empresa'}
+                        {user.organizations?.name || 'Sin empresa'}
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {user.user_roles?.map((r: any, i: number) => (
                           <span key={i}>{getRoleBadge(r.role)}</span>
-                        )) || <Badge variant="secondary">Sem cargo</Badge>}
+                        )) || <Badge variant="secondary">Sin cargo</Badge>}
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {format(new Date(user.created_at), "dd/MM/yyyy", { locale: ptBR })}
+                      {format(new Date(user.created_at), "dd/MM/yyyy", { locale: es })}
                     </TableCell>
                   </TableRow>
                 ))}

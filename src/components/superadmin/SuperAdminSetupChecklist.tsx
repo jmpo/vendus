@@ -23,10 +23,10 @@ export function SuperAdminSetupChecklist({ onNavigate }: Props) {
           <div>
             <div className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-primary" />
-              <CardTitle>Configuração inicial da plataforma</CardTitle>
+              <CardTitle>Configuración inicial de la plataforma</CardTitle>
             </div>
             <CardDescription className="mt-1">
-              Conclua os passos abaixo para deixar sua plataforma pronta para uso.
+              Complete los pasos a continuación para dejar su plataforma lista para usar.
             </CardDescription>
           </div>
           <Badge variant="secondary">
@@ -87,7 +87,7 @@ export function SuperAdminSetupChecklist({ onNavigate }: Props) {
             size="sm"
           >
             {isMarking && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-            Concluir configuração
+            Completar configuración
           </Button>
         </div>
       </CardContent>

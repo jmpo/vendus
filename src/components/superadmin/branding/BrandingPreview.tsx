@@ -46,9 +46,9 @@ export function BrandingPreview({
     >
       <div className="flex items-center justify-between gap-2">
         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-          Pré-visualização ao vivo
+          Vista previa en vivo
         </p>
-        <span className="text-xs text-muted-foreground shrink-0">Atualiza ao alterar</span>
+        <span className="text-xs text-muted-foreground shrink-0">Se actualiza al cambiar</span>
       </div>
 
       {/* Hero gradient block */}
@@ -63,7 +63,7 @@ export function BrandingPreview({
         <div className="flex justify-center mb-3 [&_img]:!h-10 [&_img]:brightness-0 [&_img]:invert">
           <Logo size="lg" />
         </div>
-        <h3 className="text-lg font-bold">Sua Plataforma</h3>
+        <h3 className="text-lg font-bold">Su Plataforma</h3>
         <p className="text-sm opacity-90">Gradiente principal aplicado</p>
       </div>
 
@@ -78,7 +78,7 @@ export function BrandingPreview({
             borderRadius: radius,
           }}
         >
-          Botão Primário
+          Botón Primario
           <ArrowRight className="inline h-4 w-4 ml-1" />
         </button>
 
@@ -137,9 +137,9 @@ export function BrandingPreview({
             <Logo size="sm" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-foreground">Card de exemplo</p>
+            <p className="text-sm font-semibold text-foreground">Tarjeta de ejemplo</p>
             <p className="text-xs text-muted-foreground">
-              Bordas, ícones e cores acompanham seus tokens.
+              Los bordes, iconos y colores siguen sus tokens.
             </p>
           </div>
         </div>

@@ -56,10 +56,10 @@ export function QuickRepliesManager() {
 
   const saveMutation = useMutation({
     mutationFn: async (payload: Partial<QuickReply> & { id?: string }) => {
-      if (!profile?.organization_id || !user?.id) throw new Error('Sem organização');
+      if (!profile?.organization_id || !user?.id) throw new Error('Sin organización');
       const data = {
         organization_id: profile.organization_id,
-        category: payload.category?.trim() || 'Geral',
+        category: payload.category?.trim() || 'General',
         title: payload.title!.trim(),
         content: payload.content!.trim(),
         shortcut: payload.shortcut?.trim() || null,
@@ -231,7 +231,7 @@ function ReplyFormDialog({ open, onClose, initial, onSave, isSaving }: FormProps
   // Reset on open
   useState(() => {
     if (open) {
-      setCategory(initial?.category || 'Geral');
+      setCategory(initial?.category || 'General');
       setTitle(initial?.title || '');
       setContent(initial?.content || '');
       setShortcut(initial?.shortcut || '');
@@ -249,7 +249,7 @@ function ReplyFormDialog({ open, onClose, initial, onSave, isSaving }: FormProps
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="sm:max-w-[560px]">
         <DialogHeader>
-          <DialogTitle>{initial ? 'Editar resposta rápida' : 'Nueva respuesta rápida'}</DialogTitle>
+          <DialogTitle>{initial ? 'Editar respuesta rápida' : 'Nueva respuesta rápida'}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">

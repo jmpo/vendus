@@ -63,7 +63,7 @@ export function SystemHealth() {
       case 'down':
         return (
           <Badge className="bg-red-500/10 text-red-500 border-red-500/20">
-            Fora do Ar
+            Fuera de Servicio
           </Badge>
         );
       default:
@@ -77,8 +77,8 @@ export function SystemHealth() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Saúde do Sistema</h1>
-        <p className="text-muted-foreground">Status dos serviços da plataforma</p>
+        <h1 className="text-2xl font-bold text-foreground">Salud del Sistema</h1>
+        <p className="text-muted-foreground">Estado de los servicios de la plataforma</p>
       </div>
 
       {/* Overall Status */}
@@ -96,12 +96,12 @@ export function SystemHealth() {
               <h2 className={`text-2xl font-bold ${
                 allOperational ? 'text-emerald-500' : 'text-amber-500'
               }`}>
-                {allOperational ? 'Todos os Sistemas Operacionais' : 'Alguns Serviços Degradados'}
+                {allOperational ? 'Todos los sistemas operativos' : 'Algunos servicios degradados'}
               </h2>
               <p className="text-muted-foreground">
                 {allOperational 
-                  ? 'Não há problemas detectados no momento'
-                  : 'Estamos trabalhando para resolver os problemas'
+                  ? 'No se han detectado problemas en este momento'
+                  : 'Estamos trabajando para resolver los problemas'
                 }
               </p>
             </div>
@@ -131,13 +131,13 @@ export function SystemHealth() {
                   <p className="text-lg font-semibold">{service.uptime}%</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Latência</p>
+                  <p className="text-sm text-muted-foreground">Latencia</p>
                   <p className="text-lg font-semibold">{service.latency}</p>
                 </div>
               </div>
               <div className="space-y-1">
                 <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Disponibilidade últimos 30 dias</span>
+                  <span>Disponibilidad en los últimos 30 días</span>
                   <span>{service.uptime}%</span>
                 </div>
                 <Progress value={service.uptime} className="h-2" />
@@ -152,16 +152,16 @@ export function SystemHealth() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Clock className="h-5 w-5" />
-            Incidentes Recentes
+            Incidentes Recientes
           </CardTitle>
-          <CardDescription>Últimos 30 dias</CardDescription>
+          <CardDescription>Últimos 30 días</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
             <CheckCircle className="h-12 w-12 mx-auto text-emerald-500 mb-4" />
-            <p className="text-muted-foreground">Nenhum incidente registrado</p>
+            <p className="text-muted-foreground">Ningún incidente registrado</p>
             <p className="text-sm text-muted-foreground">
-              A plataforma está funcionando normalmente
+              La plataforma funciona con normalidad
             </p>
           </div>
         </CardContent>

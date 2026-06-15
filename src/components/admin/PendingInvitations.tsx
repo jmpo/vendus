@@ -30,7 +30,7 @@ export function PendingInvitations() {
   const handleResend = async (invitation: typeof invitations extends (infer T)[] ? T : never) => {
     try {
       await resendInvitation.mutateAsync(invitation);
-      toast.success('Invitación reenviada por email');
+      toast.success('Invitación reenviada por correo electrónico');
     } catch (error) {
       toast.error('Error al reenviar la invitación');
     }
