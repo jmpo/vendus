@@ -140,7 +140,7 @@ export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProdu
                 <User size={24} className="text-primary-foreground" />
               </div>
               <div className="flex-1 text-left">
-                <p className="font-semibold text-foreground">{profile?.full_name || 'Usuário'}</p>
+                <p className="font-semibold text-foreground">{profile?.full_name || 'Usuario'}</p>
                 <p className="text-sm text-muted-foreground">{profile?.email}</p>
               </div>
             </div>
