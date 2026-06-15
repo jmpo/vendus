@@ -47,71 +47,71 @@ export interface AdminMenuGroup {
   items: AdminMenuItem[];
 }
 
-// Itens fixos (sempre visíveis, sem accordion)
+// Items fijos (siempre visibles, sin accordion)
 export const fixedItems: AdminMenuItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'inbox', label: 'Atendimentos', icon: MessageSquare },
+  { id: 'inbox', label: 'Atenciones', icon: MessageSquare },
   { id: 'pipeline', label: 'Pipeline', icon: LayoutGrid },
   { id: 'leads', label: 'Leads', icon: Target },
   { id: 'calendar', label: 'Agenda', icon: CalendarDays },
 ];
 
-// Grupos em accordion
+// Grupos en accordion
 export const menuGroups: AdminMenuGroup[] = [
   {
     id: 'automation',
-    label: 'Automação & IA',
+    label: 'Automatización e IA',
     icon: Sparkles,
     items: [
       { id: 'agents', label: 'Agentes IA', icon: Bot },
-      { id: 'campaigns', label: 'Campanhas Inteligentes', icon: Megaphone },
-      { id: 'cadences', label: 'Cadências Inteligentes', icon: Sparkles },
+      { id: 'campaigns', label: 'Campañas Inteligentes', icon: Megaphone },
+      { id: 'cadences', label: 'Cadencias Inteligentes', icon: Sparkles },
       { id: 'webhooks', label: 'Webhooks', icon: Webhook },
     ],
   },
   {
     id: 'capture-channels',
-    label: 'Captação',
+    label: 'Captación',
     icon: Filter,
     items: [
       { id: 'capture-quiz', label: 'Quiz', icon: ListChecks },
-      { id: 'capture-forms', label: 'Formulários', icon: FileText },
+      { id: 'capture-forms', label: 'Formularios', icon: FileText },
       { id: 'capture-chatbot', label: 'ChatBot', icon: MessageCircle },
       { id: 'capture-widget', label: 'Widget', icon: Code2 },
       { id: 'capture-whatsapp', label: 'WhatsApp', icon: MessageSquare },
-      { id: 'capture-templates', label: 'Templates', icon: LayoutGrid },
+      { id: 'capture-templates', label: 'Plantillas', icon: LayoutGrid },
       { id: 'capture-results', label: 'Resultados', icon: Target },
-      { id: 'capture-analytics', label: 'Analytics', icon: BarChart3 },
+      { id: 'capture-analytics', label: 'Analítica', icon: BarChart3 },
     ],
   },
   {
     id: 'management',
-    label: 'Gestão',
+    label: 'Gestión',
     icon: Briefcase,
     items: [
-      { id: 'products', label: 'Produtos', icon: Package },
-      { id: 'sectors', label: 'Setores', icon: SlidersHorizontal },
-      { id: 'team', label: 'Equipes', icon: Users },
-      { id: 'reports', label: 'Relatórios', icon: BarChart3 },
-      { id: 'financial', label: 'Financeiro', icon: DollarSign },
-      { id: 'payments', label: 'Pagamentos', icon: Banknote },
+      { id: 'products', label: 'Productos', icon: Package },
+      { id: 'sectors', label: 'Sectores', icon: SlidersHorizontal },
+      { id: 'team', label: 'Equipos', icon: Users },
+      { id: 'reports', label: 'Reportes', icon: BarChart3 },
+      { id: 'financial', label: 'Financiero', icon: DollarSign },
+      { id: 'payments', label: 'Pagos', icon: Banknote },
     ],
   },
   {
     id: 'settings',
-    label: 'Configurações',
+    label: 'Configuración',
     icon: Settings,
     items: [
-      { id: 'connections', label: 'Conexões', icon: Plug },
-      { id: 'integrations', label: 'Integrações', icon: Settings },
-      { id: 'quick-replies', label: 'Respostas Rápidas', icon: MessageSquare },
+      { id: 'connections', label: 'Conexiones', icon: Plug },
+      { id: 'integrations', label: 'Integraciones', icon: Settings },
+      { id: 'quick-replies', label: 'Respuestas Rápidas', icon: MessageSquare },
       { id: 'custom-fields', label: 'Campos personalizados', icon: FileText },
       { id: 'tags', label: 'Etiquetas', icon: Tag },
-      { id: 'notifications', label: 'Notificações', icon: Bell },
-      { id: 'schedules', label: 'Horários', icon: Clock },
+      { id: 'notifications', label: 'Notificaciones', icon: Bell },
+      { id: 'schedules', label: 'Horarios', icon: Clock },
       { id: 'company', label: 'Empresa', icon: Building2 },
-      { id: 'plan', label: 'Plano', icon: CreditCard },
-      { id: 'support', label: 'Suporte', icon: LifeBuoy },
+      { id: 'plan', label: 'Plan', icon: CreditCard },
+      { id: 'support', label: 'Soporte', icon: LifeBuoy },
     ],
   },
 ];
