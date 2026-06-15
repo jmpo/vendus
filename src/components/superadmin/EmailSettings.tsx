@@ -19,7 +19,7 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { usePlatformEmailSettings, useUpdatePlatformEmailSettings, useCreateAuditLog } from '@/hooks/useSuperAdmin';
-import { usePlatformPlantillas, type PlatformEmailTemplate } from '@/hooks/usePlatformPlantillas';
+import { usePlatformTemplates, type PlatformEmailTemplate } from '@/hooks/usePlatformTemplates';
 import { PlatformTemplateEditor } from './PlatformTemplateEditor';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
@@ -34,7 +34,7 @@ const CATEGORY_META: Record<string, { label: string; icon: React.ComponentType<a
 
 export function EmailSettings() {
   const { data: settings, isLoading } = usePlatformEmailSettings();
-  const { data: templates, isLoading: loadingPlantillas } = usePlatformPlantillas();
+  const { data: templates, isLoading: loadingTemplates } = usePlatformTemplates();
   const updateSettings = useUpdatePlatformEmailSettings();
   const createAuditLog = useCreateAuditLog();
 
@@ -166,7 +166,7 @@ export function EmailSettings() {
 
         {/* Plantillas */}
         <TabsContent value="templates" className="space-y-4">
-          {loadingPlantillas ? (
+          {loadingTemplates ? (
             <Skeleton className="h-[400px] w-full" />
           ) : (
             Object.entries(CATEGORY_META).map(([cat, meta]) => {

@@ -120,7 +120,7 @@ export function AIQualityPanel() {
       avgOverall: Math.round(avg('score_overall')),
       avgClarity: Math.round(avg('score_clarity')),
       avgTone: Math.round(avg('score_tone')),
-      avgConversion: Math.round(avg('score_conv.rsion_potential')),
+      avgConversion: Math.round(avg('score_conversion_potential')),
       topIssues,
     };
   }, [evals]);
@@ -317,7 +317,7 @@ export function AIQualityPanel() {
                     <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant="default">{fmtScore(e.score_overall)}</Badge>
                       <span className="text-xs text-muted-foreground">
-                        claridad {fmtScore(e.score_clarity)} · tono {fmtScore(e.score_tone)} · objetiv. {fmtScore(e.score_objectivity)} · precisión {fmtScore(e.score_precisiónracy)} · conv. {fmtScore(e.score_conv.rsion_potential)}
+                        claridad {fmtScore(e.score_clarity)} · tono {fmtScore(e.score_tone)} · objetiv. {fmtScore(e.score_objectivity)} · precisión {fmtScore(e.score_accuracy)} · conv. {fmtScore(e.score_conversion_potential)}
                       </span>
                     </div>
                     {e.summary && (
