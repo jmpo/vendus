@@ -27,22 +27,22 @@ export const SignupEmail = ({
   recipient,
   confirmationUrl,
 }: SignupEmailProps) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="es-PY" dir="ltr">
     <Head />
-    <Preview>Confirme seu e-mail no {siteName}</Preview>
+    <Preview>Confirmá tu e-mail en {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Bem-vindo ao {siteName}!</Heading>
+        <Heading style={h1}>¡Bienvenido a {siteName}!</Heading>
         <Text style={text}>
-          Obrigado por se cadastrar. Para começar a usar a plataforma, confirme seu e-mail{' '}
+          Gracias por registrarte. Para empezar a usar la plataforma, confirmá tu e-mail{' '}
           <Link href={`mailto:${recipient}`} style={link}>{recipient}</Link>{' '}
-          clicando no botão abaixo:
+          haciendo clic en el botón de abajo:
         </Text>
         <Button style={button} href={confirmationUrl}>
           Confirmar e-mail
         </Button>
         <Text style={footer}>
-          Se você não criou uma conta no {siteName}, pode ignorar este e-mail com segurança.
+          Si no creaste una cuenta en {siteName}, podés ignorar este e-mail sin problema.
         </Text>
       </Container>
     </Body>

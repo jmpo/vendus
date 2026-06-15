@@ -27,36 +27,35 @@ const WelcomeAdminAccessEmail = ({
   recoveryLink,
   email,
 }: Props) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="es-PY" dir="ltr">
     <Head />
-    <Preview>Seu acesso de administrador está pronto</Preview>
+    <Preview>Tu acceso de administrador está listo</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Bem-vindo(a){fullName ? `, ${fullName}` : ''}!</Heading>
+        <Heading style={h1}>¡Bienvenido(a){fullName ? `, ${fullName}` : ''}!</Heading>
         <Text style={text}>
-          Recebemos a confirmação da sua compra
-          {planName ? ` do plano ${planName}` : ''} e o seu acesso de
-          administrador já está ativo.
+          Recibimos la confirmación de tu compra
+          {planName ? ` del plan ${planName}` : ''} y tu acceso de
+          administrador ya está activo.
         </Text>
         <Text style={text}>
-          Para definir sua senha e entrar pela primeira vez, clique no botão
-          abaixo:
+          Para definir tu contraseña e ingresar por primera vez, hacé clic en el botón de abajo:
         </Text>
         {recoveryLink ? (
           <Section style={{ textAlign: 'center', margin: '24px 0' }}>
             <Button href={recoveryLink} style={button}>
-              Definir minha senha
+              Definir mi contraseña
             </Button>
           </Section>
         ) : (
           <Text style={text}>
-            Use a opção "Esqueci minha senha" na tela de login com o e-mail
-            <strong> {email}</strong> para criar sua senha de acesso.
+            Usá la opción "Olvidé mi contraseña" en la pantalla de login con el e-mail
+            <strong> {email}</strong> para crear tu contraseña de acceso.
           </Text>
         )}
         <Hr style={hr} />
         <Text style={muted}>
-          Se você não reconhece esta compra, basta ignorar este e-mail.
+          Si no reconocés esta compra, simplemente ignorá este e-mail.
         </Text>
       </Container>
     </Body>
@@ -67,14 +66,14 @@ export const template = {
   component: WelcomeAdminAccessEmail,
   subject: (data: Record<string, any>) =>
     data.planName
-      ? `Seu acesso ao plano ${data.planName} está pronto`
-      : 'Seu acesso de administrador está pronto',
-  displayName: 'Boas-vindas — acesso admin (Cakto)',
+      ? `Tu acceso al plan ${data.planName} está listo`
+      : 'Tu acceso de administrador está listo',
+  displayName: 'Bienvenida — acceso admin (Cakto)',
   previewData: {
-    fullName: 'Maria',
+    fullName: 'María',
     planName: 'Pro',
-    email: 'maria@exemplo.com',
-    recoveryLink: 'https://app.exemplo.com/reset?token=abc',
+    email: 'maria@ejemplo.com',
+    recoveryLink: 'https://app.ejemplo.com/reset?token=abc',
   },
 } satisfies TemplateEntry
 

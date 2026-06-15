@@ -11,8 +11,8 @@ export interface QuickMenuOption {
   human_queue?: string | null;         // optional label/queue for human handoff
 }
 
-const DEFAULT_INTRO = 'Como posso te ajudar?';
-const DEFAULT_INVALID = 'Não entendi sua escolha. Responda com o número da opção (ex: 1, 2, 3).';
+const DEFAULT_INTRO = '¿Cómo puedo ayudarte?';
+const DEFAULT_INVALID = 'No entendí tu elección. Respondé con el número de la opción (ej: 1, 2, 3).';
 
 export function isValidMenuOption(opt: unknown): opt is QuickMenuOption {
   if (!opt || typeof opt !== 'object') return false;

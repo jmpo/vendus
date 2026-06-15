@@ -19,22 +19,22 @@ interface RecoveryEmailProps {
 }
 
 export const RecoveryEmail = ({ siteName, confirmationUrl }: RecoveryEmailProps) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="es-PY" dir="ltr">
     <Head />
-    <Preview>Redefinir sua senha do {siteName}</Preview>
+    <Preview>Restablecé tu contraseña de {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Redefinir sua senha</Heading>
+        <Heading style={h1}>Restablecé tu contraseña</Heading>
         <Text style={text}>
-          Recebemos uma solicitação para redefinir a senha da sua conta no {siteName}.
-          Clique no botão abaixo para escolher uma nova senha.
+          Recibimos una solicitud para restablecer la contraseña de tu cuenta en {siteName}.
+          Hacé clic en el botón de abajo para elegir una nueva contraseña.
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Redefinir senha
+          Restablecer contraseña
         </Button>
         <Text style={footer}>
-          Se você não solicitou esta redefinição, pode ignorar este e-mail.
-          Sua senha continuará a mesma.
+          Si no solicitaste este restablecimiento, podés ignorar este e-mail.
+          Tu contraseña seguirá igual.
         </Text>
       </Container>
     </Body>

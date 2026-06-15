@@ -17,11 +17,11 @@ interface PlatformGenericProps {
 }
 
 const PlatformGenericEmail = ({
-  __subject = 'Notificação',
-  __html = '<p>Sem conteúdo.</p>',
+  __subject = 'Notificación',
+  __html = '<p>Sin contenido.</p>',
   __preview,
 }: PlatformGenericProps) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="es-PY" dir="ltr">
     <Head />
     <Preview>{__preview ?? __subject}</Preview>
     <Body style={main}>
@@ -34,11 +34,11 @@ const PlatformGenericEmail = ({
 
 export const template = {
   component: PlatformGenericEmail,
-  subject: (data: Record<string, any>) => data.__subject || 'Notificação',
-  displayName: 'Template genérico (HTML do painel)',
+  subject: (data: Record<string, any>) => data.__subject || 'Notificación',
+  displayName: 'Template genérico (HTML del panel)',
   previewData: {
-    __subject: 'Pré-visualização',
-    __html: '<h1>Olá!</h1><p>Este é um email da plataforma.</p>',
+    __subject: 'Vista previa',
+    __html: '<h1>¡Hola!</h1><p>Este es un email de la plataforma.</p>',
   },
 } satisfies TemplateEntry
 

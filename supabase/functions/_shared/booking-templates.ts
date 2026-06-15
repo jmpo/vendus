@@ -16,16 +16,16 @@ export function renderTemplate(template: string | null | undefined, vars: Bookin
 }
 
 /**
- * Format a Date in the booking timezone (BR-friendly).
+ * Format a Date in the booking timezone (es-PY).
  */
 function fmtDate(date: Date, timezone: string): string {
-  return date.toLocaleDateString("pt-BR", {
+  return date.toLocaleDateString("es-PY", {
     weekday: "long", day: "2-digit", month: "long", year: "numeric", timeZone: timezone,
   });
 }
 
 function fmtTime(date: Date, timezone: string): string {
-  return date.toLocaleTimeString("pt-BR", {
+  return date.toLocaleTimeString("es-PY", {
     hour: "2-digit", minute: "2-digit", timeZone: timezone,
   });
 }
@@ -48,14 +48,14 @@ export function buildBookingVars(input: {
   confirmation_url?: string | null;
   reschedule_url?: string | null;
 }): BookingVars {
-  const tz = input.timezone || "America/Sao_Paulo";
+  const tz = input.timezone || "America/Asuncion";
   const start = new Date(input.start_time);
   const end = new Date(input.end_time);
   return {
     nome_lead: input.guest_name || "",
     email_lead: input.guest_email || "",
     telefone_lead: input.guest_phone || "",
-    nome_evento: input.event_name || "Reunião",
+    nome_evento: input.event_name || "Reunión",
     nome_anfitriao: input.host_name || "",
     nome_vendedor: input.host_name || "",
     empresa: input.empresa || "",
@@ -74,15 +74,15 @@ export function buildBookingVars(input: {
  */
 export const DEFAULT_TEMPLATES = {
   confirmation_whatsapp:
-    "Olá, {{nome_lead}}! 👋\n\nPassando para confirmar a *{{nome_evento}}* da *{{empresa}}*.\n\n📅 {{data}}\n⏰ {{hora}}\n📍 {{modalidade}}\n\nPosso confirmar essa agenda? Responda:\n1️⃣ Confirmar\n2️⃣ Reagendar\n3️⃣ Cancelar",
+    "¡Hola, {{nome_lead}}! 👋\n\nPaso para confirmar la *{{nome_evento}}* de *{{empresa}}*.\n\n📅 {{data}}\n⏰ {{hora}}\n📍 {{modalidade}}\n\n¿Puedo confirmar esta agenda? Respondé:\n1️⃣ Confirmar\n2️⃣ Reagendar\n3️⃣ Cancelar",
   confirmation_email_subject:
-    "Confirmação: {{nome_evento}} — {{data}} às {{hora}}",
+    "Confirmación: {{nome_evento}} — {{data}} a las {{hora}}",
   reminder_whatsapp:
-    "Oi, {{nome_lead}}! ⏰\n\nLembrete: temos *{{nome_evento}}* hoje às *{{hora}}*. Te espero! 🙌",
+    "¡Hola, {{nome_lead}}! ⏰\n\nRecordatorio: tenemos *{{nome_evento}}* hoy a las *{{hora}}*. ¡Te espero! 🙌",
   reminder_link_whatsapp:
-    "🔔 {{nome_lead}}, nossa reunião começa em instantes!\n\n🔗 {{link_reuniao}}\n\nTe vejo já já 👋",
+    "🔔 {{nome_lead}}, ¡nuestra reunión empieza en unos minutos!\n\n🔗 {{link_reuniao}}\n\nNos vemos ya 👋",
   recovery_whatsapp:
-    "Oi, {{nome_lead}}, sentimos sua falta na reunião de hoje. Quer reagendar? Responda esta mensagem que te ajudamos.",
+    "Hola, {{nome_lead}}, te extrañamos en la reunión de hoy. ¿Querés reagendar? Respondé este mensaje y te ayudamos.",
   internal_whatsapp:
-    "📅 Novo agendamento: {{nome_lead}} — {{nome_evento}} em {{data}} às {{hora}}.",
+    "📅 Nueva reserva: {{nome_lead}} — {{nome_evento}} el {{data}} a las {{hora}}.",
 } as const;
