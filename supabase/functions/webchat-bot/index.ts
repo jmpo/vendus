@@ -1854,10 +1854,10 @@ serve(async (req) => {
 
       // Add CTA instructions if available
       if (productCTAs.length > 0) {
-        systemPrompt += '\n\n🔘 BOTÕES DE AÇÃO (CTAs):';
-        systemPrompt += '\nVocê puede enviar botões interativos para el cliente usando a função send_cta_buttons.';
-        systemPrompt += '\nPara enviar vídeos explicativos, use a função send_video.';
-        systemPrompt += '\nUse os CTAs de acordo com a intenção detectada na conversación:';
+        systemPrompt += '\n\n🔘 BOTONES DE ACCIÓN (CTAs):';
+        systemPrompt += '\nPodés enviar botones interactivos al cliente usando la función send_cta_buttons.';
+        systemPrompt += '\nPara enviar videos explicativos, usá la función send_video.';
+        systemPrompt += '\nUsá los CTAs según la intención detectada en la conversación:';
         
         productCTAs.forEach(cta => {
           const ctaInfo = cta.cta_type === 'video' 
