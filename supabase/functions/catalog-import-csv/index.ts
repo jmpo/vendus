@@ -8,7 +8,7 @@ const corsHeaders = {
 interface ImportBody {
   organization_id: string;
   product_id?: string | null;
-  // Array de itens já parseados no frontend (CSV/XLSX)
+  // Array de itens ya parseados no frontend (CSV/XLSX)
   items: Array<{
     title: string;
     description?: string;

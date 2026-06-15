@@ -38,7 +38,7 @@ serve(async (req) => {
 
     if (!product_id || !prompt) {
       return new Response(
-        JSON.stringify({ error: 'product_id e prompt son obrigatórios' }),
+        JSON.stringify({ error: 'product_id e prompt son obligatorios' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -91,9 +91,9 @@ Problemas que resolve: ${product.problems_solved || 'N/A'}
     }
 
     const toneDescriptions: Record<string, string> = {
-      formal: 'Usa linguagem formal e profissional. Evita gírias.',
-      informal: 'Usa linguagem amigável e descontraída, como uma conversación casual. Emojis son bem-vindos.',
-      technical: 'Usa termos técnicos relevantes. Sé preciso e objetivo.',
+      formal: 'Usá lenguaje formal y profesional. Evitá modismos.',
+      informal: 'Usá lenguaje amigable y distendido, como una conversación casual. Los emojis son bienvenidos.',
+      technical: 'Usá términos técnicos relevantes. Sé preciso y objetivo.',
     };
 
     const systemPrompt = `Usted é um especialista em crear funis de captação de leads de alta conversão.
@@ -118,7 +118,7 @@ TIPOS DE BLOCOS DISPONÍVEIS:
    Usa para: nombre, email, WhatsApp, empresa, etc.
 
 3. **buttons** - Menu de opciones clicáveis (RAMIFICAÇÃO)
-   Campos: { content: "pregunta ou contexto", options: [{ id: "uuid", label: "Texto da opción", emoji: "🚀", next_block_id: "uuid_do_bloco_destino" }] }
+   Campos: { content: "pregunta ou contexto", options: [{ id: "uuid", label: "Texto dla opción", emoji: "🚀", next_block_id: "uuid_do_bloco_destino" }] }
    Usa para: escolhas que levam a caminhos diferentes. CADA OPÇÃO DEVE TER next_block_id apontando para o bloco correto.
 
 4. **video** - Exibir vídeo embedado
@@ -136,7 +136,7 @@ TIPOS DE BLOCOS DISPONÍVEIS:
    Campos: { apply_tags: ["tag1", "tag2"] }
 
 REGRAS DE CONEXÃO:
-- Blocos lineares: use "next_block_id" no bloco para apontar para o próximo
+- Blocos lineares: use "next_block_id" no bloco para apontar para el próximo
 - Blocos buttons: cada option tiene su próprio "next_block_id" (ramificação)
 - Blocos score/tag: son invisíveis, conecte-os ao próximo bloco visível via next_block_id
 - Blocos end: NÃO têm next_block_id (son terminais)
@@ -152,7 +152,7 @@ REGRAS DE POSIÇÃO (X/Y no canvas):
 
 FORMATO DE RESPOSTA (JSON):
 {
-  "suggested_name": "Nombre sugerido para o embudo",
+  "suggested_name": "Nombre sugerido para el embudo",
   "start_block_id": "uuid_do_primeiro_bloco",
   "flow_blocks": [
     {
@@ -171,7 +171,7 @@ IMPORTANTE:
 - Todas as conexões next_block_id devem referenciar IDs existentes
 - Cada caminho de ramificação DEVE terminar com um bloco "end"
 - Usa emojis nos botões para tornar a experiência mais visual
-- Crea copies curtas e conversacionais, otimizadas para mobile
+- Creá copys cortos y conversacionales, optimizados para mobile
 - Se o usuario mencionar vídeos, use blocos video com video_url: "URL_PLACEHOLDER"
 - Se o usuario mencionar planos/preços, crie botões com as opciones e blocos end com redirect_url vazio`;
 

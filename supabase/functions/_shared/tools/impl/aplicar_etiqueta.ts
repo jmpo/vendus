@@ -56,7 +56,7 @@ export const aplicarEtiquetaTool: ToolDefinition = {
       tagId = created.id;
     }
 
-    // 3) Atribui al lead (idempotente — se já existir, ignora).
+    // 3) Atribui al lead (idempotente — se ya existir, ignora).
     const { error: assignErr } = await ctx.supabase
       .from('lead_tag_assignments')
       .upsert(

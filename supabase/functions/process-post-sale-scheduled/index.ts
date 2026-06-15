@@ -81,7 +81,7 @@ Deno.serve(async (req) => {
     if (!claimed) continue;
 
     // Defesa: se um evento "final" (compra_aprovada/reembolso/chargeback/cancelamento)
-    // chegou DEPOIS desta run ser creada, cancela em vez de disparar.
+    // chegou DEPOIS de esta run ser creada, cancela em vez de disparar.
     if (['pix_gerado', 'boleto_gerado', 'checkout_abandonado'].includes(run.event_type)) {
       const { data: laterClose } = await supabase
         .from('post_sale_scheduled_runs')

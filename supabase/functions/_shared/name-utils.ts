@@ -1,6 +1,6 @@
 // Utilitário para extrair primeiro nombre real del lead.
-// Retorna null quando o "nombre" parece ser razão social / nombre de empresa,
-// para a IA no tratar "Acesso Digital 360" como se fosse uma pessoa.
+// Retorna null cuando o "nombre" parece ser razão social / nombre de empresa,
+// para la IA no tratar "Acesso Digital 360" como se fosse uma pessoa.
 
 const COMPANY_TOKENS = [
   'agencia', 'agência', 'marketing', 'digital', 'studio', 'ltda', 'me',
@@ -18,7 +18,7 @@ function stripDiacritics(s: string): string {
 function looksLikeCompany(raw: string): boolean {
   const t = raw.trim();
   if (!t) return true;
-  // Tem dígito → quase siempre razão social ("Acesso Digital 360", "AG7")
+  // Tem dígito → casi siempre razão social ("Acesso Digital 360", "AG7")
   if (/\d/.test(t)) return true;
   const norm = stripDiacritics(t.toLowerCase());
   const tokens = norm.split(/\s+/).filter(Boolean);
@@ -56,7 +56,7 @@ export function extractFirstName(raw?: string | null): string | null {
 }
 
 /**
- * Retorna nombre para exibir no prompt — "" quando no confiável.
+ * Retorna nombre para exibir no prompt — "" cuando no confiável.
  * Útil para `replaceAll('{{nombre}}', safeFirstName(visitorName))`.
  */
 export function safeFirstName(raw?: string | null): string {

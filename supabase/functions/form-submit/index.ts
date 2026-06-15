@@ -129,7 +129,7 @@ Deno.serve(async (req) => {
       }
     }
     if (missing.length) {
-      return new Response(JSON.stringify({ error: `Campos obrigatórios no respondidos: ${missing.join(', ')}`, missing }), {
+      return new Response(JSON.stringify({ error: `Campos obligatorios no respondidos: ${missing.join(', ')}`, missing }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -291,7 +291,7 @@ Deno.serve(async (req) => {
         return okType && matchLabel(b.label, keywords) && responses[b.id];
       });
       if (b) return String(responses[b.id]);
-      // Fallback: chave do response (caso o body já venha com labels/aliases)
+      // Fallback: chave do response (caso o body ya venha com labels/aliases)
       const key = Object.keys(responses).find((k) => matchLabel(k, keywords));
       return key && responses[key] != null ? String(responses[key]) : null;
     };
@@ -686,7 +686,7 @@ Deno.serve(async (req) => {
                 lead_ids: [leadId],
                 agent_id: outreachAgentId,
                 organization_id: form.organization_id,
-                objective: outreachObjective || `Continuar a conversación iniciada no formulário "${form.name}" e ajudar o lead pelo WhatsApp.`,
+                objective: outreachObjective || `Continuar la conversación iniciada no formulário "${form.name}" e ajudar el lead pelo WhatsApp.`,
                 extra_context: extraContext,
                 mode: 'direct',
               }),

@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
 
     if (!organization_id || !email) {
       return new Response(
-        JSON.stringify({ error: "organization_id e email son obrigatórios" }),
+        JSON.stringify({ error: "organization_id e email son obligatorios" }),
         {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -127,7 +127,7 @@ Deno.serve(async (req) => {
         invited = true;
       }
     } else {
-      // Usuario já existe — verifica se já pertence a otra org
+      // Usuario ya existe — verifica se ya pertence a otra org
       const { data: existingProfile } = await admin
         .from("profiles")
         .select("organization_id")
@@ -140,7 +140,7 @@ Deno.serve(async (req) => {
         return new Response(
           JSON.stringify({
             error:
-              "Este e-mail já pertence a otra empresa. Usa um e-mail diferente.",
+              "Este e-mail ya pertence a otra empresa. Usa um e-mail diferente.",
           }),
           {
             status: 409,
@@ -173,7 +173,7 @@ Deno.serve(async (req) => {
     }
 
     // Remove qualquer otro role (ex: 'seller' inserido por trigger handle_new_user)
-    // garantindo que admin de empresa tenha somente o papel 'admin'
+    // garantindo que admin de empresa tenga somente o papel 'admin'
     const { error: cleanupError } = await admin
       .from("user_roles")
       .delete()

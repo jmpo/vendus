@@ -50,10 +50,10 @@ async function evaluateStepConditions(supabase: any, conditions: any, lead_id: s
       .eq("lead_id", lead_id)
       .eq("pipeline_stages.stage_type", "won")
       .limit(1);
-    if (data && data.length) return { ok: false, reason: "Lead já comprou" };
+    if (data && data.length) return { ok: false, reason: "Lead ya comprou" };
   }
 
-  // not_responded — no respondeu em runs anteriores desta cadência (passa, será stop_rules quem trata)
+  // not_responded — no respondeu em runs anteriores de esta cadência (passa, será stop_rules quem trata)
   // without_tag — lead no tiene essas tags
   if (Array.isArray(conditions.without_tags) && conditions.without_tags.length) {
     const { data } = await supabase
@@ -202,7 +202,7 @@ Deno.serve(async (req) => {
         if (!evalResult.ok) {
           await supabase.from("cadence_step_runs").update({ status: "skipped", skip_reason: evalResult.reason ?? "conditions", executed_at: new Date().toISOString() }).eq("id", run.id);
           skipped++;
-          // Avança mismo assim para próximo step? Sí — no trava o lead na etapa.
+          // Avança mismo assim para próximo step? Sí — no trava el lead na etapa.
         } else {
           if (!cadence.agent_id) {
             await supabase.from("cadence_step_runs").update({ status: "failed", error: "Cadence has no agent_id", executed_at: new Date().toISOString() }).eq("id", run.id);

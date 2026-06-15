@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Cache de campañas usadas neste tick
+    // Cache de campañas usadas en este tick
     const campaignCache = new Map<string, any>();
     let processed = 0;
     let skipped = 0;

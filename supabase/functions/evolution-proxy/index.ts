@@ -128,7 +128,7 @@ async function configureWebhook(
     return {
       ok: false,
       error:
-        "Token da instância ausente. Clique em 'Sincronizar do servidor' para reimportar o token desta instância.",
+        "Token da instância ausente. Clique em 'Sincronizar do servidor' para reimportar o token de esta instância.",
     };
   }
 
@@ -259,7 +259,7 @@ Deno.serve(async (req) => {
 
     const requireSuperAdmin = () => {
       if (!isSuperAdmin) {
-        return new Response(JSON.stringify({ error: "Apenas o Super Admin da plataforma puede executar essa acción." }), {
+        return new Response(JSON.stringify({ error: "Solo o Super Admin da plataforma puede executar essa acción." }), {
           status: 403,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -306,7 +306,7 @@ Deno.serve(async (req) => {
     const config = await getPlatformConfig(supabase);
     if (!config) {
       return new Response(
-        JSON.stringify({ error: "Servidor Evolution Go ainda no fue configurado pelo administrador da plataforma." }),
+        JSON.stringify({ error: "Servidor Evolution Go aún no fue configurado pelo administrador da plataforma." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -412,7 +412,7 @@ Deno.serve(async (req) => {
     }
 
     // ---- CREATE INSTANCE SELF-SERVICE (admin/manager da org) ----
-    // Cliente cria instância para a própria empresa, respeitando o limite do plano.
+    // Cliente cria instância para la própria empresa, respeitando o limite do plano.
     if (action === "create_instance_self") {
       // Authorization: precisa ser admin ou manager da organização
       if (!profile?.organization_id) {
@@ -428,7 +428,7 @@ Deno.serve(async (req) => {
         _user_id: user.id, _role: "manager",
       });
       if (!isSuperAdmin && !hasAdmin && !hasManager) {
-        return new Response(JSON.stringify({ error: "Apenas administradores ou gerentes podem crear conexões." }), {
+        return new Response(JSON.stringify({ error: "Solo administradores ou gerentes podem crear conexões." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -439,7 +439,7 @@ Deno.serve(async (req) => {
       // Sanitiza: somente letras minúsculas, números e hífens; 3-40 chars
       if (!/^[a-z0-9-]{3,40}$/.test(rawName)) {
         return new Response(JSON.stringify({
-          error: "Nombre inválido. Usa apenas letras minúsculas, números e hífens (3 a 40 caracteres).",
+          error: "Nombre inválido. Usa solo letras minúsculas, números e hífens (3 a 40 caracteres).",
         }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
@@ -485,7 +485,7 @@ Deno.serve(async (req) => {
         .slice(0, 20)) || "org";
       const finalName = `${orgSlug}-${rawName}`.slice(0, 50);
 
-      // Verifica se já existe localmente uma instância com esse nombre
+      // Verifica se ya existe localmente uma instância com esse nombre
       const { data: dup } = await supabase
         .from("evolution_instances")
         .select("id")
@@ -493,7 +493,7 @@ Deno.serve(async (req) => {
         .maybeSingle();
       if (dup) {
         return new Response(JSON.stringify({
-          error: "Já existe uma conexão com esse nombre. Escolha otro.",
+          error: "Ya existe uma conexão com esse nombre. Escolha otro.",
         }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
@@ -576,7 +576,7 @@ Deno.serve(async (req) => {
     }
 
     // ---- RENAME INSTANCE (org admin/manager OR super admin) ----
-    // Apenas atualiza o display_name local (Evolution Go no suporta rename).
+    // Solo atualiza o display_name local (Evolution Go no suporta rename).
     if (action === "rename_instance_self") {
       const id = String(body.id || "");
       const rawName = String(body.name || "").trim();
@@ -633,7 +633,7 @@ Deno.serve(async (req) => {
       const { data: hasAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
       const { data: hasManager } = await supabase.rpc("has_role", { _user_id: user.id, _role: "manager" });
       if (!isSuperAdmin && !hasAdmin && !hasManager) {
-        return new Response(JSON.stringify({ error: "Apenas administradores ou gerentes podem eliminar conexões." }), {
+        return new Response(JSON.stringify({ error: "Solo administradores ou gerentes podem eliminar conexões." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }

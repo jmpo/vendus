@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
     
     console.log('Webhook verification request:', { mode, token });
     
-    // Verificar token em todas as integraciones ativas
+    // Verificar token en cadas as integraciones ativas
     const { data: integration, error } = await supabase
       .from('facebook_lead_integrations')
       .select('id')

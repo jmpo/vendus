@@ -17,7 +17,7 @@ Deno.serve(async (req: Request) => {
   const { connection_id, name, language, category, components } = await req.json().catch(() => ({}));
 
   if (!connection_id || !name || !language || !category || !components) {
-    return json({ error: 'campos obrigatórios: connection_id, name, language, category, components' }, 400);
+    return json({ error: 'campos obligatorios: connection_id, name, language, category, components' }, 400);
   }
   if (!['MARKETING', 'UTILITY', 'AUTHENTICATION'].includes(category)) {
     return json({ error: 'category inválida' }, 400);

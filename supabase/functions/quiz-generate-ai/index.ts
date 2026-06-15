@@ -29,7 +29,7 @@ const TONE_LABELS: Record<string, string> = {
 };
 
 const RESULT_LABELS: Record<string, string> = {
-  classificacao: 'Clasifica o lead em 3 categorias (frio/morno/quente) com base no score.',
+  classificacao: 'Clasifica el lead em 3 categorias (frio/morno/quente) com base no score.',
   diagnostico: 'Genera um diagnóstico detalhado com 3 níveis de maturidade.',
   recomendacao: 'Recomende a melhor opción/plano/caminho para el lead.',
   pontuacao: 'Mostre uma pontuação final com mensaje corta.',
@@ -110,7 +110,7 @@ TIPO DE RESULTADO: ${RESULT_LABELS[result_type]}
 
 ESTRUTURA OBRIGATÓRIA (em ordem):
 1. Bloco "text" de boas-vindas corto.
-2. 3 a 6 blocos "buttons" (preguntas de múltipla escolha), cada um com 3-4 opciones, cada opción com {id, letter (A/B/C/D), label, score (0-35), tag (opcional)}.
+2. 3 a 6 blocos "buttons" (preguntas de múltipla escolha), cada um com 3-4 opciones, cadla opción com {id, letter (A/B/C/D), label, score (0-35), tag (opcional)}.
 3. Blocos "input" para capturar:
 ${captureFields.map((f) => `   - ${f}`).join('\n') || '   - (ningún)'}
 4. Bloco "end" com:

@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
     const payload = await req.json().catch(() => null);
     if (!payload) return json({ error: 'invalid json' }, 400);
 
-    // Hotmart manda hottok dentro do body também (campo "hottok")
+    // Hotmart manda hottok dentro do body también (campo "hottok")
     const incomingHottok = hottokParam ?? payload.hottok ?? payload.data?.hottok;
     if (cred.hottok && cred.hottok !== incomingHottok) {
       console.warn('[hotmart-webhook] invalid hottok for org', orgId);

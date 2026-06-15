@@ -1,4 +1,4 @@
-// Chamado pelo evolution-webhook quando lead responde uma mensaje.
+// Chamado pelo evolution-webhook quandel lead responde uma mensaje.
 // Marca o último step_run como respondido e, se stop_rules.stop_on_response, encerra a enrollment.
 // POST { lead_id, organization_id?, conversation_id? }
 

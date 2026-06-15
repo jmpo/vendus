@@ -90,7 +90,7 @@ serve(async (req: Request): Promise<Response> => {
     let sentCount = 0;
     let failedCount = 0;
 
-    // Envia em batches via Lovable Emails (já tiene fila + rate-limit)
+    // Envia em batches via Lovable Emails (ya tiene fila + rate-limit)
     const batchSize = 25;
     for (let i = 0; i < recipients.length; i += batchSize) {
       const batch = recipients.slice(i, i + batchSize);

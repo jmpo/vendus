@@ -165,7 +165,7 @@ Deno.serve(async (req) => {
       .single();
 
     if (insertError && (insertError as any).code === "23505") {
-      // Race com webhook/automação — recupera a conversación que ganhou o INSERT
+      // Race com webhook/automação — recupera la conversación que ganhou o INSERT
       const { data: race } = await supabase
         .from("webchat_conversations")
         .select("id")

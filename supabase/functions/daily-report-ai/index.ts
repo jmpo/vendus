@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
               .insert({
                 user_id: seller.id,
                 type: 'system',
-                title: '☀️ Su briefing do día',
+                title: '☀️ Su briefing del día',
                 message: report.summary,
                 action_url: '/dashboard',
                 metadata: { full_report: report.full },
@@ -345,7 +345,7 @@ async function sendReportEmail(email: string, name: string, report: { summary: s
       body: JSON.stringify({
         from: 'Assistente de Vendas <noreply@resend.dev>',
         to: [email],
-        subject: `☀️ Su briefing do día - ${new Date().toLocaleDateString('pt-BR')}`,
+        subject: `☀️ Su briefing del día - ${new Date().toLocaleDateString('pt-BR')}`,
         html: htmlContent,
       }),
     });

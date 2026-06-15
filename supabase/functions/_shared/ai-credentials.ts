@@ -32,7 +32,7 @@ export function adminClient() {
   });
 }
 
-// Defaults — usados quando a org no definiu roteamento explícito.
+// Defaults — usados cuando a org no definiu roteamento explícito.
 const DEFAULT_ROUTING: Record<AICapability, { provider: AIProvider; model?: string }> = {
   agent_chat:           { provider: "lovable", model: "google/gemini-3-flash-preview" },
   sales_copilot:        { provider: "lovable", model: "google/gemini-2.5-flash" },
@@ -101,7 +101,7 @@ export async function resolveAIProvider(
     }
   }
 
-  throw new Error(`Provedor ${wanted.provider} no tiene chave configurada para a organização ${organizationId}`);
+  throw new Error(`Provedor ${wanted.provider} no tiene chave configurada para la organização ${organizationId}`);
 }
 
 export async function logRouterFailure(

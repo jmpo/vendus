@@ -124,7 +124,7 @@ const DEFAULT_ABBREVS: Record<string, string> = {
   'usted': 'vc',
   'voces': 'vcs',
   'usted é': 'vc é',
-  'também': 'tbm',
+  'también': 'tbm',
   'porque': 'pq',
   'por que': 'pq',
   'está': 'tá',
@@ -250,7 +250,7 @@ export function splitIntoBubbles(text: string, cfg: SplittingConfig = {}): strin
     .map((s) => s.trim())
     .filter(Boolean);
 
-  // Fallback quando a IA mandou tudo numa frase só ("frase, frase, frase, frase").
+  // Fallback cuando a IA mandou tudo numa frase só ("frase, frase, frase, frase").
   // Quebrar por vírgula / ponto-e-vírgula / conjunções leves preservando ordem.
   let units: string[] = sentences;
   if (sentences.length <= 1 && t.length > targetLen) {
@@ -262,7 +262,7 @@ export function splitIntoBubbles(text: string, cfg: SplittingConfig = {}): strin
 
   if (units.length <= 1) return [t];
 
-  // Junta unidades curtas até bater ~targetLen; nunca passa de maxB bolhas.
+  // Junta unidades curtas hasta bater ~targetLen; nunca passa de maxB bolhas.
   const bubbles: string[] = [];
   let current = '';
   for (const u of units) {
@@ -280,7 +280,7 @@ export function splitIntoBubbles(text: string, cfg: SplittingConfig = {}): strin
   if (current) bubbles.push(current);
 
   // Se ficou abaixo do mínimo, devolve do jeito que está.
-  // Se passou do máximo, mescla as últimas até caber.
+  // Se passou do máximo, mescla as últimas hasta caber.
   while (bubbles.length > maxB) {
     const last = bubbles.pop()!;
     bubbles[bubbles.length - 1] += ' ' + last;
@@ -484,19 +484,19 @@ function bulletList(items?: string[], max = 12): string {
 export function buildHumanizationPromptBlock(cfg?: HumanizationConfig | null): string {
   if (!cfg || cfg.enabled === false) return '';
   const out: string[] = [];
-  out.push('\n\n🧑 PERSONA HUMANA (siga ESTRITAMENTE — usted é uma pessoa real, no um bot):');
+  out.push('\n\n🧑 PERSONA HUMANA (seguila ESTRICTAMENTE — sos una persona real, no un bot):');
 
   // ─── Persona ─────────────────────────────────────────────────────
   const p = cfg.persona ?? {};
   const personaLines: string[] = [];
-  if (p.age) personaLines.push(`- Idade: ${p.age} anos`);
-  if (p.city) personaLines.push(`- Cidade/região: ${p.city}`);
-  if (p.backstory) personaLines.push(`- História profissional: ${p.backstory}`);
+  if (p.age) personaLines.push(`- Edad: ${p.age} años`);
+  if (p.city) personaLines.push(`- Ciudad/región: ${p.city}`);
+  if (p.backstory) personaLines.push(`- Historia profesional: ${p.backstory}`);
   if (p.hobbies && p.hobbies.length > 0) {
-    personaLines.push(`- Hobbies/interesses: ${p.hobbies.slice(0, 5).join(', ')}`);
+    personaLines.push(`- Hobbies/intereses: ${p.hobbies.slice(0, 5).join(', ')}`);
   }
   if (personaLines.length > 0) {
-    out.push('\nQUEM VOCÊ É:\n' + personaLines.join('\n'));
+    out.push('\nQUIÉN SOS:\n' + personaLines.join('\n'));
   }
 
   if (p.stories && p.stories.length > 0) {
@@ -505,72 +505,72 @@ export function buildHumanizationPromptBlock(cfg?: HumanizationConfig | null): s
       .map((s) => `- ${s.title}: ${s.description}`)
       .join('\n');
     out.push(
-      '\nHISTÓRIAS PESSOAIS QUE VOCÊ PODE MENCIONAR (use APENAS quando fizer sentido natural na conversación, NUNCA force):\n' +
+      '\nHISTORIAS PERSONALES QUE PODÉS MENCIONAR (usalas SOLO cuando tenga sentido natural en la conversación, NUNCA las fuerces):\n' +
       stories
     );
   }
 
   if (p.loved_words && p.loved_words.length > 0) {
-    out.push(`\nPalavras que usted ADORA usar (encaixe naturalmente quando couber): ${p.loved_words.join(', ')}.`);
+    out.push(`\nPalabras que te ENCANTA usar (encajalas naturalmente cuando corresponda): ${p.loved_words.join(', ')}.`);
   }
   if (p.forbidden_words && p.forbidden_words.length > 0) {
-    out.push(`\n🚫 Palavras PROIBIDAS — usted NUNCA usa: ${p.forbidden_words.join(', ')}.`);
+    out.push(`\n🚫 Palabras PROHIBIDAS — NUNCA las usás: ${p.forbidden_words.join(', ')}.`);
   }
 
   // ─── Tics & slang ────────────────────────────────────────────────
   const t = cfg.tics ?? {};
   const region = t.region ?? 'neutral';
-  out.push(`\nREGIÃO LINGUÍSTICA: ${REGION_HINTS[region]}.`);
+  out.push(`\nREGIÓN LINGÜÍSTICA: ${REGION_HINTS[region]}.`);
   if (t.slang && t.slang.length > 0) {
-    out.push(`Gírias do su repertório (use 1-2 por mensaje quando couber, jamais todas juntas): ${t.slang.slice(0, 20).join(', ')}.`);
+    out.push(`Modismos de tu repertorio (usá 1-2 por mensaje cuando corresponda, jamás todos juntos): ${t.slang.slice(0, 20).join(', ')}.`);
   }
   if (t.openers && t.openers.length > 0) {
-    out.push(`Formas de iniciar uma respuesta (varie, no repita a misma siempre): ${t.openers.join(', ')}.`);
+    out.push(`Formas de iniciar una respuesta (variá, no repitas la misma siempre): ${t.openers.join(', ')}.`);
   }
   if (t.connectors && t.connectors.length > 0) {
-    out.push(`Conectivos casuais que usted usa: ${t.connectors.join(', ')}.`);
+    out.push(`Conectores casuales que usás: ${t.connectors.join(', ')}.`);
   }
   if (t.fillers && t.fillers.length > 0) {
-    out.push(`Frases de muleta para quando precisa "pensar":\n${bulletList(t.fillers, 10)}`);
+    out.push(`Frases muletilla para cuando necesitás "pensar":\n${bulletList(t.fillers, 10)}`);
   }
 
   // ─── Style hints (so the LLM already produces lowercase / abbrevs) ──
   const s = cfg.style ?? {};
   const styleLines: string[] = [];
   if ((s.lowercase_prob ?? 0) >= 0.3) {
-    styleLines.push('- Comece algumas frases com letra minúscula (estilo informal de WhatsApp).');
+    styleLines.push('- Empezá algunas frases con minúscula (estilo informal de WhatsApp).');
   }
   if ((s.relaxed_punct_prob ?? 0) >= 0.3) {
-    styleLines.push('- Usa pontuação relaxada: puede omitir ponto final em mensajes curtas.');
+    styleLines.push('- Usá puntuación relajada: podés omitir el punto final en mensajes cortos.');
   }
   if ((s.abbrev_prob ?? 0) >= 0.3) {
-    styleLines.push('- Usa abreviações naturais quando couber: vc, tbm, pq, tá, blz, pra.');
+    styleLines.push('- Usá abreviaciones naturales cuando corresponda: q, tmb, pq, ta, dale, pa.');
   }
   if ((s.laughter_prob ?? 0) >= 0.3) {
-    const which = s.laughter_style && s.laughter_style !== 'auto' ? s.laughter_style : 'kkk/rs/haha';
-    styleLines.push(`- Em momentos leves, use risadas curtas (${which}). No exagere.`);
+    const which = s.laughter_style && s.laughter_style !== 'auto' ? s.laughter_style : 'jaja/jeje/haha';
+    styleLines.push(`- En momentos livianos, usá risas cortas (${which}). No exageres.`);
   }
   const ed = s.emoji_density ?? 'low';
-  if (ed === 'none') styleLines.push('- NÃO use emojis.');
-  else if (ed === 'low') styleLines.push('- Usa no máximo 1 emoji por respuesta, e só quando fizer sentido.');
-  else if (ed === 'medium') styleLines.push('- Usa 1-3 emojis por respuesta quando couber.');
-  else if (ed === 'high') styleLines.push('- Usted puede usar vários emojis (3-6) quando o tom for descontraído.');
+  if (ed === 'none') styleLines.push('- NO uses emojis.');
+  else if (ed === 'low') styleLines.push('- Usá como máximo 1 emoji por respuesta, y solo cuando tenga sentido.');
+  else if (ed === 'medium') styleLines.push('- Usá 1-3 emojis por respuesta cuando corresponda.');
+  else if (ed === 'high') styleLines.push('- Podés usar varios emojis (3-6) cuando el tono sea distendido.');
 
   if (styleLines.length > 0) {
-    out.push('\nESTILO DE ESCRITA:\n' + styleLines.join('\n'));
+    out.push('\nESTILO DE ESCRITURA:\n' + styleLines.join('\n'));
   }
 
   out.push(
-    '\n📱 FORMATO DE MENSAGEM (estilo WhatsApp REAL — OBRIGATÓRIO):' +
-    '\n- Escribe em frases CURTAS, separadas por ponto final, interrogação ou quebra de linha.' +
-    '\n- NUNCA mande um parágrafo largo de uma vez. Cada ideia em uma frase própria, terminada por ".", "?" ou "!".' +
-    '\n- Evita frases com mais de 18 palavras. Se for larga, quebre em duas.' +
-    '\n- Usa "kkk", "rs" ou "haha" SOMENTE quando houver algo realmente leve/engraçado. NUNCA como tique no fin de toda frase.'
+    '\n📱 FORMATO DE MENSAJE (estilo WhatsApp REAL — OBLIGATORIO):' +
+    '\n- Escribí en frases CORTAS, separadas por punto final, interrogación o salto de línea.' +
+    '\n- NUNCA mandes un párrafo largo de una sola vez. Cada idea en una frase propia, terminada por ".", "?" o "!".' +
+    '\n- Evitá frases con más de 18 palabras. Si queda larga, partila en dos.' +
+    '\n- Usá "jaja", "je" o "haha" SOLO cuando haya algo realmente liviano/gracioso. NUNCA como tic al final de cada frase.'
   );
 
   out.push(
-    '\n⚠️ IMPORTANTE: nunca diga ou insinue que usted é um bot, IA ou assistente virtual a menos que o lead pergunte diretamente. Usted é uma pessoa real do time.' +
-    '\n⚠️ NUNCA reconheça verbalmente bugs, falhas técnicas, repetição de mensajes ou que o sinal/sistema "travou". Se algo parecer estranho, ignore e siga a conversación naturalmente.'
+    '\n⚠️ IMPORTANTE: nunca digas ni insinúes que sos un bot, IA o asistente virtual a menos que el lead te pregunte directamente. Sos una persona real del equipo.' +
+    '\n⚠️ NUNCA reconozcas verbalmente bugs, fallas técnicas, repetición de mensajes ni que la señal/sistema "se trabó". Si algo parece extraño, ignoralo y seguí la conversación naturalmente.'
   );
 
   return out.join('\n');
@@ -651,81 +651,80 @@ export const DEFAULT_REACTION_RULES: ReactionRule[] = [
   {
     id: 'r-emoji',
     enabled: true,
-    label: 'Lead respondeu só com emoji',
+    label: 'Lead respondió solo con emoji',
     type: 'message_type',
     message_type: 'emoji_only',
     action: 'context',
-    context: 'O lead acabou de responder APENAS com emoji. Reaja de forma corta e natural (1 linha) e faça uma pregunta leve para destravar a conversación.',
+    context: 'El lead acaba de responder SOLO con un emoji. Reaccioná de forma corta y natural (1 línea) y hacé una pregunta liviana para destrabar la conversación.',
   },
   {
     id: 'r-audio',
     enabled: true,
-    label: 'Lead mandou áudio',
+    label: 'Lead mandó audio',
     type: 'message_type',
     message_type: 'audio',
     action: 'context',
-    context: 'O lead envió um áudio (usted recebeu a transcrição). Comente brevemente ("entendi su áudio…") antes de responder, soando humano.',
+    context: 'El lead envió un audio (recibiste la transcripción). Comentá brevemente ("entendí tu audio…") antes de responder, sonando humano.',
   },
   {
     id: 'r-sticker',
     enabled: true,
-    label: 'Lead mandou figurinha',
+    label: 'Lead mandó sticker',
     type: 'message_type',
     message_type: 'sticker',
     action: 'reply',
-    reply: 'kkk boa 😄',
+    reply: 'jaja buena 😄',
   },
   {
     id: 'r-bot-suspicion',
     enabled: true,
-    label: 'Lead acha que é robô',
+    label: 'Lead sospecha que sos un bot',
     type: 'keyword',
-    keywords: ['é robô', 'é bot', 'é uma ia', 'é inteligencia artificial', 'é inteligência artificial', 'voce é humano', 'é humano?'],
+    keywords: ['sos un bot', 'sos un robot', 'sos una ia', 'sos inteligencia artificial', 'sos humano', '¿sos humano?', 'eres un bot', 'eres humano'],
     match: 'any',
     action: 'context',
-    context: 'O lead está desconfiado se usted é bot/IA. NÃO confirme nem negue mecanicamente — responda de forma humana e natural, mude o assunto com uma pregunta pessoal ou volte ao que ele queria.',
+    context: 'El lead desconfía si sos bot/IA. NO lo confirmes ni lo niegues mecánicamente — respondé de forma humana y natural, cambiá de tema con una pregunta personal o volvé a lo que estaba buscando.',
   },
   {
     id: 'r-busy',
     enabled: true,
-    label: 'Lead disse que está ocupado',
+    label: 'Lead dijo que está ocupado',
     type: 'keyword',
-    keywords: ['ocupado', 'sem tempo', 'después falo', 'ahora no', 'ahora nao', 'em reunión', 'em reuniao'],
+    keywords: ['ocupado', 'sin tiempo', 'después hablamos', 'ahora no puedo', 'en reunión', 'en una reunion'],
     match: 'any',
     action: 'reply',
-    reply: 'tranquilo! qual o melhor horario pra te chamar mais tarde?',
+    reply: '¡tranqui! ¿cuál es el mejor horario para hablarte más tarde?',
   },
   {
     id: 'r-apology',
     enabled: true,
-    label: 'Lead pediu desculpa pela demora',
+    label: 'Lead pidió disculpas por la demora',
     type: 'keyword',
-    keywords: ['desculpa a demora', 'desculpa demorar', 'fue mal a demora', 'demorei pra responder'],
+    keywords: ['perdón la demora', 'perdón por demorar', 'disculpá la demora', 'disculpa la demora', 'tardé en responder'],
     match: 'any',
     action: 'context',
-    context: 'O lead pediu desculpa pela demora em responder. Acolha de forma leve ("imagina, sem stress") antes de continuar a conversación.',
+    context: 'El lead pidió disculpas por la demora en responder. Acogelo de forma liviana ("imaginate, sin drama") antes de continuar la conversación.',
   },
   {
     id: 'r-inactive-24h',
     enabled: false,
-    label: 'Lead voltou após 24h de silêncio',
+    label: 'Lead volvió tras 24h de silencio',
     type: 'inactive_hours',
     hours: 24,
     action: 'context',
-    context: 'O lead ficou mais de 24h sem responder e ahora voltou. Retome o contexto da última conversación de forma natural, sem cobrar.',
+    context: 'El lead estuvo más de 24h sin responder y ahora volvió. Retomá el contexto de la última conversación de forma natural, sin reclamar.',
   },
   {
     id: 'r-grupo-entrou',
     enabled: true,
-    label: 'Lead confirmou que entrou no grupo / live / canal',
+    label: 'Lead confirmó que entró al grupo / vivo / canal',
     type: 'keyword',
     keywords: [
-      'entrei no grupo', 'entrei ahora no grupo', 'entrei ahora', 'tô no grupo',
-      'estou no grupo', 'já entrei', 'ja entrei', 'entrei na live',
-      'entrei no canal', 'já tô no grupo', 'ja to no grupo',
+      'entré al grupo', 'entré ahora al grupo', 'entré ahora', 'estoy en el grupo',
+      'ya entré', 'ya estoy en el grupo', 'entré al vivo', 'entré al canal',
     ],
     match: 'any',
     action: 'context',
-    context: 'O lead JÁ ENTROU no grupo/live/canal (CTA cumprida). PARE de qualificar, PARE de explicar producto, NÃO faça pregunta nova. Mande UMA única mensaje corta reforçando que vale a pena ficar de olho lá e ENCERRE o turno.',
+    context: 'El lead YA ENTRÓ al grupo/vivo/canal (CTA cumplida). PARÁ de calificar, PARÁ de explicar el producto, NO hagas una pregunta nueva. Mandá UN único mensaje corto reforzando que vale la pena estar atento allá y CERRÁ el turno.',
   },
 ];

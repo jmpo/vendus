@@ -25,7 +25,7 @@ interface SubmitRequest {
   };
 }
 
-// Variable name mapping to lead fields
+// Variable name mapping tel lead fields
 const VARIABLE_TO_LEAD_FIELD: Record<string, string> = {
   'name': 'name',
   'nombre': 'name',
@@ -126,7 +126,7 @@ Deno.serve(async (req) => {
       else computedTemperature = 'cold';
     }
 
-    // 3. Map collected_data to lead fields
+    // 3. Map collected_data tel lead fields
     const leadData: Record<string, string> = {};
     
     for (const [variable, value] of Object.entries(collected_data)) {
@@ -345,7 +345,7 @@ Deno.serve(async (req) => {
           organization_id: funnel.organization_id,
           user_id: assigned_to,
           type: 'lead_quiz_completed',
-          title: `Novo lead pelo quiz: ${lead.name}`,
+          title: `Novel lead pelo quiz: ${lead.name}`,
           message: `Score: ${totalScore} (${computedTemperature}). Embudo: ${funnel.name}.`,
           metadata: { lead_id: lead.id, funnel_id: funnel.id, score: totalScore },
         }).select().maybeSingle();

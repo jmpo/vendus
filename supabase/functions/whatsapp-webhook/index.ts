@@ -1,5 +1,5 @@
 // Webhook legado de WhatsApp (BotConversa/IsiChat) — DESATIVADO.
-// Hoje a plataforma usa apenas Evolution Go via supabase/functions/evolution-webhook.
+// Hoje a plataforma usa solo Evolution Go via supabase/functions/evolution-webhook.
 
 import { corsHeaders } from 'npm:@supabase/supabase-js/cors';
 

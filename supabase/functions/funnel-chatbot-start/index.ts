@@ -1,6 +1,6 @@
 // Cria uma webchat_conversations a partir de um embudo público (canal chat),
-// auto-criando o lead se possível. Usado pelo PublicChat (/c/:slug) quando
-// o flujo encontra um bloco ai_takeover / agent_switch e precisa delegar
+// auto-criando el lead se posible. Usado pelo PublicChat (/c/:slug) cuando
+// el flujo encontra um bloco ai_takeover / agent_switch e precisa delegar
 // o atención para um Agente IA real via webchat-bot.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -60,7 +60,7 @@ serve(async (req) => {
       });
     }
 
-    // Reaproveita conversación recente do mismo visitor (mismo embudo) se ainda aberta.
+    // Reaproveitla conversación recente do mismo visitor (mismo embudo) se aún aberta.
     const { data: existing } = await supabase
       .from('webchat_conversations')
       .select('id, lead_id, status')
@@ -125,7 +125,7 @@ serve(async (req) => {
         .eq('id', conversation.id);
     }
 
-    // Auto-cria lead se ainda no houver
+    // Auto-cria lead se aún no houver
     let leadId = conversation.lead_id || null;
     if (!leadId) {
       try {

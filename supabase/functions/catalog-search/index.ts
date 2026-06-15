@@ -41,7 +41,7 @@ function expandPriceRange(
     price_min = center - spread;
     price_max = center + spread;
   } else if (price_min != null && price_max == null) {
-    // Só min: aceita até 30% acima
+    // Só min: aceita hasta 30% acima
     price_max = price_min * 1.3;
   } else if (price_max != null && price_min == null) {
     // Só max: aceita a partir de 30% abaixo
@@ -130,9 +130,9 @@ Deno.serve(async (req) => {
         count: items.length,
         is_alternative_match: isAlternativeMatch,
         is_fuzzy_match: isFuzzyMatch,
-        // Mensaje que o agente puede usar literalmente quando no achou exato
+        // Mensaje que o agente puede usar literalmente cuando no achou exato
         agent_hint: isAlternativeMatch
-          ? "No encontrei exatamente o que el cliente pediu, mas tenho essas opciones similares. Apresente como alternativas, sem dizer 'no tenho'."
+          ? "No encontrei exatamente o que el cliente pediu, mas tengo essas opciones similares. Apresente como alternativas, sem dizer 'no tengo'."
           : isFuzzyMatch
           ? "Encontrei estas opciones aproximadas (puede ter sido error de digitação del cliente). Confirme se é o que ele queria."
           : null,

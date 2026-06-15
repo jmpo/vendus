@@ -60,7 +60,7 @@ MENSAGEM RECEBIDA
 "{{message}}"
 
 REGRAS
-1. Se o lead falar "humano", "agente", "pessoa", "vendedor", "falar com alguém"
+1. Se el lead falar "humano", "agente", "pessoa", "vendedor", "falar com alguém"
    → intencao = "humano" imediatamente.
 2. Se a confiança for menor que 0.6 para identificar o producto → produto_id = null.
 3. Se produto_id for null e ainda houver preguntas disponíveis,
@@ -68,14 +68,14 @@ REGRAS
 4. Se produto_id continuar null e o limite de preguntas for atingido,
    → intencao = "humano" e resposta_orquestrador = "Vou te conectar com um dos nossos atendentes ahora."
 5. contexto_extraido debe ser uma frase objetiva do que o lead quer.
-6. resposta_orquestrador só é preenchida quando intencao = "indefinida".`;
+6. resposta_orquestrador só é preenchida cuando intencao = "indefinida".`;
 
 function buildPrompt(input: OrchestratorRunInput): string {
   const productsList = input.products.length
     ? input.products
         .map((p) => `- ${p.name} (id: ${p.id})${p.description ? ` — ${p.description.slice(0, 120)}` : ''}`)
         .join('\n')
-    : '- (ningún producto cadastrado)';
+    : '- (ningún producto registrado)';
 
   const template = (input.customPrompt && input.customPrompt.trim().length > 0)
     ? input.customPrompt
@@ -124,7 +124,7 @@ export async function runOrchestrator(input: OrchestratorRunInput): Promise<Orch
           intencao: { type: 'string', enum: VALID_INTENTS },
           confianca: { type: 'number', description: 'Confiança 0-1' },
           contexto_extraido: { type: 'string' },
-          resposta_orquestrador: { type: 'string', description: 'Pergunta corta para el lead apenas se intencao=indefinida' },
+          resposta_orquestrador: { type: 'string', description: 'Pergunta corta para el lead solo se intencao=indefinida' },
         },
         required: ['intencao', 'confianca', 'contexto_extraido', 'resposta_orquestrador'],
         additionalProperties: false,

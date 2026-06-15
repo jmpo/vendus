@@ -187,7 +187,7 @@ serve(async (req) => {
         visitor_whatsapp: r.visitor_whatsapp,
         accepted_at: r.accepted_at,
         accepted_by: r.accepted_by,
-        // Última mensaje real da conversación (vinda do histórico via RPC)
+        // Última mensaje real de la conversación (vinda del historial via RPC)
         last_message: r.last_message_content ?? null,
         last_message_metadata: r.last_message_metadata ?? null,
         last_message_sender_type: r.last_message_sender_type ?? null,
@@ -320,7 +320,7 @@ serve(async (req) => {
         );
       }
 
-      // 1) Carrega a conversación SEM joins (evita falhas por relacionamento ambíguo)
+      // 1) Carrega la conversación SEM joins (evita falhas por relacionamento ambíguo)
       const convQuery = supabase
         .from('webchat_conversations')
         .select('*')
@@ -401,7 +401,7 @@ serve(async (req) => {
         }
       }
 
-      // 2) Hidrata joins de forma defensiva (qualquer falla vira null em vez de derrubar a conversación)
+      // 2) Hidrata joins de forma defensiva (qualquer falla vira null em vez de derrubar la conversación)
       const [widgetRes, assignedRes, agentRes, leadRes, sectorRes, productOverrideRes] = await Promise.all([
         conversation.widget_id
           ? supabase.from('webchat_widgets').select('id, name, primary_color, product_id, products(id, name)').eq('id', conversation.widget_id).maybeSingle()
@@ -429,7 +429,7 @@ serve(async (req) => {
       conversation.leads = leadRes?.data || null;
       conversation.sectors = sectorRes?.data || null;
 
-      // Producto efetivo: override manual da conversación > producto del lead vinculado > producto do widget
+      // Producto efetivo: override manual de la conversación > producto del lead vinculado > producto do widget
       const effectiveProduct =
         productOverrideRes?.data
           || (leadRes?.data?.product_id ? { id: leadRes.data.product_id, name: null } : null)
@@ -606,7 +606,7 @@ serve(async (req) => {
           let phone = conversation.visitor_phone.replace(/\D/g, '');
           if (!phone.startsWith('55')) phone = '55' + phone;
 
-          // Auto-resolve evolution_instance_id se ainda no vinculada
+          // Auto-resolve evolution_instance_id se aún no vinculada
           let evoInstanceId = conversation.evolution_instance_id as string | null;
           if (!evoInstanceId) {
             const { data: inst } = await supabase
@@ -741,7 +741,7 @@ serve(async (req) => {
 
 
       // Broadcast message to all listeners on this conversation channel.
-      // Inclui `client_temp_id` (se enviado) para o frontend conseguir substituir
+      // Inclui `client_temp_id` (se enviado) para el frontend conseguir substituir
       // a bolha otimista pela mensaje real, evitando duplicação visual.
       const broadcastPayload = body.client_temp_id
         ? { ...message, client_temp_id: body.client_temp_id }
@@ -1063,7 +1063,7 @@ serve(async (req) => {
       );
     }
 
-    // ACTION: Link to lead
+    // ACTION: Link tel lead
     if (action === 'link-lead' && req.method === 'POST') {
       const body = await req.json();
 
@@ -1091,7 +1091,7 @@ serve(async (req) => {
 
       let leadId = body.lead_id;
 
-      // If no lead_id provided, create new lead
+      // If nel lead_id provided, create new lead
       if (!leadId) {
         const { data: newLead, error: leadError } = await supabase
           .from('leads')
@@ -1125,7 +1125,7 @@ serve(async (req) => {
         leadId = newLead.id;
       }
 
-      // Link conversation to lead
+      // Link conversation tel lead
       const { error: updateError } = await supabase
         .from('webchat_conversations')
         .update({ lead_id: leadId })
@@ -1145,7 +1145,7 @@ serve(async (req) => {
         .eq('id', leadId)
         .single();
 
-      // Se a conversación ainda no tiene producto definido e o lead tiene, herda automaticamente.
+      // Se la conversación aún no tiene producto definido e el lead tiene, herda automaticamente.
       if (lead?.product_id && !conversation.product_id) {
         await supabase
           .from('webchat_conversations')
@@ -1153,7 +1153,7 @@ serve(async (req) => {
           .eq('id', body.conversation_id);
       }
 
-      // Broadcast: notifica clientes que o detalhe da conversación mudou
+      // Broadcast: notifica clientes que o detalhe de la conversación mudou
       try {
         const ch = supabase.channel(`conversation:${body.conversation_id}`);
         await ch.send({ type: 'broadcast', event: 'conversation_updated', payload: { lead_id: leadId } });
@@ -1180,7 +1180,7 @@ serve(async (req) => {
         );
       }
 
-      // Garante que a conversación pertence à org do usuario
+      // Garante que la conversación pertence à org do usuario
       const { data: conv, error: convErr } = await supabase
         .from('webchat_conversations')
         .select('id, organization_id, lead_id')
@@ -1227,7 +1227,7 @@ serve(async (req) => {
         );
       }
 
-      // Se há lead vinculado, propaga o producto pro lead também (mantém consistência do CRM).
+      // Se há lead vinculado, propaga o producto prel lead también (mantém consistência do CRM).
       if (productId && conv.lead_id) {
         await supabase
           .from('leads')
@@ -1327,7 +1327,7 @@ serve(async (req) => {
               },
               body: JSON.stringify({
                 conversation_id: body.conversation_id,
-                message: '[SISTEMA] O agente humano ativou o bot. Analiza o histórico da conversación e envie uma mensaje estratégica para reconectar com o lead, considerando todo o contexto anterior.',
+                message: '[SISTEMA] O agente humano ativou o bot. Analiza o histórico de la conversación e envie uma mensaje estratégica para reconectar com el lead, considerando todo o contexto anterior.',
                 product_id: productId,
                 visitor_name: conv.visitor_name,
                 agent_config: {
@@ -1336,7 +1336,7 @@ serve(async (req) => {
                   sales_prompt: agentConfig.sales_prompt,
                   knowledge_base: agentConfig.knowledge_base,
                   faq: agentConfig.faq || [],
-                  fallback_message: agentConfig.fallback_message || 'Hola! Como posso ajudar?',
+                  fallback_message: agentConfig.fallback_message || 'Hola! Cómo posso ajudar?',
                   temperature: agentConfig.temperature ?? 0.7,
                   max_tokens: agentConfig.max_tokens ?? 500,
                   persona_style: agentConfig.persona_style || 'friendly',
@@ -1493,7 +1493,7 @@ serve(async (req) => {
             },
             body: JSON.stringify({
               conversation_id: body.conversation_id,
-              message: `[SISTEMA] Usted é um agente de reativação. Analiza o histórico abaixo e envie UMA mensaje corta e estratégica para retomar a conversación com ${visitorName}. Sé natural, faça referência ao último assunto discutido e inclua uma pregunta aberta para reengajar. NÃO se apresente novamente. NÃO repita información já fornecidas.\n\nHistórico:\n${historySummary}`,
+              message: `[SISTEMA] Usted é um agente de reativação. Analiza o histórico abaixo e envie UMA mensaje corta e estratégica para retomar la conversación com ${visitorName}. Sé natural, faça referência ao último assunto discutido e inclua uma pregunta aberta para reengajar. NÃO se apresente novamente. NÃO repita información ya fornecidas.\n\nHistórico:\n${historySummary}`,
               product_id: productId,
               visitor_name: visitorName,
               agent_id: agentId,
@@ -1502,18 +1502,18 @@ serve(async (req) => {
 
           if (botResponse.ok) {
             const botData = await botResponse.json();
-            reactivationMessage = botData.message?.content || botData.response || `Hola ${visitorName}! Percebi que no avançamos na nossa conversación. Ainda posso te ajudar?`;
+            reactivationMessage = botData.message?.content || botData.response || `Hola ${visitorName}! Percebi que no avançamos na nossla conversación. Aún posso te ajudar?`;
           } else {
             await botResponse.text();
-            reactivationMessage = `Hola ${visitorName}! Percebi que no avançamos na nossa conversación. Ainda posso te ajudar? 😊`;
+            reactivationMessage = `Hola ${visitorName}! Percebi que no avançamos na nossla conversación. Aún posso te ajudar? 😊`;
           }
         } catch (botError) {
           console.error('[ai-reactivate] Bot error:', botError);
-          reactivationMessage = `Hola ${visitorName}! Percebi que no avançamos na nossa conversación. Ainda posso te ajudar? 😊`;
+          reactivationMessage = `Hola ${visitorName}! Percebi que no avançamos na nossla conversación. Aún posso te ajudar? 😊`;
         }
       } else {
         // No history - send default reactivation message
-        reactivationMessage = `Hola ${visitorName}! Percebi que usted demonstrou interesse em nossa solução, mas no avançamos na conversación. Usted ainda tiene interesse? Posso te enviar a demonstração pra usted testar! 😊`;
+        reactivationMessage = `Hola ${visitorName}! Percebi que usted demonstrou interesse em nossa solução, mas no avançamos en la conversación. Usted aún tiene interesse? Posso te enviar a demonstração pra usted testar! 😊`;
       }
 
       // Save message as bot outbound (status stays the same)

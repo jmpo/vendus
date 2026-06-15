@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
     const clientSecret = body.client_secret as string | undefined;
     const basicToken = body.basic_token as string | undefined;
 
-    // Permite testar com valores enviados ou os já salvos
+    // Permite testar com valores enviados ou os ya salvos
     let useClientId = clientId;
     let useClientSecret = clientSecret;
     let useBasic = basicToken;

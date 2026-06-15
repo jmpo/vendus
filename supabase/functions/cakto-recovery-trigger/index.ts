@@ -4,11 +4,11 @@
 // Flujo:
 // 1) Lê config da org (cakto_recovery_config)
 // 2) Verifica se o evento está habilitado
-// 3) Aplica cooldown (no dispara o mismo evento pro mismo lead em <X min)
-// 4) Localiza/cria o lead (pelo teléfono/email da Cakto)
+// 3) Aplica cooldown (no dispara o mismo evento pro mismel lead em <X min)
+// 4) Localiza/cria el lead (pelo teléfono/email da Cakto)
 // 5) Gera mensaje inicial com a IA usando o agente configurado
 // 6) Envia via WhatsApp (BotConversa ou IsiChat)
-// 7) Cria a conversación (webchat_conversations) pra IA continuar respondendo
+// 7) Cria la conversación (webchat_conversations) pra IA continuar respondendo
 // 8) Loga em cakto_recovery_dispatches
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
 
   const { cakto_order_id, organization_id } = payload;
   if (!cakto_order_id || !organization_id) {
-    return json({ error: 'cakto_order_id e organization_id obrigatórios' }, 400);
+    return json({ error: 'cakto_order_id e organization_id obligatorios' }, 400);
   }
 
   // 1) Carrega o pedido
@@ -189,7 +189,7 @@ Deno.serve(async (req) => {
     return json({ error: 'falla ao crear/localizar lead' }, 500);
   }
 
-  // 4) Cooldown: já disparou esse evento pra esse lead recentemente?
+  // 4) Cooldown: ya disparou esse evento pra esse lead recentemente?
   const cooldownAt = new Date(Date.now() - config.cooldown_minutes * 60_000).toISOString();
   const { data: recent } = await supabase
     .from('cakto_recovery_dispatches')
@@ -307,7 +307,7 @@ Deno.serve(async (req) => {
       ? `O cliente acabou de gerar um ${order.payment_method || 'pago'} no valor de R$ ${order.amount?.toFixed(2) ?? '?'} para "${productLabel}" mas AINDA NÃO PAGOU.${cartDescription}\n\nSua missão: tirar dudas, crear urgência leve e ajudar a finalizar. Se útil, ofereça reenviar o link/Pix. Se houver order bumps, mencione o conjunto, no só o principal.`
       : event === 'paid'
         ? `O cliente acabou de PAGAR R$ ${order.amount?.toFixed(2) ?? '?'} por "${productLabel}".${cartDescription}\n\nSua missão: agradecer, confirmar a compra, orientar próximos passos e — se fizer sentido — apresentar um upsell/cross-sell de algo que ele AINDA NÃO levou.`
-        : `O cliente tuvo um pedido REEMBOLSADO/ESTORNADO no valor de R$ ${order.amount?.toFixed(2) ?? '?'} ("${productLabel}").${cartDescription}\n\nSua missão: ser empático, entender o motivo, recuperar a relação e — se possível — propor uma alternativa.`;
+        : `O cliente tuvo um pedido REEMBOLSADO/ESTORNADO no valor de R$ ${order.amount?.toFixed(2) ?? '?'} ("${productLabel}").${cartDescription}\n\nSua missão: ser empático, entender o motivo, recuperar a relação e — se posible — propor uma alternativa.`;
 
   const systemPrompt = `Usted é ${agent.name}, agente de ${agent.agent_type} de la empresa.
 MISSÃO PRINCIPAL: ${agent.primary_objective}
@@ -327,7 +327,7 @@ ${
           (s, idx) =>
             `\n[Cenário ${idx + 1} — ${s.name}]\nInstrução: ${s.instruction}${
               s.links?.length
-                ? `\nLinks disponíveis:\n${s.links.map((l) => `  • ${l.label}: ${l.url}${l.when_to_offer ? ` (oferecer quando: ${l.when_to_offer})` : ''}`).join('\n')}`
+                ? `\nLinks disponíveis:\n${s.links.map((l) => `  • ${l.label}: ${l.url}${l.when_to_offer ? ` (oferecer cuando: ${l.when_to_offer})` : ''}`).join('\n')}`
                 : ''
             }`,
         )
@@ -419,7 +419,7 @@ REGRAS DA MENSAGEM INICIAL:
     return json({ error: 'send failed', detail: sendError }, 502);
   }
 
-  // 9) Cria/garante a conversación para o webchat-bot continuar conduzindo
+  // 9) Cria/garante la conversación para el webchat-bot continuar conduzindo
   let conversationId: string | null = null;
   const { data: existingConv } = await supabase
     .from('webchat_conversations')

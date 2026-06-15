@@ -107,7 +107,7 @@ async function generateYouTubeSummary(videoInfo: any, videoId: string, productId
   const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
   
   if (!LOVABLE_API_KEY) {
-    return `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}\n\nNota: Transcrição automática no disponível. Adicione manualmente os pontos-chave do vídeo.`;
+    return `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}\n\nNota: Transcrição automática no disponible. Adicione manualmente os pontos-chave do vídeo.`;
   }
 
   try {
@@ -126,7 +126,7 @@ async function generateYouTubeSummary(videoInfo: any, videoId: string, productId
           },
           {
             role: 'user',
-            content: `Crea um template de resumen para o seguinte vídeo do YouTube:
+            content: `Crea um template de resumen para el seguinte vídeo do YouTube:
             
 Título: ${videoInfo.title}
 Autor: ${videoInfo.author_name}

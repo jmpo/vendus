@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 // Default timezone for business-hour calculations.
-// Brazil-only product → São Paulo. Override with org-level setting later if needed.
+// Brazil-only product → Son Paulo. Override with org-level setting later if needed.
 const TZ = 'America/Sao_Paulo';
 
 function getZonedParts(date: Date): { dayOfWeek: number; minutes: number } {
@@ -241,7 +241,7 @@ REGRAS:
 ${stepInstruction ? `- INSTRUÇÃO ESPECÍFICA PARA ESTE FOLLOW-UP: ${stepInstruction}` : ''}
 ${isLastAttempt ? '- Esta é a ÚLTIMA tentativa. Crea urgência sutil sem ser agressivo.' : ''}`;
 
-        const userPrompt = `Usted já envió ${item.followups_sent + 1} mensajes para este lead sem respuesta.
+        const userPrompt = `Usted ya envió ${item.followups_sent + 1} mensajes para este lead sem respuesta.
 
 Histórico:
 ${previousMessages.join('\n')}

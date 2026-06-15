@@ -169,7 +169,7 @@ serve(async (req) => {
 
         // Get local events that need exporting:
         // - never synced (google_event_id IS NULL), OR
-        // - already pushed once but ainda marcados como local_only (recuperação manual)
+        // - already pushed once but aún marcados como local_only (recuperação manual)
         const { data: localEvents, error: localError } = await supabase
           .from("calendar_events")
           .select("*")
@@ -221,7 +221,7 @@ serve(async (req) => {
               };
             }
 
-            // Se já tiene google_event_id, faz PATCH; senão POST
+            // Se ya tiene google_event_id, faz PATCH; senão POST
             const isUpdate = !!localEvent.google_event_id;
             let createUrl = isUpdate
               ? `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(localEvent.google_event_id)}`

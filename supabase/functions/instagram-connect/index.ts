@@ -52,7 +52,7 @@ Deno.serve(async (req: Request) => {
   } = body ?? {};
 
   if (!connection_id || !organization_id || !app_id || !fb_page_id || !ig_business_account_id || !page_access_token) {
-    return json({ error: 'campos obrigatórios ausentes' }, 400);
+    return json({ error: 'campos obligatorios ausentes' }, 400);
   }
 
   const { data: belongs, error: belongsErr } = await sbAdmin.rpc('user_belongs_to_organization', {

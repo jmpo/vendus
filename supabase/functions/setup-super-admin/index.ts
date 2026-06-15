@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
       .limit(1);
     if (checkErr) throw checkErr;
     if ((existing?.length ?? 0) > 0) {
-      return json(409, { ok: false, error: "Super Admin já fue configurado" });
+      return json(409, { ok: false, error: "Super Admin ya fue configurado" });
     }
 
     // Cria o usuario (auto-confirmado)
