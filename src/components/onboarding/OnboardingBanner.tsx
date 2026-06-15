@@ -46,10 +46,10 @@ export function OnboardingBanner() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-yellow-900 dark:text-yellow-100">
-              Conclua a configuración inicial da su cuenta
+              Completá la configuración inicial de tu cuenta
             </p>
             <p className="text-xs text-yellow-800/80 dark:text-yellow-200/80 hidden sm:block">
-              Termine o cadastro guiado para liberar todo o potencial da plataforma.
+              Terminá el registro guiado para liberar todo el potencial de la plataforma.
             </p>
           </div>
           <Button
