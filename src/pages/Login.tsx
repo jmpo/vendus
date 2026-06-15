@@ -267,7 +267,7 @@ export default function Login() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password">Senha</Label>
+                  <Label htmlFor="password">Contraseña</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <Input
@@ -288,7 +288,7 @@ export default function Login() {
                     <Loader2 className="h-5 w-5 animate-spin" />
                   ) : (
                     <>
-                      Entrar
+                      Ingresar
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </>
                   )}
@@ -304,7 +304,7 @@ export default function Login() {
                   }}
                   className="text-primary hover:underline text-sm"
                 >
-                  Esqueci minha senha
+                  Olvidé mi contraseña
                 </button>
               </div>
             </>
