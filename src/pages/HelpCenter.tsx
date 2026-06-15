@@ -45,12 +45,12 @@ export default function HelpCenter() {
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)}><ArrowLeft className="h-4 w-4" /></Button>
           <div className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" />
-            <h1 className="text-lg font-semibold">Central de Ajuda</h1>
+            <h1 className="text-lg font-semibold">Centro de Ayuda</h1>
           </div>
           <div className="ml-auto">
             <Link to="/novidades">
               <Button variant="outline" size="sm" className="gap-2">
-                <Sparkles className="h-4 w-4" /> Novidades
+                <Sparkles className="h-4 w-4" /> Novedades
               </Button>
             </Link>
           </div>
@@ -59,12 +59,12 @@ export default function HelpCenter() {
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
         <div className="rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border p-6 sm:p-8 text-center space-y-3">
-          <h2 className="text-2xl sm:text-3xl font-bold">Como podemos te ajudar?</h2>
-          <p className="text-muted-foreground">Tire suas dúvidas, aprenda novos recursos e descubra dicas.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold">¿En qué podemos ayudarte?</h2>
+          <p className="text-muted-foreground">Resolvé tus dudas, aprendé nuevas funciones y descubrí consejos.</p>
           <div className="relative max-w-xl mx-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar artigo..."
+              placeholder="Buscar artículo..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10 h-11"
@@ -82,7 +82,7 @@ export default function HelpCenter() {
                   </div>
                   <div className="font-medium text-sm">{cat.name}</div>
                   <div className="text-xs text-muted-foreground">
-                    {(grouped.get(cat.id)?.length || 0)} artigos
+                    {(grouped.get(cat.id)?.length || 0)} artículos
                   </div>
                 </CardContent>
               </Card>
@@ -115,7 +115,7 @@ export default function HelpCenter() {
                           </div>
                           {article.related_release_id && (
                             <Badge variant="outline" className="text-[10px] gap-1 shrink-0">
-                              <Sparkles className="h-3 w-3" /> Novidade
+                              <Sparkles className="h-3 w-3" /> Novedad
                             </Badge>
                           )}
                         </CardContent>
@@ -129,7 +129,7 @@ export default function HelpCenter() {
 
           {articles.length === 0 && (
             <div className="text-center py-12 text-muted-foreground">
-              {search ? 'Nenhum artigo encontrado para sua busca.' : 'Ainda não há artigos publicados.'}
+              {search ? 'No se encontraron artículos para tu búsqueda.' : 'Todavía no hay artículos publicados.'}
             </div>
           )}
         </div>

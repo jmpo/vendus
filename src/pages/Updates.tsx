@@ -9,12 +9,12 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Sparkles, Wrench, Bug, BookOpen, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 const TYPE_META: Record<string, { label: string; icon: any; cls: string }> = {
-  feature: { label: 'Nova feature', icon: Sparkles, cls: 'bg-primary/10 text-primary border-primary/20' },
-  improvement: { label: 'Melhoria', icon: Wrench, cls: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
-  fix: { label: 'Correção', icon: Bug, cls: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
+  feature: { label: 'Nueva función', icon: Sparkles, cls: 'bg-primary/10 text-primary border-primary/20' },
+  improvement: { label: 'Mejora', icon: Wrench, cls: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
+  fix: { label: 'Corrección', icon: Bug, cls: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
 };
 
 export default function Updates() {
@@ -47,11 +47,11 @@ export default function Updates() {
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)}><ArrowLeft className="h-4 w-4" /></Button>
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            <h1 className="text-lg font-semibold">Novidades</h1>
+            <h1 className="text-lg font-semibold">Novedades</h1>
           </div>
           <div className="ml-auto">
             <Link to="/ajuda">
-              <Button variant="outline" size="sm" className="gap-2"><BookOpen className="h-4 w-4" /> Central de Ajuda</Button>
+              <Button variant="outline" size="sm" className="gap-2"><BookOpen className="h-4 w-4" /> Centro de Ayuda</Button>
             </Link>
           </div>
         </div>
@@ -71,7 +71,7 @@ export default function Updates() {
         </div>
 
         {filtered.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">Nenhuma atualização ainda.</div>
+          <div className="text-center py-12 text-muted-foreground">Todavía no hay actualizaciones.</div>
         ) : (
           <div className="space-y-4">
             {filtered.map(release => {
@@ -97,14 +97,14 @@ export default function Updates() {
                               </Badge>
                             );
                           })}
-                          {unread && <Badge variant="default" className="text-[10px]">Novo</Badge>}
+                          {unread && <Badge variant="default" className="text-[10px]">Nuevo</Badge>}
                         </div>
                         <h3 className="text-lg font-semibold">{release.title}</h3>
                         {release.summary && <p className="text-sm text-muted-foreground">{release.summary}</p>}
                         {release.published_at && (
                           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                             <Calendar className="h-3 w-3" />
-                            {format(new Date(release.published_at), "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                            {format(new Date(release.published_at), "d 'de' MMMM 'de' yyyy", { locale: es })}
                           </div>
                         )}
                       </div>
