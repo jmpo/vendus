@@ -76,9 +76,9 @@ export default function Login() {
       if (result.error) {
         toast.error(translateAuthError(result.error.message));
       }
-      // Se result.redirected === true, o navegador será redirecionado automaticamente
+      // Si result.redirected === true, el navegador será redirigido automáticamente
     } catch (error) {
-      toast.error('Ocorreu um erro inesperado');
+      toast.error('Ocurrió un error inesperado');
     } finally {
       setIsGoogleLoading(false);
     }
