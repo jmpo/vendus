@@ -660,7 +660,7 @@ export function PlatformSettings() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="pt-BR">Português (Brasil)</SelectItem>
+                      <SelectItem value="es-PY">Português (Brasil)</SelectItem>
                       <SelectItem value="en">English</SelectItem>
                       <SelectItem value="es">Español</SelectItem>
                     </SelectContent>

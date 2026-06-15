@@ -224,7 +224,7 @@ export function usePlatformBranding() {
             type: 'image/png',
             purpose: 'maskable any',
           })),
-          lang: settings.default_language || 'pt-BR',
+          lang: settings.default_language || 'es-PY',
         };
 
         const manifestBlob = new Blob([JSON.stringify(dynamicManifest)], {

@@ -21,7 +21,7 @@ const SAMPLE_DATA: Record<string, string> = {
   company_name: 'Empresa Demo',
   organization_name: 'Empresa Demo',
   email: 'joao@exemplo.com',
-  amount: 'R$ 297,00',
+  amount: '₲ 297,00',
   due_date: '15/05/2026',
   invite_link: 'https://app.exemplo.com/aceitar-convite?token=abc123',
   billing_link: 'https://app.exemplo.com/configuracoes/cobranca',

@@ -36,9 +36,9 @@ interface CatalogPickerDialogProps {
 function formatMoney(value: number | null, currency = 'BRL') {
   if (value == null) return '';
   try {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency }).format(value);
+    return new Intl.NumberFormat('es-PY', { style: 'currency', currency }).format(value);
   } catch {
-    return `R$ ${value.toFixed(2)}`;
+    return `₲ ${value.toFixed(2)}`;
   }
 }
 

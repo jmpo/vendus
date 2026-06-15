@@ -21,9 +21,9 @@ interface PaymentLinkDialogProps {
 
 function formatMoney(value: number, currency = 'BRL') {
   try {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency }).format(value);
+    return new Intl.NumberFormat('es-PY', { style: 'currency', currency }).format(value);
   } catch {
-    return `R$ ${value.toFixed(2)}`;
+    return `₲ ${value.toFixed(2)}`;
   }
 }
 
@@ -66,7 +66,7 @@ export function PaymentLinkDialog({
         title: title.trim(),
         description: description.trim() || null,
         amount,
-        currency: 'BRL',
+        currency: 'PYG',
         url: url.trim(),
       });
       if (error) throw error;

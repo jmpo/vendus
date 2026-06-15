@@ -95,7 +95,7 @@ export function CaktoPlanMapping() {
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div>
                     <div className="font-semibold">{plan.name}</div>
-                    <div className="text-xs text-muted-foreground">{plan.slug} {plan.price_monthly ? `· R$ ${plan.price_monthly}` : ''}</div>
+                    <div className="text-xs text-muted-foreground">{plan.slug} {plan.price_monthly ? `· ₲ ${plan.price_monthly}` : ''}</div>
                   </div>
                 </div>
                 <div className="grid sm:grid-cols-3 gap-3">
