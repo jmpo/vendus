@@ -35,20 +35,20 @@ interface MobileMoreMenuProps {
 }
 
 const quickActions = [
-  { icon: Phone, label: 'Ligar', color: 'bg-green-500/20 text-green-500', action: 'call' },
+  { icon: Phone, label: 'Llamar', color: 'bg-green-500/20 text-green-500', action: 'call' },
   { icon: Mail, label: 'Email', color: 'bg-blue-500/20 text-blue-500', action: 'email' },
   { icon: BarChart3, label: 'Stats', color: 'bg-purple-500/20 text-purple-500', action: 'financial' },
   { icon: Target, label: 'Meta', color: 'bg-orange-500/20 text-orange-500', action: 'goals' },
 ];
 
 const menuItems = [
-  { id: 'bookings', label: 'Agendamentos', icon: CalendarCheck, color: 'text-pink-400' },
-  { id: 'tasks', label: 'Tarefas', icon: CheckSquare, color: 'text-blue-400', badge: null },
-  { id: 'cadence', label: 'Cadência', icon: Calendar, color: 'text-cyan-400' },
+  { id: 'bookings', label: 'Agenda', icon: CalendarCheck, color: 'text-pink-400' },
+  { id: 'tasks', label: 'Tareas', icon: CheckSquare, color: 'text-blue-400', badge: null },
+  { id: 'cadence', label: 'Cadencia', icon: Calendar, color: 'text-cyan-400' },
   { id: 'playbook', label: 'Playbook', icon: BookOpen, color: 'text-green-400' },
-  { id: 'objections', label: 'Objeções', icon: MessageSquare, color: 'text-yellow-400' },
-  { id: 'materials', label: 'Materiais', icon: FileText, color: 'text-purple-400' },
-  { id: 'financial', label: 'Financeiro', icon: DollarSign, color: 'text-emerald-400' },
+  { id: 'objections', label: 'Objeciones', icon: MessageSquare, color: 'text-yellow-400' },
+  { id: 'materials', label: 'Materiales', icon: FileText, color: 'text-purple-400' },
+  { id: 'financial', label: 'Financiero', icon: DollarSign, color: 'text-emerald-400' },
 ];
 
 export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProduct }: MobileMoreMenuProps) {
