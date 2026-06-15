@@ -175,7 +175,7 @@ REGRAS IMPORTANTES:
 7. Retorne APENAS um JSON válido, sin explicações ou markdown
 
 TIPOS DE BLOCOS VÁLIDOS (use APENAS estes valores em block_type):
-- welcome_screen: Tela de boas-vindas (SEMPRE o primeiro bloco)
+- welcome_screen: Pantalla de bienvenida (SIEMPRE el primer bloque)
 - text: Pergunta de texto corto. Para nombre/empresa/cargo, use "text" con maps_to apropriado ("name", "company")
 - textarea: Texto largo (descripción, dor, expectativa)
 - email: Email (use maps_to: "email")
@@ -185,7 +185,7 @@ TIPOS DE BLOCOS VÁLIDOS (use APENAS estes valores em block_type):
 - multi_select: Seleção múltipla (inclua "options" como array de {label, value})
 - yes_no: Sí/No
 - scale: Escala numérica — IMPORTANTE: coloque a configuración em "options" como objeto {"min":1,"max":10,"min_label":"...","max_label":"..."}
-- end_screen: Tela final/agradecimento (SEMPRE o último bloco)
+- end_screen: Pantalla final/agradecimiento (SIEMPRE el último bloque)
 
 NÃO use "name", "company" ou "thank_you_screen" como block_type — esses valores son inválidos.
 

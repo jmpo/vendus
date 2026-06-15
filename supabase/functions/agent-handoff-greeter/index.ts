@@ -164,7 +164,7 @@ serve(async (req) => {
     }
 
     // Usa template configurado, ou um estándar amigável se vazio.
-    // Garante que o novo agente SIEMPRE se apresenta después handoff,
+    // Garantiza que el nuevo agente SIEMPRE se presenta después del handoff,
     // evitando que a primeira fala de él seja uma respuesta robótica.
     const DEFAULT_TEMPLATE =
       "Oi {{nombre}}, aquí es a {{agent_name}} do time. Vou continuar de aquí — me cuenta um poco mais do que vos sostá pensando? 😊";
