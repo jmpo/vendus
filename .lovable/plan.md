@@ -1,65 +1,145 @@
-## Contexto
+## Objetivo
 
-Parceiros que estão clonando (remix) a plataforma e abrindo no próprio projeto Lovable estão vendo conteúdo da Vendus vazando: domínio `app.vendus.com.br` em links, planos hardcoded (Trial/Starter/Pro/Enterprise) no dashboard, erro ao criar usuário, chamados de suporte que somem e cores que só aparecem na área logada. O objetivo é deixar tudo dinâmico/multi-tenant para que ao fazer download → subir no Lovable → conectar o backend, a plataforma já funcione com a marca e os dados do parceiro.
+Pasar todo el sistema (UI, mensajes al cliente final, plantillas, contenido editorial) de portugués a español. **Un solo idioma**, sin librería de i18n.
 
-## O que vamos corrigir
+## Principio rector
 
-### 1. Domínio vazando para o parceiro
-Hoje 18+ componentes usam `'https://app.vendus.com.br'` como **valor padrão** do `useQuery` (`useQuery({ initialData: 'https://app.vendus.com.br' })`) e `src/lib/publicUrl.ts` tem `DEFAULT_PUBLIC_APP_URL = 'https://app.vendus.com.br'` + `FALLBACK = 'https://sales-guide-buddy-11.lovable.app'`. Resultado: enquanto a request resolve (ou em projetos sem `public_app_url` cadastrado), aparece o domínio da Vendus em links de booking, widget, formulários, etc.
+Traducir **strings visibles**, nunca **identificadores técnicos**. Toda la lógica de base de datos, nombres de funciones, columnas, enums y valores comparados por código se quedan exactamente como están.
 
-Fix:
-- Em `src/lib/publicUrl.ts` remover defaults Vendus. Cascata nova: `public_app_url` do banco → `window.location.origin` (sempre que disponível, mesmo em editor) → `''` (não renderiza link quebrado).
-- Atualizar todos os componentes que fazem `useQuery({ ... }) = 'https://app.vendus.com.br'` para usar o valor do hook sem fallback Vendus.
-- Painel Super Admin (Identidade Visual → Marca) já tem o campo "URL pública da plataforma". Vamos só adicionar um banner/aviso explicando que esse campo é obrigatório antes de publicar.
+---
 
-### 2. Planos hardcoded no dashboard Super Admin
-`src/components/superadmin/SuperAdminDashboard.tsx` renderiza 4 cards fixos (Trial, Starter, Pro, Enterprise) e `useSuperAdmin.ts` agrega por `plan_type` (coluna que nem existe em `platform_plans`). No banco do parceiro só existem os planos que ele cadastrou.
+## Qué SÍ se traduce
 
-Fix:
-- Reescrever a query de stats para juntar `organizations.plan_id` com `platform_plans` e devolver `[{ plan_id, name, slug, color, count }]`.
-- O componente do dashboard passa a iterar sobre o array real — sem nomes hardcoded. Cor do bullet vem de um campo `color` opcional do plano (ou hash do slug como fallback).
+### 1. UI del frontend (`src/`)
+Reemplazo directo de texto portugués → español en:
+- Componentes `.tsx` en `src/components/**` y `src/pages/**`
+- Toasts, mensajes de error, validaciones (Zod schemas)
+- Labels de formularios, botones, tooltips, placeholders
+- Sidebar, headers, menús móviles, onboarding
+- Tablas/columnas visibles (headers de tablas, no nombres de DB)
 
-### 3. Erro ao criar usuário (Edge Function returned a non-2xx)
-Investigamos a edge function `create-team-member` (não há logs porque o erro acontece dentro do try). Causa provável no remix: a função chama `admin.from('user_roles').delete().eq('user_id', newUserId)` e depois `.insert(...)` sem verificar erro — e na sequência roda `initialize_user_permissions`. Se qualquer um dos passos retornar erro silencioso (ex: enum `app_role` sem o valor passado, tabela `user_notification_settings` faltando no projeto do parceiro), o cliente recebe 500 sem detalhes.
+### 2. Contenido editorial dentro del repo
+- `src/docs/content/*` — documentación interna
+- `src/components/docs/**` — Help Center estático
+- Strings de release notes embebidos
+- Textos del onboarding guiado
 
-Fix:
-- Em `create-team-member/index.ts`: capturar erro de cada passo (`profiles update`, `user_roles delete/insert`, `initialize_user_permissions`, `sector_members`) e devolver no body um JSON `{ step, message }` para diagnóstico real.
-- Garantir idempotência: se o trigger `handle_new_user` já inseriu role `seller`, o `delete + insert` vira `upsert`.
-- Logar `console.error` com contexto em cada catch para aparecer nos logs.
-- Validar que o enum `app_role` tem `admin/manager/seller` antes do insert (e devolver erro amigável se não tiver).
+### 3. Mensajes que llegan al cliente final (edge functions)
+- Plantillas React Email en `supabase/functions/_shared/transactional-email-templates/*`
+- Strings hardcoded en edge functions que se envían por WhatsApp/email:
+  - Confirmaciones de booking, recordatorios (`booking-dispatcher`)
+  - Mensajes de cadencias default
+  - Respuestas del bot fallback (cuando no hay agente IA)
+  - Mensajes de "fora do horário", "agente indisponível", etc.
 
-### 4. Suporte: chamados não aparecem na tela
-Tabelas e RLS estão corretas; o problema é que na área Super Admin do remix o usuário criado pelo dono **não tem role `super_admin`** atribuída — então a policy `is_super_admin(auth.uid())` bloqueia a leitura, e o "0 chamados" aparece em ambos os lados. Também não há indicador visual quando o INSERT da mensagem falha por RLS (`author_id = auth.uid()` ok, mas se `is_super_admin` retorna false e ele não pertence à org do ticket, a mensagem é negada).
+### 4. Datos semilla / contenido editable en DB
+Vía migrations con `UPDATE` puntual (solo campos de texto visibles), nunca renombrando claves:
+- `email_templates.subject` / `.body_html`
+- `platform_email_templates` (auth, invites, notifications)
+- `pipeline_stages.name` cuando son los defaults del seed
+- `cadence_templates` y `cadences` default
+- `quick_replies` default
+- `tag_automations` nombres visibles
+- `help_articles` y `help_categories` (si están seedeados)
+- `platform_releases` ya publicados (opcional)
+- `product_agents.system_prompt` / persona / instructions defaults
+- `booking_event_types` defaults
+- `auto_notification_settings` mensajes default
 
-Fix:
-- Confirmar que o fluxo "Primeiro Acesso Super Admin" (`FirstAccessSuperAdminModal`) realmente cria a role `super_admin` no `user_roles` para o e-mail que assumir o painel. Adicionar verificação visível: se o usuário entrou em `/super-admin` mas não tem role, mostra banner "Sua conta ainda não foi promovida a Super Admin" com botão "Promover agora" (chama RPC `promote_to_super_admin` — vamos criar).
-- Em `useSupportTickets.ts`/`SupportTickets.tsx`: tratar erro 0-rows vs erro de permissão e mostrar mensagem clara.
-- Verificar realtime: garantir que `support_tickets` e `support_messages` estão em `supabase_realtime` publication.
+> Importante: solo se traducen los registros que vinieron como **seed inicial**. Datos creados por usuarios reales no se tocan — cada organización los reescribe a su gusto.
 
-### 5. Cores não aplicam fora da área logada
-A view `platform_branding_public` só tem `SELECT` para o role `sandbox_exec` — não para `anon` nem `authenticated`. Por isso a leitura por usuário não logado (login, booking público, formulários, quiz, widget) volta null e cai no tema padrão hardcoded.
+---
 
-Fix:
-- Migração: `GRANT SELECT ON public.platform_branding_public TO anon, authenticated;`
-- Garantir que páginas públicas (`PublicBooking`, `PublicQuiz`, `AcceptInvite`, `ResetPassword`, `Auth`) estão dentro do provider que dispara `usePlatformBranding()` em `App.tsx` (já estão — só faltava o GRANT).
-- Bonus: aplicar `--primary` inline no HTML inicial via `<script>` lendo `localStorage` para evitar flash da cor padrão antes do React montar (já temos cache no `usePlatformBranding`).
+## Qué NO se toca jamás
 
-### 6. Pensando no parceiro fazendo backup/download
-- Todas as alterações de schema acima viram migration única e idempotente (`IF NOT EXISTS`, `CREATE POLICY IF NOT EXISTS`), incluindo o GRANT do view, criação da RPC `promote_to_super_admin`, e os seeds dos enums.
-- Documentar em `REMIX.md` os 4 passos pós-clone: (1) ativar Cloud, (2) rodar migrations, (3) preencher "URL pública da plataforma" + dados de marca, (4) entrar em `/super-admin` e clicar em "Promover-me a Super Admin".
+| Categoría | Ejemplos | Por qué |
+|---|---|---|
+| Nombres de funciones SQL | `aplicar_etiqueta`, `criar_deal`, `agendar_followup` | Edge functions y triggers los invocan por nombre |
+| Nombres de tablas/columnas | `leads`, `capture_funnels`, `sales_squads` | Todo el código TypeScript y los tipos generados rompen |
+| Valores de enums | `'aguardando'`, `'em_atendimento'`, `'fechado_ganho'` | El código compara strings exactos en condicionales |
+| Claves de tools de IA | `criar_deal`, `aplicar_etiqueta` en `_shared/tools/impl/*` | El LLM las llama por nombre y están registradas en prompts |
+| Slugs, identificadores, IDs | `slug` de funnels/forms ya creados | URLs públicas existentes romperían |
+| Strings en `RAISE EXCEPTION` de funciones DB | Mensajes de error de RPCs | Se traducen del lado del frontend al mostrarlos (mapeo) |
+| Memorias del proyecto (`mem://`) | Documentación interna en PT | Son notas históricas; nuevas se escriben en ES |
 
-## Arquivos afetados
+---
 
-- `src/lib/publicUrl.ts`
-- ~18 componentes que usam `usePublicAppUrl` com fallback Vendus (booking, forms, quiz, widget, chat, snippets)
-- `src/hooks/useSuperAdmin.ts` + `src/components/superadmin/SuperAdminDashboard.tsx`
-- `supabase/functions/create-team-member/index.ts`
-- `src/hooks/useSupportTickets.ts` + `src/components/admin/support/SupportTickets.tsx` + `FirstAccessSuperAdminModal`
-- 1 migration SQL (GRANT do view + RPC `promote_to_super_admin` + ajuste de realtime publication)
-- `REMIX.md`
+## Plan de ejecución por fases
 
-## O que NÃO entra
+Cada fase es una tanda de cambios revisable por separado.
 
-- Reescrever sistema de planos/cobrança — só tornar o dashboard dinâmico.
-- Mexer no fluxo de auth/email (`auth-email-hook` tem "vendus" hardcoded mas é usado só pelo nosso projeto, no parceiro o trigger não vai chamar essa função).
-- Trocar/refatorar o engine de white-label (já está bom, só faltam o GRANT e remover fallbacks Vendus).
+### Fase 1 — UI core (impacto visible inmediato)
+- Sidebar, Header, MobileHeader, MobileBottomNav, NotificationCenter
+- Dashboard, ProductDashboard, login/auth pages
+- Toasts globales y mensajes de error genéricos
+
+### Fase 2 — Módulos principales
+- Leads (lista, detalle, kanban, notas, tareas)
+- Atendimento/Inbox (chat, accept bar, transferencias)
+- Agendamentos (calendario, booking, event types)
+- Vendas (deals, comissões, metas)
+
+### Fase 3 — Captura, IA y automação
+- Funis de captura, Forms builder, Quiz
+- Agentes IA (configuração, Brain, training)
+- Cadências, Campanhas, Webhooks
+
+### Fase 4 — Admin y Super Admin
+- Configurações de empresa, equipe, setores
+- Painel Super Admin (planos, organizações, AI keys, billing)
+- Integrações (Hotmart, Cakto, Meta WA, Instagram, Sankhya, etc.)
+
+### Fase 5 — Conteúdo ao cliente final (mais sensível)
+- Plantillas de email transacional (`_shared/transactional-email-templates`)
+- Mensagens hardcoded em edge functions (booking, cadências, fallback bot)
+- Update de seeds em `email_templates`, `platform_email_templates`
+- Update de prompts default de `product_agents` (persona consultiva em ES, sem alterar estrutura SPIN)
+
+### Fase 6 — Conteúdo editorial
+- Help Center (`help_articles`, `help_categories` seedeados)
+- Docs internos (`src/docs/content/*`)
+- Onboarding guiado, release notes
+
+### Fase 7 — Localização técnica
+- `date-fns`: trocar locale `ptBR` por `es` em todos os formatters
+- `Intl.NumberFormat`: trocar `pt-BR` por `es` (ou `es-AR`/`es-MX` — confirmar país preferido)
+- Moeda default: hoje BRL — definir se mantém ou troca (depende do mercado-alvo)
+- Atributo `<html lang="pt-BR">` em `index.html` → `lang="es"`
+- Meta tags SEO, manifest.json
+
+---
+
+## Decisões técnicas
+
+```text
+┌─────────────────────────────────────────────────────┐
+│ Capa                  │ Acción            │ Riesgo  │
+├─────────────────────────────────────────────────────┤
+│ Componentes React     │ Replace strings   │ Bajo    │
+│ Edge function strings │ Replace strings   │ Bajo    │
+│ Email templates       │ Replace strings   │ Bajo    │
+│ DB: seeds editáveis   │ UPDATE puntual    │ Médio   │
+│ DB: enums, nombres    │ NO TOCAR          │ —       │
+│ DB: funções SQL       │ NO TOCAR          │ —       │
+│ Memórias mem://       │ Manter PT         │ —       │
+└─────────────────────────────────────────────────────┘
+```
+
+### Sobre la moneda y locale regional
+Hoy el sistema asume Brasil (DDI 55 obligatorio en teléfonos, BRL en precios, `pt-BR` en formatters). Para una traducción completa hace falta confirmar:
+- ¿Sigue siendo mercado brasileño solo idioma cambia? → mantengo BRL + DDI 55, solo cambio textos.
+- ¿Cambia a mercado hispano? → necesito saber país para DDI y moneda; la regla "DDI 55" en memoria es **bloqueante** y debe revisarse.
+
+---
+
+## Entregables al final
+
+- Toda la UI en español.
+- Mensajes al cliente final (email/WhatsApp default) en español.
+- Documentación interna y Help Center en español.
+- Base de datos intacta en estructura, con seeds traducidos.
+- Memoria del proyecto actualizada notando "plataforma en español; identificadores DB permanecen en PT por compatibilidad".
+
+## Pregunta abierta antes de empezar
+
+Necesito que confirmes el **mercado/país objetivo** porque hay constantes regionales (DDI 55, moneda BRL, locale `pt-BR`) que no son solo idioma. Si me dices el país, ajusto la Fase 7 en este mismo plan.
