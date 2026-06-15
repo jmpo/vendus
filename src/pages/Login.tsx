@@ -204,12 +204,12 @@ export default function Login() {
 
           <div className="text-center lg:text-left">
             <h2 className="text-2xl font-bold text-foreground">
-              {view === 'login' ? 'Entrar na conta' : 'Recuperar senha'}
+              {view === 'login' ? 'Iniciar sesión' : 'Recuperar contraseña'}
             </h2>
             <p className="text-muted-foreground mt-2">
               {view === 'login'
-                ? 'Entre com suas credenciais para acessar'
-                : 'Digite seu email e enviaremos um link para redefinir sua senha'}
+                ? 'Ingresá tus credenciales para acceder'
+                : 'Ingresá tu email y te enviaremos un enlace para restablecer tu contraseña'}
             </p>
           </div>
 
