@@ -33,7 +33,7 @@ function ConversionBadge({ rate }: { rate: number }) {
 
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${color} ${bg}`}>
-      {rate}% conversão
+      {rate}% conversión
     </span>
   );
 }
@@ -126,7 +126,7 @@ export function SalesFunnelChart({ stages, isLoading, wonCount = 0, lostCount = 
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
             <TrendingDown className="h-5 w-5 text-primary" />
-            Funil de Vendas
+            Embudo de Ventas
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -146,12 +146,12 @@ export function SalesFunnelChart({ stages, isLoading, wonCount = 0, lostCount = 
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
             <TrendingDown className="h-5 w-5 text-primary" />
-            Funil de Vendas
+            Embudo de Ventas
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-48 flex items-center justify-center text-muted-foreground text-sm">
-            Nenhum dado disponível
+            No hay datos disponibles
           </div>
         </CardContent>
       </Card>
@@ -164,7 +164,7 @@ export function SalesFunnelChart({ stages, isLoading, wonCount = 0, lostCount = 
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
             <TrendingDown className="h-5 w-5 text-primary" />
-            Funil de Vendas
+            Embudo de Ventas
           </CardTitle>
           <motion.span
             className="text-sm text-muted-foreground font-medium bg-muted/40 px-3 py-1 rounded-full"
@@ -212,7 +212,7 @@ export function SalesFunnelChart({ stages, isLoading, wonCount = 0, lostCount = 
             {wonCount > 0 && (
               <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full font-medium">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 inline-block" />
-                {wonCount} ganhos ({totalCount > 0 ? Math.round((wonCount / totalCount) * 100) : 0}%)
+                {wonCount} ganados ({totalCount > 0 ? Math.round((wonCount / totalCount) * 100) : 0}%)
               </div>
             )}
             {lostCount > 0 && (
@@ -224,7 +224,7 @@ export function SalesFunnelChart({ stages, isLoading, wonCount = 0, lostCount = 
             {activeCount > 0 && (
               <div className="flex items-center gap-1.5 text-xs text-primary bg-primary/10 px-2.5 py-1 rounded-full font-medium">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary inline-block" />
-                {activeCount} ativos ({totalCount > 0 ? Math.round((activeCount / totalCount) * 100) : 0}%)
+                {activeCount} activos ({totalCount > 0 ? Math.round((activeCount / totalCount) * 100) : 0}%)
               </div>
             )}
           </motion.div>

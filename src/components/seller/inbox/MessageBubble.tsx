@@ -101,7 +101,7 @@ export function MessageBubble({
               <span className="inline-flex"><AlertCircle className="h-3.5 w-3.5 text-destructive" /></span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-xs">
-              <p className="text-xs font-medium">Falha ao enviar</p>
+              <p className="text-xs font-medium">Fallo al enviar</p>
               {deliveryError && <p className="text-xs opacity-80 mt-1">{deliveryError}</p>}
             </TooltipContent>
           </Tooltip>
@@ -194,13 +194,13 @@ export function MessageBubble({
               {onForward && (
                 <DropdownMenuItem onClick={() => onForward(id)}>
                   <Forward className="h-4 w-4 mr-2" />
-                  Encaminhar
+                  Reenviar
                 </DropdownMenuItem>
               )}
               {onStar && (
                 <DropdownMenuItem onClick={() => onStar(id)}>
                   <Star className={cn("h-4 w-4 mr-2", isStarred && "fill-yellow-400 text-yellow-400")} />
-                  {isStarred ? 'Desfavoritar' : 'Favoritar'}
+                  {isStarred ? 'Quitar favorito' : 'Marcar como favorito'}
                 </DropdownMenuItem>
               )}
               {isOwnMessage && onEdit && (
@@ -215,7 +215,7 @@ export function MessageBubble({
               {!isVisitor && onDelete && (
                 <DropdownMenuItem onClick={() => onDelete(id)} className="text-destructive">
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Apagar
+                  Eliminar
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
@@ -262,7 +262,7 @@ export function MessageBubble({
         {forwardedFrom && !isDeleted && (
           <p className="text-[10px] opacity-60 mb-1 flex items-center gap-1">
             <Forward className="h-3 w-3" />
-            Encaminhada
+            Reenviada
           </p>
         )}
 
@@ -297,7 +297,7 @@ export function MessageBubble({
         {isDeleted ? (
           <p className="text-sm italic opacity-60 flex items-center gap-1.5">
             <Ban className="h-3.5 w-3.5" />
-            Mensagem apagada
+            Mensaje apagada
           </p>
         ) : isEditing ? (
           <div className="space-y-2">
@@ -321,7 +321,7 @@ export function MessageBubble({
               </Button>
               <Button size="sm" className="h-6 text-xs px-2" onClick={handleEditSave}>
                 <Check className="h-3 w-3 mr-1" />
-                Salvar
+                Guardar
               </Button>
             </div>
           </div>

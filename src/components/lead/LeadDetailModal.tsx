@@ -37,7 +37,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 interface LeadDetailModalProps {
   isOpen: boolean;
@@ -48,10 +48,10 @@ interface LeadDetailModalProps {
 const channelOptions = [
   { value: 'whatsapp', label: 'WhatsApp' },
   { value: 'email', label: 'Email' },
-  { value: 'phone', label: 'Ligação' },
+  { value: 'phone', label: 'Llamada' },
   { value: 'instagram', label: 'Instagram' },
   { value: 'telegram', label: 'Telegram' },
-  { value: 'other', label: 'Outro' },
+  { value: 'other', label: 'Otro' },
 ];
 
 export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProps) {
@@ -78,7 +78,7 @@ export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProp
 
   const handleAddInteraction = async () => {
     if (!interactionContent.trim()) {
-      toast.error('Conteúdo é obrigatório');
+      toast.error('El contenido es obligatorio');
       return;
     }
 
@@ -91,11 +91,11 @@ export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProp
         content: interactionContent,
         cadence_day: lead?.cadence_day
       });
-      toast.success('Interação registrada!');
+      toast.success('¡Interacción registrada!');
       setInteractionContent('');
       setIsAddingInteraction(false);
     } catch (error) {
-      toast.error('Erro ao registrar interação');
+      toast.error('Error al registrar la interacción');
     }
   };
 
@@ -105,9 +105,9 @@ export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProp
         id: leadId,
         notes: notes
       });
-      toast.success('Notas salvas!');
+      toast.success('¡Notas guardadas!');
     } catch (error) {
-      toast.error('Erro ao salvar notas');
+      toast.error('Error al guardar las notas');
     }
   };
 
@@ -158,22 +158,22 @@ export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProp
         {/* Lead Info Cards */}
         <div className="grid grid-cols-3 gap-3 py-4 border-y border-border">
           <div className="text-center p-2">
-            <p className="text-xs text-muted-foreground">Email</p>
+            <p className="text-xs text-muted-foreground">Correo electrónico</p>
             <p className="text-sm font-medium text-foreground truncate">
               {lead.email || '-'}
             </p>
           </div>
           <div className="text-center p-2">
-            <p className="text-xs text-muted-foreground">Telefone</p>
+            <p className="text-xs text-muted-foreground">Teléfono</p>
             <p className="text-sm font-medium text-foreground">
               {lead.phone || '-'}
             </p>
           </div>
           <div className="text-center p-2">
-            <p className="text-xs text-muted-foreground">Último contato</p>
+            <p className="text-xs text-muted-foreground">Último contacto</p>
             <p className="text-sm font-medium text-foreground">
               {lead.last_contact_at 
-                ? format(new Date(lead.last_contact_at), "dd/MM/yyyy", { locale: ptBR })
+                ? format(new Date(lead.last_contact_at), "dd/MM/yyyy", { locale: es })
                 : 'Nunca'
               }
             </p>
@@ -197,7 +197,7 @@ export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProp
           {lead.cadence_day && (
             <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary">
               <Calendar size={12} className="mr-1" />
-              Dia {lead.cadence_day} da cadência
+              Día {lead.cadence_day} de la cadencia
             </Badge>
           )}
         </div>
@@ -224,7 +224,7 @@ export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProp
                 onClick={() => setIsAddingInteraction(true)}
               >
                 <Plus size={16} className="mr-2" />
-                Registrar Interação
+                Registrar Interacción
               </Button>
             ) : (
               <div className="bg-secondary/30 rounded-lg p-4 mb-4 space-y-3 border border-border">
@@ -247,12 +247,12 @@ export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProp
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="outbound">Enviado</SelectItem>
-                      <SelectItem value="inbound">Recebido</SelectItem>
+                      <SelectItem value="inbound">Recibido</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <Textarea
-                  placeholder="Descreva a interação..."
+                  placeholder="Describa la interacción..."
                   value={interactionContent}
                   onChange={(e) => setInteractionContent(e.target.value)}
                   rows={3}
@@ -273,7 +273,7 @@ export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProp
                     {createInteraction.isPending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
-                      'Salvar'
+                       'Guardar'
                     )}
                   </Button>
                 </div>
@@ -286,7 +286,7 @@ export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProp
           <TabsContent value="notes" className="flex-1 overflow-hidden mt-4">
             <div className="space-y-3">
               <Textarea
-                placeholder="Adicione notas sobre este lead..."
+                placeholder="Agregue notas sobre este lead..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={8}
@@ -302,7 +302,7 @@ export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProp
                 ) : (
                   <Save size={16} className="mr-2" />
                 )}
-                Salvar Notas
+                Guardar Notas
               </Button>
             </div>
           </TabsContent>

@@ -123,7 +123,7 @@ export function InboxFiltersDrawer({
           className="flex items-center gap-1 text-sm text-primary hover:opacity-80"
         >
           <ChevronLeft className="h-4 w-4" />
-          Voltar
+          Volver
         </button>
       ) : (
         <span className="text-base font-semibold text-foreground">Filtros</span>
@@ -131,7 +131,7 @@ export function InboxFiltersDrawer({
       <button
         onClick={() => onOpenChange(false)}
         className="text-muted-foreground hover:text-foreground"
-        aria-label="Fechar"
+        aria-label="Cerrar"
       >
         <X className="h-5 w-5" />
       </button>
@@ -221,7 +221,7 @@ export function InboxFiltersDrawer({
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Buscar atendimento e mensagem"
+                  placeholder="Buscar atención y mensaje"
                   value={filters.search}
                   onChange={(e) => update({ search: e.target.value })}
                   className="pl-9 h-10"
@@ -230,13 +230,13 @@ export function InboxFiltersDrawer({
             </div>
 
             <ScrollArea className="flex-1">
-              <CategoryRow label="Produto" count={counts.product} onClick={() => setSection('product')} />
+              <CategoryRow label="Producto" count={counts.product} onClick={() => setSection('product')} />
               <CategoryRow label="Etiqueta" count={counts.tag} onClick={() => setSection('tag')} />
               <CategoryRow label="Setor" count={counts.sector} onClick={() => setSection('sector')} />
               {isAdmin && (
-                <CategoryRow label="Usuário" count={counts.user} onClick={() => setSection('user')} />
+                <CategoryRow label="Usuario" count={counts.user} onClick={() => setSection('user')} />
               )}
-              <CategoryRow label="Status" count={counts.status} onClick={() => setSection('status')} />
+              <CategoryRow label="Estado" count={counts.status} onClick={() => setSection('status')} />
 
               {totalActive > 0 && (
                 <div className="p-3">
@@ -248,7 +248,7 @@ export function InboxFiltersDrawer({
                       onFiltersChange({ ...defaultInboxFilters, search: filters.search })
                     }
                   >
-                    Limpar filtros
+                    Limpiar filtros
                   </Button>
                 </div>
               )}
@@ -260,19 +260,19 @@ export function InboxFiltersDrawer({
                   <AlertDialogTrigger asChild>
                     <Button variant="outline" className="w-full text-destructive border-destructive/40 hover:bg-destructive/10 hover:text-destructive">
                       <AlertTriangle className="h-4 w-4 mr-2" />
-                      Encerrar Todos Atendimentos
+                      Finalizar todas las atenciones
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Encerrar todos os atendimentos abertos?</AlertDialogTitle>
+                      <AlertDialogTitle>¿Finalizar todas las atenciones abiertas?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        Esta ação encerrará todas as conversas em andamento. Não pode ser desfeita.
+                        Esta acción finalizará todas las conversaciones en curso. No se puede deshacer.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                      <AlertDialogAction onClick={onCloseAllTickets}>Encerrar todos</AlertDialogAction>
+                      <AlertDialogAction onClick={onCloseAllTickets}>Finalizar todos</AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
@@ -284,12 +284,12 @@ export function InboxFiltersDrawer({
         {/* PRODUTO */}
         {section === 'product' && (
           <>
-            {renderHeader('Produto', () => setSection('root'))}
+            {renderHeader('Producto', () => setSection('root'))}
             <div className="p-3 border-b border-border">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Pesquisar produto"
+                  placeholder="Buscar producto"
                   value={subSearch}
                   onChange={(e) => setSubSearch(e.target.value)}
                   className="pl-9 h-10"
@@ -299,7 +299,7 @@ export function InboxFiltersDrawer({
             <ScrollArea className="flex-1">
               {filteredProducts.length === 0 && (
                 <p className="px-4 py-6 text-xs text-muted-foreground text-center">
-                  Nenhum produto encontrado
+                  No se encontró ningún producto
                 </p>
               )}
               {filteredProducts.map((p: any) => (
@@ -322,7 +322,7 @@ export function InboxFiltersDrawer({
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Pesquisar etiqueta"
+                  placeholder="Buscar etiqueta"
                   value={subSearch}
                   onChange={(e) => setSubSearch(e.target.value)}
                   className="pl-9 h-10"
@@ -332,7 +332,7 @@ export function InboxFiltersDrawer({
             <ScrollArea className="flex-1">
               {filteredTags.length === 0 && (
                 <p className="px-4 py-6 text-xs text-muted-foreground text-center">
-                  Nenhuma etiqueta cadastrada
+                  Ninguna etiqueta registrada
                 </p>
               )}
               {filteredTags.map((t: any) => (
@@ -351,10 +351,10 @@ export function InboxFiltersDrawer({
         {/* SETOR */}
         {section === 'sector' && (
           <>
-            {renderHeader('Setor', () => setSection('root'))}
+            {renderHeader('Sector', () => setSection('root'))}
             <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-muted/30">
               <span className="text-xs font-medium uppercase text-muted-foreground tracking-wide">
-                Setores
+                Sectores
               </span>
               {sectors.length > 0 && (
                 <button
@@ -373,7 +373,7 @@ export function InboxFiltersDrawer({
             </div>
             <ScrollArea className="flex-1">
               <OptionRow
-                label="Sem Setor"
+                label="Sin Sector"
                 checked={filters.selectedSectorIds.includes('__none__')}
                 onToggle={() => toggle('selectedSectorIds', '__none__')}
               />
@@ -393,12 +393,12 @@ export function InboxFiltersDrawer({
         {/* USUÁRIO */}
         {section === 'user' && isAdmin && (
           <>
-            {renderHeader('Usuário', () => setSection('root'))}
+            {renderHeader('Usuario', () => setSection('root'))}
             <div className="p-3 border-b border-border">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Pesquisar usuário"
+                  placeholder="Buscar usuario"
                   value={subSearch}
                   onChange={(e) => setSubSearch(e.target.value)}
                   className="pl-9 h-10"
@@ -408,7 +408,7 @@ export function InboxFiltersDrawer({
             <ScrollArea className="flex-1">
               {filteredMembers.length === 0 && (
                 <p className="px-4 py-6 text-xs text-muted-foreground text-center">
-                  Nenhum membro encontrado
+                  No se encontró ningún miembro
                 </p>
               )}
               {filteredMembers.map((m: any) => (
@@ -426,12 +426,12 @@ export function InboxFiltersDrawer({
         {/* STATUS */}
         {section === 'status' && (
           <>
-            {renderHeader('Status', () => setSection('root'))}
+            {renderHeader('Estado', () => setSection('root'))}
             <ScrollArea className="flex-1">
               <label className="flex items-center justify-between px-4 py-3.5 border-b border-border cursor-pointer hover:bg-muted/40">
                 <div>
-                  <span className="text-sm font-medium block">Ver Resolvidos</span>
-                  <span className="text-xs text-muted-foreground">Exibir tickets finalizados</span>
+                  <span className="text-sm font-medium block">Ver resueltos</span>
+                  <span className="text-xs text-muted-foreground">Mostrar tickets finalizados</span>
                 </div>
                 <Switch
                   checked={filters.showResolved}

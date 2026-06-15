@@ -83,14 +83,14 @@ export function InternalNotes({ conversationId, className }: InternalNotesProps)
       setNoteText('');
       setIsAdding(false);
       toast({
-        title: 'Nota adicionada',
-        description: 'A nota foi salva com sucesso.',
+        title: 'Nota agregada',
+        description: 'La nota se guardó con éxito.',
       });
     },
     onError: () => {
       toast({
         title: 'Erro',
-        description: 'Não foi possível adicionar a nota.',
+        description: 'No fue posible agregar la nota.',
         variant: 'destructive',
       });
     },
@@ -106,7 +106,7 @@ export function InternalNotes({ conversationId, className }: InternalNotesProps)
       <div className="flex items-center justify-between">
         <h4 className="text-sm font-semibold flex items-center gap-2">
           <StickyNote className="h-4 w-4" />
-          Notas Internas
+          Notas internas
         </h4>
         {!isAdding && (
           <Button
@@ -116,7 +116,7 @@ export function InternalNotes({ conversationId, className }: InternalNotesProps)
             className="h-7 text-xs"
           >
             <Plus className="h-3 w-3 mr-1" />
-            Adicionar
+            Agregar
           </Button>
         )}
       </div>
@@ -125,7 +125,7 @@ export function InternalNotes({ conversationId, className }: InternalNotesProps)
       {isAdding && (
         <div className="space-y-2 p-3 bg-muted/50 rounded-lg border">
           <Textarea
-            placeholder="Escreva uma nota interna..."
+            placeholder="Escriba una nota interna..."
             value={noteText}
             onChange={(e) => setNoteText(e.target.value)}
             className="min-h-[60px] text-sm bg-background"
@@ -152,7 +152,7 @@ export function InternalNotes({ conversationId, className }: InternalNotesProps)
               {addNoteMutation.isPending ? (
                 <Loader2 className="h-3 w-3 animate-spin" />
               ) : (
-                'Salvar'
+                'Guardar'
               )}
             </Button>
           </div>
@@ -166,7 +166,7 @@ export function InternalNotes({ conversationId, className }: InternalNotesProps)
         </div>
       ) : notes.length === 0 ? (
         <p className="text-xs text-muted-foreground text-center py-4">
-          Nenhuma nota ainda
+          Ninguna nota aún
         </p>
       ) : (
         <ScrollArea className="max-h-[200px]">

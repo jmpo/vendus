@@ -12,7 +12,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { useLeadTracking, LEAD_ORIGINS, LEAD_CHANNELS } from '@/hooks/useLeadTracking';
 import { Loader2 } from 'lucide-react';
 
@@ -32,12 +32,12 @@ export function LeadOriginTab({ leadId }: LeadOriginTabProps) {
   }
 
   const getOriginLabel = (value: string | null) => {
-    if (!value) return 'Não informado';
+    if (!value) return 'No informado';
     return LEAD_ORIGINS.find(o => o.value === value)?.label || value;
   };
 
   const getChannelLabel = (value: string | null) => {
-    if (!value) return 'Não informado';
+    if (!value) return 'No informado';
     return LEAD_CHANNELS.find(c => c.value === value)?.label || value;
   };
 
@@ -50,13 +50,13 @@ export function LeadOriginTab({ leadId }: LeadOriginTabProps) {
         <CardHeader>
           <CardTitle className="text-sm font-medium flex items-center gap-2">
             <Globe className="h-4 w-4" />
-            Origem do Lead
+            Origen del Lead
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Fonte</p>
+              <p className="text-sm text-muted-foreground mb-1">Fuente</p>
               <Badge variant="secondary" className="text-sm">
                 {getOriginLabel(tracking?.lead_origin)}
               </Badge>
@@ -73,7 +73,7 @@ export function LeadOriginTab({ leadId }: LeadOriginTabProps) {
             <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2 border-t border-border">
               <Calendar className="h-4 w-4" />
               <span>
-                Criado em {format(parseISO(tracking.created_at), "dd 'de' MMMM 'de' yyyy 'às' HH:mm", { locale: ptBR })}
+                Creado el {format(parseISO(tracking.created_at), "dd 'de' MMMM 'de' yyyy 'a las' HH:mm", { locale: es })}
               </span>
             </div>
           )}
@@ -85,7 +85,7 @@ export function LeadOriginTab({ leadId }: LeadOriginTabProps) {
         <CardHeader>
           <CardTitle className="text-sm font-medium flex items-center gap-2">
             <Tag className="h-4 w-4" />
-            Parâmetros UTM
+            Parámetros UTM
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -153,7 +153,7 @@ export function LeadOriginTab({ leadId }: LeadOriginTabProps) {
             </div>
           ) : (
             <p className="text-sm text-muted-foreground text-center py-4">
-              Nenhum parâmetro UTM registrado
+              Ningún parámetro UTM registrado
             </p>
           )}
         </CardContent>
@@ -164,7 +164,7 @@ export function LeadOriginTab({ leadId }: LeadOriginTabProps) {
         <CardHeader>
           <CardTitle className="text-sm font-medium flex items-center gap-2">
             <Link2 className="h-4 w-4" />
-            Referência
+            Referencia
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -200,7 +200,7 @@ export function LeadOriginTab({ leadId }: LeadOriginTabProps) {
           
           {!tracking?.landing_page && !tracking?.referrer_url && (
             <p className="text-sm text-muted-foreground text-center py-4">
-              Nenhuma informação de referência registrada
+              Ninguna información de referencia registrada
             </p>
           )}
         </CardContent>

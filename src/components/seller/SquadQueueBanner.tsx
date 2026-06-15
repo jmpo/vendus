@@ -65,11 +65,11 @@ export function SquadQueueBanner({ productId }: SquadQueueBannerProps) {
             <div className="min-w-0">
               <p className="text-sm font-semibold text-foreground leading-tight">
                 {pendingLeads.length === 1
-                  ? '1 lead aguardando atendimento'
-                  : `${pendingLeads.length} leads aguardando no squad`}
+                  ? '1 lead esperando atención'
+                  : `${pendingLeads.length} leads esperando en el squad`}
               </p>
               <p className="text-xs text-muted-foreground">
-                {status !== 'online' ? '⚠️ Fique Online para receber automaticamente' : 'Assuma um lead agora'}
+                {status !== 'online' ? '⚠️ Ponte Online para recibir automáticamente' : 'Asume un lead ahora'}
               </p>
             </div>
           </div>
@@ -86,7 +86,7 @@ export function SquadQueueBanner({ productId }: SquadQueueBannerProps) {
               ) : (
                 <UserCheck size={14} />
               )}
-              Assumir próximo
+              Asumir próximo
             </Button>
             <Button
               variant="ghost"
@@ -114,7 +114,7 @@ export function SquadQueueBanner({ productId }: SquadQueueBannerProps) {
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
                       <span className="text-sm font-medium text-foreground truncate max-w-[150px]">
-                        {item.lead?.name || 'Lead sem nome'}
+                        {item.lead?.name || 'Lead sin nombre'}
                       </span>
                       {getTemperatureIcon(item.lead?.temperature || null)}
                     </div>
@@ -150,7 +150,7 @@ export function SquadQueueBanner({ productId }: SquadQueueBannerProps) {
 
             {pendingLeads.length > 10 && (
               <div className="px-4 py-2 text-center text-xs text-muted-foreground">
-                +{pendingLeads.length - 10} leads na fila
+                +{pendingLeads.length - 10} leads en la fila
               </div>
             )}
           </div>

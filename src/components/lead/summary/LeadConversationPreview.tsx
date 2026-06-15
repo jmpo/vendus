@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MessageSquare, ArrowRight } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
@@ -47,7 +47,7 @@ export function LeadConversationPreview({ leadId, onOpenConversation }: Props) {
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           <MessageSquare className="h-4 w-4" />
-          Conversa recente
+          Conversación reciente
           <span className="text-xs text-muted-foreground font-normal capitalize">
             · {data.conv.channel}
           </span>
@@ -65,7 +65,7 @@ export function LeadConversationPreview({ leadId, onOpenConversation }: Props) {
       </CardHeader>
       <CardContent className="pt-0 space-y-2">
         {data.messages.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Sem mensagens</p>
+          <p className="text-sm text-muted-foreground">Sin mensajes</p>
         ) : (
           data.messages.map((m: any) => {
             const inbound = m.direction === 'inbound';
@@ -88,7 +88,7 @@ export function LeadConversationPreview({ leadId, onOpenConversation }: Props) {
                       : m.content}
                   </p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">
-                    {format(parseISO(m.created_at), "dd/MM HH:mm", { locale: ptBR })}
+                    {format(parseISO(m.created_at), "dd/MM HH:mm", { locale: es })}
                   </p>
                 </div>
               </div>

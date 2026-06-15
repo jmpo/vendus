@@ -79,9 +79,9 @@ export function TeamBookingLinks() {
   const handleCopy = async (url: string, label?: string) => {
     try {
       await navigator.clipboard.writeText(url);
-      toast.success(label ? `Link de ${label} copiado!` : 'Link copiado!');
+      toast.success(label ? `¡Enlace de ${label} copiado!` : '¡Enlace copiado!');
     } catch {
-      toast.error('Não foi possível copiar');
+      toast.error('No fue posible copiar');
     }
   };
 
@@ -94,18 +94,18 @@ export function TeamBookingLinks() {
       await navigator.clipboard.writeText(lines);
       toast.success(`${filteredMembers.length} links copiados!`);
     } catch {
-      toast.error('Não foi possível copiar');
+      toast.error('No fue posible copiar');
     }
   };
 
   const handleWhatsApp = (url: string, name: string | null) => {
-    const text = `Olá! Agende uma reunião com ${name ?? 'nosso time'}: ${url}`;
+    const text = `¡Hola! Reserve una reunión con ${name ?? 'nosso time'}: ${url}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   const handleGenerateSlug = async (memberId: string, fullName: string | null) => {
     if (!fullName) {
-      toast.error('Membro sem nome cadastrado');
+      toast.error('Miembro sin nombre registrado');
       return;
     }
     setGeneratingFor(memberId);
@@ -128,10 +128,10 @@ export function TeamBookingLinks() {
 
       if (error) throw error;
 
-      toast.success(`Link gerado: /agendar/${finalSlug}`);
+      toast.success(`Enlace generado: /agendar/${finalSlug}`);
       queryClient.invalidateQueries({ queryKey: ['team-members'] });
     } catch (err: any) {
-      toast.error('Erro ao gerar link: ' + (err?.message ?? 'desconhecido'));
+      toast.error('Error al generar el enlace: ' + (err?.message ?? 'desconhecido'));
     } finally {
       setGeneratingFor(null);
     }
@@ -152,7 +152,7 @@ export function TeamBookingLinks() {
       canvas.height = img.height * 2;
       ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
       const link = document.createElement('a');
-      link.download = `qrcode-agendamento-${qrModal.slug || 'link'}.png`;
+      link.download = `qrcode-reserva-${qrModal.slug || 'link'}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     };
@@ -167,7 +167,7 @@ export function TeamBookingLinks() {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Links de Agendamento da Equipe
+                Links de Agendamiento da Equipe
               </CardTitle>
               <CardDescription>
                 Copie e envie o link individual de cada vendedor — sem precisar acessar a
@@ -191,7 +191,7 @@ export function TeamBookingLinks() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar por nome ou e-mail..."
+              placeholder="Buscar por nombre o correo..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
@@ -206,9 +206,9 @@ export function TeamBookingLinks() {
           ) : !filteredMembers.length ? (
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <Link2 className="h-10 w-10 text-muted-foreground/50 mb-3" />
-              <p className="font-medium">Nenhum membro encontrado</p>
+              <p className="font-medium">Ningún miembro encontrado</p>
               <p className="text-sm text-muted-foreground">
-                Convide vendedores em Equipe para gerar links de agendamento.
+                Invite a los vendedores en Equipo para generar enlaces de reserva.
               </p>
             </div>
           ) : (
@@ -241,7 +241,7 @@ export function TeamBookingLinks() {
                               </p>
                               {!hasSlug && (
                                 <Badge variant="outline" className="text-xs">
-                                  Sem link
+                                  Sin enlace
                                 </Badge>
                               )}
                             </div>
@@ -268,7 +268,7 @@ export function TeamBookingLinks() {
                               ) : (
                                 <Sparkles className="h-3.5 w-3.5" />
                               )}
-                              Gerar link
+                              Generar enlace
                             </Button>
                           ) : (
                             <>
@@ -335,7 +335,7 @@ export function TeamBookingLinks() {
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>QR Code — {qrModal.name}</DialogTitle>
+            <DialogTitle>Código QR — {qrModal.name}</DialogTitle>
             <DialogDescription className="break-all">{qrModal.url}</DialogDescription>
           </DialogHeader>
           <div className="flex flex-col items-center gap-4 py-2">
@@ -351,11 +351,11 @@ export function TeamBookingLinks() {
                 onClick={() => handleCopy(qrModal.url, qrModal.name)}
               >
                 <Copy className="h-4 w-4" />
-                Copiar link
+                Copiar enlace
               </Button>
               <Button className="flex-1 gap-2" onClick={handleDownloadQR}>
                 <Download className="h-4 w-4" />
-                Baixar PNG
+                Descargar PNG
               </Button>
             </div>
           </div>

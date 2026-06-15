@@ -9,9 +9,9 @@ export function EmptyInboxState() {
           <MessageSquare className="h-10 w-10 text-primary" />
         </div>
         <div>
-          <h3 className="font-semibold text-lg mb-1">Central de Atendimento</h3>
+          <h3 className="font-semibold text-lg mb-1">Centro de Atención</h3>
           <p className="text-sm text-muted-foreground">
-            Selecione uma conversa ao lado ou aguarde novas interações
+            Seleccione una conversación a la izquierda o espere nuevas interacciones
           </p>
         </div>
 
@@ -19,11 +19,11 @@ export function EmptyInboxState() {
           <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
             <Zap className="h-5 w-5 text-primary mt-0.5 shrink-0" />
             <div>
-              <p className="text-sm font-medium">Atalhos rápidos</p>
+              <p className="text-sm font-medium">Atajos rápidos</p>
               <p className="text-xs text-muted-foreground">
                 <kbd className="px-1 py-0.5 bg-background rounded text-[10px]">Ctrl+K</kbd> buscar • 
                 <kbd className="px-1 py-0.5 bg-background rounded text-[10px] ml-1">Enter</kbd> enviar • 
-                <kbd className="px-1 py-0.5 bg-background rounded text-[10px] ml-1">/</kbd> respostas rápidas
+                <kbd className="px-1 py-0.5 bg-background rounded text-[10px] ml-1">/</kbd> respuestas rápidas
               </p>
             </div>
           </div>
@@ -32,7 +32,7 @@ export function EmptyInboxState() {
             <div>
               <p className="text-sm font-medium">IA Estratégica</p>
               <p className="text-xs text-muted-foreground">
-                Clique em "Sugerir Resposta IA" durante uma conversa para gerar uma resposta contextualizada
+                Haga clic en "Sugerir respuesta IA" durante una conversación para generar una respuesta contextualizada
               </p>
             </div>
           </div>
@@ -41,7 +41,7 @@ export function EmptyInboxState() {
             <div>
               <p className="text-sm font-medium">Widget de Chat</p>
               <p className="text-xs text-muted-foreground">
-                Configure o widget no painel de produtos para receber conversas automaticamente
+                Configure el widget en el panel de productos para recibir conversaciones automáticamente
               </p>
             </div>
           </div>

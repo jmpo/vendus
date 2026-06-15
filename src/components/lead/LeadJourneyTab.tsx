@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Circle, Clock, ArrowRight } from 'lucide-react';
 import { format, parseISO, differenceInDays } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { useLeadStageHistory } from '@/hooks/useInteractions';
 import { Loader2 } from 'lucide-react';
 
@@ -70,7 +70,7 @@ export function LeadJourneyTab({ leadId, currentStageId, stages }: LeadJourneyTa
     return (
       <Card>
         <CardContent className="py-12 text-center text-muted-foreground">
-          Nenhum estágio configurado para este produto
+          Ninguna etapa configurada para este producto
         </CardContent>
       </Card>
     );
@@ -81,7 +81,7 @@ export function LeadJourneyTab({ leadId, currentStageId, stages }: LeadJourneyTa
       {/* Visual funnel */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-medium">Progresso no Funil</CardTitle>
+          <CardTitle className="text-sm font-medium">Progreso en el Embudo</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
@@ -126,7 +126,7 @@ export function LeadJourneyTab({ leadId, currentStageId, stages }: LeadJourneyTa
       {/* Stage details */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-medium">Detalhes da Jornada</CardTitle>
+          <CardTitle className="text-sm font-medium">Detalles de la Jornada</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {journeyData.map((stage, index) => (
@@ -157,14 +157,14 @@ export function LeadJourneyTab({ leadId, currentStageId, stages }: LeadJourneyTa
                     <h4 className={`font-medium ${stage.isFuture ? 'text-muted-foreground' : ''}`}>
                       {stage.name}
                     </h4>
-                    {stage.is_won && <Badge className="bg-green-500">Ganho</Badge>}
+                    {stage.is_won && <Badge className="bg-green-500">Ganado</Badge>}
                     {stage.is_lost && <Badge variant="destructive">Perdido</Badge>}
-                    {stage.isCurrent && <Badge variant="outline">Atual</Badge>}
+                    {stage.isCurrent && <Badge variant="outline">Actual</Badge>}
                   </div>
                   
                   {stage.enteredAt && (
                     <p className="text-sm text-muted-foreground mt-1">
-                      Entrou em {format(parseISO(stage.enteredAt), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                      Entró el {format(parseISO(stage.enteredAt), "dd/MM/yyyy 'a las' HH:mm", { locale: es })}
                     </p>
                   )}
                 </div>
@@ -172,7 +172,7 @@ export function LeadJourneyTab({ leadId, currentStageId, stages }: LeadJourneyTa
                 {(stage.isPast || stage.isCurrent) && stage.daysInStage > 0 && (
                   <div className="flex items-center gap-1 text-sm text-muted-foreground">
                     <Clock className="h-4 w-4" />
-                    <span>{stage.daysInStage} dias</span>
+                    <span>{stage.daysInStage} días</span>
                   </div>
                 )}
               </div>
@@ -188,7 +188,7 @@ export function LeadJourneyTab({ leadId, currentStageId, stages }: LeadJourneyTa
             <p className="text-2xl font-bold text-green-500">
               {journeyData.filter(s => s.isPast).length}
             </p>
-            <p className="text-xs text-muted-foreground">Estágios concluídos</p>
+            <p className="text-xs text-muted-foreground">Etapas concluidas</p>
           </CardContent>
         </Card>
         <Card>
@@ -196,7 +196,7 @@ export function LeadJourneyTab({ leadId, currentStageId, stages }: LeadJourneyTa
             <p className="text-2xl font-bold text-primary">
               {journeyData.find(s => s.isCurrent)?.daysInStage || 0}
             </p>
-            <p className="text-xs text-muted-foreground">Dias no estágio atual</p>
+            <p className="text-xs text-muted-foreground">Días en la etapa actual</p>
           </CardContent>
         </Card>
         <Card>
@@ -204,7 +204,7 @@ export function LeadJourneyTab({ leadId, currentStageId, stages }: LeadJourneyTa
             <p className="text-2xl font-bold">
               {journeyData.reduce((acc, s) => acc + (s.daysInStage || 0), 0)}
             </p>
-            <p className="text-xs text-muted-foreground">Total de dias</p>
+            <p className="text-xs text-muted-foreground">Total de días</p>
           </CardContent>
         </Card>
         <Card>
@@ -212,7 +212,7 @@ export function LeadJourneyTab({ leadId, currentStageId, stages }: LeadJourneyTa
             <p className="text-2xl font-bold">
               {journeyData.filter(s => s.isFuture).length}
             </p>
-            <p className="text-xs text-muted-foreground">Estágios restantes</p>
+            <p className="text-xs text-muted-foreground">Etapas restantes</p>
           </CardContent>
         </Card>
       </div>

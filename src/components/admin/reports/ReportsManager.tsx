@@ -107,10 +107,10 @@ export function ReportsManager() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full justify-start flex-wrap">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-          <TabsTrigger value="sales">Vendas</TabsTrigger>
+          <TabsTrigger value="sales">Ventas</TabsTrigger>
           <TabsTrigger value="sellers">Vendedores</TabsTrigger>
           <TabsTrigger value="squads">Squads</TabsTrigger>
-          <TabsTrigger value="commissions">Comissões</TabsTrigger>
+          <TabsTrigger value="commissions">Comisiones</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -121,7 +121,7 @@ export function ReportsManager() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Vendas do Mês</p>
+                    <p className="text-sm text-muted-foreground">Ventas del Mes</p>
                     <p className="text-2xl font-bold mt-1">
                       {formatCurrency(kpis?.totalSalesThisMonth || 0)}
                     </p>
@@ -190,7 +190,7 @@ export function ReportsManager() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Evolução de Vendas (12 meses)</CardTitle>
+                <CardTitle className="text-lg">Evolución de Ventas (12 meses)</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64">
@@ -209,7 +209,7 @@ export function ReportsManager() {
                           border: '1px solid hsl(var(--border))',
                           borderRadius: '8px'
                         }}
-                        formatter={(value: number) => [formatCurrency(value), 'Vendas']}
+                        formatter={(value: number) => [formatCurrency(value), 'Ventas']}
                       />
                       <Line 
                         type="monotone" 
@@ -226,7 +226,7 @@ export function ReportsManager() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Vendas por Produto</CardTitle>
+                <CardTitle className="text-lg">Ventas por Producto</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64">
@@ -251,7 +251,7 @@ export function ReportsManager() {
                           border: '1px solid hsl(var(--border))',
                           borderRadius: '8px'
                         }}
-                        formatter={(value: number) => [formatCurrency(value), 'Vendas']}
+                        formatter={(value: number) => [formatCurrency(value), 'Ventas']}
                       />
                     </PieChart>
                   </ResponsiveContainer>
@@ -265,7 +265,7 @@ export function ReportsManager() {
         <TabsContent value="sales" className="space-y-6 mt-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Vendas Mensais Detalhadas</CardTitle>
+              <CardTitle className="text-lg">Ventas Mensuales Detalladas</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-80">
@@ -284,7 +284,7 @@ export function ReportsManager() {
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
                       }}
-                      formatter={(value: number) => [formatCurrency(value), 'Vendas']}
+                      formatter={(value: number) => [formatCurrency(value), 'Ventas']}
                     />
                     <Bar 
                       dataKey="sales" 
@@ -378,7 +378,7 @@ export function ReportsManager() {
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
                       }}
-                      formatter={(value: number) => [formatCurrency(value), 'Vendas']}
+                      formatter={(value: number) => [formatCurrency(value), 'Ventas']}
                     />
                     <Bar 
                       dataKey="totalValue" 
@@ -404,7 +404,7 @@ export function ReportsManager() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Comissões Pendentes</p>
+                    <p className="text-sm text-muted-foreground">Comisiones Pendentes</p>
                     <p className="text-2xl font-bold mt-1">
                       {formatCurrency(kpis?.pendingCommissions || 0)}
                     </p>
@@ -423,7 +423,7 @@ export function ReportsManager() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Comissões Pagas (Mês)</p>
+                    <p className="text-sm text-muted-foreground">Comisiones Pagas (Mês)</p>
                     <p className="text-2xl font-bold mt-1">
                       {formatCurrency(0)}
                     </p>

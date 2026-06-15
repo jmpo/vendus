@@ -71,7 +71,7 @@ export function StageCard({ stage, leadCount, onEdit, onDelete, isDragging }: St
           {stage.is_won && (
             <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1">
               <Trophy className="h-3 w-3" />
-              Ganho
+              Ganado
             </Badge>
           )}
 

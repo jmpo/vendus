@@ -50,11 +50,11 @@ const menuItems = [
 
   { id: 'subscriptions', label: 'Assinaturas', icon: CreditCard },
   { id: 'billing', label: 'Faturamento', icon: FileText },
-  { id: 'payments', label: 'Pagamentos (Cakto)', icon: Banknote },
+  { id: 'payments', label: 'Pagos (Cakto)', icon: Banknote },
   { id: 'whatsapp', label: 'WhatsApp / Evolution', icon: Smartphone },
   { id: 'sales-leads', label: 'Leads Comerciais', icon: Megaphone },
   { id: 'help', label: 'Central de Ajuda', icon: HelpCircle },
-  { id: 'support', label: 'Suporte', icon: LifeBuoy },
+  { id: 'support', label: 'Soporte', icon: LifeBuoy },
   { id: 'agent-tools', label: 'Ações dos Agentes', icon: Wrench },
   { id: 'ai-quality', label: 'Qualidade da IA', icon: BarChart3 },
   { id: 'releases', label: 'Atualizações', icon: Sparkles },

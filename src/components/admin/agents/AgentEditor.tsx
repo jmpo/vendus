@@ -313,7 +313,7 @@ export function AgentEditor({
       return;
     }
     if (!isGlobalType(formData.agent_type) && !formData.product_id) {
-      toast.error('Selecione um produto ou mude o tipo para Administrativo/Suporte/Financeiro (globais)');
+      toast.error('Selecione um produto ou mude o tipo para Administrativo/Soporte/Financeiro (globais)');
       setActiveTab('identity');
       return;
     }
@@ -443,7 +443,7 @@ export function AgentEditor({
                 </TabsTrigger>
               </TabsList>
             ) : (
-              // Standard agent: full editor (adds Suporte tab when type=support)
+              // Standard agent: full editor (adds Soporte tab when type=support)
               <TabsList className="inline-flex h-auto w-max gap-1">
                 <TabsTrigger value="identity" className="text-xs whitespace-nowrap">
                   <Bot className="h-3 w-3 mr-1" />
@@ -471,7 +471,7 @@ export function AgentEditor({
                 </TabsTrigger>
                 <TabsTrigger value="scheduling" className="text-xs whitespace-nowrap">
                   <Calendar className="h-3 w-3 mr-1" />
-                  Agendamento
+                  Agendamiento
                 </TabsTrigger>
                 <TabsTrigger value="channels" className="text-xs whitespace-nowrap">
                   <Zap className="h-3 w-3 mr-1" />
@@ -480,7 +480,7 @@ export function AgentEditor({
                 {isSupport && (
                   <TabsTrigger value="support" className="text-xs whitespace-nowrap">
                     <BookOpen className="h-3 w-3 mr-1" />
-                    Suporte
+                    Soporte
                   </TabsTrigger>
                 )}
                 <TabsTrigger value="training" className="text-xs whitespace-nowrap" disabled={!isEditing}>
@@ -704,7 +704,7 @@ export function AgentEditor({
                               <SelectItem value="sdr">SDR</SelectItem>
                               <SelectItem value="closer">Closer</SelectItem>
                               <SelectItem value="cs">Customer Success</SelectItem>
-                              <SelectItem value="support">Suporte</SelectItem>
+                              <SelectItem value="support">Soporte</SelectItem>
                               <SelectItem value="financial">Financeiro</SelectItem>
                             </>
                           )}

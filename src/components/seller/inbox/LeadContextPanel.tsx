@@ -76,9 +76,9 @@ interface LeadContextPanelProps {
   stages?: PipelineStage[];
   /** Agente IA atualmente vinculado (current_agent_id) */
   currentAgent?: { id: string; name: string; avatar_url: string | null } | null;
-  /** Setor responsável pela conversa */
+  /** Sector responsable pela conversa */
   currentSectorId?: string | null;
-  /** Conexão de origem (ex.: nome da instância WhatsApp) — somente leitura */
+  /** Conexión de origem (ex.: nome da instância WhatsApp) — somente leitura */
   connectionLabel?: string | null;
   onViewLead?: () => void;
   onMoveStage?: (stageId: string) => void;
@@ -140,7 +140,7 @@ export function LeadContextPanel({
     <div className="w-full h-full min-h-0 md:w-80 md:flex-shrink-0 flex flex-col bg-background overflow-hidden">
       {/* Header */}
       <div className="h-14 px-4 border-b border-border flex items-center justify-between flex-shrink-0">
-        <h3 className="font-semibold text-sm">Dados do Contato</h3>
+        <h3 className="font-semibold text-sm">Datos del contacto</h3>
         {onClose && (
           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onClose}>
             <X className="h-4 w-4" />
@@ -152,11 +152,11 @@ export function LeadContextPanel({
         <TabsList className="grid grid-cols-5 w-full rounded-none bg-muted/30 h-10 flex-shrink-0">
           <TabsTrigger value="overview" className="text-[10px] gap-1">
             <Info className="h-3 w-3" />
-            <span className="hidden sm:inline">Visão</span>
+            <span className="hidden sm:inline">Vista</span>
           </TabsTrigger>
           <TabsTrigger value="history" className="text-[10px] gap-1">
             <History className="h-3 w-3" />
-            <span className="hidden sm:inline">Histórico</span>
+            <span className="hidden sm:inline">Historial</span>
           </TabsTrigger>
           <TabsTrigger value="tags" className="text-[10px] gap-1">
             <Tag className="h-3 w-3" />
@@ -168,7 +168,7 @@ export function LeadContextPanel({
           </TabsTrigger>
           <TabsTrigger value="summary" className="text-[10px] gap-1">
             <Sparkles className="h-3 w-3" />
-            <span className="hidden sm:inline">Resumo</span>
+            <span className="hidden sm:inline">Resumen</span>
           </TabsTrigger>
         </TabsList>
 
@@ -220,7 +220,7 @@ export function LeadContextPanel({
                             Aplicar existente
                           </Label>
                           {orgTags.filter((t) => !leadTags.some((lt: any) => lt.id === t.id)).length === 0 ? (
-                            <p className="text-[11px] text-muted-foreground">Todas já aplicadas.</p>
+                            <p className="text-[11px] text-muted-foreground">Todas ya aplicadas.</p>
                           ) : (
                             <div className="max-h-40 overflow-auto space-y-0.5">
                               {orgTags
@@ -243,13 +243,13 @@ export function LeadContextPanel({
                         </div>
                         <div className="space-y-1.5 pt-2 border-t">
                           <Label className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                            Criar nova
+                            Crear nueva
                           </Label>
                           <div className="flex gap-2">
                             <Input
                               value={newTagName}
                               onChange={(e) => setNewTagName(e.target.value)}
-                              placeholder="Nome"
+                              placeholder="Nombre"
                               className="h-7 text-xs"
                             />
                             <input
@@ -275,7 +275,7 @@ export function LeadContextPanel({
                               setNewTagName('');
                             }}
                           >
-                            <Plus className="h-3 w-3 mr-1" /> Criar e aplicar
+                            <Plus className="h-3 w-3 mr-1" /> Crear y aplicar
                           </Button>
                         </div>
                       </PopoverContent>
@@ -284,10 +284,10 @@ export function LeadContextPanel({
                 </div>
                 {!lead ? (
                   <p className="text-[11px] text-muted-foreground">
-                    Vincule um lead para gerenciar etiquetas.
+                    Vincule un lead para gestionar etiquetas.
                   </p>
                 ) : leadTags.length === 0 ? (
-                  <p className="text-[11px] text-muted-foreground">Nenhuma etiqueta.</p>
+                  <p className="text-[11px] text-muted-foreground">Ninguna etiqueta.</p>
                 ) : (
                   <div className="flex flex-wrap gap-1.5">
                     {leadTags.map((t: any) => (
@@ -301,7 +301,7 @@ export function LeadContextPanel({
                         <button
                           onClick={() => removeTag.mutate({ leadId: lead.id, tagId: t.id })}
                           className="ml-0.5 hover:text-destructive"
-                          aria-label="Remover etiqueta"
+                          aria-label="Eliminar etiqueta"
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -324,18 +324,18 @@ export function LeadContextPanel({
                   </Avatar>
                   <div className="min-w-0 flex-1">
                     <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                      Atendendo agora
+                      Atendiendo ahora
                     </p>
                     <p className="text-xs font-medium truncate">{currentAgent.name} · IA</p>
                   </div>
                 </div>
               )}
 
-              {/* Setor responsável */}
+              {/* Sector responsable */}
               {sectors.length > 0 && (
                 <div className="space-y-1.5">
                   <Label className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                    <Users2 className="h-3 w-3" /> Setor responsável
+                    <Users2 className="h-3 w-3" /> Sector responsable
                   </Label>
                   <Select
                     value={currentSectorId || 'none'}
@@ -343,7 +343,7 @@ export function LeadContextPanel({
                       setSector.mutate(
                         { conversationId, sectorId: val === 'none' ? null : val },
                         {
-                          onSuccess: () => toast({ title: 'Setor atualizado' }),
+                          onSuccess: () => toast({ title: 'Sector actualizado' }),
                           onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
                         },
                       );
@@ -351,10 +351,10 @@ export function LeadContextPanel({
                     disabled={setSector.isPending}
                   >
                     <SelectTrigger className="h-8 text-xs">
-                      <SelectValue placeholder="Sem setor" />
+                      <SelectValue placeholder="Sin sector" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">Sem setor</SelectItem>
+                      <SelectItem value="none">Sin sector</SelectItem>
                       {sectors.map((s: any) => (
                         <SelectItem key={s.id} value={s.id}>
                           <span className="flex items-center gap-2">
@@ -373,11 +373,11 @@ export function LeadContextPanel({
                 </div>
               )}
 
-              {/* Conexão de origem (read-only) */}
+              {/* Conexión de origem (read-only) */}
               {connectionLabel && (
                 <div className="space-y-1.5">
                   <Label className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                    <Plug className="h-3 w-3" /> Conexão
+                    <Plug className="h-3 w-3" /> Conexión
                   </Label>
                   <div className="text-xs px-2.5 py-1.5 rounded-md bg-muted/50 border border-border truncate">
                     {connectionLabel}
@@ -401,7 +401,7 @@ export function LeadContextPanel({
               <div className="flex items-center justify-between p-2.5 bg-muted/50 rounded-lg">
                 <div className="flex items-center gap-2">
                   <Volume2 className="h-4 w-4 text-muted-foreground" />
-                  <Label htmlFor="accept-audio" className="text-xs cursor-pointer">Aceitar áudios</Label>
+                  <Label htmlFor="accept-audio" className="text-xs cursor-pointer">Aceptar audios</Label>
                 </div>
                 <Switch id="accept-audio" checked={acceptAudio} onCheckedChange={setAcceptAudio} />
               </div>
@@ -435,7 +435,7 @@ export function LeadContextPanel({
               {lead ? (
                 <div className="space-y-2.5">
                   <h5 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                    Funil de Vendas
+                    Embudo de Ventas
                   </h5>
 
                   {lead.temperature && (
@@ -451,7 +451,7 @@ export function LeadContextPanel({
                   {stages.length > 0 && (
                     <Select onValueChange={onMoveStage} value={lead.current_stage_id || undefined}>
                       <SelectTrigger className="h-8 text-xs">
-                        <SelectValue placeholder="Selecionar estágio..." />
+                        <SelectValue placeholder="Seleccionar estágio..." />
                       </SelectTrigger>
                       <SelectContent>
                         {stages.map((stage) => (
@@ -617,7 +617,7 @@ export function LeadContextPanel({
             <div className="p-4 space-y-4">
               {!lead ? (
                 <p className="text-xs text-muted-foreground text-center py-4">
-                  Vincule um lead para gerenciar etiquetas.
+                  Vincule un lead para gestionar etiquetas.
                 </p>
               ) : (
                 <>
@@ -627,7 +627,7 @@ export function LeadContextPanel({
                       Etiquetas atribuídas
                     </Label>
                     {leadTags.length === 0 ? (
-                      <p className="text-xs text-muted-foreground">Nenhuma etiqueta.</p>
+                      <p className="text-xs text-muted-foreground">Ninguna etiqueta.</p>
                     ) : (
                       <div className="flex flex-wrap gap-1.5">
                         {leadTags.map((t: any) => (
@@ -641,7 +641,7 @@ export function LeadContextPanel({
                             <button
                               onClick={() => removeTag.mutate({ leadId: lead.id, tagId: t.id })}
                               className="ml-0.5 hover:text-destructive"
-                              aria-label="Remover etiqueta"
+                              aria-label="Eliminar etiqueta"
                             >
                               <X className="h-3 w-3" />
                             </button>
@@ -682,16 +682,16 @@ export function LeadContextPanel({
                     </div>
                   )}
 
-                  {/* Criar nova */}
+                  {/* Crear nueva */}
                   <div className="space-y-2 pt-2 border-t">
                     <Label className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                      Criar nova etiqueta
+                      Crear nueva etiqueta
                     </Label>
                     <div className="flex gap-2">
                       <Input
                         value={newTagName}
                         onChange={(e) => setNewTagName(e.target.value)}
-                        placeholder="Nome"
+                        placeholder="Nombre"
                         className="h-8 text-xs"
                       />
                       <input
@@ -718,7 +718,7 @@ export function LeadContextPanel({
                       }}
                     >
                       <Plus className="h-3.5 w-3.5 mr-1" />
-                      Criar e aplicar
+                      Crear y aplicar
                     </Button>
                   </div>
                 </>

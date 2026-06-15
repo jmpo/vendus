@@ -220,7 +220,7 @@ export function StageManagerDialog({
         <DialogHeader className="shrink-0">
           <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
             <Settings2 className="h-5 w-5 text-primary" />
-            <span className="truncate">Gerenciar Etapas</span>
+            <span className="truncate">Gestionar Etapas</span>
             {productName && (
               <span className="text-muted-foreground font-normal truncate hidden sm:inline">
                 - {productName}
@@ -299,7 +299,7 @@ export function StageManagerDialog({
             {localStages.length === 0 && !isAddingNew && (
               <div className="text-center py-8 text-muted-foreground">
                 <p>Nenhuma etapa configurada.</p>
-                <p className="text-sm">Clique em "Nova Etapa" para começar.</p>
+                <p className="text-sm">Clique em "Nueva Etapa" para começar.</p>
               </div>
             )}
           </div>
@@ -365,7 +365,7 @@ export function StageManagerDialog({
                   disabled={isAddingNew || !!editingStage}
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Nova Etapa
+                  Nueva Etapa
                 </Button>
               </div>
             </>

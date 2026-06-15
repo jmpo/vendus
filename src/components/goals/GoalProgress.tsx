@@ -36,9 +36,9 @@ export function GoalProgress({ productId }: GoalProgressProps) {
       <Card className="p-6">
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <Target className="h-12 w-12 text-muted-foreground/40 mb-3" />
-          <h3 className="font-medium text-foreground mb-1">Sem meta definida</h3>
+          <h3 className="font-medium text-foreground mb-1">Sin meta definida</h3>
           <p className="text-sm text-muted-foreground">
-            Aguarde seu gestor definir suas metas
+            Espere a que su gestor defina sus metas
           </p>
         </div>
       </Card>
@@ -84,7 +84,7 @@ export function GoalProgress({ productId }: GoalProgressProps) {
               )}
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">Meta do Período</h3>
+              <h3 className="font-semibold text-foreground">Meta del Período</h3>
               <p className="text-xs text-muted-foreground">
                 {format(new Date(goal.period_start), "dd MMM", { locale: ptBR })} - {format(new Date(goal.period_end), "dd MMM", { locale: ptBR })}
               </p>
@@ -95,16 +95,16 @@ export function GoalProgress({ productId }: GoalProgressProps) {
             {isAchieved ? (
               <Badge className="bg-green-500 text-white">
                 <Trophy className="h-3 w-3 mr-1" />
-                Meta Atingida!
+                ¡Meta Alcanzada!
               </Badge>
             ) : isOnTrack ? (
               <Badge variant="secondary" className="bg-primary/10 text-primary">
                 <TrendingUp className="h-3 w-3 mr-1" />
-                No caminho
+                En camino
               </Badge>
             ) : (
               <Badge variant="outline" className="text-muted-foreground">
-                {daysRemaining > 0 ? `${daysRemaining} dias restantes` : 'Prazo encerrado'}
+                {daysRemaining > 0 ? `${daysRemaining} días restantes` : 'Plazo finalizado'}
               </Badge>
             )}
           </div>
@@ -113,7 +113,7 @@ export function GoalProgress({ productId }: GoalProgressProps) {
         {/* Value Progress */}
         <div className="space-y-2 mb-6">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Valor em Vendas</span>
+            <span className="text-muted-foreground">Valor en Ventas</span>
             <span className="font-medium text-foreground">
               {formatCurrency(goal.achieved_value || 0)} / {formatCurrency(goal.target_value)}
             </span>
@@ -123,14 +123,14 @@ export function GoalProgress({ productId }: GoalProgressProps) {
             className="h-3"
           />
           <p className="text-xs text-right text-muted-foreground">
-            {valueProgress.toFixed(0)}% alcançado
+            {valueProgress.toFixed(0)}% alcanzado
           </p>
         </div>
 
         {/* Deals Progress */}
         <div className="space-y-2 mb-6">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Número de Vendas</span>
+            <span className="text-muted-foreground">Número de Ventas</span>
             <span className="font-medium text-foreground">
               {goal.achieved_deals || 0} / {goal.target_deals} deals
             </span>
@@ -140,7 +140,7 @@ export function GoalProgress({ productId }: GoalProgressProps) {
             className="h-3"
           />
           <p className="text-xs text-right text-muted-foreground">
-            {dealsProgress.toFixed(0)}% alcançado
+            {dealsProgress.toFixed(0)}% alcanzado
           </p>
         </div>
 
@@ -150,12 +150,12 @@ export function GoalProgress({ productId }: GoalProgressProps) {
             <Flame className="h-5 w-5 text-orange-500 flex-shrink-0" />
             <p className="text-sm text-muted-foreground">
               {valueProgress < 25 
-                ? "Vamos lá! Cada contato te aproxima da meta."
+                ? "¡Vamos! Cada contacto te acerca a la meta."
                 : valueProgress < 50
-                ? "Bom progresso! Continue focado."
+                ? "¡Buen progreso! Sigue enfocado."
                 : valueProgress < 75
-                ? "Excelente! Você está quase lá."
-                : "Incrível! Falta pouco para a vitória!"
+                ? "¡Excelente! Ya casi estás ahí."
+                : "¡Increíble! Falta poco para la victoria!"
               }
             </p>
           </div>

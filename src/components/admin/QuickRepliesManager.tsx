@@ -27,7 +27,7 @@ interface QuickReply {
   is_active: boolean | null;
 }
 
-const SUGGESTED_CATEGORIES = ['Saudações', 'Vendas', 'Suporte', 'Agendamento', 'Pagamento', 'Encerramento'];
+const SUGGESTED_CATEGORIES = ['Saludos', 'Ventas', 'Soporte', 'Agendamiento', 'Pago', 'Cierre'];
 
 export function QuickRepliesManager() {
   const { user, profile } = useAuth();
@@ -259,7 +259,7 @@ function ReplyFormDialog({ open, onClose, initial, onSave, isSaving }: FormProps
                 list="categories-list"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                placeholder="Vendas, Saudações..."
+                placeholder="Vendas, Saludos..."
               />
               <datalist id="categories-list">
                 {SUGGESTED_CATEGORIES.map(c => <option key={c} value={c} />)}

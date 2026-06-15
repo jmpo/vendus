@@ -43,7 +43,7 @@ export function LeadTagsBlock({ leadId }: Props) {
             <div className="max-h-72 overflow-y-auto p-2">
               {available.length === 0 ? (
                 <p className="text-xs text-muted-foreground p-3 text-center">
-                  Nenhuma etiqueta disponível
+                  Ninguna etiqueta disponible
                 </p>
               ) : (
                 available.map((t) => (
@@ -67,7 +67,7 @@ export function LeadTagsBlock({ leadId }: Props) {
       </CardHeader>
       <CardContent className="pt-0">
         {leadTags.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Nenhuma etiqueta aplicada</p>
+          <p className="text-sm text-muted-foreground">Ninguna etiqueta aplicada</p>
         ) : (
           <div className="flex flex-wrap gap-1.5">
             {leadTags.map((t: any) => (
@@ -82,7 +82,7 @@ export function LeadTagsBlock({ leadId }: Props) {
                 <button
                   onClick={() => remove.mutate({ leadId, tagId: t.id })}
                   className="ml-1 hover:bg-black/10 rounded p-0.5"
-                  aria-label={`Remover ${t.name}`}
+                  aria-label={`Eliminar ${t.name}`}
                 >
                   <X className="h-3 w-3" />
                 </button>

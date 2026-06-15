@@ -82,7 +82,7 @@ export function PaymentLinkDialog({
       toast({ title: 'Link de pagamento enviado' });
       onOpenChange(false);
     } catch (e: any) {
-      toast({ title: 'Erro ao enviar', description: e.message, variant: 'destructive' });
+      toast({ title: 'Error al enviar', description: e.message, variant: 'destructive' });
     } finally {
       setSaving(false);
     }
@@ -146,7 +146,7 @@ export function PaymentLinkDialog({
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Pagamento via Pix com 5% de desconto à vista"
+              placeholder="Pago via Pix com 5% de desconto à vista"
               rows={2}
               maxLength={300}
             />

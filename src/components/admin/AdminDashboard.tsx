@@ -47,7 +47,7 @@ export function AdminDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Vendas do Mês</p>
+                <p className="text-sm text-muted-foreground">Ventas del Mes</p>
                 <p className="text-2xl font-bold text-foreground mt-1">
                   {formatCurrency(kpis?.totalSalesThisMonth || 0)}
                 </p>
@@ -133,7 +133,7 @@ export function AdminDashboard() {
         {/* Monthly Evolution */}
         <Card className="gradient-card border-border">
           <CardHeader>
-            <CardTitle className="text-lg">Evolução de Vendas</CardTitle>
+            <CardTitle className="text-lg">Evolución de Ventas</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-64">
@@ -152,7 +152,7 @@ export function AdminDashboard() {
                       border: '1px solid hsl(var(--border))',
                       borderRadius: '8px'
                     }}
-                    formatter={(value: number) => [formatCurrency(value), 'Vendas']}
+                    formatter={(value: number) => [formatCurrency(value), 'Ventas']}
                   />
                   <Line 
                     type="monotone" 
@@ -170,7 +170,7 @@ export function AdminDashboard() {
         {/* Product Distribution */}
         <Card className="gradient-card border-border">
           <CardHeader>
-            <CardTitle className="text-lg">Vendas por Produto</CardTitle>
+            <CardTitle className="text-lg">Ventas por Producto</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-64">
@@ -195,7 +195,7 @@ export function AdminDashboard() {
                       border: '1px solid hsl(var(--border))',
                       borderRadius: '8px'
                     }}
-                    formatter={(value: number) => [formatCurrency(value), 'Vendas']}
+                    formatter={(value: number) => [formatCurrency(value), 'Ventas']}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -281,7 +281,7 @@ export function AdminDashboard() {
                       border: '1px solid hsl(var(--border))',
                       borderRadius: '8px'
                     }}
-                    formatter={(value: number) => [formatCurrency(value), 'Vendas']}
+                    formatter={(value: number) => [formatCurrency(value), 'Ventas']}
                   />
                   <Bar 
                     dataKey="totalValue" 
@@ -309,7 +309,7 @@ export function AdminDashboard() {
                 <DollarSign className="h-5 w-5 text-warning" />
               </div>
               <div>
-                <p className="font-medium text-foreground">Comissões Pendentes</p>
+                <p className="font-medium text-foreground">Comisiones Pendentes</p>
                 <p className="text-sm text-muted-foreground">
                   {kpis?.pendingCommissionsCount} comissões aguardando aprovação
                 </p>

@@ -357,7 +357,7 @@ export function ActionConfigDialog({
                       />
                     )}
                     <span>{stage.name}</span>
-                    {stage.is_won && <Badge variant="outline" className="text-xs">Ganho</Badge>}
+                    {stage.is_won && <Badge variant="outline" className="text-xs">Ganado</Badge>}
                     {stage.is_lost && <Badge variant="outline" className="text-xs">Perdido</Badge>}
                   </span>
                 </SelectItem>
@@ -957,7 +957,7 @@ export function ActionConfigDialog({
     return (
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label>Funil a disparar *</Label>
+          <Label>Embudo a disparar *</Label>
           <Select
             value={config.flow_id || ''}
             onValueChange={(v) => setConfig((prev) => ({ ...prev, flow_id: v }))}

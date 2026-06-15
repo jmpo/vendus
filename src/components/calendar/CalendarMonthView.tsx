@@ -10,7 +10,7 @@ import {
   isSameDay, 
   isToday 
 } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { CalendarEvent } from '@/hooks/useCalendarEvents';
 import { cn } from '@/lib/utils';
 
@@ -38,8 +38,8 @@ export function CalendarMonthView({
   const calendarDays = useMemo(() => {
     const monthStart = startOfMonth(currentDate);
     const monthEnd = endOfMonth(currentDate);
-    const calendarStart = startOfWeek(monthStart, { locale: ptBR });
-    const calendarEnd = endOfWeek(monthEnd, { locale: ptBR });
+    const calendarStart = startOfWeek(monthStart, { locale: es });
+    const calendarEnd = endOfWeek(monthEnd, { locale: es });
 
     return eachDayOfInterval({ start: calendarStart, end: calendarEnd });
   }, [currentDate]);
@@ -48,7 +48,7 @@ export function CalendarMonthView({
     return events.filter((event) => isSameDay(new Date(event.start_time), day));
   };
 
-  const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  const weekDays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
   return (
     <div className="bg-card rounded-lg border overflow-hidden">
@@ -110,7 +110,7 @@ export function CalendarMonthView({
                 ))}
                 {dayEvents.length > 3 && (
                   <div className="text-xs text-muted-foreground px-1.5">
-                    +{dayEvents.length - 3} mais
+                    +{dayEvents.length - 3} más
                   </div>
                 )}
               </div>

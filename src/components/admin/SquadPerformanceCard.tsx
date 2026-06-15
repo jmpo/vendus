@@ -82,7 +82,7 @@ export function SquadPerformanceCard({ squad, onViewDetails, onManageMembers }: 
                 <p className="text-lg font-bold text-foreground">
                   {formatCurrency(performance?.totalValue || 0)}
                 </p>
-                <p className="text-xs text-muted-foreground">Vendas</p>
+                <p className="text-xs text-muted-foreground">Ventas</p>
               </div>
               <div className="text-center p-2 rounded-lg bg-muted/50">
                 <p className="text-lg font-bold text-foreground">

@@ -6,7 +6,7 @@ import {
   AlertCircle, Activity, Inbox,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { es } from "date-fns/locale";
 
 interface Props { bookingId: string }
 
@@ -33,13 +33,13 @@ const ICON: Record<string, any> = {
 };
 
 const LABEL: Record<string, string> = {
-  confirmation_sent: "Confirmação enviada",
-  reminder_sent: "Lembrete enviado",
-  recovery_sent: "Recuperação enviada",
-  reply_received: "Resposta do lead",
-  notification_sent: "Notificação interna",
-  status_changed: "Status alterado",
-  send_failed: "Falha no envio",
+  confirmation_sent: "Confirmación enviada",
+  reminder_sent: "Recordatorio enviado",
+  recovery_sent: "Recuperación enviada",
+  reply_received: "Respuesta del lead",
+  notification_sent: "Notificación interna",
+  status_changed: "Estado cambiado",
+  send_failed: "Fallo en el envío",
 };
 
 export function BookingTimeline({ bookingId }: Props) {
@@ -71,8 +71,8 @@ export function BookingTimeline({ bookingId }: Props) {
     return () => { mounted = false; };
   }, [bookingId]);
 
-  if (loading) return <div className="text-sm text-muted-foreground p-4">Carregando...</div>;
-  if (entries.length === 0) return <div className="text-sm text-muted-foreground p-4">Sem eventos ainda.</div>;
+  if (loading) return <div className="text-sm text-muted-foreground p-4">Cargando...</div>;
+  if (entries.length === 0) return <div className="text-sm text-muted-foreground p-4">Sin eventos aún.</div>;
 
   return (
     <ScrollArea className="max-h-96">
@@ -97,7 +97,7 @@ export function BookingTimeline({ bookingId }: Props) {
                 {e.error && <div className="text-xs text-rose-400 mt-0.5">{e.error}</div>}
                 {e.payload?.text && <div className="text-xs text-muted-foreground mt-0.5 truncate">"{e.payload.text}"</div>}
                 <div className="text-xs text-muted-foreground/70 mt-0.5">
-                  {formatDistanceToNow(new Date(e.ts), { addSuffix: true, locale: ptBR })}
+                  {formatDistanceToNow(new Date(e.ts), { addSuffix: true, locale: es })}
                 </div>
               </div>
             </div>

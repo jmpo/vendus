@@ -78,7 +78,7 @@ export function EventTypesManager() {
       currentSlug: profile.booking_slug,
     });
     if (!slug) {
-      toast.error('Não foi possível gerar seu link público. Tente novamente.');
+      toast.error('No se pudo generar su enlace público. Inténtelo de nuevo.');
     }
     return slug;
   };
@@ -88,7 +88,7 @@ export function EventTypesManager() {
     if (!slug) return;
     const url = `${publicAppUrl}/agendar/${slug}/${eventType.slug}`;
     await navigator.clipboard.writeText(url);
-    toast.success('Link copiado!');
+    toast.success('¡Enlace copiado!');
   };
 
   const handleOpenLink = async (eventType: BookingEventType) => {
@@ -129,12 +129,12 @@ export function EventTypesManager() {
         <div>
           <h2 className="text-2xl font-bold">Tipos de Evento</h2>
           <p className="text-muted-foreground">
-            Configure os tipos de reunião que você oferece
+            Configure los tipos de reunión que ofrece
           </p>
         </div>
         <Button onClick={handleCreate} className="gap-2">
           <Plus className="h-4 w-4" />
-          Criar Evento
+          Crear Evento
         </Button>
       </div>
 
@@ -142,7 +142,7 @@ export function EventTypesManager() {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Pesquisar tipos de evento..."
+          placeholder="Buscar tipos de evento..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10"
@@ -170,13 +170,13 @@ export function EventTypesManager() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Clock className="h-12 w-12 text-muted-foreground/50 mb-4" />
-            <h3 className="font-semibold text-lg mb-1">Nenhum tipo de evento</h3>
+            <h3 className="font-semibold text-lg mb-1">Ningún tipo de evento</h3>
             <p className="text-muted-foreground text-center mb-4">
-              Crie seu primeiro tipo de evento para começar a receber agendamentos.
+              Cree su primer tipo de evento para comenzar a recibir reservas.
             </p>
             <Button onClick={handleCreate} className="gap-2">
               <Plus className="h-4 w-4" />
-              Criar Evento
+              Crear Evento
             </Button>
           </CardContent>
         </Card>
@@ -211,7 +211,7 @@ export function EventTypesManager() {
                           )}
                         </div>
                         <Badge variant={eventType.is_active ? 'default' : 'secondary'}>
-                          {eventType.is_active ? 'Ativo' : 'Inativo'}
+                          {eventType.is_active ? 'Activo' : 'Inactivo'}
                         </Badge>
                       </div>
 
@@ -235,7 +235,7 @@ export function EventTypesManager() {
                           className="gap-1.5"
                         >
                           <Copy className="h-3.5 w-3.5" />
-                          Copiar Link
+                          Copiar Enlace
                         </Button>
                         <Button
                           variant="outline"
@@ -263,7 +263,7 @@ export function EventTypesManager() {
                                 is_active: !eventType.is_active 
                               });
                             }}>
-                              {eventType.is_active ? 'Desativar' : 'Ativar'}
+                              {eventType.is_active ? 'Desactivar' : 'Activar'}
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem 
@@ -271,7 +271,7 @@ export function EventTypesManager() {
                               className="text-destructive"
                             >
                               <Trash2 className="h-4 w-4 mr-2" />
-                              Excluir
+                              Eliminar
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -296,16 +296,16 @@ export function EventTypesManager() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir tipo de evento?</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar tipo de evento?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Isso excluirá permanentemente o tipo de evento 
+              Esta acción no se puede deshacer. Esto eliminará permanentemente el tipo de evento 
               "{eventToDelete?.name}".
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground">
-              Excluir
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -72,7 +72,7 @@ export function LeadTransferModal({
       switch (transferType) {
         case 'seller':
           if (!selectedSeller) {
-            toast.error('Selecione um vendedor');
+            toast.error('Seleccione un vendedor');
             return;
           }
           toUserId = selectedSeller;
@@ -82,7 +82,7 @@ export function LeadTransferModal({
           break;
         case 'squad':
           if (!selectedSquad) {
-            toast.error('Selecione um squad');
+            toast.error('Seleccione un squad');
             return;
           }
           toUserId = null;
@@ -97,11 +97,11 @@ export function LeadTransferModal({
         reason: reason.trim() || undefined
       });
 
-      toast.success('Lead transferido com sucesso');
+      toast.success('Lead transferido con éxito');
       onSuccess?.();
     } catch (error) {
       console.error('Error transferring lead:', error);
-      toast.error('Erro ao transferir lead');
+      toast.error('Error al transferir el lead');
     }
   };
 
@@ -117,7 +117,7 @@ export function LeadTransferModal({
         <div className="space-y-6 py-4">
           {/* Transfer type */}
           <div className="space-y-3">
-            <Label>Tipo de Transferência</Label>
+            <Label>Tipo de Transferencia</Label>
             <RadioGroup
               value={transferType}
               onValueChange={(v) => setTransferType(v as TransferType)}
@@ -127,7 +127,7 @@ export function LeadTransferModal({
                 <RadioGroupItem value="seller" id="seller" />
                 <Label htmlFor="seller" className="flex items-center gap-2 cursor-pointer flex-1">
                   <User className="h-4 w-4 text-primary" />
-                  Para outro vendedor
+                  A otro vendedor
                 </Label>
               </div>
               
@@ -135,7 +135,7 @@ export function LeadTransferModal({
                 <RadioGroupItem value="unassigned" id="unassigned" />
                 <Label htmlFor="unassigned" className="flex items-center gap-2 cursor-pointer flex-1">
                   <UserX className="h-4 w-4 text-amber-500" />
-                  Deixar sem atendimento
+                  Dejar sin atención
                 </Label>
               </div>
               
@@ -143,7 +143,7 @@ export function LeadTransferModal({
                 <RadioGroupItem value="squad" id="squad" />
                 <Label htmlFor="squad" className="flex items-center gap-2 cursor-pointer flex-1">
                   <Users className="h-4 w-4 text-blue-500" />
-                  Transferir para outro Squad
+                  Transferir a otro Squad
                 </Label>
               </div>
             </RadioGroup>
@@ -155,7 +155,7 @@ export function LeadTransferModal({
               <Label>Vendedor destino</Label>
               <Select value={selectedSeller} onValueChange={setSelectedSeller}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione um vendedor" />
+                  <SelectValue placeholder="Seleccione un vendedor" />
                 </SelectTrigger>
                 <SelectContent>
                   {isLoadingTeam ? (
@@ -188,7 +188,7 @@ export function LeadTransferModal({
               <Label>Squad destino</Label>
               <Select value={selectedSquad} onValueChange={setSelectedSquad}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione um squad" />
+                  <SelectValue placeholder="Seleccione un squad" />
                 </SelectTrigger>
                 <SelectContent>
                   {isLoadingSquads ? (
@@ -215,10 +215,10 @@ export function LeadTransferModal({
 
           {/* Reason */}
           <div className="space-y-2">
-            <Label htmlFor="reason">Motivo da transferência (opcional)</Label>
+            <Label htmlFor="reason">Motivo de la transferencia (opcional)</Label>
             <Textarea
               id="reason"
-              placeholder="Ex: Especialidade do vendedor destino, redistribuição de carteira..."
+              placeholder="Ej: Especialidad del vendedor destino, redistribución de cartera..."
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={3}
@@ -228,8 +228,8 @@ export function LeadTransferModal({
           {/* Current info */}
           <div className="p-3 bg-muted rounded-lg text-sm">
             <p className="text-muted-foreground">
-              <strong>Atual:</strong>{' '}
-              {currentAssignee?.full_name || 'Sem atendimento'}
+              <strong>Actual:</strong>{' '}
+              {currentAssignee?.full_name || 'Sin atención'}
               {currentSquad && ` (${currentSquad.name})`}
             </p>
           </div>
@@ -247,7 +247,7 @@ export function LeadTransferModal({
             {transferLead.isPending ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                Transferindo...
+                Transfiriendo...
               </>
             ) : (
               'Transferir'

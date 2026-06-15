@@ -9,7 +9,7 @@ import {
   addHours,
   startOfDay,
 } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { CalendarEvent } from '@/hooks/useCalendarEvents';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -32,7 +32,7 @@ const EVENT_TYPE_COLORS: Record<string, string> = {
 
 const BRT_TZ = 'America/Sao_Paulo';
 const formatBRT = (iso: string, opts: Intl.DateTimeFormatOptions) =>
-  new Intl.DateTimeFormat('pt-BR', { timeZone: BRT_TZ, ...opts }).format(new Date(iso));
+  new Intl.DateTimeFormat('es', { timeZone: BRT_TZ, ...opts }).format(new Date(iso));
 const getBRTHour = (iso: string) => {
   const parts = new Intl.DateTimeFormat('en-US', { timeZone: BRT_TZ, hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date(iso));
   const h = Number(parts.find(p => p.type === 'hour')?.value ?? 0);
@@ -53,8 +53,8 @@ export function CalendarWeekView({
   onEventClick 
 }: CalendarWeekViewProps) {
   const weekDays = useMemo(() => {
-    const weekStart = startOfWeek(currentDate, { locale: ptBR });
-    const weekEnd = endOfWeek(currentDate, { locale: ptBR });
+    const weekStart = startOfWeek(currentDate, { locale: es });
+    const weekEnd = endOfWeek(currentDate, { locale: es });
     return eachDayOfInterval({ start: weekStart, end: weekEnd });
   }, [currentDate]);
 
@@ -87,7 +87,7 @@ export function CalendarWeekView({
             )}
           >
             <div className="text-xs text-muted-foreground">
-              {format(day, 'EEE', { locale: ptBR })}
+              {format(day, 'EEE', { locale: es })}
             </div>
             <div className={cn(
               "text-lg font-semibold",

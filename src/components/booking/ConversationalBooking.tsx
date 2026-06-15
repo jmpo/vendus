@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { format, addDays, startOfDay, isBefore, isAfter } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import type { QuestionField } from '@/hooks/useBookingEventTypes';
 
@@ -95,9 +95,9 @@ export function ConversationalBooking({
     // Initial welcome message
     if (messages.length === 0) {
       setTimeout(() => {
-        addBotMessage(`Olá! 👋 Vamos agendar sua ${eventName}?`);
+        addBotMessage(`¡Hola! 👋 ¿Vamos a programar tu ${eventName}?`);
         setTimeout(() => {
-          addBotMessage('Para começar, qual é o seu nome?');
+          addBotMessage('Para empezar, ¿cuál es tu nombre?');
           setCurrentStep('name');
         }, 1000);
       }, 500);
@@ -134,7 +134,7 @@ export function ConversationalBooking({
         setTimeout(() => {
           addBotMessage(`Prazer em conhecê-lo, ${value.split(' ')[0]}! 😊`);
           setTimeout(() => {
-            addBotMessage('Qual é o seu melhor e-mail?');
+            addBotMessage('¿Cuál es tu mejor correo electrónico?');
             setCurrentStep('email');
           }, 800);
         }, 300);
@@ -142,12 +142,12 @@ export function ConversationalBooking({
 
       case 'email':
         if (!value.includes('@')) {
-          addBotMessage('Ops! Parece que esse e-mail não é válido. Pode verificar?');
+          addBotMessage('¡Ups! Parece que este correo no es válido. ¿Podrías revisarlo?');
           return;
         }
         setFormData(prev => ({ ...prev, email: value }));
         setTimeout(() => {
-          addBotMessage('Perfeito! E qual é o seu telefone? (opcional, pode pular com Enter)');
+          addBotMessage('¡Perfecto! ¿Y cuál es tu teléfono? (opcional, puedes saltar con Enter)');
           setCurrentStep('phone');
         }, 300);
         break;
@@ -171,7 +171,7 @@ export function ConversationalBooking({
           }, 300);
         } else {
           setTimeout(() => {
-            addBotMessage('Ótimo! Agora escolha o melhor dia e horário para nossa reunião:');
+            addBotMessage('¡Excelente! Ahora elige el mejor día y hora para nuestra reunión:');
             setCurrentStep('calendar');
           }, 300);
         }
@@ -180,7 +180,7 @@ export function ConversationalBooking({
   };
 
   const handleSkipPhone = () => {
-    addUserMessage('Pular');
+    addUserMessage('Saltar');
     handleAfterPhone();
   };
 
@@ -192,7 +192,7 @@ export function ConversationalBooking({
       }, 300);
     } else {
       setTimeout(() => {
-        addBotMessage('Excelente! Agora escolha o melhor dia e horário para nossa reunião:');
+        addBotMessage('¡Excelente! Ahora elige el mejor día y hora para nuestra reunión:');
         setCurrentStep('calendar');
       }, 300);
     }
@@ -200,9 +200,9 @@ export function ConversationalBooking({
 
   const handleSelectSlot = (slot: { start: string; end: string }) => {
     setSelectedSlot(slot);
-    addUserMessage(`${format(selectedDate!, 'dd/MM')} às ${slot.start}`);
+    addUserMessage(`${format(selectedDate!, 'dd/MM')} a las ${slot.start}`);
     setTimeout(() => {
-      addBotMessage('Perfeito! Vou confirmar os dados do seu agendamento.');
+      addBotMessage('¡Perfecto! Voy a confirmar los datos de tu cita.');
       setShowConfirmDialog(true);
     }, 500);
   };
@@ -262,7 +262,7 @@ export function ConversationalBooking({
               <span>{duration} min</span>
               <span>•</span>
               <Video className="h-3.5 w-3.5" />
-              <span>Videochamada</span>
+              <span>Video llamada</span>
             </div>
           </div>
         </div>
@@ -342,19 +342,19 @@ export function ConversationalBooking({
                         selected={selectedDate}
                         onSelect={onDateSelect}
                         disabled={isDateDisabled}
-                        locale={ptBR}
+                        locale={es}
                         className="rounded-md border"
                       />
                       <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
                         <Globe className="h-4 w-4" />
-                        <span>Horário de Brasília</span>
+                        <span>Horario de Brasilia</span>
                       </div>
                     </div>
 
                     {selectedDate && (
                       <div className="flex-1">
                         <h4 className="font-medium mb-3 capitalize">
-                          {format(selectedDate, "EEEE, dd 'de' MMMM", { locale: ptBR })}
+                          {format(selectedDate, "EEEE, dd 'de' MMMM", { locale: es })}
                         </h4>
                         
                         {loadingSlots ? (
@@ -363,7 +363,7 @@ export function ConversationalBooking({
                           </div>
                         ) : slots.filter(s => s.available).length === 0 ? (
                           <p className="text-sm text-muted-foreground py-4">
-                            Nenhum horário disponível nesta data.
+                            No hay horarios disponibles en esta fecha.
                           </p>
                         ) : (
                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-64 overflow-y-auto pr-2">
@@ -402,10 +402,10 @@ export function ConversationalBooking({
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder={
-                  currentStep === 'name' ? 'Digite seu nome...' :
-                  currentStep === 'email' ? 'Digite seu e-mail...' :
-                  currentStep === 'phone' ? 'Digite seu telefone (ou Enter para pular)...' :
-                  'Digite sua resposta...'
+                  currentStep === 'name' ? 'Escribe tu nombre...' :
+                  currentStep === 'email' ? 'Escribe tu correo...' :
+                  currentStep === 'phone' ? 'Escribe tu teléfono (o Enter para saltar)...' :
+                  'Escribe tu respuesta...'
                 }
                 className="flex-1"
                 autoFocus
@@ -426,7 +426,7 @@ export function ConversationalBooking({
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Confirmar Agendamento</DialogTitle>
+            <DialogTitle>Confirmar Cita</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="p-4 rounded-lg bg-muted/50 space-y-3">
@@ -434,7 +434,7 @@ export function ConversationalBooking({
                 <CalendarIcon className="h-5 w-5 text-muted-foreground" />
                 <div>
                   <p className="font-medium capitalize">
-                    {selectedDate && format(selectedDate, "EEEE, dd 'de' MMMM", { locale: ptBR })}
+                    {selectedDate && format(selectedDate, "EEEE, dd 'de' MMMM", { locale: es })}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     {selectedSlot?.start} - {selectedSlot?.end}
@@ -449,16 +449,16 @@ export function ConversationalBooking({
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Nome:</span>
+                <span className="text-muted-foreground">Nombre:</span>
                 <span className="font-medium">{formData.name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">E-mail:</span>
+                <span className="text-muted-foreground">Correo:</span>
                 <span className="font-medium">{formData.email}</span>
               </div>
               {formData.phone && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Telefone:</span>
+                  <span className="text-muted-foreground">Teléfono:</span>
                   <span className="font-medium">{formData.phone}</span>
                 </div>
               )}
@@ -466,7 +466,7 @@ export function ConversationalBooking({
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowConfirmDialog(false)}>
-              Voltar
+              Volver
             </Button>
             <Button onClick={handleConfirm} disabled={isSubmitting} style={{ backgroundColor: color }}>
               {isSubmitting ? (
@@ -477,7 +477,7 @@ export function ConversationalBooking({
               ) : (
                 <>
                   <Check className="h-4 w-4 mr-2" />
-                  Confirmar Agendamento
+                  Confirmar Cita
                 </>
               )}
             </Button>

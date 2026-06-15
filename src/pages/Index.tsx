@@ -265,7 +265,7 @@ const Index = () => {
       'tasks': { title: 'Minhas Tarefas', subtitle: selectedProduct.name },
       'goals': { title: 'Metas', subtitle: selectedProduct.name },
       'financial': { title: 'Financeiro', subtitle: selectedProduct.name },
-      'bookings': { title: 'Agendamentos', subtitle: selectedProduct.name },
+      'bookings': { title: 'Agendamientos', subtitle: selectedProduct.name },
       'cadence': { title: 'Cadência', subtitle: selectedProduct.name },
       'playbook': { title: 'Playbook', subtitle: selectedProduct.name },
       'objections': { title: 'Objeções', subtitle: selectedProduct.name },

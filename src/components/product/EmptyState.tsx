@@ -27,35 +27,35 @@ export function EmptyState() {
       </div>
 
       <h2 className="text-2xl font-semibold text-foreground mb-2 text-center">
-        {superAdmin ? 'Configure sua plataforma' : `Bem-vindo ao ${platformName}`}
+        {superAdmin ? 'Configure su plataforma' : `Bienvenido a ${platformName}`}
       </h2>
 
       {superAdmin ? (
         <>
           <p className="text-base text-muted-foreground text-center mb-2">
-            Você é o Super Admin desta instalação
+            Usted es el Super Admin de esta instalación
           </p>
           <p className="text-muted-foreground text-center max-w-md mb-8 text-sm">
-            Comece criando uma organização, produtos e usuários no painel
-            Super Admin para liberar o sistema.
+            Comience creando una organización, productos y usuarios en el panel
+            Super Admin para habilitar el sistema.
           </p>
           <Button onClick={() => navigate('/super-admin')} className="gap-2">
             <Settings className="h-4 w-4" />
-            Ir ao painel Super Admin
+            Ir al panel de Super Admin
           </Button>
         </>
       ) : (
         <>
           <p className="text-base text-muted-foreground text-center mb-2">
-            Você ainda não tem produtos atribuídos
+            Aún no tiene productos asignados
           </p>
           <p className="text-muted-foreground text-center max-w-md mb-8 text-sm">
-            Aguarde seu gestor liberar acesso aos produtos. Assim que isso acontecer,
-            você verá aqui tudo o que precisa para vender.
+            Espere a que su gestor habilite el acceso a los productos. Tan pronto como eso suceda,
+            verá aquí todo lo que necesita para vender.
           </p>
           <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 text-muted-foreground text-sm">
             <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            Aguardando liberação
+            Esperando habilitación
           </div>
         </>
       )}

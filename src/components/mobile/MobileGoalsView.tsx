@@ -93,7 +93,7 @@ export function MobileGoalsView({ userId, productId }: MobileGoalsViewProps) {
         <Card className="p-4 bg-card">
           <div className="flex items-center gap-2 mb-2">
             <Medal size={16} className="text-primary" />
-            <span className="text-xs text-muted-foreground">Vendas</span>
+            <span className="text-xs text-muted-foreground">Ventas</span>
           </div>
           <span className="text-2xl font-bold text-foreground">
             {currentGoal?.achieved_deals || 8}

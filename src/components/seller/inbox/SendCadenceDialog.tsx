@@ -67,7 +67,7 @@ export function SendCadenceDialog({
       toast({ title: `Cadência iniciada no dia ${selectedDay?.day || 1}` });
       onOpenChange(false);
     } catch {
-      toast({ title: 'Erro ao iniciar cadência', variant: 'destructive' });
+      toast({ title: 'Error al iniciar cadência', variant: 'destructive' });
     } finally {
       setIsSending(false);
     }
@@ -79,7 +79,7 @@ export function SendCadenceDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CalendarDays className="h-5 w-5" />
-            Enviar Cadência
+            Enviar cadencia
           </DialogTitle>
         </DialogHeader>
 

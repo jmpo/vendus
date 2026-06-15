@@ -65,9 +65,9 @@ interface ChatAreaProps {
   isTyping?: boolean;
   productName?: string;
   currentUserId?: string;
-  /** Quando true, exibe a barra "Aceitar Atendimento" no rodapé em vez do composer */
+  /** Quando true, exibe a barra "Aceptar Atención" no rodapé em vez do composer */
   needsAccept?: boolean;
-  /** Callback acionado quando o agente clica em "Aceitar Atendimento" */
+  /** Callback acionado quando o agente clica em "Aceptar Atención" */
   onAcceptTicket?: (squadId?: string) => Promise<void> | void;
   isAccepting?: boolean;
   /** Modo espectador: admin vendo conversa de outro agente. Esconde composer e mostra banner. */
@@ -279,8 +279,8 @@ export function ChatArea({
   // Helper: formata o label do separador de dia (Hoje, Ontem, dia da semana, ou data completa)
   const formatDayLabel = (dateStr: string) => {
     const d = new Date(dateStr);
-    if (isToday(d)) return 'Hoje';
-    if (isYesterday(d)) return 'Ontem';
+    if (isToday(d)) return 'Hoy';
+    if (isYesterday(d)) return 'Ayer';
     const diff = differenceInDays(new Date(), d);
     if (diff < 7) return format(d, 'EEEE', { locale: ptBR });
     return format(d, "d 'de' MMMM", { locale: ptBR });
@@ -335,10 +335,10 @@ export function ChatArea({
 
   const getStatusText = () => {
     switch (status) {
-      case 'active': return 'Conversa ativa';
-      case 'waiting': return 'Aguardando atendimento';
-      case 'bot_active': return 'Atendimento por IA';
-      case 'closed': return 'Conversa encerrada';
+      case 'active': return 'Conversación activa';
+      case 'waiting': return 'Esperando atención';
+      case 'bot_active': return 'Atención por IA';
+      case 'closed': return 'Conversación finalizada';
       default: return status;
     }
   };
@@ -359,11 +359,11 @@ export function ChatArea({
   // Status dinâmico do header mobile (Online / Digitando / Última interação)
   const lastMessageAt = messages.length > 0 ? messages[messages.length - 1].created_at : null;
   const mobileStatusLine = isTyping
-    ? 'Digitando…'
+    ? 'Escribiendo…'
     : peerOnline
-    ? 'Online'
+    ? 'En línea'
     : lastMessageAt
-    ? `Última interação: ${format(new Date(lastMessageAt), "HH:mm")}`
+    ? `Última interacción: ${format(new Date(lastMessageAt), "HH:mm")}`
     : getStatusText();
 
   return (
@@ -414,12 +414,12 @@ export function ChatArea({
               </Button>
             )}
             {status !== 'closed' && onTransfer && (
-              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onTransfer} aria-label="Atribuir responsável">
+              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onTransfer} aria-label="Asignar responsable">
                 <UserCircle className="h-[18px] w-[18px]" />
               </Button>
             )}
             {status !== 'closed' && onClose && (
-              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onClose} aria-label="Arquivar / Encerrar">
+              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onClose} aria-label="Archivar / Finalizar">
                 <Archive className="h-[18px] w-[18px]" />
               </Button>
             )}
@@ -433,19 +433,19 @@ export function ChatArea({
                 {(status === 'bot_active' || status === 'waiting') && onResume && (
                   <DropdownMenuItem onClick={onResume} disabled={isResuming}>
                     <Play className="h-4 w-4 mr-2" />
-                    Retomar atendimento
+                    Retomar atención
                   </DropdownMenuItem>
                 )}
                 {status === 'human_active' && onActivateBot && (
                   <DropdownMenuItem onClick={onActivateBot} disabled={isActivatingBot}>
                     <Bot className="h-4 w-4 mr-2" />
-                    Ativar IA
+                    Activar IA
                   </DropdownMenuItem>
                 )}
                 {onReturnToQueue && status !== 'closed' && (
                   <DropdownMenuItem onClick={onReturnToQueue} disabled={isReturning}>
                     <Undo2 className="h-4 w-4 mr-2" />
-                    Devolver à fila
+                    Devolver a la fila
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem>
@@ -460,7 +460,7 @@ export function ChatArea({
                 {status === 'closed' && onReopen && (
                   <DropdownMenuItem onClick={onReopen} disabled={isReopening}>
                     <RotateCcw className="h-4 w-4 mr-2" />
-                    Reabrir conversa
+                    Reabrir conversación
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
@@ -591,7 +591,7 @@ export function ChatArea({
                   Reabrir
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Reabrir conversa</TooltipContent>
+              <TooltipContent>Reabrir conversación</TooltipContent>
             </Tooltip>
           )}
 
@@ -603,7 +603,7 @@ export function ChatArea({
                   Retomar
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Retomar atendimento humano</TooltipContent>
+              <TooltipContent>Retomar atención humano</TooltipContent>
             </Tooltip>
           )}
 
@@ -636,7 +636,7 @@ export function ChatArea({
                       <Undo2 className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Devolver à fila</TooltipContent>
+                  <TooltipContent>Devolver a la fila</TooltipContent>
                 </Tooltip>
               )}
             </>
@@ -670,13 +670,13 @@ export function ChatArea({
               {status !== 'closed' && onClose && (
                 <DropdownMenuItem onClick={onClose} className="text-destructive">
                   <X className="h-4 w-4 mr-2" />
-                  Encerrar conversa
+                  Finalizar conversa
                 </DropdownMenuItem>
               )}
               {status === 'closed' && onReopen && (
                 <DropdownMenuItem onClick={onReopen}>
                   <RotateCcw className="h-4 w-4 mr-2" />
-                  Reabrir conversa
+                  Reabrir conversación
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
@@ -833,7 +833,7 @@ export function ChatArea({
             onTyping={onTyping}
             onOpenQuickReplies={() => setQuickRepliesOpen(true)}
             isSending={isSending}
-            placeholder={`Mensagem para ${visitorName || 'visitante'}...`}
+            placeholder={`Mensaje para ${visitorName || 'visitante'}...`}
             aiSuggestion={aiSuggestion}
             onClearSuggestion={() => setAiSuggestion('')}
             onScheduleMessage={onScheduleMessage}
@@ -842,7 +842,7 @@ export function ChatArea({
       ) : (
         <div className="p-3 border-t border-border bg-muted/30 flex-shrink-0">
           <div className="flex items-center justify-center gap-2">
-            <span className="text-xs text-muted-foreground">Conversa encerrada</span>
+            <span className="text-xs text-muted-foreground">Conversación finalizada</span>
             {onReopen && (
               <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={onReopen} disabled={isReopening}>
                 <RotateCcw className="h-3 w-3" />

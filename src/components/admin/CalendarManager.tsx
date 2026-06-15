@@ -12,7 +12,7 @@ import {
   endOfWeek,
   format
 } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { 
   CalendarDays, 
   Plus, 
@@ -70,13 +70,13 @@ function AgendaCalendarView() {
     switch (viewMode) {
       case 'month':
         return {
-          startDate: startOfWeek(startOfMonth(currentDate), { locale: ptBR }),
-          endDate: endOfWeek(endOfMonth(currentDate), { locale: ptBR }),
+          startDate: startOfWeek(startOfMonth(currentDate), { locale: es }),
+          endDate: endOfWeek(endOfMonth(currentDate), { locale: es }),
         };
       case 'week':
         return {
-          startDate: startOfWeek(currentDate, { locale: ptBR }),
-          endDate: endOfWeek(currentDate, { locale: ptBR }),
+          startDate: startOfWeek(currentDate, { locale: es }),
+          endDate: endOfWeek(currentDate, { locale: es }),
         };
       case 'day': {
         const dayStart = new Date(currentDate);
@@ -147,14 +147,14 @@ function AgendaCalendarView() {
   const getViewTitle = () => {
     switch (viewMode) {
       case 'month':
-        return format(currentDate, 'MMMM yyyy', { locale: ptBR });
+        return format(currentDate, 'MMMM yyyy', { locale: es });
       case 'week': {
-        const weekStart = startOfWeek(currentDate, { locale: ptBR });
-        const weekEnd = endOfWeek(currentDate, { locale: ptBR });
-        return `${format(weekStart, 'd', { locale: ptBR })} - ${format(weekEnd, 'd MMM yyyy', { locale: ptBR })}`;
+        const weekStart = startOfWeek(currentDate, { locale: es });
+        const weekEnd = endOfWeek(currentDate, { locale: es });
+        return `${format(weekStart, 'd', { locale: es })} - ${format(weekEnd, 'd MMM yyyy', { locale: es })}`;
       }
       case 'day':
-        return format(currentDate, "EEEE, d 'de' MMMM yyyy", { locale: ptBR });
+        return format(currentDate, "EEEE, d 'de' MMMM yyyy", { locale: es });
       default:
         return 'Próximos Eventos';
     }
@@ -175,17 +175,17 @@ function AgendaCalendarView() {
 
   return (
     <div className="space-y-4">
-      {/* Barra compacta: stats inline + botão Novo Evento */}
+      {/* Barra compacta: stats inline + botão Nuevo Evento */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/40">
             <CalendarDays className="h-4 w-4 text-primary" />
-            <span className="text-xs text-muted-foreground">Hoje</span>
+            <span className="text-xs text-muted-foreground">Hoy</span>
             <span className="text-sm font-semibold">{stats.today}</span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/40">
             <LayoutGrid className="h-4 w-4 text-blue-500" />
-            <span className="text-xs text-muted-foreground">No período</span>
+            <span className="text-xs text-muted-foreground">En el período</span>
             <span className="text-sm font-semibold">{stats.total}</span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/40">
@@ -196,7 +196,7 @@ function AgendaCalendarView() {
         </div>
         <Button onClick={handleNewEvent} size="sm">
           <Plus className="h-4 w-4 mr-2" />
-          Novo Evento
+          Nuevo Evento
         </Button>
       </div>
 
@@ -206,9 +206,9 @@ function AgendaCalendarView() {
           <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
             <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)}>
               <TabsList>
-                <TabsTrigger value="month">Mês</TabsTrigger>
+                <TabsTrigger value="month">Mes</TabsTrigger>
                 <TabsTrigger value="week">Semana</TabsTrigger>
-                <TabsTrigger value="day">Dia</TabsTrigger>
+                <TabsTrigger value="day">Día</TabsTrigger>
                 <TabsTrigger value="list">Lista</TabsTrigger>
               </TabsList>
             </Tabs>
@@ -219,10 +219,10 @@ function AgendaCalendarView() {
               {canViewAllUsers && (
                 <Select value={selectedUserId || 'all'} onValueChange={(v) => setSelectedUserId(v === 'all' ? '' : v)}>
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Todos vendedores" />
+                    <SelectValue placeholder="Todos los vendedores" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Todos vendedores</SelectItem>
+                    <SelectItem value="all">Todos los vendedores</SelectItem>
                     {teamMembers?.map((member) => (
                       <SelectItem key={member.id} value={member.id}>
                         {member.full_name}
@@ -234,10 +234,10 @@ function AgendaCalendarView() {
 
               <Select value={selectedProductId || 'all'} onValueChange={(v) => setSelectedProductId(v === 'all' ? '' : v)}>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Todos produtos" />
+                  <SelectValue placeholder="Todos los productos" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos produtos</SelectItem>
+                  <SelectItem value="all">Todos los productos</SelectItem>
                   {products?.map((product) => (
                     <SelectItem key={product.id} value={product.id}>
                       {product.name}
@@ -248,15 +248,15 @@ function AgendaCalendarView() {
 
               <Select value={selectedEventType || 'all'} onValueChange={(v) => setSelectedEventType(v === 'all' ? '' : v)}>
                 <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Todos tipos" />
+                  <SelectValue placeholder="Todos los tipos" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos tipos</SelectItem>
-                  <SelectItem value="meeting">🤝 Reunião</SelectItem>
-                  <SelectItem value="call">📞 Ligação</SelectItem>
+                  <SelectItem value="all">Todos los tipos</SelectItem>
+                  <SelectItem value="meeting">🤝 Reunión</SelectItem>
+                  <SelectItem value="call">📞 Llamada</SelectItem>
                   <SelectItem value="demo">🎯 Demo</SelectItem>
                   <SelectItem value="follow_up">📋 Follow-up</SelectItem>
-                  <SelectItem value="other">📌 Outro</SelectItem>
+                  <SelectItem value="other">📌 Otro</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -292,7 +292,7 @@ function AgendaCalendarView() {
               <ChevronRight className="h-4 w-4" />
             </Button>
             <Button variant="outline" size="sm" onClick={goToToday}>
-              Hoje
+              Hoy
             </Button>
           </div>
           <h2 className="text-lg font-semibold capitalize">{getViewTitle()}</h2>
@@ -352,10 +352,10 @@ function AgendaCalendarView() {
 /**
  * Casca do módulo Agenda no Admin: agrupa em uma única tela
  *  - Agenda (calendário visual)
- *  - Reuniões (bookings recebidos)
+ *  - Reuniones (bookings recebidos)
  *  - Tipos de Evento (pré-configuração do admin)
- *  - Disponibilidade (horários)
- *  - Links da Equipe (centralização para o admin enviar links de cada vendedor)
+ *  - Disponibilidad (horários)
+ *  - Enlaces del Equipo (centralização para o admin enviar links de cada vendedor)
  */
 export function CalendarManager() {
   const { isAdmin, isManager } = useAuth();
@@ -368,12 +368,12 @@ export function CalendarManager() {
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <CalendarDays className="h-6 w-6" />
-          Agenda & Agendamentos
+          Agenda & Agendamientos
         </h1>
         <p className="text-muted-foreground">
           {canViewAllUsers
-            ? 'Visualize a agenda da equipe, configure tipos de reunião e compartilhe os links individuais dos vendedores'
-            : 'Gerencie seus compromissos e reuniões'}
+            ? 'Visualice la agenda del equipo, configure tipos de reunión y comparta los enlaces individuales de los vendedores'
+            : 'Gestione sus citas y reuniones'}
         </p>
       </div>
 
@@ -382,20 +382,20 @@ export function CalendarManager() {
           <ScrollArea className="w-full whitespace-nowrap">
             <TabsList className="inline-flex w-auto min-w-full justify-start gap-1 p-1">
               <TabsTrigger value="agenda" className="shrink-0">Agenda</TabsTrigger>
-              <TabsTrigger value="bookings" className="shrink-0">Reuniões</TabsTrigger>
+              <TabsTrigger value="bookings" className="shrink-0">Reuniones</TabsTrigger>
               <TabsTrigger value="event-types" className="shrink-0">Tipos de Evento</TabsTrigger>
-              <TabsTrigger value="availability" className="shrink-0">Disponibilidade</TabsTrigger>
-              <TabsTrigger value="team-links" className="shrink-0">Links da Equipe</TabsTrigger>
+              <TabsTrigger value="availability" className="shrink-0">Disponibilidad</TabsTrigger>
+              <TabsTrigger value="team-links" className="shrink-0">Enlaces del Equipo</TabsTrigger>
             </TabsList>
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
         ) : (
           <TabsList className="grid w-full max-w-3xl grid-cols-5">
             <TabsTrigger value="agenda">Agenda</TabsTrigger>
-            <TabsTrigger value="bookings">Reuniões</TabsTrigger>
+            <TabsTrigger value="bookings">Reuniones</TabsTrigger>
             <TabsTrigger value="event-types">Tipos de Evento</TabsTrigger>
-            <TabsTrigger value="availability">Disponibilidade</TabsTrigger>
-            <TabsTrigger value="team-links">Links da Equipe</TabsTrigger>
+            <TabsTrigger value="availability">Disponibilidad</TabsTrigger>
+            <TabsTrigger value="team-links">Enlaces del Equipo</TabsTrigger>
           </TabsList>
         )}
 

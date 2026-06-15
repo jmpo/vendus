@@ -218,7 +218,7 @@ export function PlatformSettings() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>E-mail de Suporte</Label>
+                  <Label>E-mail de Soporte</Label>
                   <Input
                     type="email"
                     value={formData.support_email}

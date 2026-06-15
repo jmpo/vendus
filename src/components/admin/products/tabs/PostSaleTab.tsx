@@ -100,7 +100,7 @@ export function PostSaleTab({ productId }: Props) {
             <Sparkles className="h-5 w-5 text-primary shrink-0" />
             <div className="min-w-0">
               <p className="text-sm font-medium">Pacote de etiquetas deste produto</p>
-              <p className="text-xs text-muted-foreground">Gera PIX, Boleto, Aguardando Pagamento, Cliente, Reembolso etc. já com automações.</p>
+              <p className="text-xs text-muted-foreground">Gera PIX, Boleto, Aguardando Pago, Cliente, Reembolso etc. já com automações.</p>
             </div>
           </div>
           <Button variant="outline" size="sm" onClick={() => setPackageOpen(true)}>Gerar pacote</Button>
@@ -387,7 +387,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">—</SelectItem>
-                    <SelectItem value="won">Ganho</SelectItem>
+                    <SelectItem value="won">Ganado</SelectItem>
                     <SelectItem value="lost">Perdido</SelectItem>
                   </SelectContent>
                 </Select>

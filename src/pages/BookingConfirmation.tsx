@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useBookingByToken } from '@/hooks/useBookingConfirmation';
 import { BookingCountdown, CountdownProgress } from '@/components/booking/BookingCountdown';
 import { format, parseISO, isBefore } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { Logo } from '@/components/ui/Logo';
 
 export default function BookingConfirmation() {
@@ -30,9 +30,9 @@ export default function BookingConfirmation() {
             <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="h-8 w-8 text-destructive" />
             </div>
-            <h1 className="text-2xl font-bold mb-2">Link Inválido</h1>
+            <h1 className="text-2xl font-bold mb-2">Enlace Inválido</h1>
             <p className="text-muted-foreground">
-              Este link de confirmação não é válido ou a reunião foi cancelada.
+              Este enlace de confirmación no es válido o la reunión ha sido cancelada.
             </p>
           </CardContent>
         </Card>
@@ -88,9 +88,9 @@ export default function BookingConfirmation() {
                     <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
                       <AlertCircle className="h-8 w-8 text-destructive" />
                     </div>
-                    <h1 className="text-2xl font-bold mb-2">Reunião Cancelada</h1>
+                    <h1 className="text-2xl font-bold mb-2">Reunión Cancelada</h1>
                     <p className="text-muted-foreground">
-                      Esta reunião foi cancelada.
+                      Esta reunión ha sido cancelada.
                     </p>
                   </div>
                 ) : (
@@ -99,7 +99,7 @@ export default function BookingConfirmation() {
                     {isUpcoming && (
                       <div className="text-center">
                         <p className="text-sm text-muted-foreground mb-3 uppercase tracking-wide font-medium">
-                          {isUpcoming ? 'Começa em' : 'Reunião em andamento'}
+                          {isUpcoming ? 'Comienza en' : 'Reunión en curso'}
                         </p>
                         <BookingCountdown targetDate={startDate} size="md" />
                       </div>
@@ -114,7 +114,7 @@ export default function BookingConfirmation() {
                           </div>
                           <div>
                             <p className="font-semibold capitalize">
-                              {format(startDate, "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                              {format(startDate, "EEEE, dd 'de' MMMM 'de' yyyy", { locale: es })}
                             </p>
                             <p className="text-sm text-muted-foreground">
                               {format(startDate, 'HH:mm')} - {format(endDate, 'HH:mm')}
@@ -133,7 +133,7 @@ export default function BookingConfirmation() {
                         <div className="flex items-center gap-4 p-3 rounded-lg bg-background">
                           <Mail className="h-5 w-5 text-muted-foreground" />
                           <div>
-                            <p className="text-sm text-muted-foreground">E-mail</p>
+                            <p className="text-sm text-muted-foreground">Correo electrónico</p>
                             <p className="font-medium">{booking.guest_email}</p>
                           </div>
                         </div>
@@ -142,7 +142,7 @@ export default function BookingConfirmation() {
                           <div className="flex items-center gap-4 p-3 rounded-lg bg-primary/5 border border-primary/20">
                             <Video className="h-5 w-5 text-primary" />
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm text-muted-foreground">Link da reunião</p>
+                              <p className="text-sm text-muted-foreground">Enlace de la reunión</p>
                               <a 
                                 href={booking.calendar_event.meet_link}
                                 target="_blank"
@@ -169,12 +169,12 @@ export default function BookingConfirmation() {
                           {isUpcoming ? (
                             <>
                               <Clock className="h-4 w-4 mr-2" />
-                              Aguarde o Horário
+                              Espere la hora
                             </>
                           ) : (
                             <>
                               <ExternalLink className="h-4 w-4 mr-2" />
-                              Entrar na Reunião
+                              Unirse a la reunión
                             </>
                           )}
                         </Button>
@@ -186,7 +186,7 @@ export default function BookingConfirmation() {
                         className="w-full"
                         onClick={handleReschedule}
                       >
-                        Reagendar
+                        Reprogramar
                       </Button>
                     </div>
                   </>

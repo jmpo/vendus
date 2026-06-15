@@ -73,7 +73,7 @@ const AI_OBJECTIVES: { value: AIObjective; label: string; description: string }[
   { value: 'qualify', label: 'Qualificar', description: 'Avaliar interesse e fit do lead' },
   { value: 'sell', label: 'Vender', description: 'Conduzir para fechamento' },
   { value: 'schedule', label: 'Agendar', description: 'Marcar reunião ou demo' },
-  { value: 'support', label: 'Suporte', description: 'Tirar dúvidas e ajudar' },
+  { value: 'support', label: 'Soporte', description: 'Tirar dúvidas e ajudar' },
   { value: 'custom', label: 'Personalizado', description: 'Definir objetivo próprio' },
 ];
 
@@ -899,7 +899,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                 placeholder="ID do tipo de evento"
               />
               <p className="text-xs text-muted-foreground">
-                Configure tipos de evento em Agendamentos → Tipos de Evento.
+                Configure tipos de evento em Agendamientos → Tipos de Evento.
                 Cole aqui o ID do evento desejado.
               </p>
             </div>

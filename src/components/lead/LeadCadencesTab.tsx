@@ -24,9 +24,9 @@ interface Enrollment {
 }
 
 const statusMeta: Record<string, { label: string; variant: any; icon: any }> = {
-  active: { label: 'Ativo', variant: 'default', icon: CalendarClock },
-  completed: { label: 'Concluído', variant: 'secondary', icon: CheckCircle2 },
-  stopped: { label: 'Parado', variant: 'destructive', icon: StopCircle },
+  active: { label: 'Activo', variant: 'default', icon: CalendarClock },
+  completed: { label: 'Concluido', variant: 'secondary', icon: CheckCircle2 },
+  stopped: { label: 'Detenido', variant: 'destructive', icon: StopCircle },
   paused: { label: 'Pausado', variant: 'outline', icon: XCircle },
 };
 
@@ -90,29 +90,29 @@ export function LeadCadencesTab({ leadId, organizationId }: LeadCadencesTabProps
         body: { cadence_id: picked, lead_ids: [leadId], source: 'manual' },
       });
       if (error) throw error;
-      if ((data as any)?.enrolled > 0) toast.success('Lead inscrito na cadência');
-      else if ((data as any)?.skipped_existing > 0) toast.info('Lead já estava nesta cadência');
-      else toast.warning('Não foi possível inscrever (verifique filtros de exclusão)');
+      if ((data as any)?.enrolled > 0) toast.success('Lead inscrito en la cadencia');
+      else if ((data as any)?.skipped_existing > 0) toast.info('El lead ya estaba en esta cadencia');
+      else toast.warning('No fue posible inscribir (verifique los filtros de exclusión)');
       setAddOpen(false);
       setPicked(null);
       refresh();
     } catch (e: any) {
-      toast.error(e?.message ?? 'Falha ao inscrever');
+      toast.error(e?.message ?? 'Error al inscribir');
     } finally {
       setBusy(false);
     }
   };
 
   const handleStop = async (enrollmentId: string) => {
-    if (!confirm('Remover lead desta cadência?')) return;
+    if (!confirm('¿Eliminar lead de esta cadencia?')) return;
     try {
       await supabase.functions.invoke('cadence-stop', {
         body: { enrollment_id: enrollmentId, reason: 'manual_lead_detail' },
       });
-      toast.success('Lead removido da cadência');
+      toast.success('Lead eliminado de la cadencia');
       refresh();
     } catch (e: any) {
-      toast.error(e?.message ?? 'Falha ao remover');
+      toast.error(e?.message ?? 'Error al eliminar');
     }
   };
 
@@ -124,16 +124,16 @@ export function LeadCadencesTab({ leadId, organizationId }: LeadCadencesTabProps
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold">Cadências do Lead</h3>
-          <p className="text-xs text-muted-foreground">Jornadas automatizadas inscritas ou já encerradas.</p>
+          <h3 className="text-sm font-semibold">Cadencias del Lead</h3>
+          <p className="text-xs text-muted-foreground">Jornadas automatizadas inscritas o ya finalizadas.</p>
         </div>
         <Button size="sm" onClick={() => setAddOpen(true)}>
-          <Plus className="h-4 w-4 mr-1" />Adicionar
+          <Plus className="h-4 w-4 mr-1" />Agregar
         </Button>
       </div>
 
       {enrollments.length === 0 ? (
-        <Card><CardContent className="p-8 text-center text-sm text-muted-foreground">Lead não está em nenhuma cadência.</CardContent></Card>
+        <Card><CardContent className="p-8 text-center text-sm text-muted-foreground">El lead no está en ninguna cadencia.</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {enrollments.map((e) => {
@@ -145,16 +145,16 @@ export function LeadCadencesTab({ leadId, organizationId }: LeadCadencesTabProps
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-medium truncate">{e.cadence_name ?? 'Cadência'}</p>
+                        <p className="font-medium truncate">{e.cadence_name ?? 'Cadencia'}</p>
                         <Badge variant={meta.variant} className="gap-1"><Icon className="h-3 w-3" />{meta.label}</Badge>
                         {e.source && <Badge variant="outline" className="text-xs">via {e.source}</Badge>}
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Etapa atual: {e.current_step_index + 1} · Inscrito em {new Date(e.enrolled_at).toLocaleString('pt-BR')}
+                        Etapa actual: {e.current_step_index + 1} · Inscrito el {new Date(e.enrolled_at).toLocaleString('es-ES')}
                       </p>
                       {e.status === 'active' && e.next_run_at && (
                         <p className="text-xs text-muted-foreground">
-                          Próxima execução: {new Date(e.next_run_at).toLocaleString('pt-BR')}
+                          Próxima ejecución: {new Date(e.next_run_at).toLocaleString('es-ES')}
                         </p>
                       )}
                       {e.status === 'stopped' && e.stop_reason && (
@@ -168,7 +168,7 @@ export function LeadCadencesTab({ leadId, organizationId }: LeadCadencesTabProps
                     </div>
                     {e.status === 'active' && (
                       <Button size="sm" variant="ghost" onClick={() => handleStop(e.id)}>
-                        <StopCircle className="h-4 w-4 mr-1" />Remover
+                        <StopCircle className="h-4 w-4 mr-1" />Eliminar
                       </Button>
                     )}
                   </div>
@@ -181,9 +181,9 @@ export function LeadCadencesTab({ leadId, organizationId }: LeadCadencesTabProps
 
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Inscrever em uma cadência</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Inscribir en una cadencia</DialogTitle></DialogHeader>
           <div className="space-y-3 py-2">
-            <p className="text-sm text-muted-foreground">Selecione uma cadência ativa para inscrever este lead.</p>
+            <p className="text-sm text-muted-foreground">Seleccione una cadencia activa para inscribir a este lead.</p>
             <CadencePicker value={picked} onChange={setPicked} />
           </div>
           <DialogFooter>

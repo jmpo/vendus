@@ -215,7 +215,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base flex items-center gap-2">
               <DollarSign className="h-4 w-4 text-primary" />
-              Comissões Pendentes
+              Comisiones Pendentes
             </CardTitle>
             <Badge variant="outline" className="bg-primary/10 text-primary">
               {formatCurrency(pendingCommissions)}

@@ -51,11 +51,11 @@ export function ScheduleMessageDialog({
 
       if (error) throw error;
 
-      toast({ title: 'Mensagem agendada!', description: `Será enviada em ${format(new Date(scheduledAt), "dd/MM 'às' HH:mm")}` });
+      toast({ title: 'Mensaje agendada!', description: `Será enviada em ${format(new Date(scheduledAt), "dd/MM 'às' HH:mm")}` });
       setContent('');
       onOpenChange(false);
     } catch {
-      toast({ title: 'Erro ao agendar mensagem', variant: 'destructive' });
+      toast({ title: 'Error al agendar mensagem', variant: 'destructive' });
     } finally {
       setIsSaving(false);
     }
@@ -67,13 +67,13 @@ export function ScheduleMessageDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Clock className="h-5 w-5" />
-            Agendar Mensagem
+            Agendar Mensaje
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <div>
-            <Label htmlFor="msg-content">Mensagem</Label>
+            <Label htmlFor="msg-content">Mensaje</Label>
             <Textarea
               id="msg-content"
               value={content}

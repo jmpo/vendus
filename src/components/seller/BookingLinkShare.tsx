@@ -73,16 +73,16 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
     try {
       await navigator.clipboard.writeText(bookingUrl);
       setCopied(true);
-      toast.success('Link copiado!');
+      toast.success('¡Enlace copiado!');
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error('Erro ao copiar');
+      toast.error('Error al copiar');
     }
   };
 
   const handleSaveSlug = async () => {
     if (!newSlug.trim()) {
-      toast.error('O slug não pode estar vazio');
+      toast.error('El slug no puede estar vacío');
       return;
     }
 
@@ -108,7 +108,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
       .single();
 
     if (existing) {
-      toast.error('Este link já está em uso');
+      toast.error('Este enlace ya está en uso');
       setIsSaving(false);
       return;
     }
@@ -119,11 +119,11 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
       .eq('id', userId);
 
     if (error) {
-      toast.error('Erro ao salvar');
+      toast.error('Error al guardar');
     } else {
       setBookingSlug(sanitizedSlug);
       setIsEditing(false);
-      toast.success('Link atualizado!');
+      toast.success('¡Enlace actualizado!');
     }
     
     setIsSaving(false);
@@ -146,7 +146,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
       ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
       
       const link = document.createElement('a');
-      link.download = `qrcode-agendamento-${bookingSlug}.png`;
+      link.download = `qrcode-reserva-${bookingSlug}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     };
@@ -155,13 +155,13 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
   };
 
   const handleShareWhatsApp = () => {
-    const text = `Agende uma reunião comigo: ${bookingUrl}`;
+    const text = `Agenda una reunión conmigo: ${bookingUrl}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   const handleShareEmail = () => {
-    const subject = 'Agende uma reunião comigo';
-    const body = `Olá!\n\nVocê pode agendar uma reunião comigo através deste link:\n${bookingUrl}\n\nAguardo você!`;
+    const subject = 'Agenda una reunión conmigo';
+    const body = `¡Hola!\n\nPuedes agendar una reunión conmigo a través de este enlace:\n${bookingUrl}\n\n¡Te espero!`;
     window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
@@ -169,8 +169,8 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Agende uma reunião',
-          text: 'Agende uma reunião comigo',
+          title: 'Agenda una reunión',
+          text: 'Agenda una reunión conmigo',
           url: bookingUrl,
         });
       } catch {
@@ -194,17 +194,17 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Link2 className="h-5 w-5" />
-            Seu Link de Agendamento
+            Tu Enlace de Reserva
           </CardTitle>
           <CardDescription>
-            Compartilhe este link para que clientes agendem reuniões diretamente com você
+            Comparte este enlace para que los clientes agenden reuniones directamente contigo
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {isEditing ? (
             <div className="space-y-3">
               <div className="space-y-2">
-                <Label>Personalize seu link</Label>
+                <Label>Personaliza tu enlace</Label>
                 <div className="flex gap-2">
                   <div className="flex-1 flex items-center gap-0 rounded-md border bg-muted/50">
                     <span className="px-3 text-sm text-muted-foreground whitespace-nowrap">
@@ -238,7 +238,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
                 </Button>
               </div>
               <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
-                Personalizar Link
+                Personalizar Enlace
               </Button>
             </div>
           )}
@@ -253,7 +253,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
             QR Code
           </CardTitle>
           <CardDescription>
-            Escaneie ou baixe o QR Code para compartilhar
+            Escanea o descarga el código QR para compartir
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -271,11 +271,11 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
             </div>
             <div className="flex-1 space-y-3 text-center sm:text-left">
               <p className="text-sm text-muted-foreground">
-                Imprima em cartões de visita, materiais ou exiba em apresentações para facilitar o agendamento.
+                Imprímelo en tarjetas de presentación, materiales o muéstralo en presentaciones para facilitar el agendamiento.
               </p>
               <Button onClick={handleDownloadQR} variant="outline" className="w-full sm:w-auto">
                 <Download className="h-4 w-4 mr-2" />
-                Baixar QR Code
+                Descargar código QR
               </Button>
             </div>
           </div>
@@ -287,10 +287,10 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Share2 className="h-5 w-5" />
-            Compartilhar
+            Compartir
           </CardTitle>
           <CardDescription>
-            Envie seu link de agendamento por diferentes canais
+            Envía tu enlace de reserva por diferentes canales
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -329,7 +329,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
                 onClick={handleNativeShare}
               >
                 <Share2 className="h-5 w-5" />
-                <span className="text-xs">Mais</span>
+                <span className="text-xs">Más</span>
               </Button>
             )}
           </div>

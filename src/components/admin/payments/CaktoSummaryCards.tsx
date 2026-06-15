@@ -14,7 +14,7 @@ export function CaktoSummaryCards({ scope, provider = 'all' }: Props) {
 
   const items = [
     { icon: DollarSign, label: 'Receita total (pago)', value: fmtBRL(summary?.totalRevenue ?? 0), color: 'text-emerald-600 bg-emerald-500/10' },
-    { icon: CheckCircle2, label: 'Vendas pagas', value: String(summary?.paidCount ?? 0), color: 'text-blue-600 bg-blue-500/10' },
+    { icon: CheckCircle2, label: 'Ventas pagadas', value: String(summary?.paidCount ?? 0), color: 'text-blue-600 bg-blue-500/10' },
     { icon: Clock, label: 'Pendentes', value: String(summary?.pendingCount ?? 0), color: 'text-amber-600 bg-amber-500/10' },
     { icon: RotateCcw, label: 'Reembolsadas', value: String(summary?.refundedCount ?? 0), color: 'text-rose-600 bg-rose-500/10' },
     { icon: TrendingUp, label: 'Ticket médio', value: fmtBRL(summary?.ticketAvg ?? 0), color: 'text-violet-600 bg-violet-500/10' },

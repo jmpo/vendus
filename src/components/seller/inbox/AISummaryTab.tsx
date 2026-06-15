@@ -73,7 +73,7 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-primary" />
           <h5 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Resumo da IA
+            Resumen da IA
           </h5>
         </div>
         <Button

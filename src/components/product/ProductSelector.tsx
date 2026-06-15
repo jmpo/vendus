@@ -13,9 +13,9 @@ interface ProductSelectorProps {
 }
 
 const statusConfig = {
-  published: { label: 'Ativo', className: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
-  review: { label: 'Em revisão', className: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
-  draft: { label: 'Rascunho', className: 'bg-muted text-muted-foreground' },
+  published: { label: 'Activo', className: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
+  review: { label: 'En revisión', className: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
+  draft: { label: 'Borrador', className: 'bg-muted text-muted-foreground' },
 };
 
 export function ProductSelector({ products, onSelectProduct }: ProductSelectorProps) {
@@ -24,10 +24,10 @@ export function ProductSelector({ products, onSelectProduct }: ProductSelectorPr
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold text-foreground mb-3">
-            Meus Produtos
+            Mis Productos
           </h1>
           <p className="text-muted-foreground text-lg">
-            Selecione um produto para acessar seu painel completo
+            Seleccione un producto para acceder a su panel completo
           </p>
         </div>
 
@@ -72,7 +72,7 @@ export function ProductSelector({ products, onSelectProduct }: ProductSelectorPr
                     </div>
                     <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                       <TrendingUp className="h-4 w-4" />
-                      <span>32% conversão</span>
+                      <span>32% conversión</span>
                     </div>
                   </div>
 
@@ -80,7 +80,7 @@ export function ProductSelector({ products, onSelectProduct }: ProductSelectorPr
                     className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                     variant="outline"
                   >
-                    Acessar Painel
+                    Acceder al Panel
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </CardContent>

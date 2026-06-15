@@ -62,24 +62,24 @@ export function AcceptTicketBar({ onAccept, loading }: AcceptTicketBarProps) {
           ) : (
             <CheckCircle2 className="h-5 w-5 mr-2" />
           )}
-          Aceitar Atendimento
+          Aceptar Atención
         </Button>
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Aceitar Atendimento</DialogTitle>
+            <DialogTitle>Aceptar Atención</DialogTitle>
             <DialogDescription>
-              Escolha o setor para o qual deseja vincular este atendimento.
+              Elija el sector al que desea vincular esta atención.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-2 py-4">
-            <Label>Setor</Label>
+            <Label>Sector</Label>
             <Select value={selectedSector} onValueChange={setSelectedSector}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione um setor" />
+                <SelectValue placeholder="Seleccione un sector" />
               </SelectTrigger>
               <SelectContent>
                 {sectors.map((sector: any) => (

@@ -9,10 +9,10 @@ interface JourneyTimelineProps {
 }
 
 const actionLabels: Record<string, { label: string; icon: any }> = {
-  assigned: { label: 'Assumiu o atendimento', icon: UserPlus },
-  auto_assigned: { label: 'Atribuído automaticamente', icon: UserPlus },
-  unassigned: { label: 'Devolvido à fila', icon: UserMinus },
-  transferred: { label: 'Transferiu', icon: Repeat },
+  assigned: { label: 'Asumió la atención', icon: UserPlus },
+  auto_assigned: { label: 'Asignado automáticamente', icon: UserPlus },
+  unassigned: { label: 'Devuelto a la fila', icon: UserMinus },
+  transferred: { label: 'Transfirió', icon: Repeat },
 };
 
 export function JourneyTimeline({ conversationId }: JourneyTimelineProps) {
@@ -29,7 +29,7 @@ export function JourneyTimeline({ conversationId }: JourneyTimelineProps) {
   if (!events?.length) {
     return (
       <p className="text-xs text-muted-foreground text-center py-4">
-        Sem eventos de transferência ainda.
+        Sin eventos de transferencia aún.
       </p>
     );
   }

@@ -20,51 +20,51 @@ interface LeadBANTTabProps {
 const BANT_CATEGORIES = [
   {
     key: 'bant_budget' as const,
-    label: 'Budget (Orçamento)',
+    label: 'Budget (Presupuesto)',
     icon: DollarSign,
     weight: 25,
     questions: [
-      'Existe orçamento aprovado para este tipo de investimento?',
-      'Qual a faixa de investimento prevista?',
-      'Já investiram em soluções parecidas antes? Quanto?',
-      'Quem controla e libera o orçamento?',
+      '¿Existe presupuesto aprobado para este tipo de inversión?',
+      '¿Cuál es el rango de inversión previsto?',
+      '¿Ya han invertido en soluciones similares antes? ¿Cuánto?',
+      '¿Quién controla y libera el presupuesto?',
     ],
   },
   {
     key: 'bant_authority' as const,
-    label: 'Authority (Autoridade)',
+    label: 'Authority (Autoridad)',
     icon: Shield,
     weight: 25,
     questions: [
-      'Você é o decisor final desta compra?',
-      'Quem mais participa do processo de decisão?',
-      'O decisor já conhece nossa solução?',
-      'Existe algum comitê ou processo de aprovação?',
+      '¿Es usted el decisor final de esta compra?',
+      '¿Quién más participa en el proceso de decisión?',
+      '¿El decisor ya conoce nuestra solución?',
+      '¿Existe algún comité o proceso de aprobación?',
     ],
   },
   {
     key: 'bant_need' as const,
-    label: 'Need (Necessidade)',
+    label: 'Need (Necesidad)',
     icon: Target,
     weight: 30,
     questions: [
-      'Qual o principal problema que quer resolver?',
-      'Há quanto tempo convive com esse problema?',
-      'O que acontece se nada for feito nos próximos meses?',
-      'Já tentaram resolver de outra forma? Como foi?',
-      'Isso é prioridade para a empresa agora?',
+      '¿Cuál es el principal problema que desea resolver?',
+      '¿Hace cuánto tiempo convive con ese problema?',
+      '¿Qué sucede si no se hace nada en los próximos meses?',
+      '¿Ya intentaron resolverlo de otra forma? ¿Cómo fue?',
+      '¿Es esto una prioridad para la empresa ahora?',
     ],
   },
   {
     key: 'bant_timing' as const,
-    label: 'Timing (Tempo)',
+    label: 'Timing (Tiempo)',
     icon: Clock,
     weight: 20,
     questions: [
-      'Quando pretendem tomar a decisão?',
-      'Existe um prazo ou evento que define a urgência?',
-      'Já estão avaliando outras soluções?',
-      'O que precisa acontecer para fechar nos próximos 30 dias?',
+      '¿Cuándo pretenden tomar la decisión?',
+      '¿Existe un plazo o evento que defina la urgencia?',
+      '¿Ya están evaluando otras soluciones?',
+      '¿Qué debe suceder para cerrar en los próximos 30 días?',
     ],
   },
 ];
@@ -119,10 +119,10 @@ function getProgressColor(score: number): string {
 }
 
 function getSummary(score: number): { text: string; icon: typeof AlertCircle } {
-  if (score >= 76) return { text: 'Lead altamente qualificado. Forte indicação de fechamento. Priorizar atendimento.', icon: TrendingUp };
-  if (score >= 51) return { text: 'Lead com bom potencial. Maioria dos critérios atendidos. Avançar com proposta.', icon: TrendingUp };
-  if (score >= 26) return { text: 'Lead parcialmente qualificado. Aprofundar nas áreas pendentes antes de avançar.', icon: AlertCircle };
-  return { text: 'Lead em fase inicial. Poucas informações coletadas. Necessita mais qualificação.', icon: AlertCircle };
+  if (score >= 76) return { text: 'Lead altamente calificado. Fuerte indicación de cierre. Priorizar atención.', icon: TrendingUp };
+  if (score >= 51) return { text: 'Lead con buen potencial. Mayoría de criterios cumplidos. Avanzar con propuesta.', icon: TrendingUp };
+  if (score >= 26) return { text: 'Lead parcialmente calificado. Profundizar en las áreas pendientes antes de avanzar.', icon: AlertCircle };
+  return { text: 'Lead en fase inicial. Poca información recopilada. Necesita más calificación.', icon: AlertCircle };
 }
 
 export function LeadBANTTab({ lead, onUpdateLead }: LeadBANTTabProps) {
@@ -207,7 +207,7 @@ export function LeadBANTTab({ lead, onUpdateLead }: LeadBANTTabProps) {
               )}
               {pendingCats.length > 0 && (
                 <p className="text-xs text-muted-foreground">
-                  <span className="text-orange-500 font-medium">○ Pendentes:</span> {pendingCats.join(', ')}
+                  <span className="text-orange-500 font-medium">○ Pendientes:</span> {pendingCats.join(', ')}
                 </p>
               )}
             </div>
@@ -250,7 +250,7 @@ export function LeadBANTTab({ lead, onUpdateLead }: LeadBANTTabProps) {
                         <Textarea
                           value={answers[cat.key][qKey] || ''}
                           onChange={e => handleChange(cat.key, qKey, e.target.value)}
-                          placeholder="Resposta do cliente..."
+                          placeholder="Respuesta del cliente..."
                           className="min-h-[60px] resize-none"
                         />
                       </div>

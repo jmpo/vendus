@@ -23,20 +23,20 @@ export function SellerBookings({ userId, productId }: SellerBookingsProps) {
           <ScrollArea className="w-full whitespace-nowrap">
             <TabsList className="inline-flex w-auto min-w-full justify-start gap-1 p-1">
               <TabsTrigger value="agenda" className="shrink-0">Agenda</TabsTrigger>
-              <TabsTrigger value="bookings" className="shrink-0">Reuniões</TabsTrigger>
+              <TabsTrigger value="bookings" className="shrink-0">Reuniones</TabsTrigger>
               <TabsTrigger value="event-types" className="shrink-0">Tipos de Evento</TabsTrigger>
-              <TabsTrigger value="availability" className="shrink-0">Disponibilidade</TabsTrigger>
-              <TabsTrigger value="link" className="shrink-0">Meu Link</TabsTrigger>
+              <TabsTrigger value="availability" className="shrink-0">Disponibilidad</TabsTrigger>
+              <TabsTrigger value="link" className="shrink-0">Mi Enlace</TabsTrigger>
             </TabsList>
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
         ) : (
           <TabsList className="grid w-full max-w-2xl grid-cols-5">
             <TabsTrigger value="agenda">Agenda</TabsTrigger>
-            <TabsTrigger value="bookings">Reuniões</TabsTrigger>
+            <TabsTrigger value="bookings">Reuniones</TabsTrigger>
             <TabsTrigger value="event-types">Tipos de Evento</TabsTrigger>
-            <TabsTrigger value="availability">Disponibilidade</TabsTrigger>
-            <TabsTrigger value="link">Meu Link</TabsTrigger>
+            <TabsTrigger value="availability">Disponibilidad</TabsTrigger>
+            <TabsTrigger value="link">Mi Enlace</TabsTrigger>
           </TabsList>
         )}
 

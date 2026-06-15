@@ -67,7 +67,7 @@ export function SendFlowDialog({
       toast({ title: 'Fluxo enviado com sucesso!' });
       onOpenChange(false);
     } catch {
-      toast({ title: 'Erro ao enviar fluxo', variant: 'destructive' });
+      toast({ title: 'Error al enviar fluxo', variant: 'destructive' });
     } finally {
       setIsSending(false);
     }
@@ -79,7 +79,7 @@ export function SendFlowDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Workflow className="h-5 w-5" />
-            Enviar Fluxo
+            Enviar flujo
           </DialogTitle>
         </DialogHeader>
 
@@ -119,7 +119,7 @@ export function SendFlowDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSend} disabled={!selectedFlowId || isSending}>
             {isSending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            Enviar Fluxo
+            Enviar flujo
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -57,10 +57,10 @@ export function LeadHeader({ lead, onBack, onTransfer, onEdit, onDelete, onWhats
 
   const getTemperatureLabel = () => {
     switch (lead.temperature) {
-      case 'hot': return 'Quente';
-      case 'warm': return 'Morno';
-      case 'cold': return 'Frio';
-      default: return 'Não definido';
+      case 'hot': return 'Caliente';
+      case 'warm': return 'Tibio';
+      case 'cold': return 'Frío';
+      default: return 'No definido';
     }
   };
 
@@ -72,7 +72,7 @@ export function LeadHeader({ lead, onBack, onTransfer, onEdit, onDelete, onWhats
         <div className="flex items-center justify-between mb-4">
           <Button variant="ghost" size="sm" onClick={onBack} className="gap-2">
             <ArrowLeft className="h-4 w-4" />
-            Voltar
+            Volver
           </Button>
           
           <DropdownMenu>
@@ -85,7 +85,7 @@ export function LeadHeader({ lead, onBack, onTransfer, onEdit, onDelete, onWhats
               {onEdit && (
                 <DropdownMenuItem onClick={onEdit}>
                   <Pencil className="h-4 w-4 mr-2" />
-                  Editar Informações
+                  Editar Información
                 </DropdownMenuItem>
               )}
               {onTransfer && (
@@ -98,7 +98,7 @@ export function LeadHeader({ lead, onBack, onTransfer, onEdit, onDelete, onWhats
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={onDelete} className="text-destructive">
-                    Excluir Lead
+                    Eliminar Lead
                   </DropdownMenuItem>
                 </>
               )}
@@ -158,7 +158,7 @@ export function LeadHeader({ lead, onBack, onTransfer, onEdit, onDelete, onWhats
                 onClick={() => setCallAIOpen(true)}
               >
                 <Sparkles className="h-4 w-4" />
-                <span className="hidden sm:inline">Chamar com IA</span>
+                <span className="hidden sm:inline">Llamar con IA</span>
               </Button>
             )}
             {lead.email && (
@@ -200,7 +200,7 @@ export function LeadHeader({ lead, onBack, onTransfer, onEdit, onDelete, onWhats
             {!lead.assignee && lead.assigned_to === null && (
               <div className="flex items-center gap-2 text-amber-500">
                 <User className="h-4 w-4" />
-                <span className="text-sm">Sem atendimento</span>
+                <span className="text-sm">Sin atención</span>
               </div>
             )}
             {lead.squad && (

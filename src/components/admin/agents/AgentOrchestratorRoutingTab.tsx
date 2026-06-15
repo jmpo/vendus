@@ -321,7 +321,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
             <p className="text-xs text-muted-foreground text-center py-4">Carregando…</p>
           ) : globalAgents.length === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-4">
-              Sem agentes globais (Suporte / Financeiro / Administrativo). Crie um para o Orquestrador rotear suporte/financeiro.
+              Sem agentes globais (Soporte / Financeiro / Administrativo). Crie um para o Orquestrador rotear suporte/financeiro.
             </p>
           ) : (
             <div className="space-y-2">

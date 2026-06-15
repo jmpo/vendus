@@ -128,7 +128,7 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
       <div className="space-y-6 animate-fade-in">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Cadência de Vendas</h2>
+            <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Cadencia de Ventas</h2>
             <p className="text-muted-foreground mt-1 text-sm">
               Siga o roteiro dia a dia para {productName}
             </p>
@@ -152,7 +152,7 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Cadência de Vendas</h2>
+          <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Cadencia de Ventas</h2>
           <p className="text-muted-foreground mt-1 text-sm">
             Siga o roteiro dia a dia para {productName}
           </p>

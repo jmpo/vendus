@@ -63,7 +63,7 @@ export function LeadEditModal({ isOpen, onClose, lead, onSave }: LeadEditModalPr
 
   const handleSave = async () => {
     if (!formData.name.trim()) {
-      toast.error('Nome é obrigatório');
+      toast.error('El nombre es obligatorio');
       return;
     }
 
@@ -78,11 +78,11 @@ export function LeadEditModal({ isOpen, onClose, lead, onSave }: LeadEditModalPr
         temperature: formData.temperature,
         lead_origin: formData.lead_origin.trim() || null
       });
-      toast.success('Lead atualizado com sucesso');
+      toast.success('Lead actualizado con éxito');
       onClose();
     } catch (error) {
       console.error('Error updating lead:', error);
-      toast.error('Erro ao atualizar lead');
+      toast.error('Error al actualizar el lead');
     } finally {
       setIsSaving(false);
     }
@@ -98,17 +98,17 @@ export function LeadEditModal({ isOpen, onClose, lead, onSave }: LeadEditModalPr
         <div className="space-y-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome *</Label>
+              <Label htmlFor="name">Nombre *</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Nome do lead"
+                placeholder="Nombre del lead"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email">Correo electrónico</Label>
               <Input
                 id="email"
                 type="email"
@@ -121,7 +121,7 @@ export function LeadEditModal({ isOpen, onClose, lead, onSave }: LeadEditModalPr
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="phone">Telefone</Label>
+              <Label htmlFor="phone">Teléfono</Label>
               <Input
                 id="phone"
                 value={formData.phone}
@@ -136,7 +136,7 @@ export function LeadEditModal({ isOpen, onClose, lead, onSave }: LeadEditModalPr
                 id="company"
                 value={formData.company}
                 onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
-                placeholder="Nome da empresa"
+                placeholder="Nombre de la empresa"
               />
             </div>
           </div>
@@ -148,7 +148,7 @@ export function LeadEditModal({ isOpen, onClose, lead, onSave }: LeadEditModalPr
                 id="position"
                 value={formData.position}
                 onChange={(e) => setFormData(prev => ({ ...prev, position: e.target.value }))}
-                placeholder="Cargo ou função"
+                placeholder="Cargo o función"
               />
             </div>
 
@@ -159,27 +159,27 @@ export function LeadEditModal({ isOpen, onClose, lead, onSave }: LeadEditModalPr
                 onValueChange={(v) => setFormData(prev => ({ ...prev, temperature: v as 'hot' | 'warm' | 'cold' }))}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione" />
+                  <SelectValue placeholder="Seleccione" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="hot">🔥 Quente</SelectItem>
-                  <SelectItem value="warm">🌡️ Morno</SelectItem>
-                  <SelectItem value="cold">❄️ Frio</SelectItem>
+                  <SelectItem value="hot">🔥 Caliente</SelectItem>
+                  <SelectItem value="warm">🌡️ Tibio</SelectItem>
+                  <SelectItem value="cold">❄️ Frío</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="lead_origin">Origem do Lead</Label>
+            <Label htmlFor="lead_origin">Origen del Lead</Label>
             <Input
               id="lead_origin"
               value={formData.lead_origin}
               onChange={(e) => setFormData(prev => ({ ...prev, lead_origin: e.target.value }))}
-              placeholder="Ex: Indicação, Captação na rua, Conhecido, Evento..."
+              placeholder="Ej: Recomendación, Captación en la calle, Conocido, Evento..."
             />
             <p className="text-xs text-muted-foreground">
-              Descreva como o lead chegou até você
+              Describa cómo llegó el lead hasta usted
             </p>
           </div>
         </div>
@@ -192,10 +192,10 @@ export function LeadEditModal({ isOpen, onClose, lead, onSave }: LeadEditModalPr
             {isSaving ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                Salvando...
+                Guardando...
               </>
             ) : (
-              'Salvar Alterações'
+              'Guardar Cambios'
             )}
           </Button>
         </div>

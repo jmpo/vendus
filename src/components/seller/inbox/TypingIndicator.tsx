@@ -10,7 +10,7 @@ export function TypingIndicator({ name = 'Visitante', className }: TypingIndicat
   return (
     <div className={cn("flex items-center gap-2 px-4 py-2", className)}>
       <div className="flex items-center gap-1.5 bg-muted rounded-full px-3 py-2">
-        <span className="text-xs text-muted-foreground mr-1">{name} está digitando</span>
+        <span className="text-xs text-muted-foreground mr-1">{name} está escribiendo</span>
         <div className="flex gap-0.5">
           {[0, 1, 2].map((i) => (
             <motion.div

@@ -31,8 +31,8 @@ export interface TimeSlot {
   end_time: string;
 }
 
-export const DAY_NAMES = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-export const DAY_ABBREVIATIONS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+export const DAY_NAMES = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+export const DAY_ABBREVIATIONS = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
 
 export function useUserAvailability(userId?: string) {
   const { user, profile } = useAuth();
@@ -105,11 +105,11 @@ export function useUserAvailability(userId?: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-availability'] });
-      toast.success('Horário adicionado!');
+      toast.success('¡Horario agregado!');
     },
     onError: (error: Error) => {
       console.error('Error adding time slot:', error);
-      toast.error('Erro ao adicionar horário');
+      toast.error('Error al agregar horario');
     },
   });
 
@@ -124,11 +124,11 @@ export function useUserAvailability(userId?: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-availability'] });
-      toast.success('Horário removido!');
+      toast.success('¡Horario eliminado!');
     },
     onError: (error: Error) => {
       console.error('Error removing time slot:', error);
-      toast.error('Erro ao remover horário');
+      toast.error('Error al eliminar horario');
     },
   });
 
@@ -150,11 +150,11 @@ export function useUserAvailability(userId?: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-availability'] });
-      toast.success('Horário atualizado!');
+      toast.success('¡Horario actualizado!');
     },
     onError: (error: Error) => {
       console.error('Error updating time slot:', error);
-      toast.error('Erro ao atualizar horário');
+      toast.error('Error al actualizar horario');
     },
   });
 
@@ -179,11 +179,11 @@ export function useUserAvailability(userId?: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['availability-overrides'] });
-      toast.success('Exceção salva!');
+      toast.success('¡Excepción guardada!');
     },
     onError: (error: Error) => {
       console.error('Error adding override:', error);
-      toast.error('Erro ao salvar exceção');
+      toast.error('Error al guardar excepción');
     },
   });
 
@@ -198,11 +198,11 @@ export function useUserAvailability(userId?: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['availability-overrides'] });
-      toast.success('Exceção removida!');
+      toast.success('¡Excepción eliminada!');
     },
     onError: (error: Error) => {
       console.error('Error removing override:', error);
-      toast.error('Erro ao remover exceção');
+      toast.error('Error al eliminar excepción');
     },
   });
 

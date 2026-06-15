@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { CalendarDays, Clock, MapPin, Users, Bell, Link2, X, Video } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -28,11 +28,11 @@ interface EventModalProps {
 }
 
 const EVENT_TYPES = [
-  { value: 'meeting', label: '🤝 Reunião', color: 'bg-blue-500' },
-  { value: 'call', label: '📞 Ligação', color: 'bg-green-500' },
+  { value: 'meeting', label: '🤝 Reunión', color: 'bg-blue-500' },
+  { value: 'call', label: '📞 Llamada', color: 'bg-green-500' },
   { value: 'demo', label: '🎯 Demo', color: 'bg-purple-500' },
   { value: 'follow_up', label: '📋 Follow-up', color: 'bg-orange-500' },
-  { value: 'other', label: '📌 Outro', color: 'bg-gray-500' },
+  { value: 'other', label: '📌 Otro', color: 'bg-gray-500' },
 ];
 
 const REMINDER_OPTIONS = [
@@ -40,7 +40,7 @@ const REMINDER_OPTIONS = [
   { value: 15, label: '15 minutos antes' },
   { value: 30, label: '30 minutos antes' },
   { value: 60, label: '1 hora antes' },
-  { value: 1440, label: '1 dia antes' },
+  { value: 1440, label: '1 día antes' },
 ];
 
 export function EventModal({ open, onOpenChange, event, defaultDate, defaultLeadId, defaultProductId }: EventModalProps) {
@@ -180,7 +180,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CalendarDays className="h-5 w-5" />
-            {event ? 'Editar Evento' : 'Novo Evento'}
+            {event ? 'Editar Evento' : 'Nuevo Evento'}
           </DialogTitle>
         </DialogHeader>
 
@@ -190,7 +190,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
             <Label htmlFor="title">Título *</Label>
             <Input
               id="title"
-              placeholder="Ex: Reunião com cliente"
+              placeholder="Ej: Reunión con cliente"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             />
@@ -217,7 +217,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
           {/* Date and Time */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Data Início</Label>
+              <Label>Fecha Inicio</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -228,7 +228,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
                     )}
                   >
                     <CalendarDays className="mr-2 h-4 w-4" />
-                    {startDate ? format(startDate, "dd/MM/yyyy", { locale: ptBR }) : "Selecionar"}
+                    {startDate ? format(startDate, "dd/MM/yyyy", { locale: es }) : "Seleccionar"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -241,14 +241,14 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
                         setEndDate(date);
                       }
                     }}
-                    locale={ptBR}
+                    locale={es}
                   />
                 </PopoverContent>
               </Popover>
             </div>
 
             <div className="space-y-2">
-              <Label>Hora Início</Label>
+              <Label>Hora Inicio</Label>
               <div className="relative">
                 <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -262,7 +262,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
             </div>
 
             <div className="space-y-2">
-              <Label>Data Fim</Label>
+              <Label>Fecha Fin</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -273,7 +273,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
                     )}
                   >
                     <CalendarDays className="mr-2 h-4 w-4" />
-                    {endDate ? format(endDate, "dd/MM/yyyy", { locale: ptBR }) : "Selecionar"}
+                    {endDate ? format(endDate, "dd/MM/yyyy", { locale: es }) : "Seleccionar"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -282,14 +282,14 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
                     selected={endDate}
                     onSelect={setEndDate}
                     disabled={(date) => startDate ? date < startDate : false}
-                    locale={ptBR}
+                    locale={es}
                   />
                 </PopoverContent>
               </Popover>
             </div>
 
             <div className="space-y-2">
-              <Label>Hora Fim</Label>
+              <Label>Hora Fin</Label>
               <div className="relative">
                 <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -310,7 +310,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
               checked={formData.all_day}
               onCheckedChange={(checked) => setFormData({ ...formData, all_day: checked })}
             />
-            <Label htmlFor="all_day">Dia inteiro</Label>
+            <Label htmlFor="all_day">Todo el día</Label>
           </div>
 
           {/* Links Section */}
@@ -328,10 +328,10 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
                   onValueChange={(value) => setFormData({ ...formData, lead_id: value === 'none' ? undefined : value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecionar lead..." />
+                    <SelectValue placeholder="Seleccionar lead..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">Nenhum</SelectItem>
+                    <SelectItem value="none">Ninguno</SelectItem>
                     {leads?.map((lead) => (
                       <SelectItem key={lead.id} value={lead.id}>
                         {lead.name}
@@ -342,16 +342,16 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
               </div>
 
               <div className="space-y-2">
-                <Label>Produto</Label>
+                <Label>Producto</Label>
                 <Select
                   value={formData.product_id || 'none'}
                   onValueChange={(value) => setFormData({ ...formData, product_id: value === 'none' ? undefined : value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecionar produto..." />
+                    <SelectValue placeholder="Seleccionar producto..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">Nenhum</SelectItem>
+                    <SelectItem value="none">Ninguno</SelectItem>
                     {products?.map((product) => (
                       <SelectItem key={product.id} value={product.id}>
                         {product.name}
@@ -367,18 +367,18 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
           <div className="space-y-2">
             <Label htmlFor="location">
               <MapPin className="h-4 w-4 inline mr-1" />
-              Local / Link da reunião
+              Ubicación / Enlace de la reunión
             </Label>
             <Input
               id="location"
-              placeholder="https://meet.google.com/... ou endereço"
+              placeholder="https://meet.google.com/... o dirección"
               value={formData.location}
               onChange={(e) => setFormData({ ...formData, location: e.target.value })}
               disabled={formData.create_meet}
             />
             {formData.create_meet && (
               <p className="text-xs text-muted-foreground">
-                Um link do Google Meet será gerado automaticamente ao sincronizar
+                Se generará automáticamente un enlace de Google Meet al sincronizar
               </p>
             )}
           </div>
@@ -389,10 +389,10 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
               <Video className="h-5 w-5 text-green-600" />
               <div className="flex-1">
                 <Label htmlFor="create_meet" className="text-sm font-medium">
-                  Criar Google Meet
+                  Crear Google Meet
                 </Label>
                 <p className="text-xs text-muted-foreground">
-                  Gera automaticamente um link de reunião ao sincronizar
+                  Genera automáticamente un enlace de reunión al sincronizar
                 </p>
               </div>
               <Switch
@@ -408,7 +408,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
             <div className="flex items-center gap-2 p-3 rounded-lg bg-green-500/10 border border-green-500/30">
               <Video className="h-5 w-5 text-green-600" />
               <div className="flex-1">
-                <p className="text-sm font-medium text-green-700 dark:text-green-400">Link do Google Meet</p>
+                <p className="text-sm font-medium text-green-700 dark:text-green-400">Enlace de Google Meet</p>
                 <a 
                   href={event.meet_link} 
                   target="_blank" 
@@ -429,10 +429,10 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
             </div>
           )}
           <div className="space-y-2">
-            <Label htmlFor="description">Descrição</Label>
+            <Label htmlFor="description">Descripción</Label>
             <Textarea
               id="description"
-              placeholder="Detalhes do evento..."
+              placeholder="Detalles del evento..."
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={3}
@@ -443,7 +443,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
           <div className="space-y-3 border-t pt-4">
             <h4 className="text-sm font-medium flex items-center gap-2">
               <Bell className="h-4 w-4" />
-              Lembretes
+              Recordatorios
             </h4>
             <div className="space-y-2">
               {REMINDER_OPTIONS.map((option) => (
@@ -475,7 +475,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
               disabled={!formData.title || isLoading}
               className="flex-1"
             >
-              {isLoading ? 'Salvando...' : event ? 'Salvar Alterações' : 'Criar Evento'}
+              {isLoading ? 'Guardando...' : event ? 'Guardar Cambios' : 'Crear Evento'}
             </Button>
           </div>
         </div>

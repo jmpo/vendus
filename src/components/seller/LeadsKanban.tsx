@@ -134,17 +134,17 @@ export function LeadsKanban({ productId, productName, organizationId, onWhatsApp
     try {
       await moveLead.mutateAsync({ leadId: draggedLeadId, stageId });
       if (!stage.is_won) {
-        toast.success('Lead movido com sucesso!');
+        toast.success('¡Lead movido con éxito!');
       }
     } catch (error) {
-      toast.error('Erro ao mover lead');
+      toast.error('Error al mover lead');
     }
     setDraggedLeadId(null);
   };
 
   const handleAddLead = async () => {
     if (!newLead.name.trim()) {
-      toast.error('Nome é obrigatório');
+      toast.error('El nombre es obligatorio');
       return;
     }
 
@@ -159,11 +159,11 @@ export function LeadsKanban({ productId, productName, organizationId, onWhatsApp
         organization_id: profile?.organization_id || '',
         current_stage_id: stages?.[0]?.id || null
       });
-      toast.success('Lead adicionado!');
+      toast.success('¡Lead añadido!');
       setNewLead({ name: '', company: '', email: '', phone: '' });
       setIsAddingLead(false);
     } catch (error) {
-      toast.error('Erro ao criar lead');
+      toast.error('Error al crear lead');
     }
   };
 
@@ -183,11 +183,11 @@ export function LeadsKanban({ productId, productName, organizationId, onWhatsApp
           <Calendar size={32} className="text-primary" />
         </div>
         <h3 className="text-xl font-semibold text-foreground mb-2">
-          Pipeline não configurado
+          Pipeline no configurado
         </h3>
         <p className="text-muted-foreground mb-6 text-center max-w-md">
-          Este produto ainda não possui etapas de funil configuradas.
-          Um administrador precisa configurar o pipeline primeiro.
+          Este producto aún no tiene etapas de embudo configuradas.
+          Un administrador debe configurar el pipeline primero.
         </p>
       </div>
     );
@@ -213,18 +213,18 @@ export function LeadsKanban({ productId, productName, organizationId, onWhatsApp
           <DialogTrigger asChild>
             <Button className="w-full sm:w-auto sm:ml-auto">
               <Plus size={18} className="mr-2" />
-              Novo Lead
+              Nuevo Lead
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Adicionar Lead</DialogTitle>
+              <DialogTitle>Añadir Lead</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Nome *</label>
+                <label className="text-sm font-medium">Nombre *</label>
                 <Input
-                  placeholder="Nome do lead"
+                  placeholder="Nombre del lead"
                   value={newLead.name}
                   onChange={(e) => setNewLead({ ...newLead, name: e.target.value })}
                 />
@@ -232,7 +232,7 @@ export function LeadsKanban({ productId, productName, organizationId, onWhatsApp
               <div className="space-y-2">
                 <label className="text-sm font-medium">Empresa</label>
                 <Input
-                  placeholder="Nome da empresa"
+                  placeholder="Nombre de la empresa"
                   value={newLead.company}
                   onChange={(e) => setNewLead({ ...newLead, company: e.target.value })}
                 />
@@ -247,7 +247,7 @@ export function LeadsKanban({ productId, productName, organizationId, onWhatsApp
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Telefone</label>
+                <label className="text-sm font-medium">Teléfono</label>
                 <Input
                   placeholder="(11) 99999-9999"
                   value={newLead.phone}
@@ -262,7 +262,7 @@ export function LeadsKanban({ productId, productName, organizationId, onWhatsApp
                 {createLead.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  'Adicionar Lead'
+                  'Añadir Lead'
                 )}
               </Button>
             </div>
@@ -390,7 +390,7 @@ export function LeadsKanban({ productId, productName, organizationId, onWhatsApp
 
                     {lead.cadence_day && (
                       <Badge variant="outline" className="mt-2 text-xs bg-primary/5 border-primary/20 text-primary">
-                        Dia {lead.cadence_day} da cadência
+                        Día {lead.cadence_day} de la cadencia
                       </Badge>
                     )}
                   </div>
@@ -399,7 +399,7 @@ export function LeadsKanban({ productId, productName, organizationId, onWhatsApp
                 {stageLeads.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
                     <User size={24} className="mb-2 opacity-50" />
-                    <p className="text-sm">Nenhum lead</p>
+                    <p className="text-sm">Ningún lead</p>
                   </div>
                 )}
               </div>
@@ -427,7 +427,7 @@ export function LeadsKanban({ productId, productName, organizationId, onWhatsApp
       <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
         <DialogContent className="max-w-4xl h-[90vh] flex flex-col overflow-hidden p-0">
           <VisuallyHidden>
-            <DialogTitle>Detalhes do Lead</DialogTitle>
+            <DialogTitle>Detalles del Lead</DialogTitle>
           </VisuallyHidden>
           {selectedLeadId && (
             <LeadDetailPage

@@ -203,8 +203,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     refetchConversations();
     if (status === 403) {
       toast({
-        title: 'Sem acesso a esta conversa',
-        description: 'Ela pertence a outra organização ou foi transferida.',
+        title: 'Sin acceso a esta conversación',
+        description: 'Pertenece a otra organización o fue transferida.',
         variant: 'destructive',
       });
     }
@@ -316,8 +316,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
 
       if (error || !data) {
         toast({
-          title: 'Conversa não disponível',
-          description: 'Não foi possível abrir esta conversa neste contexto.',
+          title: 'Conversación no disponible',
+          description: 'No fue posible abrir esta conversación en este contexto.',
           variant: 'destructive',
         });
         onConversationSelected?.();
@@ -861,7 +861,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
               soundEnabled={soundEnabled}
               onToggleSound={toggleSound}
               showAssignedUser={isAdminMode}
-              headerLabel={isAdminMode ? 'Atendimentos · Admin' : 'Atendimentos'}
+              headerLabel={isAdminMode ? 'Atenciones · Admin' : 'Atenciones'}
               activeTab={activeTab}
               onTabChange={setActiveTab}
               tabCounts={tabCounts}
@@ -958,10 +958,10 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
               onAiSuggest={handleAiSuggest}
               onScheduleFollowup={() => setShowScheduleFollowup(true)}
               onMarkHot={async () => {
-                if (!linkedLead?.id) { toast({ title: 'Sem lead vinculado' }); return; }
+                if (!linkedLead?.id) { toast({ title: 'Sin lead vinculado' }); return; }
                 await supabase.from('leads').update({ temperature: 'hot' }).eq('id', linkedLead.id);
                 queryClient.invalidateQueries({ queryKey: ['linked-lead'] });
-                toast({ title: '🔥 Lead marcado como quente' });
+                toast({ title: '🔥 Lead marcado como caliente' });
               }}
               onSendFlow={() => setShowSendFlow(true)}
               onSendCadence={() => setShowSendCadence(true)}

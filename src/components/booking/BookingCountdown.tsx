@@ -25,7 +25,7 @@ export function BookingCountdown({ targetDate, className, size = 'md' }: Booking
       if (difference <= 0) {
         setIsExpired(true);
         return [
-          { value: 0, label: 'DIAS' },
+          { value: 0, label: 'DÍAS' },
           { value: 0, label: 'HORAS' },
           { value: 0, label: 'MIN' },
           { value: 0, label: 'SEG' },
@@ -38,7 +38,7 @@ export function BookingCountdown({ targetDate, className, size = 'md' }: Booking
       const seconds = Math.floor((difference / 1000) % 60);
 
       return [
-        { value: days, label: 'DIAS' },
+        { value: days, label: 'DÍAS' },
         { value: hours, label: 'HORAS' },
         { value: minutes, label: 'MIN' },
         { value: seconds, label: 'SEG' },
@@ -145,8 +145,8 @@ export function CountdownProgress({
   return (
     <div className={cn('w-full', className)}>
       <div className="flex justify-between text-sm mb-2">
-        <span className="text-muted-foreground">Progresso até a reunião</span>
-        <span className="font-medium text-primary">{Math.round(progress)}% concluído</span>
+        <span className="text-muted-foreground">Progreso hasta la reunión</span>
+        <span className="font-medium text-primary">{Math.round(progress)}% completado</span>
       </div>
       <div className="h-2 bg-muted rounded-full overflow-hidden">
         <motion.div

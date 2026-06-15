@@ -346,7 +346,7 @@ export function AgentsManager() {
             <p className="text-muted-foreground text-center max-w-md mb-4">
               {agents && agents.length > 0
                 ? 'Nenhum agente bate com os filtros aplicados. Tente ajustar a busca.'
-                : 'Crie seu primeiro agente. Você pode criar agentes globais (Orquestrador, Suporte) ou específicos de um produto (SDR, Closer).'}
+                : 'Crie seu primeiro agente. Você pode criar agentes globais (Orquestrador, Soporte) ou específicos de um produto (SDR, Closer).'}
             </p>
             <Button onClick={handleCreate}>
               <Plus className="h-4 w-4 mr-2" />

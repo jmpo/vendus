@@ -35,7 +35,7 @@ function formatLabel(key: string) {
 
 function formatValue(v: any): string {
   if (v == null) return '—';
-  if (typeof v === 'boolean') return v ? 'Sim' : 'Não';
+  if (typeof v === 'boolean') return v ? 'Sí' : 'No';
   if (Array.isArray(v)) return v.join(', ');
   if (typeof v === 'object') return JSON.stringify(v);
   return String(v);
@@ -55,7 +55,7 @@ export function LeadKeyResponses({ metadata, onSeeAll }: Props) {
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           <FileText className="h-4 w-4" />
-          Respostas importantes
+          Respuestas importantes
         </CardTitle>
         {total > items.length && onSeeAll && (
           <Button variant="ghost" size="sm" className="h-7 gap-1" onClick={onSeeAll}>

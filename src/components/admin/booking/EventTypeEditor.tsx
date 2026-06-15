@@ -193,17 +193,17 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
       <DialogContent className="max-w-2xl max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {isEditing ? 'Editar Tipo de Evento' : 'Novo Tipo de Evento'}
+            {isEditing ? 'Editar Tipo de Evento' : 'Nuevo Tipo de Evento'}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <Tabs defaultValue="general" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="general">Geral</TabsTrigger>
+              <TabsTrigger value="general">General</TabsTrigger>
               <TabsTrigger value="notifications">
                 <Bell className="h-4 w-4 mr-1" />
-                Notificações
+                Notificaciones
               </TabsTrigger>
             </TabsList>
 
@@ -211,18 +211,18 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
           {/* Basic Info */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome do Evento *</Label>
+              <Label htmlFor="name">Nombre del Evento *</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => handleNameChange(e.target.value)}
-                placeholder="Ex: Consultoria Digital"
+                placeholder="Ej: Consultoría Digital"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="slug">URL do Evento</Label>
+              <Label htmlFor="slug">URL del Evento</Label>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">/agendar/você/</span>
                 <Input
@@ -239,12 +239,12 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descrição</Label>
+              <Label htmlFor="description">Descripción</Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Descreva o que será discutido nesta reunião..."
+                placeholder="Describa lo que se discutirá en esta reunión..."
                 rows={3}
               />
             </div>
@@ -253,7 +253,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
           {/* Duration and Location */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Duração</Label>
+              <Label>Duración</Label>
               <Select
                 value={formData.duration_minutes.toString()}
                 onValueChange={(v) => setFormData(prev => ({ ...prev, duration_minutes: parseInt(v) }))}
@@ -272,7 +272,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
             </div>
 
             <div className="space-y-2">
-              <Label>Local</Label>
+              <Label>Ubicación</Label>
               <Select
                 value={formData.location_type}
                 onValueChange={(v) => setFormData(prev => ({ ...prev, location_type: v }))}
@@ -293,7 +293,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
 
           {/* Color */}
           <div className="space-y-2">
-            <Label>Cor do Badge</Label>
+            <Label>Color del Badge</Label>
             <div className="flex gap-2">
               {COLOR_OPTIONS.map((color) => (
                 <button
@@ -314,9 +314,9 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
           {formData.location_type === 'google_meet' && (
             <div className="flex items-center justify-between rounded-lg border p-4">
               <div>
-                <Label className="text-base">Gerar link do Google Meet</Label>
+                <Label className="text-base">Generar enlace de Google Meet</Label>
                 <p className="text-sm text-muted-foreground">
-                  Criar automaticamente um link de videoconferência
+                  Crear automáticamente un enlace de videoconferencia
                 </p>
               </div>
               <Switch
@@ -328,7 +328,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
 
           {/* Booking Experience */}
           <div className="space-y-3">
-            <Label className="text-base">Experiência de Agendamento</Label>
+            <Label className="text-base">Experiencia de Reserva</Label>
             <RadioGroup
               value={formData.booking_experience}
               onValueChange={(v) => setFormData(prev => ({ ...prev, booking_experience: v as 'standard' | 'conversational' }))}
@@ -345,9 +345,9 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
               >
                 <RadioGroupItem value="standard" id="exp-standard" className="mt-0.5" />
                 <div className="flex-1">
-                  <span className="font-medium">Padrão (Calendário + Formulário)</span>
+                  <span className="font-medium">Estándar (Calendario + Formulario)</span>
                   <p className="text-sm text-muted-foreground mt-0.5">
-                    Interface tradicional estilo Calendly com passos separados para seleção de data e preenchimento de dados.
+                    Interfaz tradicional estilo Calendly com passos separados para seleção de data e preenchimento de dados.
                   </p>
                 </div>
               </label>
@@ -362,9 +362,9 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
               >
                 <RadioGroupItem value="conversational" id="exp-conversational" className="mt-0.5" />
                 <div className="flex-1">
-                  <span className="font-medium">Conversacional (Chat Interativo)</span>
+                  <span className="font-medium">Conversacional (Chat Interactivo)</span>
                   <p className="text-sm text-muted-foreground mt-0.5">
-                    Interface moderna estilo TypeBot com perguntas uma a uma em formato de chat.
+                    Interfaz moderna estilo TypeBot com perguntas uma a uma em formato de chat.
                   </p>
                 </div>
               </label>
@@ -375,14 +375,14 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
           <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
             <CollapsibleTrigger asChild>
               <Button variant="ghost" type="button" className="w-full justify-between">
-                Configurações Avançadas
+                Configuraciones Avanzadas
                 <ChevronDown className={cn('h-4 w-4 transition-transform', advancedOpen && 'rotate-180')} />
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-4 pt-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="buffer_before">Folga antes (min)</Label>
+                  <Label htmlFor="buffer_before">Margen antes (min)</Label>
                   <Input
                     id="buffer_before"
                     type="number"
@@ -392,7 +392,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="buffer_after">Folga depois (min)</Label>
+                  <Label htmlFor="buffer_after">Margen después (min)</Label>
                   <Input
                     id="buffer_after"
                     type="number"
@@ -405,7 +405,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="min_notice_hours">Antecedência mínima (horas)</Label>
+                  <Label htmlFor="min_notice_hours">Antelación mínima (horas)</Label>
                   <Input
                     id="min_notice_hours"
                     type="number"
@@ -415,7 +415,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="max_days_ahead">Agendar até (dias)</Label>
+                  <Label htmlFor="max_days_ahead">Reservar hasta (días)</Label>
                   <Input
                     id="max_days_ahead"
                     type="number"
@@ -427,7 +427,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmation_message">Mensagem de Confirmação</Label>
+                <Label htmlFor="confirmation_message">Mensaje de Confirmación</Label>
                 <Textarea
                   id="confirmation_message"
                   value={formData.confirmation_message}
@@ -442,7 +442,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
           {/* Custom Questions */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label className="text-base">Perguntas Personalizadas</Label>
+              <Label className="text-base">Preguntas Personalizadas</Label>
               <Button type="button" variant="outline" size="sm" onClick={addQuestion}>
                 <Plus className="h-4 w-4 mr-1" />
                 Adicionar

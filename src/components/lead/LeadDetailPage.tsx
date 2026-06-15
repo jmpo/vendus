@@ -70,7 +70,7 @@ export function LeadDetailPage({ leadId, onBack, isAdminView = false, onWhatsApp
   if (!lead) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
-        <p>Lead não encontrado</p>
+        <p>Lead no encontrado</p>
       </div>
     );
   }
@@ -80,13 +80,13 @@ export function LeadDetailPage({ leadId, onBack, isAdminView = false, onWhatsApp
     ...lead,
     assignee: (lead as any).assignee || (lead.assigned_to ? {
       id: lead.assigned_to,
-      full_name: 'Carregando...',
+      full_name: 'Cargando...',
       avatar_url: null as string | null,
       email: undefined as string | undefined
     } : null),
     squad: (lead as any).squad || (lead.squad_id ? {
       id: lead.squad_id,
-      name: 'Carregando...',
+      name: 'Cargando...',
       color: null as string | null
     } : null),
     sdr: (lead as any).sdr || null,
@@ -95,7 +95,7 @@ export function LeadDetailPage({ leadId, onBack, isAdminView = false, onWhatsApp
 
   const teamMembersForSelect = (teamMembers || []).map(m => ({
     id: m.id,
-    full_name: m.full_name || m.email || 'Sem nome',
+    full_name: m.full_name || m.email || 'Sin nombre',
     avatar_url: m.avatar_url,
     email: m.email,
   }));
@@ -130,7 +130,7 @@ export function LeadDetailPage({ leadId, onBack, isAdminView = false, onWhatsApp
             <TabsList className="h-12 bg-transparent gap-2 w-max md:w-auto">
               <TabsTrigger value="summary" className="gap-2 data-[state=active]:bg-primary/10">
                 <LayoutDashboard className="h-4 w-4" />
-                <span className="hidden sm:inline">Resumo</span>
+                <span className="hidden sm:inline">Resumen</span>
               </TabsTrigger>
               <TabsTrigger value="bant" className="gap-2 data-[state=active]:bg-primary/10">
                 <ClipboardCheck className="h-4 w-4" />
@@ -146,11 +146,11 @@ export function LeadDetailPage({ leadId, onBack, isAdminView = false, onWhatsApp
               </TabsTrigger>
               <TabsTrigger value="origin" className="gap-2 data-[state=active]:bg-primary/10">
                 <Globe className="h-4 w-4" />
-                <span className="hidden sm:inline">Origem</span>
+                <span className="hidden sm:inline">Origen</span>
               </TabsTrigger>
               <TabsTrigger value="wallet" className="gap-2 data-[state=active]:bg-primary/10">
                 <Wallet className="h-4 w-4" />
-                <span className="hidden sm:inline">Carteira</span>
+                <span className="hidden sm:inline">Cartera</span>
               </TabsTrigger>
               <TabsTrigger value="notes" className="gap-2 data-[state=active]:bg-primary/10">
                 <FileText className="h-4 w-4" />
@@ -158,7 +158,7 @@ export function LeadDetailPage({ leadId, onBack, isAdminView = false, onWhatsApp
               </TabsTrigger>
               <TabsTrigger value="cadences" className="gap-2 data-[state=active]:bg-primary/10">
                 <CalendarClock className="h-4 w-4" />
-                <span className="hidden sm:inline">Cadências</span>
+                <span className="hidden sm:inline">Cadencias</span>
               </TabsTrigger>
             </TabsList>
           </div>

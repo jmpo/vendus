@@ -44,22 +44,22 @@ function AnimatedSection({ children, className = '' }: { children: React.ReactNo
 }
 
 const FEATURES = [
-  { icon: BarChart3, title: 'CRM & Pipeline Visual', desc: 'Kanban drag-and-drop com estágios personalizáveis, valores e probabilidade de fechamento.' },
-  { icon: MessageSquare, title: 'Inbox Omnichannel', desc: 'WhatsApp, chat web e mais — tudo numa caixa de entrada unificada com IA.' },
-  { icon: Zap, title: 'Funis de Captação com IA', desc: 'Landing pages e formulários inteligentes que qualificam e distribuem leads automaticamente.' },
-  { icon: FileText, title: 'Formulários Inteligentes', desc: 'Scoring automático, tags condicionais e mapeamento de campos personalizados.' },
-  { icon: Webhook, title: 'Automações & Webhooks', desc: 'Conecte com qualquer ferramenta: envie emails, notifique equipes, acione fluxos.' },
-  { icon: Bot, title: 'Agentes de IA', desc: 'Atendentes virtuais treinados com seus materiais que respondem 24/7 com contexto.' },
-  { icon: Users, title: 'Gestão de Equipes & Squads', desc: 'Distribua leads por equipe, defina permissões granulares e acompanhe performance.' },
-  { icon: PieChart, title: 'Relatórios & Dashboards', desc: 'Métricas em tempo real: conversão por etapa, tempo de resposta, ranking de vendedores.' },
-  { icon: CalendarDays, title: 'Agendamento Online', desc: 'Links de agendamento personalizados com integração ao Google Calendar e Meet.' },
-  { icon: DollarSign, title: 'Sistema de Comissões', desc: 'Regras flexíveis por produto, vendedor ou equipe com aprovação e pagamento.' },
+  { icon: BarChart3, title: 'CRM & Pipeline Visual', desc: 'Kanban drag-and-drop con etapas personalizables, valores y probabilidad de cierre.' },
+  { icon: MessageSquare, title: 'Bandeja de Entrada Omnicanal', desc: 'WhatsApp, chat web y más — todo en una bandeja de entrada unificada con IA.' },
+  { icon: Zap, title: 'Embudos de Captación con IA', desc: 'Landing pages y formularios inteligentes que califican y distribuyen leads automáticamente.' },
+  { icon: FileText, title: 'Formularios Inteligentes', desc: 'Scoring automático, etiquetas condicionales y mapeo de campos personalizados.' },
+  { icon: Webhook, title: 'Automatizaciones & Webhooks', desc: 'Conecte con cualquier herramienta: envíe correos electrónicos, notifique equipos, active flujos.' },
+  { icon: Bot, title: 'Agentes de IA', desc: 'Atendentes virtuales capacitados con sus materiales que responden 24/7 con contexto.' },
+  { icon: Users, title: 'Gestión de Equipos & Squads', desc: 'Distribuya leads por equipo, defina permisos granulares y realice el seguimiento del desempeño.' },
+  { icon: PieChart, title: 'Informes & Dashboards', desc: 'Métricas en tiempo real: conversión por etapa, tiempo de respuesta, ranking de vendedores.' },
+  { icon: CalendarDays, title: 'Agendamiento Online', desc: 'Enlaces de agendamiento personalizados con integración con Google Calendar y Meet.' },
+  { icon: DollarSign, title: 'Sistema de Comisiones', desc: 'Reglas flexibles por producto, vendedor o equipo con aprobación y pago.' },
 ];
 
 const STEPS = [
-  { number: '01', title: 'Capture', desc: 'Leads entram por formulários, funis, WhatsApp ou integrações — tudo centralizado.', icon: Sparkles },
-  { number: '02', title: 'Qualifique', desc: 'IA e scoring classificam automaticamente. Sua equipe foca no que importa.', icon: Shield },
-  { number: '03', title: 'Converta', desc: 'Pipeline visual, automações e agentes de IA aceleram o fechamento.', icon: Rocket },
+  { number: '01', title: 'Capturar', desc: 'Los leads ingresan por formularios, embudos, WhatsApp o integraciones — todo centralizado.', icon: Sparkles },
+  { number: '02', title: 'Calificar', desc: 'IA y scoring clasifican automáticamente. Su equipo se enfoca en lo que importa.', icon: Shield },
+  { number: '03', title: 'Convertir', desc: 'Pipeline visual, automatizaciones y agentes de IA aceleran el cierre.', icon: Rocket },
 ];
 
 export default function SalesPage() {
@@ -85,7 +85,7 @@ export default function SalesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.company_name.trim() || !form.contact_name.trim() || !form.email.trim()) {
-      toast.error('Preencha os campos obrigatórios.');
+      toast.error('Complete los campos obligatorios.');
       return;
     }
 
@@ -100,9 +100,9 @@ export default function SalesPage() {
       });
       if (error) throw error;
       setIsSubmitted(true);
-      toast.success('Mensagem enviada com sucesso!');
+      toast.success('¡Mensaje enviado con éxito!');
     } catch {
-      toast.error('Erro ao enviar. Tente novamente.');
+      toast.error('Error al enviar. Inténtelo de nuevo.');
     } finally {
       setIsSubmitting(false);
     }
@@ -115,7 +115,7 @@ export default function SalesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Logo size="sm" />
           <Button onClick={scrollToForm} size="sm">
-            Falar com Consultor <ChevronRight className="h-4 w-4" />
+            Hablar con un Consultor <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
       </nav>
@@ -126,22 +126,22 @@ export default function SalesPage() {
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <AnimatedSection>
             <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-              <Sparkles className="h-4 w-4" /> Plataforma completa de vendas
+              <Sparkles className="h-4 w-4" /> Plataforma completa de ventas
             </motion.div>
             <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-6">
-              Transforme seu processo de vendas com{' '}
-              <span className="text-primary">inteligência artificial</span>
+              Transforme su proceso de ventas con{' '}
+              <span className="text-primary">inteligencia artificial</span>
             </motion.h1>
             <motion.p variants={fadeUp} className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              CRM, inbox omnichannel, funis de captação, agentes de IA e automações — 
-              tudo em uma plataforma integrada para sua equipe vender mais e melhor.
+              CRM, inbox omnichannel, embudos de captación, agentes de IA y automatizaciones — 
+              todo en una plataforma integrada para que su equipo venda más y mejor.
             </motion.p>
             <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="xl" onClick={scrollToForm}>
-                Falar com Consultor <ArrowRight className="h-5 w-5" />
+                Hablar con un Consultor <ArrowRight className="h-5 w-5" />
               </Button>
               <Button size="xl" variant="outline" onClick={scrollToForm}>
-                Solicitar Proposta
+                Solicitar Propuesta
               </Button>
             </motion.div>
           </AnimatedSection>
@@ -153,10 +153,10 @@ export default function SalesPage() {
         <div className="max-w-7xl mx-auto">
           <AnimatedSection className="text-center mb-16">
             <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold mb-4">
-              Tudo que sua equipe precisa para vender mais
+              Todo lo que su equipo necesita para vender más
             </motion.h2>
             <motion.p variants={fadeUp} className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Funcionalidades pensadas para cada etapa do processo comercial.
+              Funcionalidades pensadas para cada etapa del proceso comercial.
             </motion.p>
           </AnimatedSection>
 
@@ -183,10 +183,10 @@ export default function SalesPage() {
         <div className="max-w-5xl mx-auto">
           <AnimatedSection className="text-center mb-16">
             <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold mb-4">
-              Como funciona
+              Cómo funciona
             </motion.h2>
             <motion.p variants={fadeUp} className="text-muted-foreground text-lg">
-              Três passos para revolucionar suas vendas.
+              Tres pasos para revolucionar sus ventas.
             </motion.p>
           </AnimatedSection>
 
@@ -214,17 +214,17 @@ export default function SalesPage() {
                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                 <CardContent className="p-8 sm:p-12 text-center relative z-10">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium mb-4">
-                    <Sparkles className="h-4 w-4" /> Planos sob medida
+                    <Sparkles className="h-4 w-4" /> Planes a medida
                   </div>
                   <h2 className="text-2xl sm:text-3xl font-bold mb-4">
-                    Cada empresa é única. Seu plano também.
+                    Cada empresa es única. Su plan también.
                   </h2>
                   <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-                    Não vendemos planos genéricos. Analisamos sua operação comercial e montamos 
-                    a configuração ideal para sua equipe — com os módulos, integrações e suporte que você precisa.
+                    No vendemos planes genéricos. Analizamos su operación comercial y montamos 
+                    la configuración ideal para su equipo — con los módulos, integraciones y soporte que necesita.
                   </p>
                   <Button size="lg" onClick={scrollToForm}>
-                    Solicitar Proposta Personalizada <ArrowRight className="h-5 w-5" />
+                    Solicitar Propuesta Personalizada <ArrowRight className="h-5 w-5" />
                   </Button>
                 </CardContent>
               </Card>
@@ -239,10 +239,10 @@ export default function SalesPage() {
           <AnimatedSection>
             <motion.div variants={fadeUp} className="text-center mb-10">
               <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                Fale com um consultor
+                Hable con un consultor
               </h2>
               <p className="text-muted-foreground text-lg">
-                Preencha o formulário e nossa equipe entra em contato em até 24h.
+                Complete el formulario y nuestro equipo se pondrá en contacto en un plazo de 24 horas.
               </p>
             </motion.div>
 
@@ -251,9 +251,9 @@ export default function SalesPage() {
                 <Card className="border-primary/30">
                   <CardContent className="p-8 text-center">
                     <CheckCircle2 className="h-16 w-16 text-primary mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold mb-2">Mensagem enviada!</h3>
+                    <h3 className="text-2xl font-bold mb-2">¡Mensaje enviado!</h3>
                     <p className="text-muted-foreground">
-                      Nosso consultor entrará em contato em breve. Obrigado pelo interesse!
+                      Nuestro consultor se pondrá en contacto pronto. ¡Gracias por su interés!
                     </p>
                   </CardContent>
                 </Card>
@@ -265,21 +265,21 @@ export default function SalesPage() {
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label>Nome da empresa *</Label>
+                          <Label>Nombre de la empresa *</Label>
                           <Input
                             value={form.company_name}
                             onChange={(e) => setForm(p => ({ ...p, company_name: e.target.value }))}
-                            placeholder="Sua empresa"
+                            placeholder="Su empresa"
                             required
                             maxLength={100}
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label>Seu nome *</Label>
+                          <Label>Su nombre *</Label>
                           <Input
                             value={form.contact_name}
                             onChange={(e) => setForm(p => ({ ...p, contact_name: e.target.value }))}
-                            placeholder="Nome completo"
+                            placeholder="Nombre completo"
                             required
                             maxLength={100}
                           />
@@ -299,7 +299,7 @@ export default function SalesPage() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label>Telefone / WhatsApp</Label>
+                          <Label>Teléfono / WhatsApp</Label>
                           <Input
                             value={form.phone}
                             onChange={(e) => setForm(p => ({ ...p, phone: e.target.value }))}
@@ -311,17 +311,17 @@ export default function SalesPage() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label>Tamanho da empresa</Label>
+                          <Label>Tamaño de la empresa</Label>
                           <Select value={form.company_size} onValueChange={(v) => setForm(p => ({ ...p, company_size: v }))}>
                             <SelectTrigger>
-                              <SelectValue placeholder="Selecione" />
+                              <SelectValue placeholder="Seleccionar" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="1-5">1 a 5 pessoas</SelectItem>
-                              <SelectItem value="6-20">6 a 20 pessoas</SelectItem>
-                              <SelectItem value="21-50">21 a 50 pessoas</SelectItem>
-                              <SelectItem value="51-200">51 a 200 pessoas</SelectItem>
-                              <SelectItem value="200+">Mais de 200</SelectItem>
+                              <SelectItem value="1-5">1 a 5 personas</SelectItem>
+                              <SelectItem value="6-20">6 a 20 personas</SelectItem>
+                              <SelectItem value="21-50">21 a 50 personas</SelectItem>
+                              <SelectItem value="51-200">51 a 200 personas</SelectItem>
+                              <SelectItem value="200+">Más de 200</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -330,18 +330,18 @@ export default function SalesPage() {
                           <Input
                             value={form.segment}
                             onChange={(e) => setForm(p => ({ ...p, segment: e.target.value }))}
-                            placeholder="Ex: SaaS, Varejo, Serviços..."
+                            placeholder="Ej: SaaS, Retail, Servicios..."
                             maxLength={100}
                           />
                         </div>
                       </div>
 
                       <div className="space-y-2">
-                        <Label>Qual seu principal desafio em vendas?</Label>
+                        <Label>¿Cuál es su principal desafío en ventas?</Label>
                         <Textarea
                           value={form.main_challenge}
                           onChange={(e) => setForm(p => ({ ...p, main_challenge: e.target.value }))}
-                          placeholder="Conte um pouco sobre os desafios que sua equipe enfrenta hoje..."
+                          placeholder="Cuéntenos un poco sobre los desafíos que su equipo enfrenta hoy..."
                           rows={4}
                           maxLength={1000}
                         />
@@ -351,7 +351,7 @@ export default function SalesPage() {
                         {isSubmitting ? (
                           <><Loader2 className="h-5 w-5 animate-spin" /> Enviando...</>
                         ) : (
-                          <><Send className="h-5 w-5" /> Enviar mensagem</>
+                          <><Send className="h-5 w-5" /> Enviar mensaje</>
                         )}
                       </Button>
                     </form>
@@ -366,7 +366,7 @@ export default function SalesPage() {
       {/* Footer */}
       <footer className="py-8 px-4 border-t border-border">
         <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} {platformName}. Todos os direitos reservados.
+          © {new Date().getFullYear()} {platformName}. Todos los derechos reservados.
         </div>
       </footer>
     </div>

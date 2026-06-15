@@ -105,7 +105,7 @@ export const StageEditForm = forwardRef<StageEditFormRef, StageEditFormProps>(({
     <div className="rounded-xl border bg-card/50 flex flex-col">
       <div className="flex items-center justify-between p-3 sm:p-4 border-b shrink-0">
         <h4 className="font-semibold text-foreground text-sm sm:text-base">
-          {isNew ? 'Nova Etapa' : 'Editar Etapa'}
+          {isNew ? 'Nueva Etapa' : 'Editar Etapa'}
         </h4>
         <Button
           type="button"
@@ -167,7 +167,7 @@ export const StageEditForm = forwardRef<StageEditFormRef, StageEditFormProps>(({
             <div className="flex items-center gap-2">
               <Trophy className="h-4 w-4 text-emerald-600 shrink-0" />
               <Label htmlFor="is-won" className="text-xs sm:text-sm font-normal cursor-pointer">
-                Ganho
+                Ganado
               </Label>
             </div>
             <Switch

@@ -54,7 +54,7 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
     const value = parseFloat(normalized.replace(/[^\d.-]/g, ''));
     
     if (!value || value <= 0) {
-      toast.error('Digite um valor válido');
+      toast.error('Ingrese un valor válido');
       return;
     }
 
@@ -73,13 +73,13 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
         plan_name: selectedPlan?.name || null,
       });
 
-      toast.success('Negócio registrado! Comissão calculada automaticamente.', {
+      toast.success('¡Venta registrada! Comisión calculada automáticamente.', {
         icon: <PartyPopper className="h-5 w-5" />
       });
       
       onClose();
     } catch (error) {
-      toast.error('Erro ao registrar negócio');
+      toast.error('Error al registrar venta');
     }
   };
 
@@ -101,20 +101,20 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <PartyPopper className="h-5 w-5 text-green-500" />
-            Parabéns! Negócio Fechado!
+            ¡Felicidades! ¡Venta Cerrada!
           </DialogTitle>
           <DialogDescription>
-            Registre o valor do negócio com <strong>{leadName}</strong>
+            Registre el valor de la venta con <strong>{leadName}</strong>
           </DialogDescription>
         </DialogHeader>
         
         <div className="grid gap-4 py-4">
           {hasPlans && (
             <div className="space-y-2">
-              <Label>Plano *</Label>
+              <Label>Plan *</Label>
               <Select value={selectedPlanId} onValueChange={handlePlanChange}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione o plano" />
+                  <SelectValue placeholder="Seleccione el plan" />
                 </SelectTrigger>
                 <SelectContent>
                   {activePlans.map(plan => (
@@ -131,7 +131,7 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="value">Valor do Negócio (R$)</Label>
+            <Label htmlFor="value">Valor de la Venta (R$)</Label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -145,15 +145,15 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
               />
             </div>
             {hasPlans && selectedPlanId && (
-              <p className="text-xs text-muted-foreground">Valor definido pelo plano selecionado</p>
+              <p className="text-xs text-muted-foreground">Valor definido por el plan seleccionado</p>
             )}
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="notes">Observações (opcional)</Label>
+            <Label htmlFor="notes">Observaciones (opcional)</Label>
             <Textarea
               id="notes"
-              placeholder="Detalhes sobre o fechamento..."
+              placeholder="Detalles sobre el cierre..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
@@ -166,7 +166,7 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
             Cancelar
           </Button>
           <Button onClick={handleSubmit} disabled={createDeal.isPending || (hasPlans && !selectedPlanId)}>
-            Registrar Negócio
+            Registrar Venta
           </Button>
         </DialogFooter>
       </DialogContent>

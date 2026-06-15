@@ -34,11 +34,11 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800">Pendente</Badge>;
+        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800">Pendiente</Badge>;
       case 'approved':
-        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800">Aprovada</Badge>;
+        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800">Aprobada</Badge>;
       case 'paid':
-        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800">Paga</Badge>;
+        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800">Pagada</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -49,7 +49,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
       {/* Header - Mobile optimized */}
       {isMobile && (
         <div className="pb-2">
-          <h2 className="text-xl font-bold text-foreground">Financeiro</h2>
+          <h2 className="text-xl font-bold text-foreground">Financiero</h2>
           <p className="text-sm text-muted-foreground">{productName}</p>
         </div>
       )}
@@ -61,33 +61,33 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
       )}>
         <Card className={cn(isMobile && "p-0")}>
           <CardHeader className={cn("flex flex-row items-center justify-between space-y-0", isMobile ? "p-4 pb-2" : "pb-2")}>
-            <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>Comissões Ganhas</CardTitle>
+            <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>Comisiones Ganadas</CardTitle>
             <DollarSign className={cn("text-green-500", isMobile ? "h-4 w-4" : "h-4 w-4")} />
           </CardHeader>
           <CardContent className={isMobile ? "p-4 pt-0" : ""}>
             <div className={cn("font-bold text-green-600", isMobile ? "text-xl" : "text-2xl")}>
               R$ {(commissionsSummary?.paid || 0).toLocaleString('pt-BR')}
             </div>
-            <p className="text-xs text-muted-foreground">Este mês</p>
+            <p className="text-xs text-muted-foreground">Este mes</p>
           </CardContent>
         </Card>
 
         <Card className={cn(isMobile && "p-0")}>
           <CardHeader className={cn("flex flex-row items-center justify-between space-y-0", isMobile ? "p-4 pb-2" : "pb-2")}>
-            <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>A Receber</CardTitle>
+            <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>Por Cobrar</CardTitle>
             <Wallet className={cn("text-blue-500", isMobile ? "h-4 w-4" : "h-4 w-4")} />
           </CardHeader>
           <CardContent className={isMobile ? "p-4 pt-0" : ""}>
             <div className={cn("font-bold text-blue-600", isMobile ? "text-xl" : "text-2xl")}>
               R$ {((commissionsSummary?.pending || 0) + (commissionsSummary?.approved || 0)).toLocaleString('pt-BR')}
             </div>
-            <p className="text-xs text-muted-foreground">Pendentes + Aprovadas</p>
+            <p className="text-xs text-muted-foreground">Pendientes + Aprobadas</p>
           </CardContent>
         </Card>
 
         <Card className={cn(isMobile && "p-0")}>
           <CardHeader className={cn("flex flex-row items-center justify-between space-y-0", isMobile ? "p-4 pb-2" : "pb-2")}>
-            <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>Potencial do Funil</CardTitle>
+            <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>Potencial del Embudo</CardTitle>
             <TrendingUp className={cn("text-purple-500", isMobile ? "h-4 w-4" : "h-4 w-4")} />
           </CardHeader>
           <CardContent className={isMobile ? "p-4 pt-0" : ""}>
@@ -100,7 +100,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
 
         <Card className={cn(isMobile && "p-0")}>
           <CardHeader className={cn("flex flex-row items-center justify-between space-y-0", isMobile ? "p-4 pb-2" : "pb-2")}>
-            <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>Meta do Mês</CardTitle>
+            <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>Meta del Mes</CardTitle>
             <Target className={cn("text-orange-500", isMobile ? "h-4 w-4" : "h-4 w-4")} />
           </CardHeader>
           <CardContent className={isMobile ? "p-4 pt-0" : ""}>
@@ -115,16 +115,16 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
         </Card>
       </div>
 
-      {/* Funil Financeiro */}
+      {/* Funil Financiero */}
       <Card>
         <CardHeader className={isMobile ? "p-4" : ""}>
           <CardTitle className={cn("flex items-center gap-2", isMobile && "text-base")}>
             <TrendingUp className="h-5 w-5" />
-            Pipeline Financeiro
+            Pipeline Financiero
           </CardTitle>
           {!isMobile && (
             <CardDescription>
-              Valor potencial por etapa do funil
+              Valor potencial por etapa del embudo
             </CardDescription>
           )}
         </CardHeader>
@@ -166,7 +166,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
             </div>
           ) : (
             <p className="text-muted-foreground text-center py-8 text-sm">
-              Configure os valores do pipeline no painel administrativo
+              Configure los valores del pipeline en el panel administrativo
             </p>
           )}
         </CardContent>
@@ -177,18 +177,18 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
         <CardHeader className={isMobile ? "p-4" : ""}>
           <CardTitle className={cn("flex items-center gap-2", isMobile && "text-base")}>
             <DollarSign className="h-5 w-5" />
-            Minhas Comissões
+            Mis Comisiones
           </CardTitle>
           {!isMobile && (
             <CardDescription>
-              Histórico de comissões e status de pagamento
+              Historial de comisiones y estado de pago
             </CardDescription>
           )}
         </CardHeader>
         <CardContent className={isMobile ? "p-4 pt-0" : ""}>
           {commissions?.length === 0 ? (
             <p className="text-muted-foreground text-center py-8 text-sm">
-              Nenhuma comissão registrada ainda
+              Ninguna comisión registrada aún
             </p>
           ) : isMobile ? (
             // Mobile version - Cards
@@ -213,13 +213,13 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-muted-foreground">Negócio</p>
+                      <p className="text-xs text-muted-foreground">Venta</p>
                       <p className="text-sm font-medium">
                         R$ {(commission.deals?.deal_value || 0).toLocaleString('pt-BR')}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-muted-foreground">Comissão</p>
+                      <p className="text-xs text-muted-foreground">Comisión</p>
                       <p className="text-sm font-bold text-green-600">
                         R$ {Number(commission.amount).toLocaleString('pt-BR')}
                       </p>
@@ -237,10 +237,10 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
               <TableHeader>
                 <TableRow>
                   <TableHead>Lead</TableHead>
-                  <TableHead>Valor do Negócio</TableHead>
-                  <TableHead>Comissão</TableHead>
+                  <TableHead>Valor do Venta</TableHead>
+                  <TableHead>Comisión</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Data</TableHead>
+                  <TableHead>Fecha</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

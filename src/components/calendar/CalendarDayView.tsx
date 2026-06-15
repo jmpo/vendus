@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { format, isSameDay, isToday } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { CalendarEvent } from '@/hooks/useCalendarEvents';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -22,7 +22,7 @@ const EVENT_TYPE_COLORS: Record<string, string> = {
 
 const BRT_TZ = 'America/Sao_Paulo';
 const formatBRT = (iso: string, opts: Intl.DateTimeFormatOptions) =>
-  new Intl.DateTimeFormat('pt-BR', { timeZone: BRT_TZ, ...opts }).format(new Date(iso));
+  new Intl.DateTimeFormat('es', { timeZone: BRT_TZ, ...opts }).format(new Date(iso));
 const getBRTHour = (iso: string) => {
   const parts = new Intl.DateTimeFormat('en-US', { timeZone: BRT_TZ, hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date(iso));
   const h = Number(parts.find(p => p.type === 'hour')?.value ?? 0);
@@ -58,7 +58,7 @@ export function CalendarDayView({ currentDate, events, onEventClick }: CalendarD
         isToday(currentDate) && "bg-primary/10"
       )}>
         <div className="text-sm text-muted-foreground">
-          {format(currentDate, 'EEEE', { locale: ptBR })}
+          {format(currentDate, 'EEEE', { locale: es })}
         </div>
         <div className={cn(
           "text-3xl font-bold",
@@ -67,7 +67,7 @@ export function CalendarDayView({ currentDate, events, onEventClick }: CalendarD
           {format(currentDate, 'd')}
         </div>
         <div className="text-sm text-muted-foreground">
-          {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
+          {format(currentDate, 'MMMM yyyy', { locale: es })}
         </div>
       </div>
 

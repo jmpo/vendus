@@ -383,17 +383,17 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
           </CardHeader>
           <CardContent className="space-y-5">
             <PercentSlider
-              label="Probabilidade de minúscula no início"
+              label="Probabilidad de minúscula no início"
               value={cfg.style?.lowercase_prob ?? 0.6}
               onChange={(v) => setStyle({ lowercase_prob: v })}
             />
             <PercentSlider
-              label="Probabilidade de pontuação relaxada"
+              label="Probabilidad de pontuação relaxada"
               value={cfg.style?.relaxed_punct_prob ?? 0.4}
               onChange={(v) => setStyle({ relaxed_punct_prob: v })}
             />
             <PercentSlider
-              label="Probabilidade de abreviação"
+              label="Probabilidad de abreviação"
               value={cfg.style?.abbrev_prob ?? 0.5}
               onChange={(v) => setStyle({ abbrev_prob: v })}
             />

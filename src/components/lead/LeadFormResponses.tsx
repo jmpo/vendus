@@ -20,7 +20,7 @@ export function LeadFormResponses({ metadata }: LeadFormResponsesProps) {
 
   const formatValue = (value: unknown): string => {
     if (value === null || value === undefined) return '-';
-    if (typeof value === 'boolean') return value ? 'Sim' : 'Não';
+    if (typeof value === 'boolean') return value ? 'Sí' : 'No';
     if (Array.isArray(value)) return value.join(', ');
     if (typeof value === 'object') return JSON.stringify(value);
     return String(value);
@@ -42,7 +42,7 @@ export function LeadFormResponses({ metadata }: LeadFormResponsesProps) {
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           <FileText className="h-4 w-4 text-primary" />
-          Respostas do Formulário
+          Respuestas del Formulario
           {formName && (
             <Badge variant="outline" className="ml-auto font-normal">
               {formName}
@@ -85,7 +85,7 @@ export function LeadFormResponses({ metadata }: LeadFormResponsesProps) {
           ))}
           {filteredResponses.length === 0 && (
             <p className="text-sm text-muted-foreground text-center py-2">
-              Nenhuma resposta adicional
+              Ninguna respuesta adicional
             </p>
           )}
         </div>

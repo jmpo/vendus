@@ -302,7 +302,7 @@ export function WebhooksManager() {
               <Label htmlFor="name">Nome *</Label>
               <Input
                 id="name"
-                placeholder="Ex: Vendas Hotmart"
+                placeholder="Ex: Ventas Hotmart"
                 value={newWebhook.name}
                 onChange={(e) => setNewWebhook(prev => ({ ...prev, name: e.target.value }))}
               />

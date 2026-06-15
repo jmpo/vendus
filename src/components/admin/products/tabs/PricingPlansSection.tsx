@@ -34,7 +34,7 @@ const billingCycleOptions = [
   { value: 'trimestral', label: 'Trimestral' },
   { value: 'semestral', label: 'Semestral' },
   { value: 'anual', label: 'Anual' },
-  { value: 'unico', label: 'Pagamento Único' },
+  { value: 'unico', label: 'Pago Único' },
 ];
 
 const emptyPlan: Omit<ProductPlan, 'id'> = {

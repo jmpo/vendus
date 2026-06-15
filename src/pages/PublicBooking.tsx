@@ -29,7 +29,7 @@ import {
 import { BookingThankYou } from '@/components/booking/BookingThankYou';
 import { ConversationalBooking, BookingFormData } from '@/components/booking/ConversationalBooking';
 import { format, addDays, startOfDay, isBefore, isAfter } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import type { BookingEventType } from '@/hooks/useBookingEventTypes';
 
@@ -43,7 +43,7 @@ const locationIcons: Record<string, typeof Video> = {
 const locationLabels: Record<string, string> = {
   google_meet: 'Google Meet',
   zoom: 'Zoom',
-  phone: 'Telefone',
+  phone: 'Teléfono',
   in_person: 'Presencial',
 };
 
@@ -226,9 +226,9 @@ export default function PublicBooking() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="max-w-md mx-auto">
           <CardContent className="p-8 text-center">
-            <h1 className="text-2xl font-bold mb-2">Página não encontrada</h1>
+            <h1 className="text-2xl font-bold mb-2">Página no encontrada</h1>
             <p className="text-muted-foreground">
-              O link de agendamento que você está procurando não existe ou foi removido.
+              El enlace de reserva que busca no existe o ha sido eliminado.
             </p>
           </CardContent>
         </Card>
@@ -269,7 +269,7 @@ export default function PublicBooking() {
                   ))
                 ) : eventTypes?.length === 0 ? (
                   <p className="text-center text-muted-foreground py-8">
-                    Nenhum tipo de evento disponível no momento.
+                    No hay tipos de eventos disponibles en este momento.
                   </p>
                 ) : (
                   eventTypes?.map((et) => {
@@ -330,7 +330,7 @@ export default function PublicBooking() {
                     className="mb-4 -ml-2"
                   >
                     <ArrowLeft className="h-4 w-4 mr-1" />
-                    Voltar
+                    Volver
                   </Button>
 
                   <Avatar className="h-12 w-12 mb-3">
@@ -351,7 +351,7 @@ export default function PublicBooking() {
                       <LocationIcon className="h-4 w-4" />
                       <span>
                         {eventType.create_meet 
-                          ? 'Link após confirmação'
+                          ? 'Enlace después de la confirmación'
                           : locationLabels[eventType.location_type]
                         }
                       </span>
@@ -367,7 +367,7 @@ export default function PublicBooking() {
 
                 {/* Calendar & Slots */}
                 <div className="flex-1 p-6">
-                  <h3 className="font-medium mb-4">Escolha uma data e horário</h3>
+                  <h3 className="font-medium mb-4">Elija una fecha y hora</h3>
                   
                   <div className="flex flex-col gap-4 sm:gap-6">
                     <div>
@@ -376,19 +376,19 @@ export default function PublicBooking() {
                         selected={selectedDate}
                         onSelect={handleSelectDate}
                         disabled={isDateDisabled}
-                        locale={ptBR}
+                        locale={es}
                         className="rounded-md border pointer-events-auto"
                       />
                       <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
                         <Globe className="h-4 w-4" />
-                        <span>Horário de Brasília</span>
+                        <span>Horario de Brasilia</span>
                       </div>
                     </div>
 
                     {selectedDate && (
                       <div className="flex-1">
                         <h4 className="font-medium mb-3 capitalize">
-                          {format(selectedDate, "EEEE, dd 'de' MMMM", { locale: ptBR })}
+                          {format(selectedDate, "EEEE, dd 'de' MMMM", { locale: es })}
                         </h4>
                         
                         {loadingSlots ? (
@@ -399,7 +399,7 @@ export default function PublicBooking() {
                           </div>
                         ) : slots?.length === 0 ? (
                           <p className="text-sm text-muted-foreground py-4">
-                            Nenhum horário disponível nesta data. Escolha outra data.
+                            No hay horarios disponibles en esta fecha. Elija otra fecha.
                           </p>
                         ) : (
                           <div className="grid grid-cols-2 sm:grid-cols-1 gap-2 max-h-80 overflow-y-auto pr-2">
@@ -438,7 +438,7 @@ export default function PublicBooking() {
                     className="mb-4 -ml-2"
                   >
                     <ArrowLeft className="h-4 w-4 mr-1" />
-                    Voltar
+                    Volver
                   </Button>
 
                   <Avatar className="h-12 w-12 mb-3">
@@ -457,14 +457,14 @@ export default function PublicBooking() {
                     </div>
                     <div className="flex items-center gap-2">
                       <LocationIcon className="h-4 w-4" />
-                      <span>Link após confirmação</span>
+                      <span>Enlace después de la confirmación</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <CalendarIcon className="h-4 w-4" />
                       <span>
                         {selectedSlot.start} - {selectedSlot.end}
                         <br />
-                        {format(selectedDate, "EEE, dd MMM", { locale: ptBR })}
+                        {format(selectedDate, "EEE, dd MMM", { locale: es })}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -497,7 +497,7 @@ export default function PublicBooking() {
                         type="email"
                         value={formData.email}
                         onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                        placeholder="seu@email.com"
+                        placeholder="su@correo.com"
                         required
                       />
                     </div>

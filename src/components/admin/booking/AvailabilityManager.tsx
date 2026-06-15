@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Plus, X, Copy, Trash2, Clock } from 'lucide-react';
 import { useUserAvailability, DAY_NAMES, DAY_ABBREVIATIONS } from '@/hooks/useUserAvailability';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
@@ -220,9 +220,9 @@ export function AvailabilityManager() {
         <div className="lg:col-span-3">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Horários Semanais</CardTitle>
+              <CardTitle className="text-lg">Horarios Semanales</CardTitle>
               <CardDescription>
-                Defina sua disponibilidade padrão para cada dia da semana
+                Defina su disponibilidad estándar para cada dia da semana
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -257,7 +257,7 @@ export function AvailabilityManager() {
                       {/* Slots */}
                       <div className="flex-1 space-y-2 min-w-0">
                         {!hasSlots ? (
-                          <span className="text-sm text-muted-foreground">Indisponível</span>
+                          <span className="text-sm text-muted-foreground">Indisponible</span>
                         ) : (
                           slots.map((slot) => (
                             <div key={slot.id} className="flex items-center gap-2 flex-wrap">
@@ -316,7 +316,7 @@ export function AvailabilityManager() {
                           size="icon"
                           className="h-8 w-8"
                           onClick={() => handleQuickAddSlot(day)}
-                          title="Adicionar horário rápido"
+                          title="Añadir horario rápido"
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
@@ -326,7 +326,7 @@ export function AvailabilityManager() {
                             size="icon"
                             className="h-8 w-8"
                             onClick={() => handleOpenCopyDialog(day)}
-                            title="Copiar para outros dias"
+                            title="Copiar a otros días"
                           >
                             <Copy className="h-4 w-4" />
                           </Button>
@@ -345,7 +345,7 @@ export function AvailabilityManager() {
                   onClick={() => handleOpenAddSlotDialog(1)}
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Adicionar múltiplos horários
+                  Añadir múltiples horarios
                 </Button>
               </div>
             </CardContent>
@@ -356,9 +356,9 @@ export function AvailabilityManager() {
         <div className="lg:col-span-2">
           <Card className="h-fit">
             <CardHeader>
-              <CardTitle className="text-lg">Datas Específicas</CardTitle>
+              <CardTitle className="text-lg">Fechas Específicas</CardTitle>
               <CardDescription>
-                Ajuste horários para datas específicas
+                Ajuste horarios para fechas específicas
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -379,14 +379,14 @@ export function AvailabilityManager() {
                   blocked: { backgroundColor: 'hsl(var(--destructive) / 0.2)' },
                   available: { backgroundColor: 'hsl(var(--primary) / 0.2)' },
                 }}
-                locale={ptBR}
+                locale={es}
                 className="rounded-md border pointer-events-auto w-full"
               />
 
               {/* Active Exceptions */}
               {overrides.length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="text-sm font-medium">Exceções ativas</h4>
+                  <h4 className="text-sm font-medium">Excepciones activas</h4>
                   <ScrollArea className="h-[180px]">
                     <div className="space-y-2 pr-4">
                       {overrides.map((override) => (
@@ -396,7 +396,7 @@ export function AvailabilityManager() {
                         >
                           <div>
                             <p className="font-medium">
-                              {format(new Date(override.date), "dd 'de' MMM", { locale: ptBR })}
+                              {format(new Date(override.date), "dd 'de' MMM", { locale: es })}
                             </p>
                             <p className="text-xs text-muted-foreground">
                               {override.is_available 
@@ -448,10 +448,10 @@ export function AvailabilityManager() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {selectedDate && format(selectedDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+              {selectedDate && format(selectedDate, "dd 'de' MMMM 'de' yyyy", { locale: es })}
             </DialogTitle>
             <DialogDescription>
-              Configure a disponibilidade para esta data específica
+              Configure la disponibilidad para esta fecha específica
             </DialogDescription>
           </DialogHeader>
           

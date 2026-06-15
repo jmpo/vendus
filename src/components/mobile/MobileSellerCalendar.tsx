@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addMonths, subMonths, isToday, isSameMonth, eachDayOfInterval, isSameDay } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { CalendarDays, ChevronLeft, ChevronRight, Plus, Clock, MapPin, User } from 'lucide-react';
 import { GoogleCalendarConnect } from '@/components/calendar/GoogleCalendarConnect';
 import { Button } from '@/components/ui/button';
@@ -23,12 +23,12 @@ const EVENT_TYPE_COLORS: Record<string, string> = {
 };
 
 const EVENT_TYPE_LABELS: Record<string, string> = {
-  meeting: 'Reunião',
-  call: 'Ligação',
+  meeting: 'Reunión',
+  call: 'Llamada',
   demo: 'Demo',
   follow_up: 'Follow-up',
-  task: 'Tarefa',
-  other: 'Outro',
+  task: 'Tarea',
+  other: 'Otro',
 };
 
 interface MobileSellerCalendarProps {
@@ -50,8 +50,8 @@ export function MobileSellerCalendar({ userId, productId }: MobileSellerCalendar
     const monthStart = startOfMonth(currentDate);
     const monthEnd = endOfMonth(currentDate);
     return {
-      startDate: startOfWeek(monthStart, { locale: ptBR }),
-      endDate: endOfWeek(monthEnd, { locale: ptBR }),
+      startDate: startOfWeek(monthStart, { locale: es }),
+      endDate: endOfWeek(monthEnd, { locale: es }),
     };
   }, [currentDate]);
 
@@ -128,7 +128,7 @@ export function MobileSellerCalendar({ userId, productId }: MobileSellerCalendar
               <ChevronLeft className="h-5 w-5" />
             </Button>
             <h2 className="text-lg font-semibold capitalize">
-              {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
+              {format(currentDate, 'MMMM yyyy', { locale: es })}
             </h2>
             <Button variant="ghost" size="icon" onClick={navigateNext}>
               <ChevronRight className="h-5 w-5" />
@@ -183,7 +183,7 @@ export function MobileSellerCalendar({ userId, productId }: MobileSellerCalendar
         <div className="flex items-center justify-between px-1">
           <div>
             <h3 className="font-semibold capitalize">
-              {isToday(selectedDate) ? 'Hoje' : format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}
+              {isToday(selectedDate) ? 'Hoy' : format(selectedDate, "EEEE, d 'de' MMMM", { locale: es })}
             </h3>
             <p className="text-sm text-muted-foreground">
               {selectedDateEvents.length} evento{selectedDateEvents.length !== 1 ? 's' : ''}
@@ -201,10 +201,10 @@ export function MobileSellerCalendar({ userId, productId }: MobileSellerCalendar
           <Card>
             <CardContent className="py-8 text-center">
               <CalendarDays className="h-10 w-10 text-muted-foreground/50 mx-auto mb-3" />
-              <p className="text-muted-foreground">Nenhum evento neste dia</p>
+              <p className="text-muted-foreground">Ningún evento en este día</p>
               <Button variant="ghost" size="sm" onClick={handleNewEvent} className="mt-2">
                 <Plus className="h-4 w-4 mr-1" />
-                Agendar
+                Programar
               </Button>
             </CardContent>
           </Card>
@@ -242,9 +242,9 @@ export function MobileSellerCalendar({ userId, productId }: MobileSellerCalendar
                           <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
                             <Clock className="h-3.5 w-3.5" />
                             <span>
-                              {format(new Date(event.start_time), 'HH:mm', { locale: ptBR })}
+                              {format(new Date(event.start_time), 'HH:mm', { locale: es })}
                               {' - '}
-                              {format(new Date(event.end_time), 'HH:mm', { locale: ptBR })}
+                              {format(new Date(event.end_time), 'HH:mm', { locale: es })}
                             </span>
                           </div>
 

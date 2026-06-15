@@ -197,7 +197,7 @@ export function BillingManager() {
                   <TableHead>Valor</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Vencimento</TableHead>
-                  <TableHead>Pagamento</TableHead>
+                  <TableHead>Pago</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>

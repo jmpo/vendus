@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Database } from 'lucide-react';
 import { format, parseISO, isValid } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { useCustomFields, type CustomField } from '@/hooks/useCustomFields';
 
 interface Props {
@@ -18,7 +18,7 @@ function tryFormatDate(v: any): string | null {
   if (typeof v !== 'string') return null;
   const d = parseISO(v);
   if (!isValid(d)) return null;
-  return format(d, "dd/MM/yyyy HH:mm", { locale: ptBR });
+  return format(d, "dd/MM/yyyy HH:mm", { locale: es });
 }
 
 function renderValue(value: any, type?: CustomField['field_type']) {
@@ -27,14 +27,14 @@ function renderValue(value: any, type?: CustomField['field_type']) {
   switch (type) {
     case 'number': {
       const n = Number(value);
-      return <span className="font-medium">{isNaN(n) ? String(value) : n.toLocaleString('pt-BR')}</span>;
+      return <span className="font-medium">{isNaN(n) ? String(value) : n.toLocaleString('es-ES')}</span>;
     }
     case 'date': {
       const f = tryFormatDate(value);
       return <span className="font-medium">{f ?? String(value)}</span>;
     }
     case 'boolean':
-      return <span className="font-medium">{value ? 'Sim' : 'Não'}</span>;
+      return <span className="font-medium">{value ? 'Sí' : 'No'}</span>;
     case 'select':
       return <Badge variant="secondary" className="text-xs">{String(value)}</Badge>;
     default: {
@@ -51,7 +51,7 @@ function renderValue(value: any, type?: CustomField['field_type']) {
                 {typeof item === 'object' ? (item?.mensagem || item?.message || item?.text || JSON.stringify(item)) : String(item)}
               </li>
             ))}
-            {value.length > 5 && <li className="text-xs text-muted-foreground">+{value.length - 5} mais</li>}
+            {value.length > 5 && <li className="text-xs text-muted-foreground">+{value.length - 5} más</li>}
           </ul>
         );
       }

@@ -85,7 +85,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
               <Input
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Chat de Vendas"
+                placeholder="Chat de Ventas"
               />
             </div>
 

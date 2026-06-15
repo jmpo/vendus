@@ -237,7 +237,7 @@ export function ConversationList({
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
           <Input
-            placeholder="Buscar conversa..."
+            placeholder="Buscar conversación..."
             value={internalSearch}
             onChange={(e) => setInternalSearch(e.target.value)}
             className="pl-8 h-9 bg-muted/40 border-0"
@@ -267,7 +267,7 @@ export function ConversationList({
                 <Plus className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Nova conversa</TooltipContent>
+            <TooltipContent>Nueva conversación</TooltipContent>
           </Tooltip>
         )}
       </div>
@@ -276,21 +276,21 @@ export function ConversationList({
       <div className="px-2 py-2 border-b bg-background">
         <div className="grid grid-cols-3 gap-1 p-1 bg-muted/40 rounded-lg">
           <TabButton
-            label="Atendendo"
+            label="Atendiendo"
             count={counts.attending}
             active={activeTab === 'attending'}
             onClick={() => setActiveTab('attending')}
             badgeVariant="success"
           />
           <TabButton
-            label="Em Fila"
+            label="En espera"
             count={counts.waiting}
             active={activeTab === 'waiting'}
             onClick={() => setActiveTab('waiting')}
             badgeVariant="danger"
           />
           <TabButton
-            label="Resolvidos"
+            label="Resueltos"
             count={counts.resolved}
             active={activeTab === 'resolved'}
             onClick={() => setActiveTab('resolved')}
@@ -316,13 +316,13 @@ export function ConversationList({
         ) : filteredConversations.length === 0 ? (
           <div className="p-10 text-center text-muted-foreground">
             <MessageCircle className="h-12 w-12 mx-auto mb-3 opacity-30" />
-            <p className="text-sm font-medium">Nenhuma conversa</p>
+            <p className="text-sm font-medium">Ninguna conversación</p>
             <p className="text-xs mt-1">
               {activeTab === 'waiting'
-                ? 'Não há conversas aguardando atendimento'
+                ? 'No hay conversaciones esperando atención'
                 : activeTab === 'resolved'
-                ? 'Nenhum atendimento resolvido'
-                : 'Sem conversas nesta aba'}
+                ? 'Ninguna atención resuelta'
+                : 'Sin conversaciones en esta pestaña'}
             </p>
           </div>
         ) : (
@@ -409,7 +409,7 @@ export function ConversationList({
                     >
                       {preview || (
                         <span className="italic opacity-70">
-                          {conv.last_message_at ? 'Mensagem indisponível' : 'Sem mensagens ainda'}
+                          {conv.last_message_at ? 'Mensaje no disponible' : 'Sin mensajes aún'}
                         </span>
                       )}
                     </p>

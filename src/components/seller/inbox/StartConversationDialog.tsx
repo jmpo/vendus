@@ -64,7 +64,7 @@ export function StartConversationDialog({
   const handleCreate = async () => {
     const targetPhone = phone.replace(/\D/g, '');
     if (!targetPhone) {
-      toast({ title: 'Informe um telefone', variant: 'destructive' });
+      toast({ title: 'Informe un teléfono', variant: 'destructive' });
       return;
     }
 
@@ -82,10 +82,10 @@ export function StartConversationDialog({
       if (error) throw error;
 
       toast({
-        title: data.is_new ? 'Conversa criada' : 'Conversa encontrada',
+        title: data.is_new ? 'Conversación creada' : 'Conversación encontrada',
         description: data.is_new
-          ? 'Nova conversa WhatsApp iniciada.'
-          : 'Conversa existente selecionada.',
+          ? 'Nueva conversación de WhatsApp iniciada.'
+          : 'Conversación existente seleccionada.',
       });
 
       onConversationCreated(data.conversation_id);
@@ -111,7 +111,7 @@ export function StartConversationDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <MessageCircle className="h-5 w-5 text-primary" />
-            Nova Conversa WhatsApp
+            Nueva conversación de WhatsApp
           </DialogTitle>
         </DialogHeader>
 
@@ -122,7 +122,7 @@ export function StartConversationDialog({
             <div className="relative mt-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Nome, telefone ou email..."
+                placeholder="Nombre, teléfono o email..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-9"
@@ -160,14 +160,14 @@ export function StartConversationDialog({
                 className="ml-auto h-6 px-2 text-xs"
                 onClick={() => { setSelectedLead(null); setPhone(''); }}
               >
-                Remover
+                Eliminar
               </Button>
             </div>
           )}
 
           {/* Phone */}
           <div>
-            <Label>Telefone WhatsApp</Label>
+            <Label>Teléfono de WhatsApp</Label>
             <div className="relative mt-1">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -181,9 +181,9 @@ export function StartConversationDialog({
 
           {/* Initial message */}
           <div>
-            <Label>Primeira mensagem (opcional)</Label>
+            <Label>Primer mensaje (opcional)</Label>
             <Textarea
-              placeholder="Olá! Tudo bem?"
+              placeholder="¡Hola! ¿Cómo estás?"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               className="mt-1"
@@ -200,10 +200,10 @@ export function StartConversationDialog({
             {isCreating ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                Criando...
+                Creando...
               </>
             ) : (
-              'Iniciar Conversa'
+              'Iniciar conversaciónción'
             )}
           </Button>
         </DialogFooter>
