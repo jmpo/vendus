@@ -258,21 +258,21 @@ async function generateAIReport(context: SellerContext, sellerName: string): Pro
   const summaryParts = [];
   if (taskCount > 0) summaryParts.push(`${taskCount} tarea${taskCount > 1 ? 's' : ''} hoy`);
   if (overdueCount > 0) summaryParts.push(`${overdueCount} atrasada${overdueCount > 1 ? 's' : ''}`);
-  if (stalledCount > 0) summaryParts.push(`${stalledCount} lead${stalledCount > 1 ? 's' : ''} precisa${stalledCount > 1 ? 'm' : ''} de atenção`);
-  if (hotCount > 0) summaryParts.push(`${hotCount} lead${hotCount > 1 ? 's' : ''} quente${hotCount > 1 ? 's' : ''}`);
+  if (stalledCount > 0) summaryParts.push(`${stalledCount} lead${stalledCount > 1 ? 's' : ''} requiere${stalledCount > 1 ? 'n' : ''} atención`);
+  if (hotCount > 0) summaryParts.push(`${hotCount} lead${hotCount > 1 ? 's' : ''} caliente${hotCount > 1 ? 's' : ''}`);
   
   const summary = summaryParts.length > 0 
     ? `📊 ${summaryParts.join(' • ')}` 
-    : 'Tudo em día! Continue focado nas sus metas.';
+    : '¡Todo al día! Seguí enfocado en tus metas.';
 
   // Build full report
   const fullReport = `
-☀️ Bom día, ${firstName}!
+☀️ ¡Buen día, ${firstName}!
 
-📊 RESUMO DO DIA
-${taskCount > 0 ? `• ${taskCount} tarea${taskCount > 1 ? 's' : ''} agendada${taskCount > 1 ? 's' : ''} para hoy` : '• Nenhuma tarea agendada'}
+📊 RESUMEN DEL DÍA
+${taskCount > 0 ? `• ${taskCount} tarea${taskCount > 1 ? 's' : ''} agendada${taskCount > 1 ? 's' : ''} para hoy` : '• Ninguna tarea agendada'}
 ${overdueCount > 0 ? `• ⚠️ ${overdueCount} tarea${overdueCount > 1 ? 's' : ''} atrasada${overdueCount > 1 ? 's' : ''}` : ''}
-${stalledCount > 0 ? `• ${stalledCount} lead${stalledCount > 1 ? 's' : ''} precisa${stalledCount > 1 ? 'm' : ''} de atenção` : ''}
+${stalledCount > 0 ? `• ${stalledCount} lead${stalledCount > 1 ? 's' : ''} requiere${stalledCount > 1 ? 'n' : ''} atención` : ''}
 ${goalSummary ? `• ${goalSummary}` : ''}
 
 ${priorities.length > 0 ? `🎯 PRIORIDADES\n${priorities.map((p, i) => `${i + 1}. ${p}`).join('\n')}` : ''}
