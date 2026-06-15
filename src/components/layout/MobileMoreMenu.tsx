@@ -226,7 +226,7 @@ export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProdu
               <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
                 <User size={20} className="text-blue-400" />
               </div>
-              <span className="flex-1 text-left font-medium">Meu Perfil</span>
+              <span className="flex-1 text-left font-medium">Mi Perfil</span>
               <ChevronRight size={18} className="text-muted-foreground" />
             </button>
 
@@ -237,7 +237,7 @@ export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProdu
               <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
                 <Settings size={20} className="text-gray-400" />
               </div>
-              <span className="flex-1 text-left font-medium">Configurações</span>
+              <span className="flex-1 text-left font-medium">Configuración</span>
               <ChevronRight size={18} className="text-muted-foreground" />
             </button>
 
@@ -260,7 +260,7 @@ export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProdu
                 <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
                   <Shield size={20} className="text-amber-400" />
                 </div>
-                <span className="flex-1 text-left font-medium">Painel Admin</span>
+                <span className="flex-1 text-left font-medium">Panel Admin</span>
                 <ChevronRight size={18} className="text-muted-foreground" />
               </button>
             )}
@@ -287,7 +287,7 @@ export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProdu
               <div className="h-10 w-10 rounded-xl bg-destructive/10 flex items-center justify-center">
                 <LogOut size={20} />
               </div>
-              <span className="flex-1 text-left font-medium">Sair</span>
+              <span className="flex-1 text-left font-medium">Cerrar sesión</span>
             </button>
           </div>
         </div>
