@@ -379,7 +379,7 @@ export function AvailabilityManager() {
                   blocked: { backgroundColor: 'hsl(var(--destructive) / 0.2)' },
                   available: { backgroundColor: 'hsl(var(--primary) / 0.2)' },
                 }}
-                locale={ptBR}
+                locale={es}
                 className="rounded-md border pointer-events-auto w-full"
               />
 

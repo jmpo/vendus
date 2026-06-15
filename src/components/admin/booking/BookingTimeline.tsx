@@ -6,7 +6,7 @@ import {
   AlertCircle, Activity, Inbox,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { es } from "date-fns/locale";
 
 interface Props { bookingId: string }
 

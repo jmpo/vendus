@@ -241,7 +241,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
                         setEndDate(date);
                       }
                     }}
-                    locale={ptBR}
+                    locale={es}
                   />
                 </PopoverContent>
               </Popover>
@@ -282,7 +282,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
                     selected={endDate}
                     onSelect={setEndDate}
                     disabled={(date) => startDate ? date < startDate : false}
-                    locale={ptBR}
+                    locale={es}
                   />
                 </PopoverContent>
               </Popover>

@@ -376,7 +376,7 @@ export default function PublicBooking() {
                         selected={selectedDate}
                         onSelect={handleSelectDate}
                         disabled={isDateDisabled}
-                        locale={ptBR}
+                        locale={es}
                         className="rounded-md border pointer-events-auto"
                       />
                       <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
