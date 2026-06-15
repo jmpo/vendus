@@ -189,7 +189,7 @@ export function Sidebar({
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
           >
             <Shield size={20} />
-            {!collapsed && <span className="text-sm">Painel Admin</span>}
+            {!collapsed && <span className="text-sm">Panel Admin</span>}
           </Link>
         )}
         <Link
@@ -197,7 +197,7 @@ export function Sidebar({
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
         >
           <Settings size={20} />
-          {!collapsed && <span className="text-sm">Configurações</span>}
+          {!collapsed && <span className="text-sm">Configuración</span>}
         </Link>
       </div>
     </aside>
