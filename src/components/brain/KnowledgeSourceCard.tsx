@@ -26,7 +26,7 @@ import {
 import { useDeleteKnowledgeSource } from '@/hooks/useKnowledgeSources';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { Tables } from '@/integrations/supabase/types';
 
