@@ -2579,7 +2579,7 @@ ${leadDataPrompt}
               }
             }
           });
-          agentToolPrompts.push('- notify_team: Alerte quando algo urgente precisar de atenção');
+          agentToolPrompts.push('- notify_team: Alertá cuando algo urgente requiera atención');
         }
 
         if (activeAgent.can_add_notes) {
