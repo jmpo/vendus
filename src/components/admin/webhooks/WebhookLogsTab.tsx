@@ -88,13 +88,13 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'success':
-        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20">Sucesso</Badge>;
+        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20">Éxito</Badge>;
       case 'error':
-        return <Badge variant="destructive">Erro</Badge>;
+        return <Badge variant="destructive">Error</Badge>;
       case 'skipped':
         return <Badge variant="outline" className="text-orange-600 border-orange-500/30">Teste</Badge>;
       default:
-        return <Badge variant="secondary">Pendente</Badge>;
+        return <Badge variant="secondary">Pendiente</Badge>;
     }
   };
 
@@ -120,10 +120,10 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="success">Sucesso</SelectItem>
-                <SelectItem value="error">Erro</SelectItem>
+                <SelectItem value="success">Éxito</SelectItem>
+                <SelectItem value="error">Error</SelectItem>
                 <SelectItem value="skipped">Teste</SelectItem>
-                <SelectItem value="pending">Pendente</SelectItem>
+                <SelectItem value="pending">Pendiente</SelectItem>
               </SelectContent>
             </Select>
             <span className="text-sm text-muted-foreground">
@@ -262,7 +262,7 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
 
                 {/* Request Body */}
                 <div>
-                  <p className="text-sm font-medium mb-2">Payload Recebido</p>
+                  <p className="text-sm font-medium mb-2">Payload Recibido</p>
                   <pre className="p-3 rounded-lg bg-muted text-xs overflow-auto max-h-48">
                     {JSON.stringify(selectedLog.request_body, null, 2)}
                   </pre>
@@ -281,7 +281,7 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
                 {/* Actions Executed */}
                 {selectedLog.actions_executed && selectedLog.actions_executed.length > 0 && (
                   <div>
-                    <p className="text-sm font-medium mb-2">Ações Executadas</p>
+                    <p className="text-sm font-medium mb-2">Acciones Ejecutadas</p>
                     <div className="space-y-2">
                       {selectedLog.actions_executed.map((action, index) => (
                         <div 
@@ -315,7 +315,7 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
                 {/* Error Message */}
                 {selectedLog.error_message && (
                   <div>
-                    <p className="text-sm font-medium mb-2 text-red-500">Erro</p>
+                    <p className="text-sm font-medium mb-2 text-red-500">Error</p>
                     <p className="p-3 rounded-lg bg-red-500/10 text-red-500 text-sm">
                       {selectedLog.error_message}
                     </p>

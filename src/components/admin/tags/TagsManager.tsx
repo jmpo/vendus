@@ -36,14 +36,14 @@ export function TagsManager() {
             <TagIcon className="h-4 w-4" /> Catálogo
           </TabsTrigger>
           <TabsTrigger value="automations" className="gap-2">
-            <Zap className="h-4 w-4" /> Automações
+            <Zap className="h-4 w-4" /> Automatizaciones
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="catalog" className="space-y-4">
           <div className="flex justify-end">
             <Button onClick={() => { setEditingTag(null); setDialogOpen(true); }}>
-              <Plus className="h-4 w-4 mr-2" /> Nova etiqueta
+              <Plus className="h-4 w-4 mr-2" /> Nueva etiqueta
             </Button>
           </div>
 

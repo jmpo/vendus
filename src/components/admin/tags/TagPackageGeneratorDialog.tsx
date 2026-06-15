@@ -9,12 +9,12 @@ import { useGenerateTagPackage } from '@/hooks/useTagPackage';
 import { useTagAutomations } from '@/hooks/useLeadTags';
 
 const PACKAGE_PREVIEW = [
-  { name: 'PIX Gerado',           color: '#EAB308', removed: true,  desc: 'Aplicada quando o cliente gera PIX. Removida ao confirmar pagamento.' },
-  { name: 'Boleto Gerado',        color: '#3B82F6', removed: true,  desc: 'Aplicada quando gera boleto. Removida ao confirmar pagamento.' },
-  { name: 'Aguardando Pago', color: '#F97316', removed: true,  desc: 'Aplicada com PIX ou Boleto. Removida ao confirmar.' },
-  { name: 'Checkout Abandonado',  color: '#6B7280', removed: true,  desc: 'Aplicada se abandonar. Removida se voltar e comprar.' },
-  { name: 'Cliente',              color: '#22C55E', removed: false, desc: 'Aplicada na compra. PERMANENTE para histórico.' },
-  { name: 'Reembolso',            color: '#EF4444', removed: false, desc: 'Aplicada em reembolso. PERMANENTE para histórico.' },
+  { name: 'PIX Gerado',           color: '#EAB308', removed: true,  desc: 'Aplicada cuando el cliente genera PIX. Eliminada al confirmar el pago.' },
+  { name: 'Boleto Gerado',        color: '#3B82F6', removed: true,  desc: 'Aplicada cuando genera boleto. Eliminada al confirmar el pago.' },
+  { name: 'Aguardando Pago', color: '#F97316', removed: true,  desc: 'Aplicada con PIX o Boleto. Eliminada al confirmar.' },
+  { name: 'Checkout Abandonado',  color: '#6B7280', removed: true,  desc: 'Aplicada si abandona. Eliminada si vuelve y compra.' },
+  { name: 'Cliente',              color: '#22C55E', removed: false, desc: 'Aplicada en la compra. PERMANENTE para el historial.' },
+  { name: 'Reembolso',            color: '#EF4444', removed: false, desc: 'Aplicada en reembolso. PERMANENTE para el historial.' },
 ];
 
 interface Props {
@@ -56,7 +56,7 @@ export function TagPackageGeneratorDialog({ open, onOpenChange }: Props) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Gerar pacote de etiquetas para um produto
+            Generar paquete de etiquetas para un producto
           </DialogTitle>
           <DialogDescription>
             Cria 6 etiquetas + 6 automações de uma vez. Cada etiqueta vem prefixada com o nome do produto,
@@ -66,9 +66,9 @@ export function TagPackageGeneratorDialog({ open, onOpenChange }: Props) {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Produto</Label>
+            <Label>Producto</Label>
             <Select value={productId} onValueChange={setProductId}>
-              <SelectTrigger><SelectValue placeholder="Escolha o produto" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Elige el producto" /></SelectTrigger>
               <SelectContent>
                 {products?.map((p) => (
                   <SelectItem key={p.id} value={p.id}>
@@ -82,14 +82,14 @@ export function TagPackageGeneratorDialog({ open, onOpenChange }: Props) {
             </Select>
             {alreadyHasPackage && (
               <p className="text-xs text-amber-600 dark:text-amber-500">
-                Este produto já tem um pacote gerado. Rodar de novo não duplica nada (apenas garante que esteja completo).
+                Este producto ya tiene un paquete generado. Ejecutar de nuevo no duplica nada (solo asegura que esté completo).
               </p>
             )}
           </div>
 
           {selectedProduct && (
             <div className="space-y-2">
-              <Label className="text-xs uppercase text-muted-foreground">Pré-visualização (será criado)</Label>
+              <Label className="text-xs uppercase text-muted-foreground">Previsualización (se creará)</Label>
               <div className="rounded-lg border border-border divide-y">
                 {PACKAGE_PREVIEW.map((tag) => (
                   <div key={tag.name} className="flex items-start gap-3 p-3">
@@ -105,7 +105,7 @@ export function TagPackageGeneratorDialog({ open, onOpenChange }: Props) {
                     </div>
                     <span className="text-[10px] uppercase font-medium shrink-0 mt-1">
                       {tag.removed ? (
-                        <span className="text-orange-600 inline-flex items-center gap-1"><X className="h-3 w-3" /> Transitória</span>
+                        <span className="text-orange-600 inline-flex items-center gap-1"><X className="h-3 w-3" /> Transitoria</span>
                       ) : (
                         <span className="text-emerald-600 inline-flex items-center gap-1"><Check className="h-3 w-3" /> Permanente</span>
                       )}
@@ -120,7 +120,7 @@ export function TagPackageGeneratorDialog({ open, onOpenChange }: Props) {
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleGenerate} disabled={!productId || generateMut.isPending}>
-            {generateMut.isPending ? 'Gerando...' : 'Gerar pacote'}
+            {generateMut.isPending ? 'Generando...' : 'Generar paquete'}
           </Button>
         </DialogFooter>
       </DialogContent>

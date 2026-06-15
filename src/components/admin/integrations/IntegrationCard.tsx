@@ -49,12 +49,12 @@ export function IntegrationCard({ item, isActive, onClick }: IntegrationCardProp
             {item.comingSoon ? (
               <Badge variant="outline" className="shrink-0 gap-1 text-[10px]">
                 <Clock className="h-3 w-3" />
-                Em breve
+                Próximamente
               </Badge>
             ) : showActive ? (
               <Badge className="shrink-0 gap-1 bg-green-500/10 text-green-600 hover:bg-green-500/15 text-[10px] border-green-500/20">
                 <CheckCircle2 className="h-3 w-3" />
-                Ativo
+                Activo
               </Badge>
             ) : (
               <Badge variant="secondary" className="shrink-0 gap-1 text-[10px]">

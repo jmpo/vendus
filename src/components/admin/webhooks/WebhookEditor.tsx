@@ -101,7 +101,7 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
   if (!webhook) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Webhook não encontrado</p>
+        <p className="text-muted-foreground">Webhook no encontrado</p>
         <Button variant="outline" onClick={onBack} className="mt-4">
           Voltar
         </Button>
@@ -130,7 +130,7 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
         <div className="flex flex-wrap items-center gap-3 sm:gap-3 sm:ml-auto">
           <div className="flex items-center gap-2">
             <FlaskConical className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Modo Teste</span>
+            <span className="text-sm text-muted-foreground">Modo Prueba</span>
             <Switch
               checked={webhook.is_test_mode}
               onCheckedChange={handleToggleTestMode}
@@ -138,7 +138,7 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
           </div>
           <div className="flex items-center gap-2">
             <Activity className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Ativo</span>
+            <span className="text-sm text-muted-foreground">Activo</span>
             <Switch
               checked={webhook.is_active}
               onCheckedChange={handleToggleActive}
@@ -153,15 +153,15 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2 mb-1">
-                <p className="text-xs text-muted-foreground">URL do Webhook</p>
+                <p className="text-xs text-muted-foreground">URL del Webhook</p>
                 <div className="flex gap-2 sm:hidden">
                   {webhook.is_active ? (
-                    <Badge className="bg-primary/10 text-primary border-primary/20">Ativo</Badge>
+                    <Badge className="bg-primary/10 text-primary border-primary/20">Activo</Badge>
                   ) : (
-                    <Badge variant="secondary">Inativo</Badge>
+                    <Badge variant="secondary">Inactivo</Badge>
                   )}
                   {webhook.is_test_mode && (
-                    <Badge variant="outline" className="text-warning border-warning/30">Teste</Badge>
+                    <Badge variant="outline" className="text-warning border-warning/30">Prueba</Badge>
                   )}
                 </div>
               </div>
@@ -177,21 +177,21 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
             <div className="hidden sm:flex gap-2">
               {webhook.is_active ? (
                 <Badge className="bg-primary/10 text-primary border-primary/20">
-                  Ativo
+                  Activo
                 </Badge>
               ) : (
-                <Badge variant="secondary">Inativo</Badge>
+                <Badge variant="secondary">Inactivo</Badge>
               )}
               {webhook.is_test_mode && (
                 <Badge variant="outline" className="text-warning border-warning/30">
-                  Modo Teste
+                  Modo Prueba
                 </Badge>
               )}
             </div>
           </div>
           {webhook.is_test_mode && (
             <p className="text-xs text-warning mt-2">
-              ⚠️ Em modo teste, as requisições são logadas mas as ações não são executadas.
+              ⚠️ En modo prueba, las solicitudes se registran pero las acciones no se ejecutan.
             </p>
           )}
         </CardContent>
@@ -207,7 +207,7 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-foreground">Auto Dispatch por Squad</p>
               <p className="text-xs text-muted-foreground mb-3">
-                Quando um lead é criado, ele será distribuído automaticamente para um membro online do squad selecionado. Se nenhum membro estiver disponível, o lead entra na fila.
+                Cuando se crea un lead, se distribuirá automáticamente a un miembro online del squad seleccionado. Si no hay ningún miembro disponible, el lead entra en la cola.
               </p>
               <div className="flex items-center gap-2">
                 <Select
@@ -215,11 +215,11 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
                   onValueChange={(val) => handleSquadChange(val === 'none' ? null : val)}
                 >
                   <SelectTrigger className="flex-1 sm:max-w-xs">
-                    <SelectValue placeholder="Selecionar squad..." />
+                    <SelectValue placeholder="Seleccionar squad..." />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">
-                      <span className="text-muted-foreground">Sem squad (sem Auto Dispatch)</span>
+                      <span className="text-muted-foreground">Sin squad (sin Auto Dispatch)</span>
                     </SelectItem>
                     {squads?.map((squad) => (
                       <SelectItem key={squad.id} value={squad.id}>
@@ -230,7 +230,7 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
                           />
                           {squad.name}
                           {squad.members_count !== undefined && (
-                            <span className="text-muted-foreground text-xs">({squad.members_count} membros)</span>
+                            <span className="text-muted-foreground text-xs">({squad.members_count} miembros)</span>
                           )}
                         </div>
                       </SelectItem>
@@ -250,7 +250,7 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
               </div>
               {webhook.squad_id && (
                 <p className="text-xs text-primary mt-2 flex items-center gap-1">
-                  ✅ Auto Dispatch ativado — leads serão distribuídos para o squad selecionado
+                  ✅ Auto Dispatch activado — los leads se distribuirán al squad seleccionado
                 </p>
               )}
             </div>
@@ -262,7 +262,7 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
       {webhook.is_active && !webhook.product_id && (
         <Card className="border-destructive/50 bg-destructive/5">
           <CardContent className="py-4">
-            <p className="text-sm font-semibold text-destructive">⚠️ Webhook sem produto vinculado</p>
+            <p className="text-sm font-semibold text-destructive">⚠️ Webhook sin producto vinculado</p>
             <p className="text-xs text-muted-foreground mt-1">
               Leads criados por este webhook não terão pipeline stage, não aparecerão no Kanban e ações como "Agente IA" não funcionarão. 
               Configure um produto nas ações de "Criar Lead" ou vincule um produto ao webhook.
@@ -276,11 +276,11 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
         <TabsList>
           <TabsTrigger value="config" className="gap-2">
             <Settings className="h-4 w-4" />
-            Configuração
+            Configuración
           </TabsTrigger>
           <TabsTrigger value="logs" className="gap-2">
             <Activity className="h-4 w-4" />
-            Histórico
+            Historial
             {webhook.requests_count > 0 && (
               <Badge variant="secondary" className="ml-1">
                 {webhook.requests_count}

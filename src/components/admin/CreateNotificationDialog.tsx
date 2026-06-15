@@ -24,9 +24,9 @@ interface CreateNotificationDialogProps {
 const notificationTypes = [
   { value: 'system', label: 'Sistema', color: 'bg-blue-500' },
   { value: 'urgency', label: 'Urgente', color: 'bg-red-500' },
-  { value: 'opportunity', label: 'Oportunidade', color: 'bg-green-500' },
-  { value: 'cadence', label: 'Cadência', color: 'bg-purple-500' },
-  { value: 'audit', label: 'Auditoria', color: 'bg-orange-500' },
+  { value: 'opportunity', label: 'Oportunidad', color: 'bg-green-500' },
+  { value: 'cadence', label: 'Secuencia', color: 'bg-purple-500' },
+  { value: 'audit', label: 'Auditoría', color: 'bg-orange-500' },
 ];
 
 export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificationDialogProps) {
@@ -128,7 +128,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Bell className="h-5 w-5 text-primary" />
-            Nova Notificação
+            Nueva Notificación
           </DialogTitle>
         </DialogHeader>
         
@@ -136,7 +136,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
           <div className="space-y-6 py-4">
             {/* Notification Type */}
             <div className="space-y-2">
-              <Label>Tipo da Notificação</Label>
+              <Label>Tipo de Notificación</Label>
               <Select value={type} onValueChange={(v) => setType(v as CreateNotificationData['type'])}>
                 <SelectTrigger>
                   <SelectValue />
@@ -161,19 +161,19 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Ex: Nova meta disponível!"
+                placeholder="Ej: ¡Nueva meta disponible!"
                 maxLength={100}
               />
             </div>
             
             {/* Message */}
             <div className="space-y-2">
-              <Label htmlFor="message">Mensagem</Label>
+              <Label htmlFor="message">Mensaje</Label>
               <Textarea
                 id="message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Descrição detalhada da notificação..."
+                placeholder="Descripción detallada de la notificación..."
                 rows={3}
                 maxLength={500}
               />
@@ -181,7 +181,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
             
             {/* Action URL */}
             <div className="space-y-2">
-              <Label htmlFor="actionUrl">Link (opcional)</Label>
+              <Label htmlFor="actionUrl">Enlace (opcional)</Label>
               <Input
                 id="actionUrl"
                 value={actionUrl}
@@ -193,20 +193,20 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
             
             {/* Scope */}
             <div className="space-y-3">
-              <Label>Escopo</Label>
+              <Label>Alcance</Label>
               <RadioGroup value={scope} onValueChange={(v) => setScope(v as CreateNotificationData['scope'])}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="all" id="scope-all" />
                   <Label htmlFor="scope-all" className="flex items-center gap-2 cursor-pointer">
                     <Users className="h-4 w-4" />
-                    Toda a organização
+                    Toda la organización
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="product" id="scope-product" />
                   <Label htmlFor="scope-product" className="flex items-center gap-2 cursor-pointer">
                     <Package className="h-4 w-4" />
-                    Por Produto
+                    Por Producto
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -220,7 +220,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
                   <RadioGroupItem value="custom" id="scope-custom" />
                   <Label htmlFor="scope-custom" className="flex items-center gap-2 cursor-pointer">
                     <User className="h-4 w-4" />
-                    Usuários específicos
+                    Usuarios específicos
                   </Label>
                 </div>
               </RadioGroup>
@@ -229,7 +229,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
             {/* Scope Filters */}
             {scope === 'product' && (
               <div className="space-y-2 p-3 rounded-lg border bg-muted/50">
-                <Label className="text-sm">Selecione os produtos:</Label>
+                <Label className="text-sm">Selecciona los productos:</Label>
                 <div className="flex flex-wrap gap-2">
                   {products.map(product => (
                     <Badge
@@ -248,7 +248,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
             
             {scope === 'squad' && (
               <div className="space-y-2 p-3 rounded-lg border bg-muted/50">
-                <Label className="text-sm">Selecione os squads:</Label>
+                <Label className="text-sm">Selecciona los squads:</Label>
                 <div className="flex flex-wrap gap-2">
                   {squads.map(squad => (
                     <Badge
@@ -267,7 +267,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
             
             {scope === 'custom' && (
               <div className="space-y-2 p-3 rounded-lg border bg-muted/50">
-                <Label className="text-sm">Selecione os usuários:</Label>
+                <Label className="text-sm">Selecciona los usuarios:</Label>
                 <ScrollArea className="h-32">
                   <div className="space-y-2">
                     {sellers.map(member => (
@@ -290,7 +290,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
             
             {/* Channels */}
             <div className="space-y-3">
-              <Label>Canais de Envio</Label>
+              <Label>Canales de Envío</Label>
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -300,7 +300,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
                   />
                   <Label htmlFor="send-app" className="flex items-center gap-2 cursor-pointer">
                     <Bell className="h-4 w-4" />
-                    Notificação no App
+                    Notificación en la App
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -311,7 +311,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
                   />
                   <Label htmlFor="send-email" className="flex items-center gap-2 cursor-pointer">
                     <Mail className="h-4 w-4" />
-                    Enviar também por Email
+                    Enviar también por Correo electrónico
                   </Label>
                 </div>
               </div>
@@ -322,7 +322,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
         <DialogFooter className="flex items-center justify-between border-t pt-4">
           <div className="text-sm text-muted-foreground">
             <Users className="h-4 w-4 inline mr-1" />
-            {recipientCount} destinatário(s)
+            {recipientCount} destinatario(s)
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)}>

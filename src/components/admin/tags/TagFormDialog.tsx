@@ -59,7 +59,7 @@ export function TagFormDialog({ open, onOpenChange, tag }: Props) {
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>Nombre</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex.: Comprou Produto X" />
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej.: Compró Producto X" />
           </div>
 
           <div className="space-y-2">

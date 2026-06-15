@@ -42,16 +42,16 @@ export function TagAutomationsPanel() {
       <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div>
           <CardTitle className="text-base flex items-center gap-2">
-            <Zap className="h-4 w-4" /> Automações por evento
+            <Zap className="h-4 w-4" /> Automatizaciones por evento
           </CardTitle>
           <CardDescription>
-            Aplique etiquetas automaticamente conforme o status do checkout. Etiquetas marcadas como
-            "transitórias" são removidas quando a compra é confirmada — etiquetas permanentes preservam o histórico do cliente.
+            Aplica etiquetas automáticamente según el estado del checkout. Etiquetas marcadas como
+            "transitorias" são removidas quando a compra é confirmada — etiquetas permanentes preservam o histórico do cliente.
           </CardDescription>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <Button onClick={() => setPackageDialogOpen(true)} className="gap-2">
-            <Sparkles className="h-4 w-4" /> Gerar pacote para produto
+            <Sparkles className="h-4 w-4" /> Generar paquete para producto
           </Button>
           <Button variant="outline" onClick={() => { setEditing(null); setDialogOpen(true); }}>
             <Plus className="h-4 w-4 mr-2" /> Manual
@@ -62,10 +62,10 @@ export function TagAutomationsPanel() {
         {!automations || automations.length === 0 ? (
           <div className="text-center py-10 text-muted-foreground">
             <Sparkles className="h-10 w-10 mx-auto mb-3 opacity-40" />
-            <p className="font-medium">Nenhuma automação configurada.</p>
+            <p className="font-medium">Ninguna automatización configurada.</p>
             <p className="text-xs mt-1">
-              Clique em <strong>"Gerar pacote para produto"</strong> e escolha um produto.
-              <br />Em 1 clique você cria 6 etiquetas e 6 regras prontas.
+              Clique em <strong>"Generar paquete para producto"</strong> e escolha um produto.
+              <br />Con 1 clic creas 6 etiquetas y 6 reglas listas.
             </p>
           </div>
         ) : (
@@ -76,8 +76,8 @@ export function TagAutomationsPanel() {
                 <div key={prodId ?? 'global'} className="space-y-2">
                   <div className="flex items-center gap-2 text-sm font-medium">
                     <Package className="h-4 w-4 text-muted-foreground" />
-                    {product ? product.name : 'Qualquer produto (global)'}
-                    <Badge variant="secondary" className="text-xs">{items.length} regras</Badge>
+                    {product ? product.name : 'Cualquier producto (global)'}
+                    <Badge variant="secondary" className="text-xs">{items.length} reglas</Badge>
                   </div>
                   <div className="space-y-2 pl-1">
                     {items.map((a) => {
@@ -88,7 +88,7 @@ export function TagAutomationsPanel() {
                           <Switch checked={a.is_active} onCheckedChange={() => { /* TODO toggle */ }} />
                           <div className="flex-1 min-w-0 text-sm">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-muted-foreground">Quando</span>
+                              <span className="text-muted-foreground">Cuando</span>
                               <Badge variant="secondary">{TAG_EVENT_LABELS[a.event_type]}</Badge>
                               <span className="text-muted-foreground">→ aplicar</span>
                               {addTag && (
@@ -99,12 +99,12 @@ export function TagAutomationsPanel() {
                               )}
                               {addTag?.is_lifecycle_status && (
                                 <Badge variant="outline" className="text-[10px] border-orange-500/40 text-orange-600">
-                                  transitória
+                                  transitoria
                                 </Badge>
                               )}
                               {removeTag && (
                                 <>
-                                  <span className="text-muted-foreground">+ remover</span>
+                                  <span className="text-muted-foreground">+ eliminar</span>
                                   <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs line-through opacity-70" style={{ backgroundColor: `${removeTag.color}20`, color: removeTag.color }}>
                                     {removeTag.name}
                                   </span>
@@ -164,13 +164,13 @@ function AutomationDialog({ open, onOpenChange, automation }: { open: boolean; o
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{automation ? 'Editar automação' : 'Nova automação'}</DialogTitle>
-          <DialogDescription>Configure quando uma etiqueta deve ser aplicada automaticamente.</DialogDescription>
+          <DialogTitle>{automation ? 'Editar automatización' : 'Nueva automatización'}</DialogTitle>
+          <DialogDescription>Configura cuándo se debe aplicar una etiqueta automáticamente.</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Quando este evento acontecer</Label>
+            <Label>Cuando ocurra este evento</Label>
             <Select value={eventType} onValueChange={(v) => setEventType(v as any)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -182,11 +182,11 @@ function AutomationDialog({ open, onOpenChange, automation }: { open: boolean; o
           </div>
 
           <div className="space-y-2">
-            <Label>Para o produto</Label>
+            <Label>Para el producto</Label>
             <Select value={productId || 'any'} onValueChange={(v) => setProductId(v === 'any' ? '' : v)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="any">Qualquer produto</SelectItem>
+                <SelectItem value="any">Cualquier producto</SelectItem>
                 {products?.map((p) => (
                   <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
                 ))}
@@ -195,9 +195,9 @@ function AutomationDialog({ open, onOpenChange, automation }: { open: boolean; o
           </div>
 
           <div className="space-y-2">
-            <Label>Aplicar a etiqueta</Label>
+            <Label>Aplicar la etiqueta</Label>
             <Select value={tagToAdd} onValueChange={setTagToAdd}>
-              <SelectTrigger><SelectValue placeholder="Selecione uma etiqueta" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Selecciona una etiqueta" /></SelectTrigger>
               <SelectContent>
                 {tags?.map((t) => (
                   <SelectItem key={t.id} value={t.id}>
@@ -212,11 +212,11 @@ function AutomationDialog({ open, onOpenChange, automation }: { open: boolean; o
           </div>
 
           <div className="space-y-2">
-            <Label>E remover (opcional)</Label>
+            <Label>Y eliminar (opcional)</Label>
             <Select value={tagToRemove || 'none'} onValueChange={(v) => setTagToRemove(v === 'none' ? '' : v)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">Não remover nada</SelectItem>
+                <SelectItem value="none">No eliminar nada</SelectItem>
                 {tags?.filter((t) => t.id !== tagToAdd).map((t) => (
                   <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
                 ))}
@@ -227,7 +227,7 @@ function AutomationDialog({ open, onOpenChange, automation }: { open: boolean; o
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={handleSave} disabled={!tagToAdd || upsert.isPending}>Salvar</Button>
+          <Button onClick={handleSave} disabled={!tagToAdd || upsert.isPending}>Guardar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -87,11 +87,11 @@ export function WebhookRequestsPanel({ webhookId, samples }: WebhookRequestsPane
     <Card className="h-fit">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Requisições de Exemplo</CardTitle>
+          <CardTitle className="text-lg">Solicitudes de Ejemplo</CardTitle>
           <div className="flex items-center gap-2">
             {samples.length > 0 && (
               <Badge variant="secondary">
-                {samples.length} {samples.length === 1 ? 'amostra' : 'amostras'}
+                {samples.length} {samples.length === 1 ? 'muestra' : 'muestras'}
               </Badge>
             )}
             <Button
@@ -127,7 +127,7 @@ export function WebhookRequestsPanel({ webhookId, samples }: WebhookRequestsPane
             <div className="flex items-center gap-2">
               <Select value={selectedSampleId} onValueChange={setSelectedSampleId}>
                 <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Selecionar amostra" />
+                  <SelectValue placeholder="Seleccionar muestra" />
                 </SelectTrigger>
                 <SelectContent>
                   {samples.map((sample) => (

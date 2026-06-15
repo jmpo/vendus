@@ -211,7 +211,7 @@ export function ActionConfigDialog({
       {/* Field Mappings */}
       <div className="space-y-3">
         <FieldMappingRow
-          label="Nome"
+          label="Nombre"
           crmField="name"
           value={config.field_mappings?.name || ''}
           fieldPaths={fieldPaths}
@@ -220,7 +220,7 @@ export function ActionConfigDialog({
           getSampleValue={getSampleValue}
         />
         <FieldMappingRow
-          label="Email"
+          label="Correo electrónico"
           crmField="email"
           value={config.field_mappings?.email || ''}
           fieldPaths={fieldPaths}
@@ -229,7 +229,7 @@ export function ActionConfigDialog({
           getSampleValue={getSampleValue}
         />
         <FieldMappingRow
-          label="Telefone"
+          label="Teléfono"
           crmField="phone"
           value={config.field_mappings?.phone || ''}
           fieldPaths={fieldPaths}
@@ -301,7 +301,7 @@ export function ActionConfigDialog({
     return (
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label>Setor de Destino</Label>
+          <Label>Sector de Destino</Label>
           <Select
             value={config.target_sector_id || ''}
             onValueChange={(v) => setConfig(prev => ({ ...prev, target_sector_id: v }))}
@@ -338,7 +338,7 @@ export function ActionConfigDialog({
     return (
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label>Estágio do Pipeline</Label>
+          <Label>Etapa del Pipeline</Label>
           <Select
             value={config.target_stage_id || ''}
             onValueChange={(v) => setConfig(prev => ({ ...prev, target_stage_id: v }))}
@@ -459,7 +459,7 @@ export function ActionConfigDialog({
   const renderSetDealValueConfig = () => (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label>Campo do Payload com o Valor</Label>
+        <Label>Campo del Payload con el Valor</Label>
         <Select
           value={config.value_field || ''}
           onValueChange={(v) => setConfig(prev => ({ ...prev, value_field: v }))}
@@ -482,7 +482,7 @@ export function ActionConfigDialog({
   const renderNotifyConfig = () => (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label>Mensagem da Notificação</Label>
+        <Label>Mensaje de la Notificación</Label>
         <Input
           placeholder="Ex: Novo lead recebido via webhook!"
           value={config.notification_message || ''}

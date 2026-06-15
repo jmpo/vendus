@@ -43,11 +43,11 @@ interface Message {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sales-copilot`;
 
 const initialSuggestions = [
-  "O lead disse que está caro. Me dá 3 respostas",
-  "Qual a melhor pergunta pra qualificar agora?",
-  "Ele pediu preço cedo, como voltar pro valor?",
-  "Gera um script de follow-up",
-  "Simula uma negociação comigo"
+  "El lead dijo que es caro. Dame 3 respuestas",
+  "¿Cuál es a mejor pregunta para cualificar ahora?",
+  "Pidió el precio pronto, ¿cómo volver al valor?",
+  "Genera un script de seguimiento",
+  "Simula una negociación conmigo"
 ];
 
 export function AIChat({ productName, productId }: AIChatProps) {
@@ -55,7 +55,7 @@ export function AIChat({ productName, productId }: AIChatProps) {
     {
       id: '1',
       role: 'assistant',
-      content: `Olá! 👋 Sou o assistente de vendas do **${productName}**.\n\nEstou aqui para te ajudar com:\n- Respostas para objeções\n- Sugestões de próxima ação\n- Geração de mensagens e scripts\n- Roleplay e simulações\n\nComo posso te ajudar agora?`,
+      content: `¡Hola! 👋 Soy el asistente de vendas del **${productName}**.\n\nEstoy aquí para ayudarte con:\n- Respuestas a objeciones\n- Sugerencias para la próxima acción\n- Generación de mensajes y scripts\n- Roleplay y simulaciones\n\n¿Cómo puedo ayudarte ahora?`,
       suggestions: initialSuggestions
     }
   ]);
@@ -83,12 +83,12 @@ export function AIChat({ productName, productId }: AIChatProps) {
     if (!file) return;
     
     if (!file.type.startsWith('image/')) {
-      toast.error('Por favor, selecione uma imagem');
+      toast.error('Por favor, selecciona una imagen');
       return;
     }
     
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('Imagem muito grande. Máximo 5MB');
+      toast.error('Imagen muy grande. Máximo 5MB');
       return;
     }
     
@@ -141,15 +141,15 @@ export function AIChat({ productName, productId }: AIChatProps) {
       const errorData = await resp.json().catch(() => ({}));
       
       if (resp.status === 429) {
-        throw new Error(errorData.error || "Limite de requisições excedido. Aguarde um momento.");
+        throw new Error(errorData.error || "Límite de solicitudes excedido. Espera un momento.");
       }
       if (resp.status === 402) {
-        throw new Error(errorData.error || "Créditos de IA esgotados.");
+        throw new Error(errorData.error || "Créditos de IA agotados.");
       }
-      throw new Error(errorData.error || "Erro ao processar requisição");
+      throw new Error(errorData.error || "Error al procesar la solicitud");
     }
 
-    if (!resp.body) throw new Error("Sem resposta do servidor");
+    if (!resp.body) throw new Error("Sin respuesta del servidor");
 
     const reader = resp.body.getReader();
     const decoder = new TextDecoder();
@@ -233,10 +233,10 @@ export function AIChat({ productName, productId }: AIChatProps) {
                 ...m, 
                 content: fullContent,
                 suggestions: [
-                  "Me dá mais opções",
-                  "Adapta pra WhatsApp",
-                  "Qual material devo enviar?",
-                  "E se ele disser que vai pensar?"
+                  "Dame más opciones",
+                  "Adapta para WhatsApp",
+                  "¿Qué material debo enviar?",
+                  "¿Y si dice que lo va a pensar?"
                 ]
               } 
             : m
@@ -257,7 +257,7 @@ export function AIChat({ productName, productId }: AIChatProps) {
     if (selectedImage) {
       imagePreview = selectedImage;
       userContent = [
-        { type: 'text', text: messageText || 'Analise esta imagem e me dê um feedback estratégico para a venda.' },
+        { type: 'text', text: messageText || 'Analiza esta imagen y dame un feedback estratégico para la venda.' },
         { type: 'image_url', image_url: { url: selectedImage } }
       ];
     }
@@ -299,14 +299,14 @@ export function AIChat({ productName, productId }: AIChatProps) {
       await streamChat(apiMessages as any);
     } catch (error) {
       console.error('Chat error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Erro ao processar mensagem';
+      const errorMessage = error instanceof Error ? error.message : 'Error al procesar el mensaje';
       toast.error(errorMessage);
       
       // Add error message to chat
       setMessages(prev => [...prev, {
         id: `error-${Date.now()}`,
         role: 'assistant',
-        content: `⚠️ ${errorMessage}\n\nTente novamente ou reformule sua pergunta.`,
+        content: `⚠️ ${errorMessage}\n\nIntenta de nuevo o reformula tu pregunta.`,
       }]);
     } finally {
       setIsLoading(false);
@@ -323,7 +323,7 @@ export function AIChat({ productName, productId }: AIChatProps) {
     const text = getTextContent(content);
     await navigator.clipboard.writeText(text);
     setCopiedId(id);
-    toast.success('Resposta copiada!');
+    toast.success('¡Respuesta copiada!');
     setTimeout(() => setCopiedId(null), 2000);
   };
 
@@ -338,8 +338,8 @@ export function AIChat({ productName, productId }: AIChatProps) {
           <Bot size={20} className="text-primary-foreground" />
         </div>
         <div>
-          <h2 className={cn("font-semibold text-foreground", isMobile ? "text-base" : "text-lg")}>IA do {productName}</h2>
-          <p className="text-sm text-muted-foreground">Seu copiloto de vendas</p>
+          <h2 className={cn("font-semibold text-foreground", isMobile ? "text-base" : "text-lg")}>IA de {productName}</h2>
+          <p className="text-sm text-muted-foreground">Tu copiloto de ventas</p>
         </div>
       </div>
 
@@ -380,7 +380,7 @@ export function AIChat({ productName, productId }: AIChatProps) {
                   <div className="mb-3">
                     <img 
                       src={message.imagePreview} 
-                      alt="Imagem anexada" 
+                      alt="Imagen adjunta" 
                       className="rounded-lg max-h-48 object-contain"
                     />
                   </div>
@@ -478,7 +478,7 @@ export function AIChat({ productName, productId }: AIChatProps) {
         {isTranscribing && (
           <div className="flex items-center gap-2 text-muted-foreground text-sm">
             <Loader2 size={14} className="animate-spin" />
-            Transcrevendo áudio...
+            Transcribiendo audio...
           </div>
         )}
 
@@ -491,7 +491,7 @@ export function AIChat({ productName, productId }: AIChatProps) {
               size="icon"
               onClick={handleCancelRecording}
               className="h-10 w-10 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full"
-              title="Cancelar gravação"
+              title="Cancelar grabación"
             >
               <X size={20} />
             </Button>

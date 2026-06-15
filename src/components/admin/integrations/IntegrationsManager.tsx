@@ -73,8 +73,8 @@ export function IntegrationsManager() {
 
   const handleClick = (item: IntegrationItem) => {
     if (item.comingSoon) {
-      toast.info(`${item.name} estará disponível em breve!`, {
-        description: 'Vamos avisar você assim que liberarmos.',
+      toast.info(`${item.name} estará disponible pronto!`, {
+        description: 'Te avisaremos tan pronto como lo lancemos.',
       });
       return;
     }
@@ -151,7 +151,7 @@ export function IntegrationsManager() {
 
       <div className="pt-2 pb-1 px-3">
         <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-          Categorias
+          Categorías
         </p>
       </div>
 
@@ -189,8 +189,8 @@ export function IntegrationsManager() {
 
   const activeCategoryLabel =
     categoryFilter === 'all'
-      ? 'Todas as integrações'
-      : integrationsCatalog.find((c) => c.id === categoryFilter)?.label ?? 'Integrações';
+      ? 'Todas las integraciones'
+      : integrationsCatalog.find((c) => c.id === categoryFilter)?.label ?? 'Integraciones';
 
   return (
     <div className="space-y-6">
@@ -198,16 +198,16 @@ export function IntegrationsManager() {
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <Plug className="h-6 w-6 text-primary" />
-            Integrações
+            Integraciones
           </h2>
           <p className="text-muted-foreground">
-            Conecte ferramentas e serviços ao seu CRM
+            Conecta herramientas y servicios a tu CRM
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="secondary" className="gap-1">
             <Sparkles className="h-3 w-3" />
-            {totals.active} de {totals.available} ativas
+            {totals.active} de {totals.available} activas
           </Badge>
         </div>
       </div>
@@ -235,7 +235,7 @@ export function IntegrationsManager() {
                 <div className="mb-4">
                   <h3 className="font-semibold flex items-center gap-2">
                     <Plug className="h-4 w-4 text-primary" />
-                    Categorias
+                    Categorías
                   </h3>
                 </div>
                 {renderSidebar(() => setMobileMenuOpen(false))}
@@ -247,19 +247,19 @@ export function IntegrationsManager() {
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Buscar integração... (ex: stripe, gpt, whatsapp)"
+                placeholder="Buscar integración... (ej: stripe, gpt, whatsapp)"
                 className="pl-10"
               />
             </div>
             <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as StatusFilter)}>
               <SelectTrigger className="w-full sm:w-56">
-                <SelectValue placeholder="Filtrar por status" />
+                <SelectValue placeholder="Filtrar por estado" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todas</SelectItem>
-                <SelectItem value="active">Ativas</SelectItem>
-                <SelectItem value="inactive">Não configuradas</SelectItem>
-                <SelectItem value="coming_soon">Em breve</SelectItem>
+                <SelectItem value="active">Activas</SelectItem>
+                <SelectItem value="inactive">No configuradas</SelectItem>
+                <SelectItem value="coming_soon">Próximamente</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -267,9 +267,9 @@ export function IntegrationsManager() {
           {filtered.length === 0 ? (
             <div className="rounded-lg border border-dashed p-10 text-center">
               <Search className="mx-auto h-8 w-8 text-muted-foreground" />
-              <h3 className="mt-3 font-medium">Nenhuma integração encontrada</h3>
+              <h3 className="mt-3 font-medium">No se encontró ninguna integración</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Tente outro termo ou peça uma nova integração para o suporte.
+                Prueba con otro término o solicita una nueva integración al soporte.
               </p>
             </div>
           ) : (
