@@ -1,10 +1,10 @@
-// Recebe mensajes do admin via WhatsApp, roteia para Lovable AI Gateway
-// con tools read-only e responde via WhatsApp.
+// Recibe mensajes del admin vía WhatsApp, rutea al Lovable AI Gateway
+// con tools read-only y responde vía WhatsApp.
 //
-// O agente tipo 'admin' es um CARGO (Chief of Staff executivo), no uma
-// personalidade livre — ver EXECUTIVE_KERNEL abaixo. Os campos do banco
-// (objetivo, tom, prompt adicional) son MODIFICADORES de tom/ênfase, nunca
-// podem alterar as regras do kernel.
+// El agente tipo 'admin' es un CARGO (Chief of Staff ejecutivo), no una
+// personalidad libre — ver EXECUTIVE_KERNEL abajo. Los campos del banco
+// (objetivo, tono, prompt adicional) son MODIFICADORES de tono/énfasis, nunca
+// pueden alterar las reglas del kernel.
 
 // deno-lint-ignore-file no-explicit-any
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
@@ -18,8 +18,8 @@ const corsHeaders = {
 };
 
 // ─────────────────────────────────────────────────────────────────────
-// EXECUTIVE_KERNEL — comportamento blindado por TIPO (no editável)
-// Aplica-se a todo agente con agent_type='admin', em qualquer org.
+// EXECUTIVE_KERNEL — comportamiento blindado por TIPO (no editable)
+// Se aplica a todo agente con agent_type='admin', en cualquier org.
 // ─────────────────────────────────────────────────────────────────────
 function buildExecutiveKernel(args: {
   agentName: string;
@@ -32,16 +32,16 @@ function buildExecutiveKernel(args: {
 }): string {
   const { agentName, adminName, orgName, productNames, monitoredCount, availableAgents, availableUsers } = args;
   const productsLine = productNames.length
-    ? `A organização *${orgName}* vende: ${productNames.join(", ")}. Usted JÁ CONHECE todos os productos da casa — nunca preguntes sobre eles ao admin nem se ofereça pra explicá-los.`
-    : `A organização es *${orgName}*.`;
+    ? `La organización *${orgName}* vende: ${productNames.join(", ")}. Vos YA CONOCÉS todos los productos de la casa — nunca preguntes sobre ellos al admin ni te ofrezcas a explicarlos.`
+    : `La organización es *${orgName}*.`;
 
   const scopeLine = monitoredCount && monitoredCount > 0
-    ? `Usted monitora ${monitoredCount} producto(s) específicos. Os dados das tools ya vêm filtrados.`
-    : `Usted monitora TODOS os productos da organização.`;
+    ? `Vos monitoreás ${monitoredCount} producto(s) específicos. Los datos de las tools ya vienen filtrados.`
+    : `Vos monitoreás TODOS los productos de la organización.`;
 
   // ─────────────────────────────────────────────────────────────────
-  // Catálogo dinâmico de transferência. Sem isso a Malu "chuta" tags
-  // como [HANDOFF:support] em vez de [HANDOFF_TO_AGENT:Ana].
+  // Catálogo dinámico de transferencia. Sin esto el agente "tira" tags
+  // como [HANDOFF:support] en vez de [HANDOFF_TO_AGENT:Ana].
   // ─────────────────────────────────────────────────────────────────
   const agentsCatalog = availableAgents.length
     ? availableAgents
