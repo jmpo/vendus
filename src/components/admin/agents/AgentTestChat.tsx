@@ -72,7 +72,7 @@ export function AgentTestChat({ agentId, agentName, productId, agentType }: Agen
             system_prompt: '',
             knowledge_base: null,
             faq: [],
-            fallback_message: 'Desculpe, não entendi.',
+            fallback_message: 'Lo siento, no entendí.',
             use_product_brain: true,
           },
         },
@@ -80,15 +80,15 @@ export function AgentTestChat({ agentId, agentName, productId, agentType }: Agen
 
       if (error) throw error;
 
-      const botContent = data?.message?.content || data?.response || data?.reply || 'Sem resposta do agente.';
+      const botContent = data?.message?.content || data?.response || data?.reply || 'Sin respuesta del agente.';
       const botMsg: Message = { id: crypto.randomUUID(), role: 'bot', content: botContent };
       setMessages(prev => [...prev, botMsg]);
     } catch (err) {
-      console.error('Erro ao testar agente:', err);
+      console.error('Error al probar el agente:', err);
       const errorMsg: Message = {
         id: crypto.randomUUID(),
         role: 'bot',
-        content: '⚠️ Erro ao obter resposta. Verifique se o agente está configurado corretamente.',
+        content: '⚠️ Error al obtener la respuesta. Verifique que el agente esté configurado correctamente.',
       };
       setMessages(prev => [...prev, errorMsg]);
     } finally {
@@ -127,14 +127,14 @@ export function AgentTestChat({ agentId, agentName, productId, agentType }: Agen
               )}
             </div>
             <p className="text-[10px] text-muted-foreground">
-              {isOrchestratorTest ? 'Simulando boas-vindas, menu e roteamento' : 'Modo de teste'}
+              {isOrchestratorTest ? 'Simulando bienvenida, menú y enrutamiento' : 'Modo de prueba'}
             </p>
           </div>
         </div>
         {messages.length > 0 && (
           <Button variant="ghost" size="sm" onClick={handleClear} className="text-xs gap-1 text-muted-foreground">
             <Trash2 className="h-3 w-3" />
-            Limpar
+            Limpiar
           </Button>
         )}
       </div>
@@ -146,9 +146,9 @@ export function AgentTestChat({ agentId, agentName, productId, agentType }: Agen
             <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-3">
               <Bot className="h-6 w-6 text-muted-foreground" />
             </div>
-            <p className="text-sm font-medium text-muted-foreground">Teste seu agente</p>
+            <p className="text-sm font-medium text-muted-foreground">Pruebe su agente</p>
             <p className="text-xs text-muted-foreground mt-1">
-              Simule uma conversa de venda ou faça perguntas para testar as respostas do agente
+              Simule una conversación de venta o haga preguntas para probar las respuestas del agente
             </p>
           </div>
         )}
@@ -221,7 +221,7 @@ export function AgentTestChat({ agentId, agentName, productId, agentType }: Agen
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
-          placeholder="Digite uma mensagem..."
+          placeholder="Escriba un mensaje..."
           disabled={isLoading}
           className="flex-1"
         />

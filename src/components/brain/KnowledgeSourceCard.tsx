@@ -80,9 +80,9 @@ export function KnowledgeSourceCard({ source, onView }: KnowledgeSourceCardProps
   const handleDelete = async () => {
     try {
       await deleteSource.mutateAsync({ id: source.id, productId: source.product_id });
-      toast.success('Fonte removida com sucesso');
+      toast.success('Fuente eliminada con éxito');
     } catch (error) {
-      toast.error('Erro ao remover fonte');
+      toast.error('Error al eliminar la fuente');
     }
   };
 
@@ -148,14 +148,14 @@ export function KnowledgeSourceCard({ source, onView }: KnowledgeSourceCardProps
                     )}
                     <DropdownMenuItem>
                       <RefreshCw className="h-4 w-4 mr-2" />
-                      Reprocessar
+                      Reprocesar
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={handleDelete}
                       className="text-destructive"
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
-                      Remover
+                      Eliminar
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -167,12 +167,12 @@ export function KnowledgeSourceCard({ source, onView }: KnowledgeSourceCardProps
               <span className="text-xs text-muted-foreground">
                 {formatDistanceToNow(new Date(source.created_at), { 
                   addSuffix: true, 
-                  locale: ptBR 
+                  locale: es 
                 })}
               </span>
               {source.extracted_content && (
                 <Badge variant="outline" className="text-xs">
-                  Conteúdo extraído
+                  Contenido extraído
                 </Badge>
               )}
             </div>

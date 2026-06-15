@@ -150,7 +150,7 @@ export function AgentHierarchyView({
         (a.product as Product) ||
         products.find((p) => p.id === a.product_id) || {
           id: a.product_id,
-          name: 'Produto',
+          name: 'Producto',
         };
       if (!map.has(a.product_id)) map.set(a.product_id, { product, agents: [] });
       map.get(a.product_id)!.agents.push(a);
@@ -248,7 +248,7 @@ export function AgentHierarchyView({
             <div className="flex items-center gap-2 text-muted-foreground">
               <Globe className="h-3.5 w-3.5" />
               <span className="text-[10px] font-semibold uppercase tracking-wider">
-                Agentes Globais
+                Agentes Globales
               </span>
             </div>
             <div className="flex flex-wrap items-start justify-center gap-6">

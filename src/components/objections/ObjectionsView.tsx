@@ -43,7 +43,7 @@ const categoryConfig = {
   price: { label: 'Preço', icon: DollarSign, color: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' },
   timing: { label: 'Timing', icon: Clock, color: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
   trust: { label: 'Confiança', icon: Shield, color: 'bg-purple-500/10 text-purple-500 border-purple-500/20' },
-  thinking: { label: 'Vou pensar', icon: Brain, color: 'bg-orange-500/10 text-orange-500 border-orange-500/20' },
+  thinking: { label: 'Lo voy a pensar', icon: Brain, color: 'bg-orange-500/10 text-orange-500 border-orange-500/20' },
   partner: { label: 'Sócio/Diretor', icon: Users, color: 'bg-green-500/10 text-green-500 border-green-500/20' },
   competitor: { label: 'Concorrência', icon: Swords, color: 'bg-red-500/10 text-red-500 border-red-500/20' },
 };
@@ -70,7 +70,7 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
   const handleCopy = async (text: string, id: string) => {
     await navigator.clipboard.writeText(text);
     setCopiedId(id);
-    toast.success('Resposta copiada!');
+    toast.success('¡Respuesta copiada!');
     setTimeout(() => setCopiedId(null), 2000);
   };
 
@@ -101,11 +101,11 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
           if (error) throw error;
           
           queryClient.invalidateQueries({ queryKey: ['objections'] });
-          toast.success('Objeção refinada com IA!');
+          toast.success('¡Objeción refinada con IA!');
         }
       }
     } catch (error) {
-      toast.error('Erro ao refinar objeção');
+      toast.error('Error al refinar la objeción');
     } finally {
       setRefiningId(null);
     }
@@ -118,15 +118,15 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Central de Objeções</h2>
+          <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Central de Objeciones</h2>
           <p className="text-muted-foreground mt-1 text-sm">
-            Respostas prontas para as objeções mais comuns
+            Respuestas listas para las objeciones más comunes
           </p>
         </div>
         {showAdminActions && productId && productName && (
           <Button onClick={() => setGeneratorOpen(true)} className="gap-2" size={isMobile ? "sm" : "default"}>
             <Sparkles className="h-4 w-4" />
-            {isMobile ? "Gerar IA" : "Gerar em Lote com IA"}
+            {isMobile ? "Generar IA" : "Generar en lote con IA"}
           </Button>
         )}
       </div>
@@ -137,11 +137,11 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="assistant" className="gap-2">
               <Sparkles className="h-4 w-4" />
-              Assistente IA
+              Asistente IA
             </TabsTrigger>
             <TabsTrigger value="manual" className="gap-2">
               <PenLine className="h-4 w-4" />
-              Adicionar Manual
+              Agregar Manual
             </TabsTrigger>
           </TabsList>
           <TabsContent value="assistant" className="mt-4">
@@ -162,11 +162,11 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
       {objections.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <AlertCircle size={48} className="text-muted-foreground/50 mb-4" />
-          <h3 className="text-lg font-medium text-foreground mb-1">Nenhuma objeção cadastrada</h3>
+          <h3 className="text-lg font-medium text-foreground mb-1">Ninguna objeción registrada</h3>
           <p className="text-sm text-muted-foreground mb-4">
             {showAdminActions 
-              ? 'Use a IA para gerar objeções ou adicione manualmente acima'
-              : 'Peça ao administrador para cadastrar objeções deste produto'}
+              ? 'Use la IA para generar objeciones o agréguelas manualmente arriba'
+              : 'Pida al administrador que registre las objeciones de este producto'}
           </p>
           {showAdminActions && productId && productName && (
             <Button onClick={() => setGeneratorOpen(true)} className="gap-2">
@@ -181,7 +181,7 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
-              placeholder={isMobile ? "Buscar objeção..." : "Buscar objeção... ex: 'caro', 'não é o momento', 'vou pensar'"}
+              placeholder={isMobile ? "Buscar objeción..." : "Buscar objeción... ex: 'caro', 'não é o momento', 'vou pensar'"}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={cn("pl-12 text-base bg-card border-border", isMobile ? "h-11" : "h-12")}
@@ -349,7 +349,7 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
                           </span>
                         </div>
                         <p className="text-foreground italic text-sm">
-                          {objection.followUpQuestion ? `"${objection.followUpQuestion}"` : 'Não definida'}
+                          {objection.followUpQuestion ? `"${objection.followUpQuestion}"` : 'No definida'}
                         </p>
                       </div>
                     </div>
@@ -361,9 +361,9 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
             {filteredObjections.length === 0 && (
               <div className="text-center py-12">
                 <Search size={48} className="mx-auto text-muted-foreground/50 mb-4" />
-                <p className="text-muted-foreground">Nenhuma objeção encontrada</p>
+                <p className="text-muted-foreground">No se encontraron objeciones</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Tente buscar por outras palavras-chave
+                  Intente buscar por otras palabras clave
                 </p>
               </div>
             )}

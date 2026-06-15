@@ -20,7 +20,7 @@ interface AgentWelcomeMenuTabProps {
   onChange: (patch: Partial<ProductAgent>) => void;
 }
 
-const DEFAULT_INTRO = 'Como posso te ajudar?';
+const DEFAULT_INTRO = '¿Cómo puedo ayudarte?';
 
 function makeBlankOption(): QuickMenuOption {
   return { label: '', action: 'transfer_to_agent', target_agent_id: null };
@@ -100,10 +100,10 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
             <div>
               <CardTitle className="flex items-center gap-2 text-base">
                 <Hand className="h-4 w-4 text-primary" />
-                Saudação automática
+                Saludo automático
               </CardTitle>
               <CardDescription className="text-xs mt-1">
-                Enviada na 1ª mensagem da conversa, antes da IA classificar.
+                Enviado en el 1er mensaje de la conversación, antes de que la IA clasifique.
               </CardDescription>
             </div>
             <Switch
@@ -114,7 +114,7 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
         </CardHeader>
         {formData.welcome_enabled && (
           <CardContent className="space-y-2">
-            <Label className="text-xs">Texto da saudação</Label>
+            <Label className="text-xs">Texto del saludo</Label>
             <Textarea
               rows={3}
               placeholder="Olá! Sou a Malu da TechSales Brasil. Como posso te ajudar hoje?"
@@ -122,7 +122,7 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
               onChange={(e) => onChange({ welcome_message: e.target.value })}
             />
             <p className="text-[11px] text-muted-foreground">
-              Variáveis: <code>{'{{nome}}'}</code>, <code>{'{{agent_name}}'}</code>, <code>{'{{organization_name}}'}</code>
+              Variables: <code>{'{{nome}}'}</code>, <code>{'{{agent_name}}'}</code>, <code>{'{{organization_name}}'}</code>
             </p>
           </CardContent>
         )}
@@ -135,10 +135,10 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
             <div>
               <CardTitle className="flex items-center gap-2 text-base">
                 <MessageCircle className="h-4 w-4 text-primary" />
-                Menu de atalhos
+                Menú de atajos
               </CardTitle>
               <CardDescription className="text-xs mt-1">
-                Lista numerada que o cliente pode escolher digitando o número, sem depender da IA.
+                Lista numerada que el cliente puede elegir escribiendo el número, sin depender de la IA.
               </CardDescription>
             </div>
             <Select
@@ -149,9 +149,9 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="off">Desligado</SelectItem>
-                <SelectItem value="always">Sempre na 1ª mensagem</SelectItem>
-                <SelectItem value="fallback">Só quando IA não classificar</SelectItem>
+                <SelectItem value="off">Apagado</SelectItem>
+                <SelectItem value="always">Siempre en el 1er mensaje</SelectItem>
+                <SelectItem value="fallback">Solo cuando la IA no clasifique</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -160,7 +160,7 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
         {formData.quick_menu_mode !== 'off' && (
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-xs">Texto antes do menu</Label>
+              <Label className="text-xs">Texto antes del menú</Label>
               <Input
                 placeholder={DEFAULT_INTRO}
                 value={formData.quick_menu_intro || ''}
@@ -170,7 +170,7 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label className="text-xs">Opções ({options.length}/9)</Label>
+                <Label className="text-xs">Opciones ({options.length}/9)</Label>
                 <Button
                   type="button"
                   variant="outline"
@@ -179,13 +179,13 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
                   disabled={options.length >= 9}
                 >
                   <Plus className="h-3.5 w-3.5 mr-1" />
-                  Adicionar opção
+                  Agregar opción
                 </Button>
               </div>
 
               {options.length === 0 && (
                 <div className="rounded border border-dashed p-4 text-center text-xs text-muted-foreground">
-                  Nenhuma opção configurada. Adicione ao menos uma.
+                  Ninguna opción configurada. Agregue al menos una.
                 </div>
               )}
 
@@ -212,7 +212,7 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
 
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <Label className="text-[11px] text-muted-foreground">Ação</Label>
+                      <Label className="text-[11px] text-muted-foreground">Acción</Label>
                       <Select
                         value={opt.action}
                         onValueChange={(v) =>
@@ -227,10 +227,10 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="transfer_to_agent">
-                            <span className="flex items-center gap-2"><Bot className="h-3.5 w-3.5" />Transferir para agente</span>
+                            <span className="flex items-center gap-2"><Bot className="h-3.5 w-3.5" />Transferir a agente</span>
                           </SelectItem>
                           <SelectItem value="transfer_to_human">
-                            <span className="flex items-center gap-2"><Hand className="h-3.5 w-3.5" />Transferir para humano</span>
+                            <span className="flex items-center gap-2"><Hand className="h-3.5 w-3.5" />Transferir a humano</span>
                           </SelectItem>
                         </SelectContent>
                       </Select>
@@ -238,13 +238,13 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
 
                     {opt.action === 'transfer_to_agent' && (
                       <div>
-                        <Label className="text-[11px] text-muted-foreground">Agente destino</Label>
+                        <Label className="text-[11px] text-muted-foreground">Agente de destino</Label>
                         <Select
                           value={opt.target_agent_id || ''}
                           onValueChange={(v) => updateOption(idx, { target_agent_id: v })}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Selecionar agente..." />
+                            <SelectValue placeholder="Seleccionar agente..." />
                           </SelectTrigger>
                           <SelectContent>
                             {(agentsData || []).map((a: any) => (
@@ -262,9 +262,9 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs">Mensagem se cliente digitar opção inválida</Label>
+              <Label className="text-xs">Mensaje si el cliente escribe una opción inválida</Label>
               <Input
-                placeholder="Não entendi sua escolha. Responda com o número da opção (1, 2, 3...)."
+                placeholder="No entendí su elección. Responda con el número de la opción (1, 2, 3...)."
                 value={formData.quick_menu_invalid_message || ''}
                 onChange={(e) => onChange({ quick_menu_invalid_message: e.target.value })}
               />
@@ -278,7 +278,7 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2">
             <Info className="h-3.5 w-3.5" />
-            Preview do que o cliente vai ver
+            Vista previa de lo que verá el cliente
           </CardTitle>
         </CardHeader>
         <CardContent>

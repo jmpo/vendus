@@ -15,12 +15,12 @@ interface ManualObjectionFormProps {
 }
 
 const categories = [
-  { value: 'price', label: 'Preço' },
+  { value: 'price', label: 'Precio' },
   { value: 'timing', label: 'Timing' },
-  { value: 'trust', label: 'Confiança' },
-  { value: 'thinking', label: 'Vou Pensar' },
-  { value: 'partner', label: 'Sócio/Diretor' },
-  { value: 'competitor', label: 'Concorrência' },
+  { value: 'trust', label: 'Confianza' },
+  { value: 'thinking', label: 'Lo voy a pensar' },
+  { value: 'partner', label: 'Socio/Director' },
+  { value: 'competitor', label: 'Competencia' },
 ];
 
 export function ManualObjectionForm({ productId, productName, onSuccess }: ManualObjectionFormProps) {
@@ -36,7 +36,7 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
 
   const handleRefineWithAI = async (field: 'whatTheyMean' | 'suggestedResponse' | 'followUpQuestion') => {
     if (!whatTheySay.trim()) {
-      toast.error('Digite a objeção do cliente primeiro');
+      toast.error('Ingrese primero la objeción del cliente');
       return;
     }
 
@@ -47,9 +47,9 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
       
       if (response) {
         // Parse the AI response
-        const whatTheyMeanMatch = response.match(/\*\*O QUE ELE QUER DIZER:\*\*\s*([\s\S]*?)(?=\*\*RESPOSTA SUGERIDA:\*\*|$)/i);
-        const responseMatch = response.match(/\*\*RESPOSTA SUGERIDA:\*\*\s*([\s\S]*?)(?=\*\*PERGUNTA DE RETORNO:\*\*|$)/i);
-        const questionMatch = response.match(/\*\*PERGUNTA DE RETORNO:\*\*\s*([\s\S]*?)$/i);
+        const whatTheyMeanMatch = response.match(/\*\*LO QUE QUIERE DECIR:\*\*\s*([\s\S]*?)(?=\*\*RESPUESTA SUGERIDA:\*\*|$)/i);
+        const responseMatch = response.match(/\*\*RESPUESTA SUGERIDA:\*\*\s*([\s\S]*?)(?=\*\*PREGUNTA DE RETORNO:\*\*|$)/i);
+        const questionMatch = response.match(/\*\*PREGUNTA DE RETORNO:\*\*\s*([\s\S]*?)$/i);
 
         if (field === 'whatTheyMean' && whatTheyMeanMatch?.[1]) {
           setWhatTheyMean(whatTheyMeanMatch[1].trim());
@@ -59,10 +59,10 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
           setFollowUpQuestion(questionMatch[1].trim());
         }
         
-        toast.success('Campo refinado com IA!');
+        toast.success('¡Campo refinado con IA!');
       }
     } catch (error) {
-      toast.error('Erro ao refinar com IA');
+      toast.error('Error al refinar con IA');
     } finally {
       setRefiningField(null);
     }
@@ -70,7 +70,7 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
 
   const handleRefineAll = async () => {
     if (!whatTheySay.trim()) {
-      toast.error('Digite a objeção do cliente primeiro');
+      toast.error('Ingrese primero la objeción del cliente');
       return;
     }
 
@@ -80,18 +80,18 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
       const response = await handleObjection(whatTheySay, productId);
       
       if (response) {
-        const whatTheyMeanMatch = response.match(/\*\*O QUE ELE QUER DIZER:\*\*\s*([\s\S]*?)(?=\*\*RESPOSTA SUGERIDA:\*\*|$)/i);
-        const responseMatch = response.match(/\*\*RESPOSTA SUGERIDA:\*\*\s*([\s\S]*?)(?=\*\*PERGUNTA DE RETORNO:\*\*|$)/i);
-        const questionMatch = response.match(/\*\*PERGUNTA DE RETORNO:\*\*\s*([\s\S]*?)$/i);
+        const whatTheyMeanMatch = response.match(/\*\*LO QUE QUIERE DECIR:\*\*\s*([\s\S]*?)(?=\*\*RESPUESTA SUGERIDA:\*\*|$)/i);
+        const responseMatch = response.match(/\*\*RESPUESTA SUGERIDA:\*\*\s*([\s\S]*?)(?=\*\*PREGUNTA DE RETORNO:\*\*|$)/i);
+        const questionMatch = response.match(/\*\*PREGUNTA DE RETORNO:\*\*\s*([\s\S]*?)$/i);
 
         if (whatTheyMeanMatch?.[1]) setWhatTheyMean(whatTheyMeanMatch[1].trim());
         if (responseMatch?.[1]) setSuggestedResponse(responseMatch[1].trim());
         if (questionMatch?.[1]) setFollowUpQuestion(questionMatch[1].trim());
         
-        toast.success('Todos os campos gerados com IA!');
+        toast.success('¡Todos los campos generados con IA!');
       }
     } catch (error) {
-      toast.error('Erro ao gerar com IA');
+      toast.error('Error al generar con IA');
     } finally {
       setRefiningField(null);
     }
@@ -99,11 +99,11 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
 
   const handleSave = async () => {
     if (!whatTheySay.trim()) {
-      toast.error('Digite a objeção do cliente');
+      toast.error('Ingrese la objeción del cliente');
       return;
     }
     if (!suggestedResponse.trim()) {
-      toast.error('Digite a resposta sugerida');
+      toast.error('Ingrese la respuesta sugerida');
       return;
     }
 
@@ -119,7 +119,7 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
         },
       });
       
-      toast.success('Objeção salva com sucesso!');
+      toast.success('¡Objeción guardada con éxito!');
       
       // Reset form
       setWhatTheySay('');
@@ -130,7 +130,7 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
       
       onSuccess?.();
     } catch (error) {
-      toast.error('Erro ao salvar objeção');
+      toast.error('Error al guardar la objeción');
     }
   };
 
@@ -145,10 +145,10 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
               <PenLine className="h-4 w-4 text-foreground" />
             </div>
             <div>
-              <CardTitle className="text-base">Adicionar Objeção Manual</CardTitle>
+              <CardTitle className="text-base">Agregar Objeción Manual</CardTitle>
               {productName && (
                 <p className="text-xs text-muted-foreground">
-                  Produto: {productName}
+                  Producto: {productName}
                 </p>
               )}
             </div>
@@ -159,10 +159,10 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
       <CardContent className="space-y-4">
         {/* Category Selection */}
         <div className="space-y-2">
-          <Label>Categoria</Label>
+          <Label>Categoría</Label>
           <Select value={category} onValueChange={setCategory}>
             <SelectTrigger>
-              <SelectValue placeholder="Selecione a categoria" />
+              <SelectValue placeholder="Seleccione la categoría" />
             </SelectTrigger>
             <SelectContent>
               {categories.map((cat) => (
@@ -177,7 +177,7 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
         {/* What They Say */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label>O que o cliente diz *</Label>
+            <Label>Lo que dice el cliente *</Label>
             <Button
               variant="ghost"
               size="sm"
@@ -190,11 +190,11 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
               ) : (
                 <Sparkles className="h-3 w-3" />
               )}
-              Gerar Tudo com IA
+              Generar todo con IA
             </Button>
           </div>
           <Textarea
-            placeholder='Ex: "Está muito caro para o meu orçamento"'
+            placeholder='Ex: "Es muy caro para mi presupuesto"'
             value={whatTheySay}
             onChange={(e) => setWhatTheySay(e.target.value)}
             className="min-h-[60px] resize-none"
@@ -204,7 +204,7 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
         {/* What They Mean */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label>O que ele quer dizer</Label>
+            <Label>Lo que quiere decir</Label>
             <Button
               variant="ghost"
               size="sm"
@@ -217,11 +217,11 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
               ) : (
                 <Sparkles className="h-3 w-3" />
               )}
-              Refinar com IA
+              Refinar con IA
             </Button>
           </div>
           <Textarea
-            placeholder="O medo ou dúvida real por trás da objeção"
+            placeholder="El miedo o duda real detrás de la objeción"
             value={whatTheyMean}
             onChange={(e) => setWhatTheyMean(e.target.value)}
             className="min-h-[60px] resize-none"
@@ -231,7 +231,7 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
         {/* Suggested Response */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label>Resposta sugerida *</Label>
+            <Label>Respuesta sugerida *</Label>
             <Button
               variant="ghost"
               size="sm"
@@ -244,11 +244,11 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
               ) : (
                 <Sparkles className="h-3 w-3" />
               )}
-              Refinar com IA
+              Refinar con IA
             </Button>
           </div>
           <Textarea
-            placeholder="A resposta estratégica para contornar essa objeção"
+            placeholder="La respuesta estratégica para superar esta objeción"
             value={suggestedResponse}
             onChange={(e) => setSuggestedResponse(e.target.value)}
             className="min-h-[80px] resize-none"
@@ -258,7 +258,7 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
         {/* Follow-up Question */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label>Pergunta de retorno</Label>
+            <Label>Pregunta de retorno</Label>
             <Button
               variant="ghost"
               size="sm"
@@ -271,11 +271,11 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
               ) : (
                 <Sparkles className="h-3 w-3" />
               )}
-              Refinar com IA
+              Refinar con IA
             </Button>
           </div>
           <Textarea
-            placeholder="Pergunta para engajar e avançar a conversa"
+            placeholder="Pregunta para involucrar y avanzar en la conversación"
             value={followUpQuestion}
             onChange={(e) => setFollowUpQuestion(e.target.value)}
             className="min-h-[60px] resize-none"
@@ -291,12 +291,12 @@ export function ManualObjectionForm({ productId, productName, onSuccess }: Manua
           {saveObjection.isPending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Salvando...
+              Guardando...
             </>
           ) : (
             <>
               <Save className="mr-2 h-4 w-4" />
-              Salvar Objeção
+              Guardar Objeción
             </>
           )}
         </Button>

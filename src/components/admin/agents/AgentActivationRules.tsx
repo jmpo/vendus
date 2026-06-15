@@ -47,7 +47,7 @@ export function AgentActivationRules({ formData, onChange }: Props) {
     const v = kwInput.trim();
     if (!v) return;
     if (v.length < 3) {
-      toast.error('Use palavras com pelo menos 3 letras');
+      toast.error('Use palabras con al menos 3 letras');
       return;
     }
     if (keywords.includes(v)) {
@@ -66,7 +66,7 @@ export function AgentActivationRules({ formData, onChange }: Props) {
     const v = phraseInput.trim();
     if (!v) return;
     if (v.length < 3) {
-      toast.error('Use frases com pelo menos 3 caracteres');
+      toast.error('Use frases con al menos 3 caracteres');
       return;
     }
     if (phrases.includes(v)) {
@@ -94,16 +94,16 @@ export function AgentActivationRules({ formData, onChange }: Props) {
         <div className="flex items-start gap-2">
           <Target className="h-4 w-4 text-primary mt-0.5 shrink-0" />
           <div className="flex-1">
-            <Label className="text-sm font-semibold">Acionamento Automático</Label>
+            <Label className="text-sm font-semibold">Activación Automática</Label>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Quando o lead disser qualquer uma destas palavras ou frases, este agente assume a conversa automaticamente.
+              Cuando el lead diga cualquiera de estas palabras o frases, este agente asumirá la conversación automáticamente.
             </p>
           </div>
         </div>
 
         <div className="space-y-2">
           <div className="flex items-center gap-1">
-            <Label className="text-xs">Palavras-chave</Label>
+            <Label className="text-xs">Palabras clave</Label>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Info className="h-3 w-3 text-muted-foreground" />
@@ -118,7 +118,7 @@ export function AgentActivationRules({ formData, onChange }: Props) {
             <Input
               value={kwInput}
               onChange={(e) => setKwInput(e.target.value)}
-              placeholder="Ex: preço, comprar, valor"
+              placeholder="Ej: precio, comprar, valor"
               onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addKeyword())}
               className="h-9"
             />
@@ -146,7 +146,7 @@ export function AgentActivationRules({ formData, onChange }: Props) {
 
         <div className="space-y-2">
           <div className="flex items-center gap-1">
-            <Label className="text-xs">Frases exatas</Label>
+            <Label className="text-xs">Frases exactas</Label>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Info className="h-3 w-3 text-muted-foreground" />
@@ -161,7 +161,7 @@ export function AgentActivationRules({ formData, onChange }: Props) {
             <Input
               value={phraseInput}
               onChange={(e) => setPhraseInput(e.target.value)}
-              placeholder='Ex: "quero contratar", "como faço pra pagar"'
+              placeholder='Ej: "quiero contratar", "cómo hago para pagar"'
               onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addPhrase())}
               className="h-9"
             />
@@ -188,7 +188,7 @@ export function AgentActivationRules({ formData, onChange }: Props) {
         </div>
 
         <div className="space-y-2">
-          <Label className="text-xs">Canais onde vale o gatilho</Label>
+          <Label className="text-xs">Canales donde vale el disparador</Label>
           <div className="flex flex-wrap gap-2">
             {SCOPE_CHANNELS.map((c) => {
               const active = channelSet.has(c.key);
@@ -213,9 +213,9 @@ export function AgentActivationRules({ formData, onChange }: Props) {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-xs">Prioridade de acionamento</Label>
+              <Label className="text-xs">Prioridad de activación</Label>
               <p className="text-[11px] text-muted-foreground">
-                Usada se mais de um agente bater ao mesmo tempo (maior vence)
+                Se usa si más de un agente coincide al mismo tiempo (el mayor gana)
               </p>
             </div>
             <div className="flex items-center gap-1">
@@ -244,9 +244,9 @@ export function AgentActivationRules({ formData, onChange }: Props) {
 
         <div className="flex items-center justify-between py-1">
           <div>
-            <Label className="text-xs">Assumir a conversa após acionamento</Label>
+            <Label className="text-xs">Asumir la conversación después de la activación</Label>
             <p className="text-[11px] text-muted-foreground">
-              Se desligado, responde só uma vez sem trocar o titular
+              Si está desactivado, responde solo una vez sin cambiar el titular
             </p>
           </div>
           <Switch

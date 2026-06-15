@@ -14,7 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-const DOW_LABELS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+const DOW_LABELS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
 function normalizePhoneInput(raw: string): string {
   let p = raw.replace(/\D/g, '');
@@ -110,7 +110,7 @@ export function AdminExecutiveAgentSettings() {
 
   const handleTest = async () => {
     if (!form.admin_whatsapp_number) {
-      toast.error('Cadastre um WhatsApp antes de testar');
+      toast.error('Registre un WhatsApp antes de probar');
       return;
     }
     setTesting(true);
@@ -124,9 +124,9 @@ export function AdminExecutiveAgentSettings() {
         },
       });
       if (error) throw error;
-      toast.success('Mensagem de teste enviada! Confira seu WhatsApp.');
+      toast.success('¡Mensaje de prueba enviado! Revise su WhatsApp.');
     } catch (e: any) {
-      toast.error('Falha ao enviar teste: ' + (e?.message ?? 'erro'));
+      toast.error('Fallo al enviar la prueba: ' + (e?.message ?? 'erro'));
     } finally {
       setTesting(false);
     }
@@ -146,7 +146,7 @@ export function AdminExecutiveAgentSettings() {
         <div>
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <Bot className="h-5 w-5 text-primary" />
-            Agente Admin Executivo
+            Agente Admin Ejecutivo
             <Badge variant="secondary" className="ml-2 text-xs">
               <Sparkles className="h-3 w-3 mr-1" />
               IA
@@ -160,11 +160,11 @@ export function AdminExecutiveAgentSettings() {
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleTest} disabled={testing || !form.admin_agent_enabled}>
             {testing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Send className="h-4 w-4 mr-2" />}
-            Testar
+            Probar
           </Button>
           <Button onClick={handleSave} disabled={!hasChanges || saveSettings.isPending}>
             {saveSettings.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-            Salvar
+            Guardar
           </Button>
         </div>
       </div>
@@ -174,9 +174,9 @@ export function AdminExecutiveAgentSettings() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-base">Ativar Agente Admin</CardTitle>
+              <CardTitle className="text-base">Activar Agente Admin</CardTitle>
               <CardDescription>
-                Quando ativo, o agente envia resumos e responde apenas ao número configurado abaixo.
+                Cuando está activo, el agente envía resúmenes y responde solo al número configurado a continuación.
               </CardDescription>
             </div>
             <Switch
@@ -191,7 +191,7 @@ export function AdminExecutiveAgentSettings() {
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">
                   <Phone className="h-4 w-4" />
-                  WhatsApp do administrador
+                  WhatsApp del administrador
                 </Label>
                 <Input
                   placeholder="(11) 99999-9999"
@@ -199,17 +199,17 @@ export function AdminExecutiveAgentSettings() {
                   onChange={(e) => update('admin_whatsapp_number', e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Apenas mensagens deste número são tratadas como admin. DDI 55 é adicionado automaticamente.
+                  Solo los mensajes de este número se tratan como administrador. El DDI 55 se agrega automáticamente.
                 </p>
               </div>
               <div className="space-y-2">
-                <Label>Vincular ao usuário admin</Label>
+                <Label>Vincular al usuario administrador</Label>
                 <Select value={form.admin_user_id || 'none'} onValueChange={(v) => update('admin_user_id', v === 'none' ? '' : v)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione" />
+                    <SelectValue placeholder="Seleccione" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">— Não vincular —</SelectItem>
+                    <SelectItem value="none">— No vincular —</SelectItem>
                     {(admins ?? []).map((a) => (
                       <SelectItem key={a.id} value={a.id}>
                         {a.full_name || a.email}
@@ -225,7 +225,7 @@ export function AdminExecutiveAgentSettings() {
 
       {form.admin_agent_enabled && (
         <>
-          {/* Resumo Diário */}
+          {/* Resumen Diario */}
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -234,8 +234,8 @@ export function AdminExecutiveAgentSettings() {
                     <Clock className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <CardTitle className="text-base">Resumo Diário</CardTitle>
-                    <CardDescription>KPIs do dia anterior, todo dia de manhã</CardDescription>
+                    <CardTitle className="text-base">Resumen Diario</CardTitle>
+                    <CardDescription>KPI del día anterior, todas las mañanas</CardDescription>
                   </div>
                 </div>
                 <Switch
@@ -247,7 +247,7 @@ export function AdminExecutiveAgentSettings() {
             {form.daily_summary_enabled && (
               <CardContent className="pt-0">
                 <div className="flex items-center gap-3 pl-12">
-                  <Label className="text-sm text-muted-foreground">Enviar às</Label>
+                  <Label className="text-sm text-muted-foreground">Enviar a las</Label>
                   <Select value={String(form.daily_summary_hour)} onValueChange={(v) => update('daily_summary_hour', parseInt(v))}>
                     <SelectTrigger className="w-24"><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -256,13 +256,13 @@ export function AdminExecutiveAgentSettings() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <Label className="text-sm text-muted-foreground">(horário de Brasília)</Label>
+                  <Label className="text-sm text-muted-foreground">(horario de Brasilia)</Label>
                 </div>
               </CardContent>
             )}
           </Card>
 
-          {/* Relatório Semanal */}
+          {/* Informe Semanal */}
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -271,8 +271,8 @@ export function AdminExecutiveAgentSettings() {
                     <Bell className="h-5 w-5 text-accent-foreground" />
                   </div>
                   <div>
-                    <CardTitle className="text-base">Relatório Semanal</CardTitle>
-                    <CardDescription>Comparativo da semana atual vs. semana anterior</CardDescription>
+                    <CardTitle className="text-base">Informe Semanal</CardTitle>
+                    <CardDescription>Comparativa de la semana actual vs. semana anterior</CardDescription>
                   </div>
                 </div>
                 <Switch
@@ -284,7 +284,7 @@ export function AdminExecutiveAgentSettings() {
             {form.weekly_report_enabled && (
               <CardContent className="pt-0">
                 <div className="flex items-center gap-3 pl-12 flex-wrap">
-                  <Label className="text-sm text-muted-foreground">Toda</Label>
+                  <Label className="text-sm text-muted-foreground">Cada</Label>
                   <Select value={String(form.weekly_report_dow)} onValueChange={(v) => update('weekly_report_dow', parseInt(v))}>
                     <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -293,7 +293,7 @@ export function AdminExecutiveAgentSettings() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <Label className="text-sm text-muted-foreground">às</Label>
+                  <Label className="text-sm text-muted-foreground">a las</Label>
                   <Select value={String(form.weekly_report_hour)} onValueChange={(v) => update('weekly_report_hour', parseInt(v))}>
                     <SelectTrigger className="w-24"><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -307,7 +307,7 @@ export function AdminExecutiveAgentSettings() {
             )}
           </Card>
 
-          {/* Alertas em Tempo Real */}
+          {/* Alertas en Tiempo Real */}
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -316,8 +316,8 @@ export function AdminExecutiveAgentSettings() {
                     <AlertTriangle className="h-5 w-5 text-destructive" />
                   </div>
                   <div>
-                    <CardTitle className="text-base">Alertas em Tempo Real</CardTitle>
-                    <CardDescription>Notificações imediatas quando triggers disparam</CardDescription>
+                    <CardTitle className="text-base">Alertas en Tiempo Real</CardTitle>
+                    <CardDescription>Notificaciones inmediatas cuando se activan los disparadores</CardDescription>
                   </div>
                 </div>
                 <Switch
@@ -333,8 +333,8 @@ export function AdminExecutiveAgentSettings() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
-                      <Label className="text-sm font-medium">Lead de alto valor entra no pipeline</Label>
-                      <p className="text-xs text-muted-foreground">Alertar quando deal_value ≥ valor abaixo</p>
+                      <Label className="text-sm font-medium">Lead de alto valor entra en el pipeline</Label>
+                      <p className="text-xs text-muted-foreground">Alertar cuando deal_value ≥ valor a continuación</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-muted-foreground">R$</span>
@@ -351,8 +351,8 @@ export function AdminExecutiveAgentSettings() {
 
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
-                      <Label className="text-sm font-medium">Conversa sem atendimento</Label>
-                      <p className="text-xs text-muted-foreground">Alertar após X minutos sem resposta</p>
+                      <Label className="text-sm font-medium">Conversación sin atención</Label>
+                      <p className="text-xs text-muted-foreground">Alertar después de X minutos sin respuesta</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Input
@@ -369,8 +369,8 @@ export function AdminExecutiveAgentSettings() {
 
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
-                      <Label className="text-sm font-medium">Vendedor offline em horário comercial</Label>
-                      <p className="text-xs text-muted-foreground">Alertar após X minutos offline (8h-18h, dias úteis)</p>
+                      <Label className="text-sm font-medium">Vendedor fuera de línea en horario comercial</Label>
+                      <p className="text-xs text-muted-foreground">Alertar después de X minutos fuera de línea (8h-18h, días hábiles)</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Input
@@ -387,8 +387,8 @@ export function AdminExecutiveAgentSettings() {
 
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
-                      <Label className="text-sm font-medium">Erros consecutivos em agente IA</Label>
-                      <p className="text-xs text-muted-foreground">Alertar quando um agente acumular X falhas em 30min</p>
+                      <Label className="text-sm font-medium">Errores consecutivos en el agente de IA</Label>
+                      <p className="text-xs text-muted-foreground">Alertar cuando un agente acumule X fallas en 30 min</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Input
@@ -405,8 +405,8 @@ export function AdminExecutiveAgentSettings() {
 
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <Label className="text-sm font-medium">Reuniões confirmadas/canceladas</Label>
-                      <p className="text-xs text-muted-foreground">Notificar quando o status de uma reunião muda</p>
+                      <Label className="text-sm font-medium">Reuniones confirmadas/canceladas</Label>
+                      <p className="text-xs text-muted-foreground">Notificar cuando el estado de una reunión cambie</p>
                     </div>
                     <Switch
                       checked={form.alert_meeting_changes}

@@ -107,7 +107,7 @@ export const AgentCard = memo(function AgentCard({
         <div className="absolute -top-2 -right-2 z-10">
           <Badge className="bg-primary text-primary-foreground shadow-sm">
             <Star className="h-3 w-3 mr-1" />
-            Padrão
+            Predeterminado
           </Badge>
         </div>
       )}
@@ -139,7 +139,7 @@ export const AgentCard = memo(function AgentCard({
                   'h-2 w-2 rounded-full',
                   agent.is_active ? 'bg-success' : 'bg-muted-foreground'
                 )} />
-                {agent.is_active ? 'Ativo' : 'Inativo'}
+                {agent.is_active ? 'Activo' : 'Inactivo'}
               </span>
             </div>
 
@@ -158,9 +158,9 @@ export const AgentCard = memo(function AgentCard({
                   <Badge
                     variant="outline"
                     className="text-xs py-0.5 px-1.5 border-destructive/50 bg-destructive/10 text-destructive"
-                    title="Configure mensagens de despedida e apresentação na aba Comportamento"
+                    title="Configure mensajes de despedida y presentación en la pestaña Comportamiento"
                   >
-                    🔇 Handoff não configurado
+                    🔇 Handoff no configurado
                   </Badge>
                 )}
               {instanceLabel && (
@@ -233,7 +233,7 @@ export const AgentCard = memo(function AgentCard({
                 {!agent.is_default && (
                   <DropdownMenuItem onClick={() => onSetDefault(agent)}>
                     <Star className="h-4 w-4 mr-2" />
-                    Definir como Padrão
+                    Definir como Predeterminado
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
@@ -242,7 +242,7 @@ export const AgentCard = memo(function AgentCard({
                   className="text-destructive focus:text-destructive"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Excluir
+                  Eliminar
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

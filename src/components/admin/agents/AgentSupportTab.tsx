@@ -49,7 +49,7 @@ export function AgentSupportTab({ formData, onChange, agentId }: Props) {
         <div className="flex items-start gap-2">
           <BookOpen className="h-4 w-4 text-muted-foreground mt-0.5" />
           <div className="text-sm text-muted-foreground">
-            <p className="font-medium text-foreground">Base de Soporte deste Agente</p>
+            <p className="font-medium text-foreground">Base de soporte de este agente</p>
             <p>Materiais técnicos, links úteis e respostas rápidas que serão usados <strong>exclusivamente por este agente de Soporte</strong> ao responder dúvidas.</p>
           </div>
         </div>
@@ -61,7 +61,7 @@ export function AgentSupportTab({ formData, onChange, agentId }: Props) {
       ) : (
         <Card>
           <CardContent className="text-center py-6 text-sm text-muted-foreground">
-            Salve o agente primeiro para subir PDFs e documentos.
+            Primero guarde el agente para subir archivos PDF y documentos.
           </CardContent>
         </Card>
       )}
@@ -71,7 +71,7 @@ export function AgentSupportTab({ formData, onChange, agentId }: Props) {
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center gap-2">
             <Link2 className="h-4 w-4" />
-            Links Úteis ({links.length})
+            Enlaces útiles ({links.length})
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -103,7 +103,7 @@ export function AgentSupportTab({ formData, onChange, agentId }: Props) {
 
           {links.length === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-3">
-              Nenhum link cadastrado. O agente só usará PDFs.
+              Ningún enlace registrado. El agente solo usará PDF.
             </p>
           ) : (
             <div className="space-y-1.5">
@@ -137,7 +137,7 @@ export function AgentSupportTab({ formData, onChange, agentId }: Props) {
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center gap-2">
             <MessageSquareText className="h-4 w-4" />
-            Respostas Rápidas / FAQ ({quick.length})
+            Respuestas rápidas / FAQ ({quick.length})
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -162,13 +162,13 @@ export function AgentSupportTab({ formData, onChange, agentId }: Props) {
               />
             </div>
             <Button size="sm" onClick={addQA} className="w-full">
-              <Plus className="h-4 w-4 mr-1" /> Adicionar resposta
+              <Plus className="h-4 w-4 mr-1" /> Agregar respuesta
             </Button>
           </div>
 
           {quick.length === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-3">
-              Sem FAQ inline. Use para perguntas batidas que não precisam virar PDF.
+              Sin FAQ en línea. Úselo para preguntas comunes que no necesitan convertirse en PDF.
             </p>
           ) : (
             <div className="space-y-2">

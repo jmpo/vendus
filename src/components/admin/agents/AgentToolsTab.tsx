@@ -53,166 +53,166 @@ export function AgentToolsTab({ formData, onChange }: AgentToolsTabProps) {
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Configure quais ações o agente pode executar autonomamente durante as conversas.
+        Configure qué acciones puede realizar el agente de forma autónoma durante las conversaciones.
       </p>
 
-      {/* Pipeline & Qualificação */}
+      {/* Pipeline y Calificación */}
       <Card>
         <CardHeader className="py-3 px-4">
           <CardTitle className="text-sm flex items-center gap-2">
             <GitBranch className="h-4 w-4 text-blue-500" />
-            Pipeline & Qualificação
+            Pipeline y Calificación
           </CardTitle>
-          <CardDescription className="text-xs">Movimentação e qualificação de leads</CardDescription>
+          <CardDescription className="text-xs">Movimiento y calificación de leads</CardDescription>
         </CardHeader>
         <CardContent className="px-4 pb-3 space-y-1">
           <ToolToggle
             icon={<GitBranch className="h-4 w-4 text-blue-500" />}
-            label="Mover lead no pipeline"
-            description="Avançar ou retroceder o lead entre estágios"
+            label="Mover lead en el pipeline"
+            description="Avanzar o retroceder el lead entre etapas"
             checked={formData.can_update_pipeline ?? false}
             onCheckedChange={(v) => onChange({ can_update_pipeline: v })}
           />
           <ToolToggle
             icon={<Target className="h-4 w-4 text-blue-500" />}
-            label="Qualificar lead (BANT)"
-            description="Registrar qualificação baseada em orçamento, autoridade, necessidade e prazo"
+            label="Calificar lead (BANT)"
+            description="Registrar calificación basada en presupuesto, autoridad, necesidad y plazo"
             checked={formData.can_qualify ?? false}
             onCheckedChange={(v) => onChange({ can_qualify: v })}
           />
           <ToolToggle
             icon={<Thermometer className="h-4 w-4 text-blue-500" />}
-            label="Alterar temperatura"
-            description="Classificar lead como frio, morno ou quente"
+            label="Cambiar temperatura"
+            description="Clasificar lead como frío, tibio o caliente"
             checked={formData.can_update_lead ?? false}
             onCheckedChange={(v) => onChange({ can_update_lead: v })}
           />
         </CardContent>
       </Card>
 
-      {/* Gestão do Lead */}
+      {/* Gestión del Lead */}
       <Card>
         <CardHeader className="py-3 px-4">
           <CardTitle className="text-sm flex items-center gap-2">
             <User className="h-4 w-4 text-green-500" />
-            Gestão do Lead
+            Gestión del Lead
           </CardTitle>
-          <CardDescription className="text-xs">Atualizar informações e categorizar leads</CardDescription>
+          <CardDescription className="text-xs">Actualizar información y categorizar leads</CardDescription>
         </CardHeader>
         <CardContent className="px-4 pb-3 space-y-1">
           <ToolToggle
             icon={<Tag className="h-4 w-4 text-green-500" />}
-            label="Aplicar / remover tags"
-            description="Categorizar leads com etiquetas automaticamente"
+            label="Aplicar / eliminar etiquetas"
+            description="Categorizar leads con etiquetas automáticamente"
             checked={formData.can_apply_tags ?? false}
             onCheckedChange={(v) => onChange({ can_apply_tags: v })}
           />
           <ToolToggle
             icon={<StickyNote className="h-4 w-4 text-green-500" />}
-            label="Adicionar notas internas"
-            description="Registrar observações no perfil do lead"
+            label="Agregar notas internas"
+            description="Registrar observaciones en el perfil del lead"
             checked={formData.can_add_notes ?? false}
             onCheckedChange={(v) => onChange({ can_add_notes: v })}
           />
         </CardContent>
       </Card>
 
-      {/* Comunicação */}
+      {/* Comunicación */}
       <Card>
         <CardHeader className="py-3 px-4">
           <CardTitle className="text-sm flex items-center gap-2">
             <Mail className="h-4 w-4 text-purple-500" />
-            Comunicação
+            Comunicación
           </CardTitle>
-          <CardDescription className="text-xs">Envio de emails, materiais e alertas</CardDescription>
+          <CardDescription className="text-xs">Envío de correos electrónicos, materiales y alertas</CardDescription>
         </CardHeader>
         <CardContent className="px-4 pb-3 space-y-1">
           <ToolToggle
             icon={<Mail className="h-4 w-4 text-purple-500" />}
-            label="Enviar emails"
-            description="Disparar emails automáticos para o lead"
+            label="Enviar correos electrónicos"
+            description="Enviar correos electrónicos automáticos al lead"
             checked={formData.can_send_emails ?? false}
             onCheckedChange={(v) => onChange({ can_send_emails: v })}
           />
           <ToolToggle
             icon={<FileText className="h-4 w-4 text-purple-500" />}
-            label="Enviar materiais"
-            description="Compartilhar documentos e materiais de apoio"
+            label="Enviar materiales"
+            description="Compartir documentos y materiales de apoyo"
             checked={formData.can_send_materials ?? false}
             onCheckedChange={(v) => onChange({ can_send_materials: v })}
           />
           <ToolToggle
             icon={<Bell className="h-4 w-4 text-purple-500" />}
-            label="Notificar equipe"
-            description="Enviar alertas internos para vendedores"
+            label="Notificar al equipo"
+            description="Enviar alertas internas a los vendedores"
             checked={formData.can_notify ?? false}
             onCheckedChange={(v) => onChange({ can_notify: v })}
           />
         </CardContent>
       </Card>
 
-      {/* Automação */}
+      {/* Automatización */}
       <Card>
         <CardHeader className="py-3 px-4">
           <CardTitle className="text-sm flex items-center gap-2">
             <Workflow className="h-4 w-4 text-orange-500" />
-            Automação
+            Automatización
           </CardTitle>
-          <CardDescription className="text-xs">Tarefas, reuniões, cadências e fluxos</CardDescription>
+          <CardDescription className="text-xs">Tareas, reuniones, secuencias y flujos</CardDescription>
         </CardHeader>
         <CardContent className="px-4 pb-3 space-y-1">
           <ToolToggle
             icon={<ListTodo className="h-4 w-4 text-orange-500" />}
-            label="Criar tarefas"
-            description="Criar atividades vinculadas ao lead"
+            label="Crear tareas"
+            description="Crear actividades vinculadas al lead"
             checked={formData.can_create_tasks ?? false}
             onCheckedChange={(v) => onChange({ can_create_tasks: v })}
           />
           <ToolToggle
             icon={<Calendar className="h-4 w-4 text-orange-500" />}
-            label="Agendar reuniões"
-            description="Marcar demonstrações e calls no calendário"
+            label="Agendar reuniones"
+            description="Programar demostraciones y llamadas en el calendario"
             checked={formData.can_schedule_meetings ?? false}
             onCheckedChange={(v) => onChange({ can_schedule_meetings: v })}
           />
           <ToolToggle
             icon={<Repeat className="h-4 w-4 text-orange-500" />}
-            label="Iniciar cadência de follow-up"
-            description="Disparar sequência automática de acompanhamento"
+            label="Iniciar secuencia de seguimiento"
+            description="Activar secuencia automática de seguimiento"
             checked={formData.can_start_cadence ?? false}
             onCheckedChange={(v) => onChange({ can_start_cadence: v })}
           />
           <ToolToggle
             icon={<Workflow className="h-4 w-4 text-orange-500" />}
-            label="Disparar fluxos"
-            description="Iniciar chat flows automaticamente"
+            label="Activar flujos"
+            description="Iniciar flujos de chat automáticamente"
             checked={formData.can_trigger_flows ?? false}
             onCheckedChange={(v) => onChange({ can_trigger_flows: v })}
           />
         </CardContent>
       </Card>
 
-      {/* Gestão de Atendimento */}
+      {/* Gestión de atención */}
       <Card>
         <CardHeader className="py-3 px-4">
           <CardTitle className="text-sm flex items-center gap-2">
             <ArrowRightLeft className="h-4 w-4 text-red-500" />
-            Gestão de Atendimento
+            Gestión de atención
           </CardTitle>
-          <CardDescription className="text-xs">Transferência e escalação de conversas</CardDescription>
+          <CardDescription className="text-xs">Transferencia y escalada de conversaciones</CardDescription>
         </CardHeader>
         <CardContent className="px-4 pb-3 space-y-1">
           <ToolToggle
             icon={<ArrowRightLeft className="h-4 w-4 text-red-500" />}
-            label="Transferir para outro agente"
-            description="Redirecionar conversa para agente IA especializado"
+            label="Transferir a otro agente"
+            description="Redirigir conversación a un agente de IA especializado"
             checked={formData.can_transfer ?? false}
             onCheckedChange={(v) => onChange({ can_transfer: v })}
           />
           <ToolToggle
             icon={<UserCheck className="h-4 w-4 text-red-500" />}
-            label="Transferir para humano"
-            description="Escalar para fila de atendimento humano"
+            label="Transferir a un humano"
+            description="Escalar a la cola de atención humana"
             checked={formData.can_transfer ?? false}
             onCheckedChange={(v) => onChange({ can_transfer: v })}
           />

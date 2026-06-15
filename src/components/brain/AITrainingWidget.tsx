@@ -40,7 +40,7 @@ export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
 
   const handleSaveTraining = async () => {
     if (!title.trim() || !content.trim()) {
-      toast.error('Preencha o título e o conteúdo');
+      toast.error('Complete el título y el contenido');
       return;
     }
 
@@ -49,26 +49,26 @@ export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
         product_id: productId,
         source_type: 'training',
         title,
-        description: 'Treinamento manual',
+        description: 'Entrenamiento manual',
         extracted_content: content,
         raw_content: content,
         processing_status: 'completed',
       });
       
-      toast.success('Treinamento salvo com sucesso');
+      toast.success('Entrenamiento guardado con éxito');
       setTitle('');
       setContent('');
     } catch (error) {
-      toast.error('Erro ao salvar treinamento');
+      toast.error('Error al guardar el entrenamiento');
     }
   };
 
   const handleDeleteTraining = async (id: string) => {
     try {
       await deleteTraining.mutateAsync({ id, productId });
-      toast.success('Treinamento removido');
+      toast.success('Entrenamiento eliminado');
     } catch (error) {
-      toast.error('Erro ao remover treinamento');
+      toast.error('Error al eliminar el entrenamiento');
     }
   };
 
@@ -84,7 +84,7 @@ export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
     setTimeout(() => {
       const aiResponse: Message = {
         role: 'assistant',
-        content: 'Esta é uma simulação. Em produção, a resposta seria baseada em todo o conhecimento treinado para este produto, incluindo documentos, FAQs e treinamentos manuais.',
+        content: 'Esta es una simulación. En producción, la respuesta se basaría en todo el conocimiento entrenado para este producto, incluyendo documentos, FAQ y entrenamientos manuales.',
       };
       setMessages(prev => [...prev, aiResponse]);
       setIsSimulating(false);
@@ -95,9 +95,9 @@ export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="teach">Ensinar a IA</TabsTrigger>
-          <TabsTrigger value="simulate">Simular Conversa</TabsTrigger>
-          <TabsTrigger value="history">Histórico</TabsTrigger>
+          <TabsTrigger value="teach">Enseñar a la IA</TabsTrigger>
+          <TabsTrigger value="simulate">Simular Conversación</TabsTrigger>
+          <TabsTrigger value="history">Historial</TabsTrigger>
         </TabsList>
 
         <TabsContent value="teach" className="mt-6">
@@ -105,30 +105,30 @@ export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5" />
-                Ensine a IA
+                Enseñe a la IA
               </CardTitle>
               <CardDescription>
-                Adicione informações específicas que você quer que a IA saiba sobre o produto.
+                Agregue información específica que desee que la IA sepa sobre el producto.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="training-title">Título do Treinamento</Label>
+                <Label htmlFor="training-title">Título del Entrenamiento</Label>
                 <Input
                   id="training-title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Ex: Processo de onboarding, Casos de sucesso..."
+                  placeholder="Ej: Proceso de onboarding, Casos de éxito..."
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="training-content">Conteúdo</Label>
+                <Label htmlFor="training-content">Contenido</Label>
                 <Textarea
                   id="training-content"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="Escreva tudo que você quer que a IA saiba sobre este tópico. Pode incluir exemplos, scripts, casos de uso, etc..."
+                  placeholder="Escriba todo lo que desee que la IA sepa sobre este tema. Puede incluir ejemplos, guiones, casos de uso, etc..."
                   className="min-h-[200px]"
                 />
               </div>
@@ -138,12 +138,12 @@ export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
                   {createTraining.isPending ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Salvando...
+                      Guardando...
                     </>
                   ) : (
                     <>
                       <Save className="h-4 w-4 mr-2" />
-                      Salvar Treinamento
+                      Guardar Entrenamiento
                     </>
                   )}
                 </Button>
@@ -157,13 +157,13 @@ export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
               <div className="flex items-start gap-3">
                 <Sparkles className="h-5 w-5 text-primary mt-0.5" />
                 <div>
-                  <h4 className="font-medium">O que ensinar para a IA?</h4>
+                  <h4 className="font-medium">¿Qué enseñarle a la IA?</h4>
                   <ul className="text-sm text-muted-foreground mt-2 space-y-1">
-                    <li>• Scripts de vendas que funcionam bem</li>
-                    <li>• Como lidar com objeções específicas</li>
-                    <li>• Casos de sucesso detalhados com números</li>
-                    <li>• Diferenciais competitivos profundos</li>
-                    <li>• Processo de implementação passo a passo</li>
+                    <li>• Guiones de ventas que funcionan bien</li>
+                    <li>• Cómo manejar objeciones específicas</li>
+                    <li>• Casos de éxito detallados con números</li>
+                    <li>• Diferenciales competitivos profundos</li>
+                    <li>• Proceso de implementación paso a paso</li>
                   </ul>
                 </div>
               </div>
@@ -176,17 +176,17 @@ export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Bot className="h-5 w-5" />
-                Simulador de Conversa
+                Simulador de Conversación
               </CardTitle>
               <CardDescription>
-                Teste como a IA responde baseado no conhecimento atual do produto.
+                Pruebe cómo responde la IA basándose en el conocimiento actual del producto.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[400px] border rounded-lg p-4 mb-4">
                 {messages.length === 0 ? (
                   <div className="flex items-center justify-center h-full text-muted-foreground">
-                    <p>Faça uma pergunta para iniciar a simulação</p>
+                    <p>Haga una pregunta para iniciar la simulación</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -244,7 +244,7 @@ export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
                 <Input
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
-                  placeholder="Faça uma pergunta sobre o produto..."
+                  placeholder="Haga una pregunta sobre el producto..."
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
@@ -263,9 +263,9 @@ export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
         <TabsContent value="history" className="mt-6">
           <Card>
             <CardHeader>
-              <CardTitle>Histórico de Treinamentos</CardTitle>
+              <CardTitle>Historial de Treinamentos</CardTitle>
               <CardDescription>
-                Todos os treinamentos manuais adicionados para este produto.
+                Todos los entrenamientos manuales agregados para este producto.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -305,7 +305,7 @@ export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
                 <div className="text-center py-8">
                   <Sparkles className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
                   <p className="text-muted-foreground">
-                    Nenhum treinamento manual ainda. Vá para "Ensinar a IA" para começar.
+                    Aún no hay entrenamientos manuales. Vaya a "Enseñar a la IA" para comenzar.
                   </p>
                 </div>
               )}

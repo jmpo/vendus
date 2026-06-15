@@ -19,11 +19,11 @@ import { Tables } from '@/integrations/supabase/types';
 type AIKnowledge = Tables<'ai_knowledge_base'>;
 
 const categoryConfig: Record<string, { label: string; icon: typeof Brain; color: string }> = {
-  general: { label: 'Geral', icon: BookOpen, color: 'bg-blue-500/10 text-blue-600' },
+  general: { label: 'General', icon: BookOpen, color: 'bg-blue-500/10 text-blue-600' },
   faq: { label: 'FAQ', icon: HelpCircle, color: 'bg-violet-500/10 text-violet-600' },
-  objection: { label: 'Objeção', icon: MessageSquare, color: 'bg-amber-500/10 text-amber-600' },
+  objection: { label: 'Objeción', icon: MessageSquare, color: 'bg-amber-500/10 text-amber-600' },
   script: { label: 'Script', icon: Lightbulb, color: 'bg-emerald-500/10 text-emerald-600' },
-  product: { label: 'Produto', icon: Brain, color: 'bg-red-500/10 text-red-600' },
+  product: { label: 'Producto', icon: Brain, color: 'bg-red-500/10 text-red-600' },
 };
 
 export function AIKnowledgeManager() {
@@ -77,7 +77,7 @@ export function AIKnowledgeManager() {
 
   const handleSubmit = async () => {
     if (!formData.title.trim() || !formData.content.trim() || !formData.product_id) {
-      toast.error('Título, conteúdo e produto são obrigatórios');
+      toast.error('Título, contenido y producto son obligatorios');
       return;
     }
 
@@ -94,24 +94,24 @@ export function AIKnowledgeManager() {
     try {
       if (editingItem) {
         await updateKnowledge.mutateAsync({ id: editingItem.id, ...data });
-        toast.success('Conhecimento atualizado!');
+        toast.success('¡Conocimiento actualizado!');
       } else {
         await createKnowledge.mutateAsync(data);
-        toast.success('Conhecimento criado!');
+        toast.success('¡Conocimiento creado!');
       }
       setIsDialogOpen(false);
       resetForm();
     } catch (error) {
-      toast.error('Erro ao salvar');
+      toast.error('Error al guardar');
     }
   };
 
   const handleDelete = async (id: string) => {
     try {
       await deleteKnowledge.mutateAsync(id);
-      toast.success('Conhecimento excluído!');
+      toast.success('¡Conocimiento eliminado!');
     } catch (error) {
-      toast.error('Erro ao excluir');
+      toast.error('Error al eliminar');
     }
   };
 
@@ -131,14 +131,14 @@ export function AIKnowledgeManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-foreground">Base de Conhecimento da IA</h2>
+          <h2 className="text-xl font-semibold text-foreground">Base de Conocimientos de la IA</h2>
           <p className="text-sm text-muted-foreground">
-            Treine a IA com informações específicas de cada produto
+            Entrene a la IA con información específica de cada producto
           </p>
         </div>
         <Button onClick={openCreateDialog}>
           <Plus className="mr-2 h-4 w-4" />
-          Novo Conhecimento
+          Nuevo Conocimiento
         </Button>
       </div>
 
@@ -214,9 +214,9 @@ export function AIKnowledgeManager() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Excluir conhecimento?</AlertDialogTitle>
+                        <AlertDialogTitle>¿Eliminar conocimiento?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Esta ação não pode ser desfeita.
+                          Esta acción no se puede deshacer.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
@@ -225,7 +225,7 @@ export function AIKnowledgeManager() {
                           onClick={() => handleDelete(item.id)}
                           className="bg-destructive text-destructive-foreground"
                         >
-                          Excluir
+                          Eliminar
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
@@ -240,25 +240,25 @@ export function AIKnowledgeManager() {
           <Card className="col-span-full bg-card">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <Brain className="h-12 w-12 text-muted-foreground/50 mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-1">Nenhum conhecimento</h3>
+              <h3 className="text-lg font-medium text-foreground mb-1">Sin conocimiento</h3>
               <p className="text-sm text-muted-foreground mb-4 text-center">
-                Adicione FAQs, scripts e informações para treinar a IA
+                Agregue FAQ, guiones e información para entrenar a la IA
               </p>
               <Button onClick={openCreateDialog}>
                 <Plus className="mr-2 h-4 w-4" />
-                Adicionar Conhecimento
+                Agregar Conocimiento
               </Button>
             </CardContent>
           </Card>
         )}
       </div>
 
-      {/* Dialog de Criar/Editar */}
+      {/* Dialog de Crear/Editar */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>
-              {editingItem ? 'Editar Conhecimento' : 'Novo Conhecimento'}
+              {editingItem ? 'Editar Conocimiento' : 'Nuevo Conocimiento'}
             </DialogTitle>
           </DialogHeader>
           
@@ -269,19 +269,19 @@ export function AIKnowledgeManager() {
                 id="title"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="Ex: Como responder sobre prazo de implementação"
+                placeholder="Ej: Cómo responder sobre el plazo de implementación"
               />
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label>Produto *</Label>
+                <Label>Producto *</Label>
                 <Select
                   value={formData.product_id}
                   onValueChange={(v) => setFormData({ ...formData, product_id: v })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione o produto" />
+                    <SelectValue placeholder="Seleccione el producto" />
                   </SelectTrigger>
                   <SelectContent>
                     {products?.map(p => (
@@ -292,7 +292,7 @@ export function AIKnowledgeManager() {
               </div>
 
               <div className="space-y-2">
-                <Label>Categoria</Label>
+                <Label>Categoría</Label>
                 <Select
                   value={formData.category}
                   onValueChange={(v) => setFormData({ ...formData, category: v })}
@@ -315,26 +315,26 @@ export function AIKnowledgeManager() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="content">Conteúdo *</Label>
+              <Label htmlFor="content">Contenido *</Label>
               <Textarea
                 id="content"
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                placeholder="Escreva o conhecimento detalhado que a IA deve usar..."
+                placeholder="Escriba el conocimiento detallado que la IA debe usar..."
                 rows={6}
               />
               <p className="text-xs text-muted-foreground">
-                Seja específico. Inclua exemplos, números e casos de uso reais.
+                Sea específico. Incluya ejemplos, números y casos de uso reales.
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="tags">Tags (separadas por vírgula)</Label>
+              <Label htmlFor="tags">Etiquetas (separadas por comas)</Label>
               <Input
                 id="tags"
                 value={formData.tags}
                 onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                placeholder="implementação, prazo, onboarding"
+                placeholder="implementación, plazo, onboarding"
               />
             </div>
           </div>
@@ -347,7 +347,7 @@ export function AIKnowledgeManager() {
               {(createKnowledge.isPending || updateKnowledge.isPending) && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {editingItem ? 'Salvar' : 'Criar'}
+              {editingItem ? 'Guardar' : 'Crear'}
             </Button>
           </DialogFooter>
         </DialogContent>

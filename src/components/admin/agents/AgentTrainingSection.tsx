@@ -41,12 +41,12 @@ interface TrainingMaterial {
 }
 
 const CATEGORIES = [
-  { value: 'sales_techniques', label: '🎯 Técnicas de Ventas', description: 'SPIN Selling, Challenger, etc.' },
-  { value: 'communication', label: '💬 Comunicação', description: 'Rapport, escuta ativa, linguagem corporal' },
-  { value: 'objections', label: '🛡️ Objeções', description: 'Técnicas de contorno de objeções' },
-  { value: 'closing', label: '✅ Fechamento', description: 'Técnicas de fechamento de vendas' },
-  { value: 'prospecting', label: '🔍 Prospecção', description: 'Como encontrar e abordar leads' },
-  { value: 'negotiation', label: '🤝 Negociação', description: 'Táticas de negociação' },
+  { value: 'sales_techniques', label: '🎯 Técnicas de ventas', description: 'SPIN Selling, Challenger, etc.' },
+  { value: 'communication', label: '💬 Comunicación', description: 'Rapport, escuta ativa, linguagem corporal' },
+  { value: 'objections', label: '🛡️ Objeciones', description: 'Técnicas de contorno de objeções' },
+  { value: 'closing', label: '✅ Cierre', description: 'Técnicas de fechamento de vendas' },
+  { value: 'prospecting', label: '🔍 Prospección', description: 'Como encontrar e abordar leads' },
+  { value: 'negotiation', label: '🤝 Negociación', description: 'Táticas de negociação' },
   { value: 'general', label: '📋 Geral', description: 'Outros materiais de treinamento' },
 ];
 
@@ -102,11 +102,11 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['agent-training-materials', agentId] });
-      toast.success('Material processado com sucesso!');
+      toast.success('¡Material procesado con éxito!');
     },
     onError: (error) => {
       console.error('Process error:', error);
-      toast.error('Erro ao processar material');
+      toast.error('Error al procesar el material');
     }
   });
 
@@ -122,10 +122,10 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['agent-training-materials', agentId] });
-      toast.success('Material removido com sucesso!');
+      toast.success('¡Material eliminado con éxito!');
     },
     onError: () => {
-      toast.error('Erro ao remover material');
+      toast.error('Error al eliminar el material');
     }
   });
 
@@ -147,7 +147,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
   // Handle file upload
   const handleUpload = async () => {
     if (!selectedFile || !newMaterial.title || !profile?.organization_id) {
-      toast.error('Preencha todos os campos obrigatórios');
+      toast.error('Complete todos los campos obligatorios');
       return;
     }
 
@@ -191,7 +191,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
       setSelectedFile(null);
       
       queryClient.invalidateQueries({ queryKey: ['agent-training-materials', agentId] });
-      toast.success('Material enviado! Iniciando processamento...');
+      toast.success('¡Material enviado! Iniciando procesamiento...');
       
       if (insertData?.id && urlData.publicUrl) {
         processMaterial.mutate({ 
@@ -219,20 +219,20 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
         fileUrl: material.file_url,
         filePath: filePath
       });
-      toast.info('Reprocessando material...');
+      toast.info('Reprocesando material...');
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
-        return <Badge variant="default" className="gap-1"><CheckCircle className="h-3 w-3" />Processado</Badge>;
+        return <Badge variant="default" className="gap-1"><CheckCircle className="h-3 w-3" />Procesado</Badge>;
       case 'processing':
         return <Badge variant="secondary" className="gap-1"><Loader2 className="h-3 w-3 animate-spin" />Processando</Badge>;
       case 'failed':
         return <Badge variant="destructive" className="gap-1"><XCircle className="h-3 w-3" />Erro</Badge>;
       default:
-        return <Badge variant="outline" className="gap-1"><Clock className="h-3 w-3" />Pendente</Badge>;
+        return <Badge variant="outline" className="gap-1"><Clock className="h-3 w-3" />Pendiente</Badge>;
     }
   };
 
@@ -247,7 +247,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
         <div className="flex items-start gap-2">
           <GraduationCap className="h-4 w-4 text-muted-foreground mt-0.5" />
           <div className="text-sm text-muted-foreground">
-            <p className="font-medium text-foreground">Treinamento Específico</p>
+            <p className="font-medium text-foreground">Entrenamiento específico</p>
             <p>Adicione PDFs e documentos que serão usados <strong>apenas por este agente</strong>, além do conhecimento geral do produto.</p>
           </div>
         </div>
@@ -258,7 +258,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center gap-2">
             <Upload className="h-4 w-4" />
-            Adicionar Material
+            Agregar material
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -274,7 +274,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
             </div>
             
             <div className="space-y-1.5">
-              <Label className="text-xs">Categoria *</Label>
+              <Label className="text-xs">Categoría *</Label>
               <Select 
                 value={newMaterial.category} 
                 onValueChange={(value) => setNewMaterial({ ...newMaterial, category: value })}
@@ -320,7 +320,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center gap-2">
             <BookOpen className="h-4 w-4" />
-            Materiais ({materials?.length || 0})
+            Materiales ({materials?.length || 0})
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -389,8 +389,8 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
           ) : (
             <div className="text-center py-6 text-muted-foreground">
               <BookOpen className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p className="text-sm">Nenhum material específico</p>
-              <p className="text-xs">Adicione PDFs acima</p>
+              <p className="text-sm">Ningún material específico</p>
+              <p className="text-xs">Agregue PDF arriba</p>
             </div>
           )}
         </CardContent>
@@ -405,7 +405,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
               {previewMaterial?.title}
             </DialogTitle>
             <DialogDescription>
-              Conteúdo extraído e processado pela IA
+              Contenido extraído y procesado por la IA
             </DialogDescription>
           </DialogHeader>
           <ScrollArea className="max-h-[60vh] pr-4">

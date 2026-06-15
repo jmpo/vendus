@@ -27,8 +27,8 @@ export function BrainManager() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold">Cérebro da IA</h1>
-          <p className="text-muted-foreground">Treine a IA com conhecimento dos produtos</p>
+          <h1 className="text-2xl font-bold">Cerebro de la IA</h1>
+          <p className="text-muted-foreground">Entrene a la IA con el conocimiento de los productos</p>
         </div>
         
         <Card className="border-dashed">
@@ -36,9 +36,9 @@ export function BrainManager() {
             <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
               <Package className="h-8 w-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Nenhum produto cadastrado</h3>
+            <h3 className="text-lg font-semibold mb-2">Ningún producto registrado</h3>
             <p className="text-muted-foreground text-center max-w-md">
-              Crie um produto primeiro para poder treinar o cérebro da IA.
+              Primero cree un producto para poder entrenar el cerebro de la IA.
             </p>
           </CardContent>
         </Card>

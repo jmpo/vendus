@@ -178,7 +178,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
         <div className="flex items-start gap-2">
           <Compass className="h-4 w-4 text-primary mt-0.5" />
           <div className="text-sm text-muted-foreground">
-            <p className="font-medium text-foreground">Matriz de Roteamento</p>
+            <p className="font-medium text-foreground">Matriz de Enrutamiento</p>
             <p>
               Selecione quais produtos e agentes este Orquestrador pode rotear. Itens
               desmarcados serão ignorados na hora de transferir a conversa.
@@ -193,7 +193,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
           <div className="flex items-center justify-between gap-2">
             <CardTitle className="text-sm flex items-center gap-2">
               <Package className="h-4 w-4" />
-              Produtos disponíveis ({selectedProductCount}/{products.length})
+              Productos disponibles ({selectedProductCount}/{products.length})
             </CardTitle>
             {products.length > 0 && (
               <div className="flex gap-1">
@@ -213,7 +213,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
                   className="h-7 px-2 text-xs"
                   onClick={clearProducts}
                 >
-                  Nenhum
+                  Ninguno
                 </Button>
               </div>
             )}
@@ -224,7 +224,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
             <p className="text-xs text-muted-foreground text-center py-4">Carregando…</p>
           ) : products.length === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-4">
-              Nenhum produto cadastrado. Crie produtos primeiro para o Orquestrador ter para onde rotear.
+              Ninguno produto cadastrado. Crie produtos primeiro para o Orquestrador ter para onde rotear.
             </p>
           ) : (
             <div className="space-y-2">
@@ -258,7 +258,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
                             variant="outline"
                             className="gap-1 text-xs border-warning text-warning shrink-0"
                           >
-                            <AlertTriangle className="h-3 w-3" /> Faltam especialistas
+                            <AlertTriangle className="h-3 w-3" /> Faltan especialistas
                           </Badge>
                         )}
                       </div>
@@ -284,13 +284,13 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
         </CardContent>
       </Card>
 
-      {/* Agentes Globais */}
+      {/* Agentes Globales */}
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between gap-2">
             <CardTitle className="text-sm flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Agentes Globais ({selectedGlobalAgentCount}/{globalAgents.length})
+              Agentes Globales ({selectedGlobalAgentCount}/{globalAgents.length})
             </CardTitle>
             {globalAgents.length > 0 && (
               <div className="flex gap-1">
@@ -310,7 +310,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
                   className="h-7 px-2 text-xs"
                   onClick={clearGlobalAgents}
                 >
-                  Nenhum
+                  Ninguno
                 </Button>
               </div>
             )}
@@ -352,13 +352,13 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
         </CardContent>
       </Card>
 
-      {/* Agentes por Produto */}
+      {/* Agentes por Producto */}
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between gap-2">
             <CardTitle className="text-sm flex items-center gap-2">
               <Package className="h-4 w-4" />
-              Agentes por Produto ({selectedProductAgentCount}/{productAgentsCount})
+              Agentes por Producto ({selectedProductAgentCount}/{productAgentsCount})
             </CardTitle>
             {productAgentsCount > 0 && (
               <div className="flex gap-1">
@@ -378,7 +378,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
                   className="h-7 px-2 text-xs"
                   onClick={clearProductAgents}
                 >
-                  Nenhum
+                  Ninguno
                 </Button>
               </div>
             )}
@@ -389,7 +389,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
             <p className="text-xs text-muted-foreground text-center py-4">Carregando…</p>
           ) : agentsByProduct.length === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-4">
-              Nenhum agente vinculado a produtos. Crie SDRs / Closers nos produtos para o Orquestrador rotear.
+              Ninguno agente vinculado a produtos. Crie SDRs / Closers nos produtos para o Orquestrador rotear.
             </p>
           ) : (
             <div className="space-y-4">
@@ -425,7 +425,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
                           className="h-6 px-2 text-[11px]"
                           onClick={() => setAgentsSelection(groupIds, false)}
                         >
-                          Nenhum
+                          Ninguno
                         </Button>
                       </div>
                     </div>

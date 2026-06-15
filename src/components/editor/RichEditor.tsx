@@ -23,7 +23,7 @@ interface RichEditorProps {
   className?: string;
 }
 
-export function RichEditor({ value, onChange, placeholder = 'Comece a escrever...', editable = true, className }: RichEditorProps) {
+export function RichEditor({ value, onChange, placeholder = 'Empiece a escribir...', editable = true, className }: RichEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [showYoutubeInput, setShowYoutubeInput] = useState(false);
@@ -67,9 +67,9 @@ export function RichEditor({ value, onChange, placeholder = 'Comece a escrever..
       if (error) throw error;
       const { data: { publicUrl } } = supabase.storage.from('help-media').getPublicUrl(path);
       editor.chain().focus().setImage({ src: publicUrl }).run();
-      toast.success('Imagem inserida');
+      toast.success('Imagen insertada');
     } catch (err: any) {
-      toast.error('Falha ao subir imagem: ' + err.message);
+      toast.error('Fallo al subir imagen: ' + err.message);
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -107,10 +107,10 @@ export function RichEditor({ value, onChange, placeholder = 'Comece a escrever..
     <div className={cn('border rounded-lg bg-background', className)}>
       {editable && (
         <div className="flex flex-wrap gap-1 p-2 border-b">
-          <ToolbarBtn title="Negrito" active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()}>
+          <ToolbarBtn title="Negrita" active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()}>
             <Bold className="h-4 w-4" />
           </ToolbarBtn>
-          <ToolbarBtn title="Itálico" active={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()}>
+          <ToolbarBtn title="Itálica" active={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()}>
             <Italic className="h-4 w-4" />
           </ToolbarBtn>
           <ToolbarBtn title="Título" active={editor.isActive('heading', { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
@@ -125,7 +125,7 @@ export function RichEditor({ value, onChange, placeholder = 'Comece a escrever..
           <ToolbarBtn title="Lista numerada" active={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
             <ListOrdered className="h-4 w-4" />
           </ToolbarBtn>
-          <ToolbarBtn title="Citação" active={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+          <ToolbarBtn title="Cita" active={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
             <Quote className="h-4 w-4" />
           </ToolbarBtn>
           <ToolbarBtn title="Código" active={editor.isActive('codeBlock')} onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
@@ -142,10 +142,10 @@ export function RichEditor({ value, onChange, placeholder = 'Comece a escrever..
             <YoutubeIcon className="h-4 w-4" />
           </ToolbarBtn>
           <div className="w-px bg-border mx-1" />
-          <ToolbarBtn title="Desfazer" onClick={() => editor.chain().focus().undo().run()}>
+          <ToolbarBtn title="Deshacer" onClick={() => editor.chain().focus().undo().run()}>
             <Undo2 className="h-4 w-4" />
           </ToolbarBtn>
-          <ToolbarBtn title="Refazer" onClick={() => editor.chain().focus().redo().run()}>
+          <ToolbarBtn title="Rehacer" onClick={() => editor.chain().focus().redo().run()}>
             <Redo2 className="h-4 w-4" />
           </ToolbarBtn>
           <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={handleImageUpload} />
@@ -156,18 +156,18 @@ export function RichEditor({ value, onChange, placeholder = 'Comece a escrever..
         <div className="flex gap-2 p-2 border-b bg-muted/40">
           <Input placeholder="https://..." value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} className="h-8 text-sm" />
           <Button size="sm" onClick={applyLink}>Aplicar</Button>
-          <Button size="sm" variant="ghost" onClick={() => { editor.chain().focus().unsetLink().run(); setShowLinkInput(false); }}>Remover</Button>
+          <Button size="sm" variant="ghost" onClick={() => { editor.chain().focus().unsetLink().run(); setShowLinkInput(false); }}>Eliminar</Button>
         </div>
       )}
       {showYoutubeInput && (
         <div className="flex gap-2 p-2 border-b bg-muted/40">
           <Input placeholder="https://youtube.com/watch?v=..." value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} className="h-8 text-sm" />
-          <Button size="sm" onClick={applyYoutube}>Inserir</Button>
+          <Button size="sm" onClick={applyYoutube}>Insertar</Button>
         </div>
       )}
 
       <EditorContent editor={editor} />
-      {uploading && <div className="px-4 py-2 text-xs text-muted-foreground border-t">Subindo imagem...</div>}
+      {uploading && <div className="px-4 py-2 text-xs text-muted-foreground border-t">Subiendo imagen...</div>}
     </div>
   );
 }

@@ -37,44 +37,44 @@ interface ProductBrainHubProps {
 const SOURCE_TYPES = [
   { 
     id: 'file', 
-    label: 'Arquivos', 
+    label: 'Archivos', 
     icon: FileText, 
-    description: 'PDFs, DOCs, apresentações',
+    description: 'PDF, DOC, presentaciones',
     color: 'text-blue-500'
   },
   { 
     id: 'website', 
-    label: 'Websites', 
+    label: 'Sitios web', 
     icon: Globe, 
-    description: 'URLs para crawling',
+    description: 'URL para rastreo',
     color: 'text-green-500'
   },
   { 
     id: 'youtube', 
-    label: 'Vídeos', 
+    label: 'Videos', 
     icon: Youtube, 
-    description: 'Transcrição automática',
+    description: 'Transcripción automática',
     color: 'text-red-500'
   },
   { 
     id: 'faq', 
     label: 'FAQ', 
     icon: MessageSquare, 
-    description: 'Perguntas e respostas',
+    description: 'Preguntas y respuestas',
     color: 'text-purple-500'
   },
   { 
     id: 'data', 
-    label: 'Dados', 
+    label: 'Datos', 
     icon: Database, 
-    description: 'Tabelas e comparativos',
+    description: 'Tablas y comparativas',
     color: 'text-orange-500'
   },
   { 
     id: 'training', 
-    label: 'Treinamento', 
+    label: 'Entrenamiento', 
     icon: Sparkles, 
-    description: 'Ensine a IA diretamente',
+    description: 'Enseñe a la IA directamente',
     color: 'text-primary'
   },
 ];
@@ -107,11 +107,11 @@ export function ProductBrainHub({ productId, onProductChange }: ProductBrainHubP
               <Brain className="h-6 w-6 text-primary-foreground" />
             </div>
             <div className="space-y-1">
-              <h1 className="text-2xl font-bold">Cérebro do Produto</h1>
+              <h1 className="text-2xl font-bold">Cerebro del Producto</h1>
               {/* Product Selector */}
               <Select value={productId} onValueChange={onProductChange}>
                 <SelectTrigger className="w-[240px] h-8 text-sm bg-muted/50 border-border">
-                  <SelectValue placeholder="Selecione um produto" />
+                  <SelectValue placeholder="Seleccione un producto" />
                 </SelectTrigger>
                 <SelectContent>
                   {products?.map((p) => (
@@ -140,12 +140,12 @@ export function ProductBrainHub({ productId, onProductChange }: ProductBrainHubP
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full justify-start flex-wrap">
-          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-          <TabsTrigger value="files">Arquivos</TabsTrigger>
-          <TabsTrigger value="websites">Websites</TabsTrigger>
+          <TabsTrigger value="overview">Vista General</TabsTrigger>
+          <TabsTrigger value="files">Archivos</TabsTrigger>
+          <TabsTrigger value="websites">Sitios web</TabsTrigger>
           <TabsTrigger value="youtube">YouTube</TabsTrigger>
           <TabsTrigger value="faq">FAQ</TabsTrigger>
-          <TabsTrigger value="training">Treinamento IA</TabsTrigger>
+          <TabsTrigger value="training">Entrenamiento IA</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 mt-6">
@@ -177,7 +177,7 @@ export function ProductBrainHub({ productId, onProductChange }: ProductBrainHubP
                         <Icon className="h-5 w-5" />
                       </div>
                       <Badge variant="secondary" className="text-xs">
-                        {count} {count === 1 ? 'item' : 'itens'}
+                        {count} {count === 1 ? 'item' : 'ítems'}
                       </Badge>
                     </div>
                     <div className="mt-3">
@@ -194,7 +194,7 @@ export function ProductBrainHub({ productId, onProductChange }: ProductBrainHubP
           {/* Recent Sources */}
           {sources && sources.length > 0 && (
             <div className="space-y-4">
-              <h3 className="font-semibold">Fontes Recentes</h3>
+              <h3 className="font-semibold">Fuentes Recientes</h3>
               <div className="space-y-3">
                 {sources.slice(0, 5).map((source) => (
                   <KnowledgeSourceCard key={source.id} source={source} />
@@ -208,18 +208,18 @@ export function ProductBrainHub({ productId, onProductChange }: ProductBrainHubP
             <Card className="border-dashed">
               <CardContent className="p-12 text-center">
                 <Brain className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="font-semibold mb-2">Comece a treinar o cérebro</h3>
+                <h3 className="font-semibold mb-2">Comience a entrenar el cerebro</h3>
                 <p className="text-muted-foreground mb-4">
-                  Adicione arquivos, FAQs ou treine a IA diretamente para melhorar as respostas.
+                  Agregue archivos, FAQ o entrene a la IA directamente para mejorar las respuestas.
                 </p>
                 <div className="flex justify-center gap-3">
                   <Button onClick={() => setActiveTab('files')}>
                     <FileText className="h-4 w-4 mr-2" />
-                    Adicionar Arquivo
+                    Agregar Archivo
                   </Button>
                   <Button variant="outline" onClick={() => setActiveTab('faq')}>
                     <MessageSquare className="h-4 w-4 mr-2" />
-                    Criar FAQ
+                    Crear FAQ
                   </Button>
                 </div>
               </CardContent>
