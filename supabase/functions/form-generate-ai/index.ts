@@ -130,7 +130,7 @@ Garantia: ${product.guarantee || 'N/A'}
     }
 
     const objectiveDescriptions = {
-      qualification: 'Qualificar leads identificando fit com o producto e maturidade de compra. Crea preguntas que identifiquem se el lead é um ICP qualificado.',
+      qualification: 'Qualificar leads identificando fit con o producto e maturidade de compra. Crea preguntas que identifiquem se el lead es um ICP qualificado.',
       diagnostic: 'Diagnosticar necessidades e dores del lead para personalizar a abordagem comercial. Foque em entender o cenário atual e desafios.',
       capture: 'Captar información básicas de contato de forma rápida e no-invasiva. Mantenha o formulário corto e direto.',
       presale: 'Preparar el lead para uma reunión de ventas coletando información detalhadas sobre expectativas e orçamento.',
@@ -144,8 +144,8 @@ Garantia: ${product.guarantee || 'N/A'}
     };
 
     // Build enhanced system prompt
-    const systemPrompt = `Usted é um especialista em creación de formulários de captação de leads para ventas B2B.
-Su objetivo é gerar um formulário otimizado para conversão, baseado no contexto completo do producto e da campaña.
+    const systemPrompt = `Usted es um especialista em creación de formulários de captação de leads para ventas B2B.
+Su objetivo es gerar um formulário otimizado para conversão, baseado no contexto completo do producto e da campaña.
 
 CONTEXTO DO PRODUTO:
 ${productContext}
@@ -153,10 +153,10 @@ ${productContext}
 ${knowledgeContext ? `CONHECIMENTO DO CÉREBRO DO PRODUTO (Fontes Processadas):
 ${knowledgeContext}
 
-` : ''}${objectionsContext ? `OBJEÇÕES COMUNS DOS CLIENTES (Usa para crear preguntas de qualificação):
+` : ''}${objectionsContext ? `OBJEÇÕES COMUNS DOS CLIENTES (Usa para crear preguntas de calificación):
 ${objectionsContext}
 
-` : ''}${user_context ? `CONTEXTO ESPECÍFICO DA CAMPANHA (Fornecido pelo usuario — PRIORIDADE MÁXIMA):
+` : ''}${user_context ? `CONTEXTO ESPECÍFICO DA CAMPANHA (Fornecido por el usuario — PRIORIDADE MÁXIMA):
 ${user_context}
 
 ⚠️ ATENÇÃO: As preguntas DEVEM refletir explicitamente o contexto acima. Se o usuario citou nicho, campaña (ex: Black Friday), ICP específico, sector, evento ou objeção concreta, as preguntas precisam abordar isso diretamente. No gere um formulário genérico.
@@ -168,15 +168,15 @@ TOM DE COMUNICAÇÃO: ${toneDescriptions[tone]}
 REGRAS IMPORTANTES:
 1. Crea preguntas claras e objetivas que qualifiquem o lead
 2. Usa a linguagem adequada ao tom solicitado
-3. ${use_objections && objectionsContext ? 'Usa as objeções para crear preguntas inteligentes de qualificação (ex: se objeção é preço, pergunte sobre orçamento disponible)' : 'Inclua preguntas que ajudem a entender o perfil del lead'}
+3. ${use_objections && objectionsContext ? 'Usa as objeções para crear preguntas inteligentes de calificación (ex: se objeção es preço, preguntes sobre orçamento disponible)' : 'Inclua preguntas que ajudem a entender o perfil del lead'}
 4. ${use_brain && knowledgeContext ? 'Baseie as preguntas no conhecimento real do producto e sus diferenciais' : 'Foque nas necessidades típicas do ICP descrito'}
 5. ${user_context ? 'Personalize as preguntas para el contexto da campaña descrito acima — no ignore esse contexto' : 'Foque em capturar dados que ajudem o time de ventas'}
 6. Limite ao número de preguntas solicitado (${num_questions} preguntas + telas de boas-vindas e agradecimento)
-7. Retorne APENAS um JSON válido, sem explicações ou markdown
+7. Retorne APENAS um JSON válido, sin explicações ou markdown
 
 TIPOS DE BLOCOS VÁLIDOS (use APENAS estes valores em block_type):
 - welcome_screen: Tela de boas-vindas (SEMPRE o primeiro bloco)
-- text: Pergunta de texto corto. Para nombre/empresa/cargo, use "text" com maps_to apropriado ("name", "company")
+- text: Pergunta de texto corto. Para nombre/empresa/cargo, use "text" con maps_to apropriado ("name", "company")
 - textarea: Texto largo (descripción, dor, expectativa)
 - email: Email (use maps_to: "email")
 - phone: Teléfono/WhatsApp (use maps_to: "phone")
@@ -189,7 +189,7 @@ TIPOS DE BLOCOS VÁLIDOS (use APENAS estes valores em block_type):
 
 NÃO use "name", "company" ou "thank_you_screen" como block_type — esses valores son inválidos.
 
-FORMATO DE RESPOSTA (JSON ARRAY puro, sem markdown):
+FORMATO DE RESPOSTA (JSON ARRAY puro, sin markdown):
 [
   {"block_type":"welcome_screen","label":"Título acolhedor","description":"Subtítulo"},
   {"block_type":"text","label":"Qual su nombre?","placeholder":"Su nombre","required":true,"maps_to":"name"},
@@ -202,7 +202,7 @@ FORMATO DE RESPOSTA (JSON ARRAY puro, sem markdown):
 
 IMPORTANTE: O array debe conter exatamente ${num_questions} blocos de pregunta + welcome_screen + end_screen (total: ${num_questions + 2} blocos).`;
 
-    const userPrompt = `Genera o formulário de ${num_questions} preguntas seguindo as instruções acima. Retorne APENAS o JSON array, sem explicações ou código markdown.`;
+    const userPrompt = `Genera o formulário de ${num_questions} preguntas seguindo as instruções acima. Retorne APENAS o JSON array, sin explicações ou código markdown.`;
 
     console.log('Calling AI to generate form with enriched context...');
 
@@ -228,7 +228,7 @@ IMPORTANTE: O array debe conter exatamente ${num_questions} blocos de pregunta +
       const errorText = await aiResponse.text();
       console.error('AI API error:', errorText);
       return new Response(
-        JSON.stringify({ error: 'Error ao gerar formulário com IA' }),
+        JSON.stringify({ error: 'Error ao gerar formulário con IA' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
     } = body;
 
     if (!organization_id) {
-      return new Response(JSON.stringify({ error: 'organization_id é obligatorio' }), {
+      return new Response(JSON.stringify({ error: 'organization_id es obligatorio' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -205,7 +205,7 @@ async function fetchCandidates(supabase: any, orgId: string, f: ScanFilters) {
       return true;
     });
   } else if (f.tag_ids?.length) {
-    // Conversas sem lead no podem ter tag
+    // Conversas sin lead no podem ter tag
     convs = [];
   }
 
@@ -283,7 +283,7 @@ async function processScan(supabase: any, scanId: string, orgId: string, convers
       await applyActions(supabase, orgId, r, actions);
     }
 
-    // Atualiza progresso
+    // Atualiza progreso
     await supabase.from('opportunity_scans').update({
       total_analyzed: analyzed, hot_count: hot, warm_count: warm, cold_count: cold, lost_count: lost,
       potential_revenue: potentialRev,
@@ -312,12 +312,12 @@ async function classifyConversation(supabase: any, orgId: string, conv: any, api
     const msgs = (messages || []).reverse();
     const clientMsgs = msgs.filter((m: any) => m.role === 'user').length;
 
-    // Heurística rápida: sem mensajes del cliente
+    // Heurística rápida: sin mensajes del cliente
     if (clientMsgs === 0) {
       return {
         conversation_id: conv.id, lead_id: conv.lead_id,
         classification: 'cold', score: 10,
-        reason: 'Nenhuma mensaje del cliente — solo mensajes iniciais sem engajamento.',
+        reason: 'Nenhuma mensaje del cliente — solo mensajes iniciais sin engajamento.',
         signals: ['sem_resposta_cliente'],
         suggested_action: 'Considerar arquivar ou tentar abordagem nova.',
         followup_message: '',
@@ -345,10 +345,10 @@ CONTEXTO:
 - Total de mensajes del cliente: ${clientMsgs}
 
 Clasifica como:
-- "hot": demonstrou forte interesse, pediu detalhes/preço, parou de responder mas estava engajado, OU última msg del cliente sem respuesta de la empresa
-- "warm": interesse moderado, fez algumas preguntas, conversación em andamento
-- "cold": poco engajamento, sem sinais claros de compra
-- "lost": demonstrou desinteresse, rejeição, ou tempo demais sem atividade
+- "hot": demonstrou forte interesse, pediu detalhes/preço, parou de responder mas estava engajado, OU última msg del cliente sin respuesta de la empresa
+- "warm": interesse moderado, fez algunas preguntas, conversación em andamento
+- "cold": poco engajamento, sin sinais claros de compra
+- "lost": demonstrou desinteresse, rejeição, ou tempo demais sin atividade
 
 Retorne JSON estrito:
 {

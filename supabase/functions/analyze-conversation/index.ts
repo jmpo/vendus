@@ -71,7 +71,7 @@ Retorne a análise usando a ferramenta analyze_conversation.`;
         messages: [
           {
             role: "system",
-            content: `Usted é um analista de qualidade de ventas. Analiza conversaciones de atención e forneça feedback detalhado. Avalie:
+            content: `Usted es um analista de qualidade de ventas. Analiza conversaciones de atención e forneça feedback detalhado. Avalie:
 - Tempo de respuesta (rápido, adequado, lento)
 - Tom da conversación (profissional, amigável, frio)
 - Técnicas de ventas utilizadas (rapport, SPIN, gatilhos mentais, etc.)
@@ -93,7 +93,7 @@ Retorne a análise usando a ferramenta analyze_conversation.`;
                 properties: {
                   score: { type: "number", description: "Score 1-10" },
                   strengths: { type: "array", items: { type: "string" } },
-                  weaknesses: { type: "array", items: { type: "string" } },
+                  weaken eses: { type: "array", items: { type: "string" } },
                   suggestions: { type: "array", items: { type: "string" } },
                   metrics: {
                     type: "object",
@@ -106,7 +106,7 @@ Retorne a análise usando a ferramenta analyze_conversation.`;
                     required: ["avgResponseTime", "tone", "salesTechniques", "objectionsHandled"],
                   },
                 },
-                required: ["score", "strengths", "weaknesses", "suggestions", "metrics"],
+                required: ["score", "strengths", "weaken eses", "suggestions", "metrics"],
                 additionalProperties: false,
               },
             },

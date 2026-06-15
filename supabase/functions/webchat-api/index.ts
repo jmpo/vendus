@@ -127,7 +127,7 @@ serve(async (req) => {
         // we no longer auto-reassign to a previous agent, otherwise the
         // orchestrator would be skipped for returning visitors.
         // NOTE: status fica `bot_active` para el bot responder; a UI da inbox
-        // exibe `bot_active` na aba "Aguardando" enquanto ningún humano aceitar.
+        // exibe `bot_active` na aba "Aguardando" mientras ningún humano aceitar.
         const autoAssignUserId: string | null = null;
         const autoStatus = 'bot_active';
 
@@ -164,8 +164,8 @@ serve(async (req) => {
         conversation = newConv;
 
         // ===== AUTO-CREATE LEAD =====
-        // Tode la conversación nova vira um lead imediatamente — sem vinculação manual.
-        // Se ya existir lead pelo email/teléfono, reaproveita.
+        // Tode la conversación nova vira um lead imediatamente — sin vinculação manual.
+        // Se ya existir lead por el email/teléfono, reaproveita.
         try {
           let existingLeadId: string | null = null;
           if (body.visitor_email || body.visitor_phone) {
@@ -485,7 +485,7 @@ serve(async (req) => {
                   conversation_id: body.conversation_id,
                   direction: 'outbound',
                   sender_type: 'bot',
-                  content: agentConfig.fallback_message || 'Desculpe, estou com dificuldades técnicas. Posso transferir usted para um agente?',
+                  content: agentConfig.fallback_message || 'Desculpe, estou con dificuldades técnicas. Posso transferir usted para um agente?',
                 })
                 .select()
                 .single();

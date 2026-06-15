@@ -110,7 +110,7 @@ serve(async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: action === 'test' ? "Conexão estabelecida com éxito" : "Autenticado",
+        message: action === 'test' ? "Conexão estabelecida con éxito" : "Autenticado",
         token: bearerToken,
         expiresIn: 300 // 5 minutes
       }),

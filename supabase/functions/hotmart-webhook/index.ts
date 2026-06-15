@@ -23,7 +23,7 @@ const EVENT_MAP: Record<string, string> = {
   PURCHASE_REFUNDED: 'reembolso',
   PURCHASE_CHARGEBACK: 'reembolso',
   PURCHASE_PROTEST: 'reembolso',
-  // Hotmart usa BILLET para boleto e PIX é detectado pelo payment_type
+  // Hotmart usa BILLET para boleto e PIX es detectado por el payment_type
 };
 
 const STATUS_MAP: Record<string, string> = {

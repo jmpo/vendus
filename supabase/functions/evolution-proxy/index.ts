@@ -284,7 +284,7 @@ Deno.serve(async (req) => {
 
       if (res.ok) {
         return new Response(
-          JSON.stringify({ ok: true, status: res.status, message: "Conexão estabelecida com éxito!", data: res.body }),
+          JSON.stringify({ ok: true, status: res.status, message: "Conexão estabelecida con éxito!", data: res.body }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -306,7 +306,7 @@ Deno.serve(async (req) => {
     const config = await getPlatformConfig(supabase);
     if (!config) {
       return new Response(
-        JSON.stringify({ error: "Servidor Evolution Go aún no fue configurado pelo administrador da plataforma." }),
+        JSON.stringify({ error: "Servidor Evolution Go aún no fue configurado por el administrador da plataforma." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -416,7 +416,7 @@ Deno.serve(async (req) => {
     if (action === "create_instance_self") {
       // Authorization: precisa ser admin ou manager da organização
       if (!profile?.organization_id) {
-        return new Response(JSON.stringify({ error: "Usuario sem empresa vinculada." }), {
+        return new Response(JSON.stringify({ error: "Usuario sin empresa vinculada." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -485,7 +485,7 @@ Deno.serve(async (req) => {
         .slice(0, 20)) || "org";
       const finalName = `${orgSlug}-${rawName}`.slice(0, 50);
 
-      // Verifica se ya existe localmente uma instância com esse nombre
+      // Verifica se ya existe localmente uma instância con esse nombre
       const { data: dup } = await supabase
         .from("evolution_instances")
         .select("id")
@@ -493,7 +493,7 @@ Deno.serve(async (req) => {
         .maybeSingle();
       if (dup) {
         return new Response(JSON.stringify({
-          error: "Ya existe uma conexão com esse nombre. Escolha otro.",
+          error: "Ya existe uma conexão con esse nombre. Escolha otro.",
         }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
@@ -536,7 +536,7 @@ Deno.serve(async (req) => {
           instance_id: uuid || finalName,
           instance_token: instanceToken,
           status: "disconnected",
-          is_default: (currentCount ?? 0) === 0, // primeira de la empresa = padrão
+          is_default: (currentCount ?? 0) === 0, // primeira de la empresa = estándar
           created_by_super_admin: false,
           metadata: {
             instance_uuid: uuid,
@@ -626,7 +626,7 @@ Deno.serve(async (req) => {
     // Mesma lógica de delete_instance, mas escopada à organização do usuario.
     if (action === "delete_instance_self") {
       if (!profile?.organization_id && !isSuperAdmin) {
-        return new Response(JSON.stringify({ error: "Usuario sem empresa vinculada." }), {
+        return new Response(JSON.stringify({ error: "Usuario sin empresa vinculada." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -707,7 +707,7 @@ Deno.serve(async (req) => {
       const instanceToken = inst.instance_token || meta.instance_token || null;
 
       if (!uuid || !instanceToken) {
-        return new Response(JSON.stringify({ error: "Instância sem UUID ou token. Solicite ao Super Admin para sincronizar do servidor." }), {
+        return new Response(JSON.stringify({ error: "Instância sin UUID ou token. Solicite ao Super Admin para sincronizar do servidor." }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -950,7 +950,7 @@ Deno.serve(async (req) => {
       const id = String(body.id || "");
       const orgId = body.organization_id ? String(body.organization_id) : null;
       if (!id) {
-        return new Response(JSON.stringify({ error: "id é obligatorio" }), {
+        return new Response(JSON.stringify({ error: "id es obligatorio" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -1016,7 +1016,7 @@ Deno.serve(async (req) => {
       const instanceToken = inst.instance_token || meta.instance_token || null;
 
       if (!uuid || !instanceToken) {
-        return new Response(JSON.stringify({ ok: false, error: "Instância sem UUID/token. Solicite sincronização." }), {
+        return new Response(JSON.stringify({ ok: false, error: "Instância sin UUID/token. Solicite sincronização." }), {
           status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -1040,7 +1040,7 @@ Deno.serve(async (req) => {
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      return new Response(JSON.stringify({ ok: true, message: "Webhook configurado com éxito" }), {
+      return new Response(JSON.stringify({ ok: true, message: "Webhook configurado con éxito" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -1144,7 +1144,7 @@ Deno.serve(async (req) => {
       const uuid: string | null = meta.instance_uuid || inst.instance_id || null;
       const instanceToken = inst.instance_token || meta.instance_token || null;
       if (!uuid || !instanceToken) {
-        return new Response(JSON.stringify({ ok: false, error: "Instância sem UUID/token. Solicite sincronização." }), {
+        return new Response(JSON.stringify({ ok: false, error: "Instância sin UUID/token. Solicite sincronização." }), {
           status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -1209,7 +1209,7 @@ Deno.serve(async (req) => {
       const uuid: string | null = meta.instance_uuid || inst.instance_id || null;
       const instanceToken = inst.instance_token || meta.instance_token || null;
       if (!uuid || !instanceToken) {
-        return new Response(JSON.stringify({ ok: false, error: "Instância sem UUID/token. Solicite sincronização." }), {
+        return new Response(JSON.stringify({ ok: false, error: "Instância sin UUID/token. Solicite sincronização." }), {
           status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }

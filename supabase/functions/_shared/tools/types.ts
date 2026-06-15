@@ -9,7 +9,7 @@ export interface ToolContext {
   leadId?: string | null;
   conversationId?: string | null;
   channel?: string | null;
-  // Cliente Supabase com SERVICE ROLE (ya autenticado pelo caller).
+  // Cliente Supabase con SERVICE ROLE (ya autenticado por el caller).
   supabase: any;
 }
 
@@ -28,7 +28,7 @@ export interface ToolDefinition {
   parameters: Record<string, any>;
   // Custo estimado por execução em centavos (para limites de orçamento).
   estimated_cost_cents?: number;
-  // Categorias para filtrar quais tools um agente específico puede usar.
+  // Categorias para filtrar cuáles tools um agente específico puede usar.
   categories: Array<'crm' | 'finance' | 'marketing' | 'operations' | 'communication'>;
   handler: (input: Record<string, any>, ctx: ToolContext) => Promise<ToolResult>;
 }

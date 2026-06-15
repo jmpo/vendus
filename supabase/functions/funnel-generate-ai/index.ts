@@ -96,8 +96,8 @@ Problemas que resolve: ${product.problems_solved || 'N/A'}
       technical: 'Usá términos técnicos relevantes. Sé preciso y objetivo.',
     };
 
-    const systemPrompt = `Usted é um especialista em crear funis de captação de leads de alta conversão.
-Su trabalho é transformar a descripción do usuario em um flujo de blocos estruturados que serão renderizados como uma landing page interativa.
+    const systemPrompt = `Usted es um especialista em crear funis de captação de leads de alta conversão.
+Su trabalho es transformar a descripción do usuario em um flujo de blocos estruturados que serão renderizados como uma landing page interativa.
 
 CONTEXTO DO PRODUTO:
 ${productContext}
@@ -110,7 +110,7 @@ ${knowledgeContext}
 TIPOS DE BLOCOS DISPONÍVEIS:
 
 1. **message** - Exibir texto/conteúdo para el lead
-   Campos: { content: "texto com suporte a markdown" }
+   Campos: { content: "texto con suporte a markdown" }
    Usa para: boas-vindas, explicações, transições entre seções
 
 2. **input** - Capturar um dado del lead
@@ -119,7 +119,7 @@ TIPOS DE BLOCOS DISPONÍVEIS:
 
 3. **buttons** - Menu de opciones clicáveis (RAMIFICAÇÃO)
    Campos: { content: "pregunta ou contexto", options: [{ id: "uuid", label: "Texto dla opción", emoji: "🚀", next_block_id: "uuid_do_bloco_destino" }] }
-   Usa para: escolhas que levam a caminhos diferentes. CADA OPÇÃO DEVE TER next_block_id apontando para o bloco correto.
+   Usa para: elegís que levam a caminhos diferentes. CADA OPÇÃO DEVE TER next_block_id apontando para o bloco correto.
 
 4. **video** - Exibir vídeo embedado
    Campos: { content: "texto descritivo", video_url: "URL_PLACEHOLDER" }
@@ -144,7 +144,7 @@ REGRAS DE CONEXÃO:
 
 REGRAS DE POSIÇÃO (X/Y no canvas):
 - Blocos em sequência linear: incrementar Y em 150, manter X constante
-- Quando houver ramificação (buttons com N opciones): 
+- Quando hay ramificação (buttons con N opciones): 
   - O bloco buttons fica na posição atual
   - Os caminhos ramificam horizontalmente: primeiro caminho em X=100, segundo em X=450, terceiro em X=800
   - Cada caminho continua incrementando Y normalmente
@@ -166,20 +166,20 @@ FORMATO DE RESPOSTA (JSON):
 }
 
 IMPORTANTE:
-- Retorne APENAS JSON válido, sem markdown ou explicações
+- Retorne APENAS JSON válido, sin markdown ou explicações
 - Todos os IDs devem ser UUIDs v4 únicos
 - Todas as conexões next_block_id devem referenciar IDs existentes
-- Cada caminho de ramificação DEVE terminar com um bloco "end"
+- Cada caminho de ramificação DEVE terminar con um bloco "end"
 - Usa emojis nos botões para tornar a experiência mais visual
 - Creá copys cortos y conversacionales, optimizados para mobile
-- Se o usuario mencionar vídeos, use blocos video com video_url: "URL_PLACEHOLDER"
-- Se o usuario mencionar planos/preços, crie botões com as opciones e blocos end com redirect_url vazio`;
+- Se o usuario mencionar vídeos, use blocos video con video_url: "URL_PLACEHOLDER"
+- Se o usuario mencionar planos/preços, crie botões con as opciones e blocos end con redirect_url vazio`;
 
     const userPrompt = `Crea o embudo de captação seguindo esta descripción:
 
 ${prompt}
 
-Retorne APENAS o JSON no formato especificado, sem explicações.`;
+Retorne APENAS o JSON no formato especificado, sin explicações.`;
 
     console.log('Calling AI to generate funnel...');
 
@@ -206,7 +206,7 @@ Retorne APENAS o JSON no formato especificado, sem explicações.`;
       
       if (aiResponse.status === 429) {
         return new Response(
-          JSON.stringify({ error: 'Limite de requisições excedido. Tente novamente em alguns segundos.' }),
+          JSON.stringify({ error: 'Limite de requisições excedido. Tente novamente em algunos segundos.' }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
@@ -218,7 +218,7 @@ Retorne APENAS o JSON no formato especificado, sem explicações.`;
       }
       
       return new Response(
-        JSON.stringify({ error: 'Error ao gerar embudo com IA' }),
+        JSON.stringify({ error: 'Error ao gerar embudo con IA' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -250,7 +250,7 @@ Retorne APENAS o JSON no formato especificado, sem explicações.`;
     // Validate structure
     if (!parsed.flow_blocks || !Array.isArray(parsed.flow_blocks) || parsed.flow_blocks.length === 0) {
       return new Response(
-        JSON.stringify({ error: 'IA no gerou blocos válidos. Tente com uma descripción mais detalhada.' }),
+        JSON.stringify({ error: 'IA no gerou blocos válidos. Tente con uma descripción mais detalhada.' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

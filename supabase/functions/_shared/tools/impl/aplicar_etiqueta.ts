@@ -4,7 +4,7 @@ import type { ToolDefinition } from '../types.ts';
 export const aplicarEtiquetaTool: ToolDefinition = {
   name: 'aplicar_etiqueta',
   description:
-    'Aplica uma etiqueta (tag) al lead atual para classificá-lo. Usa para marcar status como "interessado_premium", "objecao_preco", "abandonou_checkout", "comprou_produto_x" etc. Se a etiqueta no existir, será creada automaticamente.',
+    'Aplica uma etiqueta (tag) al lead atual para classificá-lo. Usa para marcar status como "interessado_premium", "objecao_preco", "abandueñou_checkout", "comprou_produto_x" etc. Se a etiqueta no existir, será creada automaticamente.',
   categories: ['crm', 'marketing'],
   estimated_cost_cents: 0,
   parameters: {
@@ -47,7 +47,7 @@ export const aplicarEtiquetaTool: ToolDefinition = {
           name: tagName,
           color: input.color ?? '#3B82F6',
           is_automatic: true,
-          description: `Criada automaticamente pelo agente ${ctx.agentName ?? 'IA'}`,
+          description: `Criada automaticamente por el agente ${ctx.agentName ?? 'IA'}`,
         })
         .select('id')
         .single();

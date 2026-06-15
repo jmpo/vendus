@@ -46,7 +46,7 @@ serve(async (req: Request): Promise<Response> => {
               idempotencyKey: `test-${Date.now()}`,
               templateData: {
                 __subject: "Prueba de envio — Lovable Emails",
-                __html: `<div style="font-family:Arial,sans-serif;padding:24px"><h2>Prueba bem-sucedido</h2><p>Este é um e-mail de prueba enviado pelo painel do Super Admin.</p><p style="color:#666;font-size:12px">Se usted recebeu, su infraestrutura de e-mail está operando corretamente.</p></div>`,
+                __html: `<div style="font-family:Arial,sans-serif;padding:24px"><h2>Prueba bem-sucedido</h2><p>Este es um e-mail de prueba enviado por el panel do Super Admin.</p><p style="color:#666;font-size:12px">Se usted recebeu, su infraestrutura de e-mail está operando corretamente.</p></div>`,
               },
             }),
           });
@@ -91,7 +91,7 @@ serve(async (req: Request): Promise<Response> => {
         }
 
         return new Response(
-          JSON.stringify({ success: true, message: "Conexão com Firecrawl bem-sucedida" }),
+          JSON.stringify({ success: true, message: "Conexão con Firecrawl bem-sucedida" }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }

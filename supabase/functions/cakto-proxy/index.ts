@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
       scope = 'organization';
       const { data: profile } = await admin.from('profiles').select('organization_id').eq('id', userId).maybeSingle();
       organizationId = profile?.organization_id ?? null;
-      if (!organizationId) return json({ error: 'Usuario sem organização' }, 400);
+      if (!organizationId) return json({ error: 'Usuario sin organização' }, 400);
       if (!isAdminOrManager && !isSuper) return json({ error: 'Permissão negada' }, 403);
     }
 
@@ -121,7 +121,7 @@ Deno.serve(async (req) => {
 
         if (error) return json({ error: error.message }, 500);
 
-        // Auto-test após guardar para ya refletir o status real (connected/error)
+        // Auto-test después guardar para ya refletir o status real (connected/error)
         let testResult: { ok: boolean; error?: string; scope?: string } = { ok: false };
         if (upserted) {
           try {

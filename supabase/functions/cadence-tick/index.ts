@@ -1,6 +1,6 @@
 // Cron a cada 5min. Executa cadence_step_runs vencidos.
 // Para cada run: valida janela, condições, gera mensaje via manual-outreach
-// (que monta prompt com contexto + histórico del lead) e agenda o próximo step.
+// (que monta prompt con contexto + historial del lead) e agenda o próximo step.
 
 import { createServiceClient } from "../_shared/campaign-audience.ts";
 
@@ -53,7 +53,7 @@ async function evaluateStepConditions(supabase: any, conditions: any, lead_id: s
     if (data && data.length) return { ok: false, reason: "Lead ya comprou" };
   }
 
-  // not_responded — no respondeu em runs anteriores de esta cadência (passa, será stop_rules quem trata)
+  // not_responded — no respondeu em runs anteriores de esta cadência (passa, será stop_rules quién trata)
   // without_tag — lead no tiene essas tags
   if (Array.isArray(conditions.without_tags) && conditions.without_tags.length) {
     const { data } = await supabase

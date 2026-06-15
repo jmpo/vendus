@@ -1,10 +1,10 @@
-// Agenda um follow-up futuro com el lead (entra na fila ai_outreach_queue).
+// Agenda um follow-up futuro con el lead (entra na fila ai_outreach_queue).
 import type { ToolDefinition } from '../types.ts';
 
 export const agendarFollowupTool: ToolDefinition = {
   name: 'agendar_followup',
   description:
-    'Agenda um follow-up automático com el lead em uma data/hora futura. Usa cuando el lead pedir para retornar mais tarde, cuando ficar de pensar, ou cuando usted quiser garantir uma reativação. Respeita horario comercial automaticamente.',
+    'Agenda um follow-up automático con el lead em uma data/hora futura. Usa cuando el lead pedir para retornar mais tarde, cuando ficar de pensar, ou cuando usted quiser garantir uma reativação. Respeita horario comercial automaticamente.',
   categories: ['crm', 'communication'],
   estimated_cost_cents: 0,
   parameters: {

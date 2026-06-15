@@ -1,4 +1,4 @@
-// Helpers compartilhados para integración com Cakto API
+// Helpers compartilhados para integración con Cakto API
 // https://docs.cakto.com.br/authentication
 
 export const CAKTO_BASE_URL = 'https://api.cakto.com.br';
@@ -39,7 +39,7 @@ export async function ensureCaktoToken(
 ): Promise<string> {
   const now = Date.now();
   const expiresAt = cred.token_expires_at ? new Date(cred.token_expires_at).getTime() : 0;
-  // Renova com 60s de antecedência
+  // Renova con 60s de antecedência
   if (cred.last_token && expiresAt - 60_000 > now) {
     return cred.last_token;
   }

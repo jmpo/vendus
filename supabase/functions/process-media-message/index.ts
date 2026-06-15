@@ -84,7 +84,7 @@ async function transcribeAudio(
   const fd = new FormData();
   fd.append("file", blob, `audio.${ext}`);
   fd.append("model", "whisper-1");
-  // Español é o idioma esperado da maior parte das mensajes; whisper auto-detecta se vier otro.
+  // Español es o idioma esperado da maior parte das mensajes; whisper auto-detecta se vier otro.
   fd.append("language", "pt");
   fd.append("response_format", "text");
 
@@ -133,7 +133,7 @@ async function describeImage(
   if (caption && caption.trim()) {
     userContent.push({
       type: "text",
-      text: `Legenda enviada pelo cliente junto da imagen: "${caption.trim()}"`,
+      text: `Legenda enviada por el cliente junto da imagen: "${caption.trim()}"`,
     });
   }
 
@@ -149,7 +149,7 @@ async function describeImage(
         {
           role: "system",
           content:
-            "Usted é um analisador visual de mensajes de WhatsApp em um CRM de ventas. " +
+            "Usted es um analisador visual de mensajes de WhatsApp em um CRM de ventas. " +
             "Su respuesta vira o conteúdo textual da mensaje que um agente IA va ler. " +
             "Sé factual, objetivo e direto.",
         },
@@ -258,7 +258,7 @@ Deno.serve(async (req) => {
       return jsonResponse({
         success: true,
         kind: "audio",
-        text: text || "(áudio sem fala detectada)",
+        text: text || "(áudio sin fala detectada)",
         model_used: "whisper-1",
         detected_mime: finalMime,
       });

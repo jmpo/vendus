@@ -49,7 +49,7 @@ const WelcomeAdminAccessEmail = ({
           </Section>
         ) : (
           <Text style={text}>
-            Usá la opción "Olvidé mi contraseña" en la pantalla de login con el e-mail
+            Usá la opción "Olvidé mi contraseña" en la pantala de login con el e-mail
             <strong> {email}</strong> para crear tu contraseña de acceso.
           </Text>
         )}

@@ -62,17 +62,17 @@ Deno.serve(async (req: Request) => {
     phoneInfo = await graphFetch(`/${phone_number_id}?fields=display_phone_number,verified_name,quality_rating,messaging_limit_tier`, access_token);
   } catch (e) {
     const ge = e as GraphError;
-    return json({ error: 'phone_number_id inválido ou token sem permiso', detail: ge.graph?.message ?? String(e) }, 400);
+    return json({ error: 'phone_number_id inválido ou token sin permiso', detail: ge.graph?.message ?? String(e) }, 400);
   }
   let wabaInfo: any;
   try {
     wabaInfo = await graphFetch(`/${waba_id}?fields=name,id`, access_token);
   } catch (e) {
     const ge = e as GraphError;
-    return json({ error: 'WABA ID inválido ou sem permiso whatsapp_business_management', detail: ge.graph?.message ?? String(e) }, 400);
+    return json({ error: 'WABA ID inválido ou sin permiso whatsapp_business_management', detail: ge.graph?.message ?? String(e) }, 400);
   }
 
-  // Detecta se é update/promoção (connection_id) ou creación direta (sem id).
+  // Detecta se es update/promoção (connection_id) ou creación direta (sem id).
   const isExisting = !!connection_id;
   let row: any;
 

@@ -1,10 +1,10 @@
-// Consulta o histórico del cliente: compras anteriores (Cakto), interações, deals em aberto.
+// Consulta o historial del cliente: compras anteriores (Cakto), interações, deals em aberto.
 import type { ToolDefinition } from '../types.ts';
 
 export const consultarHistoricoClienteTool: ToolDefinition = {
   name: 'consultar_historico_cliente',
   description:
-    'Consulta o histórico completo del lead atual: compras anteriores via Cakto, deals em aberto, número de interações. Usa ANTES de hacer ofertas para personalizar (ex: oferecer upsell se ya é cliente, ou descuento se abandonou checkout).',
+    'Consulta o historial completo del lead atual: compras anteriores via Cakto, deals em aberto, número de interações. Usa ANTES de hacer ofertas para personalizar (ex: ofrecer upsell se ya es cliente, ou descuento se abandueñou checkout).',
   categories: ['crm'],
   estimated_cost_cents: 0,
   parameters: {
@@ -25,7 +25,7 @@ export const consultarHistoricoClienteTool: ToolDefinition = {
 
     // Buscas paralelas para reduzir latência.
     const [ordersRes, dealsRes, interactionsRes, tagsRes] = await Promise.all([
-      // Pedidos Cakto pelo e-mail/teléfono.
+      // Pedidos Cakto por el e-mail/teléfono.
       ctx.supabase
         .from('cakto_orders')
         .select('cakto_id, status, amount, product_name, paid_at, created_at_cakto')

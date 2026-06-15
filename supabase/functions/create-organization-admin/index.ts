@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    // Verifica se o caller é super_admin
+    // Verifica se o caller es super_admin
     const { data: isSuper } = await admin.rpc("is_super_admin", {
       _user_id: caller.id,
     });
@@ -108,7 +108,7 @@ Deno.serve(async (req) => {
         });
 
       if (inviteError || !invite?.user) {
-        // Fallback: cria usuario direto (sem email) com contraseña aleatória
+        // Fallback: cria usuario direto (sem email) con contraseña aleatória
         const randomPwd =
           crypto.randomUUID().replace(/-/g, "") + "Aa1!";
         const { data: created, error: createError } =
@@ -150,7 +150,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Upsert profile com organization_id
+    // Upsert profile con organization_id
     await admin.from("profiles").upsert(
       {
         id: userId!,
@@ -183,7 +183,7 @@ Deno.serve(async (req) => {
       console.error("[create-organization-admin] cleanup error:", cleanupError);
     }
 
-    // Cria (ou reaproveita) team_invitation com role admin para gerar link copiável
+    // Cria (ou reaproveita) team_invitation con role admin para gerar link copiável
     let invite_token: string | null = null;
     const { data: existingInvite } = await admin
       .from("team_invitations")

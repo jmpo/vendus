@@ -149,7 +149,7 @@ serve(async (req) => {
     }
 
     // Build prompt for AI analysis
-    const analysisPrompt = `Usted é um coach de ventas experiente analisando o pipeline de um vendedor.
+    const analysisPrompt = `Usted es um coach de ventas experiente analisando o pipeline de um vendedor.
 
 DADOS DO PIPELINE:
 - Total de leads: ${analysis.totalLeads}
@@ -159,8 +159,8 @@ DADOS DO PIPELINE:
 - Média de días no pipeline: ${analysis.avgDaysInPipeline}
 - Leads quentes: ${analysis.hotLeadsCount}
 - Leads frios: ${analysis.coldLeadsCount}
-- Tarefas atrasadas: ${analysis.overdueTasksCount}
-- Estágio com mais leads (potencial gargalo): ${analysis.bottleneckStage}
+- Tareas atrasadas: ${analysis.overdueTasksCount}
+- Estágio con mais leads (potencial gargalo): ${analysis.bottleneckStage}
 
 LEADS EM RISCO (sem contato há 3+ días):
 ${analysis.atRiskLeads.slice(0, 5).map(l => `- ${l.name} (${l.company || 'sem empresa'}): ${l.daysWithoutContact} días`).join("\n")}
@@ -171,7 +171,7 @@ Genera 3-5 insights acionáveis e específicos para este vendedor. Cada insight 
 3. Sugerir uma acción específica
 4. Indicar a prioridade (high, medium, low)
 
-Responda APENAS no formato JSON abaixo, sem texto adicional:
+Responda APENAS no formato JSON abaixo, sin texto adicional:
 {
   "insights": [
     {
@@ -200,7 +200,7 @@ Responda APENAS no formato JSON abaixo, sem texto adicional:
     if (!response.ok) {
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em alguns segundos." }),
+          JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em algunos segundos." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }

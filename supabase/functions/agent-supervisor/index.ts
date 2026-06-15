@@ -1,5 +1,5 @@
 // Sprint 2 — Supervisor multi-agente
-// Avalia regras de roteamento e, em fallback, usa LLM para decidir qual especialista responde.
+// Avalia regras de roteamento e, em fallback, usa LLM para decidir cuál especialista responde.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { recordLovableUsage } from "../_shared/ai-router.ts";
@@ -44,8 +44,8 @@ async function llmFallback(
     .join("\n");
 
   const systemPrompt =
-    `Usted é um supervisor de IA que roteia conversaciones para el agente especialista mais adequado. ` +
-    `Analiza o contexto e escolha UM especialista da lista. Responde solo via tool call.`;
+    `Usted es um supervisor de IA que roteia conversaciones para el agente especialista mais adequado. ` +
+    `Analiza o contexto e elegí UM especialista da lista. Responde solo via tool call.`;
 
   const userPrompt = `Contexto:
 - Canal: ${context.channel ?? "desconhecido"}
@@ -54,7 +54,7 @@ async function llmFallback(
 - Valor do negocio: ${context.deal_value ?? "n/a"}
 
 Últimas mensajes:
-${conversationSnippet || "(sem histórico)"}
+${conversationSnippet || "(sem historial)"}
 
 Especialistas disponíveis:
 ${
@@ -98,7 +98,7 @@ ${
                     },
                     reason: {
                       type: "string",
-                      description: "Motivo corto (1 frase) da escolha",
+                      description: "Motivo corto (1 frase) da elegí",
                     },
                   },
                   required: ["specialist_id", "reason"],

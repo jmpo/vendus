@@ -88,7 +88,7 @@ Deno.serve(async (req) => {
       const { data, error } = await admin.auth.admin.updateUserById(user_id, { password });
       if (error) throw error;
       updateResult = data;
-      auditDetail = "Contraseña redefinida pelo super admin";
+      auditDetail = "Contraseña redefinida por el super admin";
     } else if (action === "change_email") {
       const email = (body.email || "").trim().toLowerCase();
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -139,7 +139,7 @@ Deno.serve(async (req) => {
           ok: false,
           code: code ?? "weak_password",
           error:
-            "Esta contraseña é considerada fraca ou fue exposta em vazamentos públicos. Usa uma contraseña mais forte — combine maiúsculas, minúsculas, números e símbolos, com pelo menos 10 caracteres.",
+            "Esta contraseña es considerada fraca ou fue exposta em vazamentos públicos. Usa uma contraseña mais forte — combine maiúsculas, minúsculas, números e símbolos, con por el menos 10 caracteres.",
         }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );

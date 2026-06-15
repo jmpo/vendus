@@ -1,8 +1,8 @@
 // Doppus Postback (Webhook) — público.
-// A Doppus envia POST com header `doppus-token` e body JSON.
+// A Doppus envia POST con header `doppus-token` e body JSON.
 // Este endpoint:
 //   1. Sempre responde 2xx (Doppus exige isso para aceitar a URL).
-//   2. Identifica a empresa pelo producto Doppus (items[0].code) ou pelo token.
+//   2. Identifica a empresa por el producto Doppus (items[0].code) ou por el token.
 //   3. Mapeia status reais da Doppus para la engine unificada de pós-venta.
 //
 // URL aceita:
@@ -94,7 +94,7 @@ function safeJsonParse(raw: string): any {
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
-  // Validações de URL pela Doppus podem chegar como GET/HEAD ou POST vazio.
+  // Validações de URL por la Doppus podem chegar como GET/HEAD ou POST vazio.
   // SEMPRE retornamos 2xx, ou a Doppus rejeita a URL.
   if (req.method === 'GET') return json({ ok: true, provider: 'doppus-webhook', ready: true });
   if (req.method === 'HEAD') return new Response(null, { status: 200, headers: corsHeaders });
@@ -106,7 +106,7 @@ Deno.serve(async (req) => {
   const rawBody = await req.text().catch(() => '');
   const payload = safeJsonParse(rawBody);
 
-  // Token enviado pela Doppus (header oficial é `doppus-token`).
+  // Token enviado por la Doppus (header oficial es `doppus-token`).
   const authHeader = req.headers.get('authorization') ?? '';
   const bearer = authHeader.toLowerCase().startsWith('bearer ')
     ? authHeader.slice(7).trim()
@@ -125,7 +125,7 @@ Deno.serve(async (req) => {
     url.searchParams.get('secret') ??
     null;
 
-  // Considera "evento real" solo se houver dados úteis no payload.
+  // Considera "evento real" solo se hay dados úteis no payload.
   const looksLikeRealEvent =
     !!payload &&
     typeof payload === 'object' &&
@@ -309,11 +309,11 @@ Deno.serve(async (req) => {
       await logEvent(admin, {
         orgId, productId: internalProductId, eventType: 'invalid_token', leadId: null, payload,
         extra: {
-          reason: 'token recibido no bate com o registrado para este producto',
+          reason: 'token recibido no bate con o registrado para este producto',
           token_fingerprint: tokenFingerprint(tokenReceived),
         },
       });
-      // Continua processando — producto fue identificado pelo items[0].code.
+      // Continua processando — producto fue identificado por el items[0].code.
     }
 
     // ====== Valores ======

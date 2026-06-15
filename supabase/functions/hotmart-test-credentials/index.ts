@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
     const clientSecret = body.client_secret as string | undefined;
     const basicToken = body.basic_token as string | undefined;
 
-    // Permite testar com valores enviados ou os ya salvos
+    // Permite testar con valores enviados ou os ya salvos
     let useClientId = clientId;
     let useClientSecret = clientSecret;
     let useBasic = basicToken;
@@ -104,7 +104,7 @@ Deno.serve(async (req) => {
 
     return json({
       ok: true,
-      message: 'Conexão estabelecida com éxito',
+      message: 'Conexão estabelecida con éxito',
       expires_in: tokenData.expires_in,
       scope: tokenData.scope,
     });

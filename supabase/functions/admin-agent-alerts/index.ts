@@ -67,7 +67,7 @@ async function checkUnattendedChats(cfg: OrgCfg) {
 
   for (const c of (data ?? []) as any[]) {
     if (await alreadySentByKind(cfg.organization_id, "unattended_chat", c.id, 6)) continue;
-    const msg = `⏰ *Conversación sem atención*\n\n` +
+    const msg = `⏰ *Conversación sin atención*\n\n` +
       `👤 ${c.visitor_name || "Visitante"}\n` +
       `🕐 Última mensaje há *${cfg.alert_unattended_minutes}+ min*`;
     await sendAdminMessage({
@@ -138,9 +138,9 @@ async function checkAgentErrors(cfg: OrgCfg) {
     if (stats.fails < cfg.alert_agent_error_threshold) continue;
     if (await alreadySentByKind(cfg.organization_id, "agent_errors", agentId, 6)) continue;
     const { data: agent } = await supabase.from("product_agents").select("name").eq("id", agentId).maybeSingle();
-    const msg = `⚠️ *Agente IA com falhas*\n\n` +
+    const msg = `⚠️ *Agente IA con falhas*\n\n` +
       `🤖 ${agent?.name || "Agente"}\n` +
-      `❌ *${stats.fails}* erros nos últimos 30min`;
+      `❌ *${stats.fails}* errores nos últimos 30min`;
     await sendAdminMessage({
       organizationId: cfg.organization_id,
       phone: cfg.admin_whatsapp_number,

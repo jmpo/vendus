@@ -37,7 +37,7 @@ serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceKey);
 
-    // Autenticação obligatoria: copiloto é ferramenta interna do vendedor.
+    // Autenticação obligatoria: copiloto es ferramenta interna do vendedor.
     let organizationId: string | null = null;
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
@@ -176,7 +176,7 @@ serve(async (req) => {
       }
     }
 
-    const systemPrompt = `Usted é o COPILOTO DE VENDAS — estrategista que ajuda vendedores a responder clientes.
+    const systemPrompt = `Usted es o COPILOTO DE VENDAS — estrategista que ajuda vendedores a responder clientes.
 
 ${productName ? `PRODUTO: ${productName}` : ""}
 
@@ -186,8 +186,8 @@ ${knowledgeContext ? knowledgeContext : ""}
 COMO USAR A BASE DE CONHECIMENTO
 ═══════════════════════════════════════
 
-- Para DADOS DO PRODUTO (preços, funcionalidades, prazos, specs): use SOMENTE o que está no contexto acima. Se no tiver, diga: "Sobre esse detalhe específico do producto, sugiro confirmar com o gestor antes de responder al cliente."
-- Para ESTRATÉGIA DE VENDAS (como abordar, como reativar, como negociar, como contornar objeções): use su conhecimento de ventas consultivas livremente, adaptando ao contexto do producto quando houver información disponível
+- Para DADOS DO PRODUTO (preços, funcionalidades, prazos, specs): use SOMENTE o que está no contexto acima. Se no tiver, diga: "Sobre esse detalhe específico do producto, sugiro confirmar con o gestor antes de responder al cliente."
+- Para ESTRATÉGIA DE VENDAS (como abordar, como reativar, como negociar, como contornar objeções): use su conhecimento de ventas consultivas livremente, adaptando ao contexto do producto cuando hay información disponível
 - Quando existir uma FAQ ou treinamento que responda à pregunta, USE como base
 - NUNCA invente preços, custos ou dados técnicos do producto
 
@@ -195,7 +195,7 @@ COMO USAR A BASE DE CONHECIMENTO
 COMO RESPONDER
 ═══════════════════════════════════════
 
-Para TODA situación do vendedor, entregue exatamente neste formato:
+Para TODA situación do vendedor, entregue exatamente en este formato:
 
 **O QUE ELE QUIS DIZER:**
 [1-2 frases explicando a real intenção ou objeção oculta del cliente]
@@ -213,7 +213,7 @@ REGRAS
 - Resposta otimizada para WhatsApp (corta, direta)
 - NÃO use emojis
 - NÃO use asteriscos ou formatação markdown nas respuestas prontas
-- Usa o nombre del cliente quando souber
+- Usa o nombre del cliente cuando souber
 - Linguagem natural e profissional
 - Foque em gerar acción, no explicar teoria
 
@@ -233,7 +233,7 @@ O QUE NUNCA FAZER
 - Dar aula ou explicar conceitos de ventas
 - Fazer listas longas
 - Usar emojis
-- Enrolar com introduções
+- Enrolar con introduções
 - Fugir do formato de 3 partes
 - Inventar preços, custos ou dados técnicos do producto
 - Recusar preguntas estratégicas de ventas alegando falta de información`;
@@ -267,20 +267,20 @@ O QUE NUNCA FAZER
     let response = await doCall(false);
 
     // No fazemos fallback automático para Lovable aqui: se a org escolheu OpenAI,
-    // qualquer error debe aparecer como error OpenAI, sem consumir créditos Lovable.
+    // qualquer error debe aparecer como error OpenAI, sin consumir créditos Lovable.
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => '');
       console.error('AI gateway error:', response.status, errorText);
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: 'Limite de requisições excedido. Tente novamente em alguns segundos.' }),
+          JSON.stringify({ error: 'Limite de requisições excedido. Tente novamente em algunos segundos.' }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
         );
       }
       if (response.status === 402) {
         const msg = cfg.provider === 'openai'
-          ? 'Su cuenta OpenAI está sem créditos ou bloqueada. Verifique em platform.openai.com/billing.'
+          ? 'Su cuenta OpenAI está sin créditos ou bloqueada. Verifique em platform.openai.com/billing.'
           : 'Créditos de IA esgotados. Adicione créditos na su cuenta Lovable.';
         return new Response(JSON.stringify({ error: msg }), {
           status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -288,7 +288,7 @@ O QUE NUNCA FAZER
       }
       if (response.status === 401 || response.status === 403) {
         return new Response(
-          JSON.stringify({ error: `Chave do provedor "${cfg.provider}" inválida ou sem permiso. Verifique em Integrações.` }),
+          JSON.stringify({ error: `Chave do provedor "${cfg.provider}" inválida ou sin permiso. Verifique em Integrações.` }),
           { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
         );
       }

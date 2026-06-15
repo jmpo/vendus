@@ -37,7 +37,7 @@ async function isDuplicateInboundMessage(
   if (!error) return false;
   // 23505 = unique violation → ya processado
   if ((error as any).code === "23505") return true;
-  // Em outros erros, deixa passar (fail-open) para no travar o webhook.
+  // Em otros errores, deixa passar (fail-open) para no travar o webhook.
   console.warn("[anti-spam] processed_messages insert non-unique error:", (error as any).message);
   return false;
 }
@@ -68,7 +68,7 @@ async function releaseConversationLock(supabase: any, conversationId: string): P
   } catch (_) { /* best-effort */ }
 }
 
-/** Verifica se ya enviamos uma respuesta com mismo hash nos últimos windowMs. */
+/** Verifica se ya enviamos uma respuesta con mismo hash nos últimos windowMs. */
 async function isDuplicateResponse(
   supabase: any,
   conversationId: string,
@@ -399,7 +399,7 @@ function normalizePayload(payload: any): Normalized | null {
     }
     if (!qr) {
       try {
-        console.warn("[evolution-webhook] QRCode event sem QR extraível — payload:",
+        console.warn("[evolution-webhook] QRCode event sin QR extraível — payload:",
           JSON.stringify(payload).slice(0, 2000));
       } catch { /* ignore */ }
     }
@@ -922,10 +922,10 @@ Deno.serve(async (req) => {
         });
       }
 
-      // Mensaje vinda do APARELHO conectado → outbound externo (dono digitou no celular)
+      // Mensaje vinda do APARELHO conectado → outbound externo (dueño digitou no celular)
       if (isFromDevice) {
         try {
-          // Eventos de eco sem destinatário claro
+          // Eventos de eco sin destinatário claro
           if (!remotePhone && !lidId) {
             console.log("[evolution-webhook] external_outbound: skip self_echo_no_target");
             return new Response(JSON.stringify({ ok: true, skipped: "self_echo_no_target" }), {
@@ -987,7 +987,7 @@ Deno.serve(async (req) => {
             convOut = convByLid as any;
           }
 
-          // Dedupe 2 (após localizar conv): mismo conteúdo outbound nos últimos 60s en esta conv
+          // Dedupe 2 (después localizar conv): mismo conteúdo outbound nos últimos 60s en esta conv
           if (convOut?.id && norm.content) {
             const since = new Date(Date.now() - 60_000).toISOString();
             const { data: recentSameContent } = await supabase
@@ -1014,7 +1014,7 @@ Deno.serve(async (req) => {
               .eq("id", convOut.id);
           }
 
-          // Persiste o LID en la conversación achada por teléfono (pra próximos eventos só com @lid casarem).
+          // Persiste o LID en la conversación achada por teléfono (pra próximos eventos só con @lid casarem).
           if (convOut?.id && lidId) {
             const { data: convRow } = await supabase
               .from("webchat_conversations")
@@ -1030,7 +1030,7 @@ Deno.serve(async (req) => {
             }
           }
 
-          // Sem teléfono real e sem match por LID → no crear conversación fantasma.
+          // Sem teléfono real e sin match por LID → no crear conversación fantasma.
           if (!convOut?.id && !remotePhoneCanonical) {
             console.log("[evolution-webhook] external_outbound: skip lid_no_phone", { lidId });
             return new Response(JSON.stringify({ ok: true, skipped: "lid_no_phone" }), {
@@ -1140,7 +1140,7 @@ Deno.serve(async (req) => {
               .update({ last_message_at: new Date().toISOString() })
               .eq("id", convOut.id);
 
-            // Broadcast realtime → painel atualiza na hora
+            // Broadcast realtime → panel atualiza na hora
             if (insertedAgentMsg) {
               try {
                 const ch = supabase.channel(`conversation:${convOut.id}`);
@@ -1187,12 +1187,12 @@ Deno.serve(async (req) => {
 
       // Find or create conversation for this phone + org.
       // Estratégia tolerante a troca de instância:
-      //   1) Tenta achar conversación aberta com a MESMA instância.
+      //   1) Tenta achar conversación aberta con a MESMA instância.
       //   2) Se no achar, busca qualquer conversación aberta do mismo (org, teléfono, whatsapp)
-      //      sem filtrar instância — assim PRESERVAMOS o histórico do contato mismo
-      //      cuando o número é reconectado/migrado para otra instância.
-      // NÃO fechamos conversaciones duplicadas automaticamente: o histórico del agente
-      // nunca puede sumir por trás dele. Se houver duplicatas, o agente encerra
+      //      sin filtrar instância — assim PRESERVAMOS o historial do contato mismo
+      //      cuando o número es reconectado/migrado para otra instância.
+      // NÃO fechamos conversaciones duplicadas automaticamente: o historial del agente
+      // nunca puede sumir por trás dele. Se hay duplicatas, o agente encerra
       // manualmente cuando quiser.
       let conversationId: string | null = null;
       let existing: { id: string } | null = null;
@@ -1216,7 +1216,7 @@ Deno.serve(async (req) => {
       if (existingByPhone?.id) {
         existing = { id: existingByPhone.id };
         if ((existingByPhone as any).status === "closed") {
-          // Reabre a mismla conversación em vez de crear uma nova: preserva histórico
+          // Reabre a mismla conversación em vez de crear uma nova: preserva historial
           await supabase
             .from("webchat_conversations")
             .update({ status: "waiting_human", closed_at: null })
@@ -1225,7 +1225,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Telemetria: se houver mais de una conversación aberta, solo logamos.
+      // Telemetria: se hay mais de una conversación aberta, solo logamos.
       try {
         const { count: openCount } = await supabase
           .from("webchat_conversations")
@@ -1350,7 +1350,7 @@ Deno.serve(async (req) => {
           .limit(1)
           .maybeSingle();
 
-        // Lookup del lead pelo teléfono NORMALIZADO (anti-duplicação por DDI/9 móvel)
+        // Lookup del lead por el teléfono NORMALIZADO (anti-duplicação por DDI/9 móvel)
         let { data: lead } = await supabase
           .from("leads")
           .select("id, name")
@@ -1523,7 +1523,7 @@ Deno.serve(async (req) => {
           console.warn("[evolution-webhook] funnel lookup error:", e?.message || String(e));
         }
 
-        // Resolve sector padrão da organização (fallback "Sem Sector")
+        // Resolve sector estándar da organização (fallback "Sem Sector")
         let defaultSectorId: string | null = null;
         try {
           const { data: defSec } = await supabase
@@ -1574,7 +1574,7 @@ Deno.serve(async (req) => {
 
         if (convErr) {
           if ((convErr as any).code === "23505") {
-            // Race com otrel flujo — reusar conversación existente do mismo teléfono
+            // Race con otrel flujo — reusar conversación existente do mismo teléfono
             const { data: race } = await supabase
               .from("webchat_conversations")
               .select("id")
@@ -1880,9 +1880,9 @@ Deno.serve(async (req) => {
               }
             } else {
               if (norm.media.type === "audio") {
-                processedContent = `🎙️ [Áudio recibido — sem dados disponíveis para transcrição.]`;
+                processedContent = `🎙️ [Áudio recibido — sin dados disponíveis para transcrição.]`;
               } else {
-                processedContent = `🖼️ [Imagen recibida — sem dados disponíveis para análise.]`;
+                processedContent = `🖼️ [Imagen recibida — sin dados disponíveis para análise.]`;
               }
               console.warn(`[evolution-webhook] media has no b64 nor url; using fallback placeholder`);
             }
@@ -1899,27 +1899,27 @@ Deno.serve(async (req) => {
             if (norm.media.type === "video") {
               processedContent = norm.media.caption
                 ? `🎥 Vídeo (legenda: "${norm.media.caption}")`
-                : `🎥 [Vídeo enviado pelo cliente]`;
+                : `🎥 [Vídeo enviado por el cliente]`;
             } else if (norm.media.type === "document") {
               processedContent = fname
                 ? `📎 Documento: ${fname}`
-                : `📎 [Documento enviado pelo cliente]`;
+                : `📎 [Documento enviado por el cliente]`;
             } else if (norm.media.type === "sticker") {
-              processedContent = `🟡 [Figurinha enviada pelo cliente]`;
+              processedContent = `🟡 [Figurinha enviada por el cliente]`;
             }
           }
         } catch (e: any) {
           console.warn("[evolution-webhook] media processing failed:", e?.message || String(e));
           if (norm.media.type === "audio") {
-            processedContent = `🎙️ [Áudio recibido — falla técnica ao processar.]`;
+            processedContent = `🎙️ [Áudio recibido — fala técnica ao processar.]`;
           } else if (norm.media.type === "image") {
-            processedContent = `🖼️ [Imagen recibida — falla técnica ao processar.]`;
+            processedContent = `🖼️ [Imagen recibida — fala técnica ao processar.]`;
           } else if (norm.media.type === "video") {
-            processedContent = `🎥 [Vídeo recibido — falla técnica ao processar.]`;
+            processedContent = `🎥 [Vídeo recibido — fala técnica ao processar.]`;
           } else if (norm.media.type === "document") {
-            processedContent = `📎 [Documento recibido — falla técnica ao processar.]`;
+            processedContent = `📎 [Documento recibido — fala técnica ao processar.]`;
           } else {
-            processedContent = `📎 [Mídia recibida — falla técnica ao processar.]`;
+            processedContent = `📎 [Mídia recibida — fala técnica ao processar.]`;
           }
         }
       }
@@ -2016,7 +2016,7 @@ Deno.serve(async (req) => {
           conversation_id: conversationId,
         }));
 
-        // Broadcast realtime → o painel (SellerInbox) escuta `conversation:{id}`
+        // Broadcast realtime → o panel (SellerInbox) escuta `conversation:{id}`
         // e adiciona a mensaje na cache instantaneamente. Sem isso, a janela
         // de chat fica congelada hasta o usuario recarregar / trocar de conversación.
         if (inserted) {
@@ -2103,7 +2103,7 @@ Deno.serve(async (req) => {
               });
               console.log(`[evolution-webhook] booking reply matched id=${target.id} -> ${newStatus || "noop"}`);
 
-              // Texto livre (no casou com 1/2/3): delega para IA decidir.
+              // Texto livre (no casou con 1/2/3): delega para IA decidir.
               if (!newStatus && (norm.content || "").trim().length > 0) {
                 supabase.functions.invoke("booking-reply-ai", {
                   body: {
@@ -2128,12 +2128,12 @@ Deno.serve(async (req) => {
       }
 
       // ============================================================
-      // BUFFER CURTO (humanização sem queimar tempo)
+      // BUFFER CURTO (humanização sin queimar tempo)
       // ============================================================
-      // Lê configuraciones de humanização da org. Janela padrão = 3s.
+      // Lê configuraciones de humanização da org. Janela estándar = 3s.
       // Teto absoluto = 8s desde a 1ª msg do burst — nunca mais que isso.
       // Loop: dorme em fatias de 1s; se chegou nova msg do visitor, deferimos
-      // para la invocação dessa nova msg (que va re-medir o teto).
+      // para la invocação de esa nova msg (que va re-medir o teto).
       let groupingEnabled = true;
       let groupingWindowMs = 3000;
       let groupingMaxMs = 8000;
@@ -2149,7 +2149,7 @@ Deno.serve(async (req) => {
           if (orgRow.ai_grouping_window_ms != null) {
             groupingWindowMs = Math.max(0, Math.min(8000, Number(orgRow.ai_grouping_window_ms)));
           } else if (orgRow.ai_debounce_ms != null) {
-            // Fallback compatível com config antiga, mas com TETO de 8s.
+            // Fallback compatível con config antiga, mas con TETO de 8s.
             groupingWindowMs = Math.max(0, Math.min(8000, Number(orgRow.ai_debounce_ms)));
           }
           if (orgRow.ai_grouping_max_ms != null) {
@@ -2200,7 +2200,7 @@ Deno.serve(async (req) => {
             lastSeenAt = newest.created_at;
             lastSeenId = newest.id;
             extensions += 1;
-            deferred = true; // otra invocação (gerada pela msg nova) cuidará da respuesta
+            deferred = true; // otra invocação (gerada por la msg nova) cuidará da respuesta
             console.log("[evolution-webhook] grouping: newer msg arrived, deferring to it");
             break;
           }
@@ -2289,7 +2289,7 @@ Deno.serve(async (req) => {
               currentBlock = findBlock(nextBlockId);
             } else {
               // re-prompt the same buttons block
-              chunksToSend.push(replaceVars(currentBlock.data?.content || "Por favor, escolha uma das opciones:")
+              chunksToSend.push(replaceVars(currentBlock.data?.content || "Por favor, elegí uma das opciones:")
                 + "\n\n" + opts.map((o: any, i: number) => `${i + 1}) ${o.emoji ? o.emoji + ' ' : ''}${o.label}`).join("\n"));
               nextBlockId = currentBlock.id;
               currentBlock = null; // stop loop
@@ -2400,7 +2400,7 @@ Deno.serve(async (req) => {
           }
           await supabase.from("webchat_conversations").update(updatePatch).eq("id", conversationId);
 
-          // 4) Send chunks via Evolution — com hard-cap de 2 bolhas (anti-spam)
+          // 4) Send chunks via Evolution — con hard-cap de 2 bolhas (anti-spam)
           if (chunksToSend.length > 2) {
             const head = chunksToSend[0];
             const tail = chunksToSend.slice(1).join("\n\n").trim();
@@ -2467,8 +2467,8 @@ Deno.serve(async (req) => {
           if (instanceLockAgent?.id) {
             agentId = instanceLockAgent.id;
             if (instanceLockAgent.product_id) resolvedProductId = instanceLockAgent.product_id;
-            // Se la conversación ya está com OUTRO agente ATIVO da misma org (típico
-            // após handoff Maria→Sonia), respeite — NÃO force voltar pro instance lock.
+            // Se la conversación ya está con OUTRO agente ATIVO da misma org (típico
+            // después handoff Maria→Sonia), respeite — NÃO force voltar pro instance lock.
             // Só sobrescreve se current_agent_id for null/inválido.
             const currentAgentId = (conv as any).current_agent_id || null;
             if (currentAgentId && currentAgentId !== agentId) {
@@ -2777,7 +2777,7 @@ Deno.serve(async (req) => {
                 }
 
                 // 1) "digitando..." REAL no WhatsApp via Presence Engine
-                //    (POST /message/presence — Evolution Go, com heartbeat a cada 7s)
+                //    (POST /message/presence — Evolution Go, con heartbeat a cada 7s)
                 const typingMs = Math.max(
                   600,
                   Math.min(

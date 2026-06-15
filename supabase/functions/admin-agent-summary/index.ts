@@ -66,7 +66,7 @@ async function buildDailySummary(orgId: string): Promise<string> {
     `✅ Leads criados: *${totalLeads}*\n` +
     `🔥 Leads quentes: *${hotLeads}*\n` +
     `💬 Conversas ativas: *${activeChats}*\n` +
-    `📅 Reuniões realizadas: *${meetings}*\n` +
+    `📅 Reuniones realizadas: *${meetings}*\n` +
     `💰 Receita fechada: *${fmt(closedRevenue)}*\n` +
     `📈 Pipeline aberto: *${fmt(pipelineTotal)}*\n\n` +
     `Quer detalhes de algún item?`;

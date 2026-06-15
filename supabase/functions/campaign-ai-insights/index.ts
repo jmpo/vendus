@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
       contexts: ctxStats,
     };
 
-    const prompt = `Usted é o Assistente da Campaña Inteligente da Vendus. Analiza os dados a seguir e produza 3 insights práticos para el gestor (en español, máximo 2 linhas cada, sem clichês). Cada insight debe ter: título corto + recomendação acionável.
+    const prompt = `Usted es o Assistente da Campaña Inteligente da Vendus. Analiza os dados a seguir e produza 3 insights práticos para el gestor (en español, máximo 2 linhas cada, sin clichês). Cada insight debe ter: título corto + recomendação acionável.
 
 Dados:
 ${JSON.stringify(summary, null, 2)}

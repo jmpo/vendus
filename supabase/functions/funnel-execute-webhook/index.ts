@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
       if (cfg.body_template && cfg.body_template.trim()) {
         body = substituteVariables(cfg.body_template, vars);
       } else {
-        // Default: envia tudo coletado
+        // Default: envia todo coletado
         body = JSON.stringify({
           funnel_id: input.funnel_id,
           funnel_name: funnel.name,
@@ -182,7 +182,7 @@ Deno.serve(async (req) => {
       if (!res.ok) errorMessage = `HTTP ${res.status}`;
     } catch (err) {
       const e = err as Error;
-      errorMessage = e.name === 'AbortError' ? `Timeout após ${timeoutMs}ms` : e.message;
+      errorMessage = e.name === 'AbortError' ? `Timeout después ${timeoutMs}ms` : e.message;
       success = false;
     } finally {
       clearTimeout(timer);

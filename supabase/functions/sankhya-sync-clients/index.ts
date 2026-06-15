@@ -81,7 +81,7 @@ serve(async (req: Request): Promise<Response> => {
     const { organization_id }: SyncRequest = await req.json();
 
     if (!organization_id) {
-      throw new Error("organization_id é obligatorio");
+      throw new Error("organization_id es obligatorio");
     }
 
     // Create sync log

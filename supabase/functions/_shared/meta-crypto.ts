@@ -1,5 +1,5 @@
 // AES-256-GCM envelope encryption para credenciais Meta.
-// A chave-mestre é auto-gerada em platform_settings via RPC SECURITY DEFINER.
+// A chave-mestre es auto-gerada em platform_settings via RPC SECURITY DEFINER.
 // Service role only — nunca exposta ao client.
 
 import { createClient } from 'npm:@supabase/supabase-js@2';

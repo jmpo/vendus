@@ -4,7 +4,7 @@
 // Body: { filename: string, mime_type: string, file_base64: string, agent_type?: string }
 // Resp: { agent: GeneratedAgent }
 //
-// Obs.: O caso JSON é tratado 100% no client (validação + insert direto).
+// Obs.: O caso JSON es tratado 100% no client (validação + insert direto).
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { unzipSync, strFromU8 } from "https://esm.sh/fflate@0.8.2";
@@ -30,7 +30,7 @@ function extractDocxText(bytes: Uint8Array): string {
   const xmlBytes = files["word/document.xml"];
   if (!xmlBytes) return "";
   const xml = strFromU8(xmlBytes);
-  // Remove tags, junta com quebras nos parágrafos
+  // Remove tags, junta con quebras nos parágrafos
   const withBreaks = xml
     .replace(/<\/w:p>/g, "\n")
     .replace(/<w:tab\/>/g, "\t")
@@ -40,7 +40,7 @@ function extractDocxText(bytes: Uint8Array): string {
 
 async function extractPdfText(bytes: Uint8Array): Promise<string> {
   try {
-    // unpdf é puro JS, sem deps nativas → roda em Deno/edge
+    // unpdf es puro JS, sin deps nativas → roda em Deno/edge
     const { extractText, getDocumentProxy } = await import("https://esm.sh/unpdf@0.12.1");
     const doc = await getDocumentProxy(bytes);
     const { text } = await extractText(doc, { mergePages: true });
@@ -130,12 +130,12 @@ serve(async (req) => {
     }
     if (extracted.length > 20000) extracted = extracted.slice(0, 20000);
 
-    const systemPrompt = `Usted é especialista em projetar agentes de IA conversacionais para ventas e atención.
+    const systemPrompt = `Usted es especialista em projetar agentes de IA conversacionais para ventas e atención.
 A partir do briefing/documento abaixo, extraia uma configuración completa de agente.
 
 REGRAS:
 - Identifica tom, missão, capacidades, restrições e gatilhos de transferência diretamente do texto.
-- Se o texto no menciona um campo, infira algo razoável e profissional, sem clichês.
+- Se o texto no menciona um campo, infira algo razoável e profissional, sin clichês.
 - Mensagens devem seguir SPIN Selling: profissional, objetivo, no máximo 2 linhas por bloco.
 - Nunca use emojis em prompts.
 - additional_prompt debe consolidar TUDO que o documento diz sobre comportamento, em 3-6 parágrafos.`;
@@ -200,7 +200,7 @@ Crea a configuración completa del agente baseada nisso.`;
       const txt = await aiResp.text();
       console.error("AI gateway error", aiResp.status, txt);
       if (aiResp.status === 429) {
-        return new Response(JSON.stringify({ error: "Limite de uso de IA atingido. Tente novamente em alguns minutos." }), {
+        return new Response(JSON.stringify({ error: "Limite de uso de IA atingido. Tente novamente em algunos minutos." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }

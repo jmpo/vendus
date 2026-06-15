@@ -6,7 +6,7 @@
 // 2) Verifica se o evento está habilitado
 // 3) Aplica cooldown (no dispara o mismo evento pro mismel lead em <X min)
 // 4) Localiza/cria el lead (pelo teléfono/email da Cakto)
-// 5) Gera mensaje inicial com a IA usando o agente configurado
+// 5) Gera mensaje inicial con a IA usando o agente configurado
 // 6) Envia via WhatsApp (BotConversa ou IsiChat)
 // 7) Cria la conversación (webchat_conversations) pra IA continuar respondendo
 // 8) Loga em cakto_recovery_dispatches
@@ -104,7 +104,7 @@ Deno.serve(async (req) => {
 
   const event = STATUS_TO_EVENT[order.status];
   if (!event) {
-    return json({ skipped: true, reason: `status sem mapeamento: ${order.status}` });
+    return json({ skipped: true, reason: `status sin mapeamento: ${order.status}` });
   }
 
   // 2) Config da org
@@ -148,7 +148,7 @@ Deno.serve(async (req) => {
     return json({ skipped: true, reason: 'sem teléfono' });
   }
 
-  // 3) Localiza lead pelo teléfono ou email (cria se no existir)
+  // 3) Localiza lead por el teléfono ou email (cria se no existir)
   let leadId: string | null = null;
   {
     const { data: existing } = await supabase
@@ -186,7 +186,7 @@ Deno.serve(async (req) => {
   }
 
   if (!leadId) {
-    return json({ error: 'falla ao crear/localizar lead' }, 500);
+    return json({ error: 'fala ao crear/localizar lead' }, 500);
   }
 
   // 4) Cooldown: ya disparou esse evento pra esse lead recentemente?
@@ -254,7 +254,7 @@ Deno.serve(async (req) => {
     priority: number;
   };
 
-  // Filtra cenários pelos filters (ex: producto específico, valor mínimo)
+  // Filtra cenários por los filters (ex: producto específico, valor mínimo)
   const matchScenario = (s: Scenario): boolean => {
     const f = s.filters || {};
     if (f.product_cakto_id && order.product_cakto_id !== f.product_cakto_id) return false;
@@ -304,21 +304,21 @@ Deno.serve(async (req) => {
 
   const eventBriefing =
     event === 'abandoned'
-      ? `O cliente acabou de gerar um ${order.payment_method || 'pago'} no valor de R$ ${order.amount?.toFixed(2) ?? '?'} para "${productLabel}" mas AINDA NÃO PAGOU.${cartDescription}\n\nSua missão: tirar dudas, crear urgência leve e ajudar a finalizar. Se útil, ofereça reenviar o link/Pix. Se houver order bumps, mencione o conjunto, no só o principal.`
+      ? `O cliente acabou de gerar um ${order.payment_method || 'pago'} no valor de R$ ${order.amount?.toFixed(2) ?? '?'} para "${productLabel}" mas AINDA NÃO PAGOU.${cartDescription}\n\nSua missão: tirar dudas, crear urgência leve e ajudar a finalizar. Se útil, ofereça reenviar o link/Pix. Se hay order bumps, mencione o conjunto, no só o principal.`
       : event === 'paid'
         ? `O cliente acabou de PAGAR R$ ${order.amount?.toFixed(2) ?? '?'} por "${productLabel}".${cartDescription}\n\nSua missão: agradecer, confirmar a compra, orientar próximos passos e — se fizer sentido — apresentar um upsell/cross-sell de algo que ele AINDA NÃO levou.`
         : `O cliente tuvo um pedido REEMBOLSADO/ESTORNADO no valor de R$ ${order.amount?.toFixed(2) ?? '?'} ("${productLabel}").${cartDescription}\n\nSua missão: ser empático, entender o motivo, recuperar a relação e — se posible — propor uma alternativa.`;
 
-  const systemPrompt = `Usted é ${agent.name}, agente de ${agent.agent_type} de la empresa.
+  const systemPrompt = `Usted es ${agent.name}, agente de ${agent.agent_type} de la empresa.
 MISSÃO PRINCIPAL: ${agent.primary_objective}
-TOM: ${agent.tone_style || 'Consultivo, próximo, sem pressão'}
+TOM: ${agent.tone_style || 'Consultivo, próximo, sin pressão'}
 ESTILO: ${agent.message_style || 'Curta, direta, humana'}
 
 CONTEXTO DESTA CONVERSA — RECUPERAÇÃO AUTOMÁTICA CAKTO:
 ${eventBriefing}
 
-${agent.can_do?.length ? `O QUE VOCÊ PODE FAZER:\n${agent.can_do.map((c: string) => `- ${c}`).join('\n')}` : ''}
-${agent.cannot_do?.length ? `O QUE VOCÊ NÃO PODE FAZER:\n${agent.cannot_do.map((c: string) => `- ${c}`).join('\n')}` : ''}
+${agent.can_do?.length ? `O QUE VOS PODE FAZER:\n${agent.can_do.map((c: string) => `- ${c}`).join('\n')}` : ''}
+${agent.cannot_do?.length ? `O QUE VOS NÃO PODE FAZER:\n${agent.cannot_do.map((c: string) => `- ${c}`).join('\n')}` : ''}
 ${knowledgeContext ? `CONHECIMENTO DO PRODUTO:\n${knowledgeContext}` : ''}
 ${
   scenarios.length
@@ -327,7 +327,7 @@ ${
           (s, idx) =>
             `\n[Cenário ${idx + 1} — ${s.name}]\nInstrução: ${s.instruction}${
               s.links?.length
-                ? `\nLinks disponíveis:\n${s.links.map((l) => `  • ${l.label}: ${l.url}${l.when_to_offer ? ` (oferecer cuando: ${l.when_to_offer})` : ''}`).join('\n')}`
+                ? `\nLinks disponíveis:\n${s.links.map((l) => `  • ${l.label}: ${l.url}${l.when_to_offer ? ` (ofrecer cuando: ${l.when_to_offer})` : ''}`).join('\n')}`
                 : ''
             }`,
         )
@@ -336,11 +336,11 @@ ${
 }
 
 REGRAS DA MENSAGEM INICIAL:
-- Genera APENAS a mensaje (sem prefixos, sem aspas, sem explicações)
+- Genera APENAS a mensaje (sem prefixos, sin aspas, sin explicações)
 - Usa o nombre del cliente: ${order.customer_name || 'cliente'}
 - Mencione o que ele estava levando: ${productLabel}
-- WhatsApp: corta (máx 2 parágrafos), sem markdown, sem emoji exagerado (1 só)
-- Termine com pregunta clara
+- WhatsApp: corta (máx 2 parágrafos), sin markdown, sin emoji exagerado (1 só)
+- Termine con pregunta clara
 - NUNCA pareça um robô. Soa como vendedor humano que viu o pedido e resolveu chamar.`;
 
   const userPrompt = `Genera a mensaje inicial de WhatsApp para esta situación. Cliente: ${order.customer_name || 'sem nombre'}. Teléfono: ${phone}.`;

@@ -287,9 +287,9 @@ async function processApprovedCommissions(supabase: any, settings: AutoNotificat
       .insert({
         user_id: commission.user_id,
         type: 'opportunity',
-        title: `💰 Comissão aprovada: ${amountFormatted}`,
-        message: `Su comissão de ${productName} (${leadName}) fue aprovada!`,
-        action_url: '/financeiro',
+        title: `💰 Comisión aprovada: ${amountFormatted}`,
+        message: `Su comisión de ${productName} (${leadName}) fue aprovada!`,
+        action_url: '/financiero',
         product_id: commission.product_id,
       });
 

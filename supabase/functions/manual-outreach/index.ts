@@ -173,29 +173,29 @@ Deno.serve(async (req) => {
           ? `MODO: CONVERSA INTENCIONAL
 - Genera APENAS uma abertura corta (1–2 linhas, no máx. 25 palavras).
 - Faça UMA pregunta provocativa referenciando o evento (ex.: "Vi que usted gerou um Pix, conseguiu finalizar?").
-- NÃO entregue Pix, link, código, instruções ou dados do evento ahora — só pergunte.
-- Aguarde a respuesta del lead antes de oferecer qualquer detalhe.`
+- NÃO entregue Pix, link, código, instruções ou dados do evento ahora — só preguntes.
+- Aguarde a respuesta del lead antes de ofrecer qualquer detalhe.`
           : `MODO: MENSAGEM DIRETA
 - Genera uma mensaje completa, mas em no máx. 2 parágrafos curtos.
-- Se houver Pix/link, coloque cada um em linha própria, sem texto extra junto.
-- Sem despedidas longas. Termine com UMA pregunta ou CTA claro.`;
+- Se hay Pix/link, coloque cada um em linha própria, sin texto extra junto.
+- Sem despedidas longas. Termine con UMA pregunta ou CTA claro.`;
 
-        const systemPrompt = `Usted é ${agent.name}, um agente de ${agent.agent_type} de la empresa.
+        const systemPrompt = `Usted es ${agent.name}, um agente de ${agent.agent_type} de la empresa.
 MISSÃO: ${agent.primary_objective}
 TOM DE VOZ: ${agent.tone_style || "Consultivo"}
 ESTILO DE MENSAGEM: ${agent.message_style || "Curta e objetiva"}
-${agent.can_do?.length ? `O QUE VOCÊ PODE FAZER:\n${agent.can_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
-${agent.cannot_do?.length ? `O QUE VOCÊ NÃO PODE FAZER:\n${agent.cannot_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
+${agent.can_do?.length ? `O QUE VOS PODE FAZER:\n${agent.can_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
+${agent.cannot_do?.length ? `O QUE VOS NÃO PODE FAZER:\n${agent.cannot_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
 ${knowledgeContext ? `CONHECIMENTO DO PRODUTO:\n${knowledgeContext}` : ""}
 ${objective ? `OBJETIVO DESTA ABORDAGEM: ${objective}` : ""}
 ${extra_context ? `CONTEXTO ADICIONAL: ${extra_context}` : ""}
 ${eventCtxLines ? `CONTEXTO DO EVENTO:\n${eventCtxLines}` : ""}
 ${modeRules}
 REGRAS GERAIS:
-- Genera APENAS a mensaje, sem explicações ou prefixos.
+- Genera APENAS a mensaje, sin explicações ou prefixos.
 - Sé natural e humano, NÃO pareça um bot. Sem clichês ("espero que esteja bem", etc.).
-- Personalize com as información del lead.
-- WhatsApp: sem markdown, sem HTML.`;
+- Personalize con as información del lead.
+- WhatsApp: sin markdown, sin HTML.`;
 
         const userPrompt = `Genera a mensaje de primeira abordagem via WhatsApp para este lead:
 Nombre: ${lead?.name || "Lead"}
@@ -234,7 +234,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
 
         console.log(`[ManualOutreach] (${mode}) -> ${lead?.name} (${leadPhone}): ${generatedMessage.slice(0, 80)}...`);
 
-        // Quebra em hasta 2 bolhas curtas (regra padrão WhatsApp do projeto)
+        // Quebra em hasta 2 bolhas curtas (regra estándar WhatsApp do projeto)
         const bubbles = mode === 'conversational'
           ? [generatedMessage] // ya forçamos corto no prompt
           : splitIntoBubbles(generatedMessage, { maxChunks: 2, targetCharsPerChunk: 280 });

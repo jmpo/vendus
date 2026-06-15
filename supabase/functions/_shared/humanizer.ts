@@ -130,7 +130,7 @@ const DEFAULT_ABBREVS: Record<string, string> = {
   'está': 'tá',
   'estou': 'tô',
   'beleza': 'blz',
-  'tudo bem': 'tdbm',
+  'todo bien': 'tdbm',
   'para': 'pra',
   'que': 'q',
   'no': 'n',
@@ -155,7 +155,7 @@ export function applyStyle(input: string, style: StyleConfig = {}): string {
   // 1. Abbreviations (per word/phrase, probabilistic)
   const abbrevs = parseAbbreviations(style.abbreviations);
   if ((style.abbrev_prob ?? 0) > 0) {
-    // Sort by length desc to match "tudo bem" before "tudo"
+    // Sort by length desc to match "todo bien" before "tudo"
     const keys = Object.keys(abbrevs).sort((a, b) => b.length - a.length);
     for (const key of keys) {
       const re = new RegExp(`\\b${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
@@ -250,7 +250,7 @@ export function splitIntoBubbles(text: string, cfg: SplittingConfig = {}): strin
     .map((s) => s.trim())
     .filter(Boolean);
 
-  // Fallback cuando a IA mandou tudo numa frase só ("frase, frase, frase, frase").
+  // Fallback cuando a IA mandou todo numa frase só ("frase, frase, frase, frase").
   // Quebrar por vírgula / ponto-e-vírgula / conjunções leves preservando ordem.
   let units: string[] = sentences;
   if (sentences.length <= 1 && t.length > targetLen) {
@@ -310,8 +310,8 @@ function hoursMultiplier(date: Date, vary: boolean): number {
   return 1.5; // off-hours: leve aumento (antes era 2x — gerava esperas absurdas)
 }
 
-// Hard caps de servidor: protegem contra configs antigas com 90s, etc.
-// Esses limites NUNCA son ultrapassados, mismo se o JSON del agente disser o contrário.
+// Hard caps de servidor: protegem contra configs antigas con 90s, etc.
+// Esses limites NUNCA son ultrapassados, mismo se o JSON del agente dice o contrário.
 const HARD_FIRST_MIN_MS = 1500;
 const HARD_FIRST_MAX_MS = 15000;
 const HARD_BETWEEN_MIN_MS = 600;
@@ -462,7 +462,7 @@ export function defaultsForAgentType(agentType: string): HumanizationConfig {
 // ─────────────── prompt block builder (persona + tics + style) ────────────
 
 const REGION_HINTS: Record<LinguisticRegion, string> = {
-  neutral: 'español brasileiro neutro, sem regionalismo forte',
+  neutral: 'español brasileiro neutro, sin regionalismo forte',
   paulista: 'sotaque paulista (mano, tipo, então, daí)',
   carioca: 'sotaque carioca (cara, véi, mermão, maneiro)',
   nordestino: 'sotaque nordestino (oxe, vixe, massa, arretado)',
@@ -531,7 +531,7 @@ export function buildHumanizationPromptBlock(cfg?: HumanizationConfig | null): s
     out.push(`Conectores casuales que usás: ${t.connectors.join(', ')}.`);
   }
   if (t.fillers && t.fillers.length > 0) {
-    out.push(`Frases muletilla para cuando necesitás "pensar":\n${bulletList(t.fillers, 10)}`);
+    out.push(`Frases muletila para cuando necesitás "pensar":\n${bulletList(t.fillers, 10)}`);
   }
 
   // ─── Style hints (so the LLM already produces lowercase / abbrevs) ──

@@ -46,7 +46,7 @@ interface ProvisionResult {
 }
 
 /**
- * Resolve um plano pelo cakto_offer_slug (preferencial) ou cakto_product_id (fallback).
+ * Resolve um plano por el cakto_offer_slug (preferencial) ou cakto_product_id (fallback).
  */
 async function resolvePlatformPlan(
   admin: SupabaseClient,
@@ -74,7 +74,7 @@ async function resolvePlatformPlan(
 
 /**
  * Provisiona o plano da plataforma para o e-mail do comprador.
- * - Cria/encontra a organization pelo cakto_customer_email.
+ * - Cria/encontra a organization por el cakto_customer_email.
  * - Grava plan_id, plan_status='active', plan_activated_at, cakto_subscription_id.
  * - Insere billing_history idempotente via metadata.cakto_id.
  */

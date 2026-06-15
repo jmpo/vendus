@@ -280,7 +280,7 @@ Deno.serve(async (req) => {
     }
 
     // 3.b Heurística: se algún campo essencial (name/email/phone) no fue mapeado via maps_to,
-    // buscar pelo label do bloco (ex: "Qual su nombre completo?") OU pela chave do response.
+    // buscar por el label do bloco (ex: "Qual su nombre completo?") OU por la chave do response.
     const matchLabel = (label: string, keywords: string[]) => {
       const l = (label || '').toLowerCase();
       return keywords.some((k) => l.includes(k));
@@ -291,7 +291,7 @@ Deno.serve(async (req) => {
         return okType && matchLabel(b.label, keywords) && responses[b.id];
       });
       if (b) return String(responses[b.id]);
-      // Fallback: chave do response (caso o body ya venha com labels/aliases)
+      // Fallback: chave do response (caso o body ya venha con labels/aliases)
       const key = Object.keys(responses).find((k) => matchLabel(k, keywords));
       return key && responses[key] != null ? String(responses[key]) : null;
     };
@@ -525,7 +525,7 @@ Deno.serve(async (req) => {
           .insert({
             organization_id: form.organization_id,
             product_id: form.product_id,
-            name: leadData.name || leadData.email || 'Lead sem nombre',
+            name: leadData.name || leadData.email || 'Lead sin nombre',
             email: leadData.email || null,
             phone: leadData.phone || null,
             company: leadData.company || null,
@@ -686,7 +686,7 @@ Deno.serve(async (req) => {
                 lead_ids: [leadId],
                 agent_id: outreachAgentId,
                 organization_id: form.organization_id,
-                objective: outreachObjective || `Continuar la conversación iniciada no formulário "${form.name}" e ajudar el lead pelo WhatsApp.`,
+                objective: outreachObjective || `Continuar la conversación iniciada no formulário "${form.name}" e ajudar el lead por el WhatsApp.`,
                 extra_context: extraContext,
                 mode: 'direct',
               }),
@@ -695,7 +695,7 @@ Deno.serve(async (req) => {
             console.error('[form-submit] manual-outreach wrap non-fatal:', e);
           }
         } else if (outreachAgentId && !leadData.phone) {
-          console.warn('[form-submit] start_ai_outreach configurado mas lead sem teléfono — pulando.');
+          console.warn('[form-submit] start_ai_outreach configurado mas lead sin teléfono — pulando.');
         }
       }
     }

@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
     let targetLeads: string[] = [];
     if (Array.isArray(lead_ids) && lead_ids.length) {
       targetLeads = lead_ids;
-      // Aplica exclusões manualmente se houver
+      // Aplica exclusões manualmente se hay
       const excl = cadence.exclusion_filters ?? {};
       if (Object.keys(excl).length) {
         const { leadIds: toRemove } = await resolveAudience(supabase, cadence.organization_id, { ...excl, lead_ids: targetLeads }, {});
@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Filtra leads ya com enrollment ativo
+    // Filtra leads ya con enrollment ativo
     const { data: existing } = await supabase
       .from("cadence_enrollments")
       .select("lead_id")

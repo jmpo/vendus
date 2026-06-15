@@ -25,14 +25,14 @@ const TONE_LABELS: Record<string, string> = {
   profissional: 'Profissional e consultivo, evite gírias e emojis em excesso.',
   consultivo: 'Consultivo, baseado em SPIN selling. Faça preguntas que despertem reflexão.',
   descontraido: 'Descontraído, próximo, puede usar emojis e linguagem casual.',
-  direto: 'Direto, sem rodeios, preguntas curtas e objetivas.',
+  direto: 'Direto, sin rodeios, preguntas curtas e objetivas.',
 };
 
 const RESULT_LABELS: Record<string, string> = {
-  classificacao: 'Clasifica el lead em 3 categorias (frio/morno/quente) com base no score.',
-  diagnostico: 'Genera um diagnóstico detalhado com 3 níveis de maturidade.',
+  classificacao: 'Clasifica el lead em 3 categorias (frio/morno/quente) con base no score.',
+  diagnostico: 'Genera um diagnóstico detalhado con 3 níveis de maturidade.',
   recomendacao: 'Recomende a melhor opción/plano/caminho para el lead.',
-  pontuacao: 'Mostre uma pontuação final com mensaje corta.',
+  pontuacao: 'Mostre uma pontuação final con mensaje corta.',
 };
 
 serve(async (req) => {
@@ -58,7 +58,7 @@ serve(async (req) => {
     } = body;
 
     if (!context || context.trim().length < 20) {
-      return new Response(JSON.stringify({ error: 'Contexto do quiz é obligatorio (mínimo 20 caracteres).' }),
+      return new Response(JSON.stringify({ error: 'Contexto do quiz es obligatorio (mínimo 20 caracteres).' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
@@ -101,7 +101,7 @@ Problemas que resolve: ${product.problems_solved || 'N/A'}
     if (capture_whatsapp) captureFields.push('WhatsApp (input_type:"phone", variable_name:"whatsapp")');
     if (capture_email) captureFields.push('E-mail (input_type:"email", variable_name:"email")');
 
-    const systemPrompt = `Usted é especialista em crear QUIZZES de qualificação de leads de alta conversão.
+    const systemPrompt = `Usted es especialista em crear QUIZZES de calificación de leads de alta conversão.
 
 ${productContext ? `CONTEXTO DO PRODUTO:\n${productContext}\n` : ''}
 ${knowledgeContext ? `CONHECIMENTO DO PRODUTO (Cérebro):\n${knowledgeContext}\n` : ''}
@@ -110,16 +110,16 @@ TIPO DE RESULTADO: ${RESULT_LABELS[result_type]}
 
 ESTRUTURA OBRIGATÓRIA (em ordem):
 1. Bloco "text" de boas-vindas corto.
-2. 3 a 6 blocos "buttons" (preguntas de múltipla escolha), cada um com 3-4 opciones, cadla opción com {id, letter (A/B/C/D), label, score (0-35), tag (opcional)}.
+2. 3 a 6 blocos "buttons" (preguntas de múltipla elegí), cada um con 3-4 opciones, cadla opción con {id, letter (A/B/C/D), label, score (0-35), tag (opcional)}.
 3. Blocos "input" para capturar:
 ${captureFields.map((f) => `   - ${f}`).join('\n') || '   - (ningún)'}
 4. Bloco "end" com:
    - content: "Resultado pronto!"
-   - result_tiers: array com 3 níveis [{id, label, min, max, color, message}]
+   - result_tiers: array con 3 níveis [{id, label, min, max, color, message}]
    - result_metrics: array opcional [{id, label, value (0-100), display:"percent", color}]
 
 REGRAS:
-- Usa linguagem natural, sem clichês.
+- Usa linguagem natural, sin clichês.
 - Score total possível ~100-150 pontos distribuídos entre as opciones.
 - Cada bloco tiene campo "variable_name" único (ex: q1, q2, faturamento, urgencia).
 - NÃO inclua next_block_id (o cliente conecta linearmente).
@@ -174,7 +174,7 @@ Retorne APENAS o JSON.`;
       console.error('AI error', aiResponse.status, text);
       if (aiResponse.status === 429) return new Response(JSON.stringify({ error: 'Limite excedido. Aguarde e tente novamente.' }), { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       if (aiResponse.status === 402) return new Response(JSON.stringify({ error: 'Créditos insuficientes. Adicione créditos ao workspace.' }), { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-      return new Response(JSON.stringify({ error: 'Error ao gerar quiz com IA' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ error: 'Error ao gerar quiz con IA' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     const aiData = await aiResponse.json();

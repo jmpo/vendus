@@ -32,10 +32,10 @@ export const criarDealTool: ToolDefinition = {
   },
   handler: async (input, ctx) => {
     if (!ctx.leadId) {
-      return { success: false, error: 'leadId é obligatorio no contexto' };
+      return { success: false, error: 'leadId es obligatorio no contexto' };
     }
 
-    // Busca o vendedor responsável pelel lead (se houver)
+    // Busca o vendedor responsável pelel lead (se hay)
     const { data: lead } = await ctx.supabase
       .from('leads')
       .select('assigned_to, organization_id')
@@ -47,7 +47,7 @@ export const criarDealTool: ToolDefinition = {
     }
 
     // Se no há vendedor atribuído, usa um placeholder (deal "del agente")
-    // — mas a tabela exige seller_id NOT NULL, então usamos o assigned_to del lead.
+    // — mas a tabela exige seller_id NOT NULL, entonces usamos o assigned_to del lead.
     const sellerId = lead.assigned_to;
     if (!sellerId) {
       return {
@@ -65,7 +65,7 @@ export const criarDealTool: ToolDefinition = {
         organization_id: ctx.organizationId,
         deal_value: input.deal_value,
         plan_name: input.plan_name ?? null,
-        notes: input.notes ?? `Criado pelo agente ${ctx.agentName ?? 'IA'}`,
+        notes: input.notes ?? `Criado por el agente ${ctx.agentName ?? 'IA'}`,
         status: 'open',
       })
       .select()

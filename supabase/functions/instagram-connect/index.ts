@@ -79,7 +79,7 @@ Deno.serve(async (req: Request) => {
     return json({ error: 'Facebook Page ID ou Page Access Token inválido', detail: ge.graph?.message ?? String(e) }, 400);
   }
   if (pageInfo?.instagram_business_account?.id && String(pageInfo.instagram_business_account.id) !== String(ig_business_account_id)) {
-    return json({ error: `A cuenta IG da página é ${pageInfo.instagram_business_account.id}, no ${ig_business_account_id}` }, 400);
+    return json({ error: `A cuenta IG da página es ${pageInfo.instagram_business_account.id}, no ${ig_business_account_id}` }, 400);
   }
   try {
     igInfo = await graphFetch(`/${ig_business_account_id}?fields=username,name`, page_access_token);
@@ -114,7 +114,7 @@ Deno.serve(async (req: Request) => {
   };
   if (app_secret) updates.app_secret_encrypted = await encryptSecret(String(app_secret));
   else if (!existing.app_secret_encrypted) {
-    return json({ error: 'app_secret é obligatorio na primeira ativação' }, 400);
+    return json({ error: 'app_secret es obligatorio na primeira ativação' }, 400);
   }
 
   const { error: updErr } = await sbAdmin

@@ -33,7 +33,7 @@ export function listTools(filter?: {
   });
 }
 
-// Converte uma lista de ferramentas para el formato esperado pelo Lovable AI Gateway / OpenAI.
+// Converte uma lista de ferramentas para el formato esperado por el Lovable AI Gateway / OpenAI.
 export function toolsToOpenAISchema(tools: ToolDefinition[]): ToolCallSchema[] {
   return tools.map((t) => ({
     type: 'function' as const,
@@ -45,7 +45,7 @@ export function toolsToOpenAISchema(tools: ToolDefinition[]): ToolCallSchema[] {
   }));
 }
 
-// Executa uma ferramenta com auditoria automática + tratamento de error.
+// Executa uma ferramenta con auditoria automática + tratamento de error.
 export async function executeTool(
   name: string,
   input: Record<string, any>,
@@ -109,7 +109,7 @@ async function logExecution(
       estimated_cost_cents: costCents,
     });
   } catch (logErr) {
-    console.error('[tools] falla ao registrar execução:', logErr);
+    console.error('[tools] fala ao registrar execução:', logErr);
   }
 }
 

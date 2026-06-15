@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
     }
 
     // 2. Calculate end time
-    // Regra: se vier sem offset de timezone, assumir Brasília (-03:00) — no UTC
+    // Regra: se vier sin offset de timezone, assumir Brasília (-03:00) — no UTC
     const hasTzOffset = /[zZ]|[+-]\d{2}:?\d{2}$/.test(startTime);
     const normalizedStart = hasTzOffset ? startTime : `${startTime}-03:00`;
     const startDate = new Date(normalizedStart);
@@ -97,7 +97,7 @@ Deno.serve(async (req) => {
       .insert({
         user_id: eventType.user_id,
         organization_id: eventType.organization_id,
-        title: `${eventType.name} com ${guestName}`,
+        title: `${eventType.name} con ${guestName}`,
         description: `Reserva via link público\n\nConvidado: ${guestName}\nEmail: ${guestEmail}${guestPhone ? `\nTelefone: ${guestPhone}` : ''}`,
         start_time: startTimeIso,
         end_time: endTime,

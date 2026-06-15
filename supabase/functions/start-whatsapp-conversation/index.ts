@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
     const normalizedPhone = normalizePhoneBR(phone);
 
     // Procura QUALQUER conversación do mismo teléfono normalizado (inclusive fechada).
-    // Reabrir conversación existente em vez de crear nova → nunca duplica histórico.
+    // Reabrir conversación existente em vez de crear nova → nunca duplica historial.
     const { data: existing } = await supabase
       .from("webchat_conversations")
       .select("id, status")
@@ -165,7 +165,7 @@ Deno.serve(async (req) => {
       .single();
 
     if (insertError && (insertError as any).code === "23505") {
-      // Race com webhook/automação — recupera la conversación que ganhou o INSERT
+      // Race con webhook/automação — recupera la conversación que ganhou o INSERT
       const { data: race } = await supabase
         .from("webchat_conversations")
         .select("id")

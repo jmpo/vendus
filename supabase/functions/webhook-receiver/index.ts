@@ -15,7 +15,7 @@ interface WebhookAction {
   config: Record<string, any>;
 }
 
-// Flatten nested object to dot notation
+// Flatten en ested object to dot notation
 function flattenObject(obj: any, prefix = ''): Record<string, any> {
   const result: Record<string, any> = {};
   
@@ -141,8 +141,8 @@ function generateWelcomeHtml(leadName: string): string {
         </div>
         <div class="content">
           <p>Hola <strong>${leadName}</strong>,</p>
-          <p>Gracias pelo su interesse! Recebemos sus dados com éxito.</p>
-          <p>Em breve nossa equipo entrará em contato com usted.</p>
+          <p>Gracias por el su interesse! Recebemos sus dados con éxito.</p>
+          <p>Em breve nossa equipo entrará em contato con usted.</p>
         </div>
       </div>
     </body>
@@ -287,7 +287,7 @@ Deno.serve(async (req) => {
           const params = new URLSearchParams(trimmed);
           params.forEach((v, k) => { payload[k] = v; });
         } else {
-          // text/plain ou sem content-type: tenta JSON, después urlencoded
+          // text/plain ou sin content-type: tenta JSON, después urlencoded
           try {
             payload = JSON.parse(trimmed);
           } catch {
@@ -824,7 +824,7 @@ async function executeAction(
       if (org?.name) orgName = org.name;
 
       // Get email template if configured
-      let subject = 'Gracias pelo su interesse!';
+      let subject = 'Gracias por el su interesse!';
       let html = generateWelcomeHtml(lead.name || 'Cliente');
 
       if (config.email_template_id) {
@@ -1204,7 +1204,7 @@ async function executeAction(
 
       if (!agent) throw new Error('AI agent not found');
 
-      // Resolve widget ativo (coluna widget_id é NOT NULL em webchat_conversations)
+      // Resolve widget ativo (coluna widget_id es NOT NULL em webchat_conversations)
       let outreachWidget = (await supabase
         .from('webchat_widgets')
         .select('id')
@@ -1250,15 +1250,15 @@ async function executeAction(
         .join('\n');
 
       // 5. Build AI prompt
-      const systemPrompt = `Usted é ${agent.name}, um agente de ${agent.agent_type} de la empresa.
+      const systemPrompt = `Usted es ${agent.name}, um agente de ${agent.agent_type} de la empresa.
 
 MISSÃO: ${agent.primary_objective}
 
 TOM DE VOZ: ${agent.tone_style || 'Consultivo'}
 ESTILO DE MENSAGEM: ${agent.message_style || 'Curta e objetiva'}
 
-${agent.can_do?.length ? `O QUE VOCÊ PODE FAZER:\n${agent.can_do.map((c: any) => `- ${c}`).join('\n')}` : ''}
-${agent.cannot_do?.length ? `O QUE VOCÊ NÃO PODE FAZER:\n${agent.cannot_do.map((c: any) => `- ${c}`).join('\n')}` : ''}
+${agent.can_do?.length ? `O QUE VOS PODE FAZER:\n${agent.can_do.map((c: any) => `- ${c}`).join('\n')}` : ''}
+${agent.cannot_do?.length ? `O QUE VOS NÃO PODE FAZER:\n${agent.cannot_do.map((c: any) => `- ${c}`).join('\n')}` : ''}
 
 ${knowledgeContext ? `CONHECIMENTO DO PRODUTO:\n${knowledgeContext}` : ''}
 
@@ -1266,11 +1266,11 @@ OBJETIVO DESTA ABORDAGEM: ${config.ai_objective || 'Abordar el lead de forma est
 ${config.ai_extra_context ? `CONTEXTO ADICIONAL: ${config.ai_extra_context}` : ''}
 
 REGRAS:
-- Genera APENAS a mensaje, sem explicações ou prefixos
+- Genera APENAS a mensaje, sin explicações ou prefixos
 - Sé natural e humano, NÃO pareça um bot
-- Personalize com as información del lead
-- A mensaje debe ser para WhatsApp (corta, direta, sem formatação HTML)
-- Termine com uma pregunta ou CTA claro`;
+- Personalize con as información del lead
+- A mensaje debe ser para WhatsApp (corta, direta, sin formatação HTML)
+- Termine con uma pregunta ou CTA claro`;
 
       const userPrompt = `Genera uma mensaje de primeira abordagem via WhatsApp para este lead:
 
@@ -1584,10 +1584,10 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       if (leadPhone && !leadPhone.startsWith('55')) leadPhone = '55' + leadPhone;
 
       if (channel === 'whatsapp' && !leadPhone) {
-        return { lead_id: existingLeadId, skipped: true, reason: 'Lead sem teléfono para WhatsApp' };
+        return { lead_id: existingLeadId, skipped: true, reason: 'Lead sin teléfono para WhatsApp' };
       }
 
-      // 4. Resolve um widget ativo da organização (coluna widget_id é NOT NULL)
+      // 4. Resolve um widget ativo da organização (coluna widget_id es NOT NULL)
       let widgetRow = (await supabase
         .from('webchat_widgets')
         .select('id')
@@ -1614,15 +1614,15 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       }
 
       // 5. Determina status inicial conforme atribuição
-      // - com agente IA  -> bot_active
-      // - com vendedor   -> human_active (ya aceito)
-      // - sem nada       -> waiting_human (entra na fila do sector)
+      // - con agente IA  -> bot_active
+      // - con vendedor   -> human_active (ya aceito)
+      // - sin nada       -> waiting_human (entra na fila do sector)
       let initialStatus: 'bot_active' | 'human_active' | 'waiting_human';
       if (agentId) initialStatus = 'bot_active';
       else if (assignedUserId) initialStatus = 'human_active';
       else initialStatus = 'waiting_human';
 
-      // 6. Cria/atualizla conversación com contexto del flujo
+      // 6. Cria/atualizla conversación con contexto del flujo
       const conversationPayload: Record<string, any> = {
         organization_id: webhook.organization_id,
         widget_id: widgetRow.id,
@@ -1662,7 +1662,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           .eq('id', existingLeadId);
       }
 
-      // 5. Se canal WhatsApp e bloco inicial é mensaje, envia primeira mensaje via Evolution Go
+      // 5. Se canal WhatsApp e bloco inicial es mensaje, envia primeira mensaje via Evolution Go
       let firstMessageSent: string | null = null;
       if (channel === 'whatsapp' && startBlock) {
         const blockData = startBlock.data || {};
@@ -1715,7 +1715,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
             throw new Error(`Falha al enviar primeira mensaje: ${errMsg}`);
           }
 
-          // Salva mensaje outbound no histórico
+          // Salva mensaje outbound no historial
           await supabase.from('webchat_messages').insert({
             conversation_id: conversation.id,
             content: messageText,

@@ -122,7 +122,7 @@ async function generateYouTubeSummary(videoInfo: any, videoId: string, productId
         messages: [
           {
             role: 'system',
-            content: 'Usted é um assistente que ajuda a crear resumos de vídeos do YouTube para treinar uma IA de ventas. Baseado nas información do vídeo, crie um template estruturado para que o usuario possa preencher com os pontos-chave.'
+            content: 'Usted es um assistente que ajuda a crear resumos de vídeos do YouTube para treinar uma IA de ventas. Baseado nas información do vídeo, crie um template estruturado para que o usuario possa preencher con os pontos-chave.'
           },
           {
             role: 'user',
