@@ -21,22 +21,22 @@ interface InviteEmailProps {
 }
 
 export const InviteEmail = ({ siteName, siteUrl, confirmationUrl }: InviteEmailProps) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="es-PY" dir="ltr">
     <Head />
-    <Preview>Você foi convidado para o {siteName}</Preview>
+    <Preview>Fuiste invitado a {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Você foi convidado!</Heading>
+        <Heading style={h1}>¡Fuiste invitado!</Heading>
         <Text style={text}>
-          Você recebeu um convite para participar do{' '}
+          Recibiste una invitación para participar de{' '}
           <Link href={siteUrl} style={link}><strong>{siteName}</strong></Link>.
-          Clique no botão abaixo para aceitar e criar sua conta.
+          Hacé clic en el botón de abajo para aceptar y crear tu cuenta.
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Aceitar convite
+          Aceptar invitación
         </Button>
         <Text style={footer}>
-          Se você não esperava este convite, pode ignorar este e-mail com segurança.
+          Si no esperabas esta invitación, podés ignorar este e-mail sin problema.
         </Text>
       </Container>
     </Body>

@@ -17,16 +17,16 @@ interface ReauthenticationEmailProps {
 }
 
 export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="es-PY" dir="ltr">
     <Head />
-    <Preview>Seu código de verificação</Preview>
+    <Preview>Tu código de verificación</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Confirme sua identidade</Heading>
-        <Text style={text}>Use o código abaixo para confirmar sua identidade:</Text>
+        <Heading style={h1}>Confirmá tu identidad</Heading>
+        <Text style={text}>Usá el código de abajo para confirmar tu identidad:</Text>
         <Text style={codeStyle}>{token}</Text>
         <Text style={footer}>
-          Este código expira em alguns minutos. Se você não solicitou, ignore este e-mail.
+          Este código expira en unos minutos. Si no lo solicitaste, ignorá este e-mail.
         </Text>
       </Container>
     </Body>

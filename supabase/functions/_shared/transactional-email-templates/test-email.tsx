@@ -13,15 +13,15 @@ import {
 import type { TemplateEntry } from './registry.ts'
 
 const TestEmail = () => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="es-PY" dir="ltr">
     <Head />
-    <Preview>Teste de envio - Vendus</Preview>
+    <Preview>Prueba de envío - Vendus</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>✅ Teste de envio</Heading>
+        <Heading style={h1}>✅ Prueba de envío</Heading>
         <Text style={text}>
-          Este é um email de teste enviado pela plataforma Vendus.
-          Se você recebeu, a infraestrutura de email está funcionando corretamente.
+          Este es un email de prueba enviado por la plataforma Vendus.
+          Si lo recibiste, la infraestructura de email está funcionando correctamente.
         </Text>
         <Text style={footer}>Vendus — {new Date().getFullYear()}</Text>
       </Container>
@@ -31,8 +31,8 @@ const TestEmail = () => (
 
 export const template = {
   component: TestEmail,
-  subject: 'Teste de envio - Vendus',
-  displayName: 'Email de teste',
+  subject: 'Prueba de envío - Vendus',
+  displayName: 'Email de prueba',
   previewData: {},
 } satisfies TemplateEntry
 

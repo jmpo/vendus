@@ -19,20 +19,20 @@ interface MagicLinkEmailProps {
 }
 
 export const MagicLinkEmail = ({ siteName, confirmationUrl }: MagicLinkEmailProps) => (
-  <Html lang="pt-BR" dir="ltr">
+  <Html lang="es-PY" dir="ltr">
     <Head />
-    <Preview>Seu link de acesso ao {siteName}</Preview>
+    <Preview>Tu link de acceso a {siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Seu link de acesso</Heading>
+        <Heading style={h1}>Tu link de acceso</Heading>
         <Text style={text}>
-          Clique no botão abaixo para acessar o {siteName}. Este link expira em alguns minutos.
+          Hacé clic en el botón de abajo para acceder a {siteName}. Este link expira en unos minutos.
         </Text>
         <Button style={button} href={confirmationUrl}>
-          Entrar
+          Ingresar
         </Button>
         <Text style={footer}>
-          Se você não solicitou este link, pode ignorar este e-mail.
+          Si no solicitaste este link, podés ignorar este e-mail.
         </Text>
       </Container>
     </Body>
