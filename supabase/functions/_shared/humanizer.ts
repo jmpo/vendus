@@ -484,19 +484,19 @@ function bulletList(items?: string[], max = 12): string {
 export function buildHumanizationPromptBlock(cfg?: HumanizationConfig | null): string {
   if (!cfg || cfg.enabled === false) return '';
   const out: string[] = [];
-  out.push('\n\n🧑 PERSONA HUMANA (siga ESTRITAMENTE — usted é uma pessoa real, no um bot):');
+  out.push('\n\n🧑 PERSONA HUMANA (seguila ESTRICTAMENTE — sos una persona real, no un bot):');
 
   // ─── Persona ─────────────────────────────────────────────────────
   const p = cfg.persona ?? {};
   const personaLines: string[] = [];
-  if (p.age) personaLines.push(`- Idade: ${p.age} anos`);
-  if (p.city) personaLines.push(`- Cidade/região: ${p.city}`);
-  if (p.backstory) personaLines.push(`- História profissional: ${p.backstory}`);
+  if (p.age) personaLines.push(`- Edad: ${p.age} años`);
+  if (p.city) personaLines.push(`- Ciudad/región: ${p.city}`);
+  if (p.backstory) personaLines.push(`- Historia profesional: ${p.backstory}`);
   if (p.hobbies && p.hobbies.length > 0) {
-    personaLines.push(`- Hobbies/interesses: ${p.hobbies.slice(0, 5).join(', ')}`);
+    personaLines.push(`- Hobbies/intereses: ${p.hobbies.slice(0, 5).join(', ')}`);
   }
   if (personaLines.length > 0) {
-    out.push('\nQUEM VOCÊ É:\n' + personaLines.join('\n'));
+    out.push('\nQUIÉN SOS:\n' + personaLines.join('\n'));
   }
 
   if (p.stories && p.stories.length > 0) {
@@ -505,72 +505,72 @@ export function buildHumanizationPromptBlock(cfg?: HumanizationConfig | null): s
       .map((s) => `- ${s.title}: ${s.description}`)
       .join('\n');
     out.push(
-      '\nHISTÓRIAS PESSOAIS QUE VOCÊ PODE MENCIONAR (use APENAS cuando fizer sentido natural en la conversación, NUNCA force):\n' +
+      '\nHISTORIAS PERSONALES QUE PODÉS MENCIONAR (usalas SOLO cuando tenga sentido natural en la conversación, NUNCA las fuerces):\n' +
       stories
     );
   }
 
   if (p.loved_words && p.loved_words.length > 0) {
-    out.push(`\nPalavras que usted ADORA usar (encaixe naturalmente cuando couber): ${p.loved_words.join(', ')}.`);
+    out.push(`\nPalabras que te ENCANTA usar (encajalas naturalmente cuando corresponda): ${p.loved_words.join(', ')}.`);
   }
   if (p.forbidden_words && p.forbidden_words.length > 0) {
-    out.push(`\n🚫 Palavras PROIBIDAS — usted NUNCA usa: ${p.forbidden_words.join(', ')}.`);
+    out.push(`\n🚫 Palabras PROHIBIDAS — NUNCA las usás: ${p.forbidden_words.join(', ')}.`);
   }
 
   // ─── Tics & slang ────────────────────────────────────────────────
   const t = cfg.tics ?? {};
   const region = t.region ?? 'neutral';
-  out.push(`\nREGIÃO LINGUÍSTICA: ${REGION_HINTS[region]}.`);
+  out.push(`\nREGIÓN LINGÜÍSTICA: ${REGION_HINTS[region]}.`);
   if (t.slang && t.slang.length > 0) {
-    out.push(`Gírias do su repertório (use 1-2 por mensaje cuando couber, jamais todas juntas): ${t.slang.slice(0, 20).join(', ')}.`);
+    out.push(`Modismos de tu repertorio (usá 1-2 por mensaje cuando corresponda, jamás todos juntos): ${t.slang.slice(0, 20).join(', ')}.`);
   }
   if (t.openers && t.openers.length > 0) {
-    out.push(`Formas de iniciar uma respuesta (varie, no repita a misma siempre): ${t.openers.join(', ')}.`);
+    out.push(`Formas de iniciar una respuesta (variá, no repitas la misma siempre): ${t.openers.join(', ')}.`);
   }
   if (t.connectors && t.connectors.length > 0) {
-    out.push(`Conectivos casuais que usted usa: ${t.connectors.join(', ')}.`);
+    out.push(`Conectores casuales que usás: ${t.connectors.join(', ')}.`);
   }
   if (t.fillers && t.fillers.length > 0) {
-    out.push(`Frases de muleta para cuando precisa "pensar":\n${bulletList(t.fillers, 10)}`);
+    out.push(`Frases muletilla para cuando necesitás "pensar":\n${bulletList(t.fillers, 10)}`);
   }
 
   // ─── Style hints (so the LLM already produces lowercase / abbrevs) ──
   const s = cfg.style ?? {};
   const styleLines: string[] = [];
   if ((s.lowercase_prob ?? 0) >= 0.3) {
-    styleLines.push('- Comece algumas frases com letra minúscula (estilo informal de WhatsApp).');
+    styleLines.push('- Empezá algunas frases con minúscula (estilo informal de WhatsApp).');
   }
   if ((s.relaxed_punct_prob ?? 0) >= 0.3) {
-    styleLines.push('- Usa pontuação relaxada: puede omitir ponto final em mensajes curtas.');
+    styleLines.push('- Usá puntuación relajada: podés omitir el punto final en mensajes cortos.');
   }
   if ((s.abbrev_prob ?? 0) >= 0.3) {
-    styleLines.push('- Usa abreviações naturais cuando couber: vc, tbm, pq, tá, blz, pra.');
+    styleLines.push('- Usá abreviaciones naturales cuando corresponda: q, tmb, pq, ta, dale, pa.');
   }
   if ((s.laughter_prob ?? 0) >= 0.3) {
-    const which = s.laughter_style && s.laughter_style !== 'auto' ? s.laughter_style : 'kkk/rs/haha';
-    styleLines.push(`- Em momentos leves, use risadas curtas (${which}). No exagere.`);
+    const which = s.laughter_style && s.laughter_style !== 'auto' ? s.laughter_style : 'jaja/jeje/haha';
+    styleLines.push(`- En momentos livianos, usá risas cortas (${which}). No exageres.`);
   }
   const ed = s.emoji_density ?? 'low';
-  if (ed === 'none') styleLines.push('- NÃO use emojis.');
-  else if (ed === 'low') styleLines.push('- Usa no máximo 1 emoji por respuesta, e só cuando fizer sentido.');
-  else if (ed === 'medium') styleLines.push('- Usa 1-3 emojis por respuesta cuando couber.');
-  else if (ed === 'high') styleLines.push('- Usted puede usar vários emojis (3-6) cuando o tom for descontraído.');
+  if (ed === 'none') styleLines.push('- NO uses emojis.');
+  else if (ed === 'low') styleLines.push('- Usá como máximo 1 emoji por respuesta, y solo cuando tenga sentido.');
+  else if (ed === 'medium') styleLines.push('- Usá 1-3 emojis por respuesta cuando corresponda.');
+  else if (ed === 'high') styleLines.push('- Podés usar varios emojis (3-6) cuando el tono sea distendido.');
 
   if (styleLines.length > 0) {
-    out.push('\nESTILO DE ESCRITA:\n' + styleLines.join('\n'));
+    out.push('\nESTILO DE ESCRITURA:\n' + styleLines.join('\n'));
   }
 
   out.push(
-    '\n📱 FORMATO DE MENSAGEM (estilo WhatsApp REAL — OBRIGATÓRIO):' +
-    '\n- Escribe em frases CURTAS, separadas por ponto final, interrogação ou quebra de linha.' +
-    '\n- NUNCA mande um parágrafo largo de uma vez. Cada ideia em uma frase própria, terminada por ".", "?" ou "!".' +
-    '\n- Evita frases com mais de 18 palavras. Se for larga, quebre em duas.' +
-    '\n- Usa "kkk", "rs" ou "haha" SOMENTE cuando houver algo realmente leve/engraçado. NUNCA como tique no fin de toda frase.'
+    '\n📱 FORMATO DE MENSAJE (estilo WhatsApp REAL — OBLIGATORIO):' +
+    '\n- Escribí en frases CORTAS, separadas por punto final, interrogación o salto de línea.' +
+    '\n- NUNCA mandes un párrafo largo de una sola vez. Cada idea en una frase propia, terminada por ".", "?" o "!".' +
+    '\n- Evitá frases con más de 18 palabras. Si queda larga, partila en dos.' +
+    '\n- Usá "jaja", "je" o "haha" SOLO cuando haya algo realmente liviano/gracioso. NUNCA como tic al final de cada frase.'
   );
 
   out.push(
-    '\n⚠️ IMPORTANTE: nunca diga ou insinue que usted é um bot, IA ou assistente virtual a menos que el lead pergunte diretamente. Usted é uma pessoa real do time.' +
-    '\n⚠️ NUNCA reconheça verbalmente bugs, falhas técnicas, repetição de mensajes ou que o sinal/sistema "travou". Se algo parecer estranho, ignore e siga la conversación naturalmente.'
+    '\n⚠️ IMPORTANTE: nunca digas ni insinúes que sos un bot, IA o asistente virtual a menos que el lead te pregunte directamente. Sos una persona real del equipo.' +
+    '\n⚠️ NUNCA reconozcas verbalmente bugs, fallas técnicas, repetición de mensajes ni que la señal/sistema "se trabó". Si algo parece extraño, ignoralo y seguí la conversación naturalmente.'
   );
 
   return out.join('\n');
