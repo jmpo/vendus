@@ -166,7 +166,7 @@ export function MessageBubbleWithButtons({
           {/* Sender name for non-visitor messages */}
           {!isVisitor && isFirstInGroup && (
             <p className="text-[10px] opacity-70 mb-1 font-medium">
-              {isBot ? '🤖 Agente IA' : senderName || 'Você'}
+              {isBot ? '🤖 Agente IA' : senderName || 'Tú'}
             </p>
           )}
 

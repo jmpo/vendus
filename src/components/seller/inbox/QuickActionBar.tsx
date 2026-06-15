@@ -37,15 +37,15 @@ interface QuickActionBarProps {
   onAnalyze?: () => void;
   /** Cria um evento de calendário (atalho rápido). */
   onCreateEvent?: () => void;
-  /** Cria uma oportunidade de venda. Visível só com lead vinculado. */
+  /** Cria uma oportunidade de venta. Visível só com lead vinculado. */
   onCreateDeal?: () => void;
   /** Abre os "Dados do Contato" / detalhe do lead. */
   onViewLead?: () => void;
-  /** Move o lead para outro estágio do funil — opcional. */
+  /** Move o lead para outro estágio do embudo — opcional. */
   onMoveStageQuick?: (stageId: string) => void;
   pipelineStages?: { id: string; name: string; color: string | null }[];
   currentStageId?: string | null;
-  /** Abre seletor de produto do catálogo para enviar como mensagem rica. */
+  /** Abre seletor de producto do catálogo para enviar como mensaje rica. */
   onPickCatalog?: () => void;
   /** Abre dialog de gerar/enviar link de pagamento. */
   onSendPaymentLink?: () => void;
@@ -103,7 +103,7 @@ export function QuickActionBar({
               Catálogo
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Enviar produto do catálogo no chat</TooltipContent>
+          <TooltipContent>Enviar producto do catálogo no chat</TooltipContent>
         </Tooltip>
       )}
 
@@ -137,7 +137,7 @@ export function QuickActionBar({
               Novo Evento
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Criar evento na agenda já vinculado a este lead</TooltipContent>
+          <TooltipContent>Crear evento na agenda já vinculado a este lead</TooltipContent>
         </Tooltip>
       )}
 
@@ -235,10 +235,10 @@ export function QuickActionBar({
           <TooltipTrigger asChild>
             <Button variant="ghost" size="sm" className="h-7 text-xs gap-1.5 shrink-0" onClick={onSendFlow}>
               <Workflow className="h-3.5 w-3.5" />
-              Fluxo
+              Flujo
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Enviar fluxo para o visitante</TooltipContent>
+          <TooltipContent>Enviar flujo para o visitante</TooltipContent>
         </Tooltip>
       )}
 

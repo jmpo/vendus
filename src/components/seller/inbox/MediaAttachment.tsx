@@ -184,7 +184,7 @@ function ImageViewer({ media }: { media: MediaPayload }) {
               variant="ghost"
               className="absolute top-2 right-2 z-10 bg-background/70 hover:bg-background"
               onClick={() => setOpen(false)}
-              aria-label="Fechar"
+              aria-label="Cerrar"
             >
               <X className="h-4 w-4" />
             </Button>

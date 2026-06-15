@@ -44,7 +44,7 @@ export function PollComposerDialog({ open, onOpenChange, onConfirm }: PollCompos
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Criar enquete</DialogTitle>
+          <DialogTitle>Crear enquete</DialogTitle>
         </DialogHeader>
         <div className="space-y-3 py-2">
           <div>
@@ -53,7 +53,7 @@ export function PollComposerDialog({ open, onOpenChange, onConfirm }: PollCompos
               id="poll-q"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ex.: Qual horário é melhor para você?"
+              placeholder="Ex.: Qual horário é melhor para tú?"
             />
           </div>
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export function PollComposerDialog({ open, onOpenChange, onConfirm }: PollCompos
             ))}
             {options.length < 12 && (
               <Button variant="outline" size="sm" onClick={addOption} className="gap-2">
-                <Plus className="h-4 w-4" /> Adicionar opção
+                <Plus className="h-4 w-4" /> Agregar opção
               </Button>
             )}
           </div>

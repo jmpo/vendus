@@ -64,7 +64,7 @@ export function SendCadenceDialog({
         next_followup_at: new Date().toISOString(),
       }]);
 
-      toast({ title: `Cadência iniciada no dia ${selectedDay?.day || 1}` });
+      toast({ title: `Cadência iniciada no día ${selectedDay?.day || 1}` });
       onOpenChange(false);
     } catch {
       toast({ title: 'Error al iniciar cadência', variant: 'destructive' });
@@ -94,7 +94,7 @@ export function SendCadenceDialog({
             </div>
           ) : !cadenceDays?.length ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              Nenhuma cadência configurada para este produto.
+              Ninguna cadência configurada para este producto.
             </p>
           ) : (
             <div className="space-y-2">
@@ -110,7 +110,7 @@ export function SendCadenceDialog({
                   )}
                 >
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="shrink-0">Dia {day.day}</Badge>
+                    <Badge variant="outline" className="shrink-0">Día {day.day}</Badge>
                     <span className="text-sm font-medium">{day.title}</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
@@ -126,7 +126,7 @@ export function SendCadenceDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSend} disabled={!leadId || !cadenceDays?.length || isSending}>
             {isSending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            {selectedDay ? `Iniciar do Dia ${selectedDay.day}` : 'Iniciar do Dia 1'}
+            {selectedDay ? `Iniciar do Día ${selectedDay.day}` : 'Iniciar do Día 1'}
           </Button>
         </DialogFooter>
       </DialogContent>

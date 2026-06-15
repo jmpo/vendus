@@ -91,7 +91,7 @@ export function StartConversationDialog({
       onConversationCreated(data.conversation_id);
       handleClose();
     } catch (err: any) {
-      toast({ title: 'Erro', description: err.message, variant: 'destructive' });
+      toast({ title: 'Error', description: err.message, variant: 'destructive' });
     } finally {
       setIsCreating(false);
     }

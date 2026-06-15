@@ -76,7 +76,7 @@ export function ReactionList({ reactions, onToggle, isVisitor }: ReactionListPro
               ? 'bg-primary/15 border-primary/40 text-foreground'
               : 'bg-background border-border text-muted-foreground'
           )}
-          title={r.byMe ? 'Você reagiu — clique para remover' : 'Reagir'}
+          title={r.byMe ? 'Tú reagiu — clique para quitar' : 'Reagir'}
         >
           <span className="text-sm leading-none">{r.emoji}</span>
           {r.count > 1 && <span className="text-[10px] font-medium">{r.count}</span>}

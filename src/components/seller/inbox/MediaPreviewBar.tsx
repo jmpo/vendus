@@ -73,7 +73,7 @@ export function MediaPreviewBar({
             <Input
               value={caption}
               onChange={(e) => onCaptionChange(e.target.value)}
-              placeholder="Adicionar legenda…"
+              placeholder="Agregar legenda…"
               className="h-7 text-xs"
               disabled={isUploading}
             />

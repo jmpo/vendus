@@ -39,7 +39,7 @@ export function ContactPickerDialog({ open, onOpenChange, onConfirm }: ContactPi
             />
           </div>
           <div>
-            <Label htmlFor="contact-phone">Telefone (com DDD)</Label>
+            <Label htmlFor="contact-phone">Teléfono (com DDD)</Label>
             <Input
               id="contact-phone"
               value={phone}

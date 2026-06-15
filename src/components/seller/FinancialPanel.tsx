@@ -115,7 +115,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
         </Card>
       </div>
 
-      {/* Funil Financiero */}
+      {/* Embudo Financiero */}
       <Card>
         <CardHeader className={isMobile ? "p-4" : ""}>
           <CardTitle className={cn("flex items-center gap-2", isMobile && "text-base")}>

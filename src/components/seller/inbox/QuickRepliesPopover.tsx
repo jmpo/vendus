@@ -36,7 +36,7 @@ export function QuickRepliesPopover({
   onOpenChange,
   onSelect,
   leadName = 'Cliente',
-  productName = 'nosso produto',
+  productName = 'nosso producto',
 }: QuickRepliesPopoverProps) {
   const { profile } = useAuth();
   const [search, setSearch] = useState('');
@@ -80,7 +80,7 @@ export function QuickRepliesPopover({
   const processContent = (content: string) => {
     return content
       .replace(/\{\{nome\}\}/gi, leadName)
-      .replace(/\{\{produto\}\}/gi, productName)
+      .replace(/\{\{producto\}\}/gi, productName)
       .replace(/\{\{name\}\}/gi, leadName)
       .replace(/\{\{product\}\}/gi, productName);
   };
@@ -111,14 +111,14 @@ export function QuickRepliesPopover({
       id: 'default-3',
       category: 'Ventas',
       title: 'Presentación del producto',
-      content: '¡{{produto}} es la solución perfecta para ti! 🎯\n\n¿Te puedo mostrar cómo puede ayudarte en tu caso específico?',
-      shortcut: '/produto',
+      content: '¡{{producto}} es la solución perfecta para ti! 🎯\n\n¿Te puedo mostrar cómo puede ayudarte en tu caso específico?',
+      shortcut: '/producto',
     },
     {
       id: 'default-4',
       category: 'Ventas',
       title: 'Próximos pasos',
-      content: '¡Perfecto, {{nome}}! ✅\n\n¿Agendamos una demostración para que conozcas mejor {{produto}}?\n\n¿Cuál sería el mejor horario para ti?',
+      content: '¡Perfecto, {{nome}}! ✅\n\n¿Agendamos una demostración para que conozcas mejor {{producto}}?\n\n¿Cuál sería el mejor horario para ti?',
       shortcut: '/demo',
     },
     {
@@ -223,7 +223,7 @@ export function QuickRepliesPopover({
         <div className="p-3 border-t bg-muted/30">
           <p className="text-xs text-muted-foreground text-center">
             Usa <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px] font-mono">{'{{nome}}'}</kbd> e{' '}
-            <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px] font-mono">{'{{produto}}'}</kbd> para variables dinámicas
+            <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px] font-mono">{'{{producto}}'}</kbd> para variables dinámicas
           </p>
         </div>
       </DialogContent>

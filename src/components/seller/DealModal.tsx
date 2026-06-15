@@ -91,7 +91,7 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
 
   const formatPlanLabel = (plan: ProductPlan) => {
     const price = plan.price.toLocaleString('es-PY', { style: 'currency', currency: 'PYG' });
-    const cycle = plan.billing_cycle !== 'unico' ? `/${plan.billing_cycle === 'mensal' ? 'mês' : plan.billing_cycle === 'anual' ? 'ano' : plan.billing_cycle}` : '';
+    const cycle = plan.billing_cycle !== 'unico' ? `/${plan.billing_cycle === 'mensal' ? 'mes' : plan.billing_cycle === 'anual' ? 'año' : plan.billing_cycle}` : '';
     return `${plan.name} - ${price}${cycle}`;
   };
 
