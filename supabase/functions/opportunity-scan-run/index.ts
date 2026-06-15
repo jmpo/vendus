@@ -331,7 +331,7 @@ async function classifyConversation(supabase: any, orgId: string, conv: any, api
 
     const transcript = msgs.map((m: any) => `${m.role === 'user' ? 'CLIENTE' : 'EMPRESA'}: ${m.content?.slice(0, 300) || ''}`).join('\n');
 
-    const prompt = `Usted é um especialista em ventas analisando umla conversación para classificar o potencial del lead.
+    const prompt = `Usted é um especialista em ventas analisando una conversación para classificar o potencial del lead.
 
 DADOS DO LEAD:
 ${JSON.stringify(leadSnap, null, 2)}

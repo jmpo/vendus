@@ -505,7 +505,7 @@ export function buildHumanizationPromptBlock(cfg?: HumanizationConfig | null): s
       .map((s) => `- ${s.title}: ${s.description}`)
       .join('\n');
     out.push(
-      '\nHISTÓRIAS PESSOAIS QUE VOCÊ PODE MENCIONAR (use APENAS cuando fizer sentido natural en lla conversación, NUNCA force):\n' +
+      '\nHISTÓRIAS PESSOAIS QUE VOCÊ PODE MENCIONAR (use APENAS cuando fizer sentido natural en la conversación, NUNCA force):\n' +
       stories
     );
   }

@@ -187,7 +187,7 @@ serve(async (req) => {
         visitor_whatsapp: r.visitor_whatsapp,
         accepted_at: r.accepted_at,
         accepted_by: r.accepted_by,
-        // Última mensaje real de lla conversación (vinda del historial via RPC)
+        // Última mensaje real de la conversación (vinda del historial via RPC)
         last_message: r.last_message_content ?? null,
         last_message_metadata: r.last_message_metadata ?? null,
         last_message_sender_type: r.last_message_sender_type ?? null,
@@ -429,7 +429,7 @@ serve(async (req) => {
       conversation.leads = leadRes?.data || null;
       conversation.sectors = sectorRes?.data || null;
 
-      // Producto efetivo: override manual de lla conversación > producto del lead vinculado > producto do widget
+      // Producto efetivo: override manual de la conversación > producto del lead vinculado > producto do widget
       const effectiveProduct =
         productOverrideRes?.data
           || (leadRes?.data?.product_id ? { id: leadRes.data.product_id, name: null } : null)
@@ -1153,7 +1153,7 @@ serve(async (req) => {
           .eq('id', body.conversation_id);
       }
 
-      // Broadcast: notifica clientes que o detalhe de lla conversación mudou
+      // Broadcast: notifica clientes que o detalhe de la conversación mudou
       try {
         const ch = supabase.channel(`conversation:${body.conversation_id}`);
         await ch.send({ type: 'broadcast', event: 'conversation_updated', payload: { lead_id: leadId } });
@@ -1327,7 +1327,7 @@ serve(async (req) => {
               },
               body: JSON.stringify({
                 conversation_id: body.conversation_id,
-                message: '[SISTEMA] O agente humano ativou o bot. Analiza o histórico de lla conversación e envie uma mensaje estratégica para reconectar com el lead, considerando todo o contexto anterior.',
+                message: '[SISTEMA] O agente humano ativou o bot. Analiza o histórico de la conversación e envie uma mensaje estratégica para reconectar com el lead, considerando todo o contexto anterior.',
                 product_id: productId,
                 visitor_name: conv.visitor_name,
                 agent_config: {
@@ -1513,7 +1513,7 @@ serve(async (req) => {
         }
       } else {
         // No history - send default reactivation message
-        reactivationMessage = `Hola ${visitorName}! Percebi que usted demonstrou interesse em nossa solução, mas no avançamos en lla conversación. Usted aún tiene interesse? Posso te enviar a demonstração pra usted testar! 😊`;
+        reactivationMessage = `Hola ${visitorName}! Percebi que usted demonstrou interesse em nossa solução, mas no avançamos en la conversación. Usted aún tiene interesse? Posso te enviar a demonstração pra usted testar! 😊`;
       }
 
       // Save message as bot outbound (status stays the same)

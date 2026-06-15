@@ -1,4 +1,4 @@
-// Sprint 3 — LLM-as-Judge: avalia umla conversación e persiste métricas
+// Sprint 3 — LLM-as-Judge: avalia una conversación e persiste métricas
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { recordLovableUsage } from "../_shared/ai-router.ts";
 

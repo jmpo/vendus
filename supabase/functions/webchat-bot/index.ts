@@ -425,7 +425,7 @@ O QUE NUNCA FAZER
 - Dar toda información de uma vez — dê aos poucos, uma coisa por mensaje
 - Repetir qualquer elemento do histórico (saudações, emojis, frases)
 - Usar mais de 1 emoji por mensaje
-- Ignorar lo que ya fue discutido/acordado en lla conversación`;
+- Ignorar lo que ya fue discutido/acordado en la conversación`;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -618,7 +618,7 @@ serve(async (req) => {
 
           if (opt.action === 'start_flow') {
             saveTestState(stateKey, { state: 'em_atendimento', context: `Menu: ${opt.label}` });
-            const msg = `[Prueba] ▶️ Iniciaría el flujo configurado para lla opción "${opt.label}".`;
+            const msg = `[Prueba] ▶️ Iniciaría el flujo configurado para la opción "${opt.label}".`;
             return new Response(
               JSON.stringify({
                 message: { content: msg, message_type: 'text' },
@@ -1857,7 +1857,7 @@ serve(async (req) => {
         systemPrompt += '\n\n🔘 BOTONES DE ACCIÓN (CTAs):';
         systemPrompt += '\nPodés enviar botones interactivos al cliente usando la función send_cta_buttons.';
         systemPrompt += '\nPara enviar videos explicativos, usá la función send_video.';
-        systemPrompt += '\nUsá los CTAs según la intención detectada en lla conversación:';
+        systemPrompt += '\nUsá los CTAs según la intención detectada en la conversación:';
         
         productCTAs.forEach(cta => {
           const ctaInfo = cta.cta_type === 'video' 
@@ -1872,7 +1872,7 @@ serve(async (req) => {
         systemPrompt += '\n\nRegras para CTAs:';
         systemPrompt += '\n- Envie CTAs de intenção "high" cuando cliente demonstrar forte interesse em comprar';
         systemPrompt += '\n- Envie CTAs de intenção "medium" cuando tiver dudas específicas';
-        systemPrompt += '\n- Envie CTAs de intenção "low" no inicio de lla conversación para exploração';
+        systemPrompt += '\n- Envie CTAs de intenção "low" no inicio de la conversación para exploração';
         systemPrompt += '\n- Para VÍDEOS: envie cuando cliente precisar de demonstração visual ou explicação detalhada';
         systemPrompt += '\n- NÃO envie muchos CTAs de uma vez (máximo 3)';
         systemPrompt += '\n- Sempre inclua uma mensaje de contexto antes dos botões';
@@ -2081,7 +2081,7 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
           .maybeSingle();
 
         // Prioridade 1: agente tiene default_schedule_user_id explícito
-        // Prioridade 2: assigned_user_id de lla conversación
+        // Prioridade 2: assigned_user_id de la conversación
         // Prioridade 3: dono do primeiro event_type ativo da org
         const agentHostId = (activeAgent as any)?.default_schedule_user_id ?? null;
         let checkUserId: string | null = agentHostId || convData?.assigned_user_id || null;
@@ -2408,7 +2408,7 @@ ${leadDataPrompt}
               }
             }
           });
-          agentToolPrompts.push('- apply_tags/remove_tags: Categorize el lead baseado en lla conversación');
+          agentToolPrompts.push('- apply_tags/remove_tags: Categorize el lead baseado en la conversación');
         }
 
         if (activeAgent.can_update_lead) {
@@ -2442,7 +2442,7 @@ ${leadDataPrompt}
             }
           });
           agentToolPrompts.push('- update_lead_temperature: Clasifica baseado no interesse demonstrado');
-          agentToolPrompts.push('- update_lead_field: Atualize información coletadas en lla conversación');
+          agentToolPrompts.push('- update_lead_field: Atualize información coletadas en la conversación');
         }
 
         if (activeAgent.can_create_tasks) {
@@ -2597,7 +2597,7 @@ ${leadDataPrompt}
               }
             }
           });
-          agentToolPrompts.push('- add_lead_note: Registre información relevantes de lla conversación');
+          agentToolPrompts.push('- add_lead_note: Registre información relevantes de la conversación');
         }
 
         if (activeAgent.can_start_cadence) {
@@ -5577,7 +5577,7 @@ async function executeFlowBlock(
           }
         } else {
           // Show buttons again
-          responseContent = currentBlock.data.content || 'Escolha umla opción:';
+          responseContent = currentBlock.data.content || 'Escolha una opción:';
           messageType = 'buttons';
           responseButtons = currentBlock.data.buttons?.map((btn: FlowBlockButton, index: number) => ({
             id: btn.id,
@@ -5918,7 +5918,7 @@ async function executeNextBlock(
       break;
 
     case 'buttons':
-      responseContent = block.data.content || 'Escolha umla opción:';
+      responseContent = block.data.content || 'Escolha una opción:';
       // Replace variables in content
       Object.entries(flowVariables).forEach(([key, value]) => {
         responseContent = responseContent.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);

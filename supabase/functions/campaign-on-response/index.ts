@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
     }
     const supabase = createServiceClient();
 
-    // Resolve lead_id a partir de lla conversación cuando no vier no payload
+    // Resolve lead_id a partir de la conversación cuando no vier no payload
     let resolvedLeadId: string | null = leadIdIn ?? null;
     if (!resolvedLeadId && conversation_id) {
       const { data: conv } = await supabase
@@ -130,7 +130,7 @@ Deno.serve(async (req) => {
         .in("tag_id", actions.tags_remove);
     }
 
-    // 5) Take over: mude lla conversación para humano (zera AI via trigger enforce_single_attendant)
+    // 5) Take over: mude la conversación para humano (zera AI via trigger enforce_single_attendant)
     if (actions.take_over && conversation_id) {
       await supabase
         .from("webchat_conversations")

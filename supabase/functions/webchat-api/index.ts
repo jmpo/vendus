@@ -164,7 +164,7 @@ serve(async (req) => {
         conversation = newConv;
 
         // ===== AUTO-CREATE LEAD =====
-        // Tode lla conversación nova vira um lead imediatamente — sem vinculação manual.
+        // Tode la conversación nova vira um lead imediatamente — sem vinculação manual.
         // Se ya existir lead pelo email/teléfono, reaproveita.
         try {
           let existingLeadId: string | null = null;
@@ -689,7 +689,7 @@ async function executeInitialFlowBlock(
         break;
 
       case 'buttons':
-        responseContent = block.data.content || 'Escolha umla opción:';
+        responseContent = block.data.content || 'Escolha una opción:';
         messageType = 'buttons';
         responseButtons = block.data.buttons?.map((btn: any, index: number) => ({
           id: btn.id,

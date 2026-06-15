@@ -139,7 +139,7 @@ Garantia: ${product.guarantee || 'N/A'}
 
     const toneDescriptions = {
       formal: 'Usa linguagem formal e profissional, adequada para B2B corporativo. Evita gírias e mantenha tom respeitoso.',
-      informal: 'Usa linguagem amigável e descontraída, como umla conversación casual. Sé acolhedor e empático.',
+      informal: 'Usa linguagem amigável e descontraída, como una conversación casual. Sé acolhedor e empático.',
       technical: 'Usa termos técnicos relevantes ao sector, assumindo conhecimento prévio. Sé preciso e objetivo.',
     };
 

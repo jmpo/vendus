@@ -1014,7 +1014,7 @@ Deno.serve(async (req) => {
               .eq("id", convOut.id);
           }
 
-          // Persiste o LID en lla conversación achada por teléfono (pra próximos eventos só com @lid casarem).
+          // Persiste o LID en la conversación achada por teléfono (pra próximos eventos só com @lid casarem).
           if (convOut?.id && lidId) {
             const { data: convRow } = await supabase
               .from("webchat_conversations")
@@ -1225,7 +1225,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Telemetria: se houver mais de umla conversación aberta, solo logamos.
+      // Telemetria: se houver mais de una conversación aberta, solo logamos.
       try {
         const { count: openCount } = await supabase
           .from("webchat_conversations")
@@ -2324,7 +2324,7 @@ Deno.serve(async (req) => {
               }
               case "buttons": {
                 const opts: any[] = b.data?.options || [];
-                const header = replaceVars(b.data?.content || "Escolha umla opción:");
+                const header = replaceVars(b.data?.content || "Escolha una opción:");
                 chunksToSend.push(header + "\n\n" + opts.map((o: any, i: number) => `${i + 1}) ${o.emoji ? o.emoji + ' ' : ''}${o.label}`).join("\n"));
                 nextBlockId = b.id; // wait here for next user message
                 currentBlock = null;

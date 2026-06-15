@@ -92,7 +92,7 @@ Problemas que resolve: ${product.problems_solved || 'N/A'}
 
     const toneDescriptions: Record<string, string> = {
       formal: 'Usa linguagem formal e profissional. Evita gírias.',
-      informal: 'Usa linguagem amigável e descontraída, como umla conversación casual. Emojis son bem-vindos.',
+      informal: 'Usa linguagem amigável e descontraída, como una conversación casual. Emojis son bem-vindos.',
       technical: 'Usa termos técnicos relevantes. Sé preciso e objetivo.',
     };
 
