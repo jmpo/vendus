@@ -69,12 +69,12 @@ export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProdu
       case 'call':
         // Open phone dialer
         window.location.href = 'tel:';
-        toast.info('Selecione um lead para ligar', { description: 'Acesse a lista de leads primeiro' });
+        toast.info('Seleccioná un lead para llamar', { description: 'Andá a la lista de leads primero' });
         break;
       case 'email':
         // Open email app
         window.location.href = 'mailto:';
-        toast.info('Selecione um lead para enviar email', { description: 'Acesse a lista de leads primeiro' });
+        toast.info('Seleccioná un lead para enviar email', { description: 'Andá a la lista de leads primero' });
         break;
       case 'financial':
         onTabChange('financial');
