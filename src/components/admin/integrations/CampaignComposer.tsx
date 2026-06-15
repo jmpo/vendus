@@ -106,9 +106,9 @@ export function CampaignComposer({ onClose }: CampaignComposerProps) {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
-          <h3 className="text-lg font-semibold">Nova Campanha</h3>
+          <h3 className="text-lg font-semibold">Nueva Campaña</h3>
           <p className="text-sm text-muted-foreground">
-            Passo {step} de 2
+            Paso {step} de 2
           </p>
         </div>
       </div>
@@ -116,9 +116,9 @@ export function CampaignComposer({ onClose }: CampaignComposerProps) {
       {step === 1 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Selecionar Destinatários</CardTitle>
+            <CardTitle className="text-base">Seleccionar Destinatarios</CardTitle>
             <CardDescription>
-              Escolha quem receberá esta mensagem
+              Elija quién recibirá este mensaje
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -126,7 +126,7 @@ export function CampaignComposer({ onClose }: CampaignComposerProps) {
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="all" id="all" />
                 <Label htmlFor="all" className="cursor-pointer">
-                  Toda a equipe ({teamMembers?.length || 0} membros)
+                  Todo el equipo ({teamMembers?.length || 0} miembros)
                 </Label>
               </div>
               
@@ -159,7 +159,7 @@ export function CampaignComposer({ onClose }: CampaignComposerProps) {
               
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="role" id="role" />
-                <Label htmlFor="role" className="cursor-pointer">Por Papel</Label>
+                <Label htmlFor="role" className="cursor-pointer">Por Rol</Label>
               </div>
               {targetType === 'role' && (
                 <div className="ml-6 space-y-2">
@@ -186,7 +186,7 @@ export function CampaignComposer({ onClose }: CampaignComposerProps) {
               
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="custom" id="custom" />
-                <Label htmlFor="custom" className="cursor-pointer">Selecionar manualmente</Label>
+                <Label htmlFor="custom" className="cursor-pointer">Seleccionar manualmente</Label>
               </div>
               {targetType === 'custom' && (
                 <div className="ml-6 space-y-2 max-h-48 overflow-y-auto">
@@ -215,7 +215,7 @@ export function CampaignComposer({ onClose }: CampaignComposerProps) {
             <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
               <Users className="h-5 w-5 text-muted-foreground" />
               <span className="text-sm">
-                <strong>{selectedRecipients.length}</strong> destinatário(s) selecionado(s)
+                <strong>{selectedRecipients.length}</strong> destinatario(s) seleccionado(s)
               </span>
             </div>
 
@@ -234,17 +234,17 @@ export function CampaignComposer({ onClose }: CampaignComposerProps) {
       {step === 2 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Compor Mensagem</CardTitle>
+            <CardTitle className="text-base">Componer Mensaje</CardTitle>
             <CardDescription>
-              Escolha um template ou escreva sua mensagem
+              Elija una plantilla o escriba su mensaje
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
-              <Label>Template (opcional)</Label>
+              <Label>Plantilla (opcional)</Label>
               <Select value={selectedTemplateId || ''} onValueChange={handleSelectTemplate}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione um template ou escreva do zero" />
+                  <SelectValue placeholder="Seleccione una plantilla o escriba desde cero" />
                 </SelectTrigger>
                 <SelectContent>
                   {templates?.map((template) => (
@@ -257,22 +257,22 @@ export function CampaignComposer({ onClose }: CampaignComposerProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="subject">Assunto</Label>
+              <Label htmlFor="subject">Asunto</Label>
               <Input
                 id="subject"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                placeholder="Assunto do email"
+                placeholder="Asunto do email"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="content">Conteúdo (HTML)</Label>
+              <Label htmlFor="content">Contenido (HTML)</Label>
               <Textarea
                 id="content"
                 value={htmlContent}
                 onChange={(e) => setHtmlContent(e.target.value)}
-                placeholder="Conteúdo do email em HTML..."
+                placeholder="Contenido del email en HTML..."
                 rows={10}
                 className="font-mono text-sm"
               />
@@ -281,13 +281,13 @@ export function CampaignComposer({ onClose }: CampaignComposerProps) {
             <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
               <Send className="h-5 w-5 text-muted-foreground" />
               <span className="text-sm">
-                Será enviado para <strong>{selectedRecipients.length}</strong> pessoa(s)
+                Será enviado a <strong>{selectedRecipients.length}</strong> persona(s)
               </span>
             </div>
 
             <div className="flex justify-between">
               <Button variant="outline" onClick={() => setStep(1)}>
-                Voltar
+                Volver
               </Button>
               <Button 
                 onClick={handleSend} 
@@ -298,7 +298,7 @@ export function CampaignComposer({ onClose }: CampaignComposerProps) {
                 ) : (
                   <Send className="h-4 w-4 mr-2" />
                 )}
-                Enviar para {selectedRecipients.length} pessoa(s)
+                Enviar a {selectedRecipients.length} persona(s)
               </Button>
             </div>
           </CardContent>

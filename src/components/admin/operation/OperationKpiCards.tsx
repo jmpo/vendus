@@ -10,42 +10,42 @@ interface Props {
 export function OperationKpiCards({ kpis, onNavigate }: Props) {
   const cards = [
     {
-      label: 'Novos leads hoje',
+      label: 'Nuevos leads hoy',
       value: kpis?.newLeadsToday ?? 0,
       hint:
         kpis && kpis.newLeadsDelta !== 0
-          ? `${kpis.newLeadsDelta > 0 ? '+' : ''}${kpis.newLeadsDelta}% vs ontem`
-          : 'Sem comparação vs ontem',
+          ? `${kpis.newLeadsDelta > 0 ? '+' : ''}${kpis.newLeadsDelta}% vs ayer`
+          : 'Sem comparação vs ayer',
       hintClass: (kpis?.newLeadsDelta ?? 0) >= 0 ? 'text-emerald-600' : 'text-destructive',
       icon: Users,
       onClick: () => onNavigate('leads'),
     },
     {
-      label: 'Atendimentos abertos',
+      label: 'Atenciones abiertas',
       value: kpis?.openConversations ?? 0,
       hint: kpis?.unansweredConversations
-        ? `${kpis.unansweredConversations} sem resposta`
+        ? `${kpis.unansweredConversations} sin respuesta`
         : 'Todos respondidos',
       hintClass: kpis?.unansweredConversations ? 'text-orange-600' : 'text-muted-foreground',
       icon: MessageCircle,
       onClick: () => onNavigate('inbox'),
     },
     {
-      label: 'Leads quentes',
+      label: 'Leads calientes',
       value: kpis?.hotLeads ?? 0,
       hint: kpis?.hotLeadsNeedingAction
-        ? `${kpis.hotLeadsNeedingAction} precisam de ação`
-        : 'Todos com responsável',
+        ? `${kpis.hotLeadsNeedingAction} necesitan acción`
+        : 'Todos con responsable',
       hintClass: kpis?.hotLeadsNeedingAction ? 'text-orange-600' : 'text-muted-foreground',
       icon: Flame,
       onClick: () => onNavigate('leads'),
     },
     {
-      label: 'Agenda de hoje',
+      label: 'Agenda de hoy',
       value: kpis?.todayAgenda ?? 0,
       hint: kpis?.upcomingSoon
-        ? `${kpis.upcomingSoon} próximas em 30 min`
-        : 'Sem compromissos próximos',
+        ? `${kpis.upcomingSoon} próximas en 30 min`
+        : 'Sin compromisos cercanos',
       hintClass: kpis?.upcomingSoon ? 'text-primary' : 'text-muted-foreground',
       icon: Calendar,
       onClick: () => onNavigate('calendar'),

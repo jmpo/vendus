@@ -72,16 +72,16 @@ export function CommissionManager() {
 
       if (editingRule) {
         await updateRule.mutateAsync({ id: editingRule, ...ruleData });
-        toast.success('Regra atualizada com sucesso');
+        toast.success('Regla actualizada con éxito');
       } else {
         await createRule.mutateAsync(ruleData);
-        toast.success('Regra criada com sucesso');
+        toast.success('Regla creada con éxito');
       }
 
       setIsDialogOpen(false);
       resetForm();
     } catch (error) {
-      toast.error('Erro ao salvar regra');
+      toast.error('Error al guardar regla');
     }
   };
 
@@ -102,9 +102,9 @@ export function CommissionManager() {
   const handleDelete = async (id: string) => {
     try {
       await deleteRule.mutateAsync(id);
-      toast.success('Regra removida com sucesso');
+      toast.success('Regla eliminada con éxito');
     } catch (error) {
-      toast.error('Erro ao remover regra');
+      toast.error('Error al eliminar regla');
     }
   };
 
@@ -121,8 +121,8 @@ export function CommissionManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Regras de Comissão</h2>
-          <p className="text-muted-foreground">Configure as regras de comissão por produto e vendedor</p>
+          <h2 className="text-2xl font-bold">Reglas de Comisión</h2>
+          <p className="text-muted-foreground">Configure las reglas de comisión por producto y vendedor</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={(open) => {
           setIsDialogOpen(open);
@@ -131,14 +131,14 @@ export function CommissionManager() {
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              Nova Regra
+              Nueva Regla
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle>{editingRule ? 'Editar Regra' : 'Nova Regra de Comissão'}</DialogTitle>
+              <DialogTitle>{editingRule ? 'Editar Regla' : 'Nueva Regla de Comissão'}</DialogTitle>
               <DialogDescription>
-                Configure a regra de comissão para os vendedores
+                Configure la regla de comisión para los vendedores
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -167,7 +167,7 @@ export function CommissionManager() {
                   checked={formData.is_default}
                   onCheckedChange={(checked) => setFormData({ ...formData, is_default: checked })}
                 />
-                <Label htmlFor="is_default">Regra padrão (todos os vendedores)</Label>
+                <Label htmlFor="is_default">Regla predeterminada (todos los vendedores)</Label>
               </div>
 
               {!formData.is_default && (
@@ -192,7 +192,7 @@ export function CommissionManager() {
               )}
 
               <div className="space-y-2">
-                <Label>Tipo de Comissão</Label>
+                <Label>Tipo de Comisión</Label>
                 <Select
                   value={formData.rule_type}
                   onValueChange={(value) => setFormData({ ...formData, rule_type: value as 'percentage' | 'fixed' })}
@@ -201,15 +201,15 @@ export function CommissionManager() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="percentage">Percentual (%)</SelectItem>
-                    <SelectItem value="fixed">Valor Fixo (R$)</SelectItem>
+                    <SelectItem value="percentage">Porcentaje (%)</SelectItem>
+                    <SelectItem value="fixed">Valor Fijo (R$)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
                 <Label>
-                  {formData.rule_type === 'percentage' ? 'Percentual (%)' : 'Valor Fixo (R$)'}
+                  {formData.rule_type === 'percentage' ? 'Porcentaje (%)' : 'Valor Fijo (R$)'}
                 </Label>
                 <Input
                   type="number"
@@ -237,7 +237,7 @@ export function CommissionManager() {
                     value={formData.max_value || ''}
                     onChange={(e) => setFormData({ ...formData, max_value: e.target.value ? Number(e.target.value) : null })}
                     min={0}
-                    placeholder="Sem limite"
+                    placeholder="Sin límite"
                   />
                 </div>
               </div>
@@ -247,7 +247,7 @@ export function CommissionManager() {
                 Cancelar
               </Button>
               <Button onClick={handleSubmit} disabled={createRule.isPending || updateRule.isPending}>
-                {editingRule ? 'Salvar' : 'Criar Regra'}
+                {editingRule ? 'Salvar' : 'Crear Regla'}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -267,19 +267,19 @@ export function CommissionManager() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     {product.name}
-                    <Badge variant="secondary">{productRules.length} regras</Badge>
+                    <Badge variant="secondary">{productRules.length} reglas</Badge>
                   </CardTitle>
                   <CardDescription>{product.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {productRules.length === 0 ? (
-                    <p className="text-muted-foreground text-sm">Nenhuma regra de comissão configurada</p>
+                    <p className="text-muted-foreground text-sm">Ninguna regla de comisión configurada</p>
                   ) : (
                     <Table>
                       <TableHeader>
                         <TableRow>
                           <TableHead>Tipo</TableHead>
-                          <TableHead>Aplicação</TableHead>
+                          <TableHead>Aplicación</TableHead>
                           <TableHead>Valor</TableHead>
                           <TableHead>Limites</TableHead>
                           <TableHead className="text-right">Ações</TableHead>
@@ -295,7 +295,7 @@ export function CommissionManager() {
                                 ) : (
                                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                                 )}
-                                {rule.rule_type === 'percentage' ? 'Percentual' : 'Fixo'}
+                                {rule.rule_type === 'percentage' ? 'Porcentaje' : 'Fixo'}
                               </div>
                             </TableCell>
                             <TableCell>
@@ -325,7 +325,7 @@ export function CommissionManager() {
                               {rule.min_value ? `Min: R$ ${rule.min_value.toLocaleString('pt-BR')}` : ''}
                               {rule.min_value && rule.max_value ? ' | ' : ''}
                               {rule.max_value ? `Max: R$ ${rule.max_value.toLocaleString('pt-BR')}` : ''}
-                              {!rule.min_value && !rule.max_value ? 'Sem limites' : ''}
+                              {!rule.min_value && !rule.max_value ? 'Sin límites' : ''}
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="flex justify-end gap-2">

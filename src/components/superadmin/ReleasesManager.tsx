@@ -15,9 +15,9 @@ import { Plus, Pencil, Trash2, Sparkles, Eye, EyeOff, Wrench, Bug } from 'lucide
 import { toast } from 'sonner';
 
 const TYPES = [
-  { key: 'feature', label: 'Nova feature', icon: Sparkles },
-  { key: 'improvement', label: 'Melhoria', icon: Wrench },
-  { key: 'fix', label: 'Correção', icon: Bug },
+  { key: 'feature', label: 'Nueva feature', icon: Sparkles },
+  { key: 'improvement', label: 'Mejora', icon: Wrench },
+  { key: 'fix', label: 'Corrección', icon: Bug },
 ];
 
 export function ReleasesManager() {
@@ -52,16 +52,16 @@ export function ReleasesManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Atualizações da Plataforma</h2>
-          <p className="text-muted-foreground text-sm">Publique novidades, melhorias e correções para todos os usuários.</p>
+          <h2 className="text-2xl font-bold">Actualizaciones de la Plataforma</h2>
+          <p className="text-muted-foreground text-sm">Publique novedades, mejoras y correcciones para todos los usuarios.</p>
         </div>
         <Button onClick={() => setEditing({ is_published: false, release_types: ['feature'], publish_as_article: false })} className="gap-2">
-          <Plus className="h-4 w-4" /> Nova atualização
+          <Plus className="h-4 w-4" /> Nueva actualización
         </Button>
       </div>
 
       {releases.length === 0 ? (
-        <Card><CardContent className="text-center py-8 text-muted-foreground">Nenhuma atualização cadastrada.</CardContent></Card>
+        <Card><CardContent className="text-center py-8 text-muted-foreground">Ninguna actualización registrada.</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {releases.map(r => (
@@ -79,10 +79,10 @@ export function ReleasesManager() {
                 </div>
                 <Badge variant={r.is_published ? 'default' : 'outline'} className="gap-1">
                   {r.is_published ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
-                  {r.is_published ? 'Publicada' : 'Rascunho'}
+                  {r.is_published ? 'Publicada' : 'Borrador'}
                 </Badge>
                 <Button variant="ghost" size="icon" onClick={() => setEditing(r)}><Pencil className="h-4 w-4" /></Button>
-                <Button variant="ghost" size="icon" onClick={() => { if (confirm('Excluir atualização?')) del.mutate(r.id); }}>
+                <Button variant="ghost" size="icon" onClick={() => { if (confirm('¿Eliminar actualización?')) del.mutate(r.id); }}>
                   <Trash2 className="h-4 w-4 text-destructive" />
                 </Button>
               </CardContent>
@@ -94,7 +94,7 @@ export function ReleasesManager() {
       <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editing?.id ? 'Editar atualização' : 'Nova atualização'}</DialogTitle>
+            <DialogTitle>{editing?.id ? 'Editar actualización' : 'Nueva actualización'}</DialogTitle>
           </DialogHeader>
           {editing && (
             <div className="space-y-4">
@@ -104,18 +104,18 @@ export function ReleasesManager() {
                   <Input value={editing.title || ''} onChange={(e) => setEditing({ ...editing, title: e.target.value })} placeholder="Ex: Nova Central de Ajuda" />
                 </div>
                 <div>
-                  <Label>Versão</Label>
+                  <Label>Versión</Label>
                   <Input value={editing.version || ''} onChange={(e) => setEditing({ ...editing, version: e.target.value })} placeholder="1.4.0" />
                 </div>
               </div>
 
               <div>
-                <Label>Resumo curto</Label>
+                <Label>Resumen corto</Label>
                 <Textarea rows={2} value={editing.summary || ''} onChange={(e) => setEditing({ ...editing, summary: e.target.value })} />
               </div>
 
               <div>
-                <Label>Tipos de atualização</Label>
+                <Label>Tipos de actualización</Label>
                 <div className="flex gap-2 mt-1.5 flex-wrap">
                   {TYPES.map(t => {
                     const active = (editing.release_types || []).includes(t.key);
@@ -130,28 +130,28 @@ export function ReleasesManager() {
               </div>
 
               <div>
-                <Label>Conteúdo</Label>
+                <Label>Contenido</Label>
                 <RichEditor
                   value={editing.content_json}
                   onChange={(json, html) => setEditing({ ...editing, content_json: json, content_html: html })}
-                  placeholder="Descreva o que mudou, com texto, imagens, links e vídeos..."
+                  placeholder="Describa qué cambió, con texto, imágenes, enlaces y videos..."
                 />
               </div>
 
               <div className="space-y-3 p-3 rounded-lg border bg-muted/40">
                 <div className="flex items-center gap-3">
                   <Switch checked={!!editing.is_published} onCheckedChange={(v) => setEditing({ ...editing, is_published: v })} />
-                  <Label>Publicar atualização (visível na página /novidades)</Label>
+                  <Label>Publicar actualización (visible en la página /novedades)</Label>
                 </div>
                 <div className="flex items-center gap-3">
                   <Switch checked={!!editing.publish_as_article} onCheckedChange={(v) => setEditing({ ...editing, publish_as_article: v })} />
-                  <Label>Publicar também como artigo na Central de Ajuda</Label>
+                  <Label>Publicar también como artículo en el Centro de Ayuda</Label>
                 </div>
                 {editing.publish_as_article && (
                   <div>
-                    <Label>Categoria do artigo</Label>
+                    <Label>Categoría del artículo</Label>
                     <Select value={editing.article_category_id || ''} onValueChange={(v) => setEditing({ ...editing, article_category_id: v })}>
-                      <SelectTrigger><SelectValue placeholder="Selecione uma categoria" /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="Seleccione una categoría" /></SelectTrigger>
                       <SelectContent>
                         {categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
                       </SelectContent>
@@ -163,7 +163,7 @@ export function ReleasesManager() {
           )}
           <DialogFooter>
             <Button variant="ghost" onClick={() => setEditing(null)}>Cancelar</Button>
-            <Button onClick={save}>Salvar</Button>
+            <Button onClick={save}>Guardar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

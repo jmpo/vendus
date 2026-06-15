@@ -16,15 +16,15 @@ export function CaktoSuperAdminPanel() {
           <h1 className="text-2xl font-bold flex items-center gap-3">
             <CaktoLogo /> Pagos
           </h1>
-          <p className="text-sm text-muted-foreground">Conta Cakto da plataforma — recebimentos e mapeamento dos planos.</p>
+          <p className="text-sm text-muted-foreground">Cuenta Cakto de la plataforma — ingresos y mapeo de planes.</p>
         </div>
       </div>
 
       <Tabs defaultValue="settings">
         <TabsList>
-          <TabsTrigger value="settings">Configuração</TabsTrigger>
-          <TabsTrigger value="receipts">Recebimentos</TabsTrigger>
-          <TabsTrigger value="plans">Vínculo de planos</TabsTrigger>
+          <TabsTrigger value="settings">Configuración</TabsTrigger>
+          <TabsTrigger value="receipts">Ingresos</TabsTrigger>
+          <TabsTrigger value="plans">Vinculación de planes</TabsTrigger>
         </TabsList>
 
         <TabsContent value="settings" className="pt-4">

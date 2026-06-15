@@ -271,7 +271,7 @@ function AgendaCalendarView() {
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <CalendarDays className="h-4 w-4" />
               <span className="font-medium text-foreground">Google Calendar</span>
-              <span className="text-xs">(clique para gerenciar a sincronização)</span>
+              <span className="text-xs">(haga clic para gestionar la sincronización)</span>
             </div>
             <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform group-open:rotate-90" />
           </div>

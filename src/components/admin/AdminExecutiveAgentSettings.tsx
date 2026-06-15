@@ -119,7 +119,7 @@ export function AdminExecutiveAgentSettings() {
       const { error } = await supabase.functions.invoke('admin-agent-handle-inbound', {
         body: {
           organization_id: profile?.organization_id,
-          message: 'Me mande um resumo de teste com os dados de hoje.',
+          message: 'Envíame un resumen de prueba con los datos de hoy.',
           phone,
         },
       });

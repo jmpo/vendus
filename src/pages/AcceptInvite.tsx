@@ -53,10 +53,10 @@ export default function AcceptInvite() {
     try {
       await acceptInvitation.mutateAsync({ token, userId: user.id });
       setAccepted(true);
-      toast.success('Convite aceito com sucesso!');
+      toast.success('¡Invitación aceptada con éxito!');
       setTimeout(() => navigate('/'), 2000);
     } catch (error: any) {
-      toast.error(translateAuthError(error?.message) || 'Erro ao aceitar convite');
+      toast.error(translateAuthError(error?.message) || 'Error al aceptar la invitación');
     }
   };
 
@@ -64,12 +64,12 @@ export default function AcceptInvite() {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      toast.error('As senhas não coincidem');
+      toast.error('Las contraseñas no coinciden');
       return;
     }
     
     if (password.length < 6) {
-      toast.error('A senha deve ter pelo menos 6 caracteres');
+      toast.error('La contraseña debe tener al menos 6 caracteres');
       return;
     }
 
@@ -88,14 +88,14 @@ export default function AcceptInvite() {
       });
       
       if (authError) throw authError;
-      if (!authData.user) throw new Error('Não foi possível criar a conta. Tente novamente.');
+      if (!authData.user) throw new Error('No se pudo crear la cuenta. Inténtelo de nuevo.');
 
       // Detecta email já cadastrado: Supabase retorna um user "fake" sem identities
       // quando o email já existe (proteção contra enumeração). Nesse caso o user_id
       // não está em auth.users e o accept_invitation falharia na FK.
       const identities = (authData.user as any).identities;
       if (Array.isArray(identities) && identities.length === 0) {
-        toast.error('Este e-mail já possui uma conta. Faça login para aceitar o convite.');
+        toast.error('Este correo electrónico ya tiene una cuenta. Inicie sesión para aceptar la invitación.');
         setTimeout(() => navigate(`/login?redirect=/accept-invite?token=${token}`), 1500);
         return;
       }
@@ -107,10 +107,10 @@ export default function AcceptInvite() {
       });
       
       setAccepted(true);
-      toast.success('Conta criada e convite aceito!');
+      toast.success('¡Cuenta creada e invitación aceptada!');
       setTimeout(() => navigate('/'), 2000);
     } catch (error: any) {
-      toast.error(translateAuthError(error?.message) || 'Erro ao criar conta');
+      toast.error(translateAuthError(error?.message) || 'Error al crear la cuenta');
     } finally {
       setIsCreatingAccount(false);
     }
@@ -131,13 +131,13 @@ export default function AcceptInvite() {
           <CardContent className="flex flex-col items-center justify-center py-12">
             <XCircle className="h-16 w-16 text-destructive mb-4" />
             <h2 className="text-xl font-semibold text-foreground mb-2">
-              Convite Inválido
+              Invitación Inválida
             </h2>
             <p className="text-muted-foreground text-center mb-6">
-              Este convite não existe, já foi usado ou expirou.
+              Esta invitación no existe, ya fue usada o expiró.
             </p>
             <Button asChild>
-              <Link to="/login">Ir para Login</Link>
+              <Link to="/login">Ir a Login</Link>
             </Button>
           </CardContent>
         </Card>
@@ -152,10 +152,10 @@ export default function AcceptInvite() {
           <CardContent className="flex flex-col items-center justify-center py-12">
             <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
             <h2 className="text-xl font-semibold text-foreground mb-2">
-              Convite Aceito!
+              ¡Invitación Aceptada!
             </h2>
             <p className="text-muted-foreground text-center">
-              Redirecionando para o dashboard...
+              Redirigiendo al dashboard...
             </p>
           </CardContent>
         </Card>
@@ -174,7 +174,7 @@ export default function AcceptInvite() {
         <Card className="w-full max-w-md">
           <CardContent className="flex flex-col items-center justify-center py-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-            <p className="text-muted-foreground">Aceitando convite...</p>
+            <p className="text-muted-foreground">Aceptando invitación...</p>
           </CardContent>
         </Card>
       </div>
@@ -190,9 +190,9 @@ export default function AcceptInvite() {
               <Mail className="h-8 w-8 text-primary" />
             </div>
           </div>
-          <CardTitle>Você foi convidado!</CardTitle>
+          <CardTitle>¡Has sido invitado!</CardTitle>
           <CardDescription>
-            Crie sua conta para ingressar na equipe
+            Crea tu cuenta para unirte al equipo
           </CardDescription>
         </CardHeader>
         
@@ -210,7 +210,7 @@ export default function AcceptInvite() {
             
             <div className="flex items-center gap-2">
               <RoleIcon className={`h-4 w-4 ${roleColor}`} />
-              <span className="text-sm">Papel: <strong>{roleLabel}</strong></span>
+              <span className="text-sm">Rol: <strong>{roleLabel}</strong></span>
             </div>
             
             {invitation.squad && (
@@ -232,7 +232,7 @@ export default function AcceptInvite() {
           {/* Create Account Form */}
           <form onSubmit={handleCreateAccount} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="fullName">Nome Completo</Label>
+              <Label htmlFor="fullName">Nombre Completo</Label>
               <Input
                 id="fullName"
                 placeholder="Seu nome"
@@ -266,7 +266,7 @@ export default function AcceptInvite() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirmar Senha</Label>
+              <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -279,15 +279,15 @@ export default function AcceptInvite() {
 
             <Button type="submit" className="w-full" disabled={isCreatingAccount}>
               {isCreatingAccount && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Criar Conta e Ingressar
+              Crear Cuenta y Unirse
             </Button>
           </form>
 
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
-              Já tem uma conta?{' '}
+              ¿Ya tienes una cuenta?{' '}
               <Link to="/login" className="text-primary hover:underline">
-                Fazer login
+                Iniciar sesión
               </Link>
             </p>
           </div>

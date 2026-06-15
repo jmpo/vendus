@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { useTeamInvitations, useCancelInvitation, useResendInvitation } from '@/hooks/useTeamInvitations';
 import { Mail, Clock, RefreshCw, X, Loader2, Shield, UserCog, User } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
 
 const roleConfig = {
@@ -21,18 +21,18 @@ export function PendingInvitations() {
   const handleCancel = async (id: string) => {
     try {
       await cancelInvitation.mutateAsync(id);
-      toast.success('Convite cancelado');
+      toast.success('Invitación cancelada');
     } catch (error) {
-      toast.error('Erro ao cancelar convite');
+      toast.error('Error al cancelar la invitación');
     }
   };
 
   const handleResend = async (invitation: typeof invitations extends (infer T)[] ? T : never) => {
     try {
       await resendInvitation.mutateAsync(invitation);
-      toast.success('Convite reenviado por email');
+      toast.success('Invitación reenviada por correo electrónico');
     } catch (error) {
-      toast.error('Erro ao reenviar convite');
+      toast.error('Error al reenviar la invitación');
     }
   };
 
@@ -43,7 +43,7 @@ export function PendingInvitations() {
       <div className="flex items-center gap-2">
         <Mail className="h-4 w-4 text-primary" />
         <h3 className="font-medium text-foreground">
-          Convites Pendentes ({invitations.length})
+          Invitaciones Pendientes ({invitations.length})
         </h3>
       </div>
 
@@ -53,7 +53,7 @@ export function PendingInvitations() {
           const Icon = config.icon;
           const expiresIn = formatDistanceToNow(new Date(invitation.expires_at), { 
             addSuffix: true,
-            locale: ptBR 
+            locale: es 
           });
 
           return (

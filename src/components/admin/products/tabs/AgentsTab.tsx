@@ -125,7 +125,7 @@ export function AgentsTab({ productId }: AgentsTabProps) {
             Agentes de IA
           </h2>
           <p className="text-sm text-muted-foreground">
-            Gerencie os agentes especializados deste produto
+            Gestione los agentes especializados de este producto
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -135,7 +135,7 @@ export function AgentsTab({ productId }: AgentsTabProps) {
           </Button>
           <Button onClick={handleCreate}>
             <Plus className="h-4 w-4 mr-2" />
-            Criar Agente
+            Crear Agente
           </Button>
         </div>
       </div>
@@ -161,14 +161,14 @@ export function AgentsTab({ productId }: AgentsTabProps) {
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Sparkles className="h-8 w-8 text-primary" />
             </div>
-            <CardTitle className="text-lg mb-2">Nenhum agente configurado</CardTitle>
+            <CardTitle className="text-lg mb-2">Ningún agente configurado</CardTitle>
             <CardDescription className="text-center max-w-sm mb-4">
               Crie agentes especializados para atender seus leads de forma automatizada.
               Cada agente usa o Cérebro do Produto com comportamentos específicos.
             </CardDescription>
             <Button onClick={handleCreate}>
               <Plus className="h-4 w-4 mr-2" />
-              Criar Primeiro Agente
+              Crear Primer Agente
             </Button>
           </CardContent>
         </Card>
@@ -180,7 +180,7 @@ export function AgentsTab({ productId }: AgentsTabProps) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-primary" />
-              Como funciona
+              Cómo funciona
             </CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground space-y-2">
@@ -225,7 +225,7 @@ export function AgentsTab({ productId }: AgentsTabProps) {
       <AlertDialog open={!!deletingAgent} onOpenChange={() => setDeletingAgent(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir agente?</AlertDialogTitle>
+            <AlertDialogTitle>¿Eliminar agente?</AlertDialogTitle>
             <AlertDialogDescription>
               Esta ação não pode ser desfeita. O agente "{deletingAgent?.name}" será 
               removido permanentemente.
@@ -237,7 +237,7 @@ export function AgentsTab({ productId }: AgentsTabProps) {
               onClick={confirmDelete}
               className="bg-destructive hover:bg-destructive/90"
             >
-              Excluir
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

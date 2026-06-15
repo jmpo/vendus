@@ -22,10 +22,10 @@ type Material = Tables<'materials'>;
 
 const typeConfig = {
   document: { label: 'Documento', icon: FileText, color: 'bg-blue-500/10 text-blue-600' },
-  video: { label: 'Vídeo', icon: Video, color: 'bg-red-500/10 text-red-600' },
-  image: { label: 'Imagem', icon: Image, color: 'bg-emerald-500/10 text-emerald-600' },
+  video: { label: 'Video', icon: Video, color: 'bg-red-500/10 text-red-600' },
+  image: { label: 'Imagen', icon: Image, color: 'bg-emerald-500/10 text-emerald-600' },
   link: { label: 'Link', icon: Link2, color: 'bg-violet-500/10 text-violet-600' },
-  other: { label: 'Outro', icon: File, color: 'bg-muted text-muted-foreground' },
+  other: { label: 'Otro', icon: File, color: 'bg-muted text-muted-foreground' },
 };
 
 export function MaterialManager() {
@@ -115,10 +115,10 @@ export function MaterialManager() {
     try {
       if (editingMaterial) {
         await updateMaterial.mutateAsync({ id: editingMaterial.id, ...materialData });
-        toast.success('Material atualizado!');
+        toast.success('¡Material actualizado!');
       } else {
         await createMaterial.mutateAsync(materialData);
-        toast.success('Material criado!');
+        toast.success('¡Material creado!');
       }
       setIsDialogOpen(false);
       resetForm();
@@ -130,7 +130,7 @@ export function MaterialManager() {
   const handleDelete = async (id: string) => {
     try {
       await deleteMaterial.mutateAsync(id);
-      toast.success('Material excluído!');
+      toast.success('¡Material eliminado!');
     } catch (error) {
       toast.error('Erro ao excluir material');
     }
@@ -152,21 +152,21 @@ export function MaterialManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-foreground">Materiais</h2>
+          <h2 className="text-xl font-semibold text-foreground">Materiales</h2>
           <p className="text-sm text-muted-foreground">
-            Gerencie documentos, vídeos e links de apoio
+            Gestione documentos, videos y enlaces de apoyo
           </p>
         </div>
         <Button onClick={openCreateDialog}>
           <Plus className="mr-2 h-4 w-4" />
-          Novo Material
+          Nuevo Material
         </Button>
       </div>
 
       <Tabs value={selectedProduct} onValueChange={setSelectedProduct}>
         <TabsList>
           <TabsTrigger value="all">Todos</TabsTrigger>
-          <TabsTrigger value="global">Globais</TabsTrigger>
+          <TabsTrigger value="global">Globales</TabsTrigger>
           {products?.map(p => (
             <TabsTrigger key={p.id} value={p.id}>{p.name}</TabsTrigger>
           ))}
@@ -263,13 +263,13 @@ export function MaterialManager() {
           <Card className="col-span-full bg-card">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <FileText className="h-12 w-12 text-muted-foreground/50 mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-1">Nenhum material</h3>
+              <h3 className="text-lg font-medium text-foreground mb-1">Ningún material</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Adicione documentos, vídeos e links
+                Añada documentos, videos y enlaces
               </p>
               <Button onClick={openCreateDialog}>
                 <Plus className="mr-2 h-4 w-4" />
-                Adicionar Material
+                Añadir Material
               </Button>
             </CardContent>
           </Card>
@@ -281,7 +281,7 @@ export function MaterialManager() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingMaterial ? 'Editar Material' : 'Novo Material'}
+              {editingMaterial ? 'Editar Material' : 'Nuevo Material'}
             </DialogTitle>
           </DialogHeader>
           
@@ -360,7 +360,7 @@ export function MaterialManager() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="tags">Tags (separadas por vírgula)</Label>
+              <Label htmlFor="tags">Etiquetas (separadas por coma)</Label>
               <Input
                 id="tags"
                 value={formData.tags}

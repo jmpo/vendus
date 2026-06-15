@@ -33,7 +33,7 @@ interface PlanFormDialogProps {
 
 const FEATURE_GROUPS: { title: string; items: { key: keyof PlatformPlan; label: string }[] }[] = [
   {
-    title: 'Canais',
+    title: 'Canales',
     items: [
       { key: 'feature_whatsapp', label: 'WhatsApp' },
       { key: 'feature_facebook', label: 'Facebook' },
@@ -42,36 +42,36 @@ const FEATURE_GROUPS: { title: string; items: { key: keyof PlatformPlan; label: 
     ],
   },
   {
-    title: 'CRM & Operação',
+    title: 'CRM y Operación',
     items: [
       { key: 'feature_kanban', label: 'Kanban' },
       { key: 'feature_pipeline', label: 'Pipeline' },
-      { key: 'feature_scheduling', label: 'Agendamientos' },
-      { key: 'feature_campaigns', label: 'Campanhas' },
-      { key: 'feature_outreach', label: 'Outreach (cadência)' },
+      { key: 'feature_scheduling', label: 'Citas' },
+      { key: 'feature_campaigns', label: 'Campañas' },
+      { key: 'feature_outreach', label: 'Outreach (cadencia)' },
     ],
   },
   {
-    title: 'Inteligência Artificial',
+    title: 'Inteligencia Artificial',
     items: [
       { key: 'feature_ai_agents', label: 'Agentes de IA' },
       { key: 'feature_voice_agents', label: 'Agentes de voz' },
-      { key: 'feature_audio_transcription_ai', label: 'Transcrição de áudio' },
-      { key: 'feature_text_correction_ai', label: 'Correção de texto com IA' },
+      { key: 'feature_audio_transcription_ai', label: 'Transcripción de audio' },
+      { key: 'feature_text_correction_ai', label: 'Corrección de texto con IA' },
     ],
   },
   {
     title: 'Captura',
     items: [
-      { key: 'feature_capture_funnels', label: 'Funis de captura' },
-      { key: 'feature_forms', label: 'Formulários' },
+      { key: 'feature_capture_funnels', label: 'Embudos de captura' },
+      { key: 'feature_forms', label: 'Formularios' },
     ],
   },
   {
-    title: 'Integrações',
+    title: 'Integraciones',
     items: [
       { key: 'feature_external_api', label: 'API externa' },
-      { key: 'feature_integrations', label: 'Integrações nativas' },
+      { key: 'feature_integrations', label: 'Integraciones nativas' },
       { key: 'feature_webhooks', label: 'Webhooks' },
     ],
   },
@@ -157,25 +157,25 @@ export function PlanFormBody({
 
   const handleSave = async () => {
     if (!form.name?.trim()) {
-      toast.error('Informe o nome do plano');
+      toast.error('Ingrese el nombre del plan');
       return;
     }
     if (!form.slug?.trim()) {
-      toast.error('Informe o slug do plano');
+      toast.error('Ingrese el slug del plan');
       return;
     }
     try {
       if (plan?.id) {
         await updatePlan.mutateAsync({ id: plan.id, ...form });
-        toast.success('Plano atualizado');
+        toast.success('Plan actualizado');
       } else {
         await createPlan.mutateAsync(form);
-        toast.success('Plano criado');
+        toast.success('Plan creado');
       }
       onSaved?.(form);
     } catch (err: any) {
       console.error(err);
-      toast.error(err.message || 'Erro ao salvar plano');
+      toast.error(err.message || 'Error al guardar el plan');
     }
   };
 
@@ -195,16 +195,16 @@ export function PlanFormBody({
     <div>
       <Tabs defaultValue="general" className="mt-2">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="general">Geral</TabsTrigger>
-          <TabsTrigger value="pricing">Preços</TabsTrigger>
-          <TabsTrigger value="limits">Limites</TabsTrigger>
+          <TabsTrigger value="general">General</TabsTrigger>
+          <TabsTrigger value="pricing">Precios</TabsTrigger>
+          <TabsTrigger value="limits">Límites</TabsTrigger>
           <TabsTrigger value="features">Funcionalidades</TabsTrigger>
         </TabsList>
 
         <TabsContent value="general" className="space-y-4 pt-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Nome *</Label>
+              <Label>Nombre *</Label>
               <Input value={form.name || ''} onChange={(e) => set('name', e.target.value)} />
             </div>
             <div className="space-y-2">
@@ -222,12 +222,12 @@ export function PlanFormBody({
               rows={3}
               value={form.description || ''}
               onChange={(e) => set('description', e.target.value)}
-              placeholder="Para quem é esse plano..."
+              placeholder="Para quién es este plan..."
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Ordem de exibição</Label>
+              <Label>Orden de visualización</Label>
               <Input
                 type="number"
                 value={form.display_order ?? 0}
@@ -236,15 +236,15 @@ export function PlanFormBody({
             </div>
             <div className="space-y-3 pt-1">
               <div className="flex items-center justify-between">
-                <Label className="cursor-pointer">Ativo</Label>
+                <Label className="cursor-pointer">Activo</Label>
                 <Switch checked={!!form.is_active} onCheckedChange={(v) => set('is_active', v)} />
               </div>
               <div className="flex items-center justify-between">
-                <Label className="cursor-pointer">Público (vitrine)</Label>
+                <Label className="cursor-pointer">Público (vitrina)</Label>
                 <Switch checked={!!form.is_public} onCheckedChange={(v) => set('is_public', v)} />
               </div>
               <div className="flex items-center justify-between">
-                <Label className="cursor-pointer">Plano padrão</Label>
+                <Label className="cursor-pointer">Plan predeterminado</Label>
                 <Switch checked={!!form.is_default} onCheckedChange={(v) => set('is_default', v)} />
               </div>
             </div>
@@ -253,7 +253,7 @@ export function PlanFormBody({
           <div className="grid grid-cols-1 gap-4 pt-2 border-t">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Link de contratação — Mensal</Label>
+                <Label>Enlace de contratación — Mensual</Label>
                 <Input
                   type="url"
                   value={form.checkout_url || ''}
@@ -265,7 +265,7 @@ export function PlanFormBody({
                 </p>
               </div>
               <div className="space-y-2">
-                <Label>Link de contratação — Anual</Label>
+                <Label>Enlace de contratación — Anual</Label>
                 <Input
                   type="url"
                   value={(form as any).checkout_url_yearly || ''}
@@ -278,11 +278,11 @@ export function PlanFormBody({
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Rótulo de destaque (opcional)</Label>
+              <Label>Etiqueta de destaque (opcional)</Label>
               <Input
                 value={form.highlight_label || ''}
                 onChange={(e) => set('highlight_label', e.target.value)}
-                placeholder='Ex.: "Mais Popular"'
+                placeholder='Ej.: "Más Popular"'
                 maxLength={30}
               />
             </div>
@@ -291,30 +291,30 @@ export function PlanFormBody({
 
         <TabsContent value="pricing" className="space-y-4 pt-4">
           <div className="grid grid-cols-2 gap-4">
-            {numberField('price_monthly', 'Preço mensal (R$)')}
-            {numberField('price_yearly', 'Preço anual (R$)')}
-            {numberField('trial_days', 'Dias de trial')}
-            {numberField('grace_period_days', 'Carência (dias)')}
+            {numberField('price_monthly', 'Precio mensual (R$)')}
+            {numberField('price_yearly', 'Precio anual (R$)')}
+            {numberField('trial_days', 'Días de trial')}
+            {numberField('grace_period_days', 'Gracia (días)')}
           </div>
         </TabsContent>
 
         <TabsContent value="limits" className="space-y-4 pt-4">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {numberField('max_users', 'Usuários')}
-            {numberField('max_connections', 'Conexões WhatsApp')}
-            {numberField('max_sectors', 'Setores')}
-            {numberField('max_products', 'Produtos')}
-            {numberField('max_contacts', 'Contatos')}
-            {numberField('max_messages_month', 'Mensagens/mês')}
+            {numberField('max_users', 'Usuarios')}
+            {numberField('max_connections', 'Conexiones WhatsApp')}
+            {numberField('max_sectors', 'Sectores')}
+            {numberField('max_products', 'Productos')}
+            {numberField('max_contacts', 'Contactos')}
+            {numberField('max_messages_month', 'Mensajes/mes')}
           </div>
 
           <div className="mt-6 p-4 rounded-lg border border-primary/30 bg-primary/5 space-y-4">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h4 className="font-semibold text-sm">IA da Plataforma</h4>
+                <h4 className="font-semibold text-sm">IA de la Plataforma</h4>
                 <p className="text-xs text-muted-foreground mt-1">
                   Quando <strong>ligado</strong>, as empresas deste plano consomem dos seus tokens Lovable até o limite mensal.
-                  Quando <strong>desligado</strong>, cada cliente precisa cadastrar a própria chave (OpenAI/Anthropic/Gemini) em Integrações.
+                  Quando <strong>desligado</strong>, cada cliente precisa cadastrar a própria clave (OpenAI/Anthropic/Gemini) em Integraciones.
                 </p>
               </div>
               <Switch
@@ -326,7 +326,7 @@ export function PlanFormBody({
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-xs">Tokens mensais incluídos</Label>
+                    <Label className="text-xs">Tokens mensuales incluidos</Label>
                     <Input
                       type="number"
                       min={0}
@@ -343,7 +343,7 @@ export function PlanFormBody({
                           className="h-6 text-[10px] px-2"
                           onClick={() => set('included_ai_tokens_month', n)}
                         >
-                          {n.toLocaleString('pt-BR')}
+                          {n.toLocaleString( 'es' )}
                         </Button>
                       ))}
                     </div>
@@ -351,7 +351,7 @@ export function PlanFormBody({
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-xs">Provedor do pool</Label>
+                    <Label className="text-xs">Proveedor del pool</Label>
                     <Select
                       value={form.platform_ai_provider ?? 'lovable'}
                       onValueChange={(v) => set('platform_ai_provider', v as any)}
@@ -365,7 +365,7 @@ export function PlanFormBody({
                               <span className="flex items-center gap-2">
                                 {p.charAt(0).toUpperCase() + p.slice(1)}
                                 <Badge variant={count > 0 ? 'default' : 'destructive'} className="text-[10px] h-4">
-                                  {count} chave{count === 1 ? '' : 's'}
+                                  {count} clave{count === 1 ? '' : 's'}
                                 </Badge>
                               </span>
                             </SelectItem>
@@ -379,7 +379,7 @@ export function PlanFormBody({
                       if (count === 0) {
                         return (
                           <p className="text-[11px] text-destructive">
-                            Nenhuma chave ativa para {p}. Cadastre em Super Admin → IA da Plataforma.
+                            Nenhuma clave ativa para {p}. Cadastre em Super Admin → IA de la Plataforma.
                           </p>
                         );
                       }
@@ -387,15 +387,15 @@ export function PlanFormBody({
                     })()}
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs">Estratégia de distribuição</Label>
+                    <Label className="text-xs">Estrategia de distribución</Label>
                     <Select
                       value={form.platform_ai_strategy ?? 'random'}
                       onValueChange={(v) => set('platform_ai_strategy', v as any)}
                     >
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="random">Aleatório (ponderado por peso)</SelectItem>
-                        <SelectItem value="round_robin">Round-robin (menos usada primeiro)</SelectItem>
+                        <SelectItem value="random">Aleatorio (ponderado por peso)</SelectItem>
+                        <SelectItem value="round_robin">Round-robin (menos usada primero)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -439,8 +439,8 @@ export function PlanFormBody({
         )}
         <Button onClick={handleSave} disabled={createPlan.isPending || updatePlan.isPending}>
           {createPlan.isPending || updatePlan.isPending
-            ? 'Salvando...'
-            : submitLabel ?? (plan ? 'Salvar plano' : 'Criar plano')}
+            ? 'Guardando...'
+            : submitLabel ?? (plan ? 'Guardar plan' : 'Crear plan')}
         </Button>
       </div>
     </div>
@@ -452,9 +452,9 @@ export function PlanFormDialog({ open, onOpenChange, plan }: PlanFormDialogProps
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{plan ? 'Editar plano' : 'Novo plano'}</DialogTitle>
+          <DialogTitle>{plan ? 'Editar plan' : 'Nuevo plan'}</DialogTitle>
           <DialogDescription>
-            Defina limites e funcionalidades disponíveis para empresas que aderirem a este plano.
+            Defina límites y funcionalidades disponibles para las empresas que se unan a este plan.
           </DialogDescription>
         </DialogHeader>
         <PlanFormBody

@@ -12,29 +12,29 @@ export function AiInsightsCard({ kpis, priorities }: Props) {
 
   insights.push({
     icon: TrendingUp,
-    title: 'Conversas respondidas em até 5 min',
-    body: 'têm 3x mais chance de fechamento.',
+    title: 'Conversaciones respondidas en hasta 5 min',
+    body: 'tienen 3 veces más posibilidades de cierre.',
   });
 
   if ((kpis?.hotLeadsNeedingAction ?? 0) > 0) {
     insights.push({
       icon: Target,
-      title: `${kpis!.hotLeadsNeedingAction} leads estão engajados`,
-      body: 'e ainda sem ação. Aproveite o timing.',
+      title: `${kpis!.hotLeadsNeedingAction} leads están comprometidos`,
+      body: 'y aún sin acción. Aproveche el timing.',
     });
   }
 
   if ((priorities?.overdueTasks ?? 0) === 0) {
     insights.push({
       icon: Users,
-      title: 'Seu time está em dia com as tarefas',
-      body: 'Sem pendências atrasadas. Ótimo ritmo!',
+      title: 'Su equipo está al día con las tareas',
+      body: 'Sin pendientes atrasados. ¡Excelente ritmo!',
     });
   } else {
     insights.push({
       icon: Users,
-      title: `${priorities!.overdueTasks} tarefas atrasadas`,
-      body: 'Priorize estas para manter o pipeline saudável.',
+      title: `${priorities!.overdueTasks} tareas atrasadas`,
+      body: 'Priorice estas para mantener el pipeline saludable.',
     });
   }
 
@@ -45,13 +45,13 @@ export function AiInsightsCard({ kpis, priorities }: Props) {
       <CardHeader className="pb-3">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-primary" />
-          Insights rápidos da IA
+          Insights rápidos de la IA
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {!hasData ? (
           <p className="text-sm text-muted-foreground py-6 text-center">
-            A IA começará a gerar insights quando houver mais interações na operação.
+            La IA comenzará a generar insights cuando haya más interacciones en la operación.
           </p>
         ) : (
           insights.slice(0, 3).map((ins, i) => {

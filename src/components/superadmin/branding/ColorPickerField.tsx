@@ -42,7 +42,7 @@ export function ColorPickerField({
             variant="ghost"
             size="icon"
             onClick={() => onChange(defaultValue)}
-            title="Restaurar padrão"
+            title="Restaurar predeterminado"
           >
             <RotateCcw className="h-4 w-4" />
           </Button>

@@ -68,10 +68,10 @@ export function StageValueManager() {
           probability_percent: values.probability_percent
         });
       }
-      toast.success('Valores salvos com sucesso');
+      toast.success('Valores guardados con éxito');
       setHasChanges(false);
     } catch (error) {
-      toast.error('Erro ao salvar valores');
+      toast.error('Error al guardar valores');
     }
   };
 
@@ -85,13 +85,13 @@ export function StageValueManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Valores do Pipeline</h2>
-          <p className="text-muted-foreground">Configure valores esperados e probabilidades por etapa</p>
+          <h2 className="text-2xl font-bold">Valores del Pipeline</h2>
+          <p className="text-muted-foreground">Configure valores esperados y probabilidades por etapa</p>
         </div>
         <div className="flex items-center gap-4">
           <Select value={selectedProductId} onValueChange={setSelectedProductId}>
             <SelectTrigger className="w-[250px]">
-              <SelectValue placeholder="Selecione um produto" />
+              <SelectValue placeholder="Seleccione un producto" />
             </SelectTrigger>
             <SelectContent>
               {products?.map((product) => (
@@ -104,7 +104,7 @@ export function StageValueManager() {
           {hasChanges && (
             <Button onClick={handleSave} disabled={upsertStageValue.isPending}>
               <Save className="mr-2 h-4 w-4" />
-              Salvar Alterações
+              Guardar Cambios
             </Button>
           )}
         </div>
@@ -115,10 +115,10 @@ export function StageValueManager() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
-              Etapas do Pipeline
+              Etapas del Pipeline
             </CardTitle>
             <CardDescription>
-              Defina o ticket médio esperado e a probabilidade de conversão para cada etapa
+              Defina el ticket promedio esperado y la probabilidad de conversión para cada etapa
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -181,7 +181,7 @@ export function StageValueManager() {
             <div className="mt-6 p-4 bg-muted rounded-lg">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">
-                  Total do Pipeline (1 lead por etapa)
+                  Total del Pipeline (1 lead por etapa)
                 </span>
                 <span className="text-lg font-bold">
                   R$ {Object.values(localValues).reduce((sum, v) => 
@@ -196,8 +196,8 @@ export function StageValueManager() {
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             {!selectedProductId 
-              ? 'Selecione um produto para configurar os valores do pipeline'
-              : 'Nenhuma etapa configurada para este produto'
+              ? 'Seleccione un producto para configurar os valores do pipeline'
+              : 'Ninguna etapa configurada para este producto'
             }
           </CardContent>
         </Card>

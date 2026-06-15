@@ -29,7 +29,7 @@ export function InviteMemberDialog({ open, onOpenChange }: InviteMemberDialogPro
     e.preventDefault();
     
     if (!email) {
-      toast.error('Digite o email do convidado');
+      toast.error('Ingrese el email del invitado');
       return;
     }
     
@@ -41,9 +41,9 @@ export function InviteMemberDialog({ open, onOpenChange }: InviteMemberDialogPro
       });
       
       setCreatedInvite(result);
-      toast.success('Convite criado com sucesso!');
+      toast.success('¡Invitación creada con éxito!');
     } catch (error: any) {
-      toast.error(error.message || 'Erro ao criar convite');
+      toast.error(error.message || 'Error al crear la invitación');
     }
   };
 
@@ -57,13 +57,13 @@ export function InviteMemberDialog({ open, onOpenChange }: InviteMemberDialogPro
   };
 
   const inviteLink = createdInvite 
-    ? `${getPublicAppUrl()}/aceitar-convite?token=${createdInvite.token}`
+    ? `${getPublicAppUrl()}/aceptar-invitacion?token=${createdInvite.token}`
     : '';
 
   const copyLink = async () => {
     await navigator.clipboard.writeText(inviteLink);
     setCopied(true);
-    toast.success('Link copiado!');
+    toast.success('¡Enlace copiado!');
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -73,10 +73,10 @@ export function InviteMemberDialog({ open, onOpenChange }: InviteMemberDialogPro
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Mail className="h-5 w-5 text-primary" />
-            Convidar Membro
+            Invitar Miembro
           </DialogTitle>
           <DialogDescription>
-            Envie um convite para adicionar um novo membro à equipe
+            Envíe una invitación para agregar un nuevo miembro al equipo
           </DialogDescription>
         </DialogHeader>
         
@@ -95,7 +95,7 @@ export function InviteMemberDialog({ open, onOpenChange }: InviteMemberDialogPro
             </div>
 
             <div className="space-y-2">
-              <Label>Papel</Label>
+              <Label>Rol</Label>
               <Select value={role} onValueChange={(v: 'admin' | 'manager' | 'seller') => setRole(v)}>
                 <SelectTrigger>
                   <SelectValue />
@@ -127,13 +127,13 @@ export function InviteMemberDialog({ open, onOpenChange }: InviteMemberDialogPro
               <Label>Squad (opcional)</Label>
               <Select value={squadId} onValueChange={setSquadId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione um squad" />
+                  <SelectValue placeholder="Seleccione un squad" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Users className="h-4 w-4" />
-                      Nenhum squad
+                      Ningún squad
                     </div>
                   </SelectItem>
                   {squads?.map((squad) => (
@@ -157,7 +157,7 @@ export function InviteMemberDialog({ open, onOpenChange }: InviteMemberDialogPro
               </Button>
               <Button type="submit" disabled={createInvitation.isPending}>
                 {createInvitation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Criar Convite
+                Crear Invitación
               </Button>
             </DialogFooter>
           </form>
@@ -165,7 +165,7 @@ export function InviteMemberDialog({ open, onOpenChange }: InviteMemberDialogPro
           <div className="space-y-4">
             <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
               <p className="text-sm text-muted-foreground mb-2">
-                Compartilhe este link com <strong>{email}</strong>:
+                Comparta este enlace con <strong>{email}</strong>:
               </p>
               <div className="flex items-center gap-2">
                 <Input 
@@ -180,12 +180,12 @@ export function InviteMemberDialog({ open, onOpenChange }: InviteMemberDialogPro
             </div>
             
             <p className="text-xs text-muted-foreground text-center">
-              O convite expira em 7 dias
+              La invitación expira en 7 días
             </p>
 
             <DialogFooter>
               <Button onClick={handleClose} className="w-full">
-                Fechar
+                Cerrar
               </Button>
             </DialogFooter>
           </div>

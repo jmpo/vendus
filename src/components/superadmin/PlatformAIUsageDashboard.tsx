@@ -18,9 +18,9 @@ import {
 
 type RangeKey = '7d' | '30d' | '90d';
 const RANGES: { value: RangeKey; label: string; days: number }[] = [
-  { value: '7d', label: 'Últimos 7 dias', days: 7 },
-  { value: '30d', label: 'Últimos 30 dias', days: 30 },
-  { value: '90d', label: 'Últimos 90 dias', days: 90 },
+  { value: '7d', label: 'Últimos 7 días', days: 7 },
+  { value: '30d', label: 'Últimos 30 días', days: 30 },
+  { value: '90d', label: 'Últimos 90 días', days: 90 },
 ];
 
 const PROVIDERS = ['lovable', 'openai', 'anthropic', 'gemini'] as const;
@@ -61,7 +61,7 @@ export function PlatformAIUsageDashboard() {
   const { data: byModel = [] } = useAIUsageByModel(filters, 20);
   const { data: byKey = [] } = useAIUsageByKey(filters, 20);
 
-  // Custo total estimado (modelo a modelo)
+  // Costo total estimado (modelo a modelo)
   const totalCostUSD = useMemo(() => {
     return byModel.reduce((acc, m) => acc + estimateCostUSD(m.provider, m.model, m.prompt_tokens, m.completion_tokens), 0);
   }, [byModel]);
@@ -99,7 +99,7 @@ export function PlatformAIUsageDashboard() {
       <div>
         <h2 className="text-2xl font-bold">Consumo de IA</h2>
         <p className="text-sm text-muted-foreground">
-          Acompanhe tokens, chamadas e custo estimado de todas as integrações de IA da plataforma.
+          Siga los tokens, llamadas y costo estimado de todas las integraciones de IA de la plataforma.
         </p>
       </div>
 
@@ -114,14 +114,14 @@ export function PlatformAIUsageDashboard() {
         <Select value={provider} onValueChange={setProvider}>
           <SelectTrigger className="w-[180px]"><SelectValue placeholder="Provedor" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os provedores</SelectItem>
+            <SelectItem value="all">Todos los proveedores</SelectItem>
             {PROVIDERS.map((p) => <SelectItem key={p} value={p}>{PROVIDER_LABELS[p]}</SelectItem>)}
           </SelectContent>
         </Select>
         <Select value={orgId} onValueChange={setOrgId}>
           <SelectTrigger className="w-[260px]"><SelectValue placeholder="Empresa" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas as empresas</SelectItem>
+            <SelectItem value="all">Todas las empresas</SelectItem>
             {orgs.map((o: any) => <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>)}
           </SelectContent>
         </Select>
@@ -130,33 +130,33 @@ export function PlatformAIUsageDashboard() {
       {/* KPIs coloridos */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <KpiCard
-          title="Chamadas"
-          value={(summary?.total_calls ?? 0).toLocaleString('pt-BR')}
+          title="Llamadas"
+          value={(summary?.total_calls ?? 0).toLocaleString( 'es' )}
           icon={<Activity className="h-5 w-5" />}
           gradient="from-violet-500 to-fuchsia-500"
         />
         <KpiCard
           title="Tokens"
-          value={(summary?.total_tokens ?? 0).toLocaleString('pt-BR')}
+          value={(summary?.total_tokens ?? 0).toLocaleString( 'es' )}
           icon={<Zap className="h-5 w-5" />}
           gradient="from-sky-500 to-cyan-500"
         />
         <KpiCard
-          title="Custo estimado"
+          title="Costo estimado"
           value={fmtUSD(totalCostUSD)}
           sub={fmtBRL(totalCostUSD * DEFAULT_USD_BRL)}
           icon={<Coins className="h-5 w-5" />}
           gradient="from-emerald-500 to-teal-500"
         />
         <KpiCard
-          title="Custo médio / chamada"
+          title="Costo promedio / llamada"
           value={fmtUSD(avgCostPerCall)}
           icon={<TrendingUp className="h-5 w-5" />}
           gradient="from-amber-500 to-orange-500"
         />
         <KpiCard
-          title="Empresas ativas"
-          value={(summary?.unique_orgs ?? 0).toLocaleString('pt-BR')}
+          title="Empresas activas"
+          value={(summary?.unique_orgs ?? 0).toLocaleString( 'es' )}
           icon={<Building2 className="h-5 w-5" />}
           gradient="from-pink-500 to-rose-500"
         />
@@ -165,7 +165,7 @@ export function PlatformAIUsageDashboard() {
       {/* Timeseries + Donut */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
-          <CardHeader><CardTitle className="text-base">Tokens por dia</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-base">Tokens por día</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={tsData}>
@@ -192,7 +192,7 @@ export function PlatformAIUsageDashboard() {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-base">Distribuição por provedor</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-base">Distribución por proveedor</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -201,7 +201,7 @@ export function PlatformAIUsageDashboard() {
                     <Cell key={d.provider} fill={PROVIDER_COLORS[d.provider] ?? '#888'} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(v: any) => Number(v).toLocaleString('pt-BR') + ' tokens'} />
+                <Tooltip formatter={(v: any) => Number(v).toLocaleString( 'es' ) + ' tokens'} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -211,14 +211,14 @@ export function PlatformAIUsageDashboard() {
 
       {/* Top empresas */}
       <Card>
-        <CardHeader><CardTitle className="text-base">Top empresas por consumo</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Principales empresas por consumo</CardTitle></CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={Math.max(220, byOrg.length * 32)}>
             <BarChart data={byOrg} layout="vertical" margin={{ left: 120 }}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
               <XAxis type="number" fontSize={11} />
               <YAxis dataKey="org_name" type="category" fontSize={11} width={140} />
-              <Tooltip formatter={(v: any) => Number(v).toLocaleString('pt-BR') + ' tokens'} />
+              <Tooltip formatter={(v: any) => Number(v).toLocaleString( 'es' ) + ' tokens'} />
               <Bar dataKey="total_tokens" fill="hsl(262 83% 58%)" radius={[0, 6, 6, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -235,9 +235,9 @@ export function PlatformAIUsageDashboard() {
                 <thead className="text-xs text-muted-foreground border-b">
                   <tr>
                     <th className="text-left py-2">Modelo</th>
-                    <th className="text-right py-2">Chamadas</th>
+                    <th className="text-right py-2">Llamadas</th>
                     <th className="text-right py-2">Tokens</th>
-                    <th className="text-right py-2">Custo</th>
+                    <th className="text-right py-2">Costo</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -252,14 +252,14 @@ export function PlatformAIUsageDashboard() {
                           </div>
                           <Badge variant="outline" className="mt-1 text-[10px]">{PROVIDER_LABELS[m.provider] ?? m.provider}</Badge>
                         </td>
-                        <td className="text-right">{m.calls.toLocaleString('pt-BR')}</td>
-                        <td className="text-right">{m.total_tokens.toLocaleString('pt-BR')}</td>
+                        <td className="text-right">{m.calls.toLocaleString( 'es' )}</td>
+                        <td className="text-right">{m.total_tokens.toLocaleString( 'es' )}</td>
                         <td className="text-right font-medium">{fmtUSD(cost)}</td>
                       </tr>
                     );
                   })}
                   {byModel.length === 0 && (
-                    <tr><td colSpan={4} className="py-6 text-center text-muted-foreground">Sem dados no período.</td></tr>
+                    <tr><td colSpan={4} className="py-6 text-center text-muted-foreground">Sin datos en el período.</td></tr>
                   )}
                 </tbody>
               </table>
@@ -268,14 +268,14 @@ export function PlatformAIUsageDashboard() {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-base">Consumo por chave do pool</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-base">Consumo por clave del pool</CardTitle></CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="text-xs text-muted-foreground border-b">
                   <tr>
-                    <th className="text-left py-2">Chave</th>
-                    <th className="text-right py-2">Chamadas</th>
+                    <th className="text-left py-2">Clave</th>
+                    <th className="text-right py-2">Llamadas</th>
                     <th className="text-right py-2">Tokens</th>
                   </tr>
                 </thead>
@@ -289,12 +289,12 @@ export function PlatformAIUsageDashboard() {
                         </div>
                         <Badge variant="outline" className="mt-1 text-[10px]">{PROVIDER_LABELS[k.provider] ?? k.provider}</Badge>
                       </td>
-                      <td className="text-right">{k.calls.toLocaleString('pt-BR')}</td>
-                      <td className="text-right">{k.total_tokens.toLocaleString('pt-BR')}</td>
+                      <td className="text-right">{k.calls.toLocaleString( 'es' )}</td>
+                      <td className="text-right">{k.total_tokens.toLocaleString( 'es' )}</td>
                     </tr>
                   ))}
                   {byKey.length === 0 && (
-                    <tr><td colSpan={3} className="py-6 text-center text-muted-foreground">Sem dados no período.</td></tr>
+                    <tr><td colSpan={3} className="py-6 text-center text-muted-foreground">Sin datos en el período.</td></tr>
                   )}
                 </tbody>
               </table>

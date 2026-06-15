@@ -19,21 +19,21 @@ const PROVIDER_META = {
     placeholder: 'sk-...',
     docsUrl: 'https://platform.openai.com/api-keys',
     docsLabel: 'Obter chave OpenAI',
-    helpText: 'Acesse o painel da OpenAI em "API Keys" e crie uma nova chave secreta.',
+    helpText: 'Acceda al panel de OpenAI en "API Keys" y cree una nueva clave secreta.',
   },
   anthropic: {
     name: 'Anthropic (Claude)',
     placeholder: 'sk-ant-...',
     docsUrl: 'https://console.anthropic.com/settings/keys',
     docsLabel: 'Obter chave Claude',
-    helpText: 'No console da Anthropic, vá em Settings → API Keys e gere uma nova chave.',
+    helpText: 'En la consola de Anthropic, vaya a Settings → API Keys y genere una nueva clave.',
   },
   gemini: {
     name: 'Google Gemini',
     placeholder: 'AIza...',
     docsUrl: 'https://aistudio.google.com/app/apikey',
     docsLabel: 'Obter chave Gemini',
-    helpText: 'Acesse o Google AI Studio e clique em "Create API Key".',
+    helpText: 'Acceda a Google AI Studio y haga clic en "Create API Key".',
   },
 } as const;
 
@@ -50,7 +50,7 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
 
   const handleSave = async () => {
     if (!apiKey.trim()) {
-      toast.error('Cole a API Key antes de salvar');
+      toast.error('Pegue la API Key antes de guardar');
       return;
     }
     save.mutate(
@@ -64,8 +64,8 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
       <CardHeader>
         <CardTitle className="text-lg">{meta.name}</CardTitle>
         <CardDescription>
-          Use sua própria conta para que a plataforma use esse provedor.
-          Por padrão, tudo usa <strong>Lovable AI</strong>.
+          Use su propia cuenta para que la plataforma use este proveedor.
+          Por defecto, todo usa <strong>Lovable AI</strong>.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -74,7 +74,7 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 text-green-600" />
               <span className="text-green-700 dark:text-green-400">
-                Chave verificada {current?.api_key_masked ? `(${current.api_key_masked})` : ''}
+                Llave verificada {current?.api_key_masked ? `(${current.api_key_masked})` : ''}
                 {current?.last_verified_at
                   ? ` em ${new Date(current.last_verified_at).toLocaleDateString('pt-BR')}`
                   : ''}
@@ -88,7 +88,7 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
               disabled={del.isPending}
             >
               <Trash2 className="mr-1 h-3 w-3" />
-              Remover
+              Eliminar
             </Button>
           </div>
         )}
@@ -100,7 +100,7 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
               type={showKey ? 'text' : 'password'}
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder={isConfigured ? 'Cole uma nova chave para substituir' : meta.placeholder}
+              placeholder={isConfigured ? 'Pegue una nueva llave para reemplazar' : meta.placeholder}
               className="pr-10"
             />
             <button
@@ -113,8 +113,8 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
           </div>
           <p className="text-xs text-muted-foreground">{meta.helpText}</p>
           <p className="text-xs text-muted-foreground">
-            A chave é validada com o provedor antes de ser salva. Depois, escolha onde
-            ela será usada na aba <strong>Roteamento de IA</strong>.
+            La llave se valida con el proveedor antes de guardarse. Luego, elija dónde
+            ella será usada en la pestaña <strong>Enrutamiento de IA</strong>.
           </p>
         </div>
 
@@ -125,7 +125,7 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
             ) : (
               <Save className="mr-2 h-4 w-4" />
             )}
-            {isConfigured ? 'Atualizar e verificar' : 'Salvar e verificar'}
+            {isConfigured ? 'Actualizar y verificar' : 'Guardar y verificar'}
           </Button>
           <Button variant="outline" asChild>
             <a href={meta.docsUrl} target="_blank" rel="noopener noreferrer">
@@ -162,7 +162,7 @@ export function LovableAIInfo() {
           </div>
           <div>
             <CardTitle className="text-lg">Lovable AI</CardTitle>
-            <CardDescription>Gateway nativo já incluso na plataforma</CardDescription>
+            <CardDescription>Gateway nativo ya incluido en la plataforma</CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -170,18 +170,18 @@ export function LovableAIInfo() {
         <div className="flex items-center gap-2 rounded-lg border border-green-500/20 bg-green-500/10 p-3">
           <CheckCircle2 className="h-4 w-4 text-green-600" />
           <span className="text-green-700 dark:text-green-400">
-            Já está ativo — não requer configuração.
+            Ya está activo — no requiere configuración.
           </span>
         </div>
         <p className="text-muted-foreground">
-          O Lovable AI é o provedor padrão dos agentes. Ele dá acesso aos modelos
-          mais modernos (Google Gemini e OpenAI GPT) sem precisar configurar
-          contas externas. Ideal para começar rápido.
+          Lovable AI es el proveedor predeterminado de los agentes. Da acceso a los modelos
+          más modernos (Google Gemini e OpenAI GPT) sin necesidad de configurar
+          cuentas externas. Ideal para comenzar rápido.
         </p>
         <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
-          <li>Modelos disponíveis: Gemini 2.5 Pro, Flash, Lite e GPT-5.</li>
-          <li>Cobrado conforme o plano da plataforma.</li>
-          <li>Para usar sua própria conta, configure OpenAI, Claude ou Gemini.</li>
+          <li>Modelos disponibles: Gemini 2.5 Pro, Flash, Lite e GPT-5.</li>
+          <li>Cobrado según el plan de la plataforma.</li>
+          <li>Para usar su propia cuenta, configure OpenAI, Claude o Gemini.</li>
         </ul>
       </CardContent>
     </Card>
@@ -198,15 +198,15 @@ export function WebhooksLink() {
             <Webhook className="h-5 w-5" />
           </div>
           <div>
-            <CardTitle className="text-lg">Webhooks Customizados</CardTitle>
-            <CardDescription>Configurados em Automação & IA → Webhooks</CardDescription>
+            <CardTitle className="text-lg">Webhooks Personalizados</CardTitle>
+            <CardDescription>Configurados en Automatización e IA → Webhooks</CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent>
         <p className="mb-4 text-sm text-muted-foreground">
-          Os webhooks customizados ficam em uma seção dedicada no menu lateral.
-          Você pode criar gatilhos, filtros e ações conectadas a sistemas externos.
+          Los webhooks personalizados se encuentran en una sección dedicada en el menú lateral.
+          Puede crear disparadores, filtros y acciones conectadas a sistemas externos.
         </p>
         <Button onClick={() => navigate('/admin?section=webhooks')}>
           Abrir Webhooks

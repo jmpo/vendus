@@ -43,28 +43,28 @@ interface SuperAdminSidebarProps {
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'organizations', label: 'Empresas', icon: Building2 },
-  { id: 'users', label: 'Usuários', icon: Users },
-  { id: 'plans', label: 'Planos', icon: Layers },
-  { id: 'ai-keys', label: 'IA da Plataforma', icon: KeyRound },
+  { id: 'users', label: 'Usuarios', icon: Users },
+  { id: 'plans', label: 'Planes', icon: Layers },
+  { id: 'ai-keys', label: 'IA de la Plataforma', icon: KeyRound },
   { id: 'ai-usage', label: 'Consumo de IA', icon: BarChart3 },
 
-  { id: 'subscriptions', label: 'Assinaturas', icon: CreditCard },
-  { id: 'billing', label: 'Faturamento', icon: FileText },
+  { id: 'subscriptions', label: 'Suscripciones', icon: CreditCard },
+  { id: 'billing', label: 'Facturación', icon: FileText },
   { id: 'payments', label: 'Pagos (Cakto)', icon: Banknote },
   { id: 'whatsapp', label: 'WhatsApp / Evolution', icon: Smartphone },
-  { id: 'sales-leads', label: 'Leads Comerciais', icon: Megaphone },
-  { id: 'help', label: 'Central de Ajuda', icon: HelpCircle },
+  { id: 'sales-leads', label: 'Leads Comerciales', icon: Megaphone },
+  { id: 'help', label: 'Centro de Ayuda', icon: HelpCircle },
   { id: 'support', label: 'Soporte', icon: LifeBuoy },
-  { id: 'agent-tools', label: 'Ações dos Agentes', icon: Wrench },
-  { id: 'ai-quality', label: 'Qualidade da IA', icon: BarChart3 },
-  { id: 'releases', label: 'Atualizações', icon: Sparkles },
+  { id: 'agent-tools', label: 'Acciones de los Agentes', icon: Wrench },
+  { id: 'ai-quality', label: 'Calidad de IA', icon: BarChart3 },
+  { id: 'releases', label: 'Actualizaciones', icon: Sparkles },
 ];
 
 const settingsItems = [
-  { id: 'branding', label: 'Identidade Visual', icon: Palette },
-  { id: 'email', label: 'E-mail', icon: Mail },
-  { id: 'audit', label: 'Logs de Auditoria', icon: ScrollText },
-  { id: 'health', label: 'Saúde do Sistema', icon: Activity },
+  { id: 'branding', label: 'Identidad Visual', icon: Palette },
+  { id: 'email', label: 'Correo electrónico', icon: Mail },
+  { id: 'audit', label: 'Logs de Auditoría', icon: ScrollText },
+  { id: 'health', label: 'Salud del Sistema', icon: Activity },
 ];
 
 interface SidebarContentProps extends SuperAdminSidebarProps {
@@ -98,7 +98,7 @@ function SidebarContent({ activeSection, onSectionChange, onNavigate }: SidebarC
           <Logo size="md" />
           <div className="min-w-0">
             <h1 className="font-bold text-foreground text-sm truncate">Super Admin</h1>
-            <p className="text-xs text-muted-foreground truncate">Painel da Plataforma</p>
+            <p className="text-xs text-muted-foreground truncate">Panel de la Plataforma</p>
           </div>
         </div>
       </div>
@@ -126,7 +126,7 @@ function SidebarContent({ activeSection, onSectionChange, onNavigate }: SidebarC
         <div className="pt-4 pb-2">
           <div className="border-t border-border" />
           <p className="text-xs text-muted-foreground mt-3 mb-2 px-3 uppercase tracking-wider">
-            Configurações
+            Configuraciones
           </p>
         </div>
 
@@ -160,7 +160,7 @@ function SidebarContent({ activeSection, onSectionChange, onNavigate }: SidebarC
         >
           <Button variant="ghost" className="w-full justify-start gap-2">
             <ArrowLeft className="h-4 w-4" />
-            Voltar ao App
+            Volver a la App
           </Button>
         </Link>
 
@@ -170,7 +170,7 @@ function SidebarContent({ activeSection, onSectionChange, onNavigate }: SidebarC
           onClick={handleSignOut}
         >
           <LogOut className="h-4 w-4" />
-          Sair
+          Salir
         </Button>
         
         <div className="flex items-center justify-between px-3 py-2">

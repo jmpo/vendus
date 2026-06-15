@@ -13,7 +13,7 @@ import { ptBR } from 'date-fns/locale';
 
 const scopeLabels: Record<string, { label: string; icon: React.ReactNode }> = {
   all: { label: 'General', icon: <Users className="h-3 w-3" /> },
-  product: { label: 'Produto', icon: <Package className="h-3 w-3" /> },
+  product: { label: 'Producto', icon: <Package className="h-3 w-3" /> },
   squad: { label: 'Squad', icon: <UsersRound className="h-3 w-3" /> },
   custom: { label: 'Individual', icon: <User className="h-3 w-3" /> },
 };

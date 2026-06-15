@@ -24,7 +24,7 @@ import { getPublicAppUrl } from '@/lib/publicUrl';
 interface Props {
   onCreated?: (org: any) => void;
   onCancel?: () => void;
-  hideStatusField?: boolean;
+  hideEstadoField?: boolean;
   submitLabel?: string;
   cancelLabel?: string;
 }
@@ -32,8 +32,8 @@ interface Props {
 export function OrganizationCreateForm({
   onCreated,
   onCancel,
-  hideStatusField,
-  submitLabel = 'Criar Empresa',
+  hideEstadoField,
+  submitLabel = 'Crear Empresa',
   cancelLabel = 'Cancelar',
 }: Props) {
   const { data: activePlans } = useActivePlans();
@@ -67,7 +67,7 @@ export function OrganizationCreateForm({
   const copyLink = async () => {
     await navigator.clipboard.writeText(inviteLink);
     setCopied(true);
-    toast.success('Link copiado!');
+    toast.success('¡Enlace copiado!');
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -88,7 +88,7 @@ export function OrganizationCreateForm({
 
   const handleCreate = async () => {
     if (!newOrg.name.trim() || !newOrg.email.trim()) {
-      toast.error('Preencha nome e e-mail da empresa');
+      toast.error('Complete el nombre y correo electrónico de la empresa');
       return;
     }
 
@@ -181,7 +181,7 @@ export function OrganizationCreateForm({
       }
     } catch (error) {
       console.error('Error creating organization:', error);
-      toast.error('Erro ao criar empresa');
+      toast.error('Error al crear la empresa');
     }
   };
 
@@ -191,10 +191,10 @@ export function OrganizationCreateForm({
         <div className="rounded-lg border border-primary/30 bg-primary/5 p-4 space-y-3">
           <div className="flex items-center gap-2 text-sm font-medium">
             <LinkIcon className="h-4 w-4 text-primary" />
-            Convite Criado
+            Invitación Creada
           </div>
           <p className="text-sm text-muted-foreground">
-            Compartilhe este link com <strong>{createdInvite.email}</strong>:
+            Comparta este enlace con <strong>{createdInvite.email}</strong>:
           </p>
           <div className="flex items-center gap-2">
             <Input value={inviteLink} readOnly className="font-mono text-xs" />
@@ -202,7 +202,7 @@ export function OrganizationCreateForm({
               {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground">O convite expira em 7 dias</p>
+          <p className="text-xs text-muted-foreground">La invitación vence en 7 días</p>
         </div>
         <div className="flex justify-end">
           <Button onClick={() => onCreated?.(createdInvite.org)}>Concluir</Button>
@@ -214,7 +214,7 @@ export function OrganizationCreateForm({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label>Nome da empresa *</Label>
+        <Label>Nombre de la empresa *</Label>
         <Input
           value={newOrg.name}
           onChange={(e) => setNewOrg({ ...newOrg, name: e.target.value })}
@@ -223,7 +223,7 @@ export function OrganizationCreateForm({
       </div>
 
       <div className="space-y-2">
-        <Label>E-mail *</Label>
+        <Label>Correo electrónico *</Label>
         <Input
           type="email"
           value={newOrg.email}
@@ -252,7 +252,7 @@ export function OrganizationCreateForm({
       </div>
 
       <div className="space-y-2">
-        <Label>Plano</Label>
+        <Label>Plan</Label>
         <Select
           value={newOrg.plan_id || 'none'}
           onValueChange={(value) => {
@@ -267,25 +267,25 @@ export function OrganizationCreateForm({
             <SelectValue placeholder="Selecione um plano" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="none">Sem plano (personalizado)</SelectItem>
+            <SelectItem value="none">Sin plan (personalizado)</SelectItem>
             {activePlans?.map((plan) => (
               <SelectItem key={plan.id} value={plan.id}>
-                {plan.name} — {plan.max_users} usuários · {plan.max_products} produtos
+                {plan.name} — {plan.max_users} usuarios · {plan.max_products} productos
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
         <p className="text-xs text-muted-foreground">
-          Selecionar um plano preenche automaticamente os limites padrão.
+          Seleccionar un plan completa automáticamente los límites predeterminados.
         </p>
       </div>
 
       {newOrg.plan_id && (
         <div className="flex items-center justify-between rounded-lg border p-3">
           <div>
-            <Label className="text-sm font-medium">Personalizar limites</Label>
+            <Label className="text-sm font-medium">Personalizar límites</Label>
             <p className="text-xs text-muted-foreground">
-              Sobrescrever os valores padrão do plano selecionado
+              Sobrescribir los valores predeterminados del plan seleccionado
             </p>
           </div>
           <Switch
@@ -297,7 +297,7 @@ export function OrganizationCreateForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label>Máx. Usuários</Label>
+          <Label>Máx. Usuarios</Label>
           <Input
             type="number"
             min={1}
@@ -309,7 +309,7 @@ export function OrganizationCreateForm({
           />
         </div>
         <div className="space-y-2">
-          <Label>Máx. Produtos</Label>
+          <Label>Máx. Productos</Label>
           <Input
             type="number"
             min={1}
@@ -322,9 +322,9 @@ export function OrganizationCreateForm({
         </div>
       </div>
 
-      {!hideStatusField && (
+      {!hideEstadoField && (
         <div className="space-y-2">
-          <Label>Status</Label>
+          <Label>Estado</Label>
           <Select
             value={newOrg.status}
             onValueChange={(value) => setNewOrg({ ...newOrg, status: value })}
@@ -333,8 +333,8 @@ export function OrganizationCreateForm({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="active">Ativo</SelectItem>
-              <SelectItem value="suspended">Suspenso</SelectItem>
+              <SelectItem value="active">Activo</SelectItem>
+              <SelectItem value="suspended">Suspendido</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -347,7 +347,7 @@ export function OrganizationCreateForm({
           </Button>
         )}
         <Button onClick={handleCreate} disabled={createOrganization.isPending}>
-          {createOrganization.isPending ? 'Criando...' : submitLabel}
+          {createOrganization.isPending ? 'Creando...' : submitLabel}
         </Button>
       </div>
     </div>

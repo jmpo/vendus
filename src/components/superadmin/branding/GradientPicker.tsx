@@ -12,10 +12,10 @@ interface GradientPickerProps {
 }
 
 const STYLES: { value: GradientStyle; label: string; description: string }[] = [
-  { value: 'solid', label: 'Sólido', description: 'Sem gradiente, cor única' },
-  { value: 'soft', label: 'Suave', description: '2 paradas — cor → claro' },
-  { value: 'vendus', label: 'Rico', description: '3 paradas — escuro → cor → claro' },
-  { value: 'custom', label: 'Custom', description: 'Escolha 3 cores manualmente' },
+  { value: 'solid', label: 'Sólido', description: 'Sin degradado, color único' },
+  { value: 'soft', label: 'Suave', description: '2 paradas — color → claro' },
+  { value: 'vendus', label: 'Rico', description: '3 paradas — oscuro → color → claro' },
+  { value: 'custom', label: 'Custom', description: 'Elija 3 colores manualmente' },
 ];
 
 export function GradientPicker({
@@ -34,7 +34,7 @@ export function GradientPicker({
 
   return (
     <div className="space-y-3">
-      <Label>Estilo do Gradiente</Label>
+      <Label>Estilo del Degradado</Label>
       <div className="grid grid-cols-2 gap-3">
         {STYLES.map((s) => {
           const previewBg = scale
@@ -68,7 +68,7 @@ export function GradientPicker({
           {(['start', 'mid', 'end'] as const).map((key) => (
             <div key={key} className="space-y-1">
               <Label className="text-xs capitalize">
-                {key === 'start' ? 'Início' : key === 'mid' ? 'Meio' : 'Fim'}
+                {key === 'start' ? 'Inicio' : key === 'mid' ? 'Medio' : 'Fin'}
               </Label>
               <div className="flex items-center gap-1">
                 <input

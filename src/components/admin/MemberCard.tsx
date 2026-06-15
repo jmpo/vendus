@@ -50,7 +50,7 @@ export function MemberCard({ member, onEditRole, onEditSquad, onAssignProduct, o
                 </h3>
                 {!member.is_active && (
                   <Badge variant="outline" className="bg-muted text-muted-foreground text-xs">
-                    Inativo
+                    Inactivo
                   </Badge>
                 )}
               </div>
@@ -109,7 +109,7 @@ export function MemberCard({ member, onEditRole, onEditSquad, onAssignProduct, o
                         </Badge>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p className="font-medium mb-1">Outros produtos:</p>
+                        <p className="font-medium mb-1">Otros productos:</p>
                         <ul className="text-sm">
                           {products.slice(2).map(p => (
                             <li key={p.id}>• {p.name}</li>
@@ -132,20 +132,20 @@ export function MemberCard({ member, onEditRole, onEditSquad, onAssignProduct, o
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => onEditRole(member)}>
                 <UserCog className="h-4 w-4 mr-2" />
-                Alterar Papel
+                Cambiar Rol
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onEditSquad(member)}>
                 <Users className="h-4 w-4 mr-2" />
-                Gerenciar Squad
+                Gestionar Squad
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => onAssignProduct(member)}>
                 <Package className="h-4 w-4 mr-2" />
-                Atribuir Produtos
+                Asignar Productos
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onEditPermissions(member)}>
                 <Settings2 className="h-4 w-4 mr-2" />
-                Permissões
+                Permisos
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem 
@@ -153,7 +153,7 @@ export function MemberCard({ member, onEditRole, onEditSquad, onAssignProduct, o
                 className="text-destructive focus:text-destructive"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
-                Apagar Usuário
+                Eliminar Usuario
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -30,7 +30,7 @@ const SAMPLE_DATA: Record<string, string> = {
   role: 'Vendedor',
   reset_link: 'https://app.exemplo.com/reset?token=xyz',
   message: 'Sua mensagem personalizada aqui.',
-  subject: 'Assunto do e-mail',
+  subject: 'Asunto do e-mail',
 };
 
 function renderTemplate(html: string, data: Record<string, string>) {
@@ -95,7 +95,7 @@ export function PlatformTemplateEditor({ template, open, onOpenChange }: Props) 
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            Editar template: {template.name}
+            Editar plantilla: {template.name}
             <Badge variant="outline">{template.slug}</Badge>
           </DialogTitle>
           <DialogDescription>{template.description}</DialogDescription>
@@ -105,7 +105,7 @@ export function PlatformTemplateEditor({ template, open, onOpenChange }: Props) 
           {/* Editor */}
           <div className="space-y-4 overflow-y-auto pr-2">
             <div className="space-y-2">
-              <Label>Nome interno</Label>
+              <Label>Nombre interno</Label>
               <Input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -113,7 +113,7 @@ export function PlatformTemplateEditor({ template, open, onOpenChange }: Props) 
             </div>
 
             <div className="space-y-2">
-              <Label>Descrição</Label>
+              <Label>Descripción</Label>
               <Input
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -121,18 +121,18 @@ export function PlatformTemplateEditor({ template, open, onOpenChange }: Props) 
             </div>
 
             <div className="space-y-2">
-              <Label>Assunto</Label>
+              <Label>Asunto</Label>
               <Input
                 value={form.subject}
                 onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                placeholder="Use {{variavel}} para dados dinâmicos"
+                placeholder="Use {{variable}} para datos dinámicos"
               />
             </div>
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label className="flex items-center gap-2">
-                  <Variable className="h-4 w-4" /> Variáveis disponíveis
+                  <Variable className="h-4 w-4" /> Variables disponibles
                 </Label>
               </div>
               <div className="flex flex-wrap gap-2 p-2 border border-border rounded-md min-h-[40px]">
@@ -154,7 +154,7 @@ export function PlatformTemplateEditor({ template, open, onOpenChange }: Props) 
                   </Badge>
                 ))}
                 {form.variables.length === 0 && (
-                  <span className="text-xs text-muted-foreground">Nenhuma variável definida</span>
+                  <span className="text-xs text-muted-foreground">Ninguna variable definida</span>
                 )}
               </div>
               <div className="flex gap-2">
@@ -165,17 +165,17 @@ export function PlatformTemplateEditor({ template, open, onOpenChange }: Props) 
                   onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addVariable())}
                 />
                 <Button type="button" variant="outline" onClick={addVariable}>
-                  Adicionar
+                  Agregar
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Clique em uma variável para inserir no HTML. Sugestões comuns: user_name, company_name, amount, due_date, billing_link, invite_link.
+                Haga clic en una variable para insertarla en el HTML. Sugerencias comunes: user_name, company_name, amount, due_date, billing_link, invite_link.
               </p>
             </div>
 
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
-                <Code className="h-4 w-4" /> HTML do e-mail
+                <Code className="h-4 w-4" /> HTML del correo electrónico
               </Label>
               <Textarea
                 value={form.html_content}
@@ -187,8 +187,8 @@ export function PlatformTemplateEditor({ template, open, onOpenChange }: Props) 
 
             <div className="flex items-center justify-between p-3 border border-border rounded-md">
               <div>
-                <p className="font-medium text-sm">Template ativo</p>
-                <p className="text-xs text-muted-foreground">Desative para impedir envios</p>
+                <p className="font-medium text-sm">Plantilla activa</p>
+                <p className="text-xs text-muted-foreground">Desactive para impedir envíos</p>
               </div>
               <Switch
                 checked={form.is_active}
@@ -209,7 +209,7 @@ export function PlatformTemplateEditor({ template, open, onOpenChange }: Props) 
                 </TabsTrigger>
               </TabsList>
               <div className="px-3 pb-2 text-xs text-muted-foreground">
-                <strong>Assunto:</strong> {previewSubject}
+                <strong>Asunto:</strong> {previewSubject}
               </div>
               <TabsContent value="preview" className="flex-1 overflow-hidden m-0 p-0">
                 <iframe
@@ -230,7 +230,7 @@ export function PlatformTemplateEditor({ template, open, onOpenChange }: Props) 
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSave} disabled={update.isPending}>
             <Save className="h-4 w-4 mr-2" />
-            Salvar template
+            Guardar plantilla
           </Button>
         </div>
       </DialogContent>

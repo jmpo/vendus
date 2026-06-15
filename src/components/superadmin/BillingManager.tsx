@@ -30,17 +30,17 @@ import {
 import { useBillingHistory, useSuperAdminStats } from '@/hooks/useSuperAdmin';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 export function BillingManager() {
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setEstadoFilter] = useState<string>('all');
 
   const { data: billingHistory, isLoading } = useBillingHistory();
   const { data: stats } = useSuperAdminStats();
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat( 'es' , {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
@@ -48,32 +48,32 @@ export function BillingManager() {
 
   const filteredBilling = billingHistory?.filter((bill: any) => {
     const matchesSearch = bill.organizations?.name?.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || bill.status === statusFilter;
+    const matchesEstado = statusFilter === 'all' || bill.status === statusFilter;
     
-    return matchesSearch && matchesStatus;
+    return matchesSearch && matchesEstado;
   }) || [];
 
-  const getStatusBadge = (status: string) => {
+  const getEstadoBadge = (status: string) => {
     switch (status) {
       case 'paid':
         return (
           <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
             <CheckCircle className="h-3 w-3 mr-1" />
-            Pago
+            Pagado
           </Badge>
         );
       case 'pending':
         return (
           <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20">
             <Clock className="h-3 w-3 mr-1" />
-            Pendente
+            Pendiente
           </Badge>
         );
       case 'failed':
         return (
           <Badge className="bg-red-500/10 text-red-500 border-red-500/20">
             <XCircle className="h-3 w-3 mr-1" />
-            Falhou
+            Falló
           </Badge>
         );
       case 'refunded':
@@ -98,8 +98,8 @@ export function BillingManager() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Faturamento</h1>
-        <p className="text-muted-foreground">Histórico de cobranças e pagamentos</p>
+        <h1 className="text-2xl font-bold text-foreground">Facturación</h1>
+        <p className="text-muted-foreground">Historial de cobros y pagos</p>
       </div>
 
       {/* Stats */}
@@ -108,7 +108,7 @@ export function BillingManager() {
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
               <DollarSign className="h-5 w-5 text-primary" />
-              <span className="text-sm text-muted-foreground">MRR Atual</span>
+              <span className="text-sm text-muted-foreground">MRR Actual</span>
             </div>
             <p className="text-2xl font-bold mt-2">{formatCurrency(stats?.mrr || 0)}</p>
           </CardContent>
@@ -117,7 +117,7 @@ export function BillingManager() {
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
               <CheckCircle className="h-5 w-5 text-emerald-500" />
-              <span className="text-sm text-muted-foreground">Total Recebido</span>
+              <span className="text-sm text-muted-foreground">Total Recibido</span>
             </div>
             <p className="text-2xl font-bold mt-2">{formatCurrency(totalPaid)}</p>
           </CardContent>
@@ -126,7 +126,7 @@ export function BillingManager() {
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
               <Clock className="h-5 w-5 text-amber-500" />
-              <span className="text-sm text-muted-foreground">Pendente</span>
+              <span className="text-sm text-muted-foreground">Pendiente</span>
             </div>
             <p className="text-2xl font-bold mt-2">{formatCurrency(totalPending)}</p>
           </CardContent>
@@ -135,7 +135,7 @@ export function BillingManager() {
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
               <FileText className="h-5 w-5 text-blue-500" />
-              <span className="text-sm text-muted-foreground">Faturas</span>
+              <span className="text-sm text-muted-foreground">Facturas</span>
             </div>
             <p className="text-2xl font-bold mt-2">{billingHistory?.length || 0}</p>
           </CardContent>
@@ -155,15 +155,15 @@ export function BillingManager() {
                 className="pl-10"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select value={statusFilter} onValueChange={setEstadoFilter}>
               <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder="Estado" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="paid">Pago</SelectItem>
-                <SelectItem value="pending">Pendente</SelectItem>
-                <SelectItem value="failed">Falhou</SelectItem>
+                <SelectItem value="paid">Pagado</SelectItem>
+                <SelectItem value="pending">Pendiente</SelectItem>
+                <SelectItem value="failed">Falló</SelectItem>
                 <SelectItem value="refunded">Reembolsado</SelectItem>
               </SelectContent>
             </Select>
@@ -183,9 +183,9 @@ export function BillingManager() {
           ) : filteredBilling.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">Nenhuma cobrança encontrada</p>
+              <p className="text-muted-foreground">Ninguna facturación encontrada</p>
               <p className="text-sm text-muted-foreground">
-                As cobranças aparecerão aqui quando forem geradas
+                Los cobros aparecerán aquí cuando se generen
               </p>
             </div>
           ) : (
@@ -193,12 +193,12 @@ export function BillingManager() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Empresa</TableHead>
-                  <TableHead>Descrição</TableHead>
+                  <TableHead>Descripción</TableHead>
                   <TableHead>Valor</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Vencimento</TableHead>
-                  <TableHead>Pago</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead>Vencimiento</TableHead>
+                  <TableHead>Pagado</TableHead>
+                  <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -208,21 +208,21 @@ export function BillingManager() {
                       {bill.organizations?.name || 'N/A'}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {bill.description || 'Mensalidade'}
+                      {bill.description || 'Mensualidad'}
                     </TableCell>
                     <TableCell className="font-semibold">
                       {formatCurrency(bill.amount)}
                     </TableCell>
-                    <TableCell>{getStatusBadge(bill.status)}</TableCell>
+                    <TableCell>{getEstadoBadge(bill.status)}</TableCell>
                     <TableCell className="text-muted-foreground">
                       {bill.due_date 
-                        ? format(new Date(bill.due_date), "dd/MM/yyyy", { locale: ptBR })
+                        ? format(new Date(bill.due_date), "dd/MM/yyyy", { locale: es })
                         : '-'
                       }
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {bill.payment_date 
-                        ? format(new Date(bill.payment_date), "dd/MM/yyyy", { locale: ptBR })
+                        ? format(new Date(bill.payment_date), "dd/MM/yyyy", { locale: es })
                         : '-'
                       }
                     </TableCell>

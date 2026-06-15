@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Search, Building2, Mail, Phone, Calendar, ArrowLeft, Users, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 const STATUS_MAP: Record<string, { label: string; variant: 'default' | 'secondary' | 'outline' | 'destructive' }> = {
   new: { label: 'Novo', variant: 'default' },
@@ -47,7 +47,7 @@ export function SalesLeadsManager() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sales-leads'] });
-      toast.success('Lead atualizado');
+      toast.success('Lead actualizado');
     },
   });
 
@@ -68,11 +68,11 @@ export function SalesLeadsManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Leads Comerciais</h1>
-          <p className="text-muted-foreground">Leads capturados pela página de vendas</p>
+          <h1 className="text-2xl font-bold">Leads Comerciales</h1>
+          <p className="text-muted-foreground">Leads capturados por la página de ventas</p>
         </div>
         {newCount > 0 && (
-          <Badge variant="default" className="text-sm px-3 py-1">{newCount} novos</Badge>
+          <Badge variant="default" className="text-sm px-3 py-1">{newCount} nuevos</Badge>
         )}
       </div>
 
@@ -80,7 +80,7 @@ export function SalesLeadsManager() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar por empresa, nome ou email..."
+            placeholder="Buscar por empresa, nombre o correo electrónico..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10"
@@ -91,8 +91,8 @@ export function SalesLeadsManager() {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os status</SelectItem>
-            <SelectItem value="new">Novos</SelectItem>
+            <SelectItem value="all">Todos los estados</SelectItem>
+            <SelectItem value="new">Nuevos</SelectItem>
             <SelectItem value="contacted">Contactados</SelectItem>
             <SelectItem value="qualified">Qualificados</SelectItem>
             <SelectItem value="converted">Convertidos</SelectItem>
@@ -108,7 +108,7 @@ export function SalesLeadsManager() {
       ) : filteredLeads.length === 0 ? (
         <Card>
           <CardContent className="py-16 text-center text-muted-foreground">
-            Nenhum lead encontrado.
+            Ningún lead encontrado.
           </CardContent>
         </Card>
       ) : (
@@ -137,7 +137,7 @@ export function SalesLeadsManager() {
                     </div>
                   </div>
                   <span className="text-xs text-muted-foreground shrink-0">
-                    {format(new Date(lead.created_at), "dd/MM/yy", { locale: ptBR })}
+                    {format(new Date(lead.created_at), "dd/MM/yy", { locale: es })}
                   </span>
                 </CardContent>
               </Card>
@@ -163,19 +163,19 @@ export function SalesLeadsManager() {
                   <div className="flex items-center gap-2"><Users className="h-4 w-4 text-muted-foreground" /> {selectedLead.contact_name}</div>
                   <div className="flex items-center gap-2"><Mail className="h-4 w-4 text-muted-foreground" /> {selectedLead.email}</div>
                   {selectedLead.phone && <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-muted-foreground" /> {selectedLead.phone}</div>}
-                  <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-muted-foreground" /> {format(new Date(selectedLead.created_at), "dd/MM/yyyy HH:mm", { locale: ptBR })}</div>
+                  <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-muted-foreground" /> {format(new Date(selectedLead.created_at), "dd/MM/yyyy HH:mm", { locale: es })}</div>
                 </div>
 
                 {(selectedLead.company_size || selectedLead.segment) && (
                   <div className="grid grid-cols-2 gap-4 text-sm">
-                    {selectedLead.company_size && <div><span className="text-muted-foreground">Tamanho:</span> {selectedLead.company_size}</div>}
+                    {selectedLead.company_size && <div><span className="text-muted-foreground">Tamaño:</span> {selectedLead.company_size}</div>}
                     {selectedLead.segment && <div><span className="text-muted-foreground">Segmento:</span> {selectedLead.segment}</div>}
                   </div>
                 )}
 
                 {selectedLead.main_challenge && (
                   <div>
-                    <Label className="text-muted-foreground text-xs">Principal desafio</Label>
+                    <Label className="text-muted-foreground text-xs">Principal desafío</Label>
                     <p className="text-sm mt-1">{selectedLead.main_challenge}</p>
                   </div>
                 )}
@@ -213,7 +213,7 @@ export function SalesLeadsManager() {
                   <Textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Anotações sobre este lead..."
+                    placeholder="Anotaciones sobre este lead..."
                     rows={3}
                   />
                   <Button
@@ -224,7 +224,7 @@ export function SalesLeadsManager() {
                       setSelectedLead({ ...selectedLead, notes });
                     }}
                   >
-                    Salvar notas
+                    Guardar notas
                   </Button>
                 </div>
               </div>

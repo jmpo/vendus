@@ -374,7 +374,7 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
                       onClick={() => onNavigateToBrain(product.id)}
                     >
                       <Brain className="mr-1 h-3 w-3" />
-                      Cérebro
+                      Cerebro
                     </Button>
                   )}
                   <AlertDialog>
@@ -388,8 +388,8 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
                       <AlertDialogHeader>
                         <AlertDialogTitle>¿Eliminar producto?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Esta ação não pode ser desfeita. Isso excluirá permanentemente 
-                          o produto "{product.name}" e todos os dados associados.
+                          Esta acción no se puede deshacer. Isso excluirá permanentemente 
+                          el producto "{product.name}" y todos los datos asociados.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
@@ -417,7 +417,7 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
               <p className="text-sm text-muted-foreground mb-4">Crea tu primer producto para comenzar</p>
               <Button onClick={openCreateDialog}>
                 <Sparkles className="mr-2 h-4 w-4" />
-                Criar Produto
+                Crear Producto
               </Button>
             </CardContent>
           </Card>

@@ -51,7 +51,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { getPublicAppUrl } from '@/lib/publicUrl';
 
@@ -97,7 +97,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
   const copyLink = async () => {
     await navigator.clipboard.writeText(inviteLink);
     setCopied(true);
-    toast.success('Link copiado!');
+    toast.success('¡Enlace copiado!');
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -111,7 +111,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
   const copyInviteLink = async (token: string) => {
     const link = `${getPublicAppUrl()}/aceitar-convite?token=${token}`;
     await navigator.clipboard.writeText(link);
-    toast.success('Link copiado!');
+    toast.success('¡Enlace copiado!');
   };
 
   const handleResendInvite = async (invite: any) => {
@@ -120,9 +120,9 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
         invitation: invite,
         organizationName: org?.name || '',
       });
-      toast.success('Convite reenviado!');
+      toast.success('¡Invitación reenviada!');
     } catch (error) {
-      toast.error('Erro ao reenviar convite');
+      toast.error('Error al reenviar la invitación');
     }
   };
 
@@ -133,10 +133,10 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
         invitationId: inviteToDelete.id,
         organizationId: orgId,
       });
-      toast.success('Convite excluído!');
+      toast.success('¡Invitación eliminada!');
       setInviteToDelete(null);
     } catch (error) {
-      toast.error('Erro ao excluir convite');
+      toast.error('Error al eliminar la invitación');
     }
   };
 
@@ -153,10 +153,10 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
         oldRole: userToEdit.user_roles?.[0]?.role || null,
         newRole,
       });
-      toast.success('Papel atualizado com sucesso!');
+      toast.success('Rol atualizado com sucesso!');
       setUserToEdit(null);
     } catch (error) {
-      toast.error('Erro ao atualizar papel');
+      toast.error('Error al actualizar el rol');
     }
   };
 
@@ -164,16 +164,16 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
     if (!userToRemove) return;
     try {
       await removeUserFromOrg.mutateAsync({ userId: userToRemove.id });
-      toast.success('Usuário removido da empresa!');
+      toast.success('¡Usuario eliminado de la empresa!');
       setUserToRemove(null);
     } catch (error) {
-      toast.error('Erro ao remover usuário');
+      toast.error('Error al eliminar al usuario');
     }
   };
 
   const copyUserId = async (userId: string) => {
     await navigator.clipboard.writeText(userId);
-    toast.success('ID copiado!');
+    toast.success('¡ID copiado!');
   };
 
   const openManageModal = (user: any, action: 'set_password' | 'change_email' | 'confirm_email') => {
@@ -217,20 +217,20 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
       if (data?.error) throw new Error(data.error);
 
       const msgs: Record<string, string> = {
-        confirm_email: 'Email confirmado com sucesso!',
-        set_password: 'Senha redefinida com sucesso!',
-        change_email: 'Email alterado com sucesso!',
+        confirm_email: '¡Correo electrónico confirmado con éxito!',
+        set_password: '¡Contraseña restablecida con éxito!',
+        change_email: '¡Correo electrónico cambiado con éxito!',
       };
       toast.success(msgs[manageAction]);
       closeManageModal();
     } catch (err: any) {
-      toast.error(err.message || 'Erro ao executar ação');
+      toast.error(err.message || 'Error al ejecutar la acción');
       setManaging(false);
     }
   };
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat( 'es' , {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
@@ -275,7 +275,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
         id: org.id,
         status: org.status === 'active' ? 'suspended' : 'active',
       });
-      toast.success(org.status === 'active' ? 'Empresa suspensa' : 'Empresa reativada');
+      toast.success(org.status === 'active' ? 'Empresa suspendida' : 'Empresa reactivada');
     } catch (error) {
       toast.error('Erro ao atualizar status');
     }
@@ -283,7 +283,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
 
   const handleSendInvite = async () => {
     if (!inviteData.email) {
-      toast.error('Preencha o email');
+      toast.error('Complete el correo electrónico');
       return;
     }
 
@@ -294,9 +294,9 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
         organizationId: orgId,
       });
       setCreatedInvite({ token: result.token, email: inviteData.email });
-      toast.success('Convite criado com sucesso!');
+      toast.success('¡Invitación creada con éxito!');
     } catch (error: any) {
-      toast.error(error.message || 'Erro ao enviar convite');
+      toast.error(error.message || 'Error al enviar la invitación');
     }
   };
 
@@ -313,10 +313,10 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
     return (
       <div className="text-center py-12">
         <Building2 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p className="text-muted-foreground">Empresa não encontrada</p>
+        <p className="text-muted-foreground">Empresa no encontrada</p>
         <Button variant="outline" onClick={onBack} className="mt-4">
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Voltar
+          Volver
         </Button>
       </div>
     );
@@ -342,7 +342,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
           </Button>
           <div>
             <h1 className="text-2xl font-bold text-foreground">{org.name}</h1>
-            <p className="text-muted-foreground">{org.cnpj || 'Sem CNPJ'}</p>
+            <p className="text-muted-foreground">{org.cnpj || 'Sin CNPJ'}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -359,7 +359,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
             ) : (
               <>
                 <CheckCircle className="h-4 w-4 mr-2" />
-                Reativar
+                Reactivar
               </>
             )}
           </Button>
@@ -367,20 +367,20 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
             variant="ghost"
             className="text-destructive hover:text-destructive hover:bg-destructive/10"
             onClick={() => { setIsDeleting(true); setDeleteConfirmName(''); }}
-            title="Excluir empresa"
+            title="Eliminar empresa"
           >
             <Trash2 className="h-4 w-4 mr-2" />
-            Excluir
+            Eliminar
           </Button>
         </div>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-          <TabsTrigger value="users">Usuários</TabsTrigger>
-          <TabsTrigger value="subscription">Assinatura</TabsTrigger>
-          <TabsTrigger value="billing">Faturamento</TabsTrigger>
+          <TabsTrigger value="overview">Visión General</TabsTrigger>
+          <TabsTrigger value="users">Usuarios</TabsTrigger>
+          <TabsTrigger value="subscription">Suscripción</TabsTrigger>
+          <TabsTrigger value="billing">Facturación</TabsTrigger>
         </TabsList>
 
         {/* Overview */}
@@ -388,39 +388,39 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Informações da Empresa</CardTitle>
+                <CardTitle>Información de la Empresa</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Building2 className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Nome:</span>
+                  <span className="text-sm text-muted-foreground">Nombre:</span>
                   <span className="font-medium">{org.name}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">E-mail:</span>
-                  <span className="font-medium">{org.email || 'Não informado'}</span>
+                  <span className="text-sm text-muted-foreground">Correo electrónico:</span>
+                  <span className="font-medium">{org.email || 'No informado'}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Telefone:</span>
-                  <span className="font-medium">{org.phone || 'Não informado'}</span>
+                  <span className="text-sm text-muted-foreground">Teléfono:</span>
+                  <span className="font-medium">{org.phone || 'No informado'}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Criado em:</span>
+                  <span className="text-sm text-muted-foreground">Creado el:</span>
                   <span className="font-medium">
-                    {format(new Date(org.created_at), "dd/MM/yyyy", { locale: ptBR })}
+                    {format(new Date(org.created_at), "dd/MM/yyyy", { locale: es })}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-muted-foreground">Status:</span>
+                  <span className="text-sm text-muted-foreground">Estado:</span>
                   <Badge className={
                     org.status === 'active' 
                       ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
                       : 'bg-amber-500/10 text-amber-500 border-amber-500/20'
                   }>
-                    {org.status === 'active' ? 'Ativo' : org.status}
+                    {org.status === 'active' ? 'Activo' : org.status}
                   </Badge>
                 </div>
               </CardContent>
@@ -443,7 +443,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                 <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                   <div className="flex items-center gap-3">
                     <Users className="h-5 w-5 text-blue-500" />
-                    <span>Usuários</span>
+                    <span>Usuarios</span>
                   </div>
                   <span className="font-bold">
                     {org.profiles?.length || 0} / {org.max_users || 10}
@@ -452,7 +452,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                 <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                   <div className="flex items-center gap-3">
                     <Package className="h-5 w-5 text-violet-500" />
-                    <span>Produtos</span>
+                    <span>Productos</span>
                   </div>
                   <span className="font-bold">
                     - / {org.max_products || 5}
@@ -468,18 +468,18 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Usuários da Empresa</CardTitle>
+                <CardTitle>Usuarios da Empresa</CardTitle>
                 <CardDescription>
-                  {org.profiles?.length || 0} usuários{pendingInvitations?.length ? ` | ${pendingInvitations.length} convite(s) pendente(s)` : ''}
+                  {org.profiles?.length || 0} usuários{pendingInvitations?.length ? ` | ${pendingInvitations.length} invitación(es) pendiente(s)` : ''}
                 </CardDescription>
               </div>
               <Button onClick={() => setIsInviting(true)}>
                 <UserPlus className="h-4 w-4 mr-2" />
-                Adicionar Usuário
+                Agregar Usuario
               </Button>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Usuários existentes */}
+              {/* Usuarios existentes */}
               {!org.profiles?.length ? (
                 <p className="text-muted-foreground text-center py-8">
                   Nenhum usuário cadastrado
@@ -512,7 +512,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={() => handleEditRole(user)}>
                               <UserCog className="h-4 w-4 mr-2" />
-                              Alterar Papel
+                              Alterar Rol
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => copyUserId(user.id)}>
                               <Copy className="h-4 w-4 mr-2" />
@@ -566,7 +566,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                         <div>
                           <p className="font-medium">{invite.email}</p>
                           <p className="text-sm text-muted-foreground">
-                            Expira: {format(new Date(invite.expires_at), "dd/MM/yyyy", { locale: ptBR })}
+                            Expira: {format(new Date(invite.expires_at), "dd/MM/yyyy", { locale: es })}
                           </p>
                         </div>
                       </div>
@@ -592,7 +592,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                               className="text-destructive focus:text-destructive"
                             >
                               <Trash2 className="h-4 w-4 mr-2" />
-                              Excluir Convite
+                              Eliminar Convite
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -609,7 +609,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>
-                  {createdInvite ? 'Convite Criado' : 'Adicionar Usuário'}
+                  {createdInvite ? 'Convite Criado' : 'Agregar Usuario'}
                 </DialogTitle>
               </DialogHeader>
               
@@ -626,7 +626,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="invite-role">Papel *</Label>
+                    <Label htmlFor="invite-role">Rol *</Label>
                     <Select 
                       value={inviteData.role} 
                       onValueChange={(value: 'admin' | 'manager' | 'seller') => setInviteData(prev => ({ ...prev, role: value }))}
@@ -696,7 +696,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
           <AlertDialog open={!!inviteToDelete} onOpenChange={() => setInviteToDelete(null)}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Excluir Convite</AlertDialogTitle>
+                <AlertDialogTitle>Eliminar Convite</AlertDialogTitle>
                 <AlertDialogDescription>
                   Tem certeza que deseja excluir o convite para <strong>{inviteToDelete?.email}</strong>? Esta ação não pode ser desfeita.
                 </AlertDialogDescription>
@@ -707,17 +707,17 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                   onClick={handleDeleteInvite}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >
-                  Excluir
+                  Eliminar
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
 
-          {/* Modal de Alterar Papel */}
+          {/* Modal de Alterar Rol */}
           <Dialog open={!!userToEdit} onOpenChange={() => setUserToEdit(null)}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Alterar Papel</DialogTitle>
+                <DialogTitle>Alterar Rol</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
@@ -731,7 +731,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Novo Papel</Label>
+                  <Label>Novo Rol</Label>
                   <Select 
                     value={newRole} 
                     onValueChange={(value: 'admin' | 'manager' | 'seller') => setNewRole(value)}
@@ -865,7 +865,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
         <TabsContent value="subscription">
           <Card>
             <CardHeader>
-              <CardTitle>Assinatura Atual</CardTitle>
+              <CardTitle>Suscripción Atual</CardTitle>
             </CardHeader>
             <CardContent>
               {!hasPlan ? (
@@ -897,16 +897,16 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                           ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 mt-1'
                           : 'bg-amber-500/10 text-amber-500 border-amber-500/20 mt-1'
                       }>
-                        {planStatus === 'active' ? 'Ativo' : (planStatus ?? '—')}
+                        {planStatus === 'active' ? 'Activo' : (planStatus ?? '—')}
                       </Badge>
                     </div>
                     <div className="p-4 border border-border rounded-lg">
                       <p className="text-sm text-muted-foreground">Ativado em</p>
                       <p className="font-medium mt-1">
                         {planActivatedAt
-                          ? format(new Date(planActivatedAt), "dd/MM/yyyy", { locale: ptBR })
+                          ? format(new Date(planActivatedAt), "dd/MM/yyyy", { locale: es })
                           : (subscription?.current_period_end
-                              ? format(new Date(subscription.current_period_end), "dd/MM/yyyy", { locale: ptBR })
+                              ? format(new Date(subscription.current_period_end), "dd/MM/yyyy", { locale: es })
                               : '-')
                         }
                       </p>
@@ -928,7 +928,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
         <TabsContent value="billing">
           <Card>
             <CardHeader>
-              <CardTitle>Histórico de Faturamento</CardTitle>
+              <CardTitle>Histórico de Facturación</CardTitle>
             </CardHeader>
             <CardContent>
               {!billingHistory?.length ? (
@@ -946,7 +946,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                         <p className="font-medium">{bill.description || 'Mensalidade'}</p>
                         <p className="text-sm text-muted-foreground">
                           {bill.due_date 
-                            ? format(new Date(bill.due_date), "dd/MM/yyyy", { locale: ptBR })
+                            ? format(new Date(bill.due_date), "dd/MM/yyyy", { locale: es })
                             : '-'
                           }
                         </p>
@@ -969,7 +969,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
       <AlertDialog open={isDeleting} onOpenChange={(open) => { if (!open) { setIsDeleting(false); setDeleteConfirmName(''); } }}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir empresa permanentemente</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar empresa permanentemente</AlertDialogTitle>
             <AlertDialogDescription asChild>
               <div className="space-y-3">
                 <p className="text-destructive font-medium">
@@ -1001,7 +1001,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                 }
               }}
             >
-              {deleteOrganization.isPending ? 'Excluindo...' : 'Excluir permanentemente'}
+              {deleteOrganization.isPending ? 'Excluindo...' : 'Eliminar permanentemente'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -81,7 +81,7 @@ export function RadarPanel({ onOpenConversation }: { onOpenConversation?: (id: s
                 Radar IA
               </CardTitle>
               <CardDescription>
-                Analisa conversas em aberto e identifica oportunidades quentes que precisam de atenção
+                Analiza conversaciones abiertas e identifica oportunidades calientes que necesitan atención
               </CardDescription>
             </div>
             <Badge variant="secondary" className="gap-1">
@@ -95,13 +95,13 @@ export function RadarPanel({ onOpenConversation }: { onOpenConversation?: (id: s
       <Tabs value={tab} onValueChange={setTab} className="space-y-4">
         <TabsList>
           <TabsTrigger value="run" className="gap-2">
-            <Play className="h-4 w-4" /> Rodar Análise
+            <Play className="h-4 w-4" /> Ejecutar Análisis
           </TabsTrigger>
           <TabsTrigger value="schedules" className="gap-2">
             <CalendarClock className="h-4 w-4" /> Agendamientos
           </TabsTrigger>
           <TabsTrigger value="history" className="gap-2">
-            <History className="h-4 w-4" /> Histórico
+            <History className="h-4 w-4" /> Historial
           </TabsTrigger>
         </TabsList>
 
@@ -122,12 +122,12 @@ export function RadarPanel({ onOpenConversation }: { onOpenConversation?: (id: s
                       {runScan.isPending || lastRunning ? (
                         <>
                           <Loader2 className="h-4 w-4 animate-spin" />
-                          {lastRunning ? 'Análise em andamento...' : 'Iniciando...'}
+                          {lastRunning ? 'Análisis en progreso...' : 'Iniciando...'}
                         </>
                       ) : (
                         <>
                           <Sparkles className="h-4 w-4" />
-                          Rodar Radar agora
+                          Ejecutar Radar ahora
                         </>
                       )}
                     </Button>
@@ -148,7 +148,7 @@ export function RadarPanel({ onOpenConversation }: { onOpenConversation?: (id: s
                 <Card>
                   <CardContent className="py-16 text-center text-muted-foreground">
                     <Sparkles className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                    <p>Configure os filtros e rode sua primeira análise</p>
+                    <p>Configure los filtros y ejecute su primer análisis</p>
                   </CardContent>
                 </Card>
               )}

@@ -32,7 +32,7 @@ import {
 import { PlanFormDialog } from './plans/PlanFormDialog';
 
 const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
+  new Intl.NumberFormat( 'es' , { style: 'currency', currency: 'BRL' }).format(value || 0);
 
 export function PlansManager() {
   const { data: plans, isLoading } = useAllPlans();
@@ -47,7 +47,7 @@ export function PlansManager() {
     if (!deleting) return;
     const inUse = usage?.[deleting.id] || 0;
     if (inUse > 0) {
-      toast.error(`Não é possível excluir: ${inUse} empresa(s) usando este plano.`);
+      toast.error(`No es posible eliminar: ${inUse} empresa(s) usando este plan.`);
       setDeleting(null);
       return;
     }
@@ -64,14 +64,14 @@ export function PlansManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Planos</h1>
+          <h1 className="text-2xl font-bold text-foreground">Planes</h1>
           <p className="text-muted-foreground">
-            Catálogo de planos comerciais com limites e funcionalidades
+            Catálogo de planes comerciales con límites y funcionalidades
           </p>
         </div>
         <Button onClick={() => setCreating(true)}>
           <Plus className="h-4 w-4 mr-2" />
-          Novo plano
+          Nuevo plan
         </Button>
       </div>
 
@@ -86,20 +86,20 @@ export function PlansManager() {
           ) : !plans?.length ? (
             <div className="p-12 text-center">
               <Layers className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-              <p className="text-muted-foreground">Nenhum plano cadastrado</p>
+              <p className="text-muted-foreground">Ningún plan registrado</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Plano</TableHead>
-                  <TableHead>Mensal</TableHead>
-                  <TableHead>Usuários</TableHead>
-                  <TableHead>Conexões</TableHead>
-                  <TableHead>IA Plataforma</TableHead>
+                  <TableHead>Mensual</TableHead>
+                  <TableHead>Usuarios</TableHead>
+                  <TableHead>Conexiones</TableHead>
+                  <TableHead>IA de Plataforma</TableHead>
                   <TableHead>Empresas</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -113,7 +113,7 @@ export function PlansManager() {
                             <span className="font-medium">{plan.name}</span>
                             {plan.is_default && (
                               <Badge variant="outline" className="text-xs">
-                                Padrão
+                                Predeterminado
                               </Badge>
                             )}
                           </div>
@@ -126,11 +126,11 @@ export function PlansManager() {
                       <TableCell>
                         {plan.allow_platform_ai ? (
                           <Badge className="bg-primary/10 text-primary border-primary/20">
-                            {(plan.included_ai_tokens_month || 0).toLocaleString('pt-BR')} tk
+                            {(plan.included_ai_tokens_month || 0).toLocaleString( 'es' )} tk
                           </Badge>
                         ) : (
                           <Badge variant="outline" className="text-muted-foreground">
-                            Chave própria
+                            Clave propia
                           </Badge>
                         )}
                       </TableCell>
@@ -139,12 +139,12 @@ export function PlansManager() {
                         {plan.is_active ? (
                           <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
                             <Check className="h-3 w-3 mr-1" />
-                            Ativo
+                            Activo
                           </Badge>
                         ) : (
                           <Badge variant="secondary">
                             <X className="h-3 w-3 mr-1" />
-                            Inativo
+                            Inactivo
                           </Badge>
                         )}
                       </TableCell>
@@ -181,9 +181,9 @@ export function PlansManager() {
       <AlertDialog open={!!deleting} onOpenChange={(open) => !open && setDeleting(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir plano?</AlertDialogTitle>
+            <AlertDialogTitle>¿Eliminar plan?</AlertDialogTitle>
             <AlertDialogDescription>
-              O plano "{deleting?.name}" será removido. Esta ação não pode ser desfeita.
+              O plano "{deleting?.name}" será eliminado. Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

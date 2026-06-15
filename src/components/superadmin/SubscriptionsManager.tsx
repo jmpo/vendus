@@ -30,12 +30,12 @@ import {
 import { useAllSubscriptions, useUpdateSubscription, useSuperAdminStats } from '@/hooks/useSuperAdmin';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format, differenceInDays } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
 
 export function SubscriptionsManager() {
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setEstadoFilter] = useState<string>('all');
   const [planFilter, setPlanFilter] = useState<string>('all');
 
   const { data: subscriptions, isLoading } = useAllSubscriptions();
@@ -43,7 +43,7 @@ export function SubscriptionsManager() {
   const updateSubscription = useUpdateSubscription();
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat( 'es' , {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
@@ -51,10 +51,10 @@ export function SubscriptionsManager() {
 
   const filteredSubs = subscriptions?.filter((sub: any) => {
     const matchesSearch = sub.organizations?.name?.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || sub.status === statusFilter;
+    const matchesEstado = statusFilter === 'all' || sub.status === statusFilter;
     const matchesPlan = planFilter === 'all' || sub.plan_type === planFilter;
     
-    return matchesSearch && matchesStatus && matchesPlan;
+    return matchesSearch && matchesEstado && matchesPlan;
   }) || [];
 
   const overdueSubs = subscriptions?.filter((sub: any) => 
@@ -62,12 +62,12 @@ export function SubscriptionsManager() {
     (sub.current_period_end && new Date(sub.current_period_end) < new Date())
   ) || [];
 
-  const getStatusBadge = (status: string) => {
+  const getEstadoBadge = (status: string) => {
     switch (status) {
       case 'active':
         return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">Ativo</Badge>;
       case 'past_due':
-        return <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20">Em Atraso</Badge>;
+        return <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20">En Atraso</Badge>;
       case 'canceled':
         return <Badge className="bg-red-500/10 text-red-500 border-red-500/20">Cancelado</Badge>;
       case 'suspended':
@@ -95,7 +95,7 @@ export function SubscriptionsManager() {
   };
 
   const handleSendReminder = async (sub: any) => {
-    toast.success(`Lembrete enviado para ${sub.organizations?.name}`);
+    toast.success(`Recordatorio enviado para ${sub.organizations?.name}`);
   };
 
   const handleSuspend = async (sub: any) => {
@@ -104,7 +104,7 @@ export function SubscriptionsManager() {
         id: sub.id,
         status: 'suspended',
       });
-      toast.success('Assinatura suspensa');
+      toast.success('Suscripción suspendida');
     } catch (error) {
       toast.error('Erro ao suspender assinatura');
     }
@@ -118,7 +118,7 @@ export function SubscriptionsManager() {
         current_period_start: new Date().toISOString(),
         current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       });
-      toast.success('Assinatura marcada como paga');
+      toast.success('Suscripción marcada como pagada');
     } catch (error) {
       toast.error('Erro ao atualizar assinatura');
     }
@@ -128,8 +128,8 @@ export function SubscriptionsManager() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Assinaturas</h1>
-        <p className="text-muted-foreground">Gerencie planos e assinaturas das empresas</p>
+        <h1 className="text-2xl font-bold text-foreground">Suscripciones</h1>
+        <p className="text-muted-foreground">Gestione planes y suscripciones de las empresas</p>
       </div>
 
       {/* Plan Summary — dinâmico a partir de platform_plans */}
@@ -150,7 +150,7 @@ export function SubscriptionsManager() {
       ) : (
         <Card>
           <CardContent className="py-6 text-sm text-muted-foreground text-center">
-            Nenhum plano cadastrado. Crie planos em <span className="font-medium text-foreground">Planos</span> para visualizar a distribuição.
+            Nenhum plano cadastrado. Crie planos em <span className="font-medium text-foreground">Planes</span> para visualizar a distribuição.
           </CardContent>
         </Card>
       )}
@@ -161,10 +161,10 @@ export function SubscriptionsManager() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-amber-500">
               <AlertTriangle className="h-5 w-5" />
-              Assinaturas em Atraso ({overdueSubs.length})
+              Suscripciones em Atraso ({overdueSubs.length})
             </CardTitle>
             <CardDescription>
-              Empresas com pagamento pendente que precisam de atenção
+              Empresas con pago pendiente que necesitan atención
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -182,13 +182,13 @@ export function SubscriptionsManager() {
                     <div>
                       <p className="font-medium">{sub.organizations?.name}</p>
                       <p className="text-sm text-muted-foreground">
-                        {formatCurrency(sub.price_monthly || 0)} - Vencido há {daysOverdue} dias
+                        {formatCurrency(sub.price_monthly || 0)} - Vencido hace {daysOverdue} dias
                       </p>
                     </div>
                     <div className="flex gap-2">
                       <Button size="sm" variant="outline" onClick={() => handleSendReminder(sub)}>
                         <Mail className="h-4 w-4 mr-1" />
-                        Lembrete
+                        Recordatorio
                       </Button>
                       <Button size="sm" variant="outline" onClick={() => handleSuspend(sub)}>
                         <Ban className="h-4 w-4 mr-1" />
@@ -196,7 +196,7 @@ export function SubscriptionsManager() {
                       </Button>
                       <Button size="sm" onClick={() => handleMarkPaid(sub)}>
                         <CheckCircle className="h-4 w-4 mr-1" />
-                        Pago
+                        Pagado
                       </Button>
                     </div>
                   </div>
@@ -220,14 +220,14 @@ export function SubscriptionsManager() {
                 className="pl-10"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select value={statusFilter} onValueChange={setEstadoFilter}>
               <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder="Estado" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="active">Ativo</SelectItem>
-                <SelectItem value="past_due">Em Atraso</SelectItem>
+                <SelectItem value="past_due">En Atraso</SelectItem>
                 <SelectItem value="suspended">Suspenso</SelectItem>
                 <SelectItem value="canceled">Cancelado</SelectItem>
                 <SelectItem value="trialing">Trial</SelectItem>
@@ -261,7 +261,7 @@ export function SubscriptionsManager() {
           ) : filteredSubs.length === 0 ? (
             <div className="text-center py-12">
               <CreditCard className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">Nenhuma assinatura encontrada</p>
+              <p className="text-muted-foreground">Ninguna suscripción encontrada</p>
             </div>
           ) : (
             <Table>
@@ -270,9 +270,9 @@ export function SubscriptionsManager() {
                   <TableHead>Empresa</TableHead>
                   <TableHead>Plano</TableHead>
                   <TableHead>Valor</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Renovação</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead>Renovación</TableHead>
+                  <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -283,10 +283,10 @@ export function SubscriptionsManager() {
                     </TableCell>
                     <TableCell>{getPlanBadge(sub.plan_type)}</TableCell>
                     <TableCell>{formatCurrency(sub.price_monthly || 0)}</TableCell>
-                    <TableCell>{getStatusBadge(sub.status)}</TableCell>
+                    <TableCell>{getEstadoBadge(sub.status)}</TableCell>
                     <TableCell>
                       {sub.current_period_end 
-                        ? format(new Date(sub.current_period_end), "dd/MM/yyyy", { locale: ptBR })
+                        ? format(new Date(sub.current_period_end), "dd/MM/yyyy", { locale: es })
                         : '-'
                       }
                     </TableCell>

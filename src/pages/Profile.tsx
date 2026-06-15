@@ -35,13 +35,13 @@ export default function Profile() {
   const handleFileUpload = async (file: File) => {
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      toast.error('Por favor, selecione uma imagem');
+      toast.error('Por favor, seleccione una imagen');
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('Imagem muito grande. Máximo 5MB');
+      toast.error('Imagen demasiado grande. Máximo 5MB');
       return;
     }
 
@@ -83,8 +83,8 @@ export default function Profile() {
             <ArrowLeft size={20} />
           </Button>
           <div>
-            <h1 className="text-xl font-semibold text-foreground">Meu Perfil</h1>
-            <p className="text-sm text-muted-foreground">Gerencie suas informações pessoais</p>
+            <h1 className="text-xl font-semibold text-foreground">Mi Perfil</h1>
+            <p className="text-sm text-muted-foreground">Gestione su información personal</p>
           </div>
         </div>
       </header>
@@ -127,10 +127,10 @@ export default function Profile() {
                 <input {...getInputProps()} />
               </div>
               <div className="text-center sm:text-left">
-                <h2 className="text-xl font-semibold">{profile?.full_name || 'Usuário'}</h2>
+                <h2 className="text-xl font-semibold">{profile?.full_name || 'Usuario'}</h2>
                 <p className="text-muted-foreground">{user?.email}</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Arraste uma foto ou clique para alterar
+                  Arrastre una foto o haga clic para cambiar
                 </p>
               </div>
             </div>
@@ -142,23 +142,23 @@ export default function Profile() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User size={20} />
-              Informações Pessoais
+              Información Personal
             </CardTitle>
             <CardDescription>
-              Atualize suas informações de contato
+              Actualice su información de contacto
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="full_name">Nome Completo</Label>
+                <Label htmlFor="full_name">Nombre Completo</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="full_name"
                     value={formData.full_name}
                     onChange={(e) => setFormData(prev => ({ ...prev, full_name: e.target.value }))}
-                    placeholder="Seu nome completo"
+                    placeholder="Su nombre completo"
                     className="pl-10"
                   />
                 </div>
@@ -176,12 +176,12 @@ export default function Profile() {
                   />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Para alterar seu email, acesse as Configurações de conta
+                  Para cambiar su email, acceda a las Configuraciones de cuenta
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone">Telefone</Label>
+                <Label htmlFor="phone">Teléfono</Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -199,12 +199,12 @@ export default function Profile() {
                   {isLoading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Salvando...
+                      Guardando...
                     </>
                   ) : (
                     <>
                       <Save size={16} />
-                      Salvar Alterações
+                      Guardar Cambios
                     </>
                   )}
                 </Button>

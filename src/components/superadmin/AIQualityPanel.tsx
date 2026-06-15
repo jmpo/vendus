@@ -135,15 +135,15 @@ export function AIQualityPanel() {
                 <BarChart3 className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <CardTitle>Qualidade da IA</CardTitle>
+                <CardTitle>Calidad de IA</CardTitle>
                 <CardDescription>
-                  Métricas LLM-as-judge das suas conversas + experimentos A/B de prompts.
+                  Métricas LLM-as-judge de sus conv.rsaciones + experimentos A/B de prompts.
                 </CardDescription>
               </div>
             </div>
             <Button onClick={() => trigger.mutate(undefined)} disabled={trigger.isPending}>
               <Sparkles className="h-4 w-4 mr-1" />
-              {trigger.isPending ? 'Avaliando…' : 'Avaliar últimas 24h'}
+              {trigger.isPending ? 'Evaluando…' : 'Evaluar últimas 24h'}
             </Button>
           </div>
         </CardHeader>
@@ -153,30 +153,30 @@ export function AIQualityPanel() {
         <TabsList>
           <TabsTrigger value="metrics">Métricas</TabsTrigger>
           <TabsTrigger value="experiments">Experimentos A/B</TabsTrigger>
-          <TabsTrigger value="evaluations">Avaliações recentes</TabsTrigger>
+          <TabsTrigger value="evaluations">Evaluaciones recientes</TabsTrigger>
         </TabsList>
 
         <TabsContent value="metrics" className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <MetricCard
-              label="Avaliações"
+              label="Evaluaciones"
               value={stats.total}
-              hint={isLoading ? 'carregando…' : 'últimas 200'}
+              hint={isLoading ? 'cargando…' : 'últimas 200'}
               icon={Activity}
             />
             <MetricCard
-              label="Score geral"
+              label="Puntaje general"
               value={stats.avgOverall || '—'}
-              hint="média 0-100"
+              hint="promedio 0-100"
               icon={TrendingUp}
             />
             <MetricCard
-              label="Clareza"
+              label="Claridad"
               value={stats.avgClarity || '—'}
               icon={Sparkles}
             />
             <MetricCard
-              label="Pot. de conversão"
+              label="Pot. de conv.rsión"
               value={stats.avgConversion || '—'}
               icon={TrendingUp}
             />
@@ -185,7 +185,7 @@ export function AIQualityPanel() {
           {stats.topIssues.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Top problemas detectados</CardTitle>
+                <CardTitle className="text-base">Principales problemas detectados</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 {stats.topIssues.map((i) => (
@@ -205,7 +205,7 @@ export function AIQualityPanel() {
         <TabsContent value="experiments" className="space-y-3">
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              Crie variantes do prompt do agente e o sistema sortearia automaticamente por lead.
+              Cree variantes del prompt del agente y el sistema las asignará automáticamente por lead.
             </p>
             <Button
               size="sm"
@@ -217,14 +217,14 @@ export function AIQualityPanel() {
                 })
               }
             >
-              <Plus className="h-4 w-4 mr-1" /> Novo experimento
+              <Plus className="h-4 w-4 mr-1" /> Nuevo experimento
             </Button>
           </div>
 
           {experiments.length === 0 && (
             <Card>
               <CardContent className="p-6 text-center text-sm text-muted-foreground">
-                Nenhum experimento ainda. Crie um para testar variações de prompt em produção.
+                Aún no hay experimentos. Cree uno para probar variaciones de prompt en producción.
               </CardContent>
             </Card>
           )}
@@ -287,7 +287,7 @@ export function AIQualityPanel() {
                         size="icon"
                         variant="ghost"
                         onClick={() => {
-                          if (confirm(`Remover experimento "${exp.name}"?`))
+                          if (confirm(`Eliminar experimento "${exp.name}"?`))
                             deleteExp.mutate(exp.id);
                         }}
                       >
@@ -305,7 +305,7 @@ export function AIQualityPanel() {
           {evals.length === 0 && (
             <Card>
               <CardContent className="p-6 text-center text-sm text-muted-foreground">
-                Nenhuma avaliação ainda. Clique em "Avaliar últimas 24h" para gerar.
+                Nenhuma avaliação ainda. Clique em "Evaluar últimas 24h" para gerar.
               </CardContent>
             </Card>
           )}
@@ -317,7 +317,7 @@ export function AIQualityPanel() {
                     <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant="default">{fmtScore(e.score_overall)}</Badge>
                       <span className="text-xs text-muted-foreground">
-                        clareza {fmtScore(e.score_clarity)} · tom {fmtScore(e.score_tone)} · objetiv. {fmtScore(e.score_objectivity)} · acc. {fmtScore(e.score_accuracy)} · conv. {fmtScore(e.score_conversion_potential)}
+                        claridad {fmtScore(e.score_clarity)} · tono {fmtScore(e.score_tone)} · objetiv. {fmtScore(e.score_objectivity)} · precisión {fmtScore(e.score_accuracy)} · conv. {fmtScore(e.score_conversion_potential)}
                       </span>
                     </div>
                     {e.summary && (
@@ -330,7 +330,7 @@ export function AIQualityPanel() {
                     )}
                   </div>
                   <span className="text-xs text-muted-foreground shrink-0">
-                    {new Date(e.created_at).toLocaleString('pt-BR', {
+                    {new Date(e.created_at).toLocaleString( 'es' , {
                       day: '2-digit',
                       month: '2-digit',
                       hour: '2-digit',
@@ -349,26 +349,26 @@ export function AIQualityPanel() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingExp?.id ? 'Editar experimento' : 'Novo experimento A/B'}
+              {editingExp?.id ? 'Editar experimento' : 'Nuevo experimento A/B'}
             </DialogTitle>
             <DialogDescription>
-              Defina o agente alvo. Variantes são gerenciadas em "Variantes" depois de criar.
+              Defina el agente objetivo. Las variantes se gestionan en "Variantes" después de crear.
             </DialogDescription>
           </DialogHeader>
           {editingExp && (
             <div className="space-y-3">
               <div>
-                <Label>Nome</Label>
+                <Label>Nombre</Label>
                 <Input
                   value={editingExp.name ?? ''}
                   onChange={(e) =>
                     setEditingExp({ ...editingExp, name: e.target.value })
                   }
-                  placeholder="Ex: Tom mais consultivo no SDR"
+                  placeholder="Ej: Tono más consultivo en SDR"
                 />
               </div>
               <div>
-                <Label>Descrição</Label>
+                <Label>Descripción</Label>
                 <Textarea
                   rows={2}
                   value={editingExp.description ?? ''}
@@ -378,7 +378,7 @@ export function AIQualityPanel() {
                 />
               </div>
               <div>
-                <Label>Agente alvo</Label>
+                <Label>Agente objetivo</Label>
                 <Select
                   value={editingExp.agent_id ?? 'all'}
                   onValueChange={(v) =>
@@ -389,7 +389,7 @@ export function AIQualityPanel() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Todos os agentes</SelectItem>
+                    <SelectItem value="all">Todos los agentes</SelectItem>
                     {agents.map((a) => (
                       <SelectItem key={a.id} value={a.id}>
                         {a.name}
@@ -399,7 +399,7 @@ export function AIQualityPanel() {
                 </Select>
               </div>
               <div>
-                <Label>Status</Label>
+                <Label>Estado</Label>
                 <Select
                   value={editingExp.status ?? 'draft'}
                   onValueChange={(v) =>
@@ -410,8 +410,8 @@ export function AIQualityPanel() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="draft">Rascunho</SelectItem>
-                    <SelectItem value="running">Rodando</SelectItem>
+                    <SelectItem value="draft">Borrador</SelectItem>
+                    <SelectItem value="running">En ejecución</SelectItem>
                     <SelectItem value="paused">Pausado</SelectItem>
                     <SelectItem value="finished">Finalizado</SelectItem>
                   </SelectContent>
@@ -431,7 +431,7 @@ export function AIQualityPanel() {
                 });
               }}
             >
-              Salvar
+              Guardar
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -485,7 +485,7 @@ function VariantsDialog({
                           {v.prompt_mode}
                         </Badge>
                         <span className="text-xs text-muted-foreground">
-                          {v.impressions} impressões
+                          {v.impressions} impresiones
                           {avg != null ? ` · score médio ${avg}` : ''}
                         </span>
                       </div>
@@ -597,7 +597,7 @@ function VariantsDialog({
                   upsert.mutate(editing as any, { onSuccess: () => setEditing(null) });
                 }}
               >
-                Salvar
+                Guardar
               </Button>
             </DialogFooter>
           </DialogContent>

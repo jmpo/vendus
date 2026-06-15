@@ -43,9 +43,9 @@ import { OrganizationCreateForm } from './OrganizationCreateForm';
 type Step = 'password' | 'name' | 'plan' | 'evolution' | 'email' | 'organization' | 'done';
 
 const STEPS: { id: Step; label: string; required: boolean }[] = [
-  { id: 'password', label: 'Senha', required: true },
-  { id: 'name', label: 'Nome', required: true },
-  { id: 'plan', label: 'Plano', required: true },
+  { id: 'password', label: 'Contraseña', required: true },
+  { id: 'name', label: 'Nombre', required: true },
+  { id: 'plan', label: 'Plan', required: true },
   { id: 'evolution', label: 'WhatsApp', required: false },
   { id: 'email', label: 'E-mail', required: false },
   { id: 'organization', label: 'Empresa', required: true },
@@ -129,10 +129,10 @@ export function FirstAccessSuperAdminModal() {
         <DialogHeader>
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-primary" />
-            <DialogTitle>Configuração inicial da plataforma</DialogTitle>
+            <DialogTitle>Configuración inicial de la plataforma</DialogTitle>
           </div>
           <DialogDescription>
-            Vamos preparar sua plataforma em poucos passos.
+            Vamos a preparar su plataforma en pocos pasos.
           </DialogDescription>
         </DialogHeader>
 
@@ -173,12 +173,12 @@ export function FirstAccessSuperAdminModal() {
             <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
               <ShieldCheck className="h-6 w-6 text-primary" />
             </div>
-            <p className="font-semibold">Plataforma pronta!</p>
+            <p className="font-semibold">¡Plataforma lista!</p>
             <p className="text-sm text-muted-foreground">
-              Você concluiu a configuração inicial. Bons negócios!
+              Ha completado la configuración inicial. ¡Buenos negocios!
             </p>
             <Button className="w-full" onClick={finish}>
-              Ir para o dashboard
+              Ir al dashboard
             </Button>
           </div>
         )}
@@ -197,7 +197,7 @@ function AlreadyDone({ label, onContinue }: { label: string; onContinue: () => v
         <AlertDescription>{label}</AlertDescription>
       </Alert>
       <Button className="w-full" onClick={onContinue}>
-        Avançar
+        Avanzar
       </Button>
     </div>
   );
@@ -208,24 +208,24 @@ function StepPassword({ onDone, alreadyDone, refetchAccess }: { onDone: () => vo
   const [pwd2, setPwd2] = useState('');
   const [loading, setLoading] = useState(false);
 
-  if (alreadyDone) return <AlreadyDone label="Senha já alterada" onContinue={onDone} />;
+  if (alreadyDone) return <AlreadyDone label="Contraseña já alterada" onContinue={onDone} />;
 
   const save = async () => {
     if (!PASSWORD_RULE.test(pwd)) {
-      toast.error('Senha fraca', { description: 'Mín. 8 caracteres, 1 maiúscula e 1 número.' });
+      toast.error('Contraseña fraca', { description: 'Mín. 8 caracteres, 1 maiúscula e 1 número.' });
       return;
     }
-    if (pwd !== pwd2) return toast.error('As senhas não coincidem.');
+    if (pwd !== pwd2) return toast.error('Las contraseñas no coinciden.');
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password: pwd });
     if (error) {
       setLoading(false);
-      return toast.error('Erro ao atualizar senha', { description: error.message });
+      return toast.error('Error al actualizar la contraseña', { description: error.message });
     }
     try { await supabase.rpc('mark_super_admin_password_changed' as any); } catch {}
     await refetchAccess();
     setLoading(false);
-    toast.success('Senha atualizada!');
+    toast.success('Contraseña atualizada!');
     onDone();
   };
 
@@ -233,20 +233,20 @@ function StepPassword({ onDone, alreadyDone, refetchAccess }: { onDone: () => vo
     <div className="space-y-3">
       <Alert>
         <Lock className="h-4 w-4" />
-        <AlertDescription>Defina uma nova senha forte. Esse passo é obrigatório.</AlertDescription>
+        <AlertDescription>Defina una nueva contraseña segura. Este paso es obligatorio.</AlertDescription>
       </Alert>
       <div className="space-y-2">
-        <Label>Nova senha</Label>
+        <Label>Nueva contraseña</Label>
         <Input type="password" value={pwd} onChange={(e) => setPwd(e.target.value)} placeholder="••••••••" />
         <p className="text-xs text-muted-foreground">Mín. 8 caracteres, 1 maiúscula e 1 número.</p>
       </div>
       <div className="space-y-2">
-        <Label>Confirmar nova senha</Label>
+        <Label>Confirmar nueva contraseña</Label>
         <Input type="password" value={pwd2} onChange={(e) => setPwd2(e.target.value)} placeholder="••••••••" />
       </div>
       <Button className="w-full" onClick={save} disabled={loading}>
         {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ArrowRight className="h-4 w-4 mr-2" />}
-        Salvar e avançar
+        Guardar y avanzar
       </Button>
     </div>
   );
@@ -256,15 +256,15 @@ function StepName({ userId, initial, onDone, alreadyDone }: { userId: string; in
   const [name, setName] = useState(initial);
   const [loading, setLoading] = useState(false);
 
-  if (alreadyDone) return <AlreadyDone label="Nome já configurado" onContinue={onDone} />;
+  if (alreadyDone) return <AlreadyDone label="Nombre já configurado" onContinue={onDone} />;
 
   const save = async () => {
-    if (!name.trim()) return toast.error('Informe seu nome completo.');
+    if (!name.trim()) return toast.error('Ingrese su nombre completo.');
     setLoading(true);
     const { error } = await supabase.from('profiles').update({ full_name: name.trim() }).eq('id', userId);
     setLoading(false);
-    if (error) return toast.error('Erro ao salvar nome', { description: error.message });
-    toast.success('Nome salvo!');
+    if (error) return toast.error('Error al guardar el nombre', { description: error.message });
+    toast.success('Nombre salvo!');
     onDone();
   };
 
@@ -272,34 +272,34 @@ function StepName({ userId, initial, onDone, alreadyDone }: { userId: string; in
     <div className="space-y-3">
       <Alert>
         <User className="h-4 w-4" />
-        <AlertDescription>Como devemos te chamar?</AlertDescription>
+        <AlertDescription>¿Cómo deberíamos llamarlo?</AlertDescription>
       </Alert>
       <div className="space-y-2">
-        <Label>Nome completo</Label>
+        <Label>Nombre completo</Label>
         <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome completo" />
       </div>
       <Button className="w-full" onClick={save} disabled={loading}>
         {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ArrowRight className="h-4 w-4 mr-2" />}
-        Salvar e avançar
+        Guardar y avanzar
       </Button>
     </div>
   );
 }
 
 function StepPlan({ onDone, alreadyDone }: { onDone: () => void; alreadyDone?: boolean }) {
-  if (alreadyDone) return <AlreadyDone label="Plano comercial já cadastrado" onContinue={onDone} />;
+  if (alreadyDone) return <AlreadyDone label="Plan comercial já cadastrado" onContinue={onDone} />;
 
   return (
     <div className="space-y-3">
       <Alert>
         <Layers className="h-4 w-4" />
         <AlertDescription>
-          Crie pelo menos um plano comercial inicial. Ele será aplicado às empresas que você cadastrar a seguir.
+          Cree al menos un plan comercial inicial. Se aplicará a las empresas que registre a continuación.
         </AlertDescription>
       </Alert>
       <PlanFormBody
         plan={null}
-        submitLabel="Criar plano e avançar"
+        submitLabel="Crear plan y avanzar"
         showCancel={false}
         onSaved={() => onDone()}
       />
@@ -324,7 +324,7 @@ function StepEvolution({ onDone, alreadyDone }: { onDone: () => void; alreadyDon
     }
   }, [config]);
 
-  if (alreadyDone) return <AlreadyDone label="Servidor WhatsApp configurado" onContinue={onDone} />;
+  if (alreadyDone) return <AlreadyDone label="Servidor de WhatsApp configurado" onContinue={onDone} />;
 
   const cleanUrl = url.replace(/\/$/, '');
 
@@ -345,7 +345,7 @@ function StepEvolution({ onDone, alreadyDone }: { onDone: () => void; alreadyDon
       { evolution_go_url: cleanUrl, evolution_go_global_api_key: globalApiKey },
       {
         onSuccess: () => {
-          toast.success('Servidor WhatsApp configurado!');
+          toast.success('Servidor de WhatsApp configurado!');
           onDone();
         },
       }
@@ -357,7 +357,7 @@ function StepEvolution({ onDone, alreadyDone }: { onDone: () => void; alreadyDon
       <Alert>
         <Server className="h-4 w-4" />
         <AlertDescription>
-          Opcional — necessário se as empresas usarão WhatsApp via Evolution Go.
+          Opcional: necesario si las empresas usarán WhatsApp a través de Evolution Go.
         </AlertDescription>
       </Alert>
 
@@ -413,7 +413,7 @@ function StepEvolution({ onDone, alreadyDone }: { onDone: () => void; alreadyDon
       )}
 
       <div className="flex gap-2">
-        <Button variant="outline" onClick={onDone}>Pular</Button>
+        <Button variant="outline" onClick={onDone}>Saltar</Button>
         <Button
           variant="outline"
           onClick={handleTest}
@@ -428,7 +428,7 @@ function StepEvolution({ onDone, alreadyDone }: { onDone: () => void; alreadyDon
           disabled={updateCfg.isPending || !cleanUrl || !globalApiKey}
         >
           {updateCfg.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-          Salvar e avançar
+          Guardar y avanzar
         </Button>
       </div>
     </div>
@@ -436,7 +436,7 @@ function StepEvolution({ onDone, alreadyDone }: { onDone: () => void; alreadyDon
 }
 
 function StepEmail({ onDone, alreadyDone }: { onDone: () => void; alreadyDone?: boolean }) {
-  if (alreadyDone) return <AlreadyDone label="E-mail transacional configurado" onContinue={onDone} />;
+  if (alreadyDone) return <AlreadyDone label="Correo electrónico transaccional configurado" onContinue={onDone} />;
   return (
     <div className="space-y-3">
       <Alert>
@@ -456,23 +456,23 @@ function StepEmail({ onDone, alreadyDone }: { onDone: () => void; alreadyDone?: 
         }
       >
         <ExternalLink className="h-4 w-4 mr-2" />
-        Abrir configuração na Lovable Cloud
+        Abrir configuración en Lovable Cloud
       </Button>
-      <Button className="w-full" onClick={onDone}>Avançar</Button>
+      <Button className="w-full" onClick={onDone}>Avanzar</Button>
     </div>
   );
 }
 
 function StepOrganization({ onDone, alreadyDone }: { onDone: () => void; alreadyDone?: boolean }) {
-  if (alreadyDone) return <AlreadyDone label="Empresa já cadastrada" onContinue={onDone} />;
+  if (alreadyDone) return <AlreadyDone label="Empresa ya registrada" onContinue={onDone} />;
   return (
     <div className="space-y-3">
       <Alert>
         <Building2 className="h-4 w-4" />
-        <AlertDescription>Cadastre a primeira empresa cliente.</AlertDescription>
+        <AlertDescription>Registre la primera empresa cliente.</AlertDescription>
       </Alert>
       <OrganizationCreateForm
-        submitLabel="Criar empresa e concluir"
+        submitLabel="Crear empresa y concluir"
         onCreated={() => onDone()}
       />
     </div>

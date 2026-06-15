@@ -33,7 +33,7 @@ interface BrainTabProps {
 const SOURCE_TYPES = [
   { 
     id: 'file', 
-    label: 'Arquivos', 
+    label: 'Archivos', 
     icon: FileText, 
     description: 'PDFs, DOCs, apresentações',
     color: 'text-blue-500'
@@ -47,7 +47,7 @@ const SOURCE_TYPES = [
   },
   { 
     id: 'youtube', 
-    label: 'Vídeos', 
+    label: 'Videos', 
     icon: Youtube, 
     description: 'Transcrição automática',
     color: 'text-red-500'
@@ -56,28 +56,28 @@ const SOURCE_TYPES = [
     id: 'faq', 
     label: 'FAQ', 
     icon: MessageSquare, 
-    description: 'Perguntas e respostas',
+    description: 'Preguntas y respuestas',
     color: 'text-purple-500'
   },
   { 
     id: 'data', 
     label: 'Dados', 
     icon: Database, 
-    description: 'Tabelas e comparativos',
+    description: 'Tablas y comparativos',
     color: 'text-orange-500'
   },
   { 
     id: 'training', 
-    label: 'Treinamento', 
+    label: 'Entrenamiento', 
     icon: Sparkles, 
-    description: 'Ensine a IA diretamente',
+    description: 'Enseñe a la IA directamente',
     color: 'text-primary'
   },
   { 
     id: 'catalog', 
     label: 'Catálogo', 
     icon: Package, 
-    description: 'Itens que a IA pode buscar e enviar',
+    description: 'Ítems que la IA puede buscar e enviar',
     color: 'text-pink-500'
   },
 ];
@@ -90,7 +90,7 @@ export function BrainTab({ productId }: BrainTabProps) {
 
   if (sourcesLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex ítems-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
@@ -101,16 +101,16 @@ export function BrainTab({ productId }: BrainTabProps) {
   return (
     <div className="space-y-6">
       {/* Header with Health Score */}
-      <div className="flex items-start justify-between">
+      <div className="flex ítems-start justify-between">
         <div className="space-y-1">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
+          <div className="flex ítems-center gap-3">
+            <div className="w-10 h-10 rounded-xl gradient-primary flex ítems-center justify-center">
               <Brain className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold">Cérebro do Produto</h2>
+              <h2 className="text-lg font-semibold">Cerebro del Producto</h2>
               <p className="text-sm text-muted-foreground">
-                Alimente a IA com conhecimento para respostas mais precisas
+                Alimente a la IA con conocimiento para respuestas más precisas
               </p>
             </div>
           </div>
@@ -131,12 +131,12 @@ export function BrainTab({ productId }: BrainTabProps) {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full justify-start flex-wrap h-auto gap-1 p-1">
-          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-          <TabsTrigger value="files">Arquivos</TabsTrigger>
+          <TabsTrigger value="overview">Vista General</TabsTrigger>
+          <TabsTrigger value="files">Archivos</TabsTrigger>
           <TabsTrigger value="websites">Websites</TabsTrigger>
           <TabsTrigger value="youtube">YouTube</TabsTrigger>
           <TabsTrigger value="faq">FAQ</TabsTrigger>
-          <TabsTrigger value="training">Treinamento IA</TabsTrigger>
+          <TabsTrigger value="training">Entrenamiento IA</TabsTrigger>
           <TabsTrigger value="catalog">Catálogo</TabsTrigger>
         </TabsList>
 
@@ -165,12 +165,12 @@ export function BrainTab({ productId }: BrainTabProps) {
                   }}
                 >
                   <CardContent className="p-4">
-                    <div className="flex items-start justify-between">
+                    <div className="flex ítems-start justify-between">
                       <div className={cn('p-2 rounded-lg bg-muted', type.color)}>
                         <Icon className="h-5 w-5" />
                       </div>
                       <Badge variant="secondary" className="text-xs">
-                        {count} {count === 1 ? 'item' : 'itens'}
+                        {count} {count === 1 ? 'ítem' : 'ítems'}
                       </Badge>
                     </div>
                     <div className="mt-3">
@@ -187,7 +187,7 @@ export function BrainTab({ productId }: BrainTabProps) {
           {/* Recent Sources */}
           {sources && sources.length > 0 && (
             <div className="space-y-4">
-              <h3 className="font-semibold">Fontes Recentes</h3>
+              <h3 className="font-semibold">Fuentes Recientes</h3>
               <div className="space-y-3">
                 {sources.slice(0, 5).map((source) => (
                   <KnowledgeSourceCard key={source.id} source={source} />
@@ -201,18 +201,18 @@ export function BrainTab({ productId }: BrainTabProps) {
             <Card className="border-dashed">
               <CardContent className="p-12 text-center">
                 <Brain className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="font-semibold mb-2">Comece a treinar o cérebro</h3>
+                <h3 className="font-semibold mb-2">Comience a entrenar el cerebro</h3>
                 <p className="text-muted-foreground mb-4">
-                  Adicione arquivos, FAQs ou treine a IA diretamente para melhorar as respostas.
+                  Añada archivos, FAQs o entrene a la IA directamente para mejorar las respuestas.
                 </p>
                 <div className="flex justify-center gap-3">
                   <Button onClick={() => setActiveTab('files')}>
                     <FileText className="h-4 w-4 mr-2" />
-                    Adicionar Arquivo
+                    Añadir Archivo
                   </Button>
                   <Button variant="outline" onClick={() => setActiveTab('faq')}>
                     <MessageSquare className="h-4 w-4 mr-2" />
-                    Criar FAQ
+                    Crear FAQ
                   </Button>
                 </div>
               </CardContent>

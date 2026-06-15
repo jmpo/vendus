@@ -145,15 +145,15 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
       updateGeneral('avatar_url', data.publicUrl);
       toast.success('Avatar enviado');
     } catch (e: any) {
-      toast.error(e.message || 'Erro no upload');
+      toast.error(e.message || 'Error en la subida');
     }
   };
 
   const handleSubmit = async () => {
-    if (!general.full_name.trim()) return toast.error('Informe o nome');
+    if (!general.full_name.trim()) return toast.error('Ingrese el nombre');
     if (!isEdit) {
-      if (!general.email.trim()) return toast.error('Informe o email');
-      if (!general.password || general.password.length < 6) return toast.error('Senha mínima de 6 caracteres');
+      if (!general.email.trim()) return toast.error('Ingrese el email');
+      if (!general.password || general.password.length < 6) return toast.error('Contraseña mínima de 6 caracteres');
     }
 
     setSubmitting(true);
@@ -216,7 +216,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
           }
         } catch (e: any) {
           console.error('sectors sync failed', e);
-          toast.error(`Erro ao salvar setores: ${e?.message || 'permissão negada'}`);
+          toast.error(`Error al guardar sectores: ${e?.message || 'permiso denegado'}`);
           // Don't abort the rest, but make the failure visible
         }
 
@@ -234,7 +234,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
           } catch (e) { console.warn('notifications save failed', e); }
         }
 
-        toast.success('Usuário atualizado!');
+        toast.success('¡Usuario actualizado!');
       } else {
         // Create via edge function
         const { data, error } = await supabase.functions.invoke('create-team-member', {
@@ -256,7 +256,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
         });
         if (error) throw error;
         if ((data as any)?.error) throw new Error((data as any).error);
-        toast.success('Usuário criado com sucesso!');
+        toast.success('¡Usuario creado con éxito!');
       }
 
       queryClient.invalidateQueries({ queryKey: ['team-members'] });
@@ -264,7 +264,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
       queryClient.invalidateQueries({ queryKey: ['user-sectors'] });
       onOpenChange(false);
     } catch (err: any) {
-      toast.error(err?.message || 'Erro ao salvar usuário');
+      toast.error(err?.message || 'Error al guardar usuario');
     } finally {
       setSubmitting(false);
     }
@@ -286,15 +286,15 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <UserPlus className="h-5 w-5 text-primary" />
-            {isEdit ? 'Editar Usuário' : 'Adicionar Usuário'}
+            {isEdit ? 'Editar Usuario' : 'Agregar Usuario'}
           </DialogTitle>
         </DialogHeader>
 
         <Tabs value={tab} onValueChange={setTab} className="w-full">
           <TabsList className="w-full grid grid-cols-3">
-            <TabsTrigger value="general">Geral</TabsTrigger>
-            <TabsTrigger value="permissions">Permissões</TabsTrigger>
-            <TabsTrigger value="notifications">Notificações</TabsTrigger>
+            <TabsTrigger value="general">General</TabsTrigger>
+            <TabsTrigger value="permissions">Permisos</TabsTrigger>
+            <TabsTrigger value="notifications">Notificaciones</TabsTrigger>
           </TabsList>
 
           {/* ============== GERAL ============== */}
@@ -322,7 +322,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="name">Nome *</Label>
+                <Label htmlFor="name">Nombre *</Label>
                 <Input id="name" value={general.full_name} onChange={(e) => updateGeneral('full_name', e.target.value)} />
               </div>
               <div className="space-y-1.5">
@@ -351,20 +351,20 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
               </div>
               {!isEdit && (
                 <div className="space-y-1.5">
-                  <Label htmlFor="pwd">Senha *</Label>
+                  <Label htmlFor="pwd">Contraseña *</Label>
                   <Input id="pwd" type="password" value={general.password} onChange={(e) => updateGeneral('password', e.target.value)} />
                 </div>
               )}
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="wpp">WhatsApp para Recuperação (Ex: 5511999999999)</Label>
+              <Label htmlFor="wpp">WhatsApp para Recuperación (Ex: 5511999999999)</Label>
               <Input id="wpp" value={general.recovery_whatsapp} onChange={(e) => updateGeneral('recovery_whatsapp', e.target.value)} />
             </div>
 
-            {/* Setores */}
+            {/* Sectores */}
             <div className="space-y-1.5">
-              <Label>Setores</Label>
+              <Label>Sectores</Label>
               {sectorBadges.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 p-2 border rounded-md bg-muted/30">
                   {sectorBadges.map((s) => (
@@ -384,7 +384,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
               )}
               {availableSectors.length > 0 && (
                 <Select value="" onValueChange={(v) => v && setSectorIds([...sectorIds, v])}>
-                  <SelectTrigger><SelectValue placeholder="+ Adicionar setor" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="+ Agregar sector" /></SelectTrigger>
                   <SelectContent>
                     {availableSectors.map((s) => (
                       <SelectItem key={s.id} value={s.id}>
@@ -401,19 +401,19 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
 
             {/* Conexão padrão */}
             <div className="space-y-1.5">
-              <Label>Conexão Padrão (WhatsApp)</Label>
+              <Label>Conexión Predeterminada (WhatsApp)</Label>
               {(!connections || connections.length === 0) ? (
                 <div className="text-xs rounded-md border border-yellow-300 bg-yellow-50 text-yellow-900 px-3 py-2">
-                  Nenhuma conexão WhatsApp encontrada. Conecte um aparelho em <strong>Integrações → WhatsApp</strong> para que esse usuário receba conversas.
+                  No se encontró ninguna conexión de WhatsApp. Conecte un dispositivo en <strong>Integrações → WhatsApp</strong> para que este usuario reciba conversaciones.
                 </div>
               ) : (
                 <Select
                   value={general.default_connection_id || 'none'}
                   onValueChange={(v) => updateGeneral('default_connection_id', v === 'none' ? '' : v)}
                 >
-                  <SelectTrigger><SelectValue placeholder="Nenhuma" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Ninguna" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">Nenhuma</SelectItem>
+                    <SelectItem value="none">Ninguna</SelectItem>
                     {connections.map((c: any) => (
                       <SelectItem key={c.id} value={c.id}>
                         {c.name} {c.phone_number ? `(${c.phone_number})` : ''}
@@ -469,12 +469,12 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
           <TabsContent value="permissions" className="space-y-5 pt-5">
             {!isEdit ? (
               <p className="text-sm text-muted-foreground text-center py-8">
-                Permissões poderão ser configuradas após criar o usuário.<br />
+                Permisos poderão ser configuradas após criar o usuário.<br />
                 Defaults serão aplicadas automaticamente conforme o perfil escolhido.
               </p>
             ) : !permissions ? (
               <div className="text-center py-8 space-y-3">
-                <p className="text-sm text-muted-foreground">Permissões ainda não foram inicializadas.</p>
+                <p className="text-sm text-muted-foreground">Permisos ainda não foram inicializadas.</p>
                 <Button
                   onClick={() => member && initPermissions.mutate({ userId: member.id, organizationId: member.organization_id || '', role: general.role })}
                   disabled={initPermissions.isPending}
@@ -551,7 +551,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="text-sm font-semibold">Notificações neste Aparelho (Push)</h4>
+                  <h4 className="text-sm font-semibold">Notificaciones neste Aparelho (Push)</h4>
                   <div className="p-4 border rounded-lg text-center space-y-2">
                     <p className="text-xs text-muted-foreground">
                       Receba notificações mesmo com o navegador fechado ou minimizado.
@@ -564,13 +564,13 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
                         const perm = await Notification.requestPermission();
                         if (perm === 'granted') {
                           setLocalNotifs((n) => ({ ...n, push_enabled: true }));
-                          toast.success('Notificações ativadas neste dispositivo');
+                          toast.success('Notificaciones ativadas neste dispositivo');
                         } else {
                           toast.error('Permissão negada');
                         }
                       }}
                     >
-                      Ativar Notificações neste Dispositivo
+                      Ativar Notificaciones neste Dispositivo
                     </Button>
                   </div>
                 </div>

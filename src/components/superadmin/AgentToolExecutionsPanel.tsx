@@ -25,7 +25,7 @@ import {
 } from '@/hooks/useAgentToolExecutions';
 import { Activity, AlertTriangle, CheckCircle2, Clock, Wrench } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 export function AgentToolExecutionsPanel() {
   const [filter, setFilter] = useState<'all' | 'success' | 'error'>('all');
@@ -41,9 +41,9 @@ export function AgentToolExecutionsPanel() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground">Execuções de Ferramentas (IA)</h2>
+        <h2 className="text-2xl font-bold text-foreground">Ejecuciones de Herramientas (IA)</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Auditoria de todas as ações que os agentes executaram nos últimos 7 dias.
+          Auditoría de todas las acciones que los agentes ejecutaron en los últimos 7 días.
         </p>
       </div>
 
@@ -51,24 +51,24 @@ export function AgentToolExecutionsPanel() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           icon={<Activity className="h-4 w-4" />}
-          label="Execuções (7d)"
+          label="Ejecuciones (7d)"
           value={stats?.total ?? 0}
         />
         <StatCard
           icon={<CheckCircle2 className="h-4 w-4 text-emerald-500" />}
-          label="Sucesso"
+          label="Éxito"
           value={stats?.successes ?? 0}
           accent="text-emerald-500"
         />
         <StatCard
           icon={<AlertTriangle className="h-4 w-4 text-destructive" />}
-          label="Erros"
+          label="Errorres"
           value={stats?.errors ?? 0}
           accent="text-destructive"
         />
         <StatCard
           icon={<Clock className="h-4 w-4" />}
-          label="Tempo médio"
+          label="Tiempo promedio"
           value={`${Math.round(stats?.avgDuration ?? 0)}ms`}
         />
       </div>
@@ -78,7 +78,7 @@ export function AgentToolExecutionsPanel() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <Wrench className="h-4 w-4" /> Uso por ferramenta (7d)
+              <Wrench className="h-4 w-4" /> Uso por herramienta (7d)
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -97,8 +97,8 @@ export function AgentToolExecutionsPanel() {
       <Tabs value={filter} onValueChange={(v) => setFilter(v as any)}>
         <TabsList>
           <TabsTrigger value="all">Todas</TabsTrigger>
-          <TabsTrigger value="success">Sucessos</TabsTrigger>
-          <TabsTrigger value="error">Erros</TabsTrigger>
+          <TabsTrigger value="success">Éxitos</TabsTrigger>
+          <TabsTrigger value="error">Errorres</TabsTrigger>
         </TabsList>
       </Tabs>
 
@@ -107,12 +107,12 @@ export function AgentToolExecutionsPanel() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Quando</TableHead>
-                <TableHead>Ferramenta</TableHead>
+                <TableHead>Cuándo</TableHead>
+                <TableHead>Herramienta</TableHead>
                 <TableHead>Agente</TableHead>
                 <TableHead>Canal</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Duração</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead>Duración</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -120,14 +120,14 @@ export function AgentToolExecutionsPanel() {
               {isLoading && (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                    Carregando...
+                    Cargando...
                   </TableCell>
                 </TableRow>
               )}
               {!isLoading && (executions?.length ?? 0) === 0 && (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                    Nenhuma execução registrada ainda.
+                    Ninguna ejecución registrada aún.
                   </TableCell>
                 </TableRow>
               )}
@@ -136,7 +136,7 @@ export function AgentToolExecutionsPanel() {
                   <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
                     {formatDistanceToNow(new Date(e.created_at), {
                       addSuffix: true,
-                      locale: ptBR,
+                      locale: es,
                     })}
                   </TableCell>
                   <TableCell>
@@ -150,7 +150,7 @@ export function AgentToolExecutionsPanel() {
                         OK
                       </Badge>
                     ) : (
-                      <Badge variant="destructive">Erro</Badge>
+                      <Badge variant="destructive">Error</Badge>
                     )}
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground">{e.duration_ms ?? 0}ms</TableCell>
@@ -173,10 +173,10 @@ export function AgentToolExecutionsPanel() {
               <code className="text-sm">{selected?.tool_name}</code>
               {selected?.success ? (
                 <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600">
-                  Sucesso
+                  Éxito
                 </Badge>
               ) : (
-                <Badge variant="destructive">Erro</Badge>
+                <Badge variant="destructive">Error</Badge>
               )}
             </DialogTitle>
           </DialogHeader>
@@ -184,21 +184,21 @@ export function AgentToolExecutionsPanel() {
             <div className="space-y-4 text-sm">
               {selected?.error_message && (
                 <div>
-                  <p className="font-semibold text-destructive mb-1">Erro</p>
+                  <p className="font-semibold text-destructive mb-1">Error</p>
                   <pre className="bg-destructive/10 text-destructive text-xs p-3 rounded whitespace-pre-wrap">
                     {selected.error_message}
                   </pre>
                 </div>
               )}
               <div>
-                <p className="font-semibold mb-1">Input</p>
+                <p className="font-semibold mb-1">Entrada</p>
                 <pre className="bg-muted text-xs p-3 rounded whitespace-pre-wrap break-all">
                   {JSON.stringify(selected?.input, null, 2)}
                 </pre>
               </div>
               {selected?.output != null && (
                 <div>
-                  <p className="font-semibold mb-1">Output</p>
+                  <p className="font-semibold mb-1">Salida</p>
                   <pre className="bg-muted text-xs p-3 rounded whitespace-pre-wrap break-all">
                     {JSON.stringify(selected.output, null, 2)}
                   </pre>
@@ -208,9 +208,9 @@ export function AgentToolExecutionsPanel() {
                 <div>Agente: {selected?.agent_name ?? '—'}</div>
                 <div>Canal: {selected?.channel ?? '—'}</div>
                 <div>Lead: {selected?.lead_id ?? '—'}</div>
-                <div>Conversa: {selected?.conversation_id ?? '—'}</div>
-                <div>Duração: {selected?.duration_ms}ms</div>
-                <div>Custo est.: {(selected?.estimated_cost_cents ?? 0) / 100} BRL</div>
+                <div>Conversación: {selected?.conversation_id ?? '—'}</div>
+                <div>Duración: {selected?.duration_ms}ms</div>
+                <div>Costo est.: {(selected?.estimated_cost_cents ?? 0) / 100} BRL</div>
               </div>
             </div>
           </ScrollArea>

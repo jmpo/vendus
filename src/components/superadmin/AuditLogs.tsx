@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuditLogs } from '@/hooks/useSuperAdmin';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 export function AuditLogs() {
   const [search, setSearch] = useState('');
@@ -29,13 +29,13 @@ export function AuditLogs() {
       case 'organization':
         return <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20">Empresa</Badge>;
       case 'subscription':
-        return <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">Assinatura</Badge>;
+        return <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">Suscripción</Badge>;
       case 'user':
-        return <Badge variant="outline" className="bg-violet-500/10 text-violet-500 border-violet-500/20">Usuário</Badge>;
+        return <Badge variant="outline" className="bg-violet-500/10 text-violet-500 border-violet-500/20">Usuario</Badge>;
       case 'platform_settings':
         return <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20">Config</Badge>;
       case 'platform_email_settings':
-        return <Badge variant="outline" className="bg-pink-500/10 text-pink-500 border-pink-500/20">E-mail</Badge>;
+        return <Badge variant="outline" className="bg-pink-500/10 text-pink-500 border-pink-500/20">Correo electrónico</Badge>;
       default:
         return type ? <Badge variant="secondary">{type}</Badge> : null;
     }
@@ -45,8 +45,8 @@ export function AuditLogs() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Logs de Auditoria</h1>
-        <p className="text-muted-foreground">Histórico de ações realizadas na plataforma</p>
+        <h1 className="text-2xl font-bold text-foreground">Logs de Auditoría</h1>
+        <p className="text-muted-foreground">Historial de acciones realizadas en la plataforma</p>
       </div>
 
       {/* Filters */}
@@ -56,7 +56,7 @@ export function AuditLogs() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por ação, usuário ou tipo..."
+                placeholder="Buscar por acción, usuario o tipo..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-10"
@@ -71,10 +71,10 @@ export function AuditLogs() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ScrollText className="h-5 w-5" />
-            Atividades Recentes
+            Actividades Recientes
           </CardTitle>
           <CardDescription>
-            Últimas 100 ações registradas
+            Últimas 100 acciones registradas
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -87,7 +87,7 @@ export function AuditLogs() {
           ) : filteredLogs.length === 0 ? (
             <div className="text-center py-12">
               <ScrollText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">Nenhum log encontrado</p>
+              <p className="text-muted-foreground">Ningún log encontrado</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -111,7 +111,7 @@ export function AuditLogs() {
                       </span>
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3.5 w-3.5" />
-                        {format(new Date(log.created_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                        {format(new Date(log.created_at), "dd/MM/yyyy ' a las' HH:mm", { locale: es })}
                       </span>
                       {log.ip_address && (
                         <span className="text-xs">IP: {log.ip_address}</span>

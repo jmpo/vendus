@@ -40,10 +40,10 @@ export function SectorsManager() {
     if (!toDelete) return;
     try {
       await deleteSector.mutateAsync(toDelete.id);
-      toast.success('Setor removido');
+      toast.success('Sector eliminado');
       setToDelete(null);
     } catch (err: any) {
-      toast.error(err?.message || 'Erro ao remover setor');
+      toast.error(err?.message || 'Error al eliminar sector');
     }
   };
 
@@ -63,15 +63,15 @@ export function SectorsManager() {
         <div>
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <LayoutGrid className="h-5 w-5 text-primary" />
-            Setores ({sectors?.length || 0})
+            Sectores ({sectors?.length || 0})
           </h3>
           <p className="text-sm text-muted-foreground">
-            Filas de atendimento. Atribua membros aos setores que devem ter acesso.
+            Filas de atención. Asigne miembros a los sectores que deben tener acceso.
           </p>
         </div>
         <Button onClick={handleAdd}>
           <Plus className="h-4 w-4 mr-2" />
-          Adicionar Setor
+          Agregar Sector
         </Button>
       </div>
 
@@ -79,9 +79,9 @@ export function SectorsManager() {
         <Card>
           <CardContent className="py-12 text-center">
             <LayoutGrid className="h-10 w-10 mx-auto text-muted-foreground/50 mb-3" />
-            <p className="text-sm text-muted-foreground">Nenhum setor cadastrado</p>
+            <p className="text-sm text-muted-foreground">Ningún sector registrado</p>
             <Button onClick={handleAdd} className="mt-4" size="sm">
-              <Plus className="h-4 w-4 mr-2" /> Criar primeiro setor
+              <Plus className="h-4 w-4 mr-2" /> Crear primer sector
             </Button>
           </CardContent>
         </Card>
@@ -92,11 +92,11 @@ export function SectorsManager() {
               <table className="w-full text-sm">
                 <thead className="bg-muted/50 text-xs text-muted-foreground">
                   <tr>
-                    <th className="text-left px-4 py-2.5 font-medium">Setor</th>
-                    <th className="text-left px-4 py-2.5 font-medium">Ordem</th>
-                    <th className="text-left px-4 py-2.5 font-medium">Status</th>
-                    <th className="text-left px-4 py-2.5 font-medium">Membros</th>
-                    <th className="text-right px-4 py-2.5 font-medium">Ações</th>
+                    <th className="text-left px-4 py-2.5 font-medium">Sector</th>
+                    <th className="text-left px-4 py-2.5 font-medium">Orden</th>
+                    <th className="text-left px-4 py-2.5 font-medium">Estado</th>
+                    <th className="text-left px-4 py-2.5 font-medium">Miembros</th>
+                    <th className="text-right px-4 py-2.5 font-medium">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -120,11 +120,11 @@ export function SectorsManager() {
                       <td className="px-4 py-3">
                         {s.is_active ? (
                           <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600">
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Ativo
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Activo
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50" /> Inativo
+                            <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50" /> Inactivo
                           </span>
                         )}
                       </td>
@@ -146,7 +146,7 @@ export function SectorsManager() {
                             )}
                           </div>
                         ) : (
-                          <span className="text-xs text-muted-foreground italic">Sem membros</span>
+                          <span className="text-xs text-muted-foreground italic">Sin miembros</span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-right">
@@ -177,9 +177,9 @@ export function SectorsManager() {
       <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remover setor</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar sector</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja remover <strong>{toDelete?.name}</strong>? Conversas e leads vinculados perderão a referência ao setor.
+              ¿Está seguro de que desea eliminar <strong>{toDelete?.name}</strong>? Las conversaciones y leads vinculados perderán la referencia al sector.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -188,7 +188,7 @@ export function SectorsManager() {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={handleConfirmDelete}
             >
-              Remover
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
