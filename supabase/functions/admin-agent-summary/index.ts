@@ -60,7 +60,7 @@ async function buildDailySummary(orgId: string): Promise<string> {
     if (prof?.full_name) name = prof.full_name.split(" ")[0];
   }
 
-  const fmt = (n: number) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const fmt = (n: number) => n.toLocaleString("es-PY", { style: "currency", currency: "BRL" });
 
   return `📊 *Bom día, ${name}! Resumen de ayer:*\n\n` +
     `✅ Leads criados: *${totalLeads}*\n` +
@@ -104,7 +104,7 @@ async function buildWeeklyReport(orgId: string): Promise<string> {
     const arrow = diff > 0 ? "📈" : diff < 0 ? "📉" : "➖";
     return `${arrow} ${diff > 0 ? "+" : ""}${diff.toFixed(0)}%`;
   };
-  const fmt = (n: number) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const fmt = (n: number) => n.toLocaleString("es-PY", { style: "currency", currency: "BRL" });
 
   return `📅 *Relatório semanal*\n\n` +
     `*Leads:* ${thisW.leads} (vs ${prevW.leads}) ${trend(thisW.leads, prevW.leads)}\n` +

@@ -62,7 +62,7 @@ export type LinguisticRegion =
 
 export interface TicsConfig {
   region?: LinguisticRegion;
-  slang?: string[];           // gírias específicas
+  slang?: string[];           // modismos específicas
   openers?: string[];         // interjeições de abertura
   connectors?: string[];      // conectivos casuais
   fillers?: string[];         // frases de muleta
@@ -468,7 +468,7 @@ const REGION_HINTS: Record<LinguisticRegion, string> = {
   nordestino: 'sotaque nordestino (oxe, vixe, massa, arretado)',
   sulista: 'sotaque sulista/gaúcho (tchê, bah, guri, capaz)',
   mineiro: 'sotaque mineiro (uai, sô, trem, dimais)',
-  custom: 'estilo regional customizado conforme as gírias listadas',
+  custom: 'estilo regional customizado conforme as modismos listadas',
 };
 
 function bulletList(items?: string[], max = 12): string {

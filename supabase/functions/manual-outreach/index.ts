@@ -172,13 +172,13 @@ Deno.serve(async (req) => {
         const modeRules = mode === 'conversational'
           ? `MODO: CONVERSA INTENCIONAL
 - Genera APENAS uma abertura corta (1–2 linhas, no máx. 25 palavras).
-- Faça UMA pregunta provocativa referenciando o evento (ex.: "Vi que usted gerou um Pix, conseguiu finalizar?").
+- Faça UNA pregunta provocativa referenciando o evento (ex.: "Vi que usted gerou um Pix, conseguiu finalizar?").
 - NÃO entregue Pix, link, código, instruções ou dados do evento ahora — só preguntes.
 - Esperá la respuesta del lead antes de ofrecer cualquier detalle.`
           : `MODO: MENSAGEM DIRETA
-- Genera uma mensaje completa, mas em no máx. 2 parágrafos curtos.
+- Genera umel mensaje completa, mas em no máx. 2 parágrafos curtos.
 - Se hay Pix/link, coloque cada um em linha própria, sin texto extra junto.
-- Sem despedidas longas. Termine con UMA pregunta ou CTA claro.`;
+- Sem despedidas longas. Termine con UNA pregunta ou CTA claro.`;
 
         const systemPrompt = `Vos sos ${agent.name}, um agente de ${agent.agent_type} de la empresa.
 MISSÃO: ${agent.primary_objective}
@@ -192,12 +192,12 @@ ${extra_context ? `CONTEXTO ADICIONAL: ${extra_context}` : ""}
 ${eventCtxLines ? `CONTEXTO DO EVENTO:\n${eventCtxLines}` : ""}
 ${modeRules}
 REGRAS GERAIS:
-- Genera APENAS a mensaje, sin explicações ou prefixos.
-- Sé natural e humano, NÃO pareça um bot. Sem clichês ("espero que esteja bem", etc.).
+- Genera APENAS el mensaje, sin explicações ou prefixos.
+- Sé natural e humano, NÃO pareça um bot. Sem clichés ("espero que esteja bem", etc.).
 - Personalize con as información del lead.
 - WhatsApp: sin markdown, sin HTML.`;
 
-        const userPrompt = `Genera a mensaje de primeira abordagem via WhatsApp para este lead:
+        const userPrompt = `Genera el mensaje de primeira abordagem via WhatsApp para este lead:
 Nombre: ${lead?.name || "Lead"}
 Email: ${lead?.email || "No informado"}
 Teléfono: ${leadPhone}

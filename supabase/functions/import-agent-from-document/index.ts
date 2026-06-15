@@ -135,7 +135,7 @@ A partir do briefing/documento abaixo, extraia uma configuración completa de ag
 
 REGRAS:
 - Identifica tom, missão, capacidades, restrições e gatilhos de transferência diretamente do texto.
-- Se o texto no menciona um campo, infira algo razoável e profissional, sin clichês.
+- Se o texto no menciona um campo, infira algo razoável e profissional, sin clichés.
 - Mensagens devem seguir SPIN Selling: profissional, objetivo, no máximo 2 linhas por bloco.
 - Nunca use emojis em prompts.
 - additional_prompt debe consolidar TUDO que o documento diz sobre comportamento, em 3-6 parágrafos.`;

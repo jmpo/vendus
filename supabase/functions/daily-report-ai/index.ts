@@ -288,7 +288,7 @@ Boas ventas! 🚀
 }
 
 function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('pt-BR', {
+  return new Intl.NumberFormat('es-PY', {
     style: 'currency',
     currency: 'BRL',
   }).format(value);
@@ -345,7 +345,7 @@ async function sendReportEmail(email: string, name: string, report: { summary: s
       body: JSON.stringify({
         from: 'Assistente de Vendas <noreply@resend.dev>',
         to: [email],
-        subject: `☀️ Su briefing del día - ${new Date().toLocaleDateString('pt-BR')}`,
+        subject: `☀️ Su briefing del día - ${new Date().toLocaleDateString('es-PY')}`,
         html: htmlContent,
       }),
     });

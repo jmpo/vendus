@@ -1,8 +1,8 @@
 // meta-whatsapp-draft
-// Cria uma conexão WhatsApp Meta em modo "rascunho" para que o wizard
+// Cria uma conexión WhatsApp Meta em modo "rascunho" para que o wizard
 // possa exibir Verify Token e URL de callback ANTES de o usuario ter
 // terminado de crear o Meta App.
-// Cada conexão recebe su próprio webhook_verify_token; a URL final é
+// Cada conexión recebe su próprio webhook_verify_token; a URL final é
 // {SUPABASE_URL}/functions/v1/meta-whatsapp-webhook/{connection_id}.
 
 import { createClient } from 'npm:@supabase/supabase-js@2';

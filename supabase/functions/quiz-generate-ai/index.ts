@@ -22,9 +22,9 @@ interface GenerateQuizRequest {
 }
 
 const TONE_LABELS: Record<string, string> = {
-  profissional: 'Profissional e consultivo, evite gírias e emojis em excesso.',
+  profissional: 'Profissional e consultivo, evite modismos e emojis em excesso.',
   consultivo: 'Consultivo, baseado em SPIN selling. Faça preguntas que despertem reflexão.',
-  descontraido: 'Descontraído, próximo, puede usar emojis e linguagem casual.',
+  descontraido: 'Descontracturado, cercano, puede usar emojis y lenguaje casual.',
   direto: 'Direto, sin rodeios, preguntas curtas e objetivas.',
 };
 
@@ -119,7 +119,7 @@ ${captureFields.map((f) => `   - ${f}`).join('\n') || '   - (ningún)'}
    - result_metrics: array opcional [{id, label, value (0-100), display:"percent", color}]
 
 REGRAS:
-- Usa linguagem natural, sin clichês.
+- Usa lenguaje natural, sin clichés.
 - Score total possível ~100-150 pontos distribuídos entre as opciones.
 - Cada bloco tiene campo "variable_name" único (ex: q1, q2, faturamento, urgencia).
 - NÃO inclua next_block_id (o cliente conecta linearmente).

@@ -67,7 +67,7 @@ Deno.serve(async (req: Request) => {
       console.log('[verify] reject', { has_path_id: !!pathConnectionId });
       return new Response('forbidden', { status: 403 });
     }
-    // Marca que a Meta validou o webhook de esta conexão.
+    // Marca que a Meta validou o webhook de esta conexión.
     await sb
       .from('whatsapp_meta_connections')
       .update({ webhook_subscribed_at: new Date().toISOString() })
@@ -127,7 +127,7 @@ Deno.serve(async (req: Request) => {
       const value = change?.value ?? {};
       const phoneNumberId = value?.metadata?.phone_number_id;
 
-      // Resolve conexão: pinned (path) tiene prioridade; fallback por phone_number_id.
+      // Resolve conexión: pinned (path) tiene prioridade; fallback por phone_number_id.
       let conn: any = pinnedConn;
       if (!conn) {
         if (!phoneNumberId) continue;

@@ -150,7 +150,7 @@ async function describeImage(
           role: "system",
           content:
             "Vos sos um analisador visual de mensajes de WhatsApp em um CRM de ventas. " +
-            "Su respuesta vira o conteúdo textual da mensaje que um agente IA va ler. " +
+            "Su respuesta vira o conteúdo textual del mensaje que um agente IA va ler. " +
             "Sé factual, objetivo e direto.",
         },
         { role: "user", content: userContent },

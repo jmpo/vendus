@@ -32,7 +32,7 @@ serve(async (req: Request): Promise<Response> => {
           throw new Error("Configuración de backend ausente");
         }
 
-        // Se forneceu e-mail, envia mensaje real via Lovable Emails
+        // Se forneceu e-mail, enviel mensaje real via Lovable Emails
         if (recipientEmail) {
           const sendRes = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
             method: "POST",

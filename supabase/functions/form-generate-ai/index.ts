@@ -138,8 +138,8 @@ Garantia: ${product.guarantee || 'N/A'}
     };
 
     const toneDescriptions = {
-      formal: 'Usa linguagem formal e profissional, adequada para B2B corporativo. Evita gírias e mantenha tom respeitoso.',
-      informal: 'Usa linguagem amigável e descontraída, como una conversación casual. Sé acolhedor e empático.',
+      formal: 'Usa lenguaje formal e profissional, adequada para B2B corporativo. Evita modismos e mantenha tom respeitoso.',
+      informal: 'Usa lenguaje amigable e descontraída, como una conversación casual. Sé cálido e empático.',
       technical: 'Usa termos técnicos relevantes ao sector, assumindo conhecimento prévio. Sé preciso e objetivo.',
     };
 
@@ -167,8 +167,8 @@ TOM DE COMUNICAÇÃO: ${toneDescriptions[tone]}
 
 REGRAS IMPORTANTES:
 1. Crea preguntas claras e objetivas que qualifiquem o lead
-2. Usa a linguagem adequada ao tom solicitado
-3. ${use_objections && objectionsContext ? 'Usa as objeções para crear preguntas inteligentes de calificación (ex: se objeção es preço, preguntes sobre orçamento disponible)' : 'Inclua preguntas que ajudem a entender o perfil del lead'}
+2. Usa a lenguaje adequada ao tom solicitado
+3. ${use_objections && objectionsContext ? 'Usa as objeções para crear preguntas inteligentes de calificación (ex: se objeção es precio, preguntes sobre orçamento disponible)' : 'Inclua preguntas que ajudem a entender o perfil del lead'}
 4. ${use_brain && knowledgeContext ? 'Baseie as preguntas no conhecimento real do producto e sus diferenciais' : 'Foque nas necessidades típicas do ICP descrito'}
 5. ${user_context ? 'Personalize as preguntas para el contexto da campaña descrito acima — no ignore esse contexto' : 'Foque em capturar dados que ajudem o time de ventas'}
 6. Limite ao número de preguntas solicitado (${num_questions} preguntas + telas de boas-vindas e agradecimento)
@@ -176,7 +176,7 @@ REGRAS IMPORTANTES:
 
 TIPOS DE BLOCOS VÁLIDOS (use APENAS estes valores em block_type):
 - welcome_screen: Pantalla de bienvenida (SIEMPRE el primer bloque)
-- text: Pergunta de texto corto. Para nombre/empresa/cargo, use "text" con maps_to apropriado ("name", "company")
+- text: Pergunta de texto corto. Para nombre/empresa/cargo, use "text" con maps_to apropiado ("name", "company")
 - textarea: Texto largo (descripción, dor, expectativa)
 - email: Email (use maps_to: "email")
 - phone: Teléfono/WhatsApp (use maps_to: "phone")
@@ -191,7 +191,7 @@ NÃO use "name", "company" ou "thank_you_screen" como block_type — esses valor
 
 FORMATO DE RESPOSTA (JSON ARRAY puro, sin markdown):
 [
-  {"block_type":"welcome_screen","label":"Título acolhedor","description":"Subtítulo"},
+  {"block_type":"welcome_screen","label":"Título cálido","description":"Subtítulo"},
   {"block_type":"text","label":"Qual su nombre?","placeholder":"Su nombre","required":true,"maps_to":"name"},
   {"block_type":"text","label":"Empresa?","required":true,"maps_to":"company"},
   {"block_type":"select","label":"Principal desafio?","options":[{"label":"Opción A","value":"a"},{"label":"Opción B","value":"b"}],"required":true},

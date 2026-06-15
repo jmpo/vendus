@@ -95,8 +95,8 @@ Deno.serve(async (req) => {
   if (bErr || !booking) return json({ error: "booking not found" }, 404);
 
   const tz = booking.timezone || "America/Sao_Paulo";
-  const startStr = new Date(booking.start_time).toLocaleString("pt-BR", { timeZone: tz });
-  const nowStr = new Date().toLocaleString("pt-BR", { timeZone: tz });
+  const startStr = new Date(booking.start_time).toLocaleString("es-PY", { timeZone: tz });
+  const nowStr = new Date().toLocaleString("es-PY", { timeZone: tz });
 
   const systemPrompt = `Vos sos um assistente de reserva profissional, consultivo e direto (estilo SPIN). Máximo 2 linhas por mensaje.
 
@@ -246,7 +246,7 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
       }).eq("id", booking.calendar_event_id);
     }
 
-    const niceWhen = newStart.toLocaleString("pt-BR", { timeZone: booking.timezone || "America/Sao_Paulo", dateStyle: "short", timeStyle: "short" });
+    const niceWhen = newStart.toLocaleString("es-PY", { timeZone: booking.timezone || "America/Sao_Paulo", dateStyle: "short", timeStyle: "short" });
     return { reply: `Anotei o novo horario: ${niceWhen} 📅 Em breve te confirmo!` };
   }
 
@@ -282,7 +282,7 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
         .update({ status: "cancelado", cancellation_reason: "Pediu follow-up futuro", last_reply_at: now })
         .eq("id", booking.id);
 
-      const niceWhen = when.toLocaleString("pt-BR", { timeZone: booking.timezone || "America/Sao_Paulo", dateStyle: "short" });
+      const niceWhen = when.toLocaleString("es-PY", { timeZone: booking.timezone || "America/Sao_Paulo", dateStyle: "short" });
       return { reply: `Sem problema! Vou te chamar de novo em ${niceWhen} 📞` };
     }
   }

@@ -1,6 +1,6 @@
 // Cron a cada 5min. Executa cadence_step_runs vencidos.
-// Para cada run: valida janela, condições, gera mensaje via manual-outreach
-// (que monta prompt con contexto + historial del lead) e agenda o próximo step.
+// Para cada run: valida janela, condições, gerel mensaje via manual-outreach
+// (que arma prompt con contexto + historial del lead) y agenda el próximo step.
 
 import { createServiceClient } from "../_shared/campaign-audience.ts";
 
@@ -202,7 +202,7 @@ Deno.serve(async (req) => {
         if (!evalResult.ok) {
           await supabase.from("cadence_step_runs").update({ status: "skipped", skip_reason: evalResult.reason ?? "conditions", executed_at: new Date().toISOString() }).eq("id", run.id);
           skipped++;
-          // Avança mismo assim para próximo step? Sí — no trava el lead na etapa.
+          // Avanza igual al próximo step? Sí — no traba el lead en la etapa.
         } else {
           if (!cadence.agent_id) {
             await supabase.from("cadence_step_runs").update({ status: "failed", error: "Cadence has no agent_id", executed_at: new Date().toISOString() }).eq("id", run.id);

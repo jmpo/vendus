@@ -178,7 +178,7 @@ Deno.serve(async (req) => {
             agent.additional_prompt || '',
             ai_context_prompt ? `\n## Contexto del flujo\n${ai_context_prompt}` : '',
             brainContext,
-            `\n## Diretrizes\n- Responda siempre en español do Brasil.\n- Máximo 2 linhas curtas por bloco e UMA pregunta por mensaje.\n- Tom profissional, sin clichês ("ótimo", "perfeito", "fico feliz").\n- Foque em entender a necessidade e conduzir para próximo passo (call/reserva).`,
+            `\n## Directrices\n- Respondé siempre en español rioplatense.\n- Máximo 2 linhas curtas por bloco e UNA pregunta por mensaje.\n- Tono profesional, sin clichés ("genial", "perfecto", "me alegra").\n- Foque em entender a necessidade e conduzir para próximo paso (call/reserva).`,
           ].filter(Boolean).join('\n');
 
           const orgId = agent.organization_id || funnelRow?.organization_id || null;

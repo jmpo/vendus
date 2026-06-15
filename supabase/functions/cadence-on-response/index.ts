@@ -1,5 +1,5 @@
-// Chamado por el evolution-webhook quandel lead responde uma mensaje.
-// Marca o último step_run como respondido e, se stop_rules.stop_on_response, encerra a enrollment.
+// Chamado por el evolution-webhook quandel lead responde umel mensaje.
+// Marca el último step_run como respondido e, si stop_rules.stop_on_response, cierra el enrollment.
 // POST { lead_id, organization_id?, conversation_id? }
 
 import { createServiceClient } from "../_shared/campaign-audience.ts";
@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
 
     let stoppedCount = 0;
     for (const enr of enrollments) {
-      // Marca o último run "sent" como "responded"
+      // Marca el último run "sent" como "responded"
       const { data: lastRun } = await supabase
         .from("cadence_step_runs")
         .select("id")

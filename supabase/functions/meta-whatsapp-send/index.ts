@@ -1,5 +1,5 @@
 // meta-whatsapp-send
-// Envia mensaje via Cloud API. Detecta janela 24h:
+// Enviel mensaje via Cloud API. Detecta janela 24h:
 //  - dentro: texto/mídia livre
 //  - fora: exige template HSM aprovado
 

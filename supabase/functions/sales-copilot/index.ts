@@ -28,7 +28,7 @@ serve(async (req) => {
     if (messages.length === 0) {
       console.warn("[sales-copilot] empty messages. body keys:", Object.keys(body || {}), "rawLen:", rawMessages.length);
       return new Response(
-        JSON.stringify({ error: "Ningunoa mensaje enviada ao copiloto." }),
+        JSON.stringify({ error: "Ningunoel mensaje enviada ao copiloto." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -186,10 +186,10 @@ ${knowledgeContext ? knowledgeContext : ""}
 COMO USAR A BASE DE CONHECIMENTO
 ═══════════════════════════════════════
 
-- Para DADOS DO PRODUTO (preços, funcionalidades, prazos, specs): use SOMENTE o que está no contexto acima. Se no tiver, diga: "Sobre esse detalle específico do producto, sugiro confirmar con o gestor antes de responder al cliente."
+- Para DADOS DO PRODUTO (precios, funcionalidades, prazos, specs): use SOMENTE o que está no contexto acima. Se no tiver, diga: "Sobre esse detalle específico do producto, sugiro confirmar con o gestor antes de responder al cliente."
 - Para ESTRATÉGIA DE VENDAS (como abordar, como reativar, como negociar, como contornar objeções): use su conhecimento de ventas consultivas livremente, adaptando ao contexto do producto cuando hay información disponível
 - Quando existir uma FAQ ou treinamento que responda à pregunta, USE como base
-- NUNCA invente preços, custos ou dados técnicos do producto
+- NUNCA invente precios, custos ou dados técnicos do producto
 
 ═══════════════════════════════════════
 COMO RESPONDER
@@ -204,7 +204,7 @@ Para TODA situación do vendedor, entregue exatamente en este formato:
 [Mensaje pronta para copiar e enviar. 2-4 linhas. Tom humano e profissional]
 
 **PERGUNTA DE RETORNO:**
-[1 pregunta para manter a conversación e avançar a venta]
+[1 pregunta para manter a conversación e avanzar a venta]
 
 ═══════════════════════════════════════
 REGRAS
@@ -235,7 +235,7 @@ O QUE NUNCA FAZER
 - Usar emojis
 - Enrolar con introduções
 - Fugir do formato de 3 partes
-- Inventar preços, custos ou dados técnicos do producto
+- Inventar precios, custos ou dados técnicos do producto
 - Recusar preguntas estratégicas de ventas alegando falta de información`;
 
     // Resolve provedor via roteamento da organización (OpenAI direta ou Lovable Gateway)

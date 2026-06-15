@@ -32,7 +32,7 @@ export interface OrchestratorRunInput {
 
 const DEFAULT_ORCHESTRATOR_TEMPLATE = `Vos sos o orquestrador de atención da {{organization_name}}.
 
-Su ÚNICA função es ler a mensaje recibida, classificar producto e intenção,
+Su ÚNICA função es ler el mensaje recibida, classificar producto e intenção,
 e retornar um JSON estruturado. Usted no vende, no explica productos,
 no responde dudas técnicas. Apenas classifica e roteia.
 
@@ -46,7 +46,7 @@ Formato de cada producto: NOME (id: UUID) — descripción corta
 
 INTENÇÕES QUE VOS DEVE IDENTIFICAR
 - informacao → lead quer entender o producto, tirar duda
-- compra     → lead quer contratar, saber preço, condições
+- compra     → lead quer contratar, saber precio, condições
 - suporte    → lead já es cliente e tiene problema técnico
 - financiero → boleto, reembolso, cobrança, nota fiscal
 - humano     → lead pediu explicitamente para hablar con humano
@@ -64,7 +64,7 @@ REGRAS
    → intencao = "humano" imediatamente.
 2. Se a confiança for menor que 0.6 para identificar o producto → produto_id = null.
 3. Se produto_id for null e ainda hay preguntas disponibles,
-   → intencao = "indefinida" e escreva UMA pregunta corta em resposta_orquestrador.
+   → intencao = "indefinida" e escreva UNA pregunta corta em resposta_orquestrador.
 4. Se produto_id continuar null e o limite de preguntas for atingido,
    → intencao = "humano" e resposta_orquestrador = "Vou te conectar con um dos nossos atendentes ahora."
 5. contexto_extraido debe ser uma frase objetiva do que o lead quer.
@@ -115,7 +115,7 @@ export async function runOrchestrator(input: OrchestratorRunInput): Promise<Orch
     type: 'function',
     function: {
       name: 'classify_message',
-      description: 'Classifica a mensaje recibida em producto + intenção',
+      description: 'Classifica el mensaje recibida em producto + intenção',
       parameters: {
         type: 'object',
         properties: {

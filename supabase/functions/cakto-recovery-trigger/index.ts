@@ -1,14 +1,14 @@
 // Recebe eventos da Cakto (via cakto-webhook), decide se dispara o agente de
-// recuperação automática e envia a primeira mensaje via WhatsApp.
+// recuperação automática e envia a primeirel mensaje via WhatsApp.
 //
 // Flujo:
 // 1) Lê config da org (cakto_recovery_config)
 // 2) Verifica se o evento está habilitado
 // 3) Aplica cooldown (no dispara o mismo evento pro mismel lead em <X min)
 // 4) Localiza/cria el lead (pelo teléfono/email da Cakto)
-// 5) Gera mensaje inicial con a IA usando o agente configurado
+// 5) Gerel mensaje inicial con a IA usando o agente configurado
 // 6) Envia via WhatsApp (BotConversa ou IsiChat)
-// 7) Cria la conversación (webchat_conversations) pra IA continuar respondendo
+// 7) Cria la conversación (webchat_conversations) pra IA continuar respondiendo
 // 8) Loga em cakto_recovery_dispatches
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
@@ -278,7 +278,7 @@ Deno.serve(async (req) => {
 
   // 6) (provider WhatsApp eliminado — siempre Evolution Go)
 
-  // 7) Gera a mensaje inicial
+  // 7) Gera el mensaje inicial
   // Monta a descripción da composición do pedido (principal + orderbumps)
   const items = Array.isArray(order.items) ? order.items : [];
   const mainItems = items.filter((i) => i.role === 'main');
@@ -311,7 +311,7 @@ Deno.serve(async (req) => {
 
   const systemPrompt = `Vos sos ${agent.name}, agente de ${agent.agent_type} de la empresa.
 MISSÃO PRINCIPAL: ${agent.primary_objective}
-TOM: ${agent.tone_style || 'Consultivo, próximo, sin pressão'}
+TOM: ${agent.tone_style || 'Consultivo, cercano, sin presión'}
 ESTILO: ${agent.message_style || 'Curta, direta, humana'}
 
 CONTEXTO DESTA CONVERSA — RECUPERAÇÃO AUTOMÁTICA CAKTO:
@@ -336,14 +336,14 @@ ${
 }
 
 REGRAS DA MENSAGEM INICIAL:
-- Genera APENAS a mensaje (sem prefixos, sin comillas, sin explicações)
+- Genera APENAS el mensaje (sem prefixos, sin comillas, sin explicações)
 - Usa o nombre del cliente: ${order.customer_name || 'cliente'}
 - Mencione o que ele estava levando: ${productLabel}
 - WhatsApp: corta (máx 2 parágrafos), sin markdown, sin emoji exagerado (1 só)
 - Termine con pregunta clara
 - NUNCA pareça um robô. Soa como vendedor humano que viu o pedido e resolveu chamar.`;
 
-  const userPrompt = `Genera a mensaje inicial de WhatsApp para esta situación. Cliente: ${order.customer_name || 'sem nombre'}. Teléfono: ${phone}.`;
+  const userPrompt = `Genera el mensaje inicial de WhatsApp para esta situación. Cliente: ${order.customer_name || 'sem nombre'}. Teléfono: ${phone}.`;
 
   const aiResp = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
     method: 'POST',

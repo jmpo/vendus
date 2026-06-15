@@ -27,7 +27,7 @@ Mantenha natural e conversacional, mas persuasivo.`,
   
   pitch_2min: `Vos sos um especialista em storytelling para ventas.
 Reescribí este pitch de 2 minutos usando a estrutura: Problema → Impacto → Solução → Resultados.
-Inclua elementos de prova social e urgência cuando apropriado.`,
+Inclua elementos de prova social e urgência cuando apropiado.`,
 };
 
 serve(async (req) => {

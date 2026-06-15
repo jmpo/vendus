@@ -1,4 +1,4 @@
-// instagram-test — health-check da conexão
+// instagram-test — health-check da conexión
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { graphFetch, GraphError } from '../_shared/meta-graph.ts';
 import { decryptSecret } from '../_shared/meta-crypto.ts';

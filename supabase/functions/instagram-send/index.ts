@@ -67,7 +67,7 @@ Deno.serve(async (req: Request) => {
     if (ok === false) {
       return json({
         error: 'OUT_OF_WINDOW',
-        message: 'Fora da janela 24h do Instagram. Para responder, use uma message tag (ex: HUMAN_AGENT) ou aguarde o usuario enviar nova mensaje.',
+        message: 'Fora da janela 24h do Instagram. Para responder, use uma message tag (ex: HUMAN_AGENT) ou esperá al usuario enviar novel mensaje.',
       }, 422);
     }
   }

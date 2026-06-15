@@ -37,7 +37,7 @@ async function isDuplicateInboundMessage(
   if (!error) return false;
   // 23505 = unique violation → ya processado
   if ((error as any).code === "23505") return true;
-  // Em otros errores, deixa passar (fail-open) para no travar o webhook.
+  // Em otros errores, deixa passar (fail-open) para no trabar o webhook.
   console.warn("[anti-spam] processed_messages insert non-unique error:", (error as any).message);
   return false;
 }
@@ -54,7 +54,7 @@ async function acquireConversationLock(
   });
   if (error) {
     console.warn("[anti-spam] lock acquire rpc error:", error.message);
-    return true; // fail-open: prefere responder a travar tudo
+    return true; // fail-open: prefere responder a trabar tudo
   }
   return data === true;
 }
@@ -1207,7 +1207,7 @@ Deno.serve(async (req) => {
         .eq("visitor_phone_normalized", phoneCanonical)
         .order("evolution_instance_id", { ascending: false, nullsFirst: false })
         .order("product_id", { ascending: false, nullsFirst: false })
-        .order("status", { ascending: true }) // 'closed' fica por último
+        .order("status", { ascending: true }) // 'closed' queda al final
         .order("last_message_at", { ascending: false, nullsFirst: false })
         .order("created_at", { ascending: false })
         .limit(1)
@@ -1515,7 +1515,7 @@ Deno.serve(async (req) => {
             if (!wa?.enabled) continue;
             const boundInstance = wa.evolution_instance_id;
             if (boundInstance && boundInstance !== instance.id) continue;
-            // Sem regras de gatilho: toda primeira mensaje dispara o embudo habilitado.
+            // Sem regras de gatilho: toda primeirel mensaje dispara o embudo habilitado.
             funnelToRun = { id: cand.id, start_block_id: (cand as any).start_block_id || null };
             break;
           }
@@ -1870,11 +1870,11 @@ Deno.serve(async (req) => {
                 );
               } else {
                 if (norm.media.type === "audio") {
-                  processedContent = `🎙️ [Áudio recibido — no consegui transcrever. Peça al cliente para reenviar ou descrever em texto.]`;
+                  processedContent = `🎙️ [Audio recibido — no pude transcribir. Peça al cliente que reenvíe o describa en texto.]`;
                 } else {
                   processedContent = norm.media.caption
-                    ? `🖼️ [Imagen recibida (legenda: "${norm.media.caption}") — no consegui analisar o conteúdo. Peça para reenviar ou descrever.]`
-                    : `🖼️ [Imagen recibida — no consegui analisar o conteúdo. Peça para reenviar ou descrever.]`;
+                    ? `🖼️ [Imagen recibida (legenda: "${norm.media.caption}") — no consegui analisar o conteúdo. Peça que reenvíe o describa.]`
+                    : `🖼️ [Imagen recibida — no pude analizar o conteúdo. Peça que reenvíe o describa.]`;
                 }
                 console.warn(`[evolution-webhook] media NOT processed (${norm.media.type}); using fallback placeholder`);
               }
@@ -2017,7 +2017,7 @@ Deno.serve(async (req) => {
         }));
 
         // Broadcast realtime → o panel (SellerInbox) escuta `conversation:{id}`
-        // e adiciona a mensaje na cache instantaneamente. Sem isso, a janela
+        // e adiciona el mensaje na cache instantaneamente. Sem isso, a janela
         // de chat fica congelada hasta o usuario recarregar / trocar de conversación.
         if (inserted) {
           try {
@@ -2194,7 +2194,7 @@ Deno.serve(async (req) => {
           });
 
           if (arrived.length > 0) {
-            // Nova mensaje do visitor → estende janela. A invocação mais nova
+            // Novel mensaje do visitor → estende janela. A invocação mais nova
             // assume o turno: se esta no for a mais antiga, abortamos.
             const newest = arrived[0];
             lastSeenAt = newest.created_at;
@@ -2630,7 +2630,7 @@ Deno.serve(async (req) => {
 
 
             // ============================================================
-            // Agrega TODAS as mensajes do visitor desde a última respuesta
+            // Agrega TODOS los mensajes del visitor desde la última respuesta
             // do bot/agente. Garante que múltiplas mensajes consecutivas
             // virem 1 contexto único para el agente raciocinar.
             // ============================================================

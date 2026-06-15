@@ -462,7 +462,7 @@ Deno.serve(async (req) => {
       if ((currentCount ?? 0) >= maxConnections) {
         return new Response(JSON.stringify({
           ok: false,
-          error: `Limite de ${maxConnections} conexão(ões) do su plano atingido. Faça upgrade para crear mais.`,
+          error: `Limite de ${maxConnections} conexión(ões) do su plano atingido. Faça upgrade para crear mais.`,
           limit_reached: true,
           current: currentCount,
           limit: maxConnections,
@@ -493,7 +493,7 @@ Deno.serve(async (req) => {
         .maybeSingle();
       if (dup) {
         return new Response(JSON.stringify({
-          error: "Ya existe uma conexão con esse nombre. Escolha otro.",
+          error: "Ya existe uma conexión con esse nombre. Escolha otro.",
         }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 

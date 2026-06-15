@@ -1,5 +1,5 @@
 // instagram-connect
-// Promove uma conexão Instagram em rascunho para ATIVA.
+// Promove uma conexión Instagram em rascunho para ATIVA.
 // Valida credenciais via Graph API, criptografa segredos e inscreve a página no app.
 
 import { createClient } from 'npm:@supabase/supabase-js@2';

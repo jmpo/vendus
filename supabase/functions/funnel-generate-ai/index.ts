@@ -136,9 +136,9 @@ TIPOS DE BLOCOS DISPONÍVEIS:
    Campos: { apply_tags: ["tag1", "tag2"] }
 
 REGRAS DE CONEXÃO:
-- Blocos lineares: use "next_block_id" no bloco para apontar para el próximo
+- Bloques lineales: usá "next_block_id" en el bloque para apuntar al próximo
 - Blocos buttons: cada option tiene su próprio "next_block_id" (ramificação)
-- Blocos score/tag: son invisíveis, conecte-os ao próximo bloco visível via next_block_id
+- Bloques score/tag: son invisibles, conectalos al próximo bloque visible vía next_block_id
 - Blocos end: NÃO têm next_block_id (son terminais)
 - Genera IDs usando formato UUID v4
 
@@ -173,7 +173,7 @@ IMPORTANTE:
 - Usa emojis nos botões para tornar a experiência mais visual
 - Creá copys cortos y conversacionales, optimizados para mobile
 - Se o usuario mencionar vídeos, use blocos video con video_url: "URL_PLACEHOLDER"
-- Se o usuario mencionar planos/preços, crie botões con as opciones e blocos end con redirect_url vazio`;
+- Se o usuario mencionar planos/precios, crie botões con as opciones e blocos end con redirect_url vazio`;
 
     const userPrompt = `Crea o embudo de captação seguindo esta descripción:
 

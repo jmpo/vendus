@@ -199,7 +199,7 @@ async function processAchievedGoals(supabase: any, settings: AutoNotificationSet
     if (existingLog) continue;
 
     const productName = goal.products?.name || 'Geral';
-    const valueFormatted = new Intl.NumberFormat('pt-BR', {
+    const valueFormatted = new Intl.NumberFormat('es-PY', {
       style: 'currency',
       currency: 'BRL',
     }).format(goal.achieved_value);
@@ -211,7 +211,7 @@ async function processAchievedGoals(supabase: any, settings: AutoNotificationSet
         user_id: goal.user_id,
         type: 'opportunity',
         title: `🎉 Meta atingida: ${productName}!`,
-        message: `Parabéns! Usted alcançou ${valueFormatted} de ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(goal.target_value)}!`,
+        message: `Parabéns! Usted alcançou ${valueFormatted} de ${new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'BRL' }).format(goal.target_value)}!`,
         action_url: '/goals',
         product_id: goal.product_id,
       });
@@ -273,7 +273,7 @@ async function processApprovedCommissions(supabase: any, settings: AutoNotificat
 
     if (existingLog) continue;
 
-    const amountFormatted = new Intl.NumberFormat('pt-BR', {
+    const amountFormatted = new Intl.NumberFormat('es-PY', {
       style: 'currency',
       currency: 'BRL',
     }).format(commission.amount);

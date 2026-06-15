@@ -389,7 +389,7 @@ Deno.serve(async (req) => {
         .from('webhook_sample_requests')
         .insert({
           webhook_id: webhookId,
-          name: `Request ${new Date().toLocaleString('pt-BR')}`,
+          name: `Request ${new Date().toLocaleString('es-PY')}`,
           request_body: payload,
           extracted_fields: flatFields
         });
@@ -1266,13 +1266,13 @@ OBJETIVO DESTA ABORDAGEM: ${config.ai_objective || 'Abordar el lead de forma est
 ${config.ai_extra_context ? `CONTEXTO ADICIONAL: ${config.ai_extra_context}` : ''}
 
 REGRAS:
-- Genera APENAS a mensaje, sin explicações ou prefixos
+- Genera APENAS el mensaje, sin explicações ou prefixos
 - Sé natural e humano, NÃO pareça um bot
 - Personalize con as información del lead
 - A mensaje debe ser para WhatsApp (corta, direta, sin formatação HTML)
 - Termine con uma pregunta ou CTA claro`;
 
-      const userPrompt = `Genera uma mensaje de primeira abordagem via WhatsApp para este lead:
+      const userPrompt = `Genera umel mensaje de primeira abordagem via WhatsApp para este lead:
 
 Nombre: ${lead?.name || 'Lead'}
 Email: ${lead?.email || 'No informado'}
@@ -1662,7 +1662,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           .eq('id', existingLeadId);
       }
 
-      // 5. Se canal WhatsApp e bloco inicial es mensaje, envia primeira mensaje via Evolution Go
+      // 5. Se canal WhatsApp e bloco inicial es mensaje, envia primeirel mensaje via Evolution Go
       let firstMessageSent: string | null = null;
       if (channel === 'whatsapp' && startBlock) {
         const blockData = startBlock.data || {};
@@ -1712,10 +1712,10 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           });
           if (sendErr || (sendData as any)?.ok === false) {
             const errMsg = sendErr?.message || JSON.stringify(sendData).slice(0, 300);
-            throw new Error(`Falha al enviar primeira mensaje: ${errMsg}`);
+            throw new Error(`Falha al enviar primeirel mensaje: ${errMsg}`);
           }
 
-          // Salva mensaje outbound no historial
+          // Salvel mensaje outbound no historial
           await supabase.from('webchat_messages').insert({
             conversation_id: conversation.id,
             content: messageText,

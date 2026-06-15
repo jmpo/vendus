@@ -1,7 +1,7 @@
 // instagram-draft
-// Cria uma conexão Instagram Direct (Meta) em modo "rascunho" para que o wizard
+// Cria uma conexión Instagram Direct (Meta) em modo "rascunho" para que o wizard
 // possa exibir Verify Token e URL de callback ANTES de o usuario ter as credenciais.
-// Cada conexão recebe su próprio webhook_verify_token; a URL final é
+// Cada conexión recebe su próprio webhook_verify_token; a URL final é
 // {SUPABASE_URL}/functions/v1/instagram-webhook/{connection_id}.
 
 import { createClient } from 'npm:@supabase/supabase-js@2';

@@ -73,7 +73,7 @@ Retorne a análise usando a ferramenta analyze_conversation.`;
             role: "system",
             content: `Vos sos um analista de qualidade de ventas. Analiza conversaciones de atención e forneça feedback detalhado. Avalie:
 - Tempo de respuesta (rápido, adequado, lento)
-- Tom da conversación (profissional, amigável, frio)
+- Tom da conversación (profissional, amigable, frio)
 - Técnicas de ventas utilizadas (rapport, SPIN, gatilhos mentais, etc.)
 - Objeções identificadas e como foram tratadas
 - Nota geral de 1 a 10

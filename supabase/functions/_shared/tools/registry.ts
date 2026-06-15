@@ -1,5 +1,5 @@
 // Registry central de todas as ferramentas que os agentes podem executar.
-// Para adicionar uma ferramenta nova: crear archivo em ./impl/, importar e registrar aqui.
+// Para adicionar una herramienta nova: crear archivo em ./impl/, importar e registrar aqui.
 
 import type { ToolDefinition, ToolContext, ToolResult, ToolCallSchema } from './types.ts';
 import { criarDealTool } from './impl/criar_deal.ts';
@@ -45,7 +45,7 @@ export function toolsToOpenAISchema(tools: ToolDefinition[]): ToolCallSchema[] {
   }));
 }
 
-// Executa uma ferramenta con auditoria automática + tratamento de error.
+// Executa una herramienta con auditoria automática + tratamento de error.
 export async function executeTool(
   name: string,
   input: Record<string, any>,

@@ -187,7 +187,7 @@ serve(async (req) => {
         visitor_whatsapp: r.visitor_whatsapp,
         accepted_at: r.accepted_at,
         accepted_by: r.accepted_by,
-        // Última mensaje real de la conversación (vinda del historial via RPC)
+        // Últimel mensaje real de la conversación (vinda del historial via RPC)
         last_message: r.last_message_content ?? null,
         last_message_metadata: r.last_message_metadata ?? null,
         last_message_sender_type: r.last_message_sender_type ?? null,
@@ -742,7 +742,7 @@ serve(async (req) => {
 
       // Broadcast message to all listeners on this conversation channel.
       // Inclui `client_temp_id` (se enviado) para el frontend conseguir substituir
-      // a bolha otimista por la mensaje real, evitando duplicação visual.
+      // a bolha otimista por lel mensaje real, evitando duplicação visual.
       const broadcastPayload = body.client_temp_id
         ? { ...message, client_temp_id: body.client_temp_id }
         : message;
@@ -1327,7 +1327,7 @@ serve(async (req) => {
               },
               body: JSON.stringify({
                 conversation_id: body.conversation_id,
-                message: '[SISTEMA] O agente humano ativou o bot. Analiza o historial de la conversación e envie uma mensaje estratégica para reconectar con el lead, considerando todo o contexto anterior.',
+                message: '[SISTEMA] O agente humano ativou o bot. Analiza o historial de la conversación e envie umel mensaje estratégica para reconectar con el lead, considerando todo o contexto anterior.',
                 product_id: productId,
                 visitor_name: conv.visitor_name,
                 agent_config: {
@@ -1493,7 +1493,7 @@ serve(async (req) => {
             },
             body: JSON.stringify({
               conversation_id: body.conversation_id,
-              message: `[SISTEMA] Vos sos um agente de reativação. Analiza o historial abaixo e envie UMA mensaje corta e estratégica para retomar la conversación con ${visitorName}. Sé natural, faça referência ao último assunto discutido e inclua uma pregunta abierta para reengajar. NÃO se apresente novamente. NÃO repita información ya fornecidas.\n\nHistórico:\n${historySummary}`,
+              message: `[SISTEMA] Vos sos un agente de reactivación. Analizá el historial de abajo e envie UN mensaje corta e estratégica para retomar la conversación con ${visitorName}. Sé natural, hacé referencia al último asunto discutido e incluí una pregunta abierta para reenganchar. NO te presentes de nuevo. NO repitas información ya provista.\n\nHistorial:\n${historySummary}`,
               product_id: productId,
               visitor_name: visitorName,
               agent_id: agentId,
@@ -1739,7 +1739,7 @@ serve(async (req) => {
         try {
           let phone = delConv.visitor_phone.replace(/\D/g, '');
           if (!phone.startsWith('55')) phone = '55' + phone;
-          const deleteNotification = '⚠️ Uma mensaje anterior fue removida por el agente.';
+          const deleteNotification = '⚠️ Umel mensaje anterior fue removida por el agente.';
           await supabase.functions.invoke('evolution-send', {
             body: {
               organization_id: orgId,

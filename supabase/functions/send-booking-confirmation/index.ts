@@ -30,9 +30,9 @@ Deno.serve(async (req) => {
 
     const startDate = new Date(startTime);
     const endDate = new Date(endTime);
-    const dateStr = startDate.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Sao_Paulo' });
-    const timeStr = startDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
-    const endTimeStr = endDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
+    const dateStr = startDate.toLocaleDateString('es-PY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Sao_Paulo' });
+    const timeStr = startDate.toLocaleTimeString('es-PY', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
+    const endTimeStr = endDate.toLocaleTimeString('es-PY', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
 
     const meetLinkBlock = meetLink
       ? `<p style="margin:16px 0"><a href="${meetLink}" style="background:#a3e635;color:#1f2937;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:600">Entrar na reunión</a></p><p style="font-size:13px;color:#6b7280;word-break:break-all">${meetLink}</p>`

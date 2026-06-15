@@ -1,5 +1,5 @@
 // Cron worker: processa fila de execuções pós-venta atrasadas.
-// Dispara mensaje inline / agente IA / e-mail por template para runs vencidas.
+// Disparel mensaje inline / agente IA / e-mail por template para runs vencidas.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
 const corsHeaders = {

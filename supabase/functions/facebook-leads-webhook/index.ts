@@ -260,7 +260,7 @@ async function createLeadFromFacebook(
       return null;
     }
     
-    // Criar interação
+    // Criar interacción
     await supabase.from('interactions').insert({
       lead_id: lead.id,
       channel: 'other',

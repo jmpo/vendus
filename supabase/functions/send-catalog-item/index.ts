@@ -35,7 +35,7 @@ function formatPrice(price: number | null, currency: string | null): string {
   if (price == null) return "";
   const cur = (currency || "BRL").toUpperCase();
   try {
-    return new Intl.NumberFormat("pt-BR", {
+    return new Intl.NumberFormat("es-PY", {
       style: "currency",
       currency: cur,
       maximumFractionDigits: 0,

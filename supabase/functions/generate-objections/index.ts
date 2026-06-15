@@ -68,7 +68,7 @@ PRICING: ${JSON.stringify(product.pricing) || "No definido"}
         .join("\n\n");
     }
 
-    const systemPrompt = `Vos sos um especialista em ventas via WhatsApp. Genera objeções prováveis con respuestas CURTAS e DIRETAS, otimizadas para mensajes de texto.
+    const systemPrompt = `Vos sos um especialista em ventas via WhatsApp. Genera objeções prováveis con respuestas CURTAS e DIRETAS, otimizadas parel mensajes de texto.
 
 ${productContext}
 ${knowledgeContext}

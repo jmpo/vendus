@@ -163,7 +163,7 @@ serve(async (req) => {
       });
     }
 
-    // Usa template configurado, ou um estándar amigável se vazio.
+    // Usa template configurado, ou um estándar amigable se vazio.
     // Garantiza que el nuevo agente SIEMPRE se presenta después del handoff,
     // evitando que a primeira fala de él seja uma respuesta robótica.
     const DEFAULT_TEMPLATE =
