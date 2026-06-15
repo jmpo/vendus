@@ -16,17 +16,18 @@ interface Country {
 }
 
 const COUNTRIES: Country[] = [
-  { code: '+55', country: 'BR', flag: '🇧🇷' },
+  { code: '+595', country: 'PY', flag: '🇵🇾' },
   { code: '+54', country: 'AR', flag: '🇦🇷' },
+  { code: '+52', country: 'MX', flag: '🇲🇽' },
+  { code: '+598', country: 'UY', flag: '🇺🇾' },
   { code: '+56', country: 'CL', flag: '🇨🇱' },
   { code: '+57', country: 'CO', flag: '🇨🇴' },
-  { code: '+52', country: 'MX', flag: '🇲🇽' },
   { code: '+51', country: 'PE', flag: '🇵🇪' },
-  { code: '+598', country: 'UY', flag: '🇺🇾' },
+  { code: '+55', country: 'BR', flag: '🇧🇷' },
   { code: '+1', country: 'US', flag: '🇺🇸' },
-  { code: '+351', country: 'PT', flag: '🇵🇹' },
   { code: '+34', country: 'ES', flag: '🇪🇸' },
 ];
+
 
 interface ChatPhoneInputProps {
   value: string;
