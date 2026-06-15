@@ -8,10 +8,10 @@ const corsHeaders = {
 };
 
 // ============================================================================
-// Anti-spam helpers (humanização + dedup + lock por conversa)
+// Anti-spam helpers (humanização + dedup + lock por conversación)
 // ============================================================================
 
-/** Hash normalizado de uma resposta para dedup curto-prazo. */
+/** Hash normalizado de uma respuesta para dedup corto-prazo. */
 function normalizeResponseHash(text: string): string {
   return (text || "")
     .toLowerCase()
@@ -37,18 +37,18 @@ async function isDuplicateInboundMessage(
   if (!error) return false;
   // 23505 = unique violation → já processado
   if ((error as any).code === "23505") return true;
-  // Em outros erros, deixa passar (fail-open) para não travar o webhook.
+  // Em outros erros, deixa passar (fail-open) para no travar o webhook.
   console.warn("[anti-spam] processed_messages insert non-unique error:", (error as any).message);
   return false;
 }
 
-/** Tenta adquirir lock por conversa de forma ATÔMICA via RPC. Retorna true se conseguiu. */
+/** Tenta adquirir lock por conversación de forma ATÔMICA via RPC. Retorna true se conseguiu. */
 async function acquireConversationLock(
   supabase: any,
   conversationId: string,
   ttlMs = 30_000,
 ): Promise<boolean> {
-  const { data, error } = await supabase.rpc("try_acquire_conversation_lock", {
+  const { fecha, error } = await supabase.rpc("try_acquire_conversation_lock", {
     p_conv: conversationId,
     p_ttl_ms: ttlMs,
   });
@@ -56,7 +56,7 @@ async function acquireConversationLock(
     console.warn("[anti-spam] lock acquire rpc error:", error.message);
     return true; // fail-open: prefere responder a travar tudo
   }
-  return data === true;
+  return fecha === true;
 }
 
 async function releaseConversationLock(supabase: any, conversationId: string): Promise<void> {
@@ -68,7 +68,7 @@ async function releaseConversationLock(supabase: any, conversationId: string): P
   } catch (_) { /* best-effort */ }
 }
 
-/** Verifica se já enviamos uma resposta com mesmo hash nos últimos windowMs. */
+/** Verifica se já enviamos uma respuesta com mismo hash nos últimos windowMs. */
 async function isDuplicateResponse(
   supabase: any,
   conversationId: string,
@@ -79,7 +79,7 @@ async function isDuplicateResponse(
   const hash = normalizeResponseHash(text);
   if (!hash) return false;
   const since = new Date(Date.now() - windowMs).toISOString();
-  const { data } = await supabase
+  const { fecha } = await supabase
     .from("sent_responses")
     .select("id")
     .eq("conversation_id", conversationId)
@@ -87,7 +87,7 @@ async function isDuplicateResponse(
     .gte("created_at", since)
     .limit(1)
     .maybeSingle();
-  return !!data?.id;
+  return !!fecha?.id;
 }
 
 async function recordSentResponse(supabase: any, conversationId: string, text: string): Promise<void> {
@@ -154,12 +154,12 @@ function extractInstance(payload: any): string {
     typeof payload?.instance === "object" ? payload?.instance?.instanceName : null,
     typeof payload?.instance === "object" ? payload?.instance?.name : null,
     typeof payload?.instance === "object" ? payload?.instance?.id : null,
-    payload?.data?.instance,
-    payload?.data?.Instance,
-    payload?.data?.instanceName,
-    payload?.data?.instance_name,
-    typeof payload?.data?.instance === "object" ? payload?.data?.instance?.name : null,
-    typeof payload?.data?.instance === "object" ? payload?.data?.instance?.instanceName : null,
+    payload?.fecha?.instance,
+    payload?.fecha?.Instance,
+    payload?.fecha?.instanceName,
+    payload?.fecha?.instance_name,
+    typeof payload?.fecha?.instance === "object" ? payload?.fecha?.instance?.name : null,
+    typeof payload?.fecha?.instance === "object" ? payload?.fecha?.instance?.instanceName : null,
     payload?.sender?.instance,
     payload?.session,
     payload?.SessionID,
@@ -194,7 +194,7 @@ function normalizePayload(payload: any): Normalized | null {
   const instance: string = extractInstance(payload);
 
   if (!instance) return null;
-  const data = payload.data || payload;
+  const fecha = payload.fecha || payload;
 
   // Helper: extract media info from a whatsmeow-style message object.
   // Audio is the most common multimodal input we get from leads.
@@ -284,7 +284,7 @@ function normalizePayload(payload: any): Normalized | null {
 
   // ---- v2 events ----
   if (event === "messages.upsert" || event === "MESSAGES_UPSERT") {
-    const messages = Array.isArray(data.messages) ? data.messages : [data];
+    const messages = Array.isArray(fecha.messages) ? fecha.messages : [fecha];
     const msg = messages[0];
     if (!msg) return null;
     const key = msg.key || {};
@@ -302,7 +302,7 @@ function normalizePayload(payload: any): Normalized | null {
         msg.message?.imageMessage?.caption ||
         msg.message?.videoMessage?.caption ||
         (msg.message?.audioMessage ? "[áudio]" : "") ||
-        (msg.message?.imageMessage ? "[imagem]" : "") ||
+        (msg.message?.imageMessage ? "[imagen]" : "") ||
         (msg.message?.videoMessage ? "[vídeo]" : "") ||
         (msg.message?.documentMessage ? "[documento]" : "") ||
         msg.body ||
@@ -315,26 +315,26 @@ function normalizePayload(payload: any): Normalized | null {
     return {
       kind: "connection",
       instance,
-      state: data.state === "open" ? "open" : data.state === "connecting" ? "connecting" : "close",
-      phone: data.wuid || data.number,
+      state: fecha.state === "open" ? "open" : fecha.state === "connecting" ? "connecting" : "close",
+      phone: fecha.wuid || fecha.number,
     };
   }
 
   if (event === "qrcode.updated" || event === "QRCODE_UPDATED") {
-    return { kind: "qrcode", instance, qr: normalizeQrString(data.qrcode?.base64 || data.qrcode?.code || data.base64 || data.code) || "" };
+    return { kind: "qrcode", instance, qr: normalizeQrString(fecha.qrcode?.base64 || fecha.qrcode?.code || fecha.base64 || fecha.code) || "" };
   }
 
   // ---- Evolution Go events ----
   // Message / SendMessage payloads carry whatsmeow Info + Message structures.
   if (event === "Message" || event === "SendMessage") {
-    const info = data.Info || data.info || {};
-    const message = data.Message || data.message || {};
+    const info = fecha.Info || fecha.info || {};
+    const message = fecha.Message || fecha.message || {};
     const sender: string = info.Sender || info.sender || info.RemoteJid || "";
     const rawRemoteJid: string = info.Chat || info.RemoteJid || sender || "";
     const fromMe: boolean = !!(info.IsFromMe ?? info.isFromMe ?? event === "SendMessage");
 
-    // Resolver JID @lid → JID @s.whatsapp.net (telefone real) quando whatsmeow envia o "Alt".
-    // Em fromMe, o destino real (telefone) vem em RecipientAlt/RecipientPn/ChatAlt.
+    // Resolver JID @lid → JID @s.whatsapp.net (teléfono real) quando whatsmeow envia o "Alt".
+    // Em fromMe, o destino real (teléfono) vem em RecipientAlt/RecipientPn/ChatAlt.
     // Em inbound, o sender real vem em SenderAlt/SenderPn.
     const altJidCandidates = fromMe
       ? [info.RecipientAlt, info.RecipientPn, info.ChatAlt, info.recipientAlt, info.recipientPn, info.chatAlt]
@@ -353,7 +353,7 @@ function normalizePayload(payload: any): Normalized | null {
       message.imageMessage?.caption ||
       message.videoMessage?.caption ||
       (message.audioMessage ? "[áudio]" : "") ||
-      (message.imageMessage ? "[imagem]" : "") ||
+      (message.imageMessage ? "[imagen]" : "") ||
       (message.videoMessage ? "[vídeo]" : "") ||
       (message.documentMessage ? "[documento]" : "") ||
       "";
@@ -374,22 +374,22 @@ function normalizePayload(payload: any): Normalized | null {
   }
 
   if (event === "Connected" || event === "PairSuccess") {
-    return { kind: "connection", instance, state: "open", phone: data.JID || data.jid };
+    return { kind: "connection", instance, state: "open", phone: fecha.JID || fecha.jid };
   }
   if (event === "LoggedOut" || event === "Disconnected") {
     return { kind: "connection", instance, state: "close" };
   }
   if (event === "QRCode" || event === "QR" || event === "QRCodeUpdated") {
     // Evolution Go can deliver the QR in many shapes. Walk the payload and pick
-    // the first usable string. Accept BOTH a base64 PNG (data:image/...) and
+    // the first usable string. Accept BOTH a base64 PNG (fecha:image/...) and
     // the raw whatsmeow pairing string (e.g. "2@xyz,abc==,def==,1") — the
     // frontend renders raw strings via api.qrserver.com and base64 directly.
     const candidates = [
-      data.QRCode, data.qrcode, data.qr, data.Qr, data.code, data.Code,
-      data.base64, data.Base64,
-      data?.qrcode?.base64, data?.qrcode?.code,
-      data?.QRCode?.Base64, data?.QRCode?.Code,
-      data?.data?.qrcode, data?.data?.base64, data?.data?.code,
+      fecha.QRCode, fecha.qrcode, fecha.qr, fecha.Qr, fecha.code, fecha.Code,
+      fecha.base64, fecha.Base64,
+      fecha?.qrcode?.base64, fecha?.qrcode?.code,
+      fecha?.QRCode?.Base64, fecha?.QRCode?.Code,
+      fecha?.fecha?.qrcode, fecha?.fecha?.base64, fecha?.fecha?.code,
       payload.QRCode, payload.qrcode, payload.qr, payload.code, payload.base64,
     ];
     let qr = "";
@@ -414,7 +414,7 @@ function normalizePayload(payload: any): Normalized | null {
 function toBase64(value: any): string | undefined {
   if (value == null) return undefined;
   if (typeof value === "string") {
-    // Accept raw base64 and data URLs returned by some Evolution builds.
+    // Accept raw base64 and fecha URLs returned by some Evolution builds.
     return value.includes(",") ? value.split(",", 2)[1] : value;
   }
   if (Array.isArray(value)) {
@@ -472,7 +472,7 @@ function bytesFromAny(value: any): Uint8Array | null {
   if (value == null) return null;
   if (value instanceof Uint8Array) return value;
   if (Array.isArray(value)) return new Uint8Array(value.map((n) => Number(n) & 0xff));
-  if (Array.isArray(value?.data)) return new Uint8Array(value.data.map((n: any) => Number(n) & 0xff));
+  if (Array.isArray(value?.fecha)) return new Uint8Array(value.fecha.map((n: any) => Number(n) & 0xff));
   if (typeof value === "string" && value.trim()) {
     try {
       const normalized = value.trim().replace(/-/g, "+").replace(/_/g, "/");
@@ -667,14 +667,14 @@ async function downloadMediaBase64(
         console.warn(`[evolution-webhook] ${a.path} failed: ${res.status} ${t.slice(0, 200)}`);
         continue;
       }
-      const data = await res.json().catch(() => null);
+      const fecha = await res.json().catch(() => null);
       const candidate =
-        data?.data?.base64 || data?.data?.image || data?.data?.file || data?.data?.media ||
-        data?.base64 || data?.Base64 || data?.image || data?.file || data?.body || data?.media ||
-        (typeof data === "string" ? data : null);
+        fecha?.fecha?.base64 || fecha?.fecha?.image || fecha?.fecha?.file || fecha?.fecha?.media ||
+        fecha?.base64 || fecha?.Base64 || fecha?.image || fecha?.file || fecha?.body || fecha?.media ||
+        (typeof fecha === "string" ? fecha : null);
       const b64 = toBase64(candidate);
       if (!b64 || b64.length < 50) {
-        console.warn(`[evolution-webhook] ${a.path}: no usable base64 (keys=${Object.keys(data || {}).join(",")})`);
+        console.warn(`[evolution-webhook] ${a.path}: no usable base64 (keys=${Object.keys(fecha || {}).join(",")})`);
         continue;
       }
       // VALIDATE: are the bytes actually decrypted? If not, this endpoint
@@ -686,7 +686,7 @@ async function downloadMediaBase64(
         console.warn(`[evolution-webhook] ${a.path}: bytes look ENCRYPTED (head=${hex}); trying next endpoint`);
         continue;
       }
-      const mime = data?.mimetype || data?.Mimetype || data?.mime || (rawMessage?.mimetype) || undefined;
+      const mime = fecha?.mimetype || fecha?.Mimetype || fecha?.mime || (rawMessage?.mimetype) || undefined;
       console.log(`[evolution-webhook] ✅ media downloaded via ${a.path} (${b64.length} chars b64, mime=${mime})`);
       return { base64: b64, mime };
     } catch (e) {
@@ -784,12 +784,12 @@ async function processMediaToText(
       },
       body: JSON.stringify(payload),
     });
-    const data = await res.json().catch(() => null);
-    if (!res.ok || !data?.success) {
-      console.warn("[evolution-webhook] process-media-message failed:", res.status, JSON.stringify(data)?.slice(0, 200));
+    const fecha = await res.json().catch(() => null);
+    if (!res.ok || !fecha?.success) {
+      console.warn("[evolution-webhook] process-media-message failed:", res.status, JSON.stringify(fecha)?.slice(0, 200));
       return null;
     }
-    return String(data.text || "").trim() || null;
+    return String(fecha.text || "").trim() || null;
   } catch (e) {
     console.warn("[evolution-webhook] process-media-message exception:", (e as any)?.message);
     return null;
@@ -830,7 +830,7 @@ Deno.serve(async (req) => {
     // Lookup instance by either instance_id (UUID) OR name OR metadata.instance_name
     // The Go server may send the instance NAME in webhook payloads even though
     // we registered the webhook with the UUID.
-    const { data: instances } = await supabase
+    const { fecha: instances } = await supabase
       .from("evolution_instances")
       .select("*")
       .or(`instance_id.eq.${norm.instance},name.eq.${norm.instance}`);
@@ -838,7 +838,7 @@ Deno.serve(async (req) => {
 
     if (!instance) {
       // Last-resort: try metadata.instance_name / metadata.instance_uuid
-      const { data: byMeta } = await supabase
+      const { fecha: byMeta } = await supabase
         .from("evolution_instances")
         .select("*")
         .or(`metadata->>instance_name.eq.${norm.instance},metadata->>instance_uuid.eq.${norm.instance}`);
@@ -893,13 +893,13 @@ Deno.serve(async (req) => {
       const remoteIsLid = remoteJid.includes("@lid");
       const lidJid = norm.lidJid || (remoteIsLid ? remoteJid : undefined);
       const lidId = lidJid ? lidJid.split("@")[0].split(":")[0] : undefined;
-      // Se só temos @lid (sem telefone real resolvido), NÃO derivamos um "telefone" do LID.
+      // Se só temos @lid (sem teléfono real resolvido), NÃO derivamos um "teléfono" do LID.
       const remotePhone = remoteIsLid ? "" : remoteJid.split("@")[0].split(":")[0].replace(/\D/g, "");
       const instancePhone = (instance.phone_number || "").replace(/\D/g, "");
       const remotePhoneCandidates = remotePhone ? phoneVariantsBR(remotePhone) : [];
       const remotePhoneCanonical = remotePhone ? (normalizePhoneBR(remotePhone) || remotePhone) : "";
 
-      // fromMe = mensagem partiu do APARELHO conectado.
+      // fromMe = mensaje partiu do APARELHO conectado.
       const isFromDevice = norm.fromMe || (!!instancePhone && remotePhone === instancePhone);
 
       console.log("[evolution-webhook] decision:", JSON.stringify({
@@ -922,7 +922,7 @@ Deno.serve(async (req) => {
         });
       }
 
-      // Mensagem vinda do APARELHO conectado → outbound externo (dono digitou no celular)
+      // Mensaje vinda do APARELHO conectado → outbound externo (dono digitou no celular)
       if (isFromDevice) {
         try {
           // Eventos de eco sem destinatário claro
@@ -939,9 +939,9 @@ Deno.serve(async (req) => {
             });
           }
 
-          // Dedupe 1: external_id idêntico (mensagem já gravada anteriormente por nós)
+          // Dedupe 1: external_id idêntico (mensaje já gravada anteriormente por nós)
           if (norm.messageId) {
-            const { data: existingMsg } = await supabase
+            const { fecha: existingMsg } = await supabase
               .from("webchat_messages")
               .select("id")
               .eq("metadata->>external_id", norm.messageId)
@@ -955,12 +955,12 @@ Deno.serve(async (req) => {
             }
           }
 
-          // Localiza conversa: por telefone real OU por LID já registrado em metadata.
+          // Localiza conversación: por teléfono real OU por LID já registrado em metadata.
           const targetPhone = remotePhoneCanonical;
           let convOut: { id: string; status?: string } | null = null;
 
           if (remotePhoneCanonical) {
-            const { data: existingConvOut } = await supabase
+            const { fecha: existingConvOut } = await supabase
               .from("webchat_conversations")
               .select("id, status")
               .eq("organization_id", instance.organization_id)
@@ -973,9 +973,9 @@ Deno.serve(async (req) => {
             convOut = existingConvOut as any;
           }
 
-          // Fallback: só temos LID — tenta achar conversa que já tenha esse LID guardado.
+          // Fallback: só temos LID — tenta achar conversación que já tenha esse LID guardado.
           if (!convOut?.id && lidId) {
-            const { data: convByLid } = await supabase
+            const { fecha: convByLid } = await supabase
               .from("webchat_conversations")
               .select("id, status")
               .eq("organization_id", instance.organization_id)
@@ -987,10 +987,10 @@ Deno.serve(async (req) => {
             convOut = convByLid as any;
           }
 
-          // Dedupe 2 (após localizar conv): mesmo conteúdo outbound nos últimos 60s nesta conv
+          // Dedupe 2 (após localizar conv): mismo conteúdo outbound nos últimos 60s nesta conv
           if (convOut?.id && norm.content) {
             const since = new Date(Date.now() - 60_000).toISOString();
-            const { data: recentSameContent } = await supabase
+            const { fecha: recentSameContent } = await supabase
               .from("webchat_messages")
               .select("id")
               .eq("conversation_id", convOut.id)
@@ -1014,9 +1014,9 @@ Deno.serve(async (req) => {
               .eq("id", convOut.id);
           }
 
-          // Persiste o LID na conversa achada por telefone (pra próximos eventos só com @lid casarem).
+          // Persiste o LID na conversación achada por teléfono (pra próximos eventos só com @lid casarem).
           if (convOut?.id && lidId) {
-            const { data: convRow } = await supabase
+            const { fecha: convRow } = await supabase
               .from("webchat_conversations")
               .select("metadata")
               .eq("id", convOut.id)
@@ -1030,7 +1030,7 @@ Deno.serve(async (req) => {
             }
           }
 
-          // Sem telefone real e sem match por LID → não criar conversa fantasma.
+          // Sem teléfono real e sem match por LID → no crear conversación fantasma.
           if (!convOut?.id && !remotePhoneCanonical) {
             console.log("[evolution-webhook] external_outbound: skip lid_no_phone", { lidId });
             return new Response(JSON.stringify({ ok: true, skipped: "lid_no_phone" }), {
@@ -1039,7 +1039,7 @@ Deno.serve(async (req) => {
           }
 
           if (!convOut?.id) {
-            const { data: newLead, error: newLeadErr } = await supabase
+            const { fecha: newLead, error: newLeadErr } = await supabase
               .from("leads")
               .insert({
                 organization_id: instance.organization_id,
@@ -1053,7 +1053,7 @@ Deno.serve(async (req) => {
               console.error("[evolution-webhook] external_outbound: lead_insert_error", newLeadErr.message);
             }
 
-            const { data: newConv, error: newConvErr } = await supabase
+            const { fecha: newConv, error: newConvErr } = await supabase
               .from("webchat_conversations")
               .insert({
                 organization_id: instance.organization_id,
@@ -1069,7 +1069,7 @@ Deno.serve(async (req) => {
               .select("id")
               .single();
             if (newConvErr && (newConvErr as any).code === "23505") {
-              const { data: race } = await supabase
+              const { fecha: race } = await supabase
                 .from("webchat_conversations")
                 .select("id")
                 .eq("organization_id", instance.organization_id)
@@ -1094,7 +1094,7 @@ Deno.serve(async (req) => {
             const mediaInfo = norm.media
               ? { media_url: norm.media.url || null, media_type: norm.media.type || null }
               : null;
-            const { data: insertedAgentMsg, error: insertErr } = await supabase
+            const { fecha: insertedAgentMsg, error: insertErr } = await supabase
               .from("webchat_messages")
               .insert({
                 conversation_id: convOut.id,
@@ -1187,19 +1187,19 @@ Deno.serve(async (req) => {
 
       // Find or create conversation for this phone + org.
       // Estratégia tolerante a troca de instância:
-      //   1) Tenta achar conversa aberta com a MESMA instância.
-      //   2) Se não achar, busca qualquer conversa aberta do mesmo (org, telefone, whatsapp)
-      //      sem filtrar instância — assim PRESERVAMOS o histórico do contato mesmo
-      //      quando o número é reconectado/migrado para outra instância.
-      // NÃO fechamos conversas duplicadas automaticamente: o histórico do atendente
-      // nunca pode sumir por trás dele. Se houver duplicatas, o atendente encerra
+      //   1) Tenta achar conversación aberta com a MESMA instância.
+      //   2) Se no achar, busca qualquer conversación aberta do mismo (org, teléfono, whatsapp)
+      //      sem filtrar instância — assim PRESERVAMOS o histórico do contato mismo
+      //      quando o número é reconectado/migrado para otra instância.
+      // NÃO fechamos conversaciones duplicadas automaticamente: o histórico del agente
+      // nunca puede sumir por trás dele. Se houver duplicatas, o agente encerra
       // manualmente quando quiser.
       let conversationId: string | null = null;
       let existing: { id: string } | null = null;
 
-      // Busca por telefone NORMALIZADO (canonical BR), tolerante a 55/+55/9 móvel.
-      // Aceita também conversa FECHADA do mesmo número e reabre — assim nunca duplicamos.
-      const { data: existingByPhone } = await supabase
+      // Busca por teléfono NORMALIZADO (canonical BR), tolerante a 55/+55/9 móvel.
+      // Aceita também conversación FECHADA do mismo número e reabre — assim nunca duplicamos.
+      const { fecha: existingByPhone } = await supabase
         .from("webchat_conversations")
         .select("id, status")
         .eq("organization_id", instance.organization_id)
@@ -1216,7 +1216,7 @@ Deno.serve(async (req) => {
       if (existingByPhone?.id) {
         existing = { id: existingByPhone.id };
         if ((existingByPhone as any).status === "closed") {
-          // Reabre a mesma conversa em vez de criar uma nova: preserva histórico
+          // Reabre a misma conversación em vez de crear uma nova: preserva histórico
           await supabase
             .from("webchat_conversations")
             .update({ status: "waiting_human", closed_at: null })
@@ -1225,7 +1225,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Telemetria: se houver mais de uma conversa aberta, apenas logamos.
+      // Telemetria: se houver mais de uma conversación aberta, apenas logamos.
       try {
         const { count: openCount } = await supabase
           .from("webchat_conversations")
@@ -1246,7 +1246,7 @@ Deno.serve(async (req) => {
 
         // Read current_agent_id + agent_type + orchestrator state to decide whether
         // we can/should reassign an instance-bound agent here.
-        const { data: currentConv } = await supabase
+        const { fecha: currentConv } = await supabase
           .from("webchat_conversations")
           .select("current_agent_id, orchestrator_state, product_agents:current_agent_id(agent_type, is_active)")
           .eq("id", existing.id)
@@ -1260,7 +1260,7 @@ Deno.serve(async (req) => {
         // the routing and we MUST NOT pre-assign instance-bound agents while the
         // conversation is still in triage / quick-menu states. Otherwise the lead
         // would be answered by an SDR before going through the welcome flow.
-        const { data: orchCfg } = await supabase
+        const { fecha: orchCfg } = await supabase
           .from("organization_orchestrator_config")
           .select("is_enabled, orchestrator_agent_id")
           .eq("organization_id", instance.organization_id)
@@ -1276,7 +1276,7 @@ Deno.serve(async (req) => {
         let didResetForStale = false;
         if (orchActive && !isManualAdminOverride) {
           try {
-            const { data: lastOutboundEW } = await supabase
+            const { fecha: lastOutboundEW } = await supabase
               .from("webchat_messages")
               .select("created_at")
               .eq("conversation_id", existing.id)
@@ -1324,7 +1324,7 @@ Deno.serve(async (req) => {
         } else {
           // No orchestrator (or already in active attendance with a specialist):
           // safe to bind the conversation to the instance-bound agent if we have one.
-          const { data: instanceBoundAgent } = await supabase
+          const { fecha: instanceBoundAgent } = await supabase
             .from("product_agents")
             .select("id")
             .eq("evolution_instance_id", instance.id)
@@ -1342,7 +1342,7 @@ Deno.serve(async (req) => {
           .update(updatePayload)
           .eq("id", existing.id);
       } else {
-        const { data: widget } = await supabase
+        const { fecha: widget } = await supabase
           .from("webchat_widgets")
           .select("id, product_id")
           .eq("organization_id", instance.organization_id)
@@ -1350,8 +1350,8 @@ Deno.serve(async (req) => {
           .limit(1)
           .maybeSingle();
 
-        // Lookup do lead pelo telefone NORMALIZADO (anti-duplicação por DDI/9 móvel)
-        let { data: lead } = await supabase
+        // Lookup del lead pelo teléfono NORMALIZADO (anti-duplicação por DDI/9 móvel)
+        let { fecha: lead } = await supabase
           .from("leads")
           .select("id, name")
           .eq("organization_id", instance.organization_id)
@@ -1362,7 +1362,7 @@ Deno.serve(async (req) => {
         // Auto-create lead if none exists for this contact (no manual linking).
         if (!lead?.id) {
           try {
-            const { data: createdLead, error: createLeadErr } = await supabase
+            const { fecha: createdLead, error: createLeadErr } = await supabase
               .from("leads")
               .insert({
                 organization_id: instance.organization_id,
@@ -1373,9 +1373,9 @@ Deno.serve(async (req) => {
               .select("id, name")
               .single();
             if (createLeadErr) {
-              // 23505 → outro fluxo criou simultaneamente; recupera o existente
+              // 23505 → otro flujo criou simultaneamente; recupera o existente
               if ((createLeadErr as any).code === "23505") {
-                const { data: race } = await supabase
+                const { fecha: race } = await supabase
                   .from("leads")
                   .select("id, name")
                   .eq("organization_id", instance.organization_id)
@@ -1405,7 +1405,7 @@ Deno.serve(async (req) => {
         // product/agent — the orchestrator must NEVER override this, otherwise a
         // number dedicated to "Product A" could end up being answered by an agent
         // from "Product B", which is exactly the bug we just fixed.
-        const { data: instanceBoundAgent } = await supabase
+        const { fecha: instanceBoundAgent } = await supabase
           .from("product_agents")
           .select("id, product_id")
           .eq("evolution_instance_id", instance.id)
@@ -1424,7 +1424,7 @@ Deno.serve(async (req) => {
         } else {
           // No agent dedicated to this WhatsApp number → fall back to orchestrator
           // (when enabled) or to product default agent (legacy).
-          const { data: orchCfgNew } = await supabase
+          const { fecha: orchCfgNew } = await supabase
             .from("organization_orchestrator_config")
             .select("is_enabled, orchestrator_agent_id")
             .eq("organization_id", instance.organization_id)
@@ -1435,7 +1435,7 @@ Deno.serve(async (req) => {
             initialStatus = "bot_active";
             initialAgentId = null;
             if (!productResolvedId) {
-              const { data: anyProd } = await supabase
+              const { fecha: anyProd } = await supabase
                 .from("products")
                 .select("id")
                 .eq("organization_id", instance.organization_id)
@@ -1448,7 +1448,7 @@ Deno.serve(async (req) => {
             console.log("[evolution-webhook] new conv → no instance lock; orchestrator will triage");
           } else if (productResolvedId) {
             // Priority 2: default agent of the widget's product (legacy behavior)
-            const { data: defAgent } = await supabase
+            const { fecha: defAgent } = await supabase
               .from("product_agents")
               .select("id")
               .eq("product_id", productResolvedId)
@@ -1457,7 +1457,7 @@ Deno.serve(async (req) => {
               .maybeSingle();
             let agent = defAgent;
             if (!agent) {
-              const { data: anyAgent } = await supabase
+              const { fecha: anyAgent } = await supabase
                 .from("product_agents")
                 .select("id")
                 .eq("product_id", productResolvedId)
@@ -1479,7 +1479,7 @@ Deno.serve(async (req) => {
           // Without this, conversations end up with status=bot_active but
           // agent_id=null/product_id=null and webchat-bot just skips ("no product_id").
           if (!initialAgentId) {
-            const { data: orgFallbackAgent } = await supabase
+            const { fecha: orgFallbackAgent } = await supabase
               .from("product_agents")
               .select("id, product_id")
               .eq("organization_id", instance.organization_id)
@@ -1503,7 +1503,7 @@ Deno.serve(async (req) => {
         // and matches this evolution instance (or any instance) and trigger rules.
         let funnelToRun: { id: string; start_block_id: string | null } | null = null;
         try {
-          const { data: candidates } = await supabase
+          const { fecha: candidates } = await supabase
             .from("capture_funnels")
             .select("id, start_block_id, channels")
             .eq("organization_id", instance.organization_id)
@@ -1515,7 +1515,7 @@ Deno.serve(async (req) => {
             if (!wa?.enabled) continue;
             const boundInstance = wa.evolution_instance_id;
             if (boundInstance && boundInstance !== instance.id) continue;
-            // Sem regras de gatilho: toda primeira mensagem dispara o funil habilitado.
+            // Sem regras de gatilho: toda primeira mensaje dispara o embudo habilitado.
             funnelToRun = { id: cand.id, start_block_id: (cand as any).start_block_id || null };
             break;
           }
@@ -1523,10 +1523,10 @@ Deno.serve(async (req) => {
           console.warn("[evolution-webhook] funnel lookup error:", e?.message || String(e));
         }
 
-        // Resolve setor padrão da organização (fallback "Sem Setor")
+        // Resolve sector padrão da organização (fallback "Sem Sector")
         let defaultSectorId: string | null = null;
         try {
-          const { data: defSec } = await supabase
+          const { fecha: defSec } = await supabase
             .from("sectors")
             .select("id")
             .eq("organization_id", instance.organization_id)
@@ -1566,7 +1566,7 @@ Deno.serve(async (req) => {
           }));
         }
 
-        const { data: created, error: convErr } = await supabase
+        const { fecha: created, error: convErr } = await supabase
           .from("webchat_conversations")
           .insert(newConv)
           .select("id")
@@ -1574,8 +1574,8 @@ Deno.serve(async (req) => {
 
         if (convErr) {
           if ((convErr as any).code === "23505") {
-            // Race com outro fluxo — reusar conversa existente do mesmo telefone
-            const { data: race } = await supabase
+            // Race com otro flujo — reusar conversación existente do mismo teléfono
+            const { fecha: race } = await supabase
               .from("webchat_conversations")
               .select("id")
               .eq("organization_id", instance.organization_id)
@@ -1616,7 +1616,7 @@ Deno.serve(async (req) => {
         // Fire-and-forget: enrich with WhatsApp profile picture (best effort, non-blocking).
         // Pulled from Evolution Go: GET /chat/findContacts or /chat/fetchProfilePictureUrl.
         try {
-          const { data: cfg } = await supabase
+          const { fecha: cfg } = await supabase
             .from("integration_settings")
             .select("settings")
             .eq("organization_id", instance.organization_id)
@@ -1627,7 +1627,7 @@ Deno.serve(async (req) => {
           let apiKey: string | undefined =
             instance.instance_token || settings.evolution_go_global_api_key;
           if (!evoUrl || !apiKey) {
-            const { data: platformCfg } = await supabase
+            const { fecha: platformCfg } = await supabase
               .from("platform_settings")
               .select("evolution_go_url, evolution_go_global_api_key")
               .limit(1)
@@ -1663,7 +1663,7 @@ Deno.serve(async (req) => {
           console.warn("[evolution-webhook] profile pic lookup failed (non-fatal):", picErr);
         }
 
-        // Safety net: fecha qualquer outra conversa aberta do mesmo telefone normalizado
+        // Safety net: fecha qualquer otra conversación aberta do mismo teléfono normalizado
         const { error: closeErr } = await supabase
           .from("webchat_conversations")
           .update({ status: "closed", closed_at: new Date().toISOString() })
@@ -1738,14 +1738,14 @@ Deno.serve(async (req) => {
       if (norm.media) {
         try {
           // 1) Resolve agent (for audio/image AI toggles only).
-          const { data: convAgent } = await supabase
+          const { fecha: convAgent } = await supabase
             .from("webchat_conversations")
             .select("current_agent_id")
             .eq("id", conversationId)
             .maybeSingle();
           let agentId: string | null = (convAgent as any)?.current_agent_id || null;
           if (!agentId) {
-            const { data: ia } = await supabase
+            const { fecha: ia } = await supabase
               .from("product_agents")
               .select("id")
               .eq("evolution_instance_id", instance.id)
@@ -1758,7 +1758,7 @@ Deno.serve(async (req) => {
           let canAudio = true;
           let canImage = true;
           if (agentId) {
-            const { data: ag } = await supabase
+            const { fecha: ag } = await supabase
               .from("product_agents")
               .select("enable_audio_transcription, enable_image_vision")
               .eq("id", agentId)
@@ -1777,7 +1777,7 @@ Deno.serve(async (req) => {
             : undefined;
 
           if (!b64) {
-            const { data: cfg } = await supabase
+            const { fecha: cfg } = await supabase
               .from("integration_settings")
               .select("settings")
               .eq("organization_id", instance.organization_id)
@@ -1787,7 +1787,7 @@ Deno.serve(async (req) => {
             let evoUrl = String(settings.evolution_go_url || "").replace(/\/$/, "");
             const apiKeys = [instance.instance_token, settings.evolution_go_global_api_key];
             if (!evoUrl || apiKeys.every((k) => !k)) {
-              const { data: platformCfg } = await supabase
+              const { fecha: platformCfg } = await supabase
                 .from("platform_settings")
                 .select("evolution_go_url, evolution_go_global_api_key")
                 .limit(1)
@@ -1859,39 +1859,39 @@ Deno.serve(async (req) => {
               if (text) {
                 processedKind = norm.media.type as "audio" | "image";
                 if (norm.media.type === "audio") {
-                  processedContent = `🎙️ Áudio do cliente (transcrito): ${text}`;
+                  processedContent = `🎙️ Áudio del cliente (transcrito): ${text}`;
                 } else {
                   processedContent = norm.media.caption
-                    ? `🖼️ Imagem (legenda: "${norm.media.caption}"): ${text}`
-                    : `🖼️ Imagem do cliente: ${text}`;
+                    ? `🖼️ Imagen (legenda: "${norm.media.caption}"): ${text}`
+                    : `🖼️ Imagen del cliente: ${text}`;
                 }
                 console.log(
                   `[evolution-webhook] media processed (${norm.media.type}): ${text.slice(0, 80)}...`,
                 );
               } else {
                 if (norm.media.type === "audio") {
-                  processedContent = `🎙️ [Áudio recebido — não consegui transcrever. Peça ao cliente para reenviar ou descrever em texto.]`;
+                  processedContent = `🎙️ [Áudio recibido — no consegui transcrever. Peça al cliente para reenviar ou descrever em texto.]`;
                 } else {
                   processedContent = norm.media.caption
-                    ? `🖼️ [Imagem recebida (legenda: "${norm.media.caption}") — não consegui analisar o conteúdo. Peça para reenviar ou descrever.]`
-                    : `🖼️ [Imagem recebida — não consegui analisar o conteúdo. Peça para reenviar ou descrever.]`;
+                    ? `🖼️ [Imagen recibida (legenda: "${norm.media.caption}") — no consegui analisar o conteúdo. Peça para reenviar ou descrever.]`
+                    : `🖼️ [Imagen recibida — no consegui analisar o conteúdo. Peça para reenviar ou descrever.]`;
                 }
                 console.warn(`[evolution-webhook] media NOT processed (${norm.media.type}); using fallback placeholder`);
               }
             } else {
               if (norm.media.type === "audio") {
-                processedContent = `🎙️ [Áudio recebido — sem dados disponíveis para transcrição.]`;
+                processedContent = `🎙️ [Áudio recibido — sem dados disponíveis para transcrição.]`;
               } else {
-                processedContent = `🖼️ [Imagem recebida — sem dados disponíveis para análise.]`;
+                processedContent = `🖼️ [Imagen recibida — sem dados disponíveis para análise.]`;
               }
               console.warn(`[evolution-webhook] media has no b64 nor url; using fallback placeholder`);
             }
           } else if (norm.media.type === "audio" || norm.media.type === "image") {
             // Toggle off but media uploaded → still surface placeholder for agent.
             if (norm.media.type === "audio") {
-              processedContent = `🎙️ [Áudio recebido — transcrição desativada para este agente.]`;
+              processedContent = `🎙️ [Áudio recibido — transcrição desativada para este agente.]`;
             } else {
-              processedContent = `🖼️ [Imagem recebida — análise visual desativada para este agente.]`;
+              processedContent = `🖼️ [Imagen recibida — análise visual desativada para este agente.]`;
             }
           } else {
             // video / document / sticker → no AI enrichment, just a textual marker.
@@ -1911,21 +1911,21 @@ Deno.serve(async (req) => {
         } catch (e: any) {
           console.warn("[evolution-webhook] media processing failed:", e?.message || String(e));
           if (norm.media.type === "audio") {
-            processedContent = `🎙️ [Áudio recebido — falha técnica ao processar.]`;
+            processedContent = `🎙️ [Áudio recibido — falla técnica ao processar.]`;
           } else if (norm.media.type === "image") {
-            processedContent = `🖼️ [Imagem recebida — falha técnica ao processar.]`;
+            processedContent = `🖼️ [Imagen recibida — falla técnica ao processar.]`;
           } else if (norm.media.type === "video") {
-            processedContent = `🎥 [Vídeo recebido — falha técnica ao processar.]`;
+            processedContent = `🎥 [Vídeo recibido — falla técnica ao processar.]`;
           } else if (norm.media.type === "document") {
-            processedContent = `📎 [Documento recebido — falha técnica ao processar.]`;
+            processedContent = `📎 [Documento recibido — falla técnica ao processar.]`;
           } else {
-            processedContent = `📎 [Mídia recebida — falha técnica ao processar.]`;
+            processedContent = `📎 [Mídia recibida — falla técnica ao processar.]`;
           }
         }
       }
 
       // ============================================================
-      // INBOUND DEDUP — Evolution Go pode reentregar o mesmo webhook
+      // INBOUND DEDUP — Evolution Go puede reentregar o mismo webhook
       // várias vezes (timeout do nosso handler). Camadas:
       //  1) processed_messages (UNIQUE instance_id+message_id) → barra retries
       //     antes de qualquer trabalho pesado. TTL de 24h.
@@ -1945,7 +1945,7 @@ Deno.serve(async (req) => {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
-        const { data: dup } = await supabase
+        const { fecha: dup } = await supabase
           .from("webchat_messages")
           .select("id")
           .eq("conversation_id", conversationId)
@@ -1979,14 +1979,14 @@ Deno.serve(async (req) => {
       let savedMessageCreatedAt: string | null = null;
       let savedMessageId: string | null = null;
       try {
-        const { data: inserted, error: insertErr } = await supabase
+        const { fecha: inserted, error: insertErr } = await supabase
           .from("webchat_messages")
           .insert(insertPayload)
           .select("*")
           .single();
 
         if (insertErr) {
-          // Race: outra invocação concorrente já gravou esta mesma msg
+          // Race: otra invocação concorrente já gravou esta misma msg
           // (índice único parcial garante unicidade no banco).
           if ((insertErr as any).code === "23505") {
             console.log("[evolution-webhook] skip: inbound duplicate (unique index)", norm.messageId);
@@ -2017,8 +2017,8 @@ Deno.serve(async (req) => {
         }));
 
         // Broadcast realtime → o painel (SellerInbox) escuta `conversation:{id}`
-        // e adiciona a mensagem na cache instantaneamente. Sem isso, a janela
-        // de chat fica congelada até o usuário recarregar / trocar de conversa.
+        // e adiciona a mensaje na cache instantaneamente. Sem isso, a janela
+        // de chat fica congelada até o usuario recarregar / trocar de conversación.
         if (inserted) {
           try {
             const ch = supabase.channel(`conversation:${conversationId}`);
@@ -2034,7 +2034,7 @@ Deno.serve(async (req) => {
         }
 
         // Campaign response hook (fire-and-forget): aplica post_response_actions
-        // se esta conversa pertencer a um target ativo de uma campanha.
+        // se esta conversación pertencer a um target ativo de uma campaña.
         try {
           const supabaseUrlEnv = Deno.env.get("SUPABASE_URL");
           const serviceKeyEnv = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -2066,7 +2066,7 @@ Deno.serve(async (req) => {
           if (phoneDigits) {
             // Match by suffix (last 10 digits) to be tolerant to DDI variations.
             const suffix = phoneDigits.slice(-10);
-            const { data: bookings } = await supabase
+            const { fecha: bookings } = await supabase
               .from("booking_requests")
               .select("id, organization_id, status, guest_phone, host_user_id")
               .in("status", ["confirmacao_enviada", "lembrete_enviado", "confirmed", "agendado"])
@@ -2103,7 +2103,7 @@ Deno.serve(async (req) => {
               });
               console.log(`[evolution-webhook] booking reply matched id=${target.id} -> ${newStatus || "noop"}`);
 
-              // Texto livre (não casou com 1/2/3): delega para IA decidir.
+              // Texto livre (no casou com 1/2/3): delega para IA decidir.
               if (!newStatus && (norm.content || "").trim().length > 0) {
                 supabase.functions.invoke("booking-reply-ai", {
                   body: {
@@ -2130,7 +2130,7 @@ Deno.serve(async (req) => {
       // ============================================================
       // BUFFER CURTO (humanização sem queimar tempo)
       // ============================================================
-      // Lê configurações de humanização da org. Janela padrão = 3s.
+      // Lê configuraciones de humanização da org. Janela padrão = 3s.
       // Teto absoluto = 8s desde a 1ª msg do burst — nunca mais que isso.
       // Loop: dorme em fatias de 1s; se chegou nova msg do visitor, deferimos
       // para a invocação dessa nova msg (que vai re-medir o teto).
@@ -2139,7 +2139,7 @@ Deno.serve(async (req) => {
       let groupingMaxMs = 8000;
       let presenceEnabledOrg = true;
       try {
-        const { data: orgRow } = await supabase
+        const { fecha: orgRow } = await supabase
           .from("organizations")
           .select("ai_grouping_enabled, ai_grouping_window_ms, ai_grouping_max_ms, ai_debounce_ms, presence_enabled")
           .eq("id", instance.organization_id)
@@ -2169,7 +2169,7 @@ Deno.serve(async (req) => {
         console.log("[evolution-webhook] grouping start", JSON.stringify({ window: groupingWindowMs, max: groupingMaxMs }));
 
         // Rolling window: a cada msg nova do visitor, estende a espera até o teto absoluto (max).
-        // Se outra invocação posterior assumir o turno, abortamos esta.
+        // Se otra invocação posterior assumir o turno, abortamos esta.
         while ((Date.now() - startedAt) < groupingMaxMs) {
           const remainingToWindow = groupingWindowMs - (Date.now() - startedAt) + extensions * groupingWindowMs;
           const remainingToMax = groupingMaxMs - (Date.now() - startedAt);
@@ -2177,7 +2177,7 @@ Deno.serve(async (req) => {
           if (wait <= 0) break;
           await new Promise((r) => setTimeout(r, wait));
 
-          const { data: newer } = await supabase
+          const { fecha: newer } = await supabase
             .from("webchat_messages")
             .select("id, created_at")
             .eq("conversation_id", conversationId)
@@ -2194,13 +2194,13 @@ Deno.serve(async (req) => {
           });
 
           if (arrived.length > 0) {
-            // Nova mensagem do visitor → estende janela. A invocação mais nova
-            // assume o turno: se esta não for a mais antiga, abortamos.
+            // Nova mensaje do visitor → estende janela. A invocação mais nova
+            // assume o turno: se esta no for a mais antiga, abortamos.
             const newest = arrived[0];
             lastSeenAt = newest.created_at;
             lastSeenId = newest.id;
             extensions += 1;
-            deferred = true; // outra invocação (gerada pela msg nova) cuidará da resposta
+            deferred = true; // otra invocação (gerada pela msg nova) cuidará da respuesta
             console.log("[evolution-webhook] grouping: newer msg arrived, deferring to it");
             break;
           }
@@ -2218,7 +2218,7 @@ Deno.serve(async (req) => {
       // ---- BOT TRIGGER ----
       // If conversation is in bot_active mode, run the funnel engine OR delegate to webchat-bot.
       try {
-        const { data: conv } = await supabase
+        const { fecha: conv } = await supabase
           .from("webchat_conversations")
           .select("id, status, widget_id, visitor_name, current_agent_id, lead_id, current_flow_id, current_block_id, flow_variables, flow_completed, flow_source, orchestrator_state, webchat_widgets(product_id)")
           .eq("id", conversationId)
@@ -2239,7 +2239,7 @@ Deno.serve(async (req) => {
           const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
           const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-          const { data: funnel } = await supabase
+          const { fecha: funnel } = await supabase
             .from("capture_funnels")
             .select("id, flow_blocks")
             .eq("id", (conv as any).current_flow_id)
@@ -2264,15 +2264,15 @@ Deno.serve(async (req) => {
 
           // 1) If currentBlock waits for input/buttons, consume the user's message first
           if (currentBlock?.type === "input") {
-            const varName = currentBlock.data?.variable_name || currentBlock.data?.input_type || "resposta";
+            const varName = currentBlock.fecha?.variable_name || currentBlock.fecha?.input_type || "respuesta";
             flowVariables[varName] = norm.content;
             // Also enrich conversation if it looks like email/phone
             if (/^\S+@\S+\.\S+$/.test(norm.content)) flowVariables["email"] = norm.content;
-            if (/^\+?\d[\d\s().-]{6,}$/.test(norm.content)) flowVariables["telefone"] = norm.content;
+            if (/^\+?\d[\d\s().-]{6,}$/.test(norm.content)) flowVariables["teléfono"] = norm.content;
             nextBlockId = currentBlock.next_block_id || null;
             currentBlock = findBlock(nextBlockId);
           } else if (currentBlock?.type === "buttons") {
-            const opts: any[] = currentBlock.data?.options || [];
+            const opts: any[] = currentBlock.fecha?.options || [];
             const lower = norm.content.trim().toLowerCase();
             const numMatch = lower.match(/^(\d+)/);
             let chosen: any = null;
@@ -2289,7 +2289,7 @@ Deno.serve(async (req) => {
               currentBlock = findBlock(nextBlockId);
             } else {
               // re-prompt the same buttons block
-              chunksToSend.push(replaceVars(currentBlock.data?.content || "Por favor, escolha uma das opções:")
+              chunksToSend.push(replaceVars(currentBlock.fecha?.content || "Por favor, escolha uma das opciones:")
                 + "\n\n" + opts.map((o: any, i: number) => `${i + 1}) ${o.emoji ? o.emoji + ' ' : ''}${o.label}`).join("\n"));
               nextBlockId = currentBlock.id;
               currentBlock = null; // stop loop
@@ -2303,35 +2303,35 @@ Deno.serve(async (req) => {
             const b = currentBlock;
             switch (b.type) {
               case "message": {
-                if (b.data?.content) chunksToSend.push(replaceVars(b.data.content));
+                if (b.fecha?.content) chunksToSend.push(replaceVars(b.fecha.content));
                 nextBlockId = b.next_block_id || null;
                 currentBlock = findBlock(nextBlockId);
                 break;
               }
               case "delay": {
-                const ms = Math.min(b.data?.delay_ms || 1500, 3000);
+                const ms = Math.min(b.fecha?.delay_ms || 1500, 3000);
                 await new Promise((r) => setTimeout(r, ms));
                 nextBlockId = b.next_block_id || null;
                 currentBlock = findBlock(nextBlockId);
                 break;
               }
               case "input": {
-                if (b.data?.content) chunksToSend.push(replaceVars(b.data.content));
-                else if (b.data?.placeholder) chunksToSend.push(replaceVars(b.data.placeholder));
+                if (b.fecha?.content) chunksToSend.push(replaceVars(b.fecha.content));
+                else if (b.fecha?.placeholder) chunksToSend.push(replaceVars(b.fecha.placeholder));
                 nextBlockId = b.id; // wait here for next user message
                 currentBlock = null;
                 break;
               }
               case "buttons": {
-                const opts: any[] = b.data?.options || [];
-                const header = replaceVars(b.data?.content || "Escolha uma opção:");
+                const opts: any[] = b.fecha?.options || [];
+                const header = replaceVars(b.fecha?.content || "Escolha uma opción:");
                 chunksToSend.push(header + "\n\n" + opts.map((o: any, i: number) => `${i + 1}) ${o.emoji ? o.emoji + ' ' : ''}${o.label}`).join("\n"));
                 nextBlockId = b.id; // wait here for next user message
                 currentBlock = null;
                 break;
               }
               case "condition": {
-                const cond = b.data?.condition;
+                const cond = b.fecha?.condition;
                 let truthy = false;
                 if (cond) {
                   const lhs = (flowVariables[cond.variable] || "").toString();
@@ -2344,13 +2344,13 @@ Deno.serve(async (req) => {
                     case "less_than": truthy = Number(lhs) < Number(rhs); break;
                   }
                 }
-                nextBlockId = (truthy ? b.data?.true_next_block_id : b.data?.false_next_block_id) || b.next_block_id || null;
+                nextBlockId = (truthy ? b.fecha?.true_next_block_id : b.fecha?.false_next_block_id) || b.next_block_id || null;
                 currentBlock = findBlock(nextBlockId);
                 break;
               }
               case "ai_takeover":
               case "agent_switch": {
-                handoffToAgent = b.data?.agent_id || null;
+                handoffToAgent = b.fecha?.agent_id || null;
                 releaseToOrchestrator = true;
                 flowCompleted = true;
                 nextBlockId = null;
@@ -2358,7 +2358,7 @@ Deno.serve(async (req) => {
                 break;
               }
               case "handoff": {
-                if (b.data?.handoff_message) chunksToSend.push(replaceVars(b.data.handoff_message));
+                if (b.fecha?.handoff_message) chunksToSend.push(replaceVars(b.fecha.handoff_message));
                 flowCompleted = true;
                 nextBlockId = null;
                 currentBlock = null;
@@ -2372,7 +2372,7 @@ Deno.serve(async (req) => {
                 break;
               }
               case "end": {
-                if (b.data?.success_message) chunksToSend.push(replaceVars(b.data.success_message));
+                if (b.fecha?.success_message) chunksToSend.push(replaceVars(b.fecha.success_message));
                 flowCompleted = true;
                 closeConversation = true;
                 nextBlockId = null;
@@ -2451,7 +2451,7 @@ Deno.serve(async (req) => {
           // PRIORITY: if THIS instance has a dedicated agent, lock to it and
           // bypass the orchestrator entirely. A WhatsApp number dedicated to a
           // product/agent must NEVER be answered by another product's agent.
-          const { data: instanceLockAgent } = await supabase
+          const { fecha: instanceLockAgent } = await supabase
             .from("product_agents")
             .select("id, product_id")
             .eq("evolution_instance_id", instance.id)
@@ -2467,12 +2467,12 @@ Deno.serve(async (req) => {
           if (instanceLockAgent?.id) {
             agentId = instanceLockAgent.id;
             if (instanceLockAgent.product_id) resolvedProductId = instanceLockAgent.product_id;
-            // Se a conversa já está com OUTRO agente ATIVO da mesma org (típico
+            // Se a conversación já está com OUTRO agente ATIVO da misma org (típico
             // após handoff Maria→Sonia), respeite — NÃO force voltar pro instance lock.
             // Só sobrescreve se current_agent_id for null/inválido.
             const currentAgentId = (conv as any).current_agent_id || null;
             if (currentAgentId && currentAgentId !== agentId) {
-              const { data: currentAgentRow } = await supabase
+              const { fecha: currentAgentRow } = await supabase
                 .from("product_agents")
                 .select("id, organization_id, is_active")
                 .eq("id", currentAgentId)
@@ -2493,7 +2493,7 @@ Deno.serve(async (req) => {
             }
           } else {
             // No instance lock → consider orchestrator
-            const { data: orchCfgBot } = await supabase
+            const { fecha: orchCfgBot } = await supabase
               .from("organization_orchestrator_config")
               .select("is_enabled, orchestrator_agent_id")
               .eq("organization_id", instance.organization_id)
@@ -2506,7 +2506,7 @@ Deno.serve(async (req) => {
             if (!orchOwnsConversation) {
               agentId = (conv as any).current_agent_id || null;
               if (!agentId && resolvedProductId) {
-                const { data: defAgent } = await supabase
+                const { fecha: defAgent } = await supabase
                   .from("product_agents")
                   .select("id")
                   .eq("product_id", resolvedProductId)
@@ -2516,7 +2516,7 @@ Deno.serve(async (req) => {
                 agentId = defAgent?.id || null;
               }
               if (!agentId && resolvedProductId) {
-                const { data: anyAgent } = await supabase
+                const { fecha: anyAgent } = await supabase
                   .from("product_agents")
                   .select("id")
                   .eq("product_id", resolvedProductId)
@@ -2533,7 +2533,7 @@ Deno.serve(async (req) => {
 
           // Derive product_id from agent when only agent_id is known
           if (agentId && !resolvedProductId) {
-            const { data: agentRow } = await supabase
+            const { fecha: agentRow } = await supabase
               .from("product_agents")
               .select("product_id")
               .eq("id", agentId)
@@ -2557,7 +2557,7 @@ Deno.serve(async (req) => {
           // FINAL FALLBACK: if we still have no product/agent and orchestrator is not active,
           // grab any active agent of the org with a product_id so we never go silent.
           if (!productIdForBot && !orchOwnsConversation && !agentId) {
-            const { data: orgFallbackAgent } = await supabase
+            const { fecha: orgFallbackAgent } = await supabase
               .from("product_agents")
               .select("id, product_id")
               .eq("organization_id", instance.organization_id)
@@ -2586,13 +2586,13 @@ Deno.serve(async (req) => {
             const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
             // ============================================================
-            // LOCK POR CONVERSA — impede 2 jobs paralelos para o mesmo lead
+            // LOCK POR CONVERSA — impede 2 jobs paralelos para o mismo lead
             // ============================================================
             let singleProc = true;
             let dedupEnabled = true;
             let dedupWindowMs = 120_000;
             try {
-              const { data: orgCfg } = await supabase
+              const { fecha: orgCfg } = await supabase
                 .from("organizations")
                 .select("ai_single_processing_per_conversation, ai_dedup_enabled, ai_dedup_window_ms")
                 .eq("id", instance.organization_id)
@@ -2630,13 +2630,13 @@ Deno.serve(async (req) => {
 
 
             // ============================================================
-            // Agrega TODAS as mensagens do visitor desde a última resposta
-            // do bot/agente. Garante que múltiplas mensagens consecutivas
-            // virem 1 contexto único para o agente raciocinar.
+            // Agrega TODAS as mensajes do visitor desde a última respuesta
+            // do bot/agente. Garante que múltiplas mensajes consecutivas
+            // virem 1 contexto único para el agente raciocinar.
             // ============================================================
             let aggregatedMessage = processedContent || norm.content;
             try {
-              const { data: lastBotMsg } = await supabase
+              const { fecha: lastBotMsg } = await supabase
                 .from("webchat_messages")
                 .select("created_at")
                 .eq("conversation_id", conversationId)
@@ -2654,7 +2654,7 @@ Deno.serve(async (req) => {
               if (lastBotMsg?.created_at) {
                 pendingQ = pendingQ.gt("created_at", lastBotMsg.created_at);
               }
-              const { data: pendingMsgs } = await pendingQ;
+              const { fecha: pendingMsgs } = await pendingQ;
 
               if (pendingMsgs && pendingMsgs.length > 1) {
                 aggregatedMessage = pendingMsgs
@@ -2714,7 +2714,7 @@ Deno.serve(async (req) => {
 
               // ============================================================
               // CAP de bolhas (defesa em profundidade) — apenas teto absoluto
-              // de 4 bolhas para WhatsApp. Não colapsa a decisão do agente.
+              // de 4 bolhas para WhatsApp. No colapsa a decisão del agente.
               // ============================================================
               if (chunks.length > 0) {
                 const HARD_TETO = 4;
@@ -2747,7 +2747,7 @@ Deno.serve(async (req) => {
                 await new Promise((r) => setTimeout(r, Math.min(firstDelayMs, 15_000)));
               }
 
-              // Toggle "Simular digitando..." do agente liga/desliga a Presence Engine real.
+              // Toggle "Simular digitando..." del agente liga/desliga a Presence Engine real.
               const agentTypingIndicator = botData?.typingIndicator !== false;
 
               const sendEvo = async (payloadBody: any) => {
@@ -2767,7 +2767,7 @@ Deno.serve(async (req) => {
               for (let i = 0; i < chunks.length; i++) {
                 const text = chunks[i];
 
-                // 0) DEDUP DE RESPOSTA — não envia se uma resposta igual saiu há pouco
+                // 0) DEDUP DE RESPOSTA — no envia se uma respuesta igual saiu há poco
                 if (dedupCfg.enabled) {
                   const dup = await isDuplicateResponse(supabase, conversationId, text, dedupCfg.windowMs);
                   if (dup) {
@@ -2855,7 +2855,7 @@ Deno.serve(async (req) => {
                 }
               }
 
-              // Atualiza last_message_at depois de todos os chunks
+              // Atualiza last_message_at después de todos os chunks
               if (chunks.length > 0) {
                 try {
                   await supabase
@@ -2873,7 +2873,7 @@ Deno.serve(async (req) => {
         // Never break the webhook because of bot errors — Evolution Go would retry
         console.error("[evolution-webhook] bot_call: exception", botErr?.message || String(botErr));
       } finally {
-        // Sempre libera o lock por conversa (best-effort)
+        // Sempre libera o lock por conversación (best-effort)
         try { await releaseConversationLock(supabase, conversationId); } catch (_) { /* noop */ }
       }
 

@@ -15,7 +15,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Fetch pending messages that are due
-    const { data: pendingMessages, error: fetchError } = await supabase
+    const { fecha: pendingMessages, error: fetchError } = await supabase
       .from("scheduled_messages")
       .select("*")
       .eq("status", "pending")
@@ -48,7 +48,7 @@ serve(async (req) => {
             conversationId: msg.conversation_id,
             content: msg.content,
             senderType: "agent",
-            senderName: "Mensagem Agendada",
+            senderName: "Mensaje Agendada",
           }),
         });
 

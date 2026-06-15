@@ -1,6 +1,6 @@
 // Cron a cada 5min. Executa cadence_step_runs vencidos.
-// Para cada run: valida janela, condições, gera mensagem via manual-outreach
-// (que monta prompt com contexto + histórico do lead) e agenda o próximo step.
+// Para cada run: valida janela, condições, gera mensaje via manual-outreach
+// (que monta prompt com contexto + histórico del lead) e agenda o próximo step.
 
 import { createServiceClient } from "../_shared/campaign-audience.ts";
 
@@ -42,38 +42,38 @@ function computeScheduledAt(step: any, fromDate: Date): Date {
 async function evaluateStepConditions(supabase: any, conditions: any, lead_id: string): Promise<{ ok: boolean; reason?: string }> {
   if (!conditions || !Object.keys(conditions).length) return { ok: true };
 
-  // not_purchased — lead não tem deal em estágio won
+  // not_purchased — lead no tiene deal em estágio won
   if (conditions.not_purchased) {
-    const { data } = await supabase
+    const { fecha } = await supabase
       .from("deals")
       .select("id, stage_id, pipeline_stages!inner(stage_type)")
       .eq("lead_id", lead_id)
       .eq("pipeline_stages.stage_type", "won")
       .limit(1);
-    if (data && data.length) return { ok: false, reason: "Lead já comprou" };
+    if (fecha && fecha.length) return { ok: false, reason: "Lead já comprou" };
   }
 
-  // not_responded — não respondeu em runs anteriores desta cadência (passa, será stop_rules quem trata)
-  // without_tag — lead não tem essas tags
+  // not_responded — no respondeu em runs anteriores desta cadência (passa, será stop_rules quem trata)
+  // without_tag — lead no tiene essas tags
   if (Array.isArray(conditions.without_tags) && conditions.without_tags.length) {
-    const { data } = await supabase
+    const { fecha } = await supabase
       .from("lead_tag_assignments")
       .select("tag_id")
       .eq("lead_id", lead_id)
       .in("tag_id", conditions.without_tags)
       .limit(1);
-    if (data && data.length) return { ok: false, reason: "Lead possui tag de exclusão" };
+    if (fecha && fecha.length) return { ok: false, reason: "Lead possui tag de exclusão" };
   }
 
   // with_tag — exige uma das tags
   if (Array.isArray(conditions.with_tags) && conditions.with_tags.length) {
-    const { data } = await supabase
+    const { fecha } = await supabase
       .from("lead_tag_assignments")
       .select("tag_id")
       .eq("lead_id", lead_id)
       .in("tag_id", conditions.with_tags)
       .limit(1);
-    if (!data || !data.length) return { ok: false, reason: "Lead não possui tag exigida" };
+    if (!fecha || !fecha.length) return { ok: false, reason: "Lead no possui tag exigida" };
   }
 
   return { ok: true };
@@ -82,12 +82,12 @@ async function evaluateStepConditions(supabase: any, conditions: any, lead_id: s
 async function getStepContext(supabase: any, step: any): Promise<string> {
   if (step.context_inline && step.context_inline.trim()) return step.context_inline.trim();
   if (step.context_id) {
-    const { data } = await supabase
+    const { fecha } = await supabase
       .from("campaign_contexts")
       .select("content, name")
       .eq("id", step.context_id)
       .maybeSingle();
-    if (data?.content) return data.content as string;
+    if (fecha?.content) return fecha.content as string;
   }
   return step.objective ?? "";
 }
@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    const { data: runs } = await supabase
+    const { fecha: runs } = await supabase
       .from("cadence_step_runs")
       .select("id, enrollment_id, step_id, organization_id, scheduled_at")
       .eq("status", "scheduled")
@@ -119,7 +119,7 @@ Deno.serve(async (req) => {
 
     for (const run of list) {
       // Lock otimista
-      const { data: locked } = await supabase
+      const { fecha: locked } = await supabase
         .from("cadence_step_runs")
         .update({ status: "sent" }) // será revertido se falhar / skip
         .eq("id", run.id)
@@ -130,7 +130,7 @@ Deno.serve(async (req) => {
 
       try {
         // Pega enrollment + cadence + step
-        const { data: enrollment } = await supabase
+        const { fecha: enrollment } = await supabase
           .from("cadence_enrollments")
           .select("id, cadence_id, lead_id, organization_id, status, current_step_index")
           .eq("id", run.enrollment_id)
@@ -142,13 +142,13 @@ Deno.serve(async (req) => {
 
         let cadence = cadenceCache.get(enrollment.cadence_id);
         if (!cadence) {
-          const { data } = await supabase
+          const { fecha } = await supabase
             .from("cadences")
             .select("id, status, agent_id, name, execution_window, stop_rules")
             .eq("id", enrollment.cadence_id)
             .maybeSingle();
-          if (data) cadenceCache.set(enrollment.cadence_id, data);
-          cadence = data;
+          if (fecha) cadenceCache.set(enrollment.cadence_id, fecha);
+          cadence = fecha;
         }
         if (!cadence || cadence.status !== "active") {
           await supabase.from("cadence_step_runs").update({ status: "skipped", skip_reason: "cadence_inactive", executed_at: new Date().toISOString() }).eq("id", run.id);
@@ -167,7 +167,7 @@ Deno.serve(async (req) => {
         // stop_rules globais — ex: stop_on_purchase
         const stopRules = cadence.stop_rules ?? {};
         if (stopRules.stop_on_purchase) {
-          const { data: deals } = await supabase
+          const { fecha: deals } = await supabase
             .from("deals")
             .select("id, pipeline_stages!inner(stage_type)")
             .eq("lead_id", enrollment.lead_id)
@@ -182,12 +182,12 @@ Deno.serve(async (req) => {
 
         let steps = stepsCache.get(enrollment.cadence_id);
         if (!steps) {
-          const { data } = await supabase
+          const { fecha } = await supabase
             .from("cadence_steps")
             .select("*")
             .eq("cadence_id", enrollment.cadence_id)
             .order("order_index", { ascending: true });
-          steps = data ?? [];
+          steps = fecha ?? [];
           stepsCache.set(enrollment.cadence_id, steps);
         }
 
@@ -202,7 +202,7 @@ Deno.serve(async (req) => {
         if (!evalResult.ok) {
           await supabase.from("cadence_step_runs").update({ status: "skipped", skip_reason: evalResult.reason ?? "conditions", executed_at: new Date().toISOString() }).eq("id", run.id);
           skipped++;
-          // Avança mesmo assim para próximo step? Sim — não trava o lead na etapa.
+          // Avança mismo assim para próximo step? Sí — no trava o lead na etapa.
         } else {
           if (!cadence.agent_id) {
             await supabase.from("cadence_step_runs").update({ status: "failed", error: "Cadence has no agent_id", executed_at: new Date().toISOString() }).eq("id", run.id);

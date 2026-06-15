@@ -48,19 +48,19 @@ Deno.serve(async (req) => {
       }),
     });
 
-    const data = await response.json();
+    const fecha = await response.json();
 
     if (!response.ok) {
-      console.error('Firecrawl API error:', data);
+      console.error('Firecrawl API error:', fecha);
       return new Response(
-        JSON.stringify({ success: false, error: data.error || `Request failed with status ${response.status}` }),
+        JSON.stringify({ success: false, error: fecha.error || `Request failed with status ${response.status}` }),
         { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Map successful, found', data.links?.length || 0, 'links');
+    console.log('Map successful, found', fecha.links?.length || 0, 'links');
     return new Response(
-      JSON.stringify(data),
+      JSON.stringify(fecha),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {

@@ -1,4 +1,4 @@
-// Replaces {{variable}} placeholders in agent prompts with real org/product/conversation data.
+// Replaces {{variable}} placeholders in agent prompts with real org/product/conversation fecha.
 
 export interface PromptVariableContext {
   organization?: {

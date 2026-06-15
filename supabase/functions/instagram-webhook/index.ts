@@ -40,13 +40,13 @@ Deno.serve(async (req: Request) => {
     const mode = url.searchParams.get('hub.mode');
     const token = url.searchParams.get('hub.verify_token');
     const challenge = url.searchParams.get('hub.challenge');
-    // Compat: aceitar ?conn= como fallback caso o usuário tenha colado a URL antiga.
+    // Compat: aceitar ?conn= como fallback caso o usuario tenha colado a URL antiga.
     const connId = pathConnectionId ?? url.searchParams.get('conn');
     if (mode !== 'subscribe' || !token || !challenge || !connId) {
       return new Response('bad request', { status: 400 });
     }
     const sb = supa();
-    const { data: conn } = await sb
+    const { fecha: conn } = await sb
       .from('instagram_connections')
       .select('id, webhook_verify_token')
       .eq('id', connId)
@@ -80,12 +80,12 @@ Deno.serve(async (req: Request) => {
   // Resolver conexão: prioriza path; fallback resolve pelo entry.id (ig_business_account_id) entre conexões ativas.
   let resolvedConn: any = null;
   if (pathConnectionId) {
-    const { data } = await sb
+    const { fecha } = await sb
       .from('instagram_connections')
       .select('*')
       .eq('id', pathConnectionId)
       .maybeSingle();
-    resolvedConn = data ?? null;
+    resolvedConn = fecha ?? null;
   }
 
   for (const entry of entries) {
@@ -93,14 +93,14 @@ Deno.serve(async (req: Request) => {
     if (!conn) {
       const entryId = String(entry?.id ?? '');
       if (!entryId) continue;
-      const { data } = await sb
+      const { fecha } = await sb
         .from('instagram_connections')
         .select('*')
         .eq('ig_business_account_id', entryId)
         .eq('status', 'active')
         .limit(1)
         .maybeSingle();
-      conn = data ?? null;
+      conn = fecha ?? null;
     }
     if (!conn) {
       console.log('[ig-webhook] no connection match', { entry_id: entry?.id });
@@ -159,8 +159,8 @@ async function handleEvent(sb: any, conn: any, evt: any) {
   const mid = String(msg?.mid ?? '');
   if (!mid && !msg?.text && !msg?.attachments && !msg?.reaction) return;
 
-  // 1) localizar/abrir conversa
-  const { data: existing } = await sb
+  // 1) localizar/abrir conversación
+  const { fecha: existing } = await sb
     .from('webchat_conversations')
     .select('id, status')
     .eq('organization_id', conn.organization_id)
@@ -189,7 +189,7 @@ async function handleEvent(sb: any, conn: any, evt: any) {
       ...(visitorName ? { visitor_name: visitorName } : {}),
     }).eq('id', conversationId);
   } else {
-    const { data: widget } = await sb
+    const { fecha: widget } = await sb
       .from('webchat_widgets')
       .select('id')
       .eq('organization_id', conn.organization_id)
@@ -197,7 +197,7 @@ async function handleEvent(sb: any, conn: any, evt: any) {
       .limit(1)
       .maybeSingle();
 
-    const { data: created, error: insErr } = await sb.from('webchat_conversations').insert({
+    const { fecha: created, error: insErr } = await sb.from('webchat_conversations').insert({
       organization_id: conn.organization_id,
       widget_id: widget?.id ?? null,
       channel: 'instagram',
@@ -218,7 +218,7 @@ async function handleEvent(sb: any, conn: any, evt: any) {
   // 2) extrair conteúdo
   const { content, contentType, metadata } = await extractContent(msg, conn);
 
-  // 3) inserir mensagem (idempotente por ig_message_id)
+  // 3) inserir mensaje (idempotente por ig_message_id)
   const { error: msgErr } = await sb.from('webchat_messages').insert({
     conversation_id: conversationId,
     direction: 'inbound',
@@ -239,9 +239,9 @@ async function handleEvent(sb: any, conn: any, evt: any) {
     signature_valid: true,
   });
 
-  // 4) dispara webchat-bot e envia resposta via IG
+  // 4) dispara webchat-bot e envia respuesta via IG
   try {
-    const { data: botRes } = await sb.functions.invoke('webchat-bot', {
+    const { fecha: botRes } = await sb.functions.invoke('webchat-bot', {
       body: {
         conversation_id: conversationId,
         message: content,
@@ -286,7 +286,7 @@ async function extractContent(msg: any, conn: any): Promise<{ content: string; c
 
   if (msg?.reaction) return { content: String(msg.reaction.emoji ?? '❤️'), contentType: 'text', metadata: { ig_type: 'reaction', reaction: msg.reaction } };
 
-  return { content: '[mensagem]', contentType: 'text', metadata: { ig_type: 'unknown', raw: msg } };
+  return { content: '[mensaje]', contentType: 'text', metadata: { ig_type: 'unknown', raw: msg } };
 }
 
 async function downloadAndStoreMedia(conn: any, mid: string, url: string, type: string): Promise<{ url: string | null; path: string }> {
@@ -299,7 +299,7 @@ async function downloadAndStoreMedia(conn: any, mid: string, url: string, type: 
   const sb = supa();
   const { error } = await sb.storage.from('instagram-media').upload(path, buf, { contentType: ct, upsert: true });
   if (error) throw error;
-  const { data: signed } = await sb.storage.from('instagram-media').createSignedUrl(path, 60 * 60 * 24 * 7);
+  const { fecha: signed } = await sb.storage.from('instagram-media').createSignedUrl(path, 60 * 60 * 24 * 7);
   return { url: signed?.signedUrl ?? null, path };
 }
 

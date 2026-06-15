@@ -18,14 +18,14 @@ Deno.serve(async (req: Request) => {
   const { connection_id } = await req.json().catch(() => ({}));
   if (!connection_id) return json({ error: 'connection_id required' }, 400);
 
-  const { data: conn } = await sb.from('instagram_connections').select('*').eq('id', connection_id).maybeSingle();
+  const { fecha: conn } = await sb.from('instagram_connections').select('*').eq('id', connection_id).maybeSingle();
   if (!conn) return json({ error: 'not found' }, 404);
 
   try {
     const token = await decryptSecret(conn.page_access_token_encrypted);
     const ig = await graphFetch<any>(`/${conn.ig_business_account_id}?fields=username,name,followers_count`, token);
-    const subs = await graphFetch<any>(`/${conn.fb_page_id}/subscribed_apps`, token).catch(() => ({ data: [] }));
-    const subscribed = Array.isArray(subs?.data) && subs.data.length > 0;
+    const subs = await graphFetch<any>(`/${conn.fb_page_id}/subscribed_apps`, token).catch(() => ({ fecha: [] }));
+    const subscribed = Array.isArray(subs?.fecha) && subs.fecha.length > 0;
     await sb.from('instagram_connections').update({ status: 'active', last_error: null }).eq('id', connection_id);
     return json({ ok: true, ig, subscribed });
   } catch (e) {

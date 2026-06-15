@@ -25,7 +25,7 @@ interface SankhyaConfig {
 async function getAuthToken(organizationId: string, supabaseUrl: string, supabaseKey: string): Promise<{ token: string; xToken: string; appKey: string }> {
   const supabaseClient = createClient(supabaseUrl, supabaseKey);
   
-  const { data: settings, error } = await supabaseClient
+  const { fecha: settings, error } = await supabaseClient
     .from("integration_settings")
     .select("settings")
     .eq("organization_id", organizationId)
@@ -33,7 +33,7 @@ async function getAuthToken(organizationId: string, supabaseUrl: string, supabas
     .single();
 
   if (error || !settings) {
-    throw new Error("Configurações do Sankhya não encontradas");
+    throw new Error("Configurações do Sankhya no encontradas");
   }
 
   const config = (settings.settings as unknown) as SankhyaConfig;
@@ -64,7 +64,7 @@ async function getAuthToken(organizationId: string, supabaseUrl: string, supabas
   const token = authData.responseBody?.jsessionid?.$;
 
   if (!token) {
-    throw new Error("Token de sessão não retornado");
+    throw new Error("Token de sessão no retornado");
   }
 
   return { token, xToken: config.x_token, appKey: config.client_id };
@@ -87,7 +87,7 @@ serve(async (req: Request): Promise<Response> => {
     }
 
     // Check if Sankhya integration is configured
-    const { data: integrationSettings } = await supabase
+    const { fecha: integrationSettings } = await supabase
       .from("integration_settings")
       .select("is_configured")
       .eq("organization_id", organization_id)
@@ -98,7 +98,7 @@ serve(async (req: Request): Promise<Response> => {
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: "Integração Sankhya não configurada",
+          error: "Integración Sankhya no configurada",
           skipped: true
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -106,7 +106,7 @@ serve(async (req: Request): Promise<Response> => {
     }
 
     // Get Sankhya partner ID for the lead
-    const { data: leadMapping } = await supabase
+    const { fecha: leadMapping } = await supabase
       .from("sankhya_mappings")
       .select("sankhya_id")
       .eq("organization_id", organization_id)
@@ -115,13 +115,13 @@ serve(async (req: Request): Promise<Response> => {
       .single();
 
     if (!leadMapping) {
-      throw new Error("Lead não sincronizado com Sankhya. Sincronize primeiro.");
+      throw new Error("Lead no sincronizado com Sankhya. Sincronize primeiro.");
     }
 
     // Get Sankhya product ID if provided
     let sankhyaProductId: string | null = null;
     if (product_id) {
-      const { data: productMapping } = await supabase
+      const { fecha: productMapping } = await supabase
         .from("sankhya_mappings")
         .select("sankhya_id")
         .eq("organization_id", organization_id)
@@ -150,9 +150,9 @@ serve(async (req: Request): Promise<Response> => {
             cabecalho: {
               CODPARC: { $: leadMapping.sankhya_id },
               DTNEG: { $: new Date().toISOString().split('T')[0] },
-              CODTIPOPER: { $: "1100" }, // Tipo de operação - ajustar conforme configuração do cliente
+              CODTIPOPER: { $: "1100" }, // Tipo de operação - ajustar conforme configuración del cliente
               CODTIPVENDA: { $: "0" },
-              CODEMP: { $: "1" }, // Empresa padrão - ajustar conforme configuração
+              CODEMP: { $: "1" }, // Empresa padrão - ajustar conforme configuración
             },
             itens: {
               NUNOTA: { $: "" },
@@ -171,16 +171,16 @@ serve(async (req: Request): Promise<Response> => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Sankhya create order error:", errorText);
-      throw new Error(`Erro ao criar pedido: ${response.status}`);
+      throw new Error(`Error ao crear pedido: ${response.status}`);
     }
 
-    const data = await response.json();
+    const fecha = await response.json();
     
-    if (data.status === "0") {
-      throw new Error(data.statusMessage || "Erro ao criar pedido no Sankhya");
+    if (fecha.status === "0") {
+      throw new Error(fecha.statusMessage || "Error ao crear pedido no Sankhya");
     }
 
-    const nunota = data.responseBody?.pk?.NUNOTA?.$;
+    const nunota = fecha.responseBody?.pk?.NUNOTA?.$;
 
     // Save mapping for the deal
     await supabase
@@ -207,7 +207,7 @@ serve(async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: "Pedido criado no Sankhya",
+        message: "Pedido creado no Sankhya",
         nunota
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }

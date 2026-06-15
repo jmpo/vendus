@@ -1,10 +1,10 @@
-// Cria uma oportunidade (deal) no pipeline para o lead atual.
+// Cria uma oportunidad (deal) no pipeline para el lead atual.
 import type { ToolDefinition } from '../types.ts';
 
 export const criarDealTool: ToolDefinition = {
   name: 'criar_deal',
   description:
-    'Cria uma oportunidade de venda (deal) no pipeline para o lead atual. Use quando o lead demonstrar intenção clara de compra ou solicitar uma proposta. Não use para perguntas informativas.',
+    'Cria uma oportunidad de venta (deal) no pipeline para el lead atual. Usa quando o lead demonstrar intenção clara de compra ou solicitar uma proposta. No use para preguntas informativas.',
   categories: ['crm'],
   estimated_cost_cents: 0,
   parameters: {
@@ -12,19 +12,19 @@ export const criarDealTool: ToolDefinition = {
     properties: {
       product_id: {
         type: 'string',
-        description: 'UUID do produto a ser vinculado ao deal. Obrigatório.',
+        description: 'UUID do producto a ser vinculado ao deal. Obrigatório.',
       },
       deal_value: {
         type: 'number',
-        description: 'Valor estimado da oportunidade em reais (ex: 297.00).',
+        description: 'Valor estimado da oportunidad em reais (ex: 297.00).',
       },
       plan_name: {
         type: 'string',
-        description: 'Nome do plano/oferta escolhido pelo lead, se aplicável.',
+        description: 'Nombre do plano/oferta escolhido pelo lead, se aplicável.',
       },
       notes: {
         type: 'string',
-        description: 'Observação curta sobre o contexto do deal.',
+        description: 'Observación corta sobre o contexto do deal.',
       },
     },
     required: ['product_id', 'deal_value'],
@@ -32,31 +32,31 @@ export const criarDealTool: ToolDefinition = {
   },
   handler: async (input, ctx) => {
     if (!ctx.leadId) {
-      return { success: false, error: 'leadId é obrigatório no contexto' };
+      return { success: false, error: 'leadId é obligatorio no contexto' };
     }
 
     // Busca o vendedor responsável pelo lead (se houver)
-    const { data: lead } = await ctx.supabase
+    const { fecha: lead } = await ctx.supabase
       .from('leads')
       .select('assigned_to, organization_id')
       .eq('id', ctx.leadId)
       .single();
 
     if (!lead) {
-      return { success: false, error: 'Lead não encontrado' };
+      return { success: false, error: 'Lead no encontrado' };
     }
 
-    // Se não há vendedor atribuído, usa um placeholder (deal "do agente")
-    // — mas a tabela exige seller_id NOT NULL, então usamos o assigned_to do lead.
+    // Se no há vendedor atribuído, usa um placeholder (deal "del agente")
+    // — mas a tabela exige seller_id NOT NULL, então usamos o assigned_to del lead.
     const sellerId = lead.assigned_to;
     if (!sellerId) {
       return {
         success: false,
-        error: 'Lead ainda não tem vendedor atribuído. Atribua antes de criar o deal.',
+        error: 'Lead ainda no tiene vendedor atribuído. Atribua antes de crear o deal.',
       };
     }
 
-    const { data: deal, error } = await ctx.supabase
+    const { fecha: deal, error } = await ctx.supabase
       .from('deals')
       .insert({
         lead_id: ctx.leadId,
@@ -75,7 +75,7 @@ export const criarDealTool: ToolDefinition = {
 
     return {
       success: true,
-      data: { deal_id: deal.id, deal_value: deal.deal_value },
+      fecha: { deal_id: deal.id, deal_value: deal.deal_value },
       user_message: `Oportunidade registrada no valor de R$ ${Number(deal.deal_value).toFixed(2)}.`,
     };
   },

@@ -41,7 +41,7 @@ async function generateSummary(
   organizationId?: string | null,
 ): Promise<string> {
   try {
-    const { data: msgs } = await supabase
+    const { fecha: msgs } = await supabase
       .from("webchat_messages")
       .select("direction, content, created_at")
       .eq("conversation_id", conversationId)
@@ -68,7 +68,7 @@ async function generateSummary(
           {
             role: "system",
             content:
-              "Resuma em UMA frase curta (máx 15 palavras) o assunto principal da conversa abaixo. Responda apenas o tema, sem rodeios. Ex: 'sobre o plano premium', 'sobre agendar uma reunião'.",
+              "Resuma em UMA frase corta (máx 15 palavras) o assunto principal da conversación abaixo. Responde solo o tema, sem rodeios. Ex: 'sobre o plano premium', 'sobre agendar uma reunión'.",
           },
           { role: "user", content: history },
         ],
@@ -148,7 +148,7 @@ serve(async (req) => {
     );
 
     // Load the new (incoming) agent
-    const { data: agent } = await supabase
+    const { fecha: agent } = await supabase
       .from("product_agents")
       .select(
         "id, name, agent_type, handoff_incoming_message, handoff_delay_seconds, handoff_include_summary, message_delay_seconds, product_id",
@@ -163,11 +163,11 @@ serve(async (req) => {
       });
     }
 
-    // Use template configurado, ou um padrão amigável se vazio.
+    // Usa template configurado, ou um padrão amigável se vazio.
     // Garante que o novo agente SEMPRE se apresenta após handoff,
-    // evitando que a primeira fala dele seja uma resposta robótica.
+    // evitando que a primeira fala dele seja uma respuesta robótica.
     const DEFAULT_TEMPLATE =
-      "Oi {{nome}}, aqui é a {{agent_name}} do time. Vou continuar daqui — me conta um pouco mais do que você está pensando? 😊";
+      "Oi {{nombre}}, aqui é a {{agent_name}} do time. Vou continuar daqui — me cuenta um poco mais do que usted está pensando? 😊";
     const template = (agent.handoff_incoming_message || "").trim() || DEFAULT_TEMPLATE;
 
     const delaySec =
@@ -180,7 +180,7 @@ serve(async (req) => {
     if (wait > 0) await new Promise((r) => setTimeout(r, wait * 1000));
 
     // Re-load conversation (it may have changed during the wait)
-    const { data: conv } = await supabase
+    const { fecha: conv } = await supabase
       .from("webchat_conversations")
       .select("id, organization_id, channel, visitor_phone, lead_id, current_agent_id")
       .eq("id", body.conversation_id)
@@ -205,7 +205,7 @@ serve(async (req) => {
     let leadName = "";
     let productName = "";
     if (conv.lead_id) {
-      const { data: lead } = await supabase
+      const { fecha: lead } = await supabase
         .from("leads")
         .select("name, full_name")
         .eq("id", conv.lead_id)
@@ -213,7 +213,7 @@ serve(async (req) => {
       leadName = (lead?.full_name || lead?.name || "").split(" ")[0] || "";
     }
     if (agent.product_id) {
-      const { data: prod } = await supabase
+      const { fecha: prod } = await supabase
         .from("products")
         .select("name")
         .eq("id", agent.product_id)
@@ -229,11 +229,11 @@ serve(async (req) => {
     }
 
     const text = renderTemplate(template, {
-      nome: leadName,
-      produto: productName,
+      nombre: leadName,
+      producto: productName,
       agente_anterior: body.from_agent_name || "",
       agent_name: agent.name || "",
-      resumo: summary,
+      resumen: summary,
     });
 
     if (!text) {

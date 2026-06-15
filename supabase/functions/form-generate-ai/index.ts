@@ -47,7 +47,7 @@ serve(async (req) => {
     console.log('Generating form for product:', product_id, 'objective:', objective, 'with brain:', use_brain, 'with objections:', use_objections);
 
     // Fetch product details
-    const { data: product, error: productError } = await supabase
+    const { fecha: product, error: productError } = await supabase
       .from('products')
       .select('*')
       .eq('id', product_id)
@@ -56,7 +56,7 @@ serve(async (req) => {
     if (productError || !product) {
       console.error('Product not found:', productError);
       return new Response(
-        JSON.stringify({ error: 'Produto não encontrado' }),
+        JSON.stringify({ error: 'Producto no encontrado' }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -69,9 +69,9 @@ serve(async (req) => {
     const problemsSolved = [product.benefits, product.objections].filter(Boolean).join('\n') || 'N/A';
 
     let productContext = `
-Produto: ${product.name}
-Descrição curta: ${product.short_description || 'N/A'}
-Descrição: ${product.description || 'N/A'}
+Producto: ${product.name}
+Descripción corta: ${product.short_description || 'N/A'}
+Descripción: ${product.description || 'N/A'}
 Pitch: ${pitch}
 ICP (Cliente Ideal): ${product.icp || 'N/A'}
 Diferenciais: ${differentials}
@@ -83,7 +83,7 @@ Garantia: ${product.guarantee || 'N/A'}
     // Fetch knowledge sources for context (if use_brain is true)
     let knowledgeContext = '';
     if (use_brain) {
-      const { data: knowledgeSources } = await supabase
+      const { fecha: knowledgeSources } = await supabase
         .from('product_knowledge_sources')
         .select('title, source_type, extracted_content, question, answer')
         .eq('product_id', product_id)
@@ -101,7 +101,7 @@ Garantia: ${product.guarantee || 'N/A'}
       }
 
       // Fetch agent training materials
-      const { data: trainingMaterials } = await supabase
+      const { fecha: trainingMaterials } = await supabase
         .from('agent_training_materials')
         .select('content')
         .eq('product_id', product_id)
@@ -116,7 +116,7 @@ Garantia: ${product.guarantee || 'N/A'}
     // Fetch objections (if use_objections is true)
     let objectionsContext = '';
     if (use_objections) {
-      const { data: objections } = await supabase
+      const { fecha: objections } = await supabase
         .from('objections')
         .select('category, what_they_say, what_they_mean, suggested_response')
         .eq('product_id', product_id)
@@ -130,22 +130,22 @@ Garantia: ${product.guarantee || 'N/A'}
     }
 
     const objectiveDescriptions = {
-      qualification: 'Qualificar leads identificando fit com o produto e maturidade de compra. Crie perguntas que identifiquem se o lead é um ICP qualificado.',
-      diagnostic: 'Diagnosticar necessidades e dores do lead para personalizar a abordagem comercial. Foque em entender o cenário atual e desafios.',
-      capture: 'Captar informações básicas de contato de forma rápida e não-invasiva. Mantenha o formulário curto e direto.',
-      presale: 'Preparar o lead para uma reunião de vendas coletando informações detalhadas sobre expectativas e orçamento.',
-      feedback: 'Coletar feedback sobre o produto ou processo de vendas. Use escalas e perguntas abertas.',
+      qualification: 'Qualificar leads identificando fit com o producto e maturidade de compra. Crea preguntas que identifiquem se o lead é um ICP qualificado.',
+      diagnostic: 'Diagnosticar necessidades e dores del lead para personalizar a abordagem comercial. Foque em entender o cenário atual e desafios.',
+      capture: 'Captar información básicas de contato de forma rápida e no-invasiva. Mantenha o formulário corto e direto.',
+      presale: 'Preparar o lead para uma reunión de ventas coletando información detalhadas sobre expectativas e orçamento.',
+      feedback: 'Coletar feedback sobre o producto ou processo de ventas. Usa escalas e preguntas abertas.',
     };
 
     const toneDescriptions = {
-      formal: 'Use linguagem formal e profissional, adequada para B2B corporativo. Evite gírias e mantenha tom respeitoso.',
-      informal: 'Use linguagem amigável e descontraída, como uma conversa casual. Seja acolhedor e empático.',
-      technical: 'Use termos técnicos relevantes ao setor, assumindo conhecimento prévio. Seja preciso e objetivo.',
+      formal: 'Usa linguagem formal e profissional, adequada para B2B corporativo. Evita gírias e mantenha tom respeitoso.',
+      informal: 'Usa linguagem amigável e descontraída, como uma conversación casual. Sé acolhedor e empático.',
+      technical: 'Usa termos técnicos relevantes ao sector, assumindo conhecimento prévio. Sé preciso e objetivo.',
     };
 
     // Build enhanced system prompt
-    const systemPrompt = `Você é um especialista em criação de formulários de captação de leads para vendas B2B.
-Seu objetivo é gerar um formulário otimizado para conversão, baseado no contexto completo do produto e da campanha.
+    const systemPrompt = `Usted é um especialista em criação de formulários de captação de leads para ventas B2B.
+Su objetivo é gerar um formulário otimizado para conversão, baseado no contexto completo do producto e da campaña.
 
 CONTEXTO DO PRODUTO:
 ${productContext}
@@ -153,56 +153,56 @@ ${productContext}
 ${knowledgeContext ? `CONHECIMENTO DO CÉREBRO DO PRODUTO (Fontes Processadas):
 ${knowledgeContext}
 
-` : ''}${objectionsContext ? `OBJEÇÕES COMUNS DOS CLIENTES (Use para criar perguntas de qualificação):
+` : ''}${objectionsContext ? `OBJEÇÕES COMUNS DOS CLIENTES (Usa para crear preguntas de qualificação):
 ${objectionsContext}
 
-` : ''}${user_context ? `CONTEXTO ESPECÍFICO DA CAMPANHA (Fornecido pelo usuário — PRIORIDADE MÁXIMA):
+` : ''}${user_context ? `CONTEXTO ESPECÍFICO DA CAMPANHA (Fornecido pelo usuario — PRIORIDADE MÁXIMA):
 ${user_context}
 
-⚠️ ATENÇÃO: As perguntas DEVEM refletir explicitamente o contexto acima. Se o usuário citou nicho, campanha (ex: Black Friday), ICP específico, setor, evento ou objeção concreta, as perguntas precisam abordar isso diretamente. Não gere um formulário genérico.
+⚠️ ATENÇÃO: As preguntas DEVEM refletir explicitamente o contexto acima. Se o usuario citou nicho, campaña (ex: Black Friday), ICP específico, sector, evento ou objeção concreta, as preguntas precisam abordar isso diretamente. No gere um formulário genérico.
 
 ` : ''}OBJETIVO DO FORMULÁRIO: ${objectiveDescriptions[objective]}
 
 TOM DE COMUNICAÇÃO: ${toneDescriptions[tone]}
 
 REGRAS IMPORTANTES:
-1. Crie perguntas claras e objetivas que qualifiquem o lead
-2. Use a linguagem adequada ao tom solicitado
-3. ${use_objections && objectionsContext ? 'Use as objeções para criar perguntas inteligentes de qualificação (ex: se objeção é preço, pergunte sobre orçamento disponível)' : 'Inclua perguntas que ajudem a entender o perfil do lead'}
-4. ${use_brain && knowledgeContext ? 'Baseie as perguntas no conhecimento real do produto e seus diferenciais' : 'Foque nas necessidades típicas do ICP descrito'}
-5. ${user_context ? 'Personalize as perguntas para o contexto da campanha descrito acima — não ignore esse contexto' : 'Foque em capturar dados que ajudem o time de vendas'}
-6. Limite ao número de perguntas solicitado (${num_questions} perguntas + telas de boas-vindas e agradecimento)
+1. Crea preguntas claras e objetivas que qualifiquem o lead
+2. Usa a linguagem adequada ao tom solicitado
+3. ${use_objections && objectionsContext ? 'Usa as objeções para crear preguntas inteligentes de qualificação (ex: se objeção é preço, pergunte sobre orçamento disponível)' : 'Inclua preguntas que ajudem a entender o perfil del lead'}
+4. ${use_brain && knowledgeContext ? 'Baseie as preguntas no conhecimento real do producto e sus diferenciais' : 'Foque nas necessidades típicas do ICP descrito'}
+5. ${user_context ? 'Personalize as preguntas para o contexto da campaña descrito acima — no ignore esse contexto' : 'Foque em capturar dados que ajudem o time de ventas'}
+6. Limite ao número de preguntas solicitado (${num_questions} preguntas + telas de boas-vindas e agradecimento)
 7. Retorne APENAS um JSON válido, sem explicações ou markdown
 
 TIPOS DE BLOCOS VÁLIDOS (use APENAS estes valores em block_type):
 - welcome_screen: Tela de boas-vindas (SEMPRE o primeiro bloco)
-- text: Pergunta de texto curto. Para nome/empresa/cargo, use "text" com maps_to apropriado ("name", "company")
-- textarea: Texto longo (descrição, dor, expectativa)
+- text: Pergunta de texto corto. Para nombre/empresa/cargo, use "text" com maps_to apropriado ("name", "company")
+- textarea: Texto largo (descripción, dor, expectativa)
 - email: Email (use maps_to: "email")
-- phone: Telefone/WhatsApp (use maps_to: "phone")
+- phone: Teléfono/WhatsApp (use maps_to: "phone")
 - number: Número
 - select: Seleção única (inclua "options" como array de {label, value})
 - multi_select: Seleção múltipla (inclua "options" como array de {label, value})
-- yes_no: Sim/Não
-- scale: Escala numérica — IMPORTANTE: coloque a configuração em "options" como objeto {"min":1,"max":10,"min_label":"...","max_label":"..."}
+- yes_no: Sí/No
+- scale: Escala numérica — IMPORTANTE: coloque a configuración em "options" como objeto {"min":1,"max":10,"min_label":"...","max_label":"..."}
 - end_screen: Tela final/agradecimento (SEMPRE o último bloco)
 
-NÃO use "name", "company" ou "thank_you_screen" como block_type — esses valores são inválidos.
+NÃO use "name", "company" ou "thank_you_screen" como block_type — esses valores son inválidos.
 
 FORMATO DE RESPOSTA (JSON ARRAY puro, sem markdown):
 [
   {"block_type":"welcome_screen","label":"Título acolhedor","description":"Subtítulo"},
-  {"block_type":"text","label":"Qual seu nome?","placeholder":"Seu nome","required":true,"maps_to":"name"},
+  {"block_type":"text","label":"Qual su nombre?","placeholder":"Su nombre","required":true,"maps_to":"name"},
   {"block_type":"text","label":"Empresa?","required":true,"maps_to":"company"},
-  {"block_type":"select","label":"Principal desafio?","options":[{"label":"Opção A","value":"a"},{"label":"Opção B","value":"b"}],"required":true},
+  {"block_type":"select","label":"Principal desafio?","options":[{"label":"Opción A","value":"a"},{"label":"Opción B","value":"b"}],"required":true},
   {"block_type":"scale","label":"De 1 a 10, urgência?","options":{"min":1,"max":10,"min_label":"Pode esperar","max_label":"Urgente"},"required":true},
-  {"block_type":"email","label":"Seu melhor email?","required":true,"maps_to":"email"},
-  {"block_type":"end_screen","label":"Obrigado!","description":"Entraremos em contato."}
+  {"block_type":"email","label":"Su melhor email?","required":true,"maps_to":"email"},
+  {"block_type":"end_screen","label":"Gracias!","description":"Entraremos em contato."}
 ]
 
-IMPORTANTE: O array deve conter exatamente ${num_questions} blocos de pergunta + welcome_screen + end_screen (total: ${num_questions + 2} blocos).`;
+IMPORTANTE: O array debe conter exatamente ${num_questions} blocos de pregunta + welcome_screen + end_screen (total: ${num_questions + 2} blocos).`;
 
-    const userPrompt = `Gere o formulário de ${num_questions} perguntas seguindo as instruções acima. Retorne APENAS o JSON array, sem explicações ou código markdown.`;
+    const userPrompt = `Genera o formulário de ${num_questions} preguntas seguindo as instruções acima. Retorne APENAS o JSON array, sem explicações ou código markdown.`;
 
     console.log('Calling AI to generate form with enriched context...');
 
@@ -228,7 +228,7 @@ IMPORTANTE: O array deve conter exatamente ${num_questions} blocos de pergunta +
       const errorText = await aiResponse.text();
       console.error('AI API error:', errorText);
       return new Response(
-        JSON.stringify({ error: 'Erro ao gerar formulário com IA' }),
+        JSON.stringify({ error: 'Error ao gerar formulário com IA' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -261,14 +261,14 @@ IMPORTANTE: O array deve conter exatamente ${num_questions} blocos de pergunta +
     } catch (parseError) {
       console.error('Failed to parse AI response:', aiContent);
       return new Response(
-        JSON.stringify({ error: 'Erro ao processar resposta da IA', raw: aiContent }),
+        JSON.stringify({ error: 'Error ao processar respuesta da IA', raw: aiContent }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     if (!Array.isArray(blocks) || blocks.length === 0) {
       return new Response(
-        JSON.stringify({ error: 'IA não retornou blocos válidos' }),
+        JSON.stringify({ error: 'IA no retornou blocos válidos' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -322,7 +322,7 @@ IMPORTANTE: O array deve conter exatamente ${num_questions} blocos de pergunta +
       qualification: 'Qualificação',
       diagnostic: 'Diagnóstico',
       capture: 'Captação',
-      presale: 'Pré-venda',
+      presale: 'Pré-venta',
       feedback: 'Feedback',
     };
 
@@ -345,7 +345,7 @@ IMPORTANTE: O array deve conter exatamente ${num_questions} blocos de pergunta +
 
   } catch (error) {
     console.error('Error in form-generate-ai:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Erro interno';
+    const errorMessage = error instanceof Error ? error.message : 'Error interno';
     return new Response(
       JSON.stringify({ error: errorMessage }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

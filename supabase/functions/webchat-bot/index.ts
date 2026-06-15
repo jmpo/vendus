@@ -40,10 +40,10 @@ const corsHeaders = {
 
 // ─── Handoff helpers ────────────────────────────────────────────────────────
 const DEFAULT_HANDOFF_OUTGOING =
-  'Beleza, {{nome}}! Vou te passar pra {{proximo_agente}}, que segue daqui contigo. Já te chama em instantes.';
+  'Beleza, {{nombre}}! Vou te passar pra {{proximo_agente}}, que segue daqui contigo. Já te chama em instantes.';
 
 const KNOWN_PLACEHOLDERS = new Set([
-  'nome', 'produto', 'agente_anterior', 'agent_name', 'resumo', 'proximo_agente',
+  'nombre', 'producto', 'agente_anterior', 'agent_name', 'resumen', 'proximo_agente',
 ]);
 
 function renderHandoffTpl(tpl: string, vars: Record<string, string>): string {
@@ -93,7 +93,7 @@ function stripFakeHandoffTags(text: string): { cleaned: string; fakeFound: boole
   });
   // Remove "entregáveis" inventados em colchetes (ex: "[Depoimento: https://...]",
   // "[Vídeo aqui]", "[Link]", "[Material]"). Se o agente quiser enviar mídia,
-  // tem que usar send_catalog_item / send_video — não escrever placeholders.
+  // tiene que usar send_catalog_item / send_video — no escrever placeholders.
   const fakeAssetRe = /\[\s*(?:depoimento|case|v[ií]deo|pdf|ficha|folder|material|link|prova[\s_-]*social|brochura)\b[^\]]*\]/gi;
   cleaned = cleaned.replace(fakeAssetRe, () => { fakeFound = true; return ''; });
   cleaned = cleaned.split('\n').filter((ln) => ln.replace(/[\s\.,;:!?\-—_]/g, '').length > 0).join('\n').trim();
@@ -292,7 +292,7 @@ interface FlowBlock {
   id: string;
   type: 'message' | 'input' | 'buttons' | 'ai_takeover' | 'handoff' | 'tag' | 'video' | 'delay' | 'agent_switch';
   position: { x: number; y: number };
-  data: {
+  fecha: {
     content?: string;
     delay_ms?: number;
     input_type?: string;
@@ -346,20 +346,20 @@ const AGENT_TYPE_LABELS: Record<string, string> = {
 };
 
 // Default super sales prompt - Vendedor Consultivo Estratégico
-const DEFAULT_SALES_PROMPT = `Você é um VENDEDOR CONSULTIVO ESTRATÉGICO de alta performance. Sua missão é VENDER através de CONEXÃO GENUÍNA e DIAGNÓSTICO REAL, não apenas informar.
+const DEFAULT_SALES_PROMPT = `Usted é um VENDEDOR CONSULTIVO ESTRATÉGICO de alta performance. Su missão é VENDER através de CONEXÃO GENUÍNA e DIAGNÓSTICO REAL, no apenas informar.
 
 ═══════════════════════════════════════
 REGRAS CRÍTICAS ANTI-REPETIÇÃO
 ═══════════════════════════════════════
 
-ANTES de responder, ANALISE TODO o histórico da conversa e siga estas regras:
+ANTES de responder, ANALISE TODO o histórico da conversación e siga estas regras:
 
-1. NUNCA repita a mesma saudação, frase de abertura ou encerramento já usada no histórico
-2. NUNCA use o mesmo emoji em 2 mensagens consecutivas (máximo 1 emoji por mensagem)
-3. Se já agendou reunião, NÃO ofereça agendar novamente
-4. Se já coletou email/telefone, NÃO peça novamente
-5. Se já apresentou o produto, NÃO repita a apresentação — avance para próxima etapa
-6. Cada mensagem DEVE progredir a conversa — nunca voltar a um ponto já coberto
+1. NUNCA repita a misma saudação, frase de abertura ou encerramento já usada no histórico
+2. NUNCA use o mismo emoji em 2 mensajes consecutivas (máximo 1 emoji por mensaje)
+3. Se já agendou reunión, NÃO ofereça agendar novamente
+4. Se já coletou email/teléfono, NÃO peça novamente
+5. Se já apresentou o producto, NÃO repita a apresentação — avance para próxima etapa
+6. Cada mensaje DEVE progredir a conversación — nunca voltar a um ponto já coberto
 
 FRASES ABSOLUTAMENTE PROIBIDAS:
 - "Tudo ótimo por aqui"
@@ -369,19 +369,19 @@ FRASES ABSOLUTAMENTE PROIBIDAS:
 - "Fique à vontade"
 - "Com certeza"
 - "Perfeito!"
-- Qualquer frase que já apareceu no histórico desta conversa
+- Qualquer frase que já apareceu no histórico desta conversación
 
 ═══════════════════════════════════════
 TÉCNICA DE VENDAS CONSULTIVAS (SPIN)
 ═══════════════════════════════════════
 
-Siga esta progressão natural (NÃO pule etapas):
+Sigue esta progressão natural (NÃO pule etapas):
 
-1. SITUAÇÃO (1-2 msgs): Entenda o cenário atual do cliente
-   - "Como funciona [processo X] hoje na sua operação?"
+1. SITUAÇÃO (1-2 msgs): Entenda o cenário atual del cliente
+   - "Como funciona [processo X] hoy na su operação?"
    - "Quanto tempo vocês dedicam a [atividade Y] por semana?"
 
-2. PROBLEMA (1-2 msgs): Identifique a DOR real
+2. PROBLEMA (1-2 msgs): Identifica a DOR real
    - "E o que mais te incomoda nesse processo atual?"
    - "Qual o maior gargalo que vocês enfrentam com isso?"
 
@@ -390,11 +390,11 @@ Siga esta progressão natural (NÃO pule etapas):
    - "Quanto vocês estimam que perdem por causa disso?"
 
 4. NECESSIDADE (1 msg): Faça o cliente verbalizar a solução
-   - "Se você pudesse resolver isso, qual seria o cenário ideal?"
-   - "O que mudaria na sua operação se [problema] não existisse mais?"
+   - "Se usted pudesse resolver isso, qual seria o cenário ideal?"
+   - "O que mudaria na su operação se [problema] no existisse mais?"
 
 5. SOLUÇÃO (1-2 msgs): Conecte benefício específico à dor identificada
-   - Não liste features — mostre como resolve a DOR específica que ele mencionou
+   - No liste features — mostre como resolve a DOR específica que ele mencionou
 
 6. AÇÃO (1 msg): Conduza para próximo passo concreto e específico
 
@@ -402,16 +402,16 @@ Siga esta progressão natural (NÃO pule etapas):
 ESTILO DE COMUNICAÇÃO
 ═══════════════════════════════════════
 
-- Mensagens CURTAS: máximo 3-4 linhas por mensagem
-- Envie TUDO em UMA ÚNICA mensagem — NUNCA quebre em múltiplos parágrafos separados por \\n\\n
-- Se a resposta ficar longa, resuma e priorize o mais importante em um único bloco
-- SEMPRE termine com UMA pergunta que avança a venda
-- Use o NOME do cliente quando souber (mas não em toda mensagem)
-- Fale como humano — linguagem natural do dia-a-dia
-- Seja específico: números, exemplos reais, dados concretos
-- NUNCA faça mais de 1 pergunta por mensagem
-- Varie a estrutura: alterne perguntas diretas, observações e provocações
-- Adapte o tom ao humor do cliente (se ele é direto, seja direto; se é detalhista, dê detalhes)
+- Mensagens CURTAS: máximo 3-4 linhas por mensaje
+- Envie TUDO em UMA ÚNICA mensaje — NUNCA quebre em múltiplos parágrafos separados por \\n\\n
+- Se a respuesta ficar larga, resuma e priorize o mais importante em um único bloco
+- SEMPRE termine com UMA pregunta que avança a venta
+- Usa o NOME del cliente quando souber (mas no em toda mensaje)
+- Fale como humano — linguagem natural do día-a-día
+- Sé específico: números, exemplos reais, dados concretos
+- NUNCA faça mais de 1 pregunta por mensaje
+- Varie a estrutura: alterne preguntas diretas, observaciones e provocações
+- Adapte o tom ao humor del cliente (se ele é direto, seja direto; se é detalhista, dê detalhes)
 
 ═══════════════════════════════════════
 O QUE NUNCA FAZER
@@ -420,12 +420,12 @@ O QUE NUNCA FAZER
 - Respostas longas (mais de 2 linhas em um único bloco)
 - Mensagens com mais de 150 caracteres sem quebra de parágrafo
 - Listar features sem conectar a benefício/dor
-- Responder sem fazer pergunta de retorno
+- Responder sem hacer pregunta de retorno
 - Parecer genérico ou robotizado
-- Dar toda informação de uma vez — dê aos poucos, uma coisa por mensagem
+- Dar toda información de uma vez — dê aos poucos, uma coisa por mensaje
 - Repetir qualquer elemento do histórico (saudações, emojis, frases)
-- Usar mais de 1 emoji por mensagem
-- Ignorar o que já foi discutido/combinado na conversa`;
+- Usar mais de 1 emoji por mensaje
+- Ignorar o que já fue discutido/combinado na conversación`;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -458,14 +458,14 @@ serve(async (req) => {
     // 🔒 HUMAN TAKEOVER GUARD (CRITICAL)
     // If a human seller has taken over this conversation, the AI must NOT
     // respond — not even with a fallback. Any reply here would "talk over"
-    // the seller and confuse the customer (e.g., "Desculpe, não entendi"
+    // the seller and confuse the customer (e.g., "Desculpe, no entendi"
     // sent right after the seller's message).
     // The whatsapp-webhook does this check too (defense-in-depth), but
     // webchat-bot is also called by other entrypoints (Inbox revival,
     // simulator, social channels), so we MUST guard here as well.
     // ============================================================
     try {
-      const { data: convStatus } = await supabase
+      const { fecha: convStatus } = await supabase
         .from('webchat_conversations')
         .select('status')
         .eq('id', body.conversation_id)
@@ -490,7 +490,7 @@ serve(async (req) => {
         system_prompt: '',
         knowledge_base: null,
         faq: [],
-        fallback_message: 'Vou pedir para um atendente humano continuar o seu atendimento, só um instante. 🙋',
+        fallback_message: 'Vou pedir para um agente humano continuar o su atención, só um instante. 🙋',
         use_product_brain: true,
       };
     }
@@ -505,7 +505,7 @@ serve(async (req) => {
     // ============================================================
     if (body.is_test === true && body.test_mode === 'orchestrator' && body.agent_id) {
       try {
-        const { data: orchAgent } = await supabase
+        const { fecha: orchAgent } = await supabase
           .from('product_agents')
           .select('id, name, agent_type, organization_id, welcome_enabled, welcome_message, quick_menu_mode, quick_menu_intro, quick_menu_options, quick_menu_invalid_message')
           .eq('id', body.agent_id)
@@ -514,8 +514,8 @@ serve(async (req) => {
         if (!orchAgent) {
           return new Response(
             JSON.stringify({
-              message: { content: '⚠️ Agente não encontrado para o teste.', message_type: 'text' },
-              response: '⚠️ Agente não encontrado para o teste.',
+              message: { content: '⚠️ Agente no encontrado para o teste.', message_type: 'text' },
+              response: '⚠️ Agente no encontrado para o teste.',
             }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
@@ -532,7 +532,7 @@ serve(async (req) => {
         // Resolve {{vars}} for greeting
         let orgName = '';
         if ((orchAgent as any).organization_id) {
-          const { data: orgRow } = await supabase
+          const { fecha: orgRow } = await supabase
             .from('organizations')
             .select('name')
             .eq('id', (orchAgent as any).organization_id)
@@ -542,7 +542,7 @@ serve(async (req) => {
         const safeNameForMenu = safeFirstName(body.visitor_name);
         const renderVars = (s: string) =>
           s
-            .replaceAll('{{nome}}', safeNameForMenu)
+            .replaceAll('{{nombre}}', safeNameForMenu)
             .replaceAll('{{visitor_name}}', safeNameForMenu)
             .replaceAll('{{agent_name}}', (orchAgent as any).name || '')
             .replaceAll('{{organization_name}}', orgName);
@@ -565,7 +565,7 @@ serve(async (req) => {
           const opt = match.option;
           if (opt.action === 'transfer_to_human') {
             saveTestState(stateKey, { state: 'humano', context: `Menu: ${opt.label}` });
-            const msg = `[Teste] 👤 Encaminhando para um atendente humano (opção: ${opt.label}).`;
+            const msg = `[Teste] 👤 Encaminhando para um agente humano (opción: ${opt.label}).`;
             return new Response(
               JSON.stringify({
                 message: { content: msg, message_type: 'text' },
@@ -577,14 +577,14 @@ serve(async (req) => {
           }
 
           if (opt.action === 'transfer_to_agent' && opt.target_agent_id) {
-            const { data: targetAgent } = await supabase
+            const { fecha: targetAgent } = await supabase
               .from('product_agents')
               .select('id, name, agent_type')
               .eq('id', opt.target_agent_id)
               .maybeSingle();
 
             if (!targetAgent) {
-              const msg = '[Teste] ⚠️ Agente alvo configurado no menu não existe ou foi desativado.';
+              const msg = '[Teste] ⚠️ Agente alvo configurado no menu no existe ou fue desativado.';
               return new Response(
                 JSON.stringify({
                   message: { content: msg, message_type: 'text' },
@@ -600,7 +600,7 @@ serve(async (req) => {
               routedAgentId: (targetAgent as any).id,
               routedAgentName: (targetAgent as any).name,
             });
-            const msg = `[Teste] 🎯 Roteamento concluído para **${(targetAgent as any).name}** (opção: ${opt.label}).\n\nEm produção, a partir daqui o lead conversaria diretamente com este agente.`;
+            const msg = `[Teste] 🎯 Roteamento concluído para **${(targetAgent as any).name}** (opción: ${opt.label}).\n\nEm produção, a partir daqui o lead conversaria diretamente com este agente.`;
             return new Response(
               JSON.stringify({
                 message: { content: msg, message_type: 'text' },
@@ -618,7 +618,7 @@ serve(async (req) => {
 
           if (opt.action === 'start_flow') {
             saveTestState(stateKey, { state: 'em_atendimento', context: `Menu: ${opt.label}` });
-            const msg = `[Teste] ▶️ Iniciaria o fluxo configurado para a opção "${opt.label}".`;
+            const msg = `[Teste] ▶️ Iniciaria o flujo configurado para a opción "${opt.label}".`;
             return new Response(
               JSON.stringify({
                 message: { content: msg, message_type: 'text' },
@@ -632,7 +632,7 @@ serve(async (req) => {
 
         // CASE B — Already routed in this test session
         if (ts.state === 'em_atendimento' && ts.routedAgentName) {
-          const msg = `[Teste] ✅ A conversa já foi roteada para **${ts.routedAgentName}** nesta sessão de teste.\n\nClique em "Limpar" para reiniciar o fluxo do orquestrador.`;
+          const msg = `[Teste] ✅ A conversación já fue roteada para **${ts.routedAgentName}** nesta sessão de teste.\n\nClique em "Limpar" para reiniciar o flujo do orquestrador.`;
           return new Response(
             JSON.stringify({
               message: { content: msg, message_type: 'text' },
@@ -642,7 +642,7 @@ serve(async (req) => {
           );
         }
         if (ts.state === 'humano') {
-          const msg = `[Teste] ✅ A conversa já foi encaminhada para humano nesta sessão de teste.\n\nClique em "Limpar" para reiniciar.`;
+          const msg = `[Teste] ✅ A conversación já fue encaminhada para humano nesta sessão de teste.\n\nClique em "Limpar" para reiniciar.`;
           return new Response(
             JSON.stringify({
               message: { content: msg, message_type: 'text' },
@@ -678,8 +678,8 @@ serve(async (req) => {
 
         // No greeting and no menu configured → tell admin to configure something
         const msg =
-          '[Teste] ℹ️ Este agente Orquestrador não tem mensagem de boas-vindas nem menu rápido configurado.\n\n' +
-          'Configure pelo menos um deles nas abas **Boas-vindas** ou **Roteamento** para testar o fluxo.';
+          '[Teste] ℹ️ Este agente Orquestrador no tiene mensaje de boas-vindas nem menu rápido configurado.\n\n' +
+          'Configure pelo menos um deles nas abas **Boas-vindas** ou **Roteamento** para testar o flujo.';
         return new Response(
           JSON.stringify({
             message: { content: msg, message_type: 'text' },
@@ -692,10 +692,10 @@ serve(async (req) => {
         return new Response(
           JSON.stringify({
             message: {
-              content: '⚠️ Erro ao executar teste do orquestrador. Veja os logs.',
+              content: '⚠️ Error ao executar teste do orquestrador. Veja os logs.',
               message_type: 'text',
             },
-            response: '⚠️ Erro ao executar teste do orquestrador.',
+            response: '⚠️ Error ao executar teste do orquestrador.',
           }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
@@ -720,7 +720,7 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    const { data: messages } = await supabase
+    const { fecha: messages } = await supabase
       .from('webchat_messages')
       .select('*')
       .eq('conversation_id', body.conversation_id)
@@ -738,7 +738,7 @@ serve(async (req) => {
         const slots = metadata.scheduling_context.suggestions;
         base.content += `\n[CONTEXTO INTERNO - NÃO REPITA ISSO AO CLIENTE: Horários já oferecidos: ${
           slots.map((s: any) => `${s.date} ${s.time}`).join(', ')
-        }. event_type_id: ${metadata.scheduling_context.event_type_id}, schedule_user_id: ${metadata.scheduling_context.schedule_user_id}. Se o cliente confirmar um horário, use schedule_meeting IMEDIATAMENTE. NÃO chame check_available_slots novamente.]`;
+        }. event_type_id: ${metadata.scheduling_context.event_type_id}, schedule_user_id: ${metadata.scheduling_context.schedule_user_id}. Se o cliente confirmar um horario, use schedule_meeting IMEDIATAMENTE. NÃO chame check_available_slots novamente.]`;
       }
       return base;
     });
@@ -746,7 +746,7 @@ serve(async (req) => {
     // Fetch product CTAs if product_id is available
     let productCTAs: ProductCTA[] = [];
     if (body.product_id) {
-      const { data: ctas } = await supabase
+      const { fecha: ctas } = await supabase
         .from('product_ctas')
         .select('*')
         .eq('product_id', body.product_id)
@@ -771,7 +771,7 @@ serve(async (req) => {
       try {
         // Check 1: explicit body.agent_id pointing to an admin agent
         if (body.agent_id) {
-          const { data: explicitAdmin } = await supabase
+          const { fecha: explicitAdmin } = await supabase
             .from('product_agents')
             .select('*')
             .eq('id', body.agent_id)
@@ -790,7 +790,7 @@ serve(async (req) => {
 
         // Check 2: conversation.current_agent_id pointing to admin (no explicit agent_id)
         if (!adminTakeoverActive && !body.agent_id) {
-          const { data: convAdmin } = await supabase
+          const { fecha: convAdmin } = await supabase
             .from('webchat_conversations')
             .select('current_agent_id, product_agents:current_agent_id(*)')
             .eq('id', body.conversation_id)
@@ -812,10 +812,10 @@ serve(async (req) => {
 
     // === STEP -2.5: Delegate to admin-agent-handle-inbound when admin takeover is active ===
     // The admin agent has a dedicated kernel (EXECUTIVE_KERNEL) and read-only tools.
-    // Running it through the generic webchat-bot pipeline produces "Desculpe, não entendi".
+    // Running it through the generic webchat-bot pipeline produces "Desculpe, no entendi".
     if (adminTakeoverActive && activeAgent && body.conversation_id) {
       try {
-        const { data: convForAdmin } = await supabase
+        const { fecha: convForAdmin } = await supabase
           .from('webchat_conversations')
           .select('organization_id, channel, visitor_phone, evolution_instance_id, lead_id')
           .eq('id', body.conversation_id)
@@ -858,7 +858,7 @@ serve(async (req) => {
             handoff: adminJson?.handoff || null,
           });
 
-          const replyText = (adminJson?.reply as string) || 'Sem resposta.';
+          const replyText = (adminJson?.reply as string) || 'Sem respuesta.';
           const handoffInfo = adminJson?.handoff || null;
 
           // Persist outbound reply in webchat_messages so the Inbox UI shows it.
@@ -922,14 +922,14 @@ serve(async (req) => {
     // The orchestrator classifies product+intent and routes to a specialist.
     // Only runs when org has orchestration enabled AND conversation is in 'triagem' state (or null).
     try {
-      const { data: convInit } = await supabase
+      const { fecha: convInit } = await supabase
         .from('webchat_conversations')
         .select('id, organization_id, channel, visitor_phone, lead_id, current_agent_id, orchestrator_state, orchestrator_context, orchestrator_question_count')
         .eq('id', body.conversation_id)
         .maybeSingle();
 
       if (convInit?.organization_id) {
-        const { data: orchConfig } = await supabase
+        const { fecha: orchConfig } = await supabase
           .from('organization_orchestrator_config')
           .select('*')
           .eq('organization_id', convInit.organization_id)
@@ -947,7 +947,7 @@ serve(async (req) => {
         // the orchestrator's greeting flow before any specialist agent answers.
         if (orchEnabled && !body.agent_id && !adminTakeoverActive) {
           try {
-            const { data: lastOutbound } = await supabase
+            const { fecha: lastOutbound } = await supabase
               .from('webchat_messages')
               .select('created_at')
               .eq('conversation_id', body.conversation_id)
@@ -994,7 +994,7 @@ serve(async (req) => {
         // before any AI classification runs. Configured per-agent in the admin.
         if (orchEnabled && !body.agent_id && !adminTakeoverActive) {
           try {
-            const { data: orchAgentFull } = await supabase
+            const { fecha: orchAgentFull } = await supabase
               .from('product_agents')
               .select('id, name, welcome_enabled, welcome_message, quick_menu_mode, quick_menu_intro, quick_menu_options, quick_menu_invalid_message')
               .eq('id', orchConfig.orchestrator_agent_id)
@@ -1057,7 +1057,7 @@ serve(async (req) => {
                     needsHuman: true,
                   };
                 } else if (opt.action === 'transfer_to_agent' && opt.target_agent_id) {
-                  const { data: targetAgent } = await supabase
+                  const { fecha: targetAgent } = await supabase
                     .from('product_agents')
                     .select('*')
                     .eq('id', opt.target_agent_id)
@@ -1084,7 +1084,7 @@ serve(async (req) => {
                     body.message = `[Menu: ${opt.label}] — ${body.message}`;
                   } else {
                     orchestratorEarlyResponse = {
-                      content: 'Esse atendimento está temporariamente indisponível. Vou te conectar com um humano.',
+                      content: 'Esse atención está temporariamente indisponível. Vou te conectar com um humano.',
                       needsHuman: true,
                     };
                     await supabase
@@ -1122,7 +1122,7 @@ serve(async (req) => {
               const greetingWanted = greetingEnabled || (menuMode === 'always' && menuOptions.length > 0);
               let isFirstInteraction = false;
               if (greetingWanted) {
-                const { data: lockRow } = await supabase
+                const { fecha: lockRow } = await supabase
                   .from('webchat_conversations')
                   .update({ welcome_sent_at: new Date().toISOString() })
                   .eq('id', body.conversation_id)
@@ -1137,7 +1137,7 @@ serve(async (req) => {
 
               if (isFirstInteraction && greetingWanted) {
                 // Resolve {{variables}} in greeting
-                const { data: orgRowG } = await supabase
+                const { fecha: orgRowG } = await supabase
                   .from('organizations')
                   .select('name')
                   .eq('id', convInit.organization_id)
@@ -1145,12 +1145,12 @@ serve(async (req) => {
                 let greeting = greetingEnabled ? greetingText : '';
                 const safeWelcomeName = safeFirstName(body.visitor_name);
                 greeting = greeting
-                  .replaceAll('{{nome}}', safeWelcomeName)
+                  .replaceAll('{{nombre}}', safeWelcomeName)
                   .replaceAll('{{visitor_name}}', safeWelcomeName)
                   .replaceAll('{{agent_name}}', (orchAgentFull as any)?.name || '')
                   .replaceAll('{{organization_name}}', orgRowG?.name || '');
-                // Limpa saudação tipo "Oi , tudo bem?" quando nome ficou vazio
-                greeting = greeting.replace(/\s+,/g, ',').replace(/(Oi|Olá|Opa|E aí)\s+,/gi, '$1,');
+                // Limpa saudação tipo "Oi , tudo bem?" quando nombre ficou vazio
+                greeting = greeting.replace(/\s+,/g, ',').replace(/(Oi|Hola|Opa|E aí)\s+,/gi, '$1,');
 
                 const showMenu = menuMode === 'always' && menuOptions.length > 0;
                 const menuMsg = showMenu
@@ -1191,20 +1191,20 @@ serve(async (req) => {
         if (orchEnabled && inTriage && !body.agent_id && !adminTakeoverActive && !orchestratorEarlyResponse && !activeAgent) {
           console.log('[webchat-bot] 🧭 Orchestrator enabled, running triage...');
 
-          const { data: orgRow } = await supabase
+          const { fecha: orgRow } = await supabase
             .from('organizations')
             .select('name')
             .eq('id', convInit.organization_id)
             .maybeSingle();
 
-          const { data: orgProducts } = await supabase
+          const { fecha: orgProducts } = await supabase
             .from('products')
             .select('id, name, description')
             .eq('organization_id', convInit.organization_id)
             .eq('is_active', true)
             .limit(20);
 
-          const { data: orchAgent } = await supabase
+          const { fecha: orchAgent } = await supabase
             .from('product_agents')
             .select('additional_prompt, quick_menu_mode, quick_menu_intro, quick_menu_options, quick_menu_invalid_message')
             .eq('id', orchConfig.orchestrator_agent_id)
@@ -1264,7 +1264,7 @@ serve(async (req) => {
               .eq('id', body.conversation_id);
 
             orchestratorEarlyResponse = {
-              content: result.resposta_orquestrador || 'Vou te conectar com um dos nossos atendentes agora.',
+              content: result.resposta_orquestrador || 'Vou te conectar com um dos nossos atendentes ahora.',
               needsHuman: true,
             };
           }
@@ -1295,7 +1295,7 @@ serve(async (req) => {
 
             // Try each preferred role for this product
             for (const role of preferredRoles) {
-              const { data: candidate } = await supabase
+              const { fecha: candidate } = await supabase
                 .from('product_agents')
                 .select('*')
                 .eq('product_id', result.produto_id)
@@ -1313,7 +1313,7 @@ serve(async (req) => {
 
             // Fallback 1: any default agent of the product
             if (!routedAgent) {
-              const { data: defaultAgent } = await supabase
+              const { fecha: defaultAgent } = await supabase
                 .from('product_agents')
                 .select('*')
                 .eq('product_id', result.produto_id)
@@ -1328,7 +1328,7 @@ serve(async (req) => {
 
             // Fallback 2: orchestrator itself assumes the conversation with product context
             if (!routedAgent) {
-              const { data: orchAsAgent } = await supabase
+              const { fecha: orchAsAgent } = await supabase
                 .from('product_agents')
                 .select('*')
                 .eq('id', orchConfig.orchestrator_agent_id)
@@ -1371,7 +1371,7 @@ serve(async (req) => {
           }
         } else if (currentState === 'em_atendimento' && convInit.current_agent_id) {
           // Already in active conversation — load the assigned specialist
-          const { data: assigned } = await supabase
+          const { fecha: assigned } = await supabase
             .from('product_agents')
             .select('*')
             .eq('id', convInit.current_agent_id)
@@ -1419,7 +1419,7 @@ serve(async (req) => {
     if (body.product_id && body.message && !body.agent_id && !adminTakeoverActive) {
       try {
         // Resolve channel for scope filtering
-        const { data: convForChannel } = await supabase
+        const { fecha: convForChannel } = await supabase
           .from('webchat_conversations')
           .select('channel, current_agent_id')
           .eq('id', body.conversation_id)
@@ -1431,7 +1431,7 @@ serve(async (req) => {
           rawChannel === 'inbox' ? 'inbox' :
           rawChannel === 'funnel' ? 'funnel' : 'chat';
 
-        const { data: candidateAgents } = await supabase
+        const { fecha: candidateAgents } = await supabase
           .from('product_agents')
           .select('id, name, is_active, activation_keywords, activation_phrases, activation_priority, activation_scope, takeover_on_match, updated_at')
           .eq('product_id', body.product_id)
@@ -1439,7 +1439,7 @@ serve(async (req) => {
 
         const match = matchAgentByMessage(body.message, candidateAgents || [], channel);
         if (match) {
-          const { data: full } = await supabase
+          const { fecha: full } = await supabase
             .from('product_agents')
             .select('*')
             .eq('id', match.agent.id)
@@ -1465,7 +1465,7 @@ serve(async (req) => {
 
             // Audit log (best-effort)
             try {
-              const { data: convInfo } = await supabase
+              const { fecha: convInfo } = await supabase
                 .from('webchat_conversations')
                 .select('organization_id, lead_id')
                 .eq('id', body.conversation_id)
@@ -1495,7 +1495,7 @@ serve(async (req) => {
 
     // First check if agent_id is provided directly (only if no keyword match)
     if (!activeAgent && body.agent_id) {
-      const { data: agent } = await supabase
+      const { fecha: agent } = await supabase
         .from('product_agents')
         .select('*')
         .eq('id', body.agent_id)
@@ -1510,7 +1510,7 @@ serve(async (req) => {
     // points to an active Admin agent, that override wins over instance-bound rules.
     // This protects manual transfers made by gestores via the Inbox UI.
     if (!activeAgent && !body.agent_id) {
-      const { data: convAdminCheck } = await supabase
+      const { fecha: convAdminCheck } = await supabase
         .from('webchat_conversations')
         .select('current_agent_id, product_agents:current_agent_id(*)')
         .eq('id', body.conversation_id)
@@ -1530,7 +1530,7 @@ serve(async (req) => {
     // Orchestrator (states: null / 'triagem' / 'aguardando_menu'). Otherwise an
     // instance-bound SDR (e.g., Natan) would answer before the welcome flow runs.
     if (!activeAgent && !body.agent_id) {
-      const { data: convInst } = await supabase
+      const { fecha: convInst } = await supabase
         .from('webchat_conversations')
         .select('evolution_instance_id, orchestrator_state, organization_id')
         .eq('id', body.conversation_id)
@@ -1538,7 +1538,7 @@ serve(async (req) => {
 
       let orchOwnsThis = false;
       if (convInst?.organization_id) {
-        const { data: orchCfgFb } = await supabase
+        const { fecha: orchCfgFb } = await supabase
           .from('organization_orchestrator_config')
           .select('is_enabled, orchestrator_agent_id')
           .eq('organization_id', convInst.organization_id)
@@ -1551,7 +1551,7 @@ serve(async (req) => {
       if (orchOwnsThis) {
         console.log('[webchat-bot] 📱 Skipping instance-bound fallback — orchestrator owns conversation');
       } else if (convInst?.evolution_instance_id) {
-        const { data: boundAgent } = await supabase
+        const { fecha: boundAgent } = await supabase
           .from('product_agents')
           .select('*')
           .eq('evolution_instance_id', convInst.evolution_instance_id)
@@ -1570,7 +1570,7 @@ serve(async (req) => {
     let flowVariables: Record<string, string> = {};
     
     if (!body.agent_id) {
-      const { data: conversation } = await supabase
+      const { fecha: conversation } = await supabase
         .from('webchat_conversations')
         .select('current_agent_id, flow_variables')
         .eq('id', body.conversation_id)
@@ -1583,7 +1583,7 @@ serve(async (req) => {
       
       // Only fall back to conversation's current_agent_id if no keyword match already set activeAgent
       if (!activeAgent && conversation?.current_agent_id) {
-        const { data: agent } = await supabase
+        const { fecha: agent } = await supabase
           .from('product_agents')
           .select('*')
           .eq('id', conversation.current_agent_id)
@@ -1596,7 +1596,7 @@ serve(async (req) => {
     }
     // Finally, try to get default agent for product
     if (!activeAgent && body.product_id) {
-      const { data: defaultAgent } = await supabase
+      const { fecha: defaultAgent } = await supabase
         .from('product_agents')
         .select('*')
         .eq('product_id', body.product_id)
@@ -1612,7 +1612,7 @@ serve(async (req) => {
 
     // Fallback: first active agent for product (when no default is set)
     if (!activeAgent && body.product_id) {
-      const { data: firstActiveAgent } = await supabase
+      const { fecha: firstActiveAgent } = await supabase
         .from('product_agents')
         .select('*')
         .eq('product_id', body.product_id)
@@ -1664,7 +1664,7 @@ serve(async (req) => {
         // Find the previous interaction timestamp (any message before now in this conv)
         let lastInteractionAt: string | null = null;
         try {
-          const { data: prevMsg } = await supabase
+          const { fecha: prevMsg } = await supabase
             .from('webchat_messages')
             .select('created_at')
             .eq('conversation_id', body.conversation_id)
@@ -1714,7 +1714,7 @@ serve(async (req) => {
         const salesPrompt = body.agent_config.sales_prompt || DEFAULT_SALES_PROMPT;
         const agentName = body.agent_config.agent_name || 'Assistente';
         
-        systemPrompt = `Você é ${agentName}, assistente virtual de vendas.\n\n`;
+        systemPrompt = `Usted é ${agentName}, assistente virtual de ventas.\n\n`;
         systemPrompt += salesPrompt;
         
         // Add persona style
@@ -1733,20 +1733,20 @@ serve(async (req) => {
 
       // Phase 3: append contextual reaction guidance, if a rule matched.
       if (reactionContext) {
-        systemPrompt += `\n\n⚡ CONTEXTO IMEDIATO (prioridade máxima nesta resposta):\n${reactionContext}`;
+        systemPrompt += `\n\n⚡ CONTEXTO IMEDIATO (prioridade máxima nesta respuesta):\n${reactionContext}`;
       }
       
       const rawVisitorName = body.visitor_name || '';
       const visitorName = extractFirstName(rawVisitorName) || '';
 
-      // Só usa o nome se for primeiro nome confiável (não razão social).
+      // Só usa o nombre se for primeiro nombre confiável (no razão social).
       if (visitorName && !activeAgent) {
-        systemPrompt += `\n\n👤 CONTEXTO DO CLIENTE:\n- Primeiro nome: ${visitorName}\n- Use com naturalidade, sem repetir em toda mensagem.`;
+        systemPrompt += `\n\n👤 CONTEXTO DO CLIENTE:\n- Primeiro nombre: ${visitorName}\n- Usa com naturalidade, sem repetir em toda mensaje.`;
       } else if (rawVisitorName && !visitorName) {
-        systemPrompt += `\n\n👤 CONTEXTO DO CLIENTE:\n- O cadastro veio com "${rawVisitorName}", que parece nome de empresa.\n- NÃO trate o lead por esse nome.\n- Pergunte o primeiro nome dele de forma natural antes de seguir.`;
+        systemPrompt += `\n\n👤 CONTEXTO DO CLIENTE:\n- O cadastro veio com "${rawVisitorName}", que parece nombre de empresa.\n- NÃO trate o lead por esse nombre.\n- Pergunte o primeiro nombre dele de forma natural antes de seguir.`;
       }
 
-      // 🧠 Memória de turno: últimas 6 mensagens do agente, pra IA não repetir.
+      // 🧠 Memória de turno: últimas 6 mensajes del agente, pra IA no repetir.
       try {
         const recentBotMsgs = (messages || [])
           .filter((m: any) => m.direction === 'outbound' && (m.sender_type === 'bot' || m.sender_type === 'agent'))
@@ -1754,15 +1754,15 @@ serve(async (req) => {
           .map((m: any, i: number) => `${i + 1}. ${String(m.content || '').slice(0, 220)}`)
           .join('\n');
         if (recentBotMsgs) {
-          systemPrompt += `\n\n🧠 MENSAGENS QUE VOCÊ JÁ MANDOU NESTA CONVERSA (não repita ideias, não se apresente de novo):\n${recentBotMsgs}`;
+          systemPrompt += `\n\n🧠 MENSAGENS QUE VOCÊ JÁ MANDOU NESTA CONVERSA (no repita ideias, no se apresente de novo):\n${recentBotMsgs}`;
         }
       } catch { /* non-fatal */ }
 
-      // 🔀 HANDOFF RECEBIDO — se este agente acabou de receber a conversa,
+      // 🔀 HANDOFF RECEBIDO — se este agente acabou de receber a conversación,
       // injeta um bloco de contexto pra ele NÃO recomeçar do zero.
       try {
         if (activeAgent?.id) {
-          const { data: lastHandoff } = await supabase
+          const { fecha: lastHandoff } = await supabase
             .from('agent_activation_logs')
             .select('from_agent_id, created_at')
             .eq('conversation_id', body.conversation_id)
@@ -1779,29 +1779,29 @@ serve(async (req) => {
           if (lastHandoff && handoffAgeMs < 30 * 60 * 1000) {
             let prevAgentName = '';
             if (lastHandoff.from_agent_id) {
-              const { data: prev } = await supabase
+              const { fecha: prev } = await supabase
                 .from('product_agents')
                 .select('name')
                 .eq('id', lastHandoff.from_agent_id)
                 .maybeSingle();
               prevAgentName = (prev as any)?.name || '';
             }
-            // Resumo cru: últimas 8 trocas (lead + agente)
+            // Resumen cru: últimas 8 trocas (lead + agente)
             const tail = (messages || [])
               .slice(-8)
               .map((m: any) => `${m.direction === 'inbound' ? 'Lead' : 'Agente'}: ${String(m.content || '').slice(0, 200)}`)
               .join('\n');
 
             systemPrompt += `\n\n🔀 HANDOFF RECEBIDO\n` +
-              `Agente anterior: ${prevAgentName || 'colega de equipe'}\n` +
-              `Histórico recente:\n${tail || '(sem mensagens prévias)'}\n\n` +
+              `Agente anterior: ${prevAgentName || 'colega de equipo'}\n` +
+              `Histórico recente:\n${tail || '(sem mensajes prévias)'}\n\n` +
               `INSTRUÇÃO CRÍTICA:\n` +
-              `- NÃO recomece a conversa. NÃO se reapresente (já fui apresentado).\n` +
+              `- NÃO recomece a conversación. NÃO se reapresente (já fui apresentado).\n` +
               `- Leia o histórico antes de responder. Capture estágio, dor e objeção.\n` +
               `- Próximo passo OBRIGATÓRIO: confirmar interesse e ir pro CTA.\n` +
               `  • Lead pronto → use a tool gerar_link_pagamento.\n` +
-              `  • Lead em dúvida → ofereça 2 horários específicos via tool de agendamento.\n` +
-              `- Máximo 2 linhas por mensagem. 1 pergunta por turno. Tom profissional.\n` +
+              `  • Lead em duda → ofereça 2 horários específicos via tool de reserva.\n` +
+              `- Máximo 2 linhas por mensaje. 1 pregunta por turno. Tom profissional.\n` +
               `- PROIBIDO escrever placeholders literais como {{checkout_link}}, {{link}}, {{preço}}. Sempre use as tools.\n` +
               `- PROIBIDO clichês: "boa!", "que ótimo", "fico feliz", "show!", "perfeito!", "maravilha", "fechou".`;
           }
@@ -1812,7 +1812,7 @@ serve(async (req) => {
 
 
       try {
-        const { data: convRow } = await supabase
+        const { fecha: convRow } = await supabase
           .from('webchat_conversations')
           .select('metadata')
           .eq('id', body.conversation_id)
@@ -1823,7 +1823,7 @@ serve(async (req) => {
           const lines = Object.entries(pending)
             .map(([k, v]) => `- ${k}: ${typeof v === 'string' ? v : JSON.stringify(v)}`)
             .join('\n');
-          systemPrompt += `\n\n💳 DADOS PENDENTES DESTE LEAD (use APENAS quando o cliente pedir, demonstrar dúvida sobre o pagamento, ou quando ficar natural oferecer):\n${lines}\n\nObjetivo da abordagem: ${meta.pending_payment_objective || 'ajudar o lead a concluir o pagamento'}.\nNão despeje todos os dados de uma vez. Resolva por conversa: pergunte, entenda, e só ofereça Pix/link/instrução quando ele sinalizar que precisa.`;
+          systemPrompt += `\n\n💳 DATOS PENDIENTES DE ESTE LEAD (úsalos SOLO cuando el cliente lo pida, muestre dudas sobre el pago, o cuando sea natural ofrecerlos):\n${lines}\n\nObjetivo del abordaje: ${meta.pending_payment_objective || 'ayudar al lead a concretar el pago'}.\nNo entregues todos los datos de una sola vez. Resolvelo por conversación: preguntá, entendé, y recién ofrecé link/instrucción cuando él indique que lo necesita.`;
         }
       } catch { /* non-fatal */ }
 
@@ -1845,19 +1845,19 @@ serve(async (req) => {
       
       // Add FAQ context — HIGH PRIORITY for direct answers
       if (body.agent_config.faq && body.agent_config.faq.length > 0) {
-        systemPrompt += '\n\n❓ FAQs — RESPOSTAS OFICIAIS (use EXATAMENTE estas respostas quando a pergunta coincidir):';
+        systemPrompt += '\n\n❓ FAQs — RESPOSTAS OFICIAIS (use EXATAMENTE estas respuestas quando a pregunta coincidir):';
         body.agent_config.faq.forEach(item => {
           systemPrompt += `\n\nPERGUNTA: ${item.question}\nRESPOSTA OFICIAL: ${item.answer}`;
         });
-        systemPrompt += '\n\n⚠️ Se o cliente fizer uma pergunta similar a alguma FAQ acima, use a RESPOSTA OFICIAL como base. NÃO invente uma resposta diferente.';
+        systemPrompt += '\n\n⚠️ Se o cliente fizer uma pregunta similar a alguna FAQ acima, use a RESPOSTA OFICIAL como base. NÃO invente uma respuesta diferente.';
       }
 
       // Add CTA instructions if available
       if (productCTAs.length > 0) {
-        systemPrompt += '\n\n🔘 BOTÕES DE AÇÃO (CTAs):';
-        systemPrompt += '\nVocê pode enviar botões interativos para o cliente usando a função send_cta_buttons.';
-        systemPrompt += '\nPara enviar vídeos explicativos, use a função send_video.';
-        systemPrompt += '\nUse os CTAs de acordo com a intenção detectada na conversa:';
+        systemPrompt += '\n\n🔘 BOTONES DE ACCIÓN (CTAs):';
+        systemPrompt += '\nPodés enviar botones interactivos al cliente usando la función send_cta_buttons.';
+        systemPrompt += '\nPara enviar videos explicativos, usá la función send_video.';
+        systemPrompt += '\nUsá los CTAs según la intención detectada en la conversación:';
         
         productCTAs.forEach(cta => {
           const ctaInfo = cta.cta_type === 'video' 
@@ -1871,18 +1871,18 @@ serve(async (req) => {
         
         systemPrompt += '\n\nRegras para CTAs:';
         systemPrompt += '\n- Envie CTAs de intenção "high" quando cliente demonstrar forte interesse em comprar';
-        systemPrompt += '\n- Envie CTAs de intenção "medium" quando tiver dúvidas específicas';
-        systemPrompt += '\n- Envie CTAs de intenção "low" no início da conversa para exploração';
+        systemPrompt += '\n- Envie CTAs de intenção "medium" quando tiver dudas específicas';
+        systemPrompt += '\n- Envie CTAs de intenção "low" no inicio da conversación para exploração';
         systemPrompt += '\n- Para VÍDEOS: envie quando cliente precisar de demonstração visual ou explicação detalhada';
         systemPrompt += '\n- NÃO envie muitos CTAs de uma vez (máximo 3)';
-        systemPrompt += '\n- Sempre inclua uma mensagem de contexto antes dos botões';
+        systemPrompt += '\n- Sempre inclua uma mensaje de contexto antes dos botões';
       }
 
       // ============================================================
       // FIX 1 — Auto-capture email/phone/name from latest user message.
       // Detects contact info in the visitor's message and persists it
       // to webchat_conversations + leads BEFORE leadContext is built,
-      // so the same turn already sees the new data and the AI never
+      // so the same turn already sees the new fecha and the AI never
       // re-asks for what it just received.
       // ============================================================
       const capturedFromMessage: { email?: string; phone?: string; name?: string } = {};
@@ -1895,7 +1895,7 @@ serve(async (req) => {
           if (emailMatch) capturedFromMessage.email = emailMatch[0].toLowerCase();
           if (phoneMatch) capturedFromMessage.phone = phoneMatch;
 
-          const { data: convRow } = await supabase
+          const { fecha: convRow } = await supabase
             .from('webchat_conversations')
             .select('id, organization_id, lead_id, visitor_email, visitor_phone, visitor_name')
             .eq('id', body.conversation_id)
@@ -1911,7 +1911,7 @@ serve(async (req) => {
             }
 
             if (convRow.lead_id && (capturedFromMessage.email || capturedFromMessage.phone)) {
-              const { data: leadRow } = await supabase
+              const { fecha: leadRow } = await supabase
                 .from('leads')
                 .select('id, email, phone')
                 .eq('id', convRow.lead_id)
@@ -1949,7 +1949,7 @@ serve(async (req) => {
       let leadContext: any = null;
       let leadId: string | null = null;
       if (body.conversation_id) {
-        const { data: convLead } = await supabase
+        const { fecha: convLead } = await supabase
           .from('webchat_conversations')
           .select('lead_id')
           .eq('id', body.conversation_id)
@@ -1957,7 +1957,7 @@ serve(async (req) => {
         
         if (convLead?.lead_id) {
           leadId = convLead.lead_id;
-          const { data: lead } = await supabase
+          const { fecha: lead } = await supabase
             .from('leads')
             .select('id, name, email, phone, temperature, tags, deal_value, company, source, custom_fields, current_stage_id, assigned_to, product_id')
             .eq('id', convLead.lead_id)
@@ -1968,7 +1968,7 @@ serve(async (req) => {
             // Detect if lead is already a customer (won stage OR "Cliente" tag OR has won deal)
             let isCustomer = false;
             if (lead.current_stage_id) {
-              const { data: stage } = await supabase
+              const { fecha: stage } = await supabase
                 .from('pipeline_stages')
                 .select('name, is_won')
                 .eq('id', lead.current_stage_id)
@@ -1983,7 +1983,7 @@ serve(async (req) => {
             if (tagsLower.some((t) => t.includes('cliente'))) isCustomer = true;
             // Won deal detection
             if (!isCustomer) {
-              const { data: wonDeal } = await supabase
+              const { fecha: wonDeal } = await supabase
                 .from('deals')
                 .select('id')
                 .eq('lead_id', lead.id)
@@ -1995,14 +1995,14 @@ serve(async (req) => {
             leadContext.is_customer = isCustomer;
 
             systemPrompt += `\n\n👤 CONTEXTO DO LEAD:
-- Nome: ${lead.name || 'Não informado'}
-- Email: ${lead.email || 'Não informado'}
-- Telefone: ${lead.phone || 'Não informado'}
-- Temperatura: ${lead.temperature || 'Não classificado'}
-- Estágio: ${leadContext.stage_name || 'Não definido'}
+- Nombre: ${lead.name || 'No informado'}
+- Email: ${lead.email || 'No informado'}
+- Teléfono: ${lead.phone || 'No informado'}
+- Temperatura: ${lead.temperature || 'No classificado'}
+- Estágio: ${leadContext.stage_name || 'No definido'}
 - Tags: ${(lead.tags || []).join(', ') || 'Nenhuma'}
-- Valor do Deal: ${lead.deal_value ? `R$ ${lead.deal_value}` : 'Não definido'}
-- Empresa: ${lead.company || 'Não informada'}
+- Valor do Deal: ${lead.deal_value ? `R$ ${lead.deal_value}` : 'No definido'}
+- Empresa: ${lead.company || 'No informada'}
 - Já é CLIENTE: ${isCustomer ? 'SIM' : 'NÃO'}`;
             if (lead.custom_fields && Object.keys(lead.custom_fields).length > 0) {
               systemPrompt += `\n- Campos personalizados: ${JSON.stringify(lead.custom_fields)}`;
@@ -2011,15 +2011,15 @@ serve(async (req) => {
             if (isCustomer) {
               systemPrompt += `\n\n🚫 REGRA DE NEGÓCIO — CONTATO JÁ É CLIENTE:
 Este contato JÁ COMPROU e é um CLIENTE ATIVO. Por isso:
-- NÃO ofereça reunião de apresentação, demo, "bate-papo de apresentação" ou qualquer agendamento comercial.
-- Se ele pedir uma reunião, responda que vai conectar com o time de pós-venda/suporte (não agende você mesma).
-- Foque em tirar dúvidas de uso do produto, suporte, materiais e onboarding. Para questões comerciais novas, encaminhe para o time responsável.`;
+- NÃO ofereça reunión de apresentação, demo, "bate-papo de apresentação" ou qualquer reserva comercial.
+- Se ele pedir uma reunión, responda que vai conectar com o time de pós-venta/suporte (no agende usted misma).
+- Foque em tirar dudas de uso do producto, suporte, materiais e onboarding. Para questões comerciais novas, encaminhe para o time responsável.`;
             }
           }
         }
       }
 
-      // Reflect captured-from-message data into leadContext immediately
+      // Reflect captured-from-message fecha into leadContext immediately
       // so this turn's prompt already knows the email/phone we just saved.
       if (capturedFromMessage.email || capturedFromMessage.phone) {
         if (!leadContext) leadContext = {};
@@ -2033,35 +2033,35 @@ Este contato JÁ COMPROU e é um CLIENTE ATIVO. Por isso:
 ⚠️ REGRA MAIS IMPORTANTE — FONTE DAS RESPOSTAS
 ═══════════════════════════════════════
 
-Você DEVE responder EXCLUSIVAMENTE com base nas informações fornecidas nas seções:
+Usted DEVE responder EXCLUSIVAMENTE com base nas información fornecidas nas seções:
 - 🧠 CONHECIMENTO DO PRODUTO
 - 📖 BASE DE CONHECIMENTO DO AGENTE
 - ❓ FAQs
 - 🛡️ CONTORNO DE OBJEÇÕES
 
-NUNCA invente, suponha ou "complete" informações que NÃO estejam explicitamente no conhecimento fornecido.
-Se a resposta para a pergunta do cliente NÃO estiver na base de conhecimento:
-1. Diga que vai verificar essa informação específica
-2. Ofereça conectar com um especialista que pode responder com precisão
-3. NUNCA dê uma resposta genérica ou inventada
+NUNCA invente, suponha ou "complete" información que NÃO estejam explicitamente no conhecimento fornecido.
+Se a respuesta para a pregunta del cliente NÃO estiver na base de conhecimento:
+1. Diga que vai verificar essa información específica
+2. Ofereça conectar com um especialista que puede responder com precisão
+3. NUNCA dê uma respuesta genérica ou inventada
 
-Exemplo ERRADO: Cliente pergunta "quantos usuários suporta?" e você responde "a estrutura é escalável" (genérico, inventado)
-Exemplo CORRETO: Cliente pergunta "quantos usuários suporta?" e a FAQ diz "300 a 500 na VPS inicial" → responda com esses dados exatos
+Exemplo ERRADO: Cliente pregunta "quantos usuarios suporta?" e usted responde "a estrutura é escalável" (genérico, inventado)
+Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a 500 na VPS inicial" → responda com esses dados exatos
 
 ═══════════════════════════════════════
 
 ⚠️ FORMATO DA RESPOSTA:
-- Máximo 2 linhas por bolha. 1 pergunta por turno. Pode quebrar em até 3 mensagens curtas e naturais (o sistema entrega cada bolha separada).
+- Máximo 2 linhas por bolha. 1 pregunta por turno. Pode quebrar em até 3 mensajes curtas e naturais (o sistema entrega cada bolha separada).
 - Limite total: ${maxLength} caracteres somando todas as bolhas.
 - ANTES de responder, releia o histórico e verifique: já perguntei isso? Já usei essa frase? Já cobri esse assunto?
-- SEMPRE termine com pergunta de retorno que AVANÇA a conversa
-- NUNCA repita saudações, emojis ou frases já usadas nesta conversa
-- Se a informação não estiver na base de conhecimento, NÃO invente — diga que vai verificar
+- SEMPRE termine com pregunta de retorno que AVANÇA a conversación
+- NUNCA repita saudações, emojis ou frases já usadas nesta conversación
+- Se a información no estiver na base de conhecimento, NÃO invente — diga que vai verificar
 
 🚫 PROIBIDO INVENTAR ENTREGÁVEIS:
-- NÃO prometa enviar "depoimento", "case", "vídeo", "PDF", "ficha", "folder", "material", "link", "depoimentos", "prova social" se o cliente NÃO pediu, OU se você não tem a tool/catálogo correspondente disponível.
-- NÃO escreva colchetes com nomes de arquivos/links inventados (ex: "[Depoimento: ...]", "[Vídeo aqui]", "[Link]"). Se for enviar mídia, use a tool send_catalog_item / send_video. Se não tem, NÃO ofereça.
-- Em transferência: faça a despedida curta e profissional. NÃO crie etapa intermediária ("vou te mandar um material e já te conecto") se não foi pedido. Apenas transfira.`;
+- NÃO prometa enviar "depoimento", "case", "vídeo", "PDF", "ficha", "folder", "material", "link", "depoimentos", "prova social" se o cliente NÃO pediu, OU se usted no tiene a tool/catálogo correspondente disponível.
+- NÃO escreva colchetes com nomes de archivos/links inventados (ex: "[Depoimento: ...]", "[Vídeo aqui]", "[Link]"). Se for enviar mídia, use a tool send_catalog_item / send_video. Se no tiene, NÃO ofereça.
+- Em transferência: faça a despedida corta e profissional. NÃO crie etapa intermediária ("vou te mandar um material e já te conecto") se no fue pedido. Apenas transfira.`;
 
       // Build tools array for CTA buttons, video, and schedule_meeting
       const videoCTAs = productCTAs.filter(c => c.cta_type === 'video');
@@ -2070,24 +2070,24 @@ Exemplo CORRETO: Cliente pergunta "quantos usuários suporta?" e a FAQ diz "300 
       // Check if agent can schedule meetings
       let canSchedule = false;
       let scheduleUserId: string | null = null;
-      // Tipos de evento permitidos para esse agente nesta conversa.
-      // Se vazio, IA não pode agendar. Se 1+, IA usa esses tipos (e só esses).
+      // Tipos de evento permitidos para esse agente nesta conversación.
+      // Se vazio, IA no puede agendar. Se 1+, IA usa esses tipos (e só esses).
       let allowedEventTypes: any[] = [];
       if (body.product_id) {
-        const { data: convData } = await supabase
+        const { fecha: convData } = await supabase
           .from('webchat_conversations')
           .select('assigned_user_id, widget_id, organization_id')
           .eq('id', body.conversation_id)
           .maybeSingle();
 
-        // Prioridade 1: agente tem default_schedule_user_id explícito
-        // Prioridade 2: assigned_user_id da conversa
+        // Prioridade 1: agente tiene default_schedule_user_id explícito
+        // Prioridade 2: assigned_user_id da conversación
         // Prioridade 3: dono do primeiro event_type ativo da org
         const agentHostId = (activeAgent as any)?.default_schedule_user_id ?? null;
         let checkUserId: string | null = agentHostId || convData?.assigned_user_id || null;
 
         if (!checkUserId && convData?.organization_id) {
-          const { data: eventOwner } = await supabase
+          const { fecha: eventOwner } = await supabase
             .from('booking_event_types')
             .select('user_id')
             .eq('organization_id', convData.organization_id)
@@ -2109,20 +2109,20 @@ Exemplo CORRETO: Cliente pergunta "quantos usuários suporta?" e a FAQ diz "300 
             .eq('user_id', checkUserId)
             .eq('is_active', true);
 
-          // Se o agente tem allowlist, filtra por ela.
+          // Se o agente tiene allowlist, filtra por ela.
           if (allowedIds.length > 0) {
             etQuery = etQuery.in('id', allowedIds);
-            const { data: ets } = await etQuery.order('created_at', { ascending: true });
+            const { fecha: ets } = await etQuery.order('created_at', { ascending: true });
             allowedEventTypes = ets || [];
           } else if (agentHostId) {
             // host definido mas SEM allowlist => tentar fallback automático
-            // criando um event type "Apresentação {produto}" sob demanda.
+            // criando um event type "Apresentação {producto}" sob demanda.
             const productIdForFallback = (activeAgent as any)?.product_id || body.product_id || null;
             const orgIdForFallback = (activeAgent as any)?.organization_id || convData?.organization_id || null;
 
             if (productIdForFallback && orgIdForFallback) {
               try {
-                const { data: prodRow } = await supabase
+                const { fecha: prodRow } = await supabase
                   .from('products')
                   .select('id, name')
                   .eq('id', productIdForFallback)
@@ -2136,12 +2136,12 @@ Exemplo CORRETO: Cliente pergunta "quantos usuários suporta?" e a FAQ diz "300 
                     .replace(/[\u0300-\u036f]/g, '')
                     .replace(/[^a-z0-9]+/g, '-')
                     .replace(/^-|-$/g, '');
-                  const productSlug = slugify(productName) || 'produto';
+                  const productSlug = slugify(productName) || 'producto';
                   const fallbackSlug = `apresentacao-${productSlug}`.slice(0, 80);
                   const fallbackName = `Apresentação ${productName}`.slice(0, 120);
 
                   // Idempotência: tenta achar event type já existente para esse host+slug
-                  const { data: existing } = await supabase
+                  const { fecha: existing } = await supabase
                     .from('booking_event_types')
                     .select('id, name, description, duration_minutes, location_type, location_details, buffer_before, buffer_after, min_notice_hours, create_meet, user_id')
                     .eq('user_id', checkUserId)
@@ -2151,19 +2151,19 @@ Exemplo CORRETO: Cliente pergunta "quantos usuários suporta?" e a FAQ diz "300 
                   let fallbackEvent: any = existing || null;
 
                   if (!fallbackEvent) {
-                    const { data: created, error: createErr } = await supabase
+                    const { fecha: created, error: createErr } = await supabase
                       .from('booking_event_types')
                       .insert({
                         organization_id: orgIdForFallback,
                         user_id: checkUserId,
                         name: fallbackName,
                         slug: fallbackSlug,
-                        description: `Reunião de apresentação do ${productName}`,
+                        description: `Reunión de apresentação do ${productName}`,
                         duration_minutes: 30,
                         location_type: 'google_meet',
                         is_active: true,
                         create_meet: true,
-                        confirmation_message: `Sua reunião sobre ${productName} foi confirmada! Em breve você receberá o link de acesso.`,
+                        confirmation_message: `Su reunión sobre ${productName} fue confirmada! Em breve usted receberá o link de acesso.`,
                       })
                       .select('id, name, description, duration_minutes, location_type, location_details, buffer_before, buffer_after, min_notice_hours, create_meet, user_id')
                       .maybeSingle();
@@ -2178,7 +2178,7 @@ Exemplo CORRETO: Cliente pergunta "quantos usuários suporta?" e a FAQ diz "300 
 
                   if (fallbackEvent) {
                     allowedEventTypes = [fallbackEvent];
-                    // Persiste no agente para próximas conversas usarem direto
+                    // Persiste no agente para próximas conversaciones usarem direto
                     try {
                       await supabase
                         .from('product_agents')
@@ -2198,8 +2198,8 @@ Exemplo CORRETO: Cliente pergunta "quantos usuários suporta?" e a FAQ diz "300 
               console.log('[webchat-bot] Agent has host but no allowed_event_type_ids and fallback unavailable — scheduling disabled');
             }
           } else {
-            // Sem host explícito do agente => comportamento legado (host = assigned/owner)
-            const { data: ets } = await etQuery.order('created_at', { ascending: true });
+            // Sem host explícito del agente => comportamento legado (host = assigned/owner)
+            const { fecha: ets } = await etQuery.order('created_at', { ascending: true });
             allowedEventTypes = ets || [];
           }
 
@@ -2217,11 +2217,11 @@ Exemplo CORRETO: Cliente pergunta "quantos usuários suporta?" e a FAQ diz "300 
           type: "function",
           function: {
             name: "send_cta_buttons",
-            description: "Enviar botões de CTA interativos para o cliente.",
+            description: "Enviar botões de CTA interativos para el cliente.",
             parameters: {
               type: "object",
               properties: {
-                message: { type: "string", description: "Mensagem que acompanha os botões" },
+                message: { type: "string", description: "Mensaje que acompanha os botões" },
                 cta_ids: { type: "array", items: { type: "string" }, description: `IDs dos CTAs: ${buttonCTAs.map(c => c.id).join(', ')}` }
               },
               required: ["message", "cta_ids"]
@@ -2238,7 +2238,7 @@ Exemplo CORRETO: Cliente pergunta "quantos usuários suporta?" e a FAQ diz "300 
               parameters: {
                 type: "object",
                 properties: {
-                  message: { type: "string", description: "Mensagem de contexto" },
+                  message: { type: "string", description: "Mensaje de contexto" },
                   video_id: { type: "string", description: `ID do vídeo: ${videoCTAs.map(c => c.id).join(', ')}` }
                 },
                 required: ["message", "video_id"]
@@ -2254,13 +2254,13 @@ Exemplo CORRETO: Cliente pergunta "quantos usuários suporta?" e a FAQ diz "300 
       }
 
       if (canSchedule && scheduleUserId) {
-        // Inject lead data into scheduling prompt if available
+        // Inject lead fecha into scheduling prompt if available
         let leadDataPrompt = '';
         if (leadContext) {
           const knownData: string[] = [];
-          if (leadContext.name) knownData.push(`Nome: ${leadContext.name}`);
+          if (leadContext.name) knownData.push(`Nombre: ${leadContext.name}`);
           if (leadContext.email) knownData.push(`Email: ${leadContext.email}`);
-          if (leadContext.phone) knownData.push(`Telefone: ${leadContext.phone}`);
+          if (leadContext.phone) knownData.push(`Teléfono: ${leadContext.phone}`);
           if (knownData.length > 0) {
             leadDataPrompt = `\n\nDADOS DO CLIENTE JÁ CONHECIDOS (use no schedule_meeting SEM perguntar novamente):\n- ${knownData.join('\n- ')}`;
           }
@@ -2270,56 +2270,56 @@ Exemplo CORRETO: Cliente pergunta "quantos usuários suporta?" e a FAQ diz "300 
         const emailEnforcementPrompt = hasLeadEmail
           ? ''
           : `\n\n🚨 EMAIL OBRIGATÓRIO ANTES DE AGENDAR:
-- Você AINDA NÃO tem o email do cliente.
-- ANTES de oferecer qualquer horário ou chamar schedule_meeting, você PRECISA coletar o email real.
-- Use a frase exata (ou variação natural): "Pra eu travar esse horário e te mandar a confirmação, qual é o melhor email seu?"
-- NUNCA use emails inventados como "exemplo.com", "cliente@email.com", etc. Se não tem o email real, PERGUNTE.`;
+- Usted AINDA NÃO tiene o email del cliente.
+- ANTES de oferecer qualquer horario ou chamar schedule_meeting, usted PRECISA coletar o email real.
+- Usa a frase exata (ou variação natural): "Pra eu travar esse horario e te mandar a confirmação, qual é o melhor email su?"
+- NUNCA use emails inventados como "exemplo.com", "cliente@email.com", etc. Se no tiene o email real, PERGUNTE.`;
 
         systemPrompt += `\n\n📅 AGENDAMENTO ESTRATÉGICO AUTOMÁTICO:
-Você possui 2 ferramentas para agendamento inteligente:
+Usted possui 2 ferramentas para reserva inteligente:
 
-1. check_available_slots: Consulta horários disponíveis nos próximos dias.
-   - Use SOMENTE quando AINDA NÃO ofereceu horários nesta conversa.
+1. check_available_slots: Consulta horários disponíveis nos próximos días.
+   - Usa SOMENTE quando AINDA NÃO ofereceu horários nesta conversación.
    - Retorna 2 sugestões estratégicas (manhã + tarde).
 
-2. schedule_meeting: Agenda a reunião com o cliente.
-   - Use IMEDIATAMENTE quando o cliente confirmar um dos horários oferecidos E você tiver o email dele.
+2. schedule_meeting: Agenda a reunión com o cliente.
+   - Usa IMEDIATAMENTE quando o cliente confirmar um dos horários oferecidos E usted tiver o email dele.
 
 🛑 REGRAS ABSOLUTAS — VIOLAR QUEBRA O SISTEMA:
 
-A) **NUNCA invente datas ou horários.** Se você ainda NÃO chamou check_available_slots nesta conversa, é PROIBIDO mencionar qualquer data/hora específica (ex: "quinta às 15:30", "amanhã 10h"). Diga apenas: "Deixa eu ver minha agenda rapidinho" e CHAME check_available_slots.
+A) **NUNCA invente fechas ou horários.** Se usted ainda NÃO chamou check_available_slots nesta conversación, é PROIBIDO mencionar qualquer fecha/hora específica (ex: "quinta às 15:30", "mañana 10h"). Diga apenas: "Deixa eu ver minha agenda rapidinho" e CHAME check_available_slots.
 
-B) **NUNCA chame schedule_meeting sem email real do cliente.** Se faltar email, PARE e pergunte: "Pra eu travar esse horário, qual é o melhor email pra eu mandar a confirmação?"
+B) **NUNCA chame schedule_meeting sem email real del cliente.** Se faltar email, PARE e pergunte: "Pra eu travar esse horario, qual é o melhor email pra eu mandar a confirmação?"
 
-C) **NUNCA escreva "✅ Reunião agendada", "agendamento confirmado", "Confirmação enviada para..." ANTES de receber a resposta de sucesso da tool schedule_meeting.** Esse texto é gerado AUTOMATICAMENTE pelo sistema após a tool executar com sucesso. Se você escrever isso antes, o sistema BLOQUEIA sua mensagem e mostra o erro ao cliente.
+C) **NUNCA escreva "✅ Reunión agendada", "reserva confirmado", "Confirmação enviada para..." ANTES de receber a respuesta de éxito da tool schedule_meeting.** Esse texto é gerado AUTOMATICAMENTE pelo sistema após a tool executar com éxito. Se usted escrever isso antes, o sistema BLOQUEIA su mensaje e mostra o error al cliente.
 
-D) **Se você for tentado a confirmar um agendamento sem ter chamado a tool, PARE imediatamente e chame schedule_meeting primeiro.** Se faltar dado (email/horário), pergunte ao cliente em vez de inventar.
+D) **Se usted for tentado a confirmar um reserva sem ter chamado a tool, PARE imediatamente e chame schedule_meeting primeiro.** Se faltar dado (email/horario), pergunte al cliente em vez de inventar.
 
-E) **Se o histórico contém [CONTEXTO INTERNO] com "Horários já oferecidos"**, você JÁ consultou a disponibilidade — não chame check_available_slots de novo (loop infinito). Quando o cliente confirmar ("pode ser às 9h", "o primeiro", "14h"), chame schedule_meeting IMEDIATAMENTE com os dados reais.
+E) **Se o histórico contém [CONTEXTO INTERNO] com "Horários já oferecidos"**, usted JÁ consultou a disponibilidade — no chame check_available_slots de novo (loop infinito). Quando o cliente confirmar ("puede ser às 9h", "o primeiro", "14h"), chame schedule_meeting IMEDIATAMENTE com os dados reais.
 
-F) Se o cliente pedir um horário DIFERENTE dos oferecidos OU um dia específico que você não tem certeza se está livre, chame check_available_slots novamente (você pode aumentar days_ahead para 14). NUNCA invente que "naquele dia/hora não tem disponibilidade" sem checar — sempre consulte a tool primeiro e ofereça os 2 próximos horários reais disponíveis.
+F) Se o cliente pedir um horario DIFERENTE dos oferecidos OU um día específico que usted no tiene certeza se está livre, chame check_available_slots novamente (usted puede aumentar days_ahead para 14). NUNCA invente que "naquele día/hora no tiene disponibilidade" sem checar — siempre consulte a tool primeiro e ofereça os 2 próximos horários reais disponíveis.
 
 FLUXO OBRIGATÓRIO:
 1. Detectar interesse → (se faltar email, perguntar email primeiro) → chamar check_available_slots
 2. Apresentar horários reais retornados pela tool
-3. Cliente confirma horário → chamar schedule_meeting com (nome, email REAL, data, hora)
-4. Sistema responde sucesso → texto de confirmação aparece automaticamente${emailEnforcementPrompt}
+3. Cliente confirma horario → chamar schedule_meeting com (nombre, email REAL, fecha, hora)
+4. Sistema responde éxito → texto de confirmação aparece automaticamente${emailEnforcementPrompt}
 ${leadDataPrompt}
 
 🛑 ANTI-REPETIÇÃO (ABSOLUTO):
-- Se você JÁ perguntou o email nesta conversa E o cliente respondeu com algo que parece email (contém @), o email FOI COLETADO. NÃO pergunte de novo. Vá direto para o próximo passo.
-- Se você JÁ chamou check_available_slots e ofereceu horários, NUNCA repita "deixa eu ver a agenda" / "vou consultar a agenda" / "aguarda um instante que vou verificar". O cliente já tem os horários. Se ele confirmou um → chame schedule_meeting AGORA. Se quer outro → check_available_slots de novo, mas SEM avisar "vou ver".
-- Se você está prestes a escrever uma frase que JÁ está no histórico recente do assistente (mesmo verbo + mesmo objeto), REESCREVA com palavras diferentes ou pule a etapa.`;
+- Se usted JÁ perguntou o email nesta conversación E o cliente respondeu com algo que parece email (contém @), o email FOI COLETADO. NÃO pergunte de novo. Vá direto para o próximo passo.
+- Se usted JÁ chamou check_available_slots e ofereceu horários, NUNCA repita "deixa eu ver a agenda" / "vou consultar a agenda" / "aguarda um instante que vou verificar". O cliente já tiene os horários. Se ele confirmou um → chame schedule_meeting AGORA. Se quer otro → check_available_slots de novo, mas SEM avisar "vou ver".
+- Se usted está prestes a escrever uma frase que JÁ está no histórico recente do assistente (mismo verbo + mismo objeto), REESCREVA com palavras diferentes ou pule a etapa.`;
 
         toolsList.push({
           type: "function",
           function: {
             name: "check_available_slots",
-            description: "Consultar horários disponíveis nos próximos dias. SEMPRE chame antes de sugerir agendamento. Retorna 2 sugestões estratégicas (manhã e tarde).",
+            description: "Consultar horários disponíveis nos próximos días. SEMPRE chame antes de sugerir reserva. Retorna 2 sugestões estratégicas (manhã e tarde).",
             parameters: {
               type: "object",
               properties: {
-                days_ahead: { type: "number", description: "Quantos dias à frente verificar (padrão 3, máximo 7)" }
+                days_ahead: { type: "number", description: "Quantos días à frente verificar (padrão 3, máximo 7)" }
               },
               required: []
             }
@@ -2330,15 +2330,15 @@ ${leadDataPrompt}
           type: "function",
           function: {
             name: "schedule_meeting",
-            description: "Agendar reunião com o cliente APÓS ele escolher um horário das sugestões.",
+            description: "Agendar reunión com o cliente APÓS ele escolher um horario das sugestões.",
             parameters: {
               type: "object",
               properties: {
-                guest_name: { type: "string", description: "Nome completo do cliente" },
-                guest_email: { type: "string", description: "Email do cliente" },
-                guest_phone: { type: "string", description: "Telefone (opcional)" },
-                preferred_date: { type: "string", description: "Data YYYY-MM-DD" },
-                preferred_time: { type: "string", description: "Horário HH:MM" }
+                guest_name: { type: "string", description: "Nombre completo del cliente" },
+                guest_email: { type: "string", description: "Email del cliente" },
+                guest_phone: { type: "string", description: "Teléfono (opcional)" },
+                preferred_date: { type: "string", description: "Fecha YYYY-MM-DD" },
+                preferred_time: { type: "string", description: "Horario HH:MM" }
               },
               required: ["guest_name", "guest_email", "preferred_date", "preferred_time"]
             }
@@ -2354,7 +2354,7 @@ ${leadDataPrompt}
           // Fetch pipeline stages for context
           let stagesList = '';
           if (body.product_id) {
-            const { data: stages } = await supabase
+            const { fecha: stages } = await supabase
               .from('pipeline_stages')
               .select('id, name')
               .eq('product_id', body.product_id)
@@ -2365,7 +2365,7 @@ ${leadDataPrompt}
             type: "function",
             function: {
               name: "move_pipeline_stage",
-              description: `Mover lead para outro estágio do pipeline. Estágios: ${stagesList || 'Não disponível'}`,
+              description: `Mover lead para otro estágio do pipeline. Estágios: ${stagesList || 'No disponível'}`,
               parameters: {
                 type: "object",
                 properties: {
@@ -2376,7 +2376,7 @@ ${leadDataPrompt}
               }
             }
           });
-          agentToolPrompts.push('- move_pipeline_stage: Use quando o lead avançar na jornada');
+          agentToolPrompts.push('- move_pipeline_stage: Usa quando o lead avançar na jornada');
         }
 
         if (activeAgent.can_apply_tags) {
@@ -2384,7 +2384,7 @@ ${leadDataPrompt}
             type: "function",
             function: {
               name: "apply_tags",
-              description: "Aplicar tags ao lead para categorização.",
+              description: "Aplicar tags al lead para categorização.",
               parameters: {
                 type: "object",
                 properties: {
@@ -2398,17 +2398,17 @@ ${leadDataPrompt}
             type: "function",
             function: {
               name: "remove_tags",
-              description: "Remover tags do lead.",
+              description: "Remover tags del lead.",
               parameters: {
                 type: "object",
                 properties: {
-                  tags: { type: "array", items: { type: "string" }, description: "Tags a remover" }
+                  tags: { type: "array", items: { type: "string" }, description: "Tags a eliminar" }
                 },
                 required: ["tags"]
               }
             }
           });
-          agentToolPrompts.push('- apply_tags/remove_tags: Categorize o lead baseado na conversa');
+          agentToolPrompts.push('- apply_tags/remove_tags: Categorize o lead baseado na conversación');
         }
 
         if (activeAgent.can_update_lead) {
@@ -2416,7 +2416,7 @@ ${leadDataPrompt}
             type: "function",
             function: {
               name: "update_lead_temperature",
-              description: "Alterar temperatura do lead (cold, warm, hot).",
+              description: "Alterar temperatura del lead (cold, warm, hot).",
               parameters: {
                 type: "object",
                 properties: {
@@ -2430,19 +2430,19 @@ ${leadDataPrompt}
             type: "function",
             function: {
               name: "update_lead_field",
-              description: "Atualizar campo do lead (deal_value, company, source, etc).",
+              description: "Atualizar campo del lead (deal_value, company, source, etc).",
               parameters: {
                 type: "object",
                 properties: {
-                  field: { type: "string", description: "Nome do campo" },
+                  field: { type: "string", description: "Nombre do campo" },
                   value: { type: "string", description: "Novo valor" }
                 },
                 required: ["field", "value"]
               }
             }
           });
-          agentToolPrompts.push('- update_lead_temperature: Classifique baseado no interesse demonstrado');
-          agentToolPrompts.push('- update_lead_field: Atualize informações coletadas na conversa');
+          agentToolPrompts.push('- update_lead_temperature: Clasifica baseado no interesse demonstrado');
+          agentToolPrompts.push('- update_lead_field: Atualize información coletadas na conversación');
         }
 
         if (activeAgent.can_create_tasks) {
@@ -2450,19 +2450,19 @@ ${leadDataPrompt}
             type: "function",
             function: {
               name: "create_task",
-              description: "Criar tarefa vinculada ao lead para acompanhamento.",
+              description: "Criar tarea vinculada al lead para acompanhamento.",
               parameters: {
                 type: "object",
                 properties: {
-                  title: { type: "string", description: "Título da tarefa" },
-                  description: { type: "string", description: "Descrição" },
-                  due_date: { type: "string", description: "Data de vencimento YYYY-MM-DD (opcional)" }
+                  title: { type: "string", description: "Título da tarea" },
+                  description: { type: "string", description: "Descripción" },
+                  due_date: { type: "string", description: "Fecha de vencimento YYYY-MM-DD (opcional)" }
                 },
                 required: ["title"]
               }
             }
           });
-          agentToolPrompts.push('- create_task: Crie quando identificar ação pendente do vendedor');
+          agentToolPrompts.push('- create_task: Crea quando identificar acción pendente do vendedor');
         }
 
         if (activeAgent.can_send_emails) {
@@ -2470,7 +2470,7 @@ ${leadDataPrompt}
             type: "function",
             function: {
               name: "send_email",
-              description: "Enviar email ao lead.",
+              description: "Enviar email al lead.",
               parameters: {
                 type: "object",
                 properties: {
@@ -2481,7 +2481,7 @@ ${leadDataPrompt}
               }
             }
           });
-          agentToolPrompts.push('- send_email: Envie informações detalhadas ou propostas');
+          agentToolPrompts.push('- send_email: Envie información detalhadas ou propostas');
         }
 
         if (activeAgent.can_transfer) {
@@ -2511,12 +2511,12 @@ ${leadDataPrompt}
               const sameProduct = activeAgent.product_id;
               agentsQuery = agentsQuery.or(`product_id.eq.${sameProduct},product_id.is.null`);
             }
-            // Bots normais não podem chamar admin (Malu é privada do gestor)
+            // Bots normais no podem chamar admin (Malu é privada do gestor)
             if (!isAdminAgent) {
               agentsQuery = agentsQuery.neq('agent_type', 'admin');
             }
 
-            const { data: agents } = await agentsQuery;
+            const { fecha: agents } = await agentsQuery;
             allowedAgents = agents || [];
           }
 
@@ -2525,10 +2525,10 @@ ${leadDataPrompt}
             .join(', ');
 
           const transferDescription = isAdminAgent
-            ? `Você é o Agente Admin (gestor). Pode transferir para qualquer agente da organização. Agentes disponíveis: ${otherAgents || 'Nenhum'}`
+            ? `Usted é o Agente Admin (gestor). Pode transferir para qualquer agente da organização. Agentes disponíveis: ${otherAgents || 'Nenhum'}`
             : isGlobalAgent
-            ? `Você é um agente global e pode rotear para qualquer agente especialista da organização. NUNCA transfira para agentes do tipo 'admin'. Agentes disponíveis: ${otherAgents || 'Nenhum'}`
-            : `Transferir conversa para outro agente IA — APENAS dentro do seu produto ou para agentes globais (orquestrador). NUNCA transfira para agentes de outros produtos nem para o admin. Agentes disponíveis: ${otherAgents || 'Nenhum'}`;
+            ? `Usted é um agente global e puede rotear para qualquer agente especialista da organização. NUNCA transfira para agentes do tipo 'admin'. Agentes disponíveis: ${otherAgents || 'Nenhum'}`
+            : `Transferir conversación para otro agente IA — APENAS dentro do su producto ou para agentes globais (orquestrador). NUNCA transfira para agentes de outros productos nem para o admin. Agentes disponíveis: ${otherAgents || 'Nenhum'}`;
 
 
           toolsList.push({
@@ -2539,7 +2539,7 @@ ${leadDataPrompt}
               parameters: {
                 type: "object",
                 properties: {
-                  agent_id: { type: "string", description: "ID do agente destino" },
+                  agent_id: { type: "string", description: "ID del agente destino" },
                   reason: { type: "string", description: "Motivo da transferência" }
                 },
                 required: ["agent_id"]
@@ -2550,7 +2550,7 @@ ${leadDataPrompt}
             type: "function",
             function: {
               name: "transfer_to_human",
-              description: "Transferir conversa para atendimento humano.",
+              description: "Transferir conversación para atención humano.",
               parameters: {
                 type: "object",
                 properties: {
@@ -2568,18 +2568,18 @@ ${leadDataPrompt}
             type: "function",
             function: {
               name: "notify_team",
-              description: "Enviar notificação/alerta para a equipe.",
+              description: "Enviar notificación/alerta para a equipo.",
               parameters: {
                 type: "object",
                 properties: {
-                  message: { type: "string", description: "Mensagem da notificação" },
+                  message: { type: "string", description: "Mensaje da notificación" },
                   priority: { type: "string", enum: ["low", "medium", "high"], description: "Prioridade" }
                 },
                 required: ["message"]
               }
             }
           });
-          agentToolPrompts.push('- notify_team: Alerte quando algo urgente precisar de atenção');
+          agentToolPrompts.push('- notify_team: Alertá cuando algo urgente requiera atención');
         }
 
         if (activeAgent.can_add_notes) {
@@ -2587,7 +2587,7 @@ ${leadDataPrompt}
             type: "function",
             function: {
               name: "add_lead_note",
-              description: "Adicionar nota interna ao perfil do lead.",
+              description: "Adicionar nota interna ao perfil del lead.",
               parameters: {
                 type: "object",
                 properties: {
@@ -2597,7 +2597,7 @@ ${leadDataPrompt}
               }
             }
           });
-          agentToolPrompts.push('- add_lead_note: Registre informações relevantes da conversa');
+          agentToolPrompts.push('- add_lead_note: Registre información relevantes da conversación');
         }
 
         if (activeAgent.can_start_cadence) {
@@ -2625,7 +2625,7 @@ ${leadDataPrompt}
             type: "function",
             function: {
               name: "qualify_lead",
-              description: "Registrar qualificação BANT do lead.",
+              description: "Registrar qualificação BANT del lead.",
               parameters: {
                 type: "object",
                 properties: {
@@ -2638,25 +2638,25 @@ ${leadDataPrompt}
               }
             }
           });
-          agentToolPrompts.push('- qualify_lead: Registre BANT quando coletar informações de qualificação');
+          agentToolPrompts.push('- qualify_lead: Registre BANT quando coletar información de qualificação');
         }
 
         // Add tool usage instructions to system prompt
         if (agentToolPrompts.length > 0) {
           systemPrompt += `\n\n🔧 FERRAMENTAS AUTÔNOMAS DISPONÍVEIS:\n${agentToolPrompts.join('\n')}`;
           systemPrompt += `\n\nREGRAS DE USO DAS FERRAMENTAS:
-- Execute ações automaticamente quando fizer sentido no contexto da conversa
-- NÃO peça permissão ao lead para ações internas (tags, notas, temperatura)
-- SEMPRE confirme antes de ações visíveis ao lead (agendar reunião, enviar email)
-- Registre informações importantes coletadas na conversa usando as ferramentas
-- NUNCA mencione ao lead que você está usando ferramentas internas`;
+- Execute acciones automaticamente quando fizer sentido no contexto da conversación
+- NÃO peça permiso al lead para acciones internas (tags, notas, temperatura)
+- SEMPRE confirme antes de acciones visíveis al lead (agendar reunión, enviar email)
+- Registre información importantes coletadas na conversación usando as ferramentas
+- NUNCA mencione al lead que usted está usando ferramentas internas`;
         }
       }
 
       // === CATALOG TOOLS (search + send) — habilita SEMPRE que org tiver itens ativos
-      // (não trava no product_id; busca prioriza produto atual mas faz fallback org-wide)
+      // (no trava no product_id; busca prioriza producto atual mas faz fallback org-wide)
       try {
-        const { data: convForCatalog } = await supabase
+        const { fecha: convForCatalog } = await supabase
           .from('webchat_conversations')
           .select('organization_id')
           .eq('id', body.conversation_id)
@@ -2664,16 +2664,16 @@ ${leadDataPrompt}
         const orgId = convForCatalog?.organization_id;
 
         if (orgId) {
-          // Conta itens ativos da ORG inteira (sem filtrar por produto atual).
-          // Assim o agente sempre tem a tool quando há catálogo, mesmo se o produto
-          // dele não tiver itens próprios.
+          // Cuenta itens ativos da ORG inteira (sem filtrar por producto atual).
+          // Assim o agente siempre tiene a tool quando há catálogo, mismo se o producto
+          // dele no tiver itens próprios.
           const { count: orgCatalogCount } = await supabase
             .from('product_catalog_items')
             .select('id', { count: 'exact', head: true })
             .eq('organization_id', orgId)
             .eq('is_active', true);
 
-          // Conta itens do produto atual só pra log/contexto
+          // Cuenta itens do producto atual só pra log/contexto
           let productCatalogCount = 0;
           if (body.product_id) {
             const { count: pc } = await supabase
@@ -2692,7 +2692,7 @@ ${leadDataPrompt}
               type: "function",
               function: {
                 name: "search_catalog",
-                description: "Buscar itens no catálogo (imóveis, produtos, etc) por texto livre + filtros. Use quando o cliente descrever o que procura (ex: 'apto 2 quartos no Batel até 600 mil', 'tem o modelo X?'). Retorna no máximo 5 itens.",
+                description: "Buscar itens no catálogo (imóveis, productos, etc) por texto livre + filtros. Usa quando o cliente descrever o que procura (ex: 'apto 2 quartos no Batel até 600 mil', 'tiene o modelo X?'). Retorna no máximo 5 itens.",
                 parameters: {
                   type: "object",
                   properties: {
@@ -2701,7 +2701,7 @@ ${leadDataPrompt}
                     price_max: { type: "number", description: "Preço máximo (opcional)" },
                     attribute_filters: {
                       type: "object",
-                      description: "Filtros por atributo (ex: {bairro:'Batel', quartos:2}). Use chaves do attributes do catálogo.",
+                      description: "Filtros por atributo (ex: {bairro:'Batel', quartos:2}). Usa chaves do attributes do catálogo.",
                       additionalProperties: true,
                     },
                     tags: { type: "array", items: { type: "string" }, description: "Tags exigidas (opcional)" },
@@ -2716,7 +2716,7 @@ ${leadDataPrompt}
               type: "function",
               function: {
                 name: "send_catalog_item",
-                description: "Enviar UM item do catálogo ao cliente. Por padrão envia apenas FOTO + título + preço + link. Use include_videos=true APENAS se o cliente pediu vídeo/tour/demonstração. Use include_documents=true APENAS se o cliente pediu ficha/folder/specs/brochura/PDF. Só chame após o cliente CONFIRMAR interesse num item específico retornado por search_catalog. NÃO envie múltiplos itens automaticamente — pergunte antes.",
+                description: "Enviar UM item do catálogo al cliente. Por padrão envia apenas FOTO + título + preço + link. Usa include_videos=true APENAS se o cliente pediu vídeo/tour/demonstração. Usa include_documents=true APENAS se o cliente pediu ficha/folder/specs/brochura/PDF. Só chame após o cliente CONFIRMAR interesse num item específico retornado por search_catalog. NÃO envie múltiplos itens automaticamente — pergunte antes.",
                 parameters: {
                   type: "object",
                   properties: {
@@ -2731,26 +2731,26 @@ ${leadDataPrompt}
             });
 
             systemPrompt += `\n\n📦 CATÁLOGO PESQUISÁVEL DISPONÍVEL (CANAL OFICIAL DE ENVIO DE MÍDIA):
-Você tem acesso a um catálogo de itens (imóveis/produtos) com busca semântica e mídia rica (fotos, vídeos, PDFs, link).
+Usted tiene acesso a um catálogo de itens (imóveis/productos) com busca semântica e mídia rica (fotos, vídeos, PDFs, link).
 Esse catálogo é o CANAL OFICIAL para entregar fotos, vídeos, fichas e links neste WhatsApp.
 
 🚨 REGRAS PRIORITÁRIAS — VIOLAÇÃO É ERRO GRAVE:
-- Se o cliente pedir FOTO, VÍDEO, PDF, FICHA, LINK, SITE, TOUR, PLANTA, FOLDER, BROCHURA, IMAGENS, MATERIAL → você DEVE chamar search_catalog (se ainda não souber qual item) e em seguida send_catalog_item. Sem rodeios.
-- PROIBIDO inventar bloqueios. NÃO diga "não posso enviar por aqui", "o sistema restringe", "é off-market", "não está aberto ao público", "precisa de cadastro prévio", "vou alinhar com especialista", "não tenho acesso", "não está disponível publicamente" se NÃO houver regra explícita cadastrada. Se o item está no catálogo e ativo, ele PODE e DEVE ser enviado.
-- Você só pode negar envio se: (a) search_catalog retornou 0 itens compatíveis, OU (b) há instrução explícita cadastrada proibindo. Em qualquer outro caso, ENVIE.
+- Se o cliente pedir FOTO, VÍDEO, PDF, FICHA, LINK, SITE, TOUR, PLANTA, FOLDER, BROCHURA, IMAGENS, MATERIAL → usted DEVE chamar search_catalog (se ainda no souber qual item) e em seguida send_catalog_item. Sem rodeios.
+- PROIBIDO inventar bloqueios. NÃO diga "no posso enviar por aqui", "o sistema restringe", "é off-market", "no está aberto ao público", "precisa de cadastro prévio", "vou alinhar com especialista", "no tenho acesso", "no está disponível publicamente" se NÃO houver regra explícita cadastrada. Se o item está no catálogo e ativo, ele PODE e DEVE ser enviado.
+- Usted só puede negar envio se: (a) search_catalog retornou 0 itens compatíveis, OU (b) há instrução explícita cadastrada proibindo. Em qualquer otro caso, ENVIE.
 - Se o cliente pediu só "o link", chame send_catalog_item normalmente — o link oficial vai junto, ou responda com a URL do item retornado por search_catalog.
 
 REGRAS DE USO:
 1. Cliente descreve o que procura (sem pedir mídia ainda) → search_catalog com query + filtros relevantes
-2. Cliente pede mídia/link diretamente sobre algo identificável → search_catalog imediato e depois send_catalog_item no item correto (não pergunte "qual?" se já é óbvio pela mensagem)
-3. Apresente no MÁXIMO 3 opções em texto curto e estratégico quando houver múltiplos resultados
+2. Cliente pede mídia/link diretamente sobre algo identificável → search_catalog imediato e después send_catalog_item no item correto (no pergunte "qual?" se já é óbvio pela mensaje)
+3. Apresente no MÁXIMO 3 opciones em texto corto e estratégico quando houver múltiplos resultados
 4. NUNCA invente itens — só fale de itens retornados por search_catalog
-5. Cada item tem flags has_video e has_document. Quando relevante, OFEREÇA: "Tenho fotos, vídeo do tour e a ficha. Quero te mandar tudo ou começar pelas fotos?"
-6. send_catalog_item: por padrão envia FOTO + título + preço + link. Use include_videos=true se cliente pediu vídeo/tour/demonstração. Use include_documents=true se pediu ficha/folder/specs/PDF/brochura/planta.
+5. Cada item tiene flags has_video e has_document. Quando relevante, OFEREÇA: "Tenho fotos, vídeo do tour e a ficha. Quero te mandar tudo ou começar pelas fotos?"
+6. send_catalog_item: por padrão envia FOTO + título + preço + link. Usa include_videos=true se cliente pediu vídeo/tour/demonstração. Usa include_documents=true se pediu ficha/folder/specs/PDF/brochura/planta.
 7. Escale com bom senso: foto → (se interesse) vídeo → (se precisar) documento. Mas se o cliente pediu "manda tudo", mande tudo.
 8. Múltiplos itens: um por vez, aguardando reação entre envios.
-9. search_catalog vazio → ofereça relaxar filtros / outra região / outra faixa. NUNCA invente desculpa de "off-market" ou "restrição".
-10. Se o envio falhar por algum motivo técnico, mande pelo menos o LINK oficial do item (nunca devolva resposta vazia).`;
+9. search_catalog vazio → ofereça relaxar filtros / otra região / otra faixa. NUNCA invente desculpa de "off-market" ou "restrição".
+10. Se o envio falhar por algún motivo técnico, mande pelo menos o LINK oficial do item (nunca devolva respuesta vazia).`;
           }
         }
       } catch (catErr) {
@@ -2759,7 +2759,7 @@ REGRAS DE USO:
 
       // === REGISTRY TOOLS (Fase 1 — agentes que agem) ===
       // Adiciona as tools modulares do registry centralizado.
-      // Só habilita se temos agente ativo (caso contrário não há contexto pra executar).
+      // Só habilita se temos agente ativo (caso contrário no há contexto pra executar).
       // Filtra nomes já presentes na toolsList legada pra evitar conflito.
       try {
         if (activeAgent) {
@@ -2780,10 +2780,10 @@ REGRAS DE USO:
       const tools = toolsList.length > 0 ? toolsList : undefined;
 
       // ============================================
-      // MEMÓRIA DE AGENDAMENTO — evita reagendar reunião confirmada
+      // MEMÓRIA DE AGENDAMENTO — evita reagendar reunión confirmada
       // ============================================
       try {
-        const { data: convMeeting } = await supabase
+        const { fecha: convMeeting } = await supabase
           .from('webchat_conversations')
           .select('meeting_scheduled_at, meeting_metadata')
           .eq('id', body.conversation_id)
@@ -2803,9 +2803,9 @@ REGRAS DE USO:
           const extra = meta?.attendee_email ? ` (confirmação enviada para ${meta.attendee_email})` : '';
           systemPrompt +=
             `\n\n📅 REUNIÃO JÁ AGENDADA NESTA CONVERSA: ${formatted}${extra}.\n` +
-            `REGRA CRÍTICA: NUNCA proponha um novo horário. NUNCA pergunte "prefere 09h ou 12h?". ` +
-            `A reunião já foi confirmada. Apenas siga a conversa normalmente focando no produto/objeção do cliente. ` +
-            `Só sugira remarcar se o cliente pedir explicitamente para mudar o horário.`;
+            `REGRA CRÍTICA: NUNCA proponha um novo horario. NUNCA pergunte "prefere 09h ou 12h?". ` +
+            `A reunión já fue confirmada. Apenas siga a conversación normalmente focando no producto/objeção del cliente. ` +
+            `Só sugira remarcar se o cliente pedir explicitamente para mudar o horario.`;
           console.log('[webchat-bot] Meeting context injected:', formatted);
         }
       } catch (meetErr) {
@@ -2815,15 +2815,15 @@ REGRAS DE USO:
       // ============================================
       // SPRINT 2 — Memória semântica + Supervisor
       // ============================================
-      // Buscar memórias relevantes do lead (silencioso em caso de falha)
+      // Buscar memórias relevantes del lead (silencioso em caso de falla)
       try {
         const convInfo: any = await supabase
           .from('webchat_conversations')
           .select('lead_id, organization_id')
           .eq('id', body.conversation_id)
           .maybeSingle();
-        const leadId = convInfo?.data?.lead_id;
-        const orgId = convInfo?.data?.organization_id;
+        const leadId = convInfo?.fecha?.lead_id;
+        const orgId = convInfo?.fecha?.organization_id;
 
         if (leadId && orgId) {
           // 1) Retrieval: busca memórias relevantes
@@ -2854,12 +2854,12 @@ REGRAS DE USO:
                 )
                 .join('\n');
               systemPrompt +=
-                `\n\n🧠 MEMÓRIA SEMÂNTICA (contexto histórico relevante deste cliente):\n${memBlock}\n\nUse essas informações para personalizar sua resposta sem repetir o que ele já disse.`;
+                `\n\n🧠 MEMÓRIA SEMÂNTICA (contexto histórico relevante deste cliente):\n${memBlock}\n\nUse essas información para personalizar su respuesta sem repetir o que ele já disse.`;
               console.log('[webchat-bot] Injected', memories.length, 'memories into prompt');
             }
           }
 
-          // 2) Persistência fire-and-forget: salva mensagem do usuário como memória
+          // 2) Persistência fire-and-forget: salva mensaje do usuario como memória
           fetch(
             `${Deno.env.get('SUPABASE_URL')}/functions/v1/memory-embedder`,
             {
@@ -2894,8 +2894,8 @@ REGRAS DE USO:
           .select('lead_id, organization_id')
           .eq('id', body.conversation_id)
           .maybeSingle();
-        const orgId2 = convInfo2?.data?.organization_id;
-        const seed = convInfo2?.data?.lead_id || body.conversation_id;
+        const orgId2 = convInfo2?.fecha?.organization_id;
+        const seed = convInfo2?.fecha?.lead_id || body.conversation_id;
 
         if (orgId2 && seed) {
           const pickResp = await fetch(
@@ -2941,7 +2941,7 @@ REGRAS DE USO:
         // gastar créditos Lovable.
         let orgIdForRouting = (activeAgent as any)?.organization_id || null;
         if (!orgIdForRouting && body.conversation_id) {
-          const { data: convForRouting } = await supabase
+          const { fecha: convForRouting } = await supabase
             .from('webchat_conversations')
             .select('organization_id')
             .eq('id', body.conversation_id)
@@ -2949,7 +2949,7 @@ REGRAS DE USO:
           orgIdForRouting = convForRouting?.organization_id || null;
         }
         if (!orgIdForRouting && body.product_id) {
-          const { data: productForRouting } = await supabase
+          const { fecha: productForRouting } = await supabase
             .from('products')
             .select('organization_id')
             .eq('id', body.product_id)
@@ -2963,7 +2963,7 @@ REGRAS DE USO:
           console.error('[webchat-bot] AI config error:', cfgErr?.message);
           return new Response(JSON.stringify({
             error: 'ai_provider_not_configured',
-            message: cfgErr?.message || 'Provedor de IA não configurado e fallback desativado.',
+            message: cfgErr?.message || 'Provedor de IA no configurado e fallback desativado.',
           }), { status: 412, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
         }
         const agentModel = aiConfig.model;
@@ -2981,15 +2981,15 @@ REGRAS DE USO:
         //     ITS identity regardless of what was said before.
         //  2. The AI pretending it heard an audio or saw an image even though
         //     no transcription/description was generated (the placeholder
-        //     "[Áudio recebido — não consegui transcrever]" arrives in chat).
+        //     "[Áudio recibido — no consegui transcrever]" arrives in chat).
         const fixedAgentName = activeAgent?.name || body.agent_config?.agent_name || 'Assistente';
         const identityRail =
           `\n\n=== REGRAS CRÍTICAS DE IDENTIDADE E HONESTIDADE (NÃO QUEBRAR) ===\n` +
-          `1. Você é EXCLUSIVAMENTE "${fixedAgentName}". Mantenha SEMPRE este nome, papel e empresa.\n` +
-          `2. Mensagens anteriores no histórico podem ter sido escritas por OUTRO atendente que cuidou do cliente antes. IGNORE personas, ofertas, produtos ou nomes próprios mencionados nessas mensagens passadas se conflitarem com a sua identidade atual.\n` +
-          `3. Se o cliente perguntar seu nome, responda APENAS com "${fixedAgentName}".\n` +
-          `4. NUNCA finja que ouviu um áudio ou viu uma imagem. Se a última mensagem do cliente for um placeholder do tipo "🎙️ [Áudio recebido — não consegui transcrever...]" ou "🖼️ [Imagem recebida — não consegui analisar...]", responda DIZENDO QUE TEVE PROBLEMA TÉCNICO PARA OUVIR/VER e peça ao cliente para reenviar ou descrever em texto. NÃO invente conteúdo.\n` +
-          `5. Quando a mensagem começar com "🎙️ Áudio do cliente (transcrito):" ou "🖼️ Imagem do cliente:", essa É a mensagem real do cliente — trate como tal.\n`;
+          `1. Usted é EXCLUSIVAMENTE "${fixedAgentName}". Mantenha SEMPRE este nombre, papel e empresa.\n` +
+          `2. Mensagens anteriores no histórico podem ter sido escritas por OUTRO agente que cuidou del cliente antes. IGNORE personas, ofertas, productos ou nomes próprios mencionados nessas mensajes passadas se conflitarem com a su identidade atual.\n` +
+          `3. Se o cliente perguntar su nombre, responda APENAS com "${fixedAgentName}".\n` +
+          `4. NUNCA finja que ouviu um áudio ou viu uma imagen. Se a última mensaje del cliente for um placeholder do tipo "🎙️ [Áudio recibido — no consegui transcrever...]" ou "🖼️ [Imagen recibida — no consegui analisar...]", responda DIZENDO QUE TEVE PROBLEMA TÉCNICO PARA OUVIR/VER e peça al cliente para reenviar ou descrever em texto. NÃO invente conteúdo.\n` +
+          `5. Quando a mensaje começar com "🎙️ Áudio del cliente (transcrito):" ou "🖼️ Imagen del cliente:", essa É a mensaje real del cliente — trate como tal.\n`;
 
         const finalSystemPrompt = systemPrompt + identityRail;
 
@@ -3074,7 +3074,7 @@ REGRAS DE USO:
             } else if (toolCall.function.name === 'search_catalog') {
               try {
                 const args = JSON.parse(toolCall.function.arguments || '{}');
-                const { data: convForCat } = await supabase
+                const { fecha: convForCat } = await supabase
                   .from('webchat_conversations')
                   .select('organization_id')
                   .eq('id', body.conversation_id)
@@ -3088,8 +3088,8 @@ REGRAS DE USO:
                 };
                 const limitPayload = Math.min(args.limit || 3, 5);
 
-                // 1ª tentativa: priorizar produto atual (se houver)
-                let { data: searchData, error: searchErr } = await supabase.functions.invoke('catalog-search', {
+                // 1ª tentativa: priorizar producto atual (se houver)
+                let { fecha: searchData, error: searchErr } = await supabase.functions.invoke('catalog-search', {
                   body: {
                     organization_id: convForCat?.organization_id,
                     product_id: body.product_id || null,
@@ -3102,9 +3102,9 @@ REGRAS DE USO:
                 let items = (searchData as any)?.items || [];
                 console.log('[webchat-bot] 📦 catalog-search (product scope) returned', items.length, 'items');
 
-                // 2ª tentativa: fallback org-wide se o produto atual não trouxe nada
+                // 2ª tentativa: fallback org-wide se o producto atual no trouxe nada
                 if (items.length === 0 && body.product_id) {
-                  const { data: orgSearchData } = await supabase.functions.invoke('catalog-search', {
+                  const { fecha: orgSearchData } = await supabase.functions.invoke('catalog-search', {
                     body: {
                       organization_id: convForCat?.organization_id,
                       product_id: null,
@@ -3119,24 +3119,24 @@ REGRAS DE USO:
 
                 // Detect if user EXPLICITLY asked for media in the current message
                 const userMsgLower = (body.message || '').toLowerCase();
-                const mediaIntentRegex = /\b(foto|fotos|imagem|imagens|video|vídeo|videos|vídeos|tour|planta|pdf|ficha|folder|brochura|material|materiais|link|site|envia|manda|mandar|enviar|envie|me\s+manda|me\s+envia|quero\s+ver|posso\s+ver)\b/i;
+                const mediaIntentRegex = /\b(foto|fotos|imagen|imagens|video|vídeo|videos|vídeos|tour|planta|pdf|ficha|folder|brochura|material|materiais|link|site|envia|manda|mandar|enviar|envie|me\s+manda|me\s+envia|quero\s+ver|posso\s+ver)\b/i;
                 const explicitMediaRequest = mediaIntentRegex.test(userMsgLower);
                 const wantsVideo = /\b(video|vídeo|tour|demonstr)/i.test(userMsgLower);
                 const wantsDoc = /\b(pdf|ficha|folder|brochura|planta|specs)/i.test(userMsgLower);
 
                 let toolResultText: string;
                 if (items.length === 0) {
-                  toolResultText = 'Nenhum item encontrado com esses critérios. Sugira ao cliente relaxar filtros ou explorar alternativas. NÃO invente desculpa de "off-market" ou "restrição".';
+                  toolResultText = 'Nenhum item encontrado com esses critérios. Sugiere al cliente relaxar filtros ou explorar alternativas. NÃO invente desculpa de "off-market" ou "restrição".';
                 } else if (explicitMediaRequest) {
                   // User asked for media → IA must send NOW, not ask
                   const topItem = items[0];
-                  toolResultText = `ITENS ENCONTRADOS NO CATÁLOGO (use o id quando for chamar send_catalog_item):\n${JSON.stringify(items, null, 2)}\n\n🚨 O CLIENTE JÁ PEDIU MÍDIA EXPLICITAMENTE NESTA MENSAGEM ("${body.message}"). VOCÊ DEVE CHAMAR send_catalog_item AGORA com item_id="${topItem.id}"${wantsVideo ? ' e include_videos=true' : ''}${wantsDoc ? ' e include_documents=true' : ''}. NÃO PERGUNTE "qual interessa?" — envie direto. Se houver múltiplos itens muito relevantes, escolha o que mais combina com o pedido. Não devolva texto explicando — chame a tool send_catalog_item.`;
+                  toolResultText = `ITENS ENCONTRADOS NO CATÁLOGO (use o id quando for chamar send_catalog_item):\n${JSON.stringify(items, null, 2)}\n\n🚨 O CLIENTE JÁ PEDIU MÍDIA EXPLICITAMENTE NESTA MENSAGEM ("${body.message}"). VOCÊ DEVE CHAMAR send_catalog_item AGORA com item_id="${topItem.id}"${wantsVideo ? ' e include_videos=true' : ''}${wantsDoc ? ' e include_documents=true' : ''}. NÃO PERGUNTE "qual interessa?" — envie direto. Se houver múltiplos itens mucho relevantes, escolha o que mais combina com o pedido. No devolva texto explicando — chame a tool send_catalog_item.`;
                 } else {
-                  toolResultText = `ITENS ENCONTRADOS NO CATÁLOGO (use o id quando for chamar send_catalog_item):\n${JSON.stringify(items, null, 2)}\n\nApresente no máximo 3 opções de forma curta e estratégica. Pergunte qual interessa antes de chamar send_catalog_item.`;
+                  toolResultText = `ITENS ENCONTRADOS NO CATÁLOGO (use o id quando for chamar send_catalog_item):\n${JSON.stringify(items, null, 2)}\n\nApresente no máximo 3 opciones de forma corta e estratégica. Pergunte qual interessa antes de chamar send_catalog_item.`;
                 }
 
-                // Follow-up: deixa a IA formatar a resposta — COM tools habilitadas
-                // para que ela possa chamar send_catalog_item no mesmo ciclo.
+                // Follow-up: deixa a IA formatar a respuesta — COM tools habilitadas
+                // para que ela possa chamar send_catalog_item no mismo ciclo.
                 const followUpBody: any = {
                   model: agentModel,
                   messages: [
@@ -3176,7 +3176,7 @@ REGRAS DE USO:
                       if (explicitMediaRequest && wantsVideo) sendArgs.include_videos = true;
                       if (explicitMediaRequest && wantsDoc) sendArgs.include_documents = true;
 
-                      const { data: sendData, error: sendErr } = await supabase.functions.invoke('send-catalog-item', {
+                      const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('send-catalog-item', {
                         body: {
                           conversation_id: body.conversation_id,
                           item_id: sendArgs.item_id,
@@ -3191,7 +3191,7 @@ REGRAS DE USO:
                         const fallbackItem = items.find((i: any) => i.id === sendArgs.item_id) || items[0];
                         responseContent = fallbackItem?.url
                           ? `Aqui está: ${fallbackItem.title} — ${fallbackItem.url}`
-                          : 'Houve um problema ao enviar. Posso te mandar o link manualmente?';
+                          : 'Houve um problema al enviar. Posso te mandar o link manualmente?';
                       } else {
                         const sent = sendData as any;
                         console.log('[webchat-bot] 📦 chained catalog item sent:', sent?.delivered, sent?.delivery_channel, sent?.sent_counts);
@@ -3210,7 +3210,7 @@ REGRAS DE USO:
                       const fallbackItem = items[0];
                       responseContent = fallbackItem?.url
                         ? `Aqui está: ${fallbackItem.title} — ${fallbackItem.url}`
-                        : 'Não consegui enviar agora. Quer que eu tente novamente?';
+                        : 'No consegui enviar ahora. Quer que eu tente novamente?';
                     }
                   } else {
                     // Plain text response from follow-up
@@ -3221,7 +3221,7 @@ REGRAS DE USO:
                       console.log('[webchat-bot] ⚠️ Model ignored forced tool_choice — falling back to direct send');
                       try {
                         const topItem = items[0];
-                        const { data: sendData } = await supabase.functions.invoke('send-catalog-item', {
+                        const { fecha: sendData } = await supabase.functions.invoke('send-catalog-item', {
                           body: {
                             conversation_id: body.conversation_id,
                             item_id: topItem.id,
@@ -3246,12 +3246,12 @@ REGRAS DE USO:
                   }
                 } else {
                   responseContent = items.length === 0
-                    ? 'Não encontrei itens com esses critérios. Quer ajustar a busca?'
-                    : `Achei ${items.length} ${items.length === 1 ? 'opção' : 'opções'} pra você. Quer que eu envie os detalhes?`;
+                    ? 'No encontrei itens com esses critérios. Quer ajustar a busca?'
+                    : `Achei ${items.length} ${items.length === 1 ? 'opción' : 'opciones'} pra usted. Quer que eu envie os detalhes?`;
                 }
               } catch (catErr) {
                 console.error('[webchat-bot] search_catalog error:', catErr);
-                responseContent = 'Não consegui consultar o catálogo agora. Pode descrever melhor o que procura?';
+                responseContent = 'No consegui consultar o catálogo ahora. Pode descrever melhor o que procura?';
               }
             } else if (toolCall.function.name === 'send_catalog_item') {
               try {
@@ -3259,7 +3259,7 @@ REGRAS DE USO:
                 if (!args.item_id) {
                   responseContent = choice.message?.content || 'Posso te enviar mais detalhes? Confirma qual te interessa?';
                 } else {
-                  const { data: sendData, error: sendErr } = await supabase.functions.invoke('send-catalog-item', {
+                  const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('send-catalog-item', {
                     body: {
                       conversation_id: body.conversation_id,
                       item_id: args.item_id,
@@ -3271,7 +3271,7 @@ REGRAS DE USO:
 
                   if (sendErr) {
                     console.error('[webchat-bot] send_catalog_item error:', sendErr);
-                    responseContent = 'Houve um problema ao enviar o item. Posso te mandar o link manualmente?';
+                    responseContent = 'Houve um problema al enviar o item. Posso te mandar o link manualmente?';
                   } else {
                     const sent = sendData as any;
                     console.log('[webchat-bot] 📦 catalog item sent:', sent?.delivered, sent?.delivery_channel, sent?.sent_counts);
@@ -3288,7 +3288,7 @@ REGRAS DE USO:
                 }
               } catch (catErr) {
                 console.error('[webchat-bot] send_catalog_item exception:', catErr);
-                responseContent = 'Não consegui enviar agora. Quer que eu tente novamente?';
+                responseContent = 'No consegui enviar ahora. Quer que eu tente novamente?';
               }
             } else if (toolCall.function.name === 'check_available_slots' && scheduleUserId) {
               try {
@@ -3301,7 +3301,7 @@ REGRAS DE USO:
                 // already offered slots in the last 60 minutes. Force the
                 // model to use schedule_meeting instead.
                 // ============================================================
-                const { data: recentMsgs } = await supabase
+                const { fecha: recentMsgs } = await supabase
                   .from('webchat_messages')
                   .select('metadata, created_at')
                   .eq('conversation_id', body.conversation_id)
@@ -3334,8 +3334,8 @@ REGRAS DE USO:
                     if (userMsgLower.includes(s.time) ||
                         userMsgLower.includes(timeNorm) ||
                         userMsgLower.includes(timeAlt) ||
-                        (i === 0 && /\b(primeir|opção 1|opcao 1|primeira|primeiro)\b/.test(userMsgLower)) ||
-                        (i === 1 && /\b(segund|opção 2|opcao 2|segunda)\b/.test(userMsgLower))) {
+                        (i === 0 && /\b(primeir|opción 1|opcao 1|primeira|primeiro)\b/.test(userMsgLower)) ||
+                        (i === 1 && /\b(segund|opción 2|opcao 2|segunda)\b/.test(userMsgLower))) {
                       matchedSlot = s;
                       break;
                     }
@@ -3357,7 +3357,7 @@ REGRAS DE USO:
                     // and letting a small inline schedule_meeting trigger run.
                     skipSlotSearch = true;
                   } else if (!guestEmail) {
-                    responseContent = 'Pra eu travar esse horário pra você, qual o melhor email pra mandar a confirmação?';
+                    responseContent = 'Pra eu travar esse horario pra usted, qual o melhor email pra mandar a confirmação?';
                     skipSlotSearch = true;
                   } else {
                     // Have email but couldn't match slot text → ask short clarification
@@ -3372,13 +3372,13 @@ REGRAS DE USO:
 
 
 
-                // Find event type — usa allowedEventTypes se disponível (vinculado ao agente),
+                // Find event type — usa allowedEventTypes se disponível (vinculado al agente),
                 // senão fallback para o primeiro ativo do host
                 let eventType: any = null;
                 if (allowedEventTypes.length > 0) {
                   eventType = allowedEventTypes[0];
                 } else {
-                  const { data: et } = await supabase
+                  const { fecha: et } = await supabase
                     .from('booking_event_types')
                     .select('*')
                     .eq('user_id', scheduleUserId)
@@ -3390,7 +3390,7 @@ REGRAS DE USO:
                 }
 
                 if (!eventType) {
-                  responseContent = 'No momento não tenho horários configurados. Posso verificar alternativas para você?';
+                  responseContent = 'No momento no tenho horários configurados. Posso verificar alternativas para usted?';
                 } else {
                   const today = new Date();
                   const allSlots: Array<{ date: string; dateLabel: string; time: string; period: 'morning' | 'afternoon' }> = [];
@@ -3405,7 +3405,7 @@ REGRAS DE USO:
                     if (d === 0 && today.getHours() >= 18) continue;
 
                     // Fetch weekly availability
-                    const { data: weeklyAvail } = await supabase
+                    const { fecha: weeklyAvail } = await supabase
                       .from('user_availability')
                       .select('*')
                       .eq('user_id', scheduleUserId)
@@ -3413,7 +3413,7 @@ REGRAS DE USO:
                       .eq('is_available', true);
 
                     // Check overrides
-                    const { data: override } = await supabase
+                    const { fecha: override } = await supabase
                       .from('availability_overrides')
                       .select('*')
                       .eq('user_id', scheduleUserId)
@@ -3432,7 +3432,7 @@ REGRAS DE USO:
                     if (timeRanges.length === 0) continue;
 
                     // Fetch existing events
-                    const { data: existingEvents } = await supabase
+                    const { fecha: existingEvents } = await supabase
                       .from('calendar_events')
                       .select('start_time, end_time')
                       .eq('user_id', scheduleUserId)
@@ -3508,7 +3508,7 @@ REGRAS DE USO:
                   }
 
                   if (suggestions.length === 0) {
-                    responseContent = 'Infelizmente não encontrei horários disponíveis nos próximos dias. Posso verificar outras opções para você?';
+                    responseContent = 'Infelizmente no encontrei horários disponíveis nos próximos días. Posso verificar outras opciones para usted?';
                   } else {
                     // Save scheduling context as metadata for persistence
                     schedulingMetadata = {
@@ -3529,15 +3529,15 @@ REGRAS DE USO:
                     // Build a natural response for the AI to relay
                     let slotsInfo = '📅 HORÁRIOS DISPONÍVEIS ENCONTRADOS:\n';
                     suggestions.forEach((s, i) => {
-                      slotsInfo += `\nOpção ${i + 1}: ${s.dateLabel} às ${s.time} (${s.period === 'morning' ? 'manhã' : 'tarde'}) [data: ${s.date}]`;
+                      slotsInfo += `\nOpção ${i + 1}: ${s.dateLabel} às ${s.time} (${s.period === 'morning' ? 'manhã' : 'tarde'}) [fecha: ${s.date}]`;
                     });
-                    slotsInfo += '\n\nApresente esses horários ao cliente de forma natural e estratégica. NÃO mostre o formato de data técnico (YYYY-MM-DD).';
+                    slotsInfo += '\n\nApresente esses horários al cliente de forma natural e estratégica. NÃO mostre o formato de fecha técnico (YYYY-MM-DD).';
 
                     // FIX 3: slim follow-up prompt — drop emailEnforcement, anti-CTAs etc.
                     // We only want a clean "present these slots and ask which one" reply.
                     const slimAgentName = activeAgent?.name || 'Assistente';
                     const slimAgentPersona = activeAgent?.personality || 'consultivo, claro e cordial';
-                    const slimFollowUpSystem = `Você é ${slimAgentName}. Tom: ${slimAgentPersona}.\n\nApresente os horários encontrados de forma natural, curta (no máximo 2 linhas) e pergunte qual o cliente prefere. NUNCA pergunte o email novamente — você já tem ou pedirá depois. NUNCA diga "deixa eu ver a agenda" — você acabou de ver. NUNCA invente outros horários além dos fornecidos.`;
+                    const slimFollowUpSystem = `Usted é ${slimAgentName}. Tom: ${slimAgentPersona}.\n\nApresente os horários encontrados de forma natural, corta (no máximo 2 linhas) e pergunte qual o cliente prefere. NUNCA pergunte o email novamente — usted já tiene ou pedirá después. NUNCA diga "deixa eu ver a agenda" — usted acabou de ver. NUNCA invente outros horários além dos fornecidos.`;
 
                     // Make a follow-up call to the AI with the slot info
                     const followUpResponse = await fetch(aiConfig.endpoint, {
@@ -3563,9 +3563,9 @@ REGRAS DE USO:
                     } else {
                       // Fallback: present slots directly
                       responseContent = suggestions.map((s, i) => 
-                        `Opção ${i + 1}: ${s.dateLabel} às ${s.time}`
+                        `Opción ${i + 1}: ${s.dateLabel} às ${s.time}`
                       ).join('\n');
-                      responseContent = `Encontrei esses horários disponíveis:\n\n${responseContent}\n\nQual funciona melhor pra você?`;
+                      responseContent = `Encontrei esses horários disponíveis:\n\n${responseContent}\n\nQual funciona melhor pra usted?`;
                     }
                   }
                 }
@@ -3573,7 +3573,7 @@ REGRAS DE USO:
                 console.log('[webchat-bot] Available slots check completed');
               } catch (slotsError) {
                 console.error('[webchat-bot] Check slots error:', slotsError);
-                responseContent = 'Não consegui verificar a agenda agora. Posso tentar novamente ou transferir para um atendente?';
+                responseContent = 'No consegui verificar a agenda ahora. Posso tentar novamente ou transferir para um agente?';
               }
             } else if (toolCall.function.name === 'schedule_meeting' && scheduleUserId) {
               try {
@@ -3582,7 +3582,7 @@ REGRAS DE USO:
                 
                 // Find event type for this user.
                 // Se o cliente passou event_type_id (escolheu entre múltiplos), prioriza esse.
-                // Senão usa allowedEventTypes[0] (vínculo do agente) ou fallback para o mais antigo.
+                // Senão usa allowedEventTypes[0] (vínculo del agente) ou fallback para o mais antigo.
                 let eventType: any = null;
                 const requestedEtId = (args as any).event_type_id;
                 if (requestedEtId && allowedEventTypes.length > 0) {
@@ -3592,7 +3592,7 @@ REGRAS DE USO:
                   eventType = allowedEventTypes[0];
                 }
                 if (!eventType) {
-                  const { data: et } = await supabase
+                  const { fecha: et } = await supabase
                     .from('booking_event_types')
                     .select('*')
                     .eq('user_id', scheduleUserId)
@@ -3610,15 +3610,15 @@ REGRAS DE USO:
                   const endTime = new Date(startTime.getTime() + eventType.duration_minutes * 60000);
                   
                   // Get user's org
-                   const { data: hostProfile } = await supabase
+                   const { fecha: hostProfile } = await supabase
                     .from('profiles')
                     .select('organization_id, full_name')
                     .eq('id', scheduleUserId)
                     .single();
                   
                   if (hostProfile) {
-                    // Create calendar event (NUNCA enviar campos que não existem na tabela calendar_events,
-                    // ex.: location_details — isso fazia o insert falhar silenciosamente e o agendamento
+                    // Create calendar event (NUNCA enviar campos que no existem na tabela calendar_events,
+                    // ex.: location_details — isso fazia o insert falhar silenciosamente e o reserva
                     // ficava sem vínculo com a agenda interna nem ia para o Google).
                     const locationDetailsText = eventType.location_details
                       ? (typeof eventType.location_details === 'string'
@@ -3631,10 +3631,10 @@ REGRAS DE USO:
                       ? `${baseDescription}\n\nLocal: ${locationDetailsText}`
                       : baseDescription;
 
-                    // Resolve product_id do lead (para que o evento apareça quando o vendedor filtra por produto)
+                    // Resolve product_id del lead (para que o evento apareça quando o vendedor filtra por producto)
                     let resolvedProductId: string | null = body.product_id || null;
                     if (!resolvedProductId && leadId) {
-                      const { data: leadRow } = await supabase
+                      const { fecha: leadRow } = await supabase
                         .from('leads')
                         .select('product_id')
                         .eq('id', leadId)
@@ -3642,7 +3642,7 @@ REGRAS DE USO:
                       resolvedProductId = leadRow?.product_id || null;
                     }
 
-                    const { data: calendarEvent, error: calendarInsertError } = await supabase
+                    const { fecha: calendarEvent, error: calendarInsertError } = await supabase
                       .from('calendar_events')
                       .insert({
                         title: `${eventType.name} - ${args.guest_name}`,
@@ -3673,21 +3673,21 @@ REGRAS DE USO:
 
                     if (calendarInsertError || !calendarEvent) {
                       console.error('[webchat-bot] calendar_events insert failed:', calendarInsertError);
-                      responseContent = 'Tive um problema técnico para travar esse horário na agenda. Pode me dar 1 minutinho que eu confirmo com a equipe?';
+                      responseContent = 'Tive um problema técnico para travar esse horario na agenda. Pode me dar 1 minutinho que eu confirmo com a equipo?';
                       try {
                         await supabase.from('notifications').insert({
                           organization_id: hostProfile.organization_id,
                           user_id: scheduleUserId,
-                          title: '⚠️ Falha ao criar agendamento via IA',
-                          message: `Não consegui criar o evento na agenda para ${args.guest_name} (${args.guest_email}) em ${args.preferred_date} ${args.preferred_time}. Verifique manualmente. Erro: ${calendarInsertError?.message || 'desconhecido'}`,
+                          title: '⚠️ Falha ao crear reserva via IA',
+                          message: `No consegui crear o evento na agenda para ${args.guest_name} (${args.guest_email}) em ${args.preferred_date} ${args.preferred_time}. Verifique manualmente. Error: ${calendarInsertError?.message || 'desconhecido'}`,
                           type: 'system_alert',
                           product_id: body.product_id || null,
                         });
                       } catch (_e) {}
-                      break; // sai do loop — não declarar "agendado com sucesso"
+                      break; // sai do loop — no declarar "agendado com éxito"
                     }
 
-                    // Create booking request — calendar_event_id agora é OBRIGATÓRIO
+                    // Create booking request — calendar_event_id ahora é OBRIGATÓRIO
                     await supabase.from('booking_requests').insert({
                       event_type_id: eventType.id,
                       host_user_id: scheduleUserId,
@@ -3727,7 +3727,7 @@ REGRAS DE USO:
                           guestName: args.guest_name,
                           guestEmail: args.guest_email,
                           eventName: eventType.name,
-                          hostName: hostProfile.full_name || 'Equipe',
+                          hostName: hostProfile.full_name || 'Equipo',
                           startTime: startTime.toISOString(),
                           endTime: endTime.toISOString(),
                           meetLink: calendarEvent?.meet_link || '',
@@ -3752,7 +3752,7 @@ REGRAS DE USO:
 
                     // === Fire-and-forget: push to host's Google Calendar if connected ===
                     try {
-                      const { data: gconn } = await supabase
+                      const { fecha: gconn } = await supabase
                         .from('google_calendar_connections')
                         .select('id')
                         .eq('user_id', scheduleUserId)
@@ -3795,7 +3795,7 @@ REGRAS DE USO:
                       console.warn('[webchat-bot] Failed to persist meeting context (non-fatal):', persistErr);
                     }
 
-                    // === Notificações internas para a equipe ===
+                    // === Notificações internas para a equipo ===
                     try {
                       const formattedDateNotif = startTime.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'America/Sao_Paulo' });
                       const formattedTimeNotif = startTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
@@ -3810,7 +3810,7 @@ REGRAS DE USO:
 
                       // Notificar todos os admins da org se a flag estiver ativa
                       if ((activeAgent as any)?.booking_notify_org_admins) {
-                        const { data: admins } = await supabase
+                        const { fecha: admins } = await supabase
                           .from('user_roles')
                           .select('user_id, profiles!inner(organization_id)')
                           .eq('role', 'admin')
@@ -3821,7 +3821,7 @@ REGRAS DE USO:
                       // Sempre incluir o host (anfitrião)
                       if (scheduleUserId) recipientIds.add(scheduleUserId);
 
-                      const notifTitle = `📅 Nova reunião agendada via ${agentNameNotif}`;
+                      const notifTitle = `📅 Nova reunión agendada via ${agentNameNotif}`;
                       const notifMsg = `${eventType.name} com ${args.guest_name} (${args.guest_email}) em ${formattedDateNotif} às ${formattedTimeNotif}.`;
 
                       const notifRows = Array.from(recipientIds).map((uid) => ({
@@ -3854,16 +3854,16 @@ REGRAS DE USO:
                     const formattedTime = startTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
                     
                     if (emailSent) {
-                      responseContent = `✅ Reunião agendada com sucesso!\n\n📅 ${formattedDate} às ${formattedTime}\n📧 Confirmação enviada para ${args.guest_email}\n\nPosso ajudar com mais alguma coisa?`;
+                      responseContent = `✅ Reunión agendada com éxito!\n\n📅 ${formattedDate} às ${formattedTime}\n📧 Confirmação enviada para ${args.guest_email}\n\nPosso ajudar com mais alguna coisa?`;
                     } else {
-                      responseContent = `✅ Reunião agendada com sucesso!\n\n📅 ${formattedDate} às ${formattedTime}\n\n⚠️ Tive um problema ao disparar o email automático para ${args.guest_email}. Nosso time vai te enviar a confirmação manualmente em instantes.`;
+                      responseContent = `✅ Reunión agendada com éxito!\n\n📅 ${formattedDate} às ${formattedTime}\n\n⚠️ Tive um problema ao disparar o email automático para ${args.guest_email}. Nosso time vai te enviar a confirmação manualmente em instantes.`;
                       // Notify internal team
                       try {
                         await supabase.from('notifications').insert({
                           organization_id: hostProfile.organization_id,
                           user_id: scheduleUserId,
-                          title: '⚠️ Email de confirmação falhou',
-                          message: `Agendamento criado para ${args.guest_name} (${args.guest_email}) em ${formattedDate} ${formattedTime}, mas o email automático não foi enviado. Confirme manualmente.`,
+                          title: '⚠️ Email de confirmação falló',
+                          message: `Reserva creado para ${args.guest_name} (${args.guest_email}) em ${formattedDate} ${formattedTime}, mas o email automático no fue enviado. Confirme manualmente.`,
                           type: 'system_alert',
                           product_id: body.product_id,
                         });
@@ -3873,14 +3873,14 @@ REGRAS DE USO:
                     }
                     console.log('[webchat-bot] Meeting scheduled successfully, emailSent:', emailSent);
                   } else {
-                    responseContent = 'Desculpe, não foi possível agendar no momento. Posso transferir você para um atendente para confirmar o agendamento?';
+                    responseContent = 'Desculpe, no fue possível agendar no momento. Posso transferir usted para um agente para confirmar o reserva?';
                   }
                 } else {
-                  responseContent = 'Infelizmente não tenho horários disponíveis no momento. Posso verificar alternativas para você?';
+                  responseContent = 'Infelizmente no tenho horários disponíveis no momento. Posso verificar alternativas para usted?';
                 }
               } catch (scheduleError) {
                 console.error('[webchat-bot] Schedule error:', scheduleError);
-                responseContent = 'Desculpe, ocorreu um erro ao agendar. Posso transferir para um atendente?';
+                responseContent = 'Desculpe, ocorreu um error ao agendar. Posso transferir para um agente?';
               }
             } else {
               // Handle dynamic agent tools
@@ -3892,7 +3892,7 @@ REGRAS DE USO:
                 // Helper to log action
                 const logAction = async (success: boolean, result: any = {}, errorMsg?: string) => {
                   if (!activeAgent || !body.product_id) return;
-                  const { data: conv } = await supabase.from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
+                  const { fecha: conv } = await supabase.from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
                   if (conv) {
                     await supabase.from('agent_action_logs').insert({
                       organization_id: conv.organization_id,
@@ -3911,7 +3911,7 @@ REGRAS DE USO:
 
                 // ============================================================
                 // ANTI-RECOVERY GUARD: bloqueia re-envio de PIX / checkout
-                // quando o cliente ACABOU de confirmar pagamento.
+                // quando o cliente ACABOU de confirmar pago.
                 // ============================================================
                 const PAYMENT_RECOVERY_TOOLS = new Set([
                   'gerar_link_pagamento',
@@ -3926,9 +3926,9 @@ REGRAS DE USO:
                   const paymentConfirmedMarkers = [
                     'ja paguei', 'já paguei',
                     'ja efetuei', 'já efetuei',
-                    'efetuei o pagamento', 'efetuei pagamento',
-                    'pagamento efetuado', 'pagamento realizado', 'pagamento concluido', 'pagamento concluído',
-                    'paguei agora', 'acabei de pagar', 'acabo de pagar',
+                    'efetuei o pago', 'efetuei pago',
+                    'pago efetuado', 'pago realizado', 'pago concluido', 'pago concluído',
+                    'paguei ahora', 'acabei de pagar', 'acabo de pagar',
                     'pix enviado', 'pix realizado', 'pix pago', 'pix efetuado', 'fiz o pix', 'fiz pix',
                     'comprovante', 'segue comprovante',
                     'transferencia feita', 'transferência feita',
@@ -3936,10 +3936,10 @@ REGRAS DE USO:
                   ];
                   const isPaymentConfirmed = paymentConfirmedMarkers.some(m => lastUserMsg.includes(m));
                   if (isPaymentConfirmed) {
-                    console.warn('[webchat-bot] 🛡️ ANTI-RECOVERY: bloqueando', toolName, '— cliente já confirmou pagamento. Msg:', lastUserMsg.slice(0, 120));
-                    await logAction(false, { blocked: true, reason: 'payment_already_confirmed', user_message: body.message }, 'Tool bloqueada: cliente confirmou pagamento');
+                    console.warn('[webchat-bot] 🛡️ ANTI-RECOVERY: bloqueando', toolName, '— cliente já confirmou pago. Msg:', lastUserMsg.slice(0, 120));
+                    await logAction(false, { blocked: true, reason: 'payment_already_confirmed', user_message: body.message }, 'Tool bloqueada: cliente confirmou pago');
                     responseContent = choice.message?.content || '';
-                    break; // sai do while de redirect/tool dispatch — follow-up gera resposta natural
+                    break; // sai do while de redirect/tool dispatch — follow-up gera respuesta natural
                   }
                 }
 
@@ -3948,16 +3948,16 @@ REGRAS DE USO:
                   await supabase.from('leads').update({ current_stage_id: args.stage_id }).eq('id', leadId);
                   await supabase.from('lead_stage_history').insert({ lead_id: leadId, stage_id: args.stage_id, changed_by: null });
                   await logAction(true, { stage_id: args.stage_id });
-                  responseContent = choice.message?.content || 'Lead movido no pipeline com sucesso.';
+                  responseContent = choice.message?.content || 'Lead movido no pipeline com éxito.';
                 } else if (toolName === 'apply_tags' && leadId) {
-                  const { data: currentLead } = await supabase.from('leads').select('tags').eq('id', leadId).maybeSingle();
+                  const { fecha: currentLead } = await supabase.from('leads').select('tags').eq('id', leadId).maybeSingle();
                   const currentTags = currentLead?.tags || [];
                   const newTags = [...new Set([...currentTags, ...(args.tags || [])])];
                   await supabase.from('leads').update({ tags: newTags }).eq('id', leadId);
                   await logAction(true, { tags: args.tags });
                   responseContent = choice.message?.content || '';
                 } else if (toolName === 'remove_tags' && leadId) {
-                  const { data: currentLead } = await supabase.from('leads').select('tags').eq('id', leadId).maybeSingle();
+                  const { fecha: currentLead } = await supabase.from('leads').select('tags').eq('id', leadId).maybeSingle();
                   const currentTags = currentLead?.tags || [];
                   const filtered = currentTags.filter((t: string) => !(args.tags || []).includes(t));
                   await supabase.from('leads').update({ tags: filtered }).eq('id', leadId);
@@ -3975,7 +3975,7 @@ REGRAS DE USO:
                   }
                   responseContent = choice.message?.content || '';
                 } else if (toolName === 'create_task' && leadId) {
-                  const { data: conv } = await supabase.from('webchat_conversations').select('organization_id, assigned_user_id').eq('id', body.conversation_id).maybeSingle();
+                  const { fecha: conv } = await supabase.from('webchat_conversations').select('organization_id, assigned_user_id').eq('id', body.conversation_id).maybeSingle();
                   if (conv) {
                     await supabase.from('tasks').insert({
                       title: args.title,
@@ -3989,7 +3989,7 @@ REGRAS DE USO:
                     });
                     await logAction(true, { title: args.title });
                   }
-                  responseContent = choice.message?.content || 'Tarefa criada com sucesso.';
+                  responseContent = choice.message?.content || 'Tarea creada com éxito.';
                 } else if (toolName === 'transfer_to_agent') {
                   // ─────────────────────────────────────────────────────
                   // Cross-product safety: an agent bound to a product can only
@@ -4008,7 +4008,7 @@ REGRAS DE USO:
                     await logAction(true, { target_agent: targetAgentId, reason: 'already_on_target', noop: true });
                     responseContent = choice.message?.content || 'Pode seguir comigo, já estou aqui.';
                   } else {
-                  const { data: targetAgent } = await supabase
+                  const { fecha: targetAgent } = await supabase
                     .from('product_agents')
                     .select('id, name, agent_type, product_id, organization_id, handoff_incoming_message')
                     .eq('id', targetAgentId)
@@ -4026,13 +4026,13 @@ REGRAS DE USO:
                   if (!targetAgent) {
                     console.warn('[webchat-bot] ⛔ transfer_to_agent: target not found / inactive', { targetAgentId });
                     await logAction(false, { target_agent: targetAgentId, reason: 'target_not_found' });
-                    responseContent = 'Não consegui localizar esse agente. Posso continuar te atendendo aqui.';
+                    responseContent = 'No consegui localizar esse agente. Posso continuar te atendendo aqui.';
                   } else if (tryingToCallAdmin) {
                     console.warn('[webchat-bot] ⛔ transfer_to_agent: bots cannot call admin agents', {
                       from: activeAgent?.name, to: targetAgent.name,
                     });
                     await logAction(false, { target_agent: targetAgentId, reason: 'admin_is_private' });
-                    responseContent = 'Esse agente é exclusivo do gestor da organização. Posso seguir aqui ou chamar outro especialista?';
+                    responseContent = 'Esse agente é exclusivo do gestor da organização. Posso seguir aqui ou chamar otro especialista?';
                   } else if (!isAllowed) {
                     console.warn('[webchat-bot] ⛔ cross-product transfer blocked', {
                       from: `${activeAgent?.name} (product ${activeAgent?.product_id})`,
@@ -4044,7 +4044,7 @@ REGRAS DE USO:
                       from_product: activeAgent?.product_id,
                       to_product: targetAgent.product_id,
                     });
-                    responseContent = 'Esse agente atende outro produto, não posso transferir. Posso continuar com você por aqui?';
+                    responseContent = 'Esse agente atende otro producto, no posso transferir. Posso continuar com usted por aqui?';
                   } else {
                     // ✅ Allowed — switch the conversation and fire the greeter so
                     // the new agent introduces itself even if the lead doesn't reply.
@@ -4058,9 +4058,9 @@ REGRAS DE USO:
                     });
 
                     // Registra em agent_activation_logs pra que o próximo turno do
-                    // novo agente detecte "handoff recebido" e injete o contexto.
+                    // novo agente detecte "handoff recibido" e injete o contexto.
                     try {
-                      const { data: convOrg } = await supabase
+                      const { fecha: convOrg } = await supabase
                         .from('webchat_conversations')
                         .select('organization_id, lead_id')
                         .eq('id', body.conversation_id)
@@ -4108,17 +4108,17 @@ REGRAS DE USO:
                       console.warn('[webchat-bot] greeter schedule error:', greeterErr);
                     }
 
-                    // Despedida do agente atual: usa template configurado OU default.
-                    // Resolve nome do lead pra renderização das vars.
+                    // Despedida del agente atual: usa template configurado OU default.
+                    // Resolve nombre del lead pra renderização das vars.
                     let nomeLead = '';
                     try {
-                      const { data: convL } = await supabase
+                      const { fecha: convL } = await supabase
                         .from('webchat_conversations')
                         .select('lead_id')
                         .eq('id', body.conversation_id)
                         .maybeSingle();
                       if (convL?.lead_id) {
-                        const { data: lead } = await supabase
+                        const { fecha: lead } = await supabase
                           .from('leads')
                           .select('name, full_name')
                           .eq('id', convL.lead_id)
@@ -4129,15 +4129,15 @@ REGRAS DE USO:
 
                     const outTpl = ((activeAgent as any)?.handoff_outgoing_message || '').trim() || DEFAULT_HANDOFF_OUTGOING;
                     responseContent = renderHandoffTpl(outTpl, {
-                      nome: nomeLead,
-                      produto: '',
+                      nombre: nomeLead,
+                      producto: '',
                       proximo_agente: targetAgent.name || 'minha colega',
                       agent_name: activeAgent?.name || '',
                     });
                   }
                   } // end else (alreadyOnTarget guard)
                 } else if (toolName === 'transfer_to_human') {
-                  // IA larga o lead: limpa agente IA, marca needs_human e devolve à fila do setor
+                  // IA larga o lead: limpa agente IA, marca needs_human e devolve à fila do sector
                   await supabase.from('webchat_conversations').update({
                     status: 'waiting_human',
                     current_agent_id: null,
@@ -4145,9 +4145,9 @@ REGRAS DE USO:
                     needs_human: true,
                   }).eq('id', body.conversation_id);
                   await logAction(true, { reason: args.reason });
-                  responseContent = choice.message?.content || 'Vou transferir você para um atendente. Aguarde um momento!';
+                  responseContent = choice.message?.content || 'Vou transferir usted para um agente. Aguarde um momento!';
                 } else if (toolName === 'notify_team') {
-                  const { data: conv } = await supabase.from('webchat_conversations').select('organization_id, assigned_user_id').eq('id', body.conversation_id).maybeSingle();
+                  const { fecha: conv } = await supabase.from('webchat_conversations').select('organization_id, assigned_user_id').eq('id', body.conversation_id).maybeSingle();
                   if (conv) {
                     await supabase.from('notifications').insert({
                       organization_id: conv.organization_id,
@@ -4161,7 +4161,7 @@ REGRAS DE USO:
                   }
                   responseContent = choice.message?.content || '';
                 } else if (toolName === 'add_lead_note' && leadId) {
-                  const { data: conv } = await supabase.from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
+                  const { fecha: conv } = await supabase.from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
                   if (conv) {
                     await supabase.from('lead_notes').insert({
                       lead_id: leadId,
@@ -4172,7 +4172,7 @@ REGRAS DE USO:
                   }
                   responseContent = choice.message?.content || '';
                 } else if (toolName === 'start_cadence' && leadId) {
-                  const { data: conv } = await supabase.from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
+                  const { fecha: conv } = await supabase.from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
                   if (conv) {
                     await supabase.from('ai_outreach_queue').insert({
                       lead_id: leadId,
@@ -4191,7 +4191,7 @@ REGRAS DE USO:
                   responseContent = choice.message?.content || '';
                 } else if (toolName === 'qualify_lead' && leadId) {
                   const qualification = { budget: args.budget, authority: args.authority, need: args.need, timeline: args.timeline };
-                  const { data: currentLead } = await supabase.from('leads').select('custom_fields').eq('id', leadId).maybeSingle();
+                  const { fecha: currentLead } = await supabase.from('leads').select('custom_fields').eq('id', leadId).maybeSingle();
                   const customFields = (currentLead?.custom_fields || {}) as Record<string, any>;
                   customFields['bant_qualification'] = qualification;
                   await supabase.from('leads').update({ custom_fields: customFields }).eq('id', leadId);
@@ -4218,7 +4218,7 @@ REGRAS DE USO:
                     console.error('[webchat-bot] Email error:', emailErr);
                     await logAction(false, {}, String(emailErr));
                   }
-                  responseContent = choice.message?.content || 'Email enviado com sucesso!';
+                  responseContent = choice.message?.content || 'Email enviado com éxito!';
                 } else if (getRegistryTool(toolName)) {
                   // === REGISTRY DISPATCH (Fase 1) ===
                   // Ferramenta nova do registry centralizado. Auditoria automática.
@@ -4238,12 +4238,12 @@ REGRAS DE USO:
                     });
                     console.log('[webchat-bot] 🧰 Registry tool result:', toolName, registryResult.success ? 'OK' : 'FAIL', registryResult.error || '');
                     // Mantém logAction legado também, pra retrocompatibilidade do painel antigo
-                    await logAction(registryResult.success, registryResult.data || {}, registryResult.error);
+                    await logAction(registryResult.success, registryResult.fecha || {}, registryResult.error);
                     responseContent =
                       choice.message?.content ||
                       registryResult.user_message ||
-                      ''; // ← vazio força o follow-up completion (linhas abaixo) a gerar resposta natural
-                                                                                          // em vez de mandar "Ação executada com sucesso." pro cliente
+                      ''; // ← vazio força o follow-up completion (linhas abaixo) a gerar respuesta natural
+                                                                                          // em vez de mandar "Acción executada com éxito." pro cliente
 
                   }
                 } else {
@@ -4272,7 +4272,7 @@ REGRAS DE USO:
                       ...conversationHistory,
                       { role: 'user', content: body.message },
                       { role: 'assistant', content: null, tool_calls: [toolCall] },
-                      { role: 'tool', tool_call_id: toolCall.id, content: 'Ação executada com sucesso. Continue a conversa naturalmente respondendo à última mensagem do cliente. NÃO mencione que executou uma ferramenta.' },
+                      { role: 'tool', tool_call_id: toolCall.id, content: 'Acción executada com éxito. Continue a conversación naturalmente respondendo à última mensaje del cliente. NÃO mencione que executou uma ferramenta.' },
                     ],
                     max_tokens: 400,
                     temperature: 0.6,
@@ -4314,16 +4314,16 @@ REGRAS DE USO:
           if (canSchedule && !scheduleSucceeded && responseContent) {
             const lowered = responseContent.toLowerCase();
             const hallucinationMarkers = [
-              'reunião agendada',
+              'reunión agendada',
               'reuniao agendada',
-              'agendamento confirmado',
-              'agendado com sucesso',
+              'reserva confirmado',
+              'agendado com éxito',
               'confirmação enviada para',
               'confirmacao enviada para',
-              'agendei sua reunião',
-              'agendei sua reuniao',
-              'marquei sua reunião',
-              'marquei sua reuniao',
+              'agendei su reunión',
+              'agendei su reuniao',
+              'marquei su reunión',
+              'marquei su reuniao',
             ];
             const matchedMarker = hallucinationMarkers.find(m => lowered.includes(m));
             
@@ -4334,12 +4334,12 @@ REGRAS DE USO:
               const originalContent = responseContent;
               const needsEmail = !leadContext?.email;
               responseContent = needsEmail
-                ? 'Deixa eu confirmar a agenda aqui rapidinho antes de fechar com você. Pode me passar o melhor email pra eu mandar a confirmação?'
-                : 'Deixa eu confirmar a agenda aqui rapidinho antes de travar o horário. Só um instante…';
+                ? 'Deixa eu confirmar a agenda aqui rapidinho antes de fechar com usted. Pode me passar o melhor email pra eu mandar a confirmação?'
+                : 'Deixa eu confirmar a agenda aqui rapidinho antes de travar o horario. Só um instante…';
               
               // Log attempt for audit
               try {
-                const { data: convForLog } = await supabase
+                const { fecha: convForLog } = await supabase
                   .from('webchat_conversations')
                   .select('organization_id')
                   .eq('id', body.conversation_id)
@@ -4364,13 +4364,13 @@ REGRAS DE USO:
             } else {
               // Detect "scheduling intent missed": user confirmed a slot but model didn't call tool
               const userMsg = (body.message || '').toLowerCase();
-              const confirmationTerms = /\b(pode ser|fechado|ok|combinado|vamos|marca pra mim|marca pra mim|tá bom|ta bom|beleza|perfeito|pode marcar)\b/;
+              const confirmationTerms = /\b(puede ser|fechado|ok|combinado|vamos|marca pra mim|marca pra mim|tá bom|ta bom|beleza|perfeito|puede marcar)\b/;
               const timePattern = /\b\d{1,2}[:h]\d{0,2}\b/;
               const hasConfirmation = confirmationTerms.test(userMsg) || timePattern.test(userMsg);
               
               if (hasConfirmation) {
                 try {
-                  const { data: convForLog } = await supabase
+                  const { fecha: convForLog } = await supabase
                     .from('webchat_conversations')
                     .select('organization_id')
                     .eq('id', body.conversation_id)
@@ -4403,7 +4403,7 @@ REGRAS DE USO:
           // ============================================================
           if (responseContent && responseContent.length > 30) {
             try {
-              const { data: recentAssistantMsgs } = await supabase
+              const { fecha: recentAssistantMsgs } = await supabase
                 .from('webchat_messages')
                 .select('content')
                 .eq('conversation_id', body.conversation_id)
@@ -4449,7 +4449,7 @@ REGRAS DE USO:
                   body: JSON.stringify(prepareAIRequestBody({
                     model: agentModel,
                     messages: [
-                      { role: 'system', content: `Você é um editor. Reescreva a mensagem do assistente removendo qualquer frase parecida com: "${repeatedPhrase}". A nova mensagem deve AVANÇAR a conversa para o próximo passo, ser curta (máx 2 linhas) e NÃO repetir nada que já foi dito. Responda apenas com o novo texto, sem aspas.` },
+                      { role: 'system', content: `Usted é um editor. Reescreva a mensaje do assistente removendo qualquer frase parecida com: "${repeatedPhrase}". A nova mensaje debe AVANÇAR a conversación para o próximo passo, ser corta (máx 2 linhas) e NÃO repetir nada que já fue dito. Responde solo com o novo texto, sem aspas.` },
                       { role: 'user', content: responseContent },
                     ],
                     max_tokens: 200,
@@ -4464,7 +4464,7 @@ REGRAS DE USO:
                     console.log('[webchat-bot] ✓ Rewritten response used');
                     // Log the repetition event for audit
                     try {
-                      const { data: convForLog } = await supabase
+                      const { fecha: convForLog } = await supabase
                         .from('webchat_conversations')
                         .select('organization_id')
                         .eq('id', body.conversation_id)
@@ -4497,12 +4497,12 @@ REGRAS DE USO:
           const errorText = await aiResponse.text();
           console.error('[webchat-bot] AI API error:', aiResponse.status, errorText);
           responseContent = body.agent_config.fallback_message || 
-            'Desculpe, não consegui processar sua mensagem. Posso transferir você para um atendente?';
+            'Desculpe, no consegui processar su mensaje. Posso transferir usted para um agente?';
         }
       } catch (aiError) {
         console.error('[webchat-bot] AI call failed:', aiError);
         responseContent = body.agent_config.fallback_message ||
-          'Desculpe, estou com dificuldades técnicas. Posso transferir você para um atendente?';
+          'Desculpe, estou com dificuldades técnicas. Posso transferir usted para um agente?';
       }
     }
 
@@ -4541,7 +4541,7 @@ REGRAS DE USO:
           console.log('[webchat-bot] 🔀 HANDOFF detected →', target, 'rawTag:', parsedHandoff.rawTag);
 
           // Get conversation org for logging + lead/product names for variable rendering
-          const { data: convForHandoff } = await supabase
+          const { fecha: convForHandoff } = await supabase
             .from('webchat_conversations')
             .select('organization_id, lead_id, channel, visitor_phone')
             .eq('id', body.conversation_id)
@@ -4551,7 +4551,7 @@ REGRAS DE USO:
           let leadFirstName = '';
           let productName = '';
           if (convForHandoff?.lead_id) {
-            const { data: lead } = await supabase
+            const { fecha: lead } = await supabase
               .from('leads')
               .select('name, full_name')
               .eq('id', convForHandoff.lead_id)
@@ -4559,7 +4559,7 @@ REGRAS DE USO:
             leadFirstName = ((lead as any)?.full_name || (lead as any)?.name || '').split(' ')[0] || '';
           }
           if (body.product_id) {
-            const { data: prod } = await supabase
+            const { fecha: prod } = await supabase
               .from('products')
               .select('name')
               .eq('id', body.product_id)
@@ -4583,8 +4583,8 @@ REGRAS DE USO:
             // Replace AI reply with the configured outgoing message OR default farewell
             const outTpl = ((activeAgent as any).handoff_outgoing_message || '').trim() || DEFAULT_HANDOFF_OUTGOING;
             responseContent = renderTpl(outTpl, {
-              nome: leadFirstName,
-              produto: productName,
+              nombre: leadFirstName,
+              producto: productName,
               proximo_agente: 'um especialista humano',
               agent_name: activeAgent.name || '',
             });
@@ -4609,7 +4609,7 @@ REGRAS DE USO:
             }
           } else if (targetRole) {
             // Find specialist agent of the requested role for the same product
-            const { data: nextAgent } = await supabase
+            const { fecha: nextAgent } = await supabase
               .from('product_agents')
               .select('id, name, agent_type, handoff_incoming_message, handoff_delay_seconds')
               .eq('product_id', body.product_id)
@@ -4630,9 +4630,9 @@ REGRAS DE USO:
               // Replace the AI's reply with the configured outgoing (farewell) message OR default
               const outTpl = ((activeAgent as any).handoff_outgoing_message || '').trim() || DEFAULT_HANDOFF_OUTGOING;
               responseContent = renderTpl(outTpl, {
-                nome: leadFirstName,
-                produto: productName,
-                proximo_agente: nextAgent.name || 'a próxima atendente',
+                nombre: leadFirstName,
+                producto: productName,
+                proximo_agente: nextAgent.name || 'a próxima agente',
                 agent_name: activeAgent.name || '',
               });
 
@@ -4740,7 +4740,7 @@ REGRAS DE USO:
 
     let botMessage: any = null;
     if (!skipFullPersist) {
-      const { data: saved, error: msgError } = await supabase
+      const { fecha: saved, error: msgError } = await supabase
         .from('webchat_messages')
         .insert({
           conversation_id: body.conversation_id,
@@ -4782,9 +4782,9 @@ REGRAS DE USO:
           };
 
       // ============================================================
-      // CAP de bolhas — respeita config do agente (humanization.splitting.max_bubbles)
+      // CAP de bolhas — respeita config del agente (humanization.splitting.max_bubbles)
       // com teto absoluto de 4 para WhatsApp (anti-spam / queima de número).
-      // Não colapsa abaixo do que o humanizer decidiu naturalmente.
+      // No colapsa abaixo do que o humanizer decidiu naturalmente.
       // ============================================================
       const isWhatsApp = String(channel).toLowerCase() === 'whatsapp';
       let bubbles: string[] = Array.isArray(humanResult.bubbles) ? humanResult.bubbles.filter(b => typeof b === 'string' && b.trim().length > 0) : [];
@@ -4903,12 +4903,12 @@ function splitIntoChunks(text: string): string[] {
 function getPersonaInstructions(style: string): string {
   switch (style) {
     case 'professional':
-      return '🎩 TOM: Seja formal, objetivo e técnico. Use linguagem corporativa. Transmita autoridade e conhecimento.';
+      return '🎩 TOM: Sé formal, objetivo e técnico. Usa linguagem corporativa. Transmita autoridade e conhecimento.';
     case 'casual':
-      return '😎 TOM: Seja descontraído e informal. Use linguagem leve, gírias quando apropriado, e seja próximo do cliente.';
+      return '😎 TOM: Sé descontraído e informal. Usa linguagem leve, gírias quando apropriado, e seja próximo del cliente.';
     case 'friendly':
     default:
-      return '😊 TOM: Seja amigável, acolhedor e prestativo. Equilíbrio entre profissional e descontraído. Crie conexão genuína.';
+      return '😊 TOM: Sé amigável, acolhedor e prestativo. Equilíbrio entre profissional e descontraído. Crea conexão genuína.';
   }
 }
 
@@ -4928,41 +4928,41 @@ function buildAgentSystemPrompt(
 ): string {
   const typeLabel = AGENT_TYPE_LABELS[agent.agent_type] || agent.agent_type;
   
-  let prompt = `IDENTIDADE: Você é ${agent.name}, agente de ${typeLabel}.\n\n`;
+  let prompt = `IDENTIDADE: Usted é ${agent.name}, agente de ${typeLabel}.\n\n`;
   
   // Primary objective
   prompt += `OBJETIVO PRINCIPAL:\n${agent.primary_objective}\n\n`;
   
   // Tone of voice
   const toneInstructions: Record<string, string> = {
-    formal: 'Seja formal, objetivo e profissional. Use linguagem corporativa e transmita autoridade.',
-    consultive: 'Seja consultivo, demonstrando expertise e conduzindo o cliente com confiança. Faça perguntas estratégicas.',
-    friendly: 'Seja amigável, acolhedor e próximo. Crie conexão genuína sem ser artificial.',
-    technical: 'Seja técnico, preciso e detalhista. Use termos apropriados ao contexto.',
+    formal: 'Sé formal, objetivo e profissional. Usa linguagem corporativa e transmita autoridade.',
+    consultive: 'Sé consultivo, demonstrando expertise e conduzindo o cliente com confiança. Faça preguntas estratégicas.',
+    friendly: 'Sé amigável, acolhedor e próximo. Crea conexão genuína sem ser artificial.',
+    technical: 'Sé técnico, preciso e detalhista. Usa termos apropriados ao contexto.',
   };
   prompt += `TOM DE VOZ: ${toneInstructions[agent.tone_style] || toneInstructions.friendly}\n\n`;
 
-  // Regras adicionais para evitar bugs reais que apareceram em conversas (Maria → leads).
-  prompt += `🚫 NUNCA reconheça verbalmente bugs, falhas, repetição de mensagem ou que o sinal "travou". Se algo parecer estranho, ignore e siga.\n`;
-  prompt += `🚫 NUNCA se apresente de novo se já se apresentou nesta conversa.\n`;
+  // Regras adicionais para evitar bugs reais que apareceram em conversaciones (Maria → leads).
+  prompt += `🚫 NUNCA reconheça verbalmente bugs, falhas, repetição de mensaje ou que o sinal "travou". Se algo parecer estranho, ignore e siga.\n`;
+  prompt += `🚫 NUNCA se apresente de novo se já se apresentou nesta conversación.\n`;
   if (agent.agent_type === 'sdr') {
-    prompt += `🎯 VOCÊ É SDR: NÃO vende, NÃO faz pitch de produto, NÃO explica detalhes técnicos. Seu papel é qualificar e levar pro próximo passo (grupo, live, agendamento, closer).\n`;
-    prompt += `🎯 Se o lead JÁ realizou a CTA (entrou no grupo, agendou, comprou), PARE de qualificar e PARE de fazer perguntas novas — só reforce o próximo passo.\n`;
+    prompt += `🎯 VOCÊ É SDR: NÃO vende, NÃO faz pitch de producto, NÃO explica detalhes técnicos. Su papel é qualificar e levar pro próximo passo (grupo, live, reserva, closer).\n`;
+    prompt += `🎯 Se o lead JÁ realizou a CTA (entrou no grupo, agendou, comprou), PARE de qualificar e PARE de hacer preguntas novas — só reforce o próximo passo.\n`;
   }
   prompt += `📱 Estilo WhatsApp: frases curtas terminadas em ".", "?" ou "!". Cada ideia em uma frase. NUNCA mande parágrafo gigante.\n`;
-  prompt += `🚨 TRAVA ANTI-SPAM (OBRIGATÓRIA): O lead pode mandar várias mensagens seguidas — você as recebe AGRUPADAS em um único bloco. Responda UMA ÚNICA VEZ, em UMA mensagem só, considerando TUDO que ele disse. NUNCA gere múltiplas respostas separadas, NUNCA reaja mensagem por mensagem. Resposta curta (até ~500 caracteres), pontual, certeira, com no máximo 1 pergunta no final. Se for absolutamente necessário dividir, no MÁXIMO 2 mensagens — nunca 3 ou mais.\n\n`;
+  prompt += `🚨 TRAVA ANTI-SPAM (OBRIGATÓRIA): O lead puede mandar várias mensajes seguidas — usted as recebe AGRUPADAS em um único bloco. Responda UMA ÚNICA VEZ, em UMA mensaje só, considerando TUDO que ele disse. NUNCA gere múltiplas respuestas separadas, NUNCA reaja mensaje por mensaje. Resposta corta (até ~500 caracteres), pontual, certeira, com no máximo 1 pregunta no final. Se for absolutamente necessário dividir, no MÁXIMO 2 mensajes — nunca 3 ou mais.\n\n`;
 
   // CRITICAL: Anti-repetition and context awareness rules
   prompt += `═══════════════════════════════════════
 REGRAS CRÍTICAS DE COMPORTAMENTO (OBRIGATÓRIAS)
 ═══════════════════════════════════════
 
-1. ANALISE o histórico COMPLETO antes de CADA resposta
+1. ANALISE o histórico COMPLETO antes de CADA respuesta
 2. NUNCA repita saudações, frases ou emojis já usados no histórico
-3. Se já realizou uma ação (agendou reunião, coletou dados, enviou email), NÃO repita nem ofereça novamente
-4. Adapte seu estilo baseado nas respostas e humor do cliente
-5. CADA mensagem deve PROGREDIR a conversa — nunca retroceda a pontos já cobertos
-6. Máximo 1 emoji por mensagem, NUNCA o mesmo emoji em mensagens consecutivas
+3. Se já realizou uma acción (agendou reunión, coletou dados, envió email), NÃO repita nem ofereça novamente
+4. Adapte su estilo baseado nas respuestas e humor del cliente
+5. CADA mensaje debe PROGREDIR a conversación — nunca retroceda a pontos já cobertos
+6. Máximo 1 emoji por mensaje, NUNCA o mismo emoji em mensajes consecutivas
 
 FRASES ABSOLUTAMENTE PROIBIDAS:
 - "Tudo ótimo por aqui"
@@ -4972,37 +4972,37 @@ FRASES ABSOLUTAMENTE PROIBIDAS:
 - "Fique à vontade"
 - "Com certeza!"
 - "Perfeito!"
-- Qualquer frase ou saudação que já apareceu nesta conversa
+- Qualquer frase ou saudação que já apareceu nesta conversación
 
 VARIAÇÃO OBRIGATÓRIA:
-- Alterne entre perguntas diretas, observações estratégicas e provocações construtivas
-- Varie a estrutura das mensagens (não use sempre o mesmo padrão)
-- Use o nome do cliente de forma natural (não em toda mensagem, a cada 2-3 msgs)
+- Alterne entre preguntas diretas, observaciones estratégicas e provocações construtivas
+- Varie a estrutura das mensajes (no use siempre o mismo padrão)
+- Usa o nombre del cliente de forma natural (no em toda mensaje, a cada 2-3 msgs)
 - Adapte o tom: se o cliente é direto, seja direto; se é detalhista, explore
 
 TÉCNICA CONSULTIVA:
 1. Descubra a DOR real antes de apresentar qualquer solução
-2. Faça perguntas ABERTAS que revelam necessidades (não perguntas de sim/não)
+2. Faça preguntas ABERTAS que revelam necessidades (no preguntas de sí/no)
 3. Conecte benefícios ESPECÍFICOS às dores ESPECÍFICAS mencionadas pelo cliente
-4. Crie urgência baseada na REALIDADE do cliente, não urgência artificial
-5. Progrida naturalmente: Situação → Problema → Implicação → Solução → Ação
+4. Crea urgência baseada na REALIDADE del cliente, no urgência artificial
+5. Progrida naturalmente: Situação → Problema → Implicação → Solução → Acción
 
 FONTE DAS RESPOSTAS (REGRA MAIS IMPORTANTE):
-- TODAS as suas respostas DEVEM ser baseadas EXCLUSIVAMENTE no conhecimento fornecido (Cérebro do Produto + Treinamento)
-- Se a informação não estiver na base de conhecimento, DIGA que vai verificar — NUNCA invente
-- Use dados, números e fatos EXATOS da base — não generalize nem parafraseie de forma vaga
+- TODAS as sus respuestas DEVEM ser baseadas EXCLUSIVAMENTE no conhecimento fornecido (Cérebro do Producto + Treinamento)
+- Se a información no estiver na base de conhecimento, DIGA que vai verificar — NUNCA invente
+- Usa dados, números e fatos EXATOS da base — no generalize nem parafraseie de forma vaga
 - Quando o cliente perguntar algo coberto pelo FAQ ou base de conhecimento, cite os dados reais
 
 CONTINUIDADE PÓS-TRANSFERÊNCIA:
-- Se o histórico mostrar que outro agente já estava conversando com o lead, você ASSUMIU a conversa: NÃO se reapresente novamente, NÃO repita perguntas já feitas, NÃO peça dados que o lead já forneceu
+- Se o histórico mostrar que otro agente já estava conversando com o lead, usted ASSUMIU a conversación: NÃO se reapresente novamente, NÃO repita preguntas já feitas, NÃO peça dados que o lead já forneceu
 - Reconheça brevemente o contexto anterior ("vi que vocês estavam falando sobre X") e siga com o próximo passo natural
-- Se já houver uma mensagem automática de saudação sua no histórico, vá DIRETO ao assunto
+- Se já houver uma mensaje automática de saudação su no histórico, vá DIRETO ao assunto
 
-NUNCA AJA COMO SUPORTE (a menos que seu agent_type seja explicitamente "support"):
-- Você NUNCA pede CPF, número de pedido, "motivo do seu contato" ou age como atendente de SAC/suporte técnico
-- Se o objetivo principal menciona "transferir pra suporte", isso é uma INSTRUÇÃO DE ROTEAMENTO, não um exemplo de fala — não copie esse tom
+NUNCA AJA COMO SUPORTE (a menos que su agent_type seja explicitamente "support"):
+- Usted NUNCA pede CPF, número de pedido, "motivo do su contato" ou age como agente de SAC/suporte técnico
+- Se o objetivo principal menciona "transferir pra suporte", isso é uma INSTRUÇÃO DE ROTEAMENTO, no um exemplo de fala — no copie esse tom
 - Se o lead pedir suporte explicitamente E for um cliente atual com problema técnico, use a tool transfer_to_human ou transfer_to_agent (nunca finja ser suporte)
-- Para qualquer outra intenção (compra, dúvida comercial, agendamento), siga seu papel de vendas/SDR normalmente
+- Para qualquer otra intenção (compra, duda comercial, reserva), siga su papel de ventas/SDR normalmente
 
 ═══════════════════════════════════════\n\n`;
 
@@ -5064,7 +5064,7 @@ NUNCA AJA COMO SUPORTE (a menos que seu agent_type seja explicitamente "support"
     const links = Array.isArray(tc.support_links) ? tc.support_links : [];
     const quick = Array.isArray(tc.support_quick_answers) ? tc.support_quick_answers : [];
     if (links.length > 0) {
-      prompt += `🔗 LINKS OFICIAIS DE SUPORTE (use APENAS estes — não invente URLs):\n`;
+      prompt += `🔗 LINKS OFICIAIS DE SUPORTE (use APENAS estes — no invente URLs):\n`;
       links.forEach((l: any) => {
         if (l?.title && l?.url) {
           prompt += `- ${l.title}: ${l.url}${l.description ? ` — ${l.description}` : ''}\n`;
@@ -5073,7 +5073,7 @@ NUNCA AJA COMO SUPORTE (a menos que seu agent_type seja explicitamente "support"
       prompt += '\n';
     }
     if (quick.length > 0) {
-      prompt += `💡 RESPOSTAS RÁPIDAS OFICIAIS (use EXATAMENTE quando a pergunta coincidir):\n`;
+      prompt += `💡 RESPOSTAS RÁPIDAS OFICIAIS (use EXATAMENTE quando a pregunta coincidir):\n`;
       quick.forEach((q: any) => {
         if (q?.question && q?.answer) {
           prompt += `\nP: ${q.question}\nR: ${q.answer}\n`;
@@ -5090,7 +5090,7 @@ NUNCA AJA COMO SUPORTE (a menos que seu agent_type seja explicitamente "support"
   
   // Visitor name context
   if (visitorName) {
-    prompt += `👤 CLIENTE: ${visitorName}\n- Use o nome de forma natural (não em toda mensagem)\n\n`;
+    prompt += `👤 CLIENTE: ${visitorName}\n- Usa o nombre de forma natural (no em toda mensaje)\n\n`;
   }
   
   // Message style
@@ -5100,10 +5100,10 @@ NUNCA AJA COMO SUPORTE (a menos que seu agent_type seja explicitamente "support"
     detailed: '5-6 linhas',
   };
   prompt += `⚠️ FORMATO: Mensagens de no máximo ${messageLength[agent.message_style] || '3-4 linhas'}.`;
-  prompt += ' ANTES de responder, releia o histórico e verifique se não está repetindo nada.';
+  prompt += ' ANTES de responder, releia o histórico e verifique se no está repetindo nada.';
   
   if (agent.always_end_with_question) {
-    prompt += ' SEMPRE termine com uma pergunta que AVANÇA a conversa para o objetivo.';
+    prompt += ' SEMPRE termine com uma pregunta que AVANÇA a conversación para o objetivo.';
   }
   
   return prompt;
@@ -5112,23 +5112,23 @@ NUNCA AJA COMO SUPORTE (a menos que seu agent_type seja explicitamente "support"
 // Fetch product brain knowledge
 async function fetchProductBrain(supabase: any, productId: string): Promise<string | null> {
   try {
-    const { data: product } = await supabase
+    const { fecha: product } = await supabase
       .from('products')
       .select('name, description, pitch_15s, pitch_30s, pitch_2min, icp, differentials')
       .eq('id', productId)
-      .single() as { data: Product | null };
+      .single() as { fecha: Product | null };
 
-    const { data: sources } = await supabase
+    const { fecha: sources } = await supabase
       .from('product_knowledge_sources')
       .select('source_type, title, extracted_content, transcript, question, answer')
       .eq('product_id', productId)
       .eq('is_active', true)
-      .eq('processing_status', 'completed') as { data: KnowledgeSource[] | null };
+      .eq('processing_status', 'completed') as { fecha: KnowledgeSource[] | null };
 
-    const { data: objections } = await supabase
+    const { fecha: objections } = await supabase
       .from('objections')
       .select('what_they_say, suggested_response')
-      .eq('product_id', productId) as { data: Objection[] | null };
+      .eq('product_id', productId) as { fecha: Objection[] | null };
 
     if (!product && !sources?.length && !objections?.length) {
       return null;
@@ -5170,7 +5170,7 @@ async function fetchProductBrain(supabase: any, productId: string): Promise<stri
     }
 
     if (objections && objections.length > 0) {
-      context += '\n\n🛡️ CONTORNO DE OBJEÇÕES (USE estas respostas quando o cliente levantar objeções):';
+      context += '\n\n🛡️ CONTORNO DE OBJEÇÕES (USE estas respuestas quando o cliente levantar objeções):';
       for (const obj of objections.slice(0, 12)) {
         context += `\n\n❌ Objeção: "${obj.what_they_say}"`;
         context += `\n✅ Resposta: ${obj.suggested_response}`;
@@ -5192,27 +5192,27 @@ async function fetchTrainingMaterials(
 ): Promise<string | null> {
   try {
     // 1. Fetch product-level materials (agent_id is NULL) - used by all agents
-    const { data: productMaterials } = await supabase
+    const { fecha: productMaterials } = await supabase
       .from('agent_training_materials')
       .select('title, category, extracted_content')
       .eq('product_id', productId)
       .is('agent_id', null)
       .eq('is_active', true)
       .eq('processing_status', 'completed')
-      .limit(10) as { data: TrainingMaterial[] | null };
+      .limit(10) as { fecha: TrainingMaterial[] | null };
 
     // 2. Fetch agent-specific materials if agentId is provided
     let agentMaterials: TrainingMaterial[] = [];
     if (agentId) {
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from('agent_training_materials')
         .select('title, category, extracted_content')
         .eq('agent_id', agentId)
         .eq('is_active', true)
         .eq('processing_status', 'completed')
-        .limit(10) as { data: TrainingMaterial[] | null };
+        .limit(10) as { fecha: TrainingMaterial[] | null };
       
-      agentMaterials = data || [];
+      agentMaterials = fecha || [];
       console.log('[webchat-bot] Agent-specific materials found:', agentMaterials.length);
     }
 
@@ -5277,8 +5277,8 @@ function findFAQMatch(
   return null;
 }
 
-// Sincroniza variáveis capturadas no fluxo (name, phone, email, etc.) para o lead vinculado.
-// Campos conhecidos vão direto na coluna do lead; demais entram em custom_fields.
+// Sincroniza variáveis capturadas no flujo (name, phone, email, etc.) para el lead vinculado.
+// Campos conhecidos vão direto na coluna del lead; demais entram em custom_fields.
 async function syncFlowVarsToLead(
   supabase: any,
   conversationId: string,
@@ -5286,7 +5286,7 @@ async function syncFlowVarsToLead(
   options?: { onlyKeys?: string[] }
 ): Promise<void> {
   try {
-    const { data: conv } = await supabase
+    const { fecha: conv } = await supabase
       .from('webchat_conversations')
       .select('lead_id, organization_id')
       .eq('id', conversationId)
@@ -5294,9 +5294,9 @@ async function syncFlowVarsToLead(
     if (!conv?.lead_id) return;
 
     const KNOWN: Record<string, string> = {
-      name: 'name', nome: 'name', full_name: 'name',
+      name: 'name', nombre: 'name', full_name: 'name',
       email: 'email', 'e-mail': 'email',
-      phone: 'phone', telefone: 'phone', whatsapp: 'phone', celular: 'phone',
+      phone: 'phone', teléfono: 'phone', whatsapp: 'phone', celular: 'phone',
       company: 'company', empresa: 'company',
       cpf: 'cpf', cnpj: 'cnpj',
     };
@@ -5328,7 +5328,7 @@ async function syncFlowVarsToLead(
     if (Object.keys(update).length === 0 && !hasCustom) return;
 
     if (hasCustom) {
-      const { data: leadRow } = await supabase
+      const { fecha: leadRow } = await supabase
         .from('leads')
         .select('custom_fields')
         .eq('id', conv.lead_id)
@@ -5337,9 +5337,9 @@ async function syncFlowVarsToLead(
     }
 
     await supabase.from('leads').update(update).eq('id', conv.lead_id);
-    console.log('[syncFlowVarsToLead] Lead atualizado:', conv.lead_id, Object.keys(update));
+    console.log('[syncFlowVarsToLead] Lead actualizado:', conv.lead_id, Object.keys(update));
   } catch (e) {
-    console.error('[syncFlowVarsToLead] erro (não-fatal):', e);
+    console.error('[syncFlowVarsToLead] error (no-fatal):', e);
   }
 }
 
@@ -5392,7 +5392,7 @@ async function executeFlowBlock(
 }> {
   try {
     // Fetch the flow
-    const { data: flowData, error: flowError } = await supabase
+    const { fecha: flowData, error: flowError } = await supabase
       .from('chat_flows')
       .select('*')
       .eq('id', flowContext.current_flow_id)
@@ -5427,17 +5427,17 @@ async function executeFlowBlock(
 
     switch (currentBlock.type) {
       case 'message':
-        responseContent = currentBlock.data.content || '';
+        responseContent = currentBlock.fecha.content || '';
         break;
 
       case 'input':
         // User's message is the input value - save it to flow variables
-        if (currentBlock.data.variable_name) {
-          flowVariables[currentBlock.data.variable_name] = userMessage;
-          console.log('[executeFlowBlock] Saved variable:', currentBlock.data.variable_name, '=', userMessage);
+        if (currentBlock.fecha.variable_name) {
+          flowVariables[currentBlock.fecha.variable_name] = userMessage;
+          console.log('[executeFlowBlock] Saved variable:', currentBlock.fecha.variable_name, '=', userMessage);
           // Sincroniza imediatamente no lead vinculado (name/phone/email/...)
           await syncFlowVarsToLead(supabase, conversationId, flowVariables, {
-            onlyKeys: [currentBlock.data.variable_name],
+            onlyKeys: [currentBlock.fecha.variable_name],
           });
         }
         
@@ -5453,7 +5453,7 @@ async function executeFlowBlock(
 
       case 'buttons':
         // Check if user clicked a button (message matches button label or ID)
-        const clickedButton = currentBlock.data.buttons?.find(
+        const clickedButton = currentBlock.fecha.buttons?.find(
           (btn: FlowBlockButton) => btn.label.toLowerCase() === userMessage.toLowerCase() || btn.id === userMessage
         );
         
@@ -5538,9 +5538,9 @@ async function executeFlowBlock(
             case 'handoff':
               // Transfer to human agent
               flowCompleted = true;
-              responseContent = 'Vou transferir você para um atendente. Aguarde um momento!';
+              responseContent = 'Vou transferir usted para um agente. Aguarde um momento!';
               
-              // Update conversation status — IA larga o lead, vai para fila do setor
+              // Update conversation status — IA larga o lead, vai para fila do sector
               await supabase
                 .from('webchat_conversations')
                 .update({ 
@@ -5554,7 +5554,7 @@ async function executeFlowBlock(
                 .eq('id', conversationId);
               
               // Save message
-              const { data: handoffMsg } = await supabase
+              const { fecha: handoffMsg } = await supabase
                 .from('webchat_messages')
                 .insert({
                   conversation_id: conversationId,
@@ -5577,9 +5577,9 @@ async function executeFlowBlock(
           }
         } else {
           // Show buttons again
-          responseContent = currentBlock.data.content || 'Escolha uma opção:';
+          responseContent = currentBlock.fecha.content || 'Escolha uma opción:';
           messageType = 'buttons';
-          responseButtons = currentBlock.data.buttons?.map((btn: FlowBlockButton, index: number) => ({
+          responseButtons = currentBlock.fecha.buttons?.map((btn: FlowBlockButton, index: number) => ({
             id: btn.id,
             label: `${btn.emoji || ''} ${btn.label}`.trim(),
             type: btn.action_type === 'url' ? 'url' : 
@@ -5599,41 +5599,41 @@ async function executeFlowBlock(
         // AI takes over the conversation
         flowCompleted = true;
         
-        // Se o bloco tem agente específico, usar ele
-        if (currentBlock.data.agent_id) {
+        // Se o bloco tiene agente específico, usar ele
+        if (currentBlock.fecha.agent_id) {
           await supabase
             .from('webchat_conversations')
-            .update({ current_agent_id: currentBlock.data.agent_id })
+            .update({ current_agent_id: currentBlock.fecha.agent_id })
             .eq('id', conversationId);
           
-          flowVariables['__current_agent_id'] = currentBlock.data.agent_id;
-          console.log('[executeFlowBlock] AI takeover with agent:', currentBlock.data.agent_id);
+          flowVariables['__current_agent_id'] = currentBlock.fecha.agent_id;
+          console.log('[executeFlowBlock] AI takeover with agent:', currentBlock.fecha.agent_id);
         }
         
-        // Armazenar overrides de permissões
-        if (currentBlock.data.override_can_do?.length) {
-          flowVariables['__override_can_do'] = JSON.stringify(currentBlock.data.override_can_do);
+        // Armazenar overrides de permisos
+        if (currentBlock.fecha.override_can_do?.length) {
+          flowVariables['__override_can_do'] = JSON.stringify(currentBlock.fecha.override_can_do);
         }
-        if (currentBlock.data.override_cannot_do?.length) {
-          flowVariables['__override_cannot_do'] = JSON.stringify(currentBlock.data.override_cannot_do);
+        if (currentBlock.fecha.override_cannot_do?.length) {
+          flowVariables['__override_cannot_do'] = JSON.stringify(currentBlock.fecha.override_cannot_do);
         }
-        if (currentBlock.data.override_handoff_triggers?.length) {
-          flowVariables['__override_handoff_triggers'] = JSON.stringify(currentBlock.data.override_handoff_triggers);
+        if (currentBlock.fecha.override_handoff_triggers?.length) {
+          flowVariables['__override_handoff_triggers'] = JSON.stringify(currentBlock.fecha.override_handoff_triggers);
         }
         
         // Armazenar config de auto-switch
-        if (currentBlock.data.auto_switch_enabled && currentBlock.data.auto_switch_agents?.length) {
-          flowVariables['__auto_switch_config'] = JSON.stringify(currentBlock.data.auto_switch_agents);
-          console.log('[executeFlowBlock] Auto-switch enabled with', currentBlock.data.auto_switch_agents.length, 'agents');
+        if (currentBlock.fecha.auto_switch_enabled && currentBlock.fecha.auto_switch_agents?.length) {
+          flowVariables['__auto_switch_config'] = JSON.stringify(currentBlock.fecha.auto_switch_agents);
+          console.log('[executeFlowBlock] Auto-switch enabled with', currentBlock.fecha.auto_switch_agents.length, 'agents');
         }
         
         // Contexto adicional
-        if (currentBlock.data.ai_context_prompt) {
-          flowVariables['__ai_context'] = currentBlock.data.ai_context_prompt;
+        if (currentBlock.fecha.ai_context_prompt) {
+          flowVariables['__ai_context'] = currentBlock.fecha.ai_context_prompt;
         }
         
-        responseContent = currentBlock.data.ai_context_prompt 
-          ? `[Contexto para IA: ${currentBlock.data.ai_context_prompt}]`
+        responseContent = currentBlock.fecha.ai_context_prompt 
+          ? `[Contexto para IA: ${currentBlock.fecha.ai_context_prompt}]`
           : '';
         console.log('[executeFlowBlock] AI takeover with variables:', Object.keys(flowVariables));
         break;
@@ -5641,9 +5641,9 @@ async function executeFlowBlock(
       case 'handoff':
         // Transfer to human agent
         flowCompleted = true;
-        responseContent = currentBlock.data.handoff_message || 'Vou transferir você para um atendente.';
+        responseContent = currentBlock.fecha.handoff_message || 'Vou transferir usted para um agente.';
         
-        // Update conversation status — IA larga o lead, vai para fila do setor
+        // Update conversation status — IA larga o lead, vai para fila do sector
         await supabase
           .from('webchat_conversations')
           .update({
@@ -5657,7 +5657,7 @@ async function executeFlowBlock(
 
       case 'tag':
         // Add tag to lead (implementation would connect to leads table)
-        console.log('[executeFlowBlock] Tag applied:', currentBlock.data.tag_name, '=', currentBlock.data.tag_value);
+        console.log('[executeFlowBlock] Tag applied:', currentBlock.fecha.tag_name, '=', currentBlock.fecha.tag_value);
         
         // Move to next block immediately
         if (nextBlockId) {
@@ -5669,8 +5669,8 @@ async function executeFlowBlock(
         break;
 
       case 'video':
-        responseContent = currentBlock.data.video_title || 'Assista a este vídeo:';
-        responseVideoUrl = currentBlock.data.video_url;
+        responseContent = currentBlock.fecha.video_title || 'Assista a este vídeo:';
+        responseVideoUrl = currentBlock.fecha.video_url;
         messageType = 'video';
         break;
 
@@ -5687,7 +5687,7 @@ async function executeFlowBlock(
       
       case 'agent_switch':
         // Switch to a different agent
-        const newAgentId = currentBlock.data.agent_id;
+        const newAgentId = currentBlock.fecha.agent_id;
         
         if (newAgentId) {
           // Update conversation with new agent
@@ -5711,8 +5711,8 @@ async function executeFlowBlock(
 
       case 'create_lead':
       case 'update_lead':
-        // Sincroniza todas as variáveis capturadas para o lead vinculado.
-        // O lead já é auto-criado em webchat-api ao iniciar a conversa,
+        // Sincroniza todas as variáveis capturadas para el lead vinculado.
+        // O lead já é auto-creado em webchat-api ao iniciar a conversación,
         // então tanto 'create_lead' quanto 'update_lead' acabam fazendo update.
         await syncFlowVarsToLead(supabase, conversationId, flowVariables);
         if (nextBlockId) {
@@ -5722,15 +5722,15 @@ async function executeFlowBlock(
         break;
 
       case 'score': {
-        const inc = Number(currentBlock.data.score_value || 0);
+        const inc = Number(currentBlock.fecha.score_value || 0);
         if (inc) {
-          const { data: convRow } = await supabase
+          const { fecha: convRow } = await supabase
             .from('webchat_conversations')
             .select('lead_id')
             .eq('id', conversationId)
             .maybeSingle();
           if (convRow?.lead_id) {
-            const { data: leadRow } = await supabase
+            const { fecha: leadRow } = await supabase
               .from('leads')
               .select('score')
               .eq('id', convRow.lead_id)
@@ -5748,16 +5748,16 @@ async function executeFlowBlock(
       }
 
       case 'tag': {
-        const tagsToAdd: string[] = currentBlock.data.apply_tags
-          || (currentBlock.data.tag_name ? [currentBlock.data.tag_name] : []);
+        const tagsToAdd: string[] = currentBlock.fecha.apply_tags
+          || (currentBlock.fecha.tag_name ? [currentBlock.fecha.tag_name] : []);
         if (tagsToAdd.length) {
-          const { data: convRow } = await supabase
+          const { fecha: convRow } = await supabase
             .from('webchat_conversations')
             .select('lead_id')
             .eq('id', conversationId)
             .maybeSingle();
           if (convRow?.lead_id) {
-            const { data: leadRow } = await supabase
+            const { fecha: leadRow } = await supabase
               .from('leads')
               .select('tags')
               .eq('id', convRow.lead_id)
@@ -5775,10 +5775,10 @@ async function executeFlowBlock(
       }
 
       case 'condition': {
-        const branch = evaluateCondition(currentBlock.data.condition, flowVariables);
+        const branch = evaluateCondition(currentBlock.fecha.condition, flowVariables);
         const target = branch
-          ? currentBlock.data.true_next_block_id
-          : currentBlock.data.false_next_block_id;
+          ? currentBlock.fecha.true_next_block_id
+          : currentBlock.fecha.false_next_block_id;
         console.log('[executeFlowBlock] condition →', branch ? 'true' : 'false', target);
         if (target) {
           const nb = flow.blocks.find((b: FlowBlock) => b.id === target);
@@ -5789,8 +5789,8 @@ async function executeFlowBlock(
       }
 
       case 'create_task': {
-        const cfg = currentBlock.data.task_config;
-        const { data: convRow } = await supabase
+        const cfg = currentBlock.fecha.task_config;
+        const { fecha: convRow } = await supabase
           .from('webchat_conversations')
           .select('lead_id, organization_id')
           .eq('id', conversationId)
@@ -5806,14 +5806,14 @@ async function executeFlowBlock(
           await supabase.from('tasks').insert({
             organization_id: convRow.organization_id,
             lead_id: convRow.lead_id,
-            title: renderTpl(cfg.title_template) || 'Tarefa do funil',
+            title: renderTpl(cfg.title_template) || 'Tarea do embudo',
             description: renderTpl(cfg.description_template) || null,
             due_at: dueAt,
             assigned_to: cfg.assign_to === 'specific_user' ? cfg.user_id : null,
             squad_id: cfg.assign_to === 'squad' ? cfg.squad_id : null,
             status: 'pending',
           });
-          console.log('[executeFlowBlock] task criada para lead', convRow.lead_id);
+          console.log('[executeFlowBlock] task creada para lead', convRow.lead_id);
         }
         if (nextBlockId) {
           const nb = flow.blocks.find((b: FlowBlock) => b.id === nextBlockId);
@@ -5826,7 +5826,7 @@ async function executeFlowBlock(
     // Save bot response message if we have content
     let botMessage = null;
     if (responseContent) {
-      const { data: msg, error: msgError } = await supabase
+      const { fecha: msg, error: msgError } = await supabase
         .from('webchat_messages')
         .insert({
           conversation_id: conversationId,
@@ -5906,7 +5906,7 @@ async function executeNextBlock(
 
   switch (block.type) {
     case 'message':
-      responseContent = block.data.content || '';
+      responseContent = block.fecha.content || '';
       // Replace variables in content
       Object.entries(flowVariables).forEach(([key, value]) => {
         responseContent = responseContent.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
@@ -5914,17 +5914,17 @@ async function executeNextBlock(
       break;
 
     case 'input':
-      responseContent = block.data.placeholder || 'Digite sua resposta...';
+      responseContent = block.fecha.placeholder || 'Digite su respuesta...';
       break;
 
     case 'buttons':
-      responseContent = block.data.content || 'Escolha uma opção:';
+      responseContent = block.fecha.content || 'Escolha uma opción:';
       // Replace variables in content
       Object.entries(flowVariables).forEach(([key, value]) => {
         responseContent = responseContent.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
       });
       messageType = 'buttons';
-      responseButtons = block.data.buttons?.map((btn: FlowBlockButton, index: number) => ({
+      responseButtons = block.fecha.buttons?.map((btn: FlowBlockButton, index: number) => ({
         id: btn.id,
         label: `${btn.emoji || ''} ${btn.label}`.trim(),
         type: btn.action_type === 'url' ? 'url' : 
@@ -5945,7 +5945,7 @@ async function executeNextBlock(
 
     case 'handoff':
       flowCompleted = true;
-      responseContent = block.data.handoff_message || 'Vou transferir você para um atendente.';
+      responseContent = block.fecha.handoff_message || 'Vou transferir usted para um agente.';
       await supabase
         .from('webchat_conversations')
         .update({
@@ -5958,21 +5958,21 @@ async function executeNextBlock(
       break;
 
     case 'video':
-      responseContent = block.data.video_title || 'Assista a este vídeo:';
-      responseVideoUrl = block.data.video_url;
+      responseContent = block.fecha.video_title || 'Assista a este vídeo:';
+      responseVideoUrl = block.fecha.video_url;
       messageType = 'video';
       break;
     
     case 'agent_switch':
       // Switch agent and continue to next block
-      if (block.data.agent_id) {
+      if (block.fecha.agent_id) {
         await supabase
           .from('webchat_conversations')
-          .update({ current_agent_id: block.data.agent_id })
+          .update({ current_agent_id: block.fecha.agent_id })
           .eq('id', conversationId);
         
-        flowVariables['__current_agent_id'] = block.data.agent_id;
-        console.log('[executeNextBlock] Switched to agent:', block.data.agent_id);
+        flowVariables['__current_agent_id'] = block.fecha.agent_id;
+        console.log('[executeNextBlock] Switched to agent:', block.fecha.agent_id);
       }
       
       // Continue to next block
@@ -5994,15 +5994,15 @@ async function executeNextBlock(
       break;
 
     case 'score': {
-      const inc = Number(block.data.score_value || 0);
+      const inc = Number(block.fecha.score_value || 0);
       if (inc) {
-        const { data: convRow } = await supabase
+        const { fecha: convRow } = await supabase
           .from('webchat_conversations')
           .select('lead_id')
           .eq('id', conversationId)
           .maybeSingle();
         if (convRow?.lead_id) {
-          const { data: leadRow } = await supabase
+          const { fecha: leadRow } = await supabase
             .from('leads').select('score').eq('id', convRow.lead_id).maybeSingle();
           await supabase.from('leads')
             .update({ score: Number(leadRow?.score || 0) + inc })
@@ -6017,13 +6017,13 @@ async function executeNextBlock(
     }
 
     case 'tag': {
-      const tagsToAdd: string[] = block.data.apply_tags
-        || (block.data.tag_name ? [block.data.tag_name] : []);
+      const tagsToAdd: string[] = block.fecha.apply_tags
+        || (block.fecha.tag_name ? [block.fecha.tag_name] : []);
       if (tagsToAdd.length) {
-        const { data: convRow } = await supabase
+        const { fecha: convRow } = await supabase
           .from('webchat_conversations').select('lead_id').eq('id', conversationId).maybeSingle();
         if (convRow?.lead_id) {
-          const { data: leadRow } = await supabase
+          const { fecha: leadRow } = await supabase
             .from('leads').select('tags').eq('id', convRow.lead_id).maybeSingle();
           const merged = Array.from(new Set([...(leadRow?.tags || []), ...tagsToAdd]));
           await supabase.from('leads').update({ tags: merged }).eq('id', convRow.lead_id);
@@ -6037,8 +6037,8 @@ async function executeNextBlock(
     }
 
     case 'condition': {
-      const branch = evaluateCondition(block.data.condition, flowVariables);
-      const target = branch ? block.data.true_next_block_id : block.data.false_next_block_id;
+      const branch = evaluateCondition(block.fecha.condition, flowVariables);
+      const target = branch ? block.fecha.true_next_block_id : block.fecha.false_next_block_id;
       if (target) {
         const nb = flow.blocks.find((b: FlowBlock) => b.id === target);
         if (nb) return executeNextBlock(supabase, conversationId, flow, nb, flowVariables);
@@ -6060,7 +6060,7 @@ async function executeNextBlock(
   // Save message if we have content
   let botMessage = null;
   if (responseContent) {
-    const { data: msg } = await supabase
+    const { fecha: msg } = await supabase
       .from('webchat_messages')
       .insert({
         conversation_id: conversationId,

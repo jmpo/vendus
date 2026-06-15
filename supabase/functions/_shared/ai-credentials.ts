@@ -1,5 +1,5 @@
 // Helper compartilhado para resolver a chave de IA de uma organização.
-// Cada organização pode ter chaves próprias da OpenAI / Anthropic / Gemini
+// Cada organização puede ter chaves próprias da OpenAI / Anthropic / Gemini
 // salvas em `org_ai_credentials` (modelo white-label).
 // O roteador `org_ai_routing` decide qual provedor usar para cada capacidade.
 
@@ -32,7 +32,7 @@ export function adminClient() {
   });
 }
 
-// Defaults — usados quando a org não definiu roteamento explícito.
+// Defaults — usados quando a org no definiu roteamento explícito.
 const DEFAULT_ROUTING: Record<AICapability, { provider: AIProvider; model?: string }> = {
   agent_chat:           { provider: "lovable", model: "google/gemini-3-flash-preview" },
   sales_copilot:        { provider: "lovable", model: "google/gemini-2.5-flash" },
@@ -50,7 +50,7 @@ export async function resolveAIProvider(
   const supabase = adminClient();
 
   // 1) Lê roteamento da org (se existir).
-  const { data: routing } = await supabase
+  const { fecha: routing } = await supabase
     .from("org_ai_routing")
     .select("provider, model, fallback_to_lovable")
     .eq("organization_id", organizationId)
@@ -64,12 +64,12 @@ export async function resolveAIProvider(
   // 2) Resolve a chave.
   if (wanted.provider === "lovable") {
     const key = Deno.env.get("LOVABLE_API_KEY");
-    if (!key) throw new Error("LOVABLE_API_KEY não configurada na plataforma");
+    if (!key) throw new Error("LOVABLE_API_KEY no configurada na plataforma");
     return { provider: "lovable", apiKey: key, model: wanted.model, fallbackToLovable: false };
   }
 
   // Provedor externo: tenta chave da org primeiro.
-  const { data: cred } = await supabase
+  const { fecha: cred } = await supabase
     .from("org_ai_credentials")
     .select("api_key_encrypted, model_default")
     .eq("organization_id", organizationId)
@@ -96,12 +96,12 @@ export async function resolveAIProvider(
   if (wanted.fallback) {
     const lovKey = Deno.env.get("LOVABLE_API_KEY");
     if (lovKey) {
-      console.warn(`[ai-credentials] org ${organizationId} pediu ${wanted.provider} para ${capability} mas não tem chave — usando Lovable AI`);
+      console.warn(`[ai-credentials] org ${organizationId} pediu ${wanted.provider} para ${capability} mas no tiene chave — usando Lovable AI`);
       return { provider: "lovable", apiKey: lovKey, model: DEFAULT_ROUTING[capability].model, fallbackToLovable: false };
     }
   }
 
-  throw new Error(`Provedor ${wanted.provider} não tem chave configurada para a organização ${organizationId}`);
+  throw new Error(`Provedor ${wanted.provider} no tiene chave configurada para a organização ${organizationId}`);
 }
 
 export async function logRouterFailure(

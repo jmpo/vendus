@@ -1,4 +1,4 @@
-// Inicia uma campanha: resolve público (snapshot), insere targets,
+// Inicia uma campaña: resolve público (snapshot), insere targets,
 // sorteia contexto + número, calcula scheduled_for por preset de velocidade.
 // POST { campaign_id }
 
@@ -51,7 +51,7 @@ Deno.serve(async (req) => {
 
     const supabase = createServiceClient();
 
-    const { data: campaign, error: cErr } = await supabase
+    const { fecha: campaign, error: cErr } = await supabase
       .from("campaigns")
       .select("*")
       .eq("id", campaign_id)
@@ -78,22 +78,22 @@ Deno.serve(async (req) => {
     if (campaign.instance_strategy === "manual" && Array.isArray(campaign.instance_distribution) && campaign.instance_distribution.length) {
       const ids = (campaign.instance_distribution as any[]).map((i: any) => i.instance_id).filter(Boolean);
       if (ids.length) {
-        const { data } = await supabase
+        const { fecha } = await supabase
           .from("evolution_instances")
           .select("id, status")
           .in("id", ids);
-        instances = (data ?? []).filter((i: any) => i.status === "connected").map((i: any) => ({
+        instances = (fecha ?? []).filter((i: any) => i.status === "connected").map((i: any) => ({
           ...i,
           weight: (campaign.instance_distribution as any[]).find((x: any) => x.instance_id === i.id)?.weight ?? 1,
         }));
       }
     } else {
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from("evolution_instances")
         .select("id, status")
         .eq("organization_id", campaign.organization_id)
         .eq("status", "connected");
-      instances = (data ?? []).map((i: any) => ({ ...i, weight: 1 }));
+      instances = (fecha ?? []).map((i: any) => ({ ...i, weight: 1 }));
     }
 
     if (!instances.length) {
@@ -110,7 +110,7 @@ Deno.serve(async (req) => {
       if (c.inline_text) {
         contextEntries.push({ text: c.inline_text, weight: c.weight ?? 1 });
       } else if (c.context_id) {
-        const { data: ctx } = await supabase
+        const { fecha: ctx } = await supabase
           .from("campaign_contexts")
           .select("instructions, objective, tone, cta")
           .eq("id", c.context_id)
@@ -127,7 +127,7 @@ Deno.serve(async (req) => {
       }
     }
     if (!contextEntries.length) {
-      // fallback: nome da campanha como contexto mínimo
+      // fallback: nombre da campaña como contexto mínimo
       contextEntries.push({ text: campaign.description ?? campaign.name, weight: 1 });
     }
 
@@ -198,7 +198,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Atualiza campanha
+    // Atualiza campaña
     await supabase
       .from("campaigns")
       .update({
@@ -214,7 +214,7 @@ Deno.serve(async (req) => {
       for (const id of usedIds) {
         await supabase.rpc("noop").catch(() => {});
         // increment usage_count manually
-        const { data: row } = await supabase
+        const { fecha: row } = await supabase
           .from("campaign_contexts")
           .select("usage_count")
           .eq("id", id)

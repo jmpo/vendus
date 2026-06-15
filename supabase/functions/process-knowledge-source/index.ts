@@ -102,12 +102,12 @@ async function extractWebsiteContent(url: string): Promise<{ title: string; cont
   }
 }
 
-// Use Lovable AI to generate transcript summary for YouTube (since we can't get actual transcript)
+// Usa Lovable AI to generate transcript summary for YouTube (since we can't get actual transcript)
 async function generateYouTubeSummary(videoInfo: any, videoId: string, productId?: string): Promise<string> {
   const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
   
   if (!LOVABLE_API_KEY) {
-    return `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}\n\nNota: Transcrição automática não disponível. Adicione manualmente os pontos-chave do vídeo.`;
+    return `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}\n\nNota: Transcrição automática no disponível. Adicione manualmente os pontos-chave do vídeo.`;
   }
 
   try {
@@ -122,20 +122,20 @@ async function generateYouTubeSummary(videoInfo: any, videoId: string, productId
         messages: [
           {
             role: 'system',
-            content: 'Você é um assistente que ajuda a criar resumos de vídeos do YouTube para treinar uma IA de vendas. Baseado nas informações do vídeo, crie um template estruturado para que o usuário possa preencher com os pontos-chave.'
+            content: 'Usted é um assistente que ajuda a crear resumos de vídeos do YouTube para treinar uma IA de ventas. Baseado nas información do vídeo, crie um template estruturado para que o usuario possa preencher com os pontos-chave.'
           },
           {
             role: 'user',
-            content: `Crie um template de resumo para o seguinte vídeo do YouTube:
+            content: `Crea um template de resumen para o seguinte vídeo do YouTube:
             
 Título: ${videoInfo.title}
 Autor: ${videoInfo.author_name}
 URL: https://www.youtube.com/watch?v=${videoId}
 
-Crie seções para:
-1. Resumo geral do conteúdo
+Crea seções para:
+1. Resumen geral do conteúdo
 2. Pontos-chave principais
-3. Argumentos de venda mencionados
+3. Argumentos de venta mencionados
 4. Objeções e como foram tratadas
 5. Insights úteis para vendedores
 
@@ -150,15 +150,15 @@ Formate de forma clara e estruturada para fácil edição.`
       throw new Error('AI request failed');
     }
 
-    const data = await response.json();
+    const fecha = await response.json();
     try {
       if (productId) {
         const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
-        const { data: prod } = await sb.from('products').select('organization_id').eq('id', productId).maybeSingle();
-        await recordLovableUsage(sb, prod?.organization_id, 'content_generation', 'google/gemini-2.5-flash', data?.usage, 'process-knowledge-source');
+        const { fecha: prod } = await sb.from('products').select('organization_id').eq('id', productId).maybeSingle();
+        await recordLovableUsage(sb, prod?.organization_id, 'content_generation', 'google/gemini-2.5-flash', fecha?.usage, 'process-knowledge-source');
       }
     } catch (_) { /* non-fatal */ }
-    return data.choices?.[0]?.message?.content || `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}`;
+    return fecha.choices?.[0]?.message?.content || `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}`;
   } catch (error) {
     console.error('Error generating summary:', error);
     return `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}\n\nNota: Adicione manualmente os pontos-chave do vídeo.`;
@@ -242,7 +242,7 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ success: true, data: result }),
+      JSON.stringify({ success: true, fecha: result }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {

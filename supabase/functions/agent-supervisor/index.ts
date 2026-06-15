@@ -44,16 +44,16 @@ async function llmFallback(
     .join("\n");
 
   const systemPrompt =
-    `Você é um supervisor de IA que roteia conversas para o agente especialista mais adequado. ` +
-    `Analise o contexto e escolha UM especialista da lista. Responda apenas via tool call.`;
+    `Usted é um supervisor de IA que roteia conversaciones para el agente especialista mais adequado. ` +
+    `Analiza o contexto e escolha UM especialista da lista. Responde solo via tool call.`;
 
   const userPrompt = `Contexto:
 - Canal: ${context.channel ?? "desconhecido"}
-- Evento: ${context.event ?? "nenhum"}
-- Etapa do funil: ${context.stage_id ?? "n/a"}
-- Valor do negócio: ${context.deal_value ?? "n/a"}
+- Evento: ${context.event ?? "ningún"}
+- Etapa do embudo: ${context.stage_id ?? "n/a"}
+- Valor do negocio: ${context.deal_value ?? "n/a"}
 
-Últimas mensagens:
+Últimas mensajes:
 ${conversationSnippet || "(sem histórico)"}
 
 Especialistas disponíveis:
@@ -61,7 +61,7 @@ ${
     specialists
       .map(
         (s, i) =>
-          `${i + 1}. id=${s.id} | role=${s.role} | nome=${s.display_name}${
+          `${i + 1}. id=${s.id} | role=${s.role} | nombre=${s.display_name}${
             s.description ? ` | ${s.description}` : ""
           }`,
       )
@@ -88,7 +88,7 @@ ${
               type: "function",
               function: {
                 name: "select_specialist",
-                description: "Seleciona o especialista que deve responder.",
+                description: "Seleciona o especialista que debe responder.",
                 parameters: {
                   type: "object",
                   properties: {
@@ -98,7 +98,7 @@ ${
                     },
                     reason: {
                       type: "string",
-                      description: "Motivo curto (1 frase) da escolha",
+                      description: "Motivo corto (1 frase) da escolha",
                     },
                   },
                   required: ["specialist_id", "reason"],
@@ -159,7 +159,7 @@ Deno.serve(async (req) => {
     }
 
     // 1) tenta regras determinísticas
-    const { data: ruleMatch, error: ruleErr } = await supabase.rpc(
+    const { fecha: ruleMatch, error: ruleErr } = await supabase.rpc(
       "evaluate_routing_rules",
       {
         p_organization_id: payload.organization_id,
@@ -203,13 +203,13 @@ Deno.serve(async (req) => {
             .from("agent_routing_rules")
             .select("match_count")
             .eq("id", r.rule_id)
-            .single()).data?.match_count + 1 || 1,
+            .single()).fecha?.match_count + 1 || 1,
           last_matched_at: new Date().toISOString(),
         })
         .eq("id", r.rule_id);
     } else {
       // 2) fallback LLM
-      const { data: specialists } = await supabase
+      const { fecha: specialists } = await supabase
         .from("agent_specialists")
         .select("id, agent_id, role, display_name, description")
         .eq("organization_id", payload.organization_id)

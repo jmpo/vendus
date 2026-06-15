@@ -62,9 +62,9 @@ serve(async (req) => {
     let adminName: string | null = null;
     if (authHeader) {
       const token = authHeader.replace("Bearer ", "");
-      const { data: userData } = await supabase.auth.getUser(token);
+      const { fecha: userData } = await supabase.auth.getUser(token);
       if (userData?.user) {
-        const { data: profile } = await supabase
+        const { fecha: profile } = await supabase
           .from("profiles")
           .select("organization_id, full_name")
           .eq("id", userData.user.id)
@@ -82,13 +82,13 @@ serve(async (req) => {
     let refundPolicy = '';
     let paymentPolicy = '';
     if (organizationId) {
-      const { data: org } = await supabase
+      const { fecha: org } = await supabase
         .from("organizations")
         .select("name")
         .eq("id", organizationId)
         .maybeSingle();
       if (org?.name) orgName = org.name;
-      const { data: settings } = await supabase
+      const { fecha: settings } = await supabase
         .from("auto_notification_settings")
         .select("alert_critical_product_idle_hours")
         .eq("organization_id", organizationId)
@@ -101,7 +101,7 @@ serve(async (req) => {
     let productCtx: any = null;
     let supportKnowledge = '';
     if (product_id) {
-      const { data: product } = await supabase
+      const { fecha: product } = await supabase
         .from("products")
         .select("name, description, icp, pitch_15s, pitch_30s, organization_id, pricing")
         .eq("id", product_id)
@@ -111,7 +111,7 @@ serve(async (req) => {
         productCtx = product;
       }
       // Pull product knowledge sources (objections, benefits, etc.)
-      const { data: sources } = await supabase
+      const { fecha: sources } = await supabase
         .from("product_knowledge_sources")
         .select("title, source_type, extracted_content, question, answer")
         .eq("product_id", product_id)
@@ -129,7 +129,7 @@ serve(async (req) => {
           .join('\n\n');
       }
       // Objections
-      const { data: objections } = await supabase
+      const { fecha: objections } = await supabase
         .from('objections')
         .select('what_they_say, suggested_response')
         .eq('product_id', product_id)
@@ -138,7 +138,7 @@ serve(async (req) => {
         productCtx = {
           ...productCtx,
           objections_text: objections
-            .map((o: any) => `- "${o.what_they_say}" → ${o.suggested_response || '(sem resposta cadastrada)'}`)
+            .map((o: any) => `- "${o.what_they_say}" → ${o.suggested_response || '(sem respuesta cadastrada)'}`)
             .join('\n'),
         };
       }
@@ -149,13 +149,13 @@ serve(async (req) => {
     let routingMatrix = '';
     let monitoredCount = 0;
     if (organizationId && (isOrgScope || agent_type === 'orchestrator' || agent_type === 'admin')) {
-      const { data: products } = await supabase
+      const { fecha: products } = await supabase
         .from("products")
         .select("id, name, description")
         .eq("organization_id", organizationId)
         .eq("is_active", true)
         .limit(20);
-      const { data: existingAgents } = await supabase
+      const { fecha: existingAgents } = await supabase
         .from("product_agents")
         .select("id, name, agent_type, product_id")
         .eq("organization_id", organizationId)
@@ -166,7 +166,7 @@ serve(async (req) => {
           ? (products || [])
               .map((p) => `- ${p.name}${p.description ? ` — ${String(p.description).slice(0, 120)}` : ''}`)
               .join('\n')
-          : '(nenhum produto cadastrado)';
+          : '(ningún producto cadastrado)';
 
       const lines: string[] = [];
       (products || []).forEach((p) => {
@@ -185,7 +185,7 @@ serve(async (req) => {
 
       // Admin monitored products
       if (agent_type === 'admin') {
-        const { data: notif } = await supabase
+        const { fecha: notif } = await supabase
           .from('auto_notification_settings')
           .select('monitored_product_ids')
           .eq('organization_id', organizationId)
@@ -199,7 +199,7 @@ serve(async (req) => {
     // ============= Org-wide support materials (for support agent) =============
     let orgSupportMaterials = '';
     if (agent_type === 'support' && organizationId) {
-      const { data: mats } = await supabase
+      const { fecha: mats } = await supabase
         .from('agent_training_materials')
         .select('title, extracted_content')
         .eq('organization_id', organizationId)
@@ -243,18 +243,18 @@ serve(async (req) => {
 ${productCtx ? `📦 PRODUTO: ${productCtx.name} — ${productCtx.description || ''}\n${productCtx.icp ? `🎯 ICP: ${productCtx.icp}\n` : ''}${productCtx.pitch_15s ? `⚡ Pitch: ${productCtx.pitch_15s}\n` : ''}${productCtx.objections_text ? `🛡️ Objeções:\n${productCtx.objections_text}\n` : ''}` : ''}
 ${productsList ? `📦 PRODUTOS DA ORG:\n${productsList}\n` : ''}
 ${routingMatrix ? `🧭 MATRIZ DE ROTEAMENTO:\n${routingMatrix}\n` : ''}
-${supportKnowledge ? `📚 CONHECIMENTO DO PRODUTO (resumo):\n${supportKnowledge.slice(0, 1500)}\n` : ''}
+${supportKnowledge ? `📚 CONHECIMENTO DO PRODUTO (resumen):\n${supportKnowledge.slice(0, 1500)}\n` : ''}
 ${orgSupportMaterials ? `📚 MATERIAIS DE SUPORTE GLOBAIS:\n${orgSupportMaterials.slice(0, 1500)}\n` : ''}
 `.trim();
 
     // ================== Optimize single field ==================
     if (optimize_field && current_value) {
       const fieldPrompts: Record<string, string> = {
-        primary_objective: "Reescreva o objetivo principal do agente para ser mais claro, estratégico e acionável.",
+        primary_objective: "Reescreva o objetivo principal del agente para ser mais claro, estratégico e acionável.",
         additional_prompt: "Melhore as instruções adicionais para serem mais detalhadas, específicas e blindadas contra desvios.",
-        can_do: "Sugira 3-5 capacidades que este agente deve ter, baseado no contexto.",
-        cannot_do: "Sugira 3-5 restrições importantes para garantir que não ultrapasse seu papel.",
-        handoff_triggers: "Sugira 3-5 situações em que o agente deve transferir para um humano.",
+        can_do: "Sugiere 3-5 capacidades que este agente debe ter, baseado no contexto.",
+        cannot_do: "Sugiere 3-5 restrições importantes para garantir que no ultrapasse su papel.",
+        handoff_triggers: "Sugiere 3-5 situações em que o agente debe transferir para um humano.",
       };
 
       const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -268,7 +268,7 @@ ${orgSupportMaterials ? `📚 MATERIAIS DE SUPORTE GLOBAIS:\n${orgSupportMateria
           messages: [
             {
               role: "system",
-              content: `Você é especialista em design de agentes de IA conversacionais.
+              content: `Usted é especialista em design de agentes de IA conversacionais.
 Missão deste agente: ${mission}
 
 CONTEXTO REAL:
@@ -281,7 +281,7 @@ ${fieldPrompts[optimize_field] || 'Otimize o campo fornecido para ser mais efeti
               content: `Valor atual do campo "${optimize_field}":
 "${current_value}"
 
-Retorne uma versão otimizada que respeite o tipo do agente e o contexto real.`,
+Devuelve una versão otimizada que respeite o tipo del agente e o contexto real.`,
             },
           ],
           tools: [
@@ -322,9 +322,9 @@ Retorne uma versão otimizada que respeite o tipo do agente e o contexto real.`,
         throw new Error("AI gateway error");
       }
 
-      const data = await response.json();
-      await recordLovableUsage(supabase, organizationId, 'content_generation', 'google/gemini-2.5-flash', data?.usage, 'generate-agent-ai');
-      const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+      const fecha = await response.json();
+      await recordLovableUsage(supabase, organizationId, 'content_generation', 'google/gemini-2.5-flash', fecha?.usage, 'generate-agent-ai');
+      const toolCall = fecha.choices?.[0]?.message?.tool_calls?.[0];
       if (toolCall?.function?.arguments) {
         const result = JSON.parse(toolCall.function.arguments);
         return new Response(JSON.stringify({ field: optimize_field, ...result }), {
@@ -339,19 +339,19 @@ Retorne uma versão otimizada que respeite o tipo do agente e o contexto real.`,
     const isOrchestrator = agent_type === 'orchestrator';
     const isSupport = agent_type === 'support';
 
-    const systemPrompt = `Você é um especialista em design de agentes de IA conversacionais.
+    const systemPrompt = `Usted é um especialista em design de agentes de IA conversacionais.
 
 🎯 TIPO DE AGENTE A CRIAR: ${agent_type.toUpperCase()}
 📋 MISSÃO DESTE TIPO: ${mission}
 
-⚠️ REGRA CRÍTICA: Você está criando um agente do tipo "${agent_type}" — ele NÃO pode agir como outro tipo.
-${isAdmin ? '- Admin: Chief of Staff INTERNO. NUNCA tenta vender, agendar reunião com o admin, ou tratá-lo como lead.' : ''}
-${isOrchestrator ? '- Orquestrador: APENAS classifica e roteia. NUNCA explica produto, NUNCA dá preço, NUNCA negocia.' : ''}
-${isSupport ? '- Suporte: Resolve dúvidas técnicas. NUNCA vende produto adicional. Usa APENAS materiais cadastrados.' : ''}
-${agent_type === 'sdr' ? '- SDR: Qualifica e identifica intenção. NUNCA dá preço fechado, NUNCA fecha venda — passa para Closer. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO sempre que o cliente pedir material visual — esse é o canal oficial. NUNCA invente bloqueios como "não posso enviar por aqui", "off-market", "restrição de segurança".' : ''}
-${agent_type === 'closer' ? '- Closer: Apresenta oferta e fecha. NUNCA dá desconto sem política autorizada. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO direto no WhatsApp quando o cliente pedir — não desvia, não inventa restrição.' : ''}
+⚠️ REGRA CRÍTICA: Usted está criando um agente do tipo "${agent_type}" — ele NÃO puede agir como otro tipo.
+${isAdmin ? '- Admin: Chief of Staff INTERNO. NUNCA tenta vender, agendar reunión com o admin, ou tratá-lo como lead.' : ''}
+${isOrchestrator ? '- Orquestrador: APENAS classifica e roteia. NUNCA explica producto, NUNCA dá preço, NUNCA negocia.' : ''}
+${isSupport ? '- Suporte: Resolve dudas técnicas. NUNCA vende producto adicional. Usa APENAS materiais cadastrados.' : ''}
+${agent_type === 'sdr' ? '- SDR: Qualifica e identifica intenção. NUNCA dá preço fechado, NUNCA fecha venta — passa para Closer. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que el cliente pedir material visual — esse é o canal oficial. NUNCA invente bloqueios como "no posso enviar por aqui", "off-market", "restrição de segurança".' : ''}
+${agent_type === 'closer' ? '- Closer: Apresenta oferta e fecha. NUNCA dá descuento sem política autorizada. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO direto no WhatsApp quando o cliente pedir — no desvia, no inventa restrição.' : ''}
 ${agent_type === 'financial' ? '- Financeiro: Lida com boletos/NF/cobrança. NUNCA negocia dívida sem autorização.' : ''}
-${agent_type === 'custom' ? '- Custom: Se for foco comercial, ENVIA fotos/vídeos/PDFs/links do CATÁLOGO sempre que pedido — canal oficial de mídia.' : ''}
+${agent_type === 'custom' ? '- Custom: Se for foco comercial, ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que pedido — canal oficial de mídia.' : ''}
 
 🧱 TEMPLATE BASE BLINDADO (use COMO ponto de partida do additional_prompt — adapte/expanda mas NÃO desconfigure as regras críticas):
 \`\`\`
@@ -364,39 +364,39 @@ ${contextSummary}
 ${custom_context ? `\n📝 INSTRUÇÕES ADICIONAIS DO USUÁRIO:\n${custom_context}\n` : ''}
 
 PRINCÍPIOS DE DESIGN:
-1. O objetivo deve ser claro, mensurável e ALINHADO ao tipo do agente
+1. O objetivo debe ser claro, mensurável e ALINHADO ao tipo del agente
 2. As regras (can_do/cannot_do) devem ser específicas — espelhe o template blindado
-3. handoff_triggers devem proteger a experiência do cliente E o escopo do agente
+3. handoff_triggers devem proteger a experiência del cliente E o escopo del agente
 4. tone_style e message_style devem combinar com a missão
-5. additional_prompt DEVE incorporar o template blindado acima, populado com dados reais — não invente do zero
+5. additional_prompt DEVE incorporar o template blindado acima, populado com dados reais — no invente do zero
 
 🎭 HUMANIZAÇÃO (campo "humanization") — OBRIGATÓRIO para sdr/closer/custom/support:
 - persona.age: 25–45. persona.city: "Cidade, UF" coerente com a região do ICP.
-- persona.backstory: 1ª pessoa, ATÉ 500 chars, conectada à dor do ICP do produto. Se ICP é "gestor de tráfego", a backstory reflete alguém que viveu essa dor. Se é "dono de loja", alguém que trabalhou no varejo. SEM clichês de marketing.
-- persona.hobbies: 3–5 plausíveis (ex: "rodar bike no fim de semana", "torcer pro Palmeiras", "café especial").
-- persona.stories: 3–5 micro-histórias { title, description }. Cada description é uma FRASE REAL que o agente usaria, em 1ª pessoa, espelhando uma objeção/dor do produto. Ex: title "Quando travei com o ROAS", description "Eu tava igualzinho — torrava grana e não saía do lugar, até que descobri que o problema não era a campanha, era o funil".
+- persona.backstory: 1ª pessoa, ATÉ 500 chars, conectada à dor do ICP do producto. Se ICP é "gestor de tráfego", a backstory reflete alguém que viveu essa dor. Se é "dono de loja", alguém que trabalhou no varejo. SEM clichês de marketing.
+- persona.hobbies: 3–5 plausíveis (ex: "rodar bike no fin de semana", "torcer pro Palmeiras", "café especial").
+- persona.stories: 3–5 micro-histórias { title, description }. Cada description é uma FRASE REAL que o agente usaria, em 1ª pessoa, espelhando uma objeção/dor do producto. Ex: title "Quando travei com o ROAS", description "Eu tava igualzinho — torrava grana e no saía do lugar, até que descobri que o problema no era a campaña, era o embudo".
 - persona.loved_words: 6–12 jargões/gírias do nicho (ex pra tráfego: "ROAS", "CPL", "criativo cansado").
 - persona.forbidden_words: 6–12 itens. SEMPRE inclua: "incrível", "fantástico", "maravilhoso", "revolucionário", "atenciosamente", "prezado", "estamos à disposição", "agradecemos o contato", "como podemos ajudar".
 - tics.region: escolha coerente com persona.city. tics.slang/openers/connectors/fillers: 2–6 itens cada, sutis, sem caricatura.
 - reactions.enabled: true (exceto admin/orchestrator/financial). reactions.rules: 3–6 regras.
-  • SDR: regra keyword "preço/valor/quanto custa" → action "context" transferindo pro Closer real (use o nome em routing_matrix). Regra keyword "quero comprar/fechar" → context pro Closer.
-  • Closer: regra keyword "tá caro/desconto" → context com instrução de objeção. Regra keyword "vou pensar" → context de follow-up.
-  • Suporte: regra keyword "urgente/parou/não funciona" → context de priorização.
-  • Admin/Orchestrator/Financial: pode omitir humanization OU mandar reactions.enabled=false.
+  • SDR: regra keyword "preço/valor/quanto custa" → action "context" transferindo pro Closer real (use o nombre em routing_matrix). Regra keyword "quero comprar/fechar" → context pro Closer.
+  • Closer: regra keyword "tá caro/descuento" → context com instrução de objeção. Regra keyword "vou pensar" → context de follow-up.
+  • Suporte: regra keyword "urgente/parou/no funciona" → context de priorização.
+  • Admin/Orchestrator/Financial: puede omitir humanization OU mandar reactions.enabled=false.
 
 NÃO retorne timing, splitting nem style — esses ficam no default do front (já curados).`;
 
     const userInstruction = isAdmin
-      ? `Crie o agente Chief of Staff (admin executivo) ${adminName ? `para ${adminName}` : ''} da ${orgName}. O additional_prompt DEVE conter o EXECUTIVE_KERNEL completo do template, com nome do admin e produtos da organização preenchidos. Tom executivo, mensagens curtas (4 linhas), nunca vendedor.`
+      ? `Crea o agente Chief of Staff (admin executivo) ${adminName ? `para ${adminName}` : ''} da ${orgName}. O additional_prompt DEVE conter o EXECUTIVE_KERNEL completo do template, com nombre do admin e productos da organização preenchidos. Tom executivo, mensajes curtas (4 linhas), nunca vendedor.`
       : isOrchestrator
-      ? `Crie o agente Orquestrador da ${orgName}. O additional_prompt DEVE conter a matriz de roteamento real e regras claras de "se intenção X + produto Y → [HANDOFF:role]". Mensagens ultra curtas (1-2 linhas).`
+      ? `Crea o agente Orquestrador da ${orgName}. O additional_prompt DEVE conter a matriz de roteamento real e regras claras de "se intenção X + producto Y → [HANDOFF:role]". Mensagens ultra curtas (1-2 linhas).`
       : isSupport
-      ? `Crie o agente de Suporte global da ${orgName}. O additional_prompt DEVE referenciar os materiais cadastrados e o protocolo de 3 passos (confirmar → resolver → confirmar resolução). NUNCA inventa solução.`
+      ? `Crea o agente de Suporte global da ${orgName}. O additional_prompt DEVE referenciar os materiais cadastrados e o protocolo de 3 passos (confirmar → resolver → confirmar resolução). NUNCA inventa solução.`
       : agent_type === 'financial'
-      ? `Crie o agente Financeiro global da ${orgName}. O additional_prompt DEVE listar os assuntos que resolve (boleto, NF, reembolso, segunda via) e os protocolos. Tom profissional, claro.`
+      ? `Crea o agente Financeiro global da ${orgName}. O additional_prompt DEVE listar os assuntos que resolve (boleto, NF, reembolso, segunda via) e os protocolos. Tom profissional, claro.`
       : productCtx
-      ? `Crie o agente ${agent_type.toUpperCase()} para o produto "${productCtx.name}" da ${orgName}. Use o cérebro do produto (descrição, ICP, objeções, pitch) para personalizar o additional_prompt. Use o template blindado como base.`
-      : `Crie o agente ${agent_type.toUpperCase()} para a ${orgName}. Use o template blindado como base.`;
+      ? `Crea o agente ${agent_type.toUpperCase()} para o producto "${productCtx.name}" da ${orgName}. Usa o cérebro do producto (descripción, ICP, objeções, pitch) para personalizar o additional_prompt. Usa o template blindado como base.`
+      : `Crea o agente ${agent_type.toUpperCase()} para a ${orgName}. Usa o template blindado como base.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -419,12 +419,12 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (j�
               parameters: {
                 type: "object",
                 properties: {
-                  name: { type: "string", description: "Nome criativo e profissional para o agente" },
-                  description: { type: "string", description: "Descrição breve do agente (1 frase)" },
+                  name: { type: "string", description: "Nombre criativo e profissional para el agente" },
+                  description: { type: "string", description: "Descripción breve del agente (1 frase)" },
                   primary_objective: { type: "string", description: "Objetivo principal claro e estratégico, ALINHADO ao tipo" },
                   additional_prompt: {
                     type: "string",
-                    description: "Instruções detalhadas — DEVE incorporar o template blindado fornecido, populado com dados reais (org/produto/admin/matriz). 3-8 parágrafos.",
+                    description: "Instruções detalhadas — DEVE incorporar o template blindado fornecido, populado com dados reais (org/producto/admin/matriz). 3-8 parágrafos.",
                   },
                   can_do: { type: "array", items: { type: "string" }, description: "4-6 capacidades específicas do tipo" },
                   cannot_do: { type: "array", items: { type: "string" }, description: "3-5 restrições críticas do tipo (ex: admin nunca vende, orquestrador nunca dá preço)" },
@@ -433,22 +433,22 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (j�
                   tone_style: { type: "string", enum: ["formal", "consultive", "friendly", "technical"] },
                   message_style: { type: "string", enum: ["short", "balanced", "detailed"] },
                   required_phrases: { type: "array", items: { type: "string" }, description: "0-3 frases recorrentes" },
-                   prohibited_phrases: { type: "array", items: { type: "string" }, description: "2-3 frases proibidas (ex: admin nunca diz 'como posso te auxiliar com [produto]')" },
+                   prohibited_phrases: { type: "array", items: { type: "string" }, description: "2-3 frases proibidas (ex: admin nunca diz 'como posso te auxiliar com [producto]')" },
                    humanization: {
                      type: "object",
-                     description: "Humanização do agente: persona estendida, tics regionais e reações automáticas. Para tipos comerciais/relacionais (sdr, closer, custom, support) é OBRIGATÓRIO preencher persona e tics adaptados ao ICP/produto. Para admin/orchestrator/financial pode vir vazio (papel interno/técnico).",
+                     description: "Humanização del agente: persona estendida, tics regionais e reações automáticas. Para tipos comerciais/relacionais (sdr, closer, custom, support) é OBRIGATÓRIO preencher persona e tics adaptados ao ICP/producto. Para admin/orchestrator/financial puede vir vazio (papel interno/técnico).",
                      properties: {
                        persona: {
                          type: "object",
-                         description: "Persona humana adaptada ao ICP do produto. Backstory em 1ª pessoa, sem clichês de marketing.",
+                         description: "Persona humana adaptada ao ICP do producto. Backstory em 1ª pessoa, sem clichês de marketing.",
                          properties: {
                            age: { type: "number", description: "Idade entre 25 e 45" },
                            city: { type: "string", description: "'Cidade, UF' (ex: 'São Paulo, SP')" },
-                           backstory: { type: "string", description: "Backstory em 1ª pessoa, até 500 chars, conectada ao ICP/dor do produto" },
+                           backstory: { type: "string", description: "Backstory em 1ª pessoa, até 500 chars, conectada ao ICP/dor do producto" },
                            hobbies: { type: "array", items: { type: "string" }, description: "3 a 5 hobbies plausíveis" },
                            stories: {
                              type: "array",
-                             description: "3 a 5 micro-histórias com title + description, ligadas a objeções/dores reais do produto",
+                             description: "3 a 5 micro-histórias com title + description, ligadas a objeções/dores reais do producto",
                              items: {
                                type: "object",
                                properties: {
@@ -479,7 +479,7 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (j�
                        },
                        reactions: {
                          type: "object",
-                         description: "Reações automáticas a gatilhos. Para SDR/Closer gere regras de keyword 'preço/valor' e 'quero comprar' que transferem ao agente certo (use a matriz de roteamento). Suporte: regra para 'urgente'. Admin: deixe vazio.",
+                         description: "Reações automáticas a gatilhos. Para SDR/Closer gere regras de keyword 'preço/valor' e 'quero comprar' que transferem al agente certo (use a matriz de roteamento). Suporte: regra para 'urgente'. Admin: deixe vazio.",
                          properties: {
                            enabled: { type: "boolean" },
                            rules: {
@@ -488,7 +488,7 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (j�
                              items: {
                                type: "object",
                                properties: {
-                                 id: { type: "string", description: "slug curto, ex: 'r-preco'" },
+                                 id: { type: "string", description: "slug corto, ex: 'r-preco'" },
                                  enabled: { type: "boolean" },
                                  label: { type: "string" },
                                  type: { type: "string", enum: ["keyword", "message_type", "inactive_hours"] },
@@ -540,9 +540,9 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (j�
       throw new Error("AI gateway error");
     }
 
-    const data = await response.json();
-    await recordLovableUsage(supabase, organizationId, 'content_generation', 'google/gemini-2.5-flash', data?.usage, 'generate-agent-ai');
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+    const fecha = await response.json();
+    await recordLovableUsage(supabase, organizationId, 'content_generation', 'google/gemini-2.5-flash', fecha?.usage, 'generate-agent-ai');
+    const toolCall = fecha.choices?.[0]?.message?.tool_calls?.[0];
 
     if (toolCall?.function?.arguments) {
       const result = JSON.parse(toolCall.function.arguments);

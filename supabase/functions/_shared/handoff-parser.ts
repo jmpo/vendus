@@ -5,10 +5,10 @@
 //
 //   1) [HANDOFF:role]                — role-based handoff (closer/sdr/cs/support/financial/humano)
 //                                      → resolved by `agent_type` + same product
-//   2) [HANDOFF_TO_AGENT:Nome]       — direct handoff to another AI agent by NAME
-//                                      → resolved by `name ILIKE %Nome%` (admin-only path)
-//   3) [HANDOFF_TO_USER:Nome]        — handoff to a HUMAN team member by NAME
-//                                      → resolved by `profiles.full_name ILIKE %Nome%`
+//   2) [HANDOFF_TO_AGENT:Nombre]       — direct handoff to another AI agent by NAME
+//                                      → resolved by `name ILIKE %Nombre%` (admin-only path)
+//   3) [HANDOFF_TO_USER:Nombre]        — handoff to a HUMAN team member by NAME
+//                                      → resolved by `profiles.full_name ILIKE %Nombre%`
 
 export type HandoffTarget = 'closer' | 'sdr' | 'cs' | 'support' | 'financial' | 'humano' | null;
 

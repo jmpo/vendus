@@ -121,9 +121,9 @@ const rand = (min: number, max: number) => min + Math.random() * (max - min);
 const chance = (p: number) => Math.random() < clamp(p ?? 0, 0, 1);
 
 const DEFAULT_ABBREVS: Record<string, string> = {
-  'você': 'vc',
+  'usted': 'vc',
   'voces': 'vcs',
-  'você é': 'vc é',
+  'usted é': 'vc é',
   'também': 'tbm',
   'porque': 'pq',
   'por que': 'pq',
@@ -133,7 +133,7 @@ const DEFAULT_ABBREVS: Record<string, string> = {
   'tudo bem': 'tdbm',
   'para': 'pra',
   'que': 'q',
-  'não': 'n',
+  'no': 'n',
 };
 
 function parseAbbreviations(raw?: string): Record<string, string> {
@@ -311,7 +311,7 @@ function hoursMultiplier(date: Date, vary: boolean): number {
 }
 
 // Hard caps de servidor: protegem contra configs antigas com 90s, etc.
-// Esses limites NUNCA são ultrapassados, mesmo se o JSON do agente disser o contrário.
+// Esses limites NUNCA son ultrapassados, mismo se o JSON del agente disser o contrário.
 const HARD_FIRST_MIN_MS = 1500;
 const HARD_FIRST_MAX_MS = 15000;
 const HARD_BETWEEN_MIN_MS = 600;
@@ -429,7 +429,7 @@ export function defaultsForAgentType(agentType: string): HumanizationConfig {
       lowercase_prob: 0.6,
       relaxed_punct_prob: 0.4,
       abbrev_prob: 0.5,
-      abbreviations: 'você=vc\ntambém=tbm\nporque=pq\nestá=tá\nbeleza=blz',
+      abbreviations: 'usted=vc\ntambém=tbm\nporque=pq\nestá=tá\nbeleza=blz',
       typo_correction_prob: 0.05,
       laughter_prob: 0.15,
       laughter_style: 'auto',
@@ -462,7 +462,7 @@ export function defaultsForAgentType(agentType: string): HumanizationConfig {
 // ─────────────── prompt block builder (persona + tics + style) ────────────
 
 const REGION_HINTS: Record<LinguisticRegion, string> = {
-  neutral: 'português brasileiro neutro, sem regionalismo forte',
+  neutral: 'español brasileiro neutro, sem regionalismo forte',
   paulista: 'sotaque paulista (mano, tipo, então, daí)',
   carioca: 'sotaque carioca (cara, véi, mermão, maneiro)',
   nordestino: 'sotaque nordestino (oxe, vixe, massa, arretado)',
@@ -484,7 +484,7 @@ function bulletList(items?: string[], max = 12): string {
 export function buildHumanizationPromptBlock(cfg?: HumanizationConfig | null): string {
   if (!cfg || cfg.enabled === false) return '';
   const out: string[] = [];
-  out.push('\n\n🧑 PERSONA HUMANA (siga ESTRITAMENTE — você é uma pessoa real, não um bot):');
+  out.push('\n\n🧑 PERSONA HUMANA (siga ESTRITAMENTE — usted é uma pessoa real, no um bot):');
 
   // ─── Persona ─────────────────────────────────────────────────────
   const p = cfg.persona ?? {};
@@ -505,16 +505,16 @@ export function buildHumanizationPromptBlock(cfg?: HumanizationConfig | null): s
       .map((s) => `- ${s.title}: ${s.description}`)
       .join('\n');
     out.push(
-      '\nHISTÓRIAS PESSOAIS QUE VOCÊ PODE MENCIONAR (use APENAS quando fizer sentido natural na conversa, NUNCA force):\n' +
+      '\nHISTÓRIAS PESSOAIS QUE VOCÊ PODE MENCIONAR (use APENAS quando fizer sentido natural na conversación, NUNCA force):\n' +
       stories
     );
   }
 
   if (p.loved_words && p.loved_words.length > 0) {
-    out.push(`\nPalavras que você ADORA usar (encaixe naturalmente quando couber): ${p.loved_words.join(', ')}.`);
+    out.push(`\nPalavras que usted ADORA usar (encaixe naturalmente quando couber): ${p.loved_words.join(', ')}.`);
   }
   if (p.forbidden_words && p.forbidden_words.length > 0) {
-    out.push(`\n🚫 Palavras PROIBIDAS — você NUNCA usa: ${p.forbidden_words.join(', ')}.`);
+    out.push(`\n🚫 Palavras PROIBIDAS — usted NUNCA usa: ${p.forbidden_words.join(', ')}.`);
   }
 
   // ─── Tics & slang ────────────────────────────────────────────────
@@ -522,13 +522,13 @@ export function buildHumanizationPromptBlock(cfg?: HumanizationConfig | null): s
   const region = t.region ?? 'neutral';
   out.push(`\nREGIÃO LINGUÍSTICA: ${REGION_HINTS[region]}.`);
   if (t.slang && t.slang.length > 0) {
-    out.push(`Gírias do seu repertório (use 1-2 por mensagem quando couber, jamais todas juntas): ${t.slang.slice(0, 20).join(', ')}.`);
+    out.push(`Gírias do su repertório (use 1-2 por mensaje quando couber, jamais todas juntas): ${t.slang.slice(0, 20).join(', ')}.`);
   }
   if (t.openers && t.openers.length > 0) {
-    out.push(`Formas de iniciar uma resposta (varie, não repita a mesma sempre): ${t.openers.join(', ')}.`);
+    out.push(`Formas de iniciar uma respuesta (varie, no repita a misma siempre): ${t.openers.join(', ')}.`);
   }
   if (t.connectors && t.connectors.length > 0) {
-    out.push(`Conectivos casuais que você usa: ${t.connectors.join(', ')}.`);
+    out.push(`Conectivos casuais que usted usa: ${t.connectors.join(', ')}.`);
   }
   if (t.fillers && t.fillers.length > 0) {
     out.push(`Frases de muleta para quando precisa "pensar":\n${bulletList(t.fillers, 10)}`);
@@ -541,20 +541,20 @@ export function buildHumanizationPromptBlock(cfg?: HumanizationConfig | null): s
     styleLines.push('- Comece algumas frases com letra minúscula (estilo informal de WhatsApp).');
   }
   if ((s.relaxed_punct_prob ?? 0) >= 0.3) {
-    styleLines.push('- Use pontuação relaxada: pode omitir ponto final em mensagens curtas.');
+    styleLines.push('- Usa pontuação relaxada: puede omitir ponto final em mensajes curtas.');
   }
   if ((s.abbrev_prob ?? 0) >= 0.3) {
-    styleLines.push('- Use abreviações naturais quando couber: vc, tbm, pq, tá, blz, pra.');
+    styleLines.push('- Usa abreviações naturais quando couber: vc, tbm, pq, tá, blz, pra.');
   }
   if ((s.laughter_prob ?? 0) >= 0.3) {
     const which = s.laughter_style && s.laughter_style !== 'auto' ? s.laughter_style : 'kkk/rs/haha';
-    styleLines.push(`- Em momentos leves, use risadas curtas (${which}). Não exagere.`);
+    styleLines.push(`- Em momentos leves, use risadas curtas (${which}). No exagere.`);
   }
   const ed = s.emoji_density ?? 'low';
   if (ed === 'none') styleLines.push('- NÃO use emojis.');
-  else if (ed === 'low') styleLines.push('- Use no máximo 1 emoji por resposta, e só quando fizer sentido.');
-  else if (ed === 'medium') styleLines.push('- Use 1-3 emojis por resposta quando couber.');
-  else if (ed === 'high') styleLines.push('- Você pode usar vários emojis (3-6) quando o tom for descontraído.');
+  else if (ed === 'low') styleLines.push('- Usa no máximo 1 emoji por respuesta, e só quando fizer sentido.');
+  else if (ed === 'medium') styleLines.push('- Usa 1-3 emojis por respuesta quando couber.');
+  else if (ed === 'high') styleLines.push('- Usted puede usar vários emojis (3-6) quando o tom for descontraído.');
 
   if (styleLines.length > 0) {
     out.push('\nESTILO DE ESCRITA:\n' + styleLines.join('\n'));
@@ -562,15 +562,15 @@ export function buildHumanizationPromptBlock(cfg?: HumanizationConfig | null): s
 
   out.push(
     '\n📱 FORMATO DE MENSAGEM (estilo WhatsApp REAL — OBRIGATÓRIO):' +
-    '\n- Escreva em frases CURTAS, separadas por ponto final, interrogação ou quebra de linha.' +
-    '\n- NUNCA mande um parágrafo longo de uma vez. Cada ideia em uma frase própria, terminada por ".", "?" ou "!".' +
-    '\n- Evite frases com mais de 18 palavras. Se for longa, quebre em duas.' +
-    '\n- Use "kkk", "rs" ou "haha" SOMENTE quando houver algo realmente leve/engraçado. NUNCA como tique no fim de toda frase.'
+    '\n- Escribe em frases CURTAS, separadas por ponto final, interrogação ou quebra de linha.' +
+    '\n- NUNCA mande um parágrafo largo de uma vez. Cada ideia em uma frase própria, terminada por ".", "?" ou "!".' +
+    '\n- Evita frases com mais de 18 palavras. Se for larga, quebre em duas.' +
+    '\n- Usa "kkk", "rs" ou "haha" SOMENTE quando houver algo realmente leve/engraçado. NUNCA como tique no fin de toda frase.'
   );
 
   out.push(
-    '\n⚠️ IMPORTANTE: nunca diga ou insinue que você é um bot, IA ou assistente virtual a menos que o lead pergunte diretamente. Você é uma pessoa real do time.' +
-    '\n⚠️ NUNCA reconheça verbalmente bugs, falhas técnicas, repetição de mensagens ou que o sinal/sistema "travou". Se algo parecer estranho, ignore e siga a conversa naturalmente.'
+    '\n⚠️ IMPORTANTE: nunca diga ou insinue que usted é um bot, IA ou assistente virtual a menos que o lead pergunte diretamente. Usted é uma pessoa real do time.' +
+    '\n⚠️ NUNCA reconheça verbalmente bugs, falhas técnicas, repetição de mensajes ou que o sinal/sistema "travou". Se algo parecer estranho, ignore e siga a conversación naturalmente.'
   );
 
   return out.join('\n');
@@ -583,9 +583,9 @@ const EMOJI_ONLY_RE = /^[\s\p{Extended_Pictographic}\p{Emoji_Presentation}\u200d
 export function detectMessageType(text: string): ReactionMessageType | null {
   const t = (text ?? '').trim();
   if (!t) return null;
-  if (/🎙️|\[áudio\]|\[audio\]|áudio do cliente/i.test(t)) return 'audio';
+  if (/🎙️|\[áudio\]|\[audio\]|áudio del cliente/i.test(t)) return 'audio';
   if (/\[sticker\]|\[figurinha\]/i.test(t)) return 'sticker';
-  if (/\[imagem\]|\[image\]|🖼️/i.test(t)) return 'image';
+  if (/\[imagen\]|\[image\]|🖼️/i.test(t)) return 'image';
   if (/\[v[ií]deo\]|\[video\]/i.test(t)) return 'video';
   // strip whatsapp/markdown wrappers then test emoji-only
   const stripped = t.replace(/[*_~`>]/g, '').trim();
@@ -655,7 +655,7 @@ export const DEFAULT_REACTION_RULES: ReactionRule[] = [
     type: 'message_type',
     message_type: 'emoji_only',
     action: 'context',
-    context: 'O lead acabou de responder APENAS com emoji. Reaja de forma curta e natural (1 linha) e faça uma pergunta leve para destravar a conversa.',
+    context: 'O lead acabou de responder APENAS com emoji. Reaja de forma corta e natural (1 linha) e faça uma pregunta leve para destravar a conversación.',
   },
   {
     id: 'r-audio',
@@ -664,7 +664,7 @@ export const DEFAULT_REACTION_RULES: ReactionRule[] = [
     type: 'message_type',
     message_type: 'audio',
     action: 'context',
-    context: 'O lead enviou um áudio (você recebeu a transcrição). Comente brevemente ("entendi seu áudio…") antes de responder, soando humano.',
+    context: 'O lead envió um áudio (usted recebeu a transcrição). Comente brevemente ("entendi su áudio…") antes de responder, soando humano.',
   },
   {
     id: 'r-sticker',
@@ -683,27 +683,27 @@ export const DEFAULT_REACTION_RULES: ReactionRule[] = [
     keywords: ['é robô', 'é bot', 'é uma ia', 'é inteligencia artificial', 'é inteligência artificial', 'voce é humano', 'é humano?'],
     match: 'any',
     action: 'context',
-    context: 'O lead está desconfiado se você é bot/IA. NÃO confirme nem negue mecanicamente — responda de forma humana e natural, mude o assunto com uma pergunta pessoal ou volte ao que ele queria.',
+    context: 'O lead está desconfiado se usted é bot/IA. NÃO confirme nem negue mecanicamente — responda de forma humana e natural, mude o assunto com uma pregunta pessoal ou volte ao que ele queria.',
   },
   {
     id: 'r-busy',
     enabled: true,
     label: 'Lead disse que está ocupado',
     type: 'keyword',
-    keywords: ['ocupado', 'sem tempo', 'depois falo', 'agora não', 'agora nao', 'em reunião', 'em reuniao'],
+    keywords: ['ocupado', 'sem tempo', 'después falo', 'ahora no', 'ahora nao', 'em reunión', 'em reuniao'],
     match: 'any',
     action: 'reply',
-    reply: 'tranquilo! qual o melhor horário pra te chamar mais tarde?',
+    reply: 'tranquilo! qual o melhor horario pra te chamar mais tarde?',
   },
   {
     id: 'r-apology',
     enabled: true,
     label: 'Lead pediu desculpa pela demora',
     type: 'keyword',
-    keywords: ['desculpa a demora', 'desculpa demorar', 'foi mal a demora', 'demorei pra responder'],
+    keywords: ['desculpa a demora', 'desculpa demorar', 'fue mal a demora', 'demorei pra responder'],
     match: 'any',
     action: 'context',
-    context: 'O lead pediu desculpa pela demora em responder. Acolha de forma leve ("imagina, sem stress") antes de continuar a conversa.',
+    context: 'O lead pediu desculpa pela demora em responder. Acolha de forma leve ("imagina, sem stress") antes de continuar a conversación.',
   },
   {
     id: 'r-inactive-24h',
@@ -712,7 +712,7 @@ export const DEFAULT_REACTION_RULES: ReactionRule[] = [
     type: 'inactive_hours',
     hours: 24,
     action: 'context',
-    context: 'O lead ficou mais de 24h sem responder e agora voltou. Retome o contexto da última conversa de forma natural, sem cobrar.',
+    context: 'O lead ficou mais de 24h sem responder e ahora voltou. Retome o contexto da última conversación de forma natural, sem cobrar.',
   },
   {
     id: 'r-grupo-entrou',
@@ -720,12 +720,12 @@ export const DEFAULT_REACTION_RULES: ReactionRule[] = [
     label: 'Lead confirmou que entrou no grupo / live / canal',
     type: 'keyword',
     keywords: [
-      'entrei no grupo', 'entrei agora no grupo', 'entrei agora', 'tô no grupo',
+      'entrei no grupo', 'entrei ahora no grupo', 'entrei ahora', 'tô no grupo',
       'estou no grupo', 'já entrei', 'ja entrei', 'entrei na live',
       'entrei no canal', 'já tô no grupo', 'ja to no grupo',
     ],
     match: 'any',
     action: 'context',
-    context: 'O lead JÁ ENTROU no grupo/live/canal (CTA cumprida). PARE de qualificar, PARE de explicar produto, NÃO faça pergunta nova. Mande UMA única mensagem curta reforçando que vale a pena ficar de olho lá e ENCERRE o turno.',
+    context: 'O lead JÁ ENTROU no grupo/live/canal (CTA cumprida). PARE de qualificar, PARE de explicar producto, NÃO faça pregunta nova. Mande UMA única mensaje corta reforçando que vale a pena ficar de olho lá e ENCERRE o turno.',
   },
 ];

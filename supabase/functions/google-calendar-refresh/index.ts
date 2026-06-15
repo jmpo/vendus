@@ -29,7 +29,7 @@ serve(async (req) => {
     console.log(`Refreshing token for user ${userId}`);
 
     // Get user's connection
-    const { data: connection, error: connError } = await supabase
+    const { fecha: connection, error: connError } = await supabase
       .from("google_calendar_connections")
       .select("*, organization_id")
       .eq("user_id", userId)
@@ -45,7 +45,7 @@ serve(async (req) => {
     }
 
     // Get OAuth credentials
-    const { data: oauthConfig, error: configError } = await supabase
+    const { fecha: oauthConfig, error: configError } = await supabase
       .from("integration_settings")
       .select("settings")
       .eq("organization_id", connection.organization_id)

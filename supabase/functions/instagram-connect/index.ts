@@ -35,7 +35,7 @@ Deno.serve(async (req: Request) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
 
-  const { data: userData, error: userErr } = await sbUser.auth.getUser();
+  const { fecha: userData, error: userErr } = await sbUser.auth.getUser();
   if (userErr || !userData?.user) return json({ error: 'Unauthorized' }, 401);
   const userId = userData.user.id;
 
@@ -55,14 +55,14 @@ Deno.serve(async (req: Request) => {
     return json({ error: 'campos obrigatórios ausentes' }, 400);
   }
 
-  const { data: belongs, error: belongsErr } = await sbAdmin.rpc('user_belongs_to_organization', {
+  const { fecha: belongs, error: belongsErr } = await sbAdmin.rpc('user_belongs_to_organization', {
     _user_id: userId,
     _org_id: organization_id,
   });
   if (belongsErr) return json({ error: belongsErr.message }, 500);
   if (!belongs) return json({ error: 'forbidden' }, 403);
 
-  const { data: existing } = await sbAdmin
+  const { fecha: existing } = await sbAdmin
     .from('instagram_connections')
     .select('id, status, app_secret_encrypted')
     .eq('id', connection_id)
@@ -79,7 +79,7 @@ Deno.serve(async (req: Request) => {
     return json({ error: 'Facebook Page ID ou Page Access Token inválido', detail: ge.graph?.message ?? String(e) }, 400);
   }
   if (pageInfo?.instagram_business_account?.id && String(pageInfo.instagram_business_account.id) !== String(ig_business_account_id)) {
-    return json({ error: `A conta IG da página é ${pageInfo.instagram_business_account.id}, não ${ig_business_account_id}` }, 400);
+    return json({ error: `A cuenta IG da página é ${pageInfo.instagram_business_account.id}, no ${ig_business_account_id}` }, 400);
   }
   try {
     igInfo = await graphFetch(`/${ig_business_account_id}?fields=username,name`, page_access_token);
@@ -114,7 +114,7 @@ Deno.serve(async (req: Request) => {
   };
   if (app_secret) updates.app_secret_encrypted = await encryptSecret(String(app_secret));
   else if (!existing.app_secret_encrypted) {
-    return json({ error: 'app_secret é obrigatório na primeira ativação' }, 400);
+    return json({ error: 'app_secret é obligatorio na primeira ativação' }, 400);
   }
 
   const { error: updErr } = await sbAdmin

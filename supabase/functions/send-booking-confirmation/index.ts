@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
     const endTimeStr = endDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
 
     const meetLinkBlock = meetLink
-      ? `<p style="margin:16px 0"><a href="${meetLink}" style="background:#a3e635;color:#1f2937;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:600">Entrar na reunião</a></p><p style="font-size:13px;color:#6b7280;word-break:break-all">${meetLink}</p>`
+      ? `<p style="margin:16px 0"><a href="${meetLink}" style="background:#a3e635;color:#1f2937;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:600">Entrar na reunión</a></p><p style="font-size:13px;color:#6b7280;word-break:break-all">${meetLink}</p>`
       : "";
 
     const result = await sendPlatformEmail({
@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
       },
     });
 
-    if (!result.ok) throw new Error(result.error || "Falha ao enviar confirmação");
+    if (!result.ok) throw new Error(result.error || "Falha al enviar confirmação");
 
     return new Response(
       JSON.stringify({ success: true }),

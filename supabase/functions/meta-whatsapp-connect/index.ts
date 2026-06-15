@@ -1,6 +1,6 @@
 // meta-whatsapp-connect
 // Recebe credenciais do wizard, valida via Graph API, criptografa, salva.
-// Retorna webhook_url + verify_token para o cliente colar no Meta App.
+// Retorna webhook_url + verify_token para el cliente colar no Meta App.
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { GRAPH_BASE, graphFetch, GraphError } from '../_shared/meta-graph.ts';
@@ -28,7 +28,7 @@ Deno.serve(async (req: Request) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
 
-  const { data: userData, error: userErr } = await sbUser.auth.getUser();
+  const { fecha: userData, error: userErr } = await sbUser.auth.getUser();
   if (userErr || !userData?.user) return json({ error: 'Unauthorized' }, 401);
   const userId = userData.user.id;
 
@@ -50,7 +50,7 @@ Deno.serve(async (req: Request) => {
   }
 
   // Confirma membership da org
-  const { data: belongs } = await sbAdmin.rpc('user_belongs_to_organization', {
+  const { fecha: belongs } = await sbAdmin.rpc('user_belongs_to_organization', {
     _user_id: userId,
     _organization_id: organization_id,
   });
@@ -62,14 +62,14 @@ Deno.serve(async (req: Request) => {
     phoneInfo = await graphFetch(`/${phone_number_id}?fields=display_phone_number,verified_name,quality_rating,messaging_limit_tier`, access_token);
   } catch (e) {
     const ge = e as GraphError;
-    return json({ error: 'phone_number_id inválido ou token sem permissão', detail: ge.graph?.message ?? String(e) }, 400);
+    return json({ error: 'phone_number_id inválido ou token sem permiso', detail: ge.graph?.message ?? String(e) }, 400);
   }
   let wabaInfo: any;
   try {
     wabaInfo = await graphFetch(`/${waba_id}?fields=name,id`, access_token);
   } catch (e) {
     const ge = e as GraphError;
-    return json({ error: 'WABA ID inválido ou sem permissão whatsapp_business_management', detail: ge.graph?.message ?? String(e) }, 400);
+    return json({ error: 'WABA ID inválido ou sem permiso whatsapp_business_management', detail: ge.graph?.message ?? String(e) }, 400);
   }
 
   // Detecta se é update/promoção (connection_id) ou criação direta (sem id).
@@ -78,7 +78,7 @@ Deno.serve(async (req: Request) => {
 
   if (isExisting) {
     // Carrega o registro (rascunho ou ativo) e promove a 'active'.
-    const { data: current, error: loadErr } = await sbAdmin
+    const { fecha: current, error: loadErr } = await sbAdmin
       .from('whatsapp_meta_connections')
       .select('id, status, app_secret_encrypted, access_token_encrypted, webhook_verify_token')
       .eq('id', connection_id)
@@ -103,15 +103,15 @@ Deno.serve(async (req: Request) => {
     if (app_secret) {
       updates.app_secret_encrypted = await encryptSecret(app_secret);
     } else if (!current.app_secret_encrypted) {
-      return json({ error: 'app_secret obrigatório (não há um salvo anteriormente)' }, 400);
+      return json({ error: 'app_secret obligatorio (no há um guardado anteriormente)' }, 400);
     }
     if (access_token) {
       updates.access_token_encrypted = await encryptSecret(access_token);
     } else if (!current.access_token_encrypted) {
-      return json({ error: 'access_token obrigatório (não há um salvo anteriormente)' }, 400);
+      return json({ error: 'access_token obligatorio (no há um guardado anteriormente)' }, 400);
     }
 
-    const { data, error } = await sbAdmin
+    const { fecha, error } = await sbAdmin
       .from('whatsapp_meta_connections')
       .update(updates)
       .eq('id', connection_id)
@@ -119,11 +119,11 @@ Deno.serve(async (req: Request) => {
       .select('id, webhook_verify_token')
       .single();
     if (error) return json({ error: error.message }, 500);
-    row = data;
+    row = fecha;
   } else {
-    if (!app_secret) return json({ error: 'app_secret obrigatório na criação' }, 400);
+    if (!app_secret) return json({ error: 'app_secret obligatorio na criação' }, 400);
     const verifyToken = generateVerifyToken();
-    const { data, error } = await sbAdmin
+    const { fecha, error } = await sbAdmin
       .from('whatsapp_meta_connections')
       .insert({
         organization_id,
@@ -145,7 +145,7 @@ Deno.serve(async (req: Request) => {
       .select('id, webhook_verify_token')
       .single();
     if (error) return json({ error: error.message }, 500);
-    row = data;
+    row = fecha;
   }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL');

@@ -29,10 +29,10 @@ serve(async (req: Request): Promise<Response> => {
         const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
         const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
         if (!supabaseUrl || !serviceKey) {
-          throw new Error("Configuração de backend ausente");
+          throw new Error("Configuración de backend ausente");
         }
 
-        // Se forneceu e-mail, envia mensagem real via Lovable Emails
+        // Se forneceu e-mail, envia mensaje real via Lovable Emails
         if (recipientEmail) {
           const sendRes = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
             method: "POST",
@@ -46,13 +46,13 @@ serve(async (req: Request): Promise<Response> => {
               idempotencyKey: `test-${Date.now()}`,
               templateData: {
                 __subject: "Teste de envio — Lovable Emails",
-                __html: `<div style="font-family:Arial,sans-serif;padding:24px"><h2>Teste bem-sucedido</h2><p>Este é um e-mail de teste enviado pelo painel do Super Admin.</p><p style="color:#666;font-size:12px">Se você recebeu, sua infraestrutura de e-mail está operando corretamente.</p></div>`,
+                __html: `<div style="font-family:Arial,sans-serif;padding:24px"><h2>Teste bem-sucedido</h2><p>Este é um e-mail de teste enviado pelo painel do Super Admin.</p><p style="color:#666;font-size:12px">Se usted recebeu, su infraestrutura de e-mail está operando corretamente.</p></div>`,
               },
             }),
           });
           if (!sendRes.ok) {
             const err = await sendRes.text();
-            throw new Error(`Falha ao enviar e-mail: ${err}`);
+            throw new Error(`Falha al enviar e-mail: ${err}`);
           }
           return new Response(
             JSON.stringify({ success: true, message: `E-mail de teste enviado para ${recipientEmail}` }),
@@ -70,7 +70,7 @@ serve(async (req: Request): Promise<Response> => {
       case "firecrawl": {
         const firecrawlApiKey = Deno.env.get("FIRECRAWL_API_KEY");
         if (!firecrawlApiKey) {
-          throw new Error("FIRECRAWL_API_KEY não configurada");
+          throw new Error("FIRECRAWL_API_KEY no configurada");
         }
 
         const res = await fetch("https://api.firecrawl.dev/v0/scrape", {
@@ -97,7 +97,7 @@ serve(async (req: Request): Promise<Response> => {
       }
 
       default:
-        throw new Error(`Tipo de integração desconhecido: ${integrationType}`);
+        throw new Error(`Tipo de integración desconhecido: ${integrationType}`);
     }
   } catch (error: unknown) {
     console.error("Error in test-integration:", error);

@@ -1,5 +1,5 @@
-// Reprocessa um pedido Cakto já salvo em `cakto_orders`, rodando novamente o
-// pipeline de provisionamento (plano + usuário admin). Idempotente.
+// Reprocessa um pedido Cakto já guardado em `cakto_orders`, rodando novamente o
+// pipeline de provisionamento (plano + usuario admin). Idempotente.
 
 import { buildAdminClient, provisionFromOrder } from '../_shared/cakto-plan-provisioning.ts';
 
@@ -30,17 +30,17 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_ANON_KEY')!,
       { global: { headers: { Authorization: authHeader } } },
     );
-    const { data: { user: caller } } = await userClient.auth.getUser();
+    const { fecha: { user: caller } } = await userClient.auth.getUser();
     if (!caller) return json({ error: 'unauthorized' }, 401);
 
-    const { data: isSuper } = await admin.rpc('is_super_admin', { _user_id: caller.id });
+    const { fecha: isSuper } = await admin.rpc('is_super_admin', { _user_id: caller.id });
     if (!isSuper) return json({ error: 'forbidden' }, 403);
 
     const body = await req.json().catch(() => ({}));
     const orderId = body.order_id ?? body.orderId;
     if (!orderId) return json({ error: 'order_id required' }, 400);
 
-    const { data: order, error } = await admin
+    const { fecha: order, error } = await admin
       .from('cakto_orders')
       .select('*')
       .eq('id', orderId)

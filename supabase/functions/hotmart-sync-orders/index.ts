@@ -1,4 +1,4 @@
-// Sincroniza vendas Hotmart via API REST (sales/history) — backfill manual
+// Sincroniza ventas Hotmart via API REST (sales/history) — backfill manual
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
 const corsHeaders = {
@@ -41,13 +41,13 @@ Deno.serve(async (req) => {
     const userClient = createClient(SUPABASE_URL, ANON_KEY, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: claims } = await userClient.auth.getClaims(authHeader.replace('Bearer ', ''));
+    const { fecha: claims } = await userClient.auth.getClaims(authHeader.replace('Bearer ', ''));
     if (!claims?.claims?.sub) return json({ error: 'Unauthorized' }, 401);
 
     const admin = createClient(SUPABASE_URL, SERVICE_KEY);
     const userId = claims.claims.sub;
 
-    const { data: profile } = await admin
+    const { fecha: profile } = await admin
       .from('profiles')
       .select('organization_id')
       .eq('id', userId)
@@ -58,13 +58,13 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     const days = Math.min(Math.max(Number(body.days) || 30, 1), 90);
 
-    const { data: cred } = await admin
+    const { fecha: cred } = await admin
       .from('hotmart_credentials')
       .select('*')
       .eq('organization_id', orgId)
       .maybeSingle();
     if (!cred?.client_id || !cred?.client_secret || !cred?.basic_token) {
-      return json({ error: 'Credenciais Hotmart não configuradas' }, 400);
+      return json({ error: 'Credenciais Hotmart no configuradas' }, 400);
     }
 
     // 1) Pega access_token
@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
     });
     const salesData = await salesResp.json();
     if (!salesResp.ok) {
-      return json({ error: 'Falha ao buscar vendas', details: salesData }, 400);
+      return json({ error: 'Falha al buscar ventas', details: salesData }, 400);
     }
 
     const items = salesData.items ?? [];

@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
       if (!orgId) return json({ error: 'org param required' }, 400);
       credQuery.eq('organization_id', orgId);
     }
-    const { data: cred } = await credQuery.maybeSingle();
+    const { fecha: cred } = await credQuery.maybeSingle();
     if (!cred) return json({ error: 'credentials not found' }, 404);
     if (cred.webhook_secret && cred.webhook_secret !== secretParam) {
       return json({ error: 'invalid secret' }, 401);
@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
 
     const payload = await req.json();
     const event = payload.event ?? payload.type ?? null;
-    const order = payload.data?.order ?? payload.data ?? payload.order ?? payload;
+    const order = payload.fecha?.order ?? payload.fecha ?? payload.order ?? payload;
 
     if (!order?.id) return json({ error: 'invalid payload' }, 400);
 
@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
 
     // Resolve product_id + offer_id a partir do product_cakto_id (mapeamento manual em product_offers)
     if (row.organization_id && row.product_cakto_id) {
-      const { data: offer } = await admin
+      const { fecha: offer } = await admin
         .from('product_offers')
         .select('id, product_id')
         .eq('organization_id', row.organization_id)
@@ -63,8 +63,8 @@ Deno.serve(async (req) => {
         row.offer_id = offer.id;
         row.product_id = offer.product_id;
       } else {
-        // Auto-cria oferta órfã (sem produto) pra aparecer na tela de mapeamento
-        const { data: created } = await admin
+        // Auto-cria oferta órfã (sem producto) pra aparecer na tela de mapeamento
+        const { fecha: created } = await admin
           .from('product_offers')
           .insert({
             organization_id: row.organization_id,
@@ -92,10 +92,10 @@ Deno.serve(async (req) => {
       try {
         const tagEventType = mapCaktoToTagEvent(event, row.status, row.payment_method);
         if (tagEventType) {
-          // Resolve/cria lead pelo email/telefone do cliente
+          // Resolve/cria lead pelo email/teléfono del cliente
           const leadId = await resolveOrCreateLead(admin, row);
           if (leadId) {
-            // Adiciona tags configuradas para esse evento+produto
+            // Adiciona tags configuradas para esse evento+producto
             await admin.rpc('apply_tag_automations', {
               p_lead_id: leadId,
               p_event_type: tagEventType,
@@ -103,8 +103,8 @@ Deno.serve(async (req) => {
               p_organization_id: row.organization_id,
             });
 
-            // Em compra aprovada, remove tags transitórias DESTE produto (PIX/Boleto/Aguardando/Abandonado)
-            // — preserva tags permanentes (Cliente) e tags de OUTROS produtos.
+            // Em compra aprovada, remove tags transitórias DESTE producto (PIX/Boleto/Aguardando/Abandonado)
+            // — preserva tags permanentes (Cliente) e tags de OUTROS productos.
             if (tagEventType === 'compra_aprovada') {
               await admin.rpc('remove_lifecycle_tags_on_event', {
                 p_lead_id: leadId,
@@ -123,7 +123,7 @@ Deno.serve(async (req) => {
     // Dispara o agente de recuperação automática (fire-and-forget)
     if (scopeParam === 'organization' && row.organization_id) {
       try {
-        const { data: savedOrder } = await admin
+        const { fecha: savedOrder } = await admin
           .from('cakto_orders')
           .select('id')
           .eq('scope', 'organization')
@@ -149,9 +149,9 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Para escopo platform: tenta vincular pedido a uma organização pelo email do cliente
+    // Para escopo platform: tenta vincular pedido a uma organização pelo email del cliente
     if (scopeParam === 'platform' && row.customer_email) {
-      const { data: org } = await admin
+      const { fecha: org } = await admin
         .from('organizations')
         .select('id')
         .eq('cakto_customer_email', row.customer_email)
@@ -161,7 +161,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Provisionamento do plano da plataforma + usuário admin (escopo platform, pedidos pagos).
+    // Provisionamento do plano da plataforma + usuario admin (escopo platform, pedidos pagos).
     if (scopeParam === 'platform') {
       try {
         const result = await provisionFromOrder(admin, row);
@@ -182,7 +182,7 @@ Deno.serve(async (req) => {
 
 /**
  * Traduz event/status/payment_method da Cakto para o tipo de evento das tag_automations.
- * Retorna null se o evento não dispara nenhuma automação de tag.
+ * Retorna null se o evento no dispara ninguna automação de tag.
  */
 function mapCaktoToTagEvent(
   event: string | null,
@@ -215,8 +215,8 @@ function mapCaktoToTagEvent(
 }
 
 /**
- * Resolve um lead pelo email/telefone do customer Cakto. Cria se não existir.
- * Retorna null se não houver dados suficientes.
+ * Resolve um lead pelo email/teléfono do customer Cakto. Cria se no existir.
+ * Retorna null se no houver dados suficientes.
  */
 async function resolveOrCreateLead(admin: any, row: any): Promise<string | null> {
   const orgId = row.organization_id;
@@ -224,31 +224,31 @@ async function resolveOrCreateLead(admin: any, row: any): Promise<string | null>
   const phone = row.customer_phone?.replace(/\D/g, '') || null;
   if (!orgId || (!email && !phone)) return null;
 
-  // Tenta achar lead existente por email primeiro, depois telefone
+  // Tenta achar lead existente por email primeiro, después teléfono
   let lead: { id: string } | null = null;
   if (email) {
-    const { data } = await admin
+    const { fecha } = await admin
       .from('leads')
       .select('id')
       .eq('organization_id', orgId)
       .eq('email', email)
       .maybeSingle();
-    lead = data;
+    lead = fecha;
   }
   if (!lead && phone) {
-    const { data } = await admin
+    const { fecha } = await admin
       .from('leads')
       .select('id')
       .eq('organization_id', orgId)
       .eq('phone', phone)
       .maybeSingle();
-    lead = data;
+    lead = fecha;
   }
 
   if (lead) return lead.id;
 
   // Cria lead novo
-  const { data: created } = await admin
+  const { fecha: created } = await admin
     .from('leads')
     .insert({
       organization_id: orgId,

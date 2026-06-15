@@ -8,7 +8,7 @@ Deno.serve((req: Request) => {
   return new Response(
     JSON.stringify({
       error: 'Gone',
-      message: 'Este endpoint legado foi descontinuado. Configure os webhooks no Evolution Go (evolution-webhook).',
+      message: 'Este endpoint legado fue descontinuado. Configure os webhooks no Evolution Go (evolution-webhook).',
     }),
     {
       status: 410,

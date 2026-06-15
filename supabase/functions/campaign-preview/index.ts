@@ -1,4 +1,4 @@
-// Preview do público de uma campanha.
+// Preview do público de uma campaña.
 // POST { organization_id, audience_filters, exclusion_filters }
 // → { total_audience, will_receive, excluded, sample_ids }
 

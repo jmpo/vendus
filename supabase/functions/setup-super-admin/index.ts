@@ -24,30 +24,30 @@ Deno.serve(async (req) => {
     const companyName = String(body?.companyName ?? "").trim();
     const phone = String(body?.phone ?? "").trim();
 
-    if (!fullName) return json(400, { ok: false, error: "Nome é obrigatório" });
+    if (!fullName) return json(400, { ok: false, error: "Nombre é obligatorio" });
     if (!email || !/^\S+@\S+\.\S+$/.test(email))
       return json(400, { ok: false, error: "Email inválido" });
     if (!password || password.length < 8)
-      return json(400, { ok: false, error: "Senha precisa de no mínimo 8 caracteres" });
+      return json(400, { ok: false, error: "Contraseña precisa de no mínimo 8 caracteres" });
 
     const admin = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    // Trava de segurança: só permite se NÃO existe nenhum super_admin
-    const { data: existing, error: checkErr } = await admin
+    // Trava de segurança: só permite se NÃO existe ningún super_admin
+    const { fecha: existing, error: checkErr } = await admin
       .from("user_roles")
       .select("user_id")
       .eq("role", "super_admin")
       .limit(1);
     if (checkErr) throw checkErr;
     if ((existing?.length ?? 0) > 0) {
-      return json(409, { ok: false, error: "Super Admin já foi configurado" });
+      return json(409, { ok: false, error: "Super Admin já fue configurado" });
     }
 
-    // Cria o usuário (auto-confirmado)
-    const { data: created, error: createErr } = await admin.auth.admin.createUser({
+    // Cria o usuario (auto-confirmado)
+    const { fecha: created, error: createErr } = await admin.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
     });
     if (createErr) throw createErr;
     const userId = created.user?.id;
-    if (!userId) throw new Error("Falha ao criar usuário");
+    if (!userId) throw new Error("Falha ao crear usuario");
 
     // Garante profile (trigger normalmente cria, blindamos)
     await admin
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
     // Organização opcional
     let organizationId: string | null = null;
     if (companyName) {
-      const { data: org, error: orgErr } = await admin
+      const { fecha: org, error: orgErr } = await admin
         .from("organizations")
         .insert({
           name: companyName,
@@ -102,7 +102,7 @@ Deno.serve(async (req) => {
       .upsert({ user_id: userId, role: "admin" }, { onConflict: "user_id,role" });
 
     // Marca lock permanente em platform_settings
-    const { data: settings } = await admin
+    const { fecha: settings } = await admin
       .from("platform_settings")
       .select("id")
       .maybeSingle();

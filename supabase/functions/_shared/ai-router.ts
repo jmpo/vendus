@@ -95,12 +95,12 @@ export async function resolveAIConfig(
   async function readPlan(): Promise<{ allow: boolean; provider: string; strategy: string }> {
     if (!organizationId) return { allow: true, provider: 'lovable', strategy: 'random' };
     try {
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from('organizations')
         .select('plan_id, platform_plans!inner(allow_platform_ai, platform_ai_provider, platform_ai_strategy)')
         .eq('id', organizationId)
         .maybeSingle();
-      const plan = (data as any)?.platform_plans;
+      const plan = (fecha as any)?.platform_plans;
       return {
         allow: plan?.allow_platform_ai !== false,
         provider: (plan?.platform_ai_provider as string) || 'lovable',
@@ -115,12 +115,12 @@ export async function resolveAIConfig(
   /** Tenta escolher uma chave do pool da plataforma. Retorna null se vazio. */
   async function pickPoolKey(provider: string, strategy: string): Promise<{ id: string; api_key: string; model_default?: string; label: string } | null> {
     try {
-      const { data, error } = await supabase.rpc('pick_platform_ai_key', { p_provider: provider, p_strategy: strategy });
+      const { fecha, error } = await supabase.rpc('pick_platform_ai_key', { p_provider: provider, p_strategy: strategy });
       if (error) {
         console.warn('[ai-router] pick_platform_ai_key error:', error);
         return null;
       }
-      const row = Array.isArray(data) ? data[0] : data;
+      const row = Array.isArray(fecha) ? fecha[0] : fecha;
       if (!row) return null;
       return { id: row.id, api_key: row.api_key_encrypted, model_default: row.model_default ?? undefined, label: row.label };
     } catch (e) {
@@ -161,8 +161,8 @@ export async function resolveAIConfig(
   if (!organizationId) return envLovableConfig;
 
   try {
-    // 1) Roteamento configurado pela empresa (chave própria) tem prioridade
-    const { data: routing } = await supabase
+    // 1) Roteamento configurado pela empresa (chave própria) tiene prioridade
+    const { fecha: routing } = await supabase
       .from('org_ai_routing')
       .select('provider, model, fallback_to_lovable')
       .eq('organization_id', organizationId)
@@ -173,7 +173,7 @@ export async function resolveAIConfig(
     const routedModel = (routing?.model || preferredModel || DEFAULT_MODEL) as string;
 
     if (orgProvider && orgProvider !== 'lovable') {
-      const { data: cred } = await supabase
+      const { fecha: cred } = await supabase
         .from('org_ai_credentials')
         .select('api_key_encrypted')
         .eq('organization_id', organizationId)
@@ -186,11 +186,11 @@ export async function resolveAIConfig(
       // sem chave própria → cai pro pool / plano abaixo
     }
 
-    // 2) Plano da empresa decide se usa pool da plataforma
+    // 2) Plano de la empresa decide se usa pool da plataforma
     const plan = await readPlan();
     if (!plan.allow) {
       const err: any = new Error(
-        'Seu plano não inclui IA da plataforma. Cadastre uma chave própria (OpenAI/Anthropic/Gemini) em Integrações.',
+        'Su plano no inclui IA da plataforma. Cadastre uma chave própria (OpenAI/Anthropic/Gemini) em Integrações.',
       );
       err.code = 'AI_PLAN_NO_PLATFORM';
       throw err;
@@ -203,7 +203,7 @@ export async function resolveAIConfig(
       const extra = { platform_key_id: pool.id, key_label: pool.label } as any;
       if (plan.provider === 'openai') return buildOpenAIConfig(pool.api_key, usedModel, 'gateway', extra);
       if (plan.provider === 'lovable') return buildLovableConfig(pool.api_key, usedModel, 'gateway', extra);
-      // anthropic/gemini: hoje o roteador só sabe chamar OpenAI/Lovable; usamos chave do pool via Lovable Gateway como compat
+      // anthropic/gemini: hoy o roteador só sabe chamar OpenAI/Lovable; usamos chave do pool via Lovable Gateway como compat
       return buildLovableConfig(envLovableKey || pool.api_key, usedModel, 'gateway', extra);
     }
 
@@ -226,7 +226,7 @@ export async function resolveAIConfig(
 
 /**
  * Registra consumo de tokens da plataforma após chamada Lovable AI.
- * Para chave própria do cliente, apenas grava log informativo (não consome cota).
+ * Para chave própria del cliente, apenas grava log informativo (no consome cota).
  */
 export async function recordAIUsage(
   supabase: any,

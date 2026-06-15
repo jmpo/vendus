@@ -28,7 +28,7 @@ serve(async (req) => {
 
     console.log("Audio file received:", audioFile.name, audioFile.type, audioFile.size, "bytes");
 
-    // Use ElevenLabs Scribe API for transcription
+    // Usa ElevenLabs Scribe API for transcription
     const elevenLabsFormData = new FormData();
     elevenLabsFormData.append("file", audioFile, audioFile.name || "recording.webm");
     elevenLabsFormData.append("model_id", "scribe_v2");
@@ -58,8 +58,8 @@ serve(async (req) => {
       throw new Error(`Transcription failed: ${response.status} - ${errorText}`);
     }
 
-    const data = await response.json();
-    const transcribedText = data.text?.trim() || "";
+    const fecha = await response.json();
+    const transcribedText = fecha.text?.trim() || "";
     
     console.log("Transcription result:", transcribedText.substring(0, 100));
 

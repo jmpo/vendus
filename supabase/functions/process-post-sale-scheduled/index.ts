@@ -1,5 +1,5 @@
-// Cron worker: processa fila de execuções pós-venda atrasadas.
-// Dispara mensagem inline / agente IA / e-mail por template para runs vencidas.
+// Cron worker: processa fila de execuções pós-venta atrasadas.
+// Dispara mensaje inline / agente IA / e-mail por template para runs vencidas.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
 const corsHeaders = {
@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
 
-  const { data: due, error: dueErr } = await supabase
+  const { fecha: due, error: dueErr } = await supabase
     .from('post_sale_scheduled_runs')
     .select('*')
     .eq('status', 'pending')
@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
 
   for (const run of due ?? []) {
     // claim
-    const { data: claimed } = await supabase
+    const { fecha: claimed } = await supabase
       .from('post_sale_scheduled_runs')
       .update({ status: 'running', attempts: (run.attempts ?? 0) + 1 })
       .eq('id', run.id)
@@ -81,9 +81,9 @@ Deno.serve(async (req) => {
     if (!claimed) continue;
 
     // Defesa: se um evento "final" (compra_aprovada/reembolso/chargeback/cancelamento)
-    // chegou DEPOIS desta run ser criada, cancela em vez de disparar.
+    // chegou DEPOIS desta run ser creada, cancela em vez de disparar.
     if (['pix_gerado', 'boleto_gerado', 'checkout_abandonado'].includes(run.event_type)) {
-      const { data: laterClose } = await supabase
+      const { fecha: laterClose } = await supabase
         .from('post_sale_scheduled_runs')
         .select('id')
         .eq('lead_id', run.lead_id)
@@ -108,13 +108,13 @@ Deno.serve(async (req) => {
 
 
     try {
-      const { data: action } = await supabase
+      const { fecha: action } = await supabase
         .from('post_sale_event_actions')
         .select('*')
         .eq('id', run.action_id)
         .maybeSingle();
 
-      const { data: lead } = await supabase
+      const { fecha: lead } = await supabase
         .from('leads')
         .select('id, name, email, phone')
         .eq('id', run.lead_id)
@@ -127,12 +127,12 @@ Deno.serve(async (req) => {
       } else {
         const vars = buildVars(lead, run.event_data || {});
 
-        // 1) Mensagem inline
+        // 1) Mensaje inline
         if (action.send_mode === 'message' && action.inline_message) {
           const message = replaceVars(action.inline_message, vars);
           if (action.message_channel === 'whatsapp' && lead.phone) {
             const phone = normalizePhone(lead.phone);
-            const { data: sd, error: se } = await supabase.functions.invoke('evolution-send', {
+            const { fecha: sd, error: se } = await supabase.functions.invoke('evolution-send', {
               body: {
                 type: 'text', to: phone, payload: { text: message },
                 organization_id: run.organization_id,
@@ -145,7 +145,7 @@ Deno.serve(async (req) => {
               queue_name: 'transactional_email',
               payload: {
                 to: lead.email,
-                subject: `Sobre ${run.event_data?.product_name ?? 'sua compra'}`,
+                subject: `Sobre ${run.event_data?.product_name ?? 'su compra'}`,
                 html: `<p>${message.replace(/\n/g, '<br/>')}</p>`,
                 organization_id: run.organization_id,
                 lead_id: lead.id,
@@ -156,7 +156,7 @@ Deno.serve(async (req) => {
 
         // 2) Agente IA
         if (action.agent_id && lead.phone) {
-          const { data: od, error: oe } = await supabase.functions.invoke('manual-outreach', {
+          const { fecha: od, error: oe } = await supabase.functions.invoke('manual-outreach', {
             body: {
               lead_ids: [lead.id],
               agent_id: action.agent_id,
@@ -182,7 +182,7 @@ Deno.serve(async (req) => {
 
         // 3) E-mail por template
         if (action.email_template_id && lead.email) {
-          const { data: tpl } = await supabase
+          const { fecha: tpl } = await supabase
             .from('email_templates')
             .select('subject, html_content')
             .eq('id', action.email_template_id)

@@ -1,6 +1,6 @@
 // Edge Function: presence-test
 // Dispara presence ("digitando..." ou "gravando áudio...") por X segundos
-// SEM enviar nenhuma mensagem. Usado pelo Admin para validar se o WhatsApp
+// SEM enviar ninguna mensaje. Usado pelo Admin para validar se o WhatsApp
 // do número testado mostra o status real.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -28,14 +28,14 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const { data: { user } } = await supabase.auth.getUser(auth.replace("Bearer ", ""));
+    const { fecha: { user } } = await supabase.auth.getUser(auth.replace("Bearer ", ""));
     if (!user) {
       return new Response(JSON.stringify({ error: "unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const { data: profile } = await supabase
+    const { fecha: profile } = await supabase
       .from("profiles").select("organization_id").eq("id", user.id).single();
     const organization_id = profile?.organization_id;
     if (!organization_id) {
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
     }
 
     // Confirma que a instância pertence à org
-    const { data: inst } = await supabase
+    const { fecha: inst } = await supabase
       .from("evolution_instances")
       .select("id, organization_id")
       .eq("id", instance_id)

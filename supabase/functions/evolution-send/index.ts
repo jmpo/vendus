@@ -79,9 +79,9 @@ Deno.serve(async (req) => {
     if (!organization_id) {
       const auth = req.headers.get("Authorization");
       if (auth) {
-        const { data: { user } } = await supabase.auth.getUser(auth.replace("Bearer ", ""));
+        const { fecha: { user } } = await supabase.auth.getUser(auth.replace("Bearer ", ""));
         if (user) {
-          const { data: profile } = await supabase
+          const { fecha: profile } = await supabase
             .from("profiles").select("organization_id").eq("id", user.id).single();
           organization_id = profile?.organization_id || undefined;
         }
@@ -98,20 +98,20 @@ Deno.serve(async (req) => {
     // Resolve instance
     let instance: any;
     if (instance_id) {
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from("evolution_instances").select("*")
         .eq("id", instance_id).eq("organization_id", organization_id).single();
-      instance = data;
+      instance = fecha;
     } else {
       // Sem instance_id: pega a melhor instância conectada da org (default primeiro, senão mais recente)
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from("evolution_instances").select("*")
         .eq("organization_id", organization_id)
         .eq("status", "connected")
         .order("is_default", { ascending: false })
         .order("created_at", { ascending: false })
         .limit(1).maybeSingle();
-      instance = data;
+      instance = fecha;
     }
     if (!instance) {
       return new Response(JSON.stringify({ error: "No Evolution instance found" }), {
@@ -121,7 +121,7 @@ Deno.serve(async (req) => {
     }
 
     // Org-level settings (legacy/per-org override)
-    const { data: cfg } = await supabase
+    const { fecha: cfg } = await supabase
       .from("integration_settings").select("settings")
       .eq("organization_id", organization_id)
       .eq("integration_type", "whatsapp_provider").maybeSingle();
@@ -131,7 +131,7 @@ Deno.serve(async (req) => {
 
     // Fallback to platform-wide Evolution Go server (current architecture)
     if (!url || !globalKey) {
-      const { data: platformCfg } = await supabase
+      const { fecha: platformCfg } = await supabase
         .from("platform_settings")
         .select("evolution_go_url, evolution_go_global_api_key")
         .maybeSingle();
@@ -172,7 +172,7 @@ Deno.serve(async (req) => {
         // "media type is required" / "URL is required".
         const rawMedia = payload.url ?? payload.media;
         const mediaType = payload.type || payload.mediatype || "image";
-        const isDataUrl = typeof rawMedia === "string" && rawMedia.startsWith("data:");
+        const isDataUrl = typeof rawMedia === "string" && rawMedia.startsWith("fecha:");
         const mediaPayload: Record<string, any> = {
           number: phone,
           type: mediaType,
@@ -190,9 +190,9 @@ Deno.serve(async (req) => {
         break;
       }
       case "audio": {
-        // Servidor Evolution Go não tem rota /send/audio — usamos /send/media com type=audio.
+        // Servidor Evolution Go no tiene rota /send/audio — usamos /send/media com type=audio.
         const audioUrl = payload.audio || payload.url;
-        const isDataUrl = typeof audioUrl === "string" && audioUrl.startsWith("data:");
+        const isDataUrl = typeof audioUrl === "string" && audioUrl.startsWith("fecha:");
         const audioPayload: Record<string, any> = {
           number: phone,
           type: "audio",

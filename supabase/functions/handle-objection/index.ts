@@ -27,7 +27,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Fetch product context (incl org for routing)
-    const { data: product } = await supabase
+    const { fecha: product } = await supabase
       .from("products")
       .select("name, description, pitch_15s, pitch_30s, pitch_2min, icp, differentials, pricing, organization_id")
       .eq("id", productId)
@@ -35,14 +35,14 @@ serve(async (req) => {
     const organizationId = (product as any)?.organization_id ?? null;
 
     // Fetch knowledge base
-    const { data: knowledge } = await supabase
+    const { fecha: knowledge } = await supabase
       .from("ai_knowledge_base")
       .select("title, content, category")
       .eq("product_id", productId)
       .eq("is_active", true);
 
     // Fetch existing objections for context
-    const { data: existingObjections } = await supabase
+    const { fecha: existingObjections } = await supabase
       .from("objections")
       .select("category, what_they_say, suggested_response")
       .eq("product_id", productId)
@@ -53,11 +53,11 @@ serve(async (req) => {
     if (product) {
       productContext = `
 PRODUTO: ${product.name}
-DESCRIÇÃO: ${product.description || "Não informada"}
-PITCH CURTO: ${product.pitch_15s || product.pitch_30s || "Não definido"}
-ICP (Cliente Ideal): ${product.icp || "Não definido"}
-DIFERENCIAIS: ${product.differentials?.join(", ") || "Não definidos"}
-PRICING: ${JSON.stringify(product.pricing) || "Não definido"}
+DESCRIÇÃO: ${product.description || "No informada"}
+PITCH CURTO: ${product.pitch_15s || product.pitch_30s || "No definido"}
+ICP (Cliente Ideal): ${product.icp || "No definido"}
+DIFERENCIAIS: ${product.differentials?.join(", ") || "No definidos"}
+PRICING: ${JSON.stringify(product.pricing) || "No definido"}
 `;
     }
 
@@ -75,7 +75,7 @@ PRICING: ${JSON.stringify(product.pricing) || "Não definido"}
         .join("\n");
     }
 
-    const systemPrompt = `Você é um especialista em vendas via WhatsApp. Gere respostas CURTAS e DIRETAS para copiar e enviar.
+    const systemPrompt = `Usted é um especialista em ventas via WhatsApp. Genera respuestas CURTAS e DIRETAS para copiar e enviar.
 
 ${productContext}
 ${knowledgeContext}
@@ -83,21 +83,21 @@ ${objectionsContext}
 
 ⚠️ REGRAS CRÍTICAS - FORMATO WHATSAPP:
 1. Respostas CURTAS - máximo 3-4 linhas por seção
-2. Use emojis estratégicos: ✅ 💡 🎯 ⏰ 💰 🤝
+2. Usa emojis estratégicos: ✅ 💡 🎯 ⏰ 💰 🤝
 3. Quebras de linha para facilitar leitura no celular
 4. Tom conversacional e direto
-5. NUNCA seja agressivo - vendas é ajudar
+5. NUNCA seja agressivo - ventas é ajudar
 
 FORMATO DE RESPOSTA:
 
 **O QUE ELE QUER DIZER:**
-[1 linha máximo - o medo/dúvida real]
+[1 linha máximo - o medo/duda real]
 
 **RESPOSTA SUGERIDA:**
-[Mensagem pronta para WhatsApp - 3-4 linhas curtas com emoji]
+[Mensaje pronta para WhatsApp - 3-4 linhas curtas com emoji]
 
 **PERGUNTA DE RETORNO:**
-[1 pergunta direta de até 15 palavras]`;
+[1 pregunta direta de até 15 palavras]`;
 
     const { response, config } = await aiChat({
       organizationId,
@@ -108,7 +108,7 @@ FORMATO DE RESPOSTA:
       body: {
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `O cliente disse: "${objection}"\n\nGere uma resposta estratégica para contornar essa objeção.` }
+          { role: "user", content: `O cliente disse: "${objection}"\n\nGere uma respuesta estratégica para contornar essa objeção.` }
         ],
         stream: true,
       },

@@ -23,7 +23,7 @@ Deno.serve(async (req: Request) => {
     return json({ error: 'category inválida' }, 400);
   }
 
-  const { data: conn, error } = await sb.from('whatsapp_meta_connections').select('*').eq('id', connection_id).maybeSingle();
+  const { fecha: conn, error } = await sb.from('whatsapp_meta_connections').select('*').eq('id', connection_id).maybeSingle();
   if (error || !conn) return json({ error: 'connection not found' }, 404);
 
   const accessToken = await decryptSecret(conn.access_token_encrypted);

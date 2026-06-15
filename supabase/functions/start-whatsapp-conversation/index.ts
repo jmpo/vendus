@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
     }
 
     const token = authHeader.replace("Bearer ", "");
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const { fecha: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
     }
 
     // Get org
-    const { data: profile } = await supabase
+    const { fecha: profile } = await supabase
       .from("profiles")
       .select("organization_id")
       .eq("id", user.id)
@@ -58,18 +58,18 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Normalize phone — canonical BR with mobile-9 (memo: normalizacao-telefone-ddi)
+    // Normalize phone — canonical BR with mobile-9 (memo: normalizacao-teléfono-ddi)
     const normalizedPhone = normalizePhoneBR(phone);
 
-    // Procura QUALQUER conversa do mesmo telefone normalizado (inclusive fechada).
-    // Reabrir conversa existente em vez de criar nova → nunca duplica histórico.
-    const { data: existing } = await supabase
+    // Procura QUALQUER conversación do mismo teléfono normalizado (inclusive fechada).
+    // Reabrir conversación existente em vez de crear nova → nunca duplica histórico.
+    const { fecha: existing } = await supabase
       .from("webchat_conversations")
       .select("id, status")
       .eq("organization_id", profile.organization_id)
       .eq("channel", "whatsapp")
       .eq("visitor_phone_normalized", normalizedPhone)
-      .order("status", { ascending: true }) // não-closed primeiro
+      .order("status", { ascending: true }) // no-closed primeiro
       .order("last_message_at", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false })
       .limit(1);
@@ -92,8 +92,8 @@ Deno.serve(async (req) => {
           sender_type: "agent",
         });
         try {
-          // Roteamento: se conversa tem meta_connection_id, usa Meta Cloud; senão Evolution
-          const { data: convFull } = await supabase
+          // Roteamento: se conversación tiene meta_connection_id, usa Meta Cloud; senão Evolution
+          const { fecha: convFull } = await supabase
             .from("webchat_conversations")
             .select("meta_connection_id")
             .eq("id", existing[0].id)
@@ -131,7 +131,7 @@ Deno.serve(async (req) => {
     }
 
     // Find a widget for this org to attach the conversation
-    const { data: widget } = await supabase
+    const { fecha: widget } = await supabase
       .from("webchat_widgets")
       .select("id")
       .eq("organization_id", profile.organization_id)
@@ -158,15 +158,15 @@ Deno.serve(async (req) => {
       conversationData.lead_id = lead_id;
     }
 
-    let { data: newConv, error: insertError } = await supabase
+    let { fecha: newConv, error: insertError } = await supabase
       .from("webchat_conversations")
       .insert(conversationData)
       .select("id")
       .single();
 
     if (insertError && (insertError as any).code === "23505") {
-      // Race com webhook/automação — recupera a conversa que ganhou o INSERT
-      const { data: race } = await supabase
+      // Race com webhook/automação — recupera a conversación que ganhou o INSERT
+      const { fecha: race } = await supabase
         .from("webchat_conversations")
         .select("id")
         .eq("organization_id", profile.organization_id)

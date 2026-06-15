@@ -44,7 +44,7 @@ async function verifyKey(provider: string, apiKey: string): Promise<{ ok: boolea
       });
       if (!r.ok && r.status !== 200) {
         const txt = await r.text();
-        // 400 com erro de modelo já indica que a auth funcionou
+        // 400 com error de modelo já indica que a auth funcionou
         if (txt.includes("model") || r.status === 400) return { ok: true };
         return { ok: false, error: `Anthropic respondeu ${r.status}: ${txt.slice(0, 200)}` };
       }
@@ -57,7 +57,7 @@ async function verifyKey(provider: string, apiKey: string): Promise<{ ok: boolea
     }
     return { ok: false, error: `Provedor desconhecido: ${provider}` };
   } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : "erro desconhecido" };
+    return { ok: false, error: e instanceof Error ? e.message : "error desconhecido" };
   }
 }
 
@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
       auth: { persistSession: false },
     });
-    const { data: userData } = await userClient.auth.getUser();
+    const { fecha: userData } = await userClient.auth.getUser();
     if (!userData?.user) return json({ error: "not authenticated" }, 401);
     const userId = userData.user.id;
 
@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
     });
 
     // Resolve org + role
-    const { data: profile } = await adminClient
+    const { fecha: profile } = await adminClient
       .from("profiles")
       .select("organization_id")
       .eq("id", userId)
@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
     if (!profile?.organization_id) return json({ error: "user has no organization" }, 400);
     const orgId = profile.organization_id;
 
-    const { data: roles } = await adminClient
+    const { fecha: roles } = await adminClient
       .from("user_roles")
       .select("role")
       .eq("user_id", userId);

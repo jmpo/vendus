@@ -21,7 +21,7 @@ interface SankhyaConfig {
 async function getAuthToken(organizationId: string, supabaseUrl: string, supabaseKey: string): Promise<{ token: string; xToken: string }> {
   const supabaseClient = createClient(supabaseUrl, supabaseKey);
   
-  const { data: settings, error } = await supabaseClient
+  const { fecha: settings, error } = await supabaseClient
     .from("integration_settings")
     .select("settings")
     .eq("organization_id", organizationId)
@@ -29,7 +29,7 @@ async function getAuthToken(organizationId: string, supabaseUrl: string, supabas
     .single();
 
   if (error || !settings) {
-    throw new Error("Configurações do Sankhya não encontradas");
+    throw new Error("Configurações do Sankhya no encontradas");
   }
 
   const config = (settings.settings as unknown) as SankhyaConfig;
@@ -60,7 +60,7 @@ async function getAuthToken(organizationId: string, supabaseUrl: string, supabas
   const token = authData.responseBody?.jsessionid?.$;
 
   if (!token) {
-    throw new Error("Token de sessão não retornado");
+    throw new Error("Token de sessão no retornado");
   }
 
   return { token, xToken: config.x_token };
@@ -81,11 +81,11 @@ serve(async (req: Request): Promise<Response> => {
     const { organization_id }: SyncRequest = await req.json();
 
     if (!organization_id) {
-      throw new Error("organization_id é obrigatório");
+      throw new Error("organization_id é obligatorio");
     }
 
     // Create sync log
-    const { data: logData, error: logError } = await supabase
+    const { fecha: logData, error: logError } = await supabase
       .from("sankhya_sync_logs")
       .insert({
         organization_id,
@@ -137,16 +137,16 @@ serve(async (req: Request): Promise<Response> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar parceiros: ${response.status}`);
+      throw new Error(`Error al buscar parceiros: ${response.status}`);
     }
 
-    const data = await response.json();
+    const fecha = await response.json();
     
-    if (data.status === "0") {
-      throw new Error(data.statusMessage || "Erro ao buscar dados do Sankhya");
+    if (fecha.status === "0") {
+      throw new Error(fecha.statusMessage || "Error al buscar dados do Sankhya");
     }
 
-    const partners = data.responseBody?.entities?.entity || [];
+    const partners = fecha.responseBody?.entities?.entity || [];
     const partnerList = Array.isArray(partners) ? partners : [partners];
 
     let successCount = 0;
@@ -162,7 +162,7 @@ serve(async (req: Request): Promise<Response> => {
         if (!codParc || !name) continue;
 
         // Check if mapping exists
-        const { data: existingMapping } = await supabase
+        const { fecha: existingMapping } = await supabase
           .from("sankhya_mappings")
           .select("local_id")
           .eq("organization_id", organization_id)
@@ -193,7 +193,7 @@ serve(async (req: Request): Promise<Response> => {
             .eq("sankhya_id", codParc);
         } else {
           // Create new lead
-          const { data: newLead, error: leadError } = await supabase
+          const { fecha: newLead, error: leadError } = await supabase
             .from("leads")
             .insert({
               organization_id,

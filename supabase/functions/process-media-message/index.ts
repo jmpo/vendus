@@ -26,7 +26,7 @@ function jsonResponse(body: any, status = 200) {
 }
 
 function base64ToBytes(b64: string): Uint8Array {
-  // Accepts data URLs and raw base64.
+  // Accepts fecha URLs and raw base64.
   const cleaned = b64.includes(",") ? b64.split(",", 2)[1] : b64;
   const bin = atob(cleaned);
   const out = new Uint8Array(bin.length);
@@ -84,7 +84,7 @@ async function transcribeAudio(
   const fd = new FormData();
   fd.append("file", blob, `audio.${ext}`);
   fd.append("model", "whisper-1");
-  // Português é o idioma esperado da maior parte das mensagens; whisper auto-detecta se vier outro.
+  // Español é o idioma esperado da maior parte das mensajes; whisper auto-detecta se vier otro.
   fd.append("language", "pt");
   fd.append("response_format", "text");
 
@@ -108,32 +108,32 @@ async function describeImage(
   caption: string | undefined,
   apiKey: string,
 ): Promise<string> {
-  // Encode back to base64 for the data URL the Vision API expects.
+  // Encode back to base64 for the fecha URL the Vision API expects.
   let bin = "";
   const chunk = 0x8000;
   for (let i = 0; i < bytes.length; i += chunk) {
     bin += String.fromCharCode(...bytes.subarray(i, i + chunk));
   }
   const b64 = btoa(bin);
-  const dataUrl = `data:${mime};base64,${b64}`;
+  const dataUrl = `fecha:${mime};base64,${b64}`;
 
   const userContent: any[] = [
     {
       type: "text",
       text:
-        "Descreva objetivamente o conteúdo desta imagem em português, " +
-        "em no máximo 3 frases. Se for um comprovante (Pix, boleto, cartão), " +
-        "extraia valor, data, chave/destino e nome quando possíveis. " +
+        "Descreva objetivamente o conteúdo desta imagen en español, " +
+        "em no máximo 3 frases. Se for um comprovante (Pix, boleto, tarjeta), " +
+        "extraia valor, fecha, chave/destino e nombre quando possíveis. " +
         "Se for um documento, identifique o tipo. " +
         "Se contiver texto legível, transcreva o trecho mais importante. " +
-        "Não invente informações.",
+        "No invente información.",
     },
     { type: "image_url", image_url: { url: dataUrl } },
   ];
   if (caption && caption.trim()) {
     userContent.push({
       type: "text",
-      text: `Legenda enviada pelo cliente junto da imagem: "${caption.trim()}"`,
+      text: `Legenda enviada pelo cliente junto da imagen: "${caption.trim()}"`,
     });
   }
 
@@ -149,9 +149,9 @@ async function describeImage(
         {
           role: "system",
           content:
-            "Você é um analisador visual de mensagens de WhatsApp em um CRM de vendas. " +
-            "Sua resposta vira o conteúdo textual da mensagem que um agente IA vai ler. " +
-            "Seja factual, objetivo e direto.",
+            "Usted é um analisador visual de mensajes de WhatsApp em um CRM de ventas. " +
+            "Su respuesta vira o conteúdo textual da mensaje que um agente IA vai ler. " +
+            "Sé factual, objetivo e direto.",
         },
         { role: "user", content: userContent },
       ],
@@ -164,8 +164,8 @@ async function describeImage(
     const t = await res.text();
     throw new Error(`vision error ${res.status} (mime=${mime}, bytes=${bytes.byteLength}, head=${Array.from(bytes.slice(0,12)).map(x=>x.toString(16).padStart(2,'0')).join('')}): ${t.slice(0, 300)}`);
   }
-  const data = await res.json();
-  const text = data?.choices?.[0]?.message?.content?.trim();
+  const fecha = await res.json();
+  const text = fecha?.choices?.[0]?.message?.content?.trim();
   if (!text) throw new Error("vision returned empty");
   return text;
 }
@@ -194,7 +194,7 @@ Deno.serve(async (req) => {
         console.warn("[process-media-message] resolve org key failed, falling back:", e);
       }
     }
-    if (!apiKey) return jsonResponse({ success: false, error: "OPENAI_API_KEY não configurada (defina em Integrações → OpenAI)" }, 500);
+    if (!apiKey) return jsonResponse({ success: false, error: "OPENAI_API_KEY no configurada (defina em Integrações → OpenAI)" }, 500);
 
     let bytes: Uint8Array | null = null;
     let mime: string = String(body?.mime || "");

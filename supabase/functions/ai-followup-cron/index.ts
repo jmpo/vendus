@@ -11,7 +11,7 @@ const corsHeaders = {
 const TZ = 'America/Sao_Paulo';
 
 function getZonedParts(date: Date): { dayOfWeek: number; minutes: number } {
-  // Use Intl to extract weekday/hour/minute in the target TZ
+  // Usa Intl to extract weekday/hour/minute in the target TZ
   const fmt = new Intl.DateTimeFormat('en-US', {
     timeZone: TZ,
     weekday: 'short',
@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // (provider WhatsApp removido — sempre Evolution Go)
+    // (provider WhatsApp eliminado — siempre Evolution Go)
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
 
     if (!lovableApiKey) {
@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
     const now = new Date();
     const nowIso = now.toISOString();
 
-    const { data: pendingFollowups, error: fetchError } = await supabase
+    const { fecha: pendingFollowups, error: fetchError } = await supabase
       .from('ai_outreach_queue')
       .select('*')
       .eq('status', 'sent')
@@ -161,7 +161,7 @@ Deno.serve(async (req) => {
 
         // Check if lead replied OR if a human took over the conversation
         if (item.conversation_id) {
-          const { data: convInfo } = await supabase
+          const { fecha: convInfo } = await supabase
             .from('webchat_conversations')
             .select('status')
             .eq('id', item.conversation_id)
@@ -176,7 +176,7 @@ Deno.serve(async (req) => {
             continue;
           }
 
-          const { data: inboundMessages } = await supabase
+          const { fecha: inboundMessages } = await supabase
             .from('webchat_messages')
             .select('id')
             .eq('conversation_id', item.conversation_id)
@@ -194,7 +194,7 @@ Deno.serve(async (req) => {
         }
 
         // Get agent
-        const { data: agent } = await supabase
+        const { fecha: agent } = await supabase
           .from('product_agents')
           .select('*')
           .eq('id', item.agent_id)
@@ -208,7 +208,7 @@ Deno.serve(async (req) => {
         // Get conversation history
         let previousMessages: string[] = [];
         if (item.conversation_id) {
-          const { data: messages } = await supabase
+          const { fecha: messages } = await supabase
             .from('webchat_messages')
             .select('content, sender_type')
             .eq('conversation_id', item.conversation_id)
@@ -227,21 +227,21 @@ Deno.serve(async (req) => {
         const isLastAttempt = attemptNumber >= maxFollowups;
 
         // Build follow-up prompt
-        const systemPrompt = `Você é ${agent.name}, um agente de ${agent.agent_type}.
+        const systemPrompt = `Usted é ${agent.name}, um agente de ${agent.agent_type}.
 TOM DE VOZ: ${agent.tone_style || 'Consultivo'}
 ESTILO: ${agent.message_style || 'Curta e objetiva'}
 OBJETIVO: ${item.objective || agent.primary_objective}
 ${item.extra_context ? `CONTEXTO: ${item.extra_context}` : ''}
 
 REGRAS:
-- Gere APENAS a mensagem, sem explicações
-- Seja natural e humano
-- Mensagem para WhatsApp (curta, direta)
-- DIFERENTE das mensagens anteriores
+- Genera APENAS a mensaje, sem explicações
+- Sé natural e humano
+- Mensaje para WhatsApp (corta, direta)
+- DIFERENTE das mensajes anteriores
 ${stepInstruction ? `- INSTRUÇÃO ESPECÍFICA PARA ESTE FOLLOW-UP: ${stepInstruction}` : ''}
-${isLastAttempt ? '- Esta é a ÚLTIMA tentativa. Crie urgência sutil sem ser agressivo.' : ''}`;
+${isLastAttempt ? '- Esta é a ÚLTIMA tentativa. Crea urgência sutil sem ser agressivo.' : ''}`;
 
-        const userPrompt = `Você já enviou ${item.followups_sent + 1} mensagens para este lead sem resposta.
+        const userPrompt = `Usted já envió ${item.followups_sent + 1} mensajes para este lead sem respuesta.
 
 Histórico:
 ${previousMessages.join('\n')}
@@ -249,7 +249,7 @@ ${previousMessages.join('\n')}
 Lead: ${item.lead_data?.name || 'Lead'}
 Tentativa ${attemptNumber + 1} de ${maxFollowups}
 
-Gere uma mensagem de follow-up estratégica DIFERENTE das anteriores.`;
+Genera uma mensaje de follow-up estratégica DIFERENTE das anteriores.`;
 
         // Call AI
         const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -295,7 +295,7 @@ Gere uma mensagem de follow-up estratégica DIFERENTE das anteriores.`;
         // Send via Evolution Go (auto-resolve instância conectada)
         let sendSuccess = false;
         try {
-          const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+          const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
             body: {
               organization_id: item.organization_id,
               type: 'text',

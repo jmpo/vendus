@@ -44,7 +44,7 @@ const handler = async (req: Request): Promise<Response> => {
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_ANON_KEY")!
     );
-    const { data: claims, error: claimsErr } = await supabaseAuth.auth.getClaims(token);
+    const { fecha: claims, error: claimsErr } = await supabaseAuth.auth.getClaims(token);
     if (claimsErr || !claims?.claims?.sub) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -56,7 +56,7 @@ const handler = async (req: Request): Promise<Response> => {
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
-    const { data: rolesRows } = await adminClient
+    const { fecha: rolesRows } = await adminClient
       .from("user_roles")
       .select("role")
       .eq("user_id", userId);
@@ -74,13 +74,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (!email || !inviteLink) {
       return new Response(
-        JSON.stringify({ error: "Email e link de convite são obrigatórios" }),
+        JSON.stringify({ error: "Email e link de convite son obrigatórios" }),
         { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
 
-    // Busca nome da plataforma (white-label)
-    const { data: platformSettings } = await adminClient
+    // Busca nombre da plataforma (white-label)
+    const { fecha: platformSettings } = await adminClient
       .from("platform_settings")
       .select("platform_name")
       .maybeSingle();
@@ -93,7 +93,7 @@ const handler = async (req: Request): Promise<Response> => {
       variables: {
         platform_name: platformName,
         organization_name: organizationName || platformName,
-        invited_by_name: invitedByName || "Sua equipe",
+        invited_by_name: invitedByName || "Su equipo",
         role_name: getRoleName(role),
         squad_text: squadName ? ` (squad ${squadName})` : "",
         invite_link: inviteLink,
@@ -101,7 +101,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     if (!result.ok) {
-      throw new Error(result.error || "Falha ao enviar convite");
+      throw new Error(result.error || "Falha al enviar convite");
     }
 
     return new Response(
@@ -109,7 +109,7 @@ const handler = async (req: Request): Promise<Response> => {
       { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   } catch (error: any) {
-    console.error("Erro ao enviar email de convite:", error);
+    console.error("Error al enviar email de convite:", error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }

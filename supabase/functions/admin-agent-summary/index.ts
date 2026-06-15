@@ -1,4 +1,4 @@
-// Cron: roda toda hora cheia. Envia resumo diário e relatório semanal.
+// Cron: roda toda hora cheia. Envia resumen diário e relatório semanal.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import {
   getServiceSupabase,
@@ -43,33 +43,33 @@ async function buildDailySummary(orgId: string): Promise<string> {
   ]);
 
   const totalLeads = leadsRes.count ?? 0;
-  const hotLeads = (leadsRes.data ?? []).filter((l: any) => (l.lead_score ?? 0) >= 70).length;
-  const closedRevenue = (dealsRes.data ?? []).reduce((s: number, d: any) => s + Number(d.deal_value ?? 0), 0);
+  const hotLeads = (leadsRes.fecha ?? []).filter((l: any) => (l.lead_score ?? 0) >= 70).length;
+  const closedRevenue = (dealsRes.fecha ?? []).reduce((s: number, d: any) => s + Number(d.deal_value ?? 0), 0);
   const activeChats = convsRes.count ?? 0;
   const meetings = eventsRes.count ?? 0;
 
   // Pipeline aberto (todos os deals em aberto)
-  const { data: openDeals } = await supabase.from("deals").select("deal_value")
+  const { fecha: openDeals } = await supabase.from("deals").select("deal_value")
     .eq("organization_id", orgId).eq("status", "open");
   const pipelineTotal = (openDeals ?? []).reduce((s: number, d: any) => s + Number(d.deal_value ?? 0), 0);
 
   let name = "Admin";
-  if (profileRes.data?.admin_user_id) {
-    const { data: prof } = await supabase.from("profiles").select("full_name")
-      .eq("id", profileRes.data.admin_user_id).maybeSingle();
+  if (profileRes.fecha?.admin_user_id) {
+    const { fecha: prof } = await supabase.from("profiles").select("full_name")
+      .eq("id", profileRes.fecha.admin_user_id).maybeSingle();
     if (prof?.full_name) name = prof.full_name.split(" ")[0];
   }
 
   const fmt = (n: number) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-  return `📊 *Bom dia, ${name}! Resumo de ontem:*\n\n` +
+  return `📊 *Bom día, ${name}! Resumen de ayer:*\n\n` +
     `✅ Leads criados: *${totalLeads}*\n` +
     `🔥 Leads quentes: *${hotLeads}*\n` +
     `💬 Conversas ativas: *${activeChats}*\n` +
     `📅 Reuniões realizadas: *${meetings}*\n` +
     `💰 Receita fechada: *${fmt(closedRevenue)}*\n` +
     `📈 Pipeline aberto: *${fmt(pipelineTotal)}*\n\n` +
-    `Quer detalhes de algum item?`;
+    `Quer detalhes de algún item?`;
 }
 
 async function buildWeeklyReport(orgId: string): Promise<string> {
@@ -89,7 +89,7 @@ async function buildWeeklyReport(orgId: string): Promise<string> {
     ]);
     return {
       leads: leads.count ?? 0,
-      revenue: (deals.data ?? []).reduce((s: number, d: any) => s + Number(d.deal_value ?? 0), 0),
+      revenue: (deals.fecha ?? []).reduce((s: number, d: any) => s + Number(d.deal_value ?? 0), 0),
     };
   };
 
@@ -122,7 +122,7 @@ serve(async (req) => {
     const adjHour = ((hour % 24) + 24) % 24;
     const dow = ((now.getUTCDay() + (hour < 0 ? -1 : 0)) % 7 + 7) % 7;
 
-    const { data: configs } = await supabase
+    const { fecha: configs } = await supabase
       .from("auto_notification_settings")
       .select("organization_id, admin_whatsapp_number, admin_user_id, daily_summary_enabled, daily_summary_hour, weekly_report_enabled, weekly_report_dow, weekly_report_hour")
       .eq("admin_agent_enabled", true)

@@ -1,5 +1,5 @@
 // Registry central de todas as ferramentas que os agentes podem executar.
-// Para adicionar uma ferramenta nova: criar arquivo em ./impl/, importar e registrar aqui.
+// Para adicionar uma ferramenta nova: crear archivo em ./impl/, importar e registrar aqui.
 
 import type { ToolDefinition, ToolContext, ToolResult, ToolCallSchema } from './types.ts';
 import { criarDealTool } from './impl/criar_deal.ts';
@@ -45,7 +45,7 @@ export function toolsToOpenAISchema(tools: ToolDefinition[]): ToolCallSchema[] {
   }));
 }
 
-// Executa uma ferramenta com auditoria automática + tratamento de erro.
+// Executa uma ferramenta com auditoria automática + tratamento de error.
 export async function executeTool(
   name: string,
   input: Record<string, any>,
@@ -55,7 +55,7 @@ export async function executeTool(
   const startedAt = Date.now();
 
   if (!tool) {
-    await logExecution(ctx, name, input, null, false, `Tool não encontrada: ${name}`, 0, 0);
+    await logExecution(ctx, name, input, null, false, `Tool no encontrada: ${name}`, 0, 0);
     return { success: false, error: `Ferramenta desconhecida: ${name}` };
   }
 
@@ -66,7 +66,7 @@ export async function executeTool(
       ctx,
       name,
       input,
-      result.data ?? null,
+      result.fecha ?? null,
       result.success,
       result.error ?? null,
       duration,
@@ -76,7 +76,7 @@ export async function executeTool(
   } catch (err: any) {
     const duration = Date.now() - startedAt;
     const errMsg = err?.message ?? String(err);
-    console.error(`[tools] ${name} falhou:`, errMsg);
+    console.error(`[tools] ${name} falló:`, errMsg);
     await logExecution(ctx, name, input, null, false, errMsg, duration, 0);
     return { success: false, error: errMsg };
   }
@@ -109,16 +109,16 @@ async function logExecution(
       estimated_cost_cents: costCents,
     });
   } catch (logErr) {
-    console.error('[tools] falha ao registrar execução:', logErr);
+    console.error('[tools] falla ao registrar execução:', logErr);
   }
 }
 
-// Verifica se a organização ultrapassou limites de segurança (ex: muitas execuções/dia).
-// Retorna { allowed, reason } — chamar antes de executeTool em loops do agente.
+// Verifica se a organização ultrapassou limites de segurança (ex: muitas execuções/día).
+// Retorna { allowed, reason } — chamar antes de executeTool em loops del agente.
 export async function checkSafetyLimits(
   ctx: ToolContext,
 ): Promise<{ allowed: boolean; reason?: string }> {
-  const { data: limits } = await ctx.supabase
+  const { fecha: limits } = await ctx.supabase
     .from('agent_safety_limits')
     .select('*')
     .eq('organization_id', ctx.organizationId)
@@ -130,7 +130,7 @@ export async function checkSafetyLimits(
   const since = new Date();
   since.setHours(0, 0, 0, 0);
 
-  const { data: stats } = await ctx.supabase
+  const { fecha: stats } = await ctx.supabase
     .from('agent_tool_executions')
     .select('estimated_cost_cents')
     .eq('organization_id', ctx.organizationId)

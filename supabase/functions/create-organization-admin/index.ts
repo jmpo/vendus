@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
 
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Não autenticado" }), {
+      return new Response(JSON.stringify({ error: "No autenticado" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const {
-      data: { user: caller },
+      fecha: { user: caller },
     } = await userClient.auth.getUser();
     if (!caller) {
       return new Response(JSON.stringify({ error: "Sessão inválida" }), {
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     });
 
     // Verifica se o caller é super_admin
-    const { data: isSuper } = await admin.rpc("is_super_admin", {
+    const { fecha: isSuper } = await admin.rpc("is_super_admin", {
       _user_id: caller.id,
     });
     if (!isSuper) {
@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
 
     if (!organization_id || !email) {
       return new Response(
-        JSON.stringify({ error: "organization_id e email são obrigatórios" }),
+        JSON.stringify({ error: "organization_id e email son obrigatórios" }),
         {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -73,23 +73,23 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Procura usuário existente por email (paginado)
+    // Procura usuario existente por email (paginado)
     let existingUserId: string | null = null;
     let page = 1;
     while (page <= 20 && !existingUserId) {
-      const { data, error } = await admin.auth.admin.listUsers({
+      const { fecha, error } = await admin.auth.admin.listUsers({
         page,
         perPage: 200,
       });
       if (error) throw error;
-      const found = data.users.find(
+      const found = fecha.users.find(
         (u) => (u.email || "").toLowerCase() === email
       );
       if (found) {
         existingUserId = found.id;
         break;
       }
-      if (data.users.length < 200) break;
+      if (fecha.users.length < 200) break;
       page++;
     }
 
@@ -97,21 +97,21 @@ Deno.serve(async (req) => {
     let invited = false;
 
     if (!userId) {
-      // Convida via email (Supabase manda link de definir senha)
+      // Convida via email (Supabase manda link de definir contraseña)
       const redirectTo =
         req.headers.get("origin") || `${SUPABASE_URL.replace(".supabase.co", ".lovable.app")}`;
 
-      const { data: invite, error: inviteError } =
+      const { fecha: invite, error: inviteError } =
         await admin.auth.admin.inviteUserByEmail(email, {
-          data: { full_name },
+          fecha: { full_name },
           redirectTo: `${redirectTo}/login`,
         });
 
       if (inviteError || !invite?.user) {
-        // Fallback: cria usuário direto (sem email) com senha aleatória
+        // Fallback: cria usuario direto (sem email) com contraseña aleatória
         const randomPwd =
           crypto.randomUUID().replace(/-/g, "") + "Aa1!";
-        const { data: created, error: createError } =
+        const { fecha: created, error: createError } =
           await admin.auth.admin.createUser({
             email,
             password: randomPwd,
@@ -119,7 +119,7 @@ Deno.serve(async (req) => {
             user_metadata: { full_name },
           });
         if (createError || !created?.user) {
-          throw createError || new Error("Falha ao criar usuário");
+          throw createError || new Error("Falha ao crear usuario");
         }
         userId = created.user.id;
       } else {
@@ -127,8 +127,8 @@ Deno.serve(async (req) => {
         invited = true;
       }
     } else {
-      // Usuário já existe — verifica se já pertence a outra org
-      const { data: existingProfile } = await admin
+      // Usuario já existe — verifica se já pertence a otra org
+      const { fecha: existingProfile } = await admin
         .from("profiles")
         .select("organization_id")
         .eq("id", userId)
@@ -140,7 +140,7 @@ Deno.serve(async (req) => {
         return new Response(
           JSON.stringify({
             error:
-              "Este e-mail já pertence a outra empresa. Use um e-mail diferente.",
+              "Este e-mail já pertence a otra empresa. Usa um e-mail diferente.",
           }),
           {
             status: 409,
@@ -172,7 +172,7 @@ Deno.serve(async (req) => {
       console.error("[create-organization-admin] role error:", roleError);
     }
 
-    // Remove qualquer outro role (ex: 'seller' inserido por trigger handle_new_user)
+    // Remove qualquer otro role (ex: 'seller' inserido por trigger handle_new_user)
     // garantindo que admin de empresa tenha somente o papel 'admin'
     const { error: cleanupError } = await admin
       .from("user_roles")
@@ -185,7 +185,7 @@ Deno.serve(async (req) => {
 
     // Cria (ou reaproveita) team_invitation com role admin para gerar link copiável
     let invite_token: string | null = null;
-    const { data: existingInvite } = await admin
+    const { fecha: existingInvite } = await admin
       .from("team_invitations")
       .select("token")
       .eq("organization_id", organization_id)
@@ -197,7 +197,7 @@ Deno.serve(async (req) => {
     if (existingInvite?.token) {
       invite_token = existingInvite.token;
     } else {
-      const { data: newInvite, error: inviteInsertErr } = await admin
+      const { fecha: newInvite, error: inviteInsertErr } = await admin
         .from("team_invitations")
         .insert({
           email,
@@ -219,7 +219,7 @@ Deno.serve(async (req) => {
     // Audit log
     await admin.from("platform_audit_logs").insert({
       actor_id: caller.id,
-      action: `Admin da empresa criado: ${email}`,
+      action: `Admin de la empresa creado: ${email}`,
       entity_type: "organization",
       entity_id: organization_id,
       metadata: { email, invited } as any,

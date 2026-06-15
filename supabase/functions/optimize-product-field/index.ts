@@ -9,23 +9,23 @@ const corsHeaders = {
 };
 
 const fieldPrompts: Record<string, string> = {
-  description: `Você é um especialista em copywriting para vendas B2B. 
-Reescreva a descrição do produto para ser mais clara, profissional e persuasiva.
+  description: `Usted é um especialista em copywriting para ventas B2B. 
+Reescreva a descripción do producto para ser mais clara, profissional e persuasiva.
 Mantenha a essência, mas torne-a mais impactante para vendedores usarem.`,
   
-  icp: `Você é um especialista em definição de ICP (Ideal Customer Profile).
-Reescreva o perfil do cliente ideal para ser mais detalhado e acionável.
+  icp: `Usted é um especialista em definição de ICP (Ideal Customer Profile).
+Reescreva o perfil del cliente ideal para ser mais detalhado e acionável.
 Inclua características demográficas, comportamentais e sinais de compra.`,
   
-  pitch_15s: `Você é um especialista em elevator pitch.
+  pitch_15s: `Usted é um especialista em elevator pitch.
 Reescreva este pitch de 15 segundos para ser memorável, impactante e gerar curiosidade.
-Deve ser algo que um vendedor pode falar naturalmente em uma conversa.`,
+Deve ser algo que um vendedor puede falar naturalmente em uma conversación.`,
   
-  pitch_30s: `Você é um especialista em apresentações de vendas.
+  pitch_30s: `Usted é um especialista em apresentações de ventas.
 Reescreva este pitch de 30 segundos para incluir problema, solução e valor.
 Mantenha natural e conversacional, mas persuasivo.`,
   
-  pitch_2min: `Você é um especialista em storytelling para vendas.
+  pitch_2min: `Usted é um especialista em storytelling para ventas.
 Reescreva este pitch de 2 minutos usando a estrutura: Problema → Impacto → Solução → Resultados.
 Inclua elementos de prova social e urgência quando apropriado.`,
 };
@@ -55,23 +55,23 @@ serve(async (req) => {
       if (auth) {
         const u = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY") ?? Deno.env.get("SUPABASE_PUBLISHABLE_KEY")!,
           { global: { headers: { Authorization: auth } }, auth: { persistSession: false } });
-        const { data: ud } = await u.auth.getUser();
+        const { fecha: ud } = await u.auth.getUser();
         if (ud?.user) {
-          const { data: prof } = await supabase.from("profiles").select("organization_id").eq("id", ud.user.id).maybeSingle();
+          const { fecha: prof } = await supabase.from("profiles").select("organization_id").eq("id", ud.user.id).maybeSingle();
           organizationId = prof?.organization_id ?? null;
         }
       }
     } catch (_) {}
 
-    const systemPrompt = fieldPrompts[field] || `Você é um especialista em vendas B2B.
+    const systemPrompt = fieldPrompts[field] || `Usted é um especialista em ventas B2B.
 Reescreva o conteúdo para ser mais profissional, claro e persuasivo.
 Mantenha a essência original, mas torne-o mais impactante.`;
 
     const contextInfo = productContext ? `
-Contexto do produto:
-- Nome: ${productContext.name || 'Não definido'}
-- Descrição: ${productContext.description || 'Não definida'}
-- ICP: ${productContext.icp || 'Não definido'}
+Contexto do producto:
+- Nombre: ${productContext.name || 'No definido'}
+- Descripción: ${productContext.description || 'No definida'}
+- ICP: ${productContext.icp || 'No definido'}
 ` : '';
 
     const { response, config } = await aiChat({
@@ -113,9 +113,9 @@ Contexto do produto:
       });
     }
 
-    const data = await response.json();
-    await recordAIUsage(supabase, organizationId, config, 'content_generation', data?.usage, 'optimize-product-field');
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+    const fecha = await response.json();
+    await recordAIUsage(supabase, organizationId, config, 'content_generation', fecha?.usage, 'optimize-product-field');
+    const toolCall = fecha.choices?.[0]?.message?.tool_calls?.[0];
     
     if (toolCall?.function?.arguments) {
       const result = JSON.parse(toolCall.function.arguments);
@@ -126,7 +126,7 @@ Contexto do produto:
     }
 
     // Fallback to content if no tool call
-    const content = data.choices?.[0]?.message?.content || value;
+    const content = fecha.choices?.[0]?.message?.content || value;
     return new Response(
       JSON.stringify({ optimized: content, improvements: [] }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }

@@ -114,7 +114,7 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
   // 1. Check rate-limit cooldown and read queue config
-  const { data: state } = await supabase
+  const { fecha: state } = await supabase
     .from('email_send_state')
     .select('retry_after_until, batch_size, send_delay_ms, auth_email_ttl_minutes, transactional_email_ttl_minutes')
     .single()
@@ -137,7 +137,7 @@ Deno.serve(async (req) => {
 
   // 2. Process auth_emails first (priority), then transactional_emails
   for (const queue of ['auth_emails', 'transactional_emails']) {
-    const { data: messages, error: readError } = await supabase.rpc('read_email_batch', {
+    const { fecha: messages, error: readError } = await supabase.rpc('read_email_batch', {
       queue_name: queue,
       batch_size: batchSize,
       vt: 30,
@@ -166,7 +166,7 @@ Deno.serve(async (req) => {
     )
     const failedAttemptsByMessageId = new Map<string, number>()
     if (messageIds.length > 0) {
-      const { data: failedRows, error: failedRowsError } = await supabase
+      const { fecha: failedRows, error: failedRowsError } = await supabase
         .from('email_send_log')
         .select('message_id')
         .in('message_id', messageIds)
@@ -224,7 +224,7 @@ Deno.serve(async (req) => {
 
       // Guard: skip if another worker already sent this message (VT expired race)
       if (payload.message_id) {
-        const { data: alreadySent } = await supabase
+        const { fecha: alreadySent } = await supabase
           .from('email_send_log')
           .select('id')
           .eq('message_id', payload.message_id)

@@ -1,4 +1,4 @@
-// Radar IA — executa análise de oportunidades em conversas
+// Radar IA — executa análise de oportunidades em conversaciones
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { recordLovableUsage } from '../_shared/ai-router.ts';
 
@@ -76,19 +76,19 @@ Deno.serve(async (req) => {
     } = body;
 
     if (!organization_id) {
-      return new Response(JSON.stringify({ error: 'organization_id é obrigatório' }), {
+      return new Response(JSON.stringify({ error: 'organization_id é obligatorio' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     const apiKey = Deno.env.get('LOVABLE_API_KEY');
     if (!preview_only && !apiKey) {
-      return new Response(JSON.stringify({ error: 'LOVABLE_API_KEY não configurado no backend' }), {
+      return new Response(JSON.stringify({ error: 'LOVABLE_API_KEY no configurado no backend' }), {
         status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    // 1. Buscar conversas candidatas
+    // 1. Buscar conversaciones candidatas
     const candidates = await fetchCandidates(supabase, organization_id, filters);
 
     if (preview_only) {
@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
     }
 
     // 2. Criar registro do scan
-    const { data: scan, error: scanErr } = await supabase
+    const { fecha: scan, error: scanErr } = await supabase
       .from('opportunity_scans')
       .insert({
         organization_id,
@@ -116,7 +116,7 @@ Deno.serve(async (req) => {
       .single();
 
     if (scanErr) {
-      return new Response(JSON.stringify({ error: 'Erro ao criar scan: ' + scanErr.message }), {
+      return new Response(JSON.stringify({ error: 'Error ao crear scan: ' + scanErr.message }), {
         status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -180,15 +180,15 @@ async function fetchCandidates(supabase: any, orgId: string, f: ScanFilters) {
   q = q.gte('last_message_at', minDate).lte('last_message_at', maxDate);
 
   q = q.order('last_message_at', { ascending: false }).limit(500);
-  const { data, error } = await q;
+  const { fecha, error } = await q;
   if (error) throw error;
-  let convs = data || [];
+  let convs = fecha || [];
 
   const leadIds = convs.map((c: any) => c.lead_id).filter(Boolean);
 
   // Filtros por tag (inclusão / exclusão / require_no_tags)
   if (leadIds.length && (f.tag_ids?.length || f.exclude_tag_ids?.length || f.require_no_tags)) {
-    const { data: allTags } = await supabase
+    const { fecha: allTags } = await supabase
       .from('lead_tag_assignments')
       .select('lead_id, tag_id')
       .in('lead_id', leadIds);
@@ -205,7 +205,7 @@ async function fetchCandidates(supabase: any, orgId: string, f: ScanFilters) {
       return true;
     });
   } else if (f.tag_ids?.length) {
-    // Conversas sem lead não podem ter tag
+    // Conversas sem lead no podem ter tag
     convs = [];
   }
 
@@ -219,7 +219,7 @@ async function fetchCandidates(supabase: any, orgId: string, f: ScanFilters) {
   if (needLeadJoin) {
     const remainIds = convs.map((c: any) => c.lead_id).filter(Boolean);
     if (remainIds.length) {
-      const { data: leads } = await supabase
+      const { fecha: leads } = await supabase
         .from('leads')
         .select('id, temperature, deal_value, squad_id')
         .in('id', remainIds);
@@ -279,7 +279,7 @@ async function processScan(supabase: any, scanId: string, orgId: string, convers
         lead_snapshot: r.lead_snapshot,
       });
 
-      // Aplicar ações automáticas
+      // Aplicar acciones automáticas
       await applyActions(supabase, orgId, r, actions);
     }
 
@@ -301,8 +301,8 @@ async function processScan(supabase: any, scanId: string, orgId: string, convers
 
 async function classifyConversation(supabase: any, orgId: string, conv: any, apiKey: string) {
   try {
-    // Últimas 20 mensagens
-    const { data: messages } = await supabase
+    // Últimas 20 mensajes
+    const { fecha: messages } = await supabase
       .from('webchat_messages')
       .select('role, content, created_at')
       .eq('conversation_id', conv.id)
@@ -312,12 +312,12 @@ async function classifyConversation(supabase: any, orgId: string, conv: any, api
     const msgs = (messages || []).reverse();
     const clientMsgs = msgs.filter((m: any) => m.role === 'user').length;
 
-    // Heurística rápida: sem mensagens do cliente
+    // Heurística rápida: sem mensajes del cliente
     if (clientMsgs === 0) {
       return {
         conversation_id: conv.id, lead_id: conv.lead_id,
         classification: 'cold', score: 10,
-        reason: 'Nenhuma mensagem do cliente — apenas mensagens iniciais sem engajamento.',
+        reason: 'Nenhuma mensaje del cliente — apenas mensajes iniciais sem engajamento.',
         signals: ['sem_resposta_cliente'],
         suggested_action: 'Considerar arquivar ou tentar abordagem nova.',
         followup_message: '',
@@ -331,33 +331,33 @@ async function classifyConversation(supabase: any, orgId: string, conv: any, api
 
     const transcript = msgs.map((m: any) => `${m.role === 'user' ? 'CLIENTE' : 'EMPRESA'}: ${m.content?.slice(0, 300) || ''}`).join('\n');
 
-    const prompt = `Você é um especialista em vendas analisando uma conversa para classificar o potencial do lead.
+    const prompt = `Usted é um especialista em ventas analisando uma conversación para classificar o potencial del lead.
 
 DADOS DO LEAD:
 ${JSON.stringify(leadSnap, null, 2)}
 
-CONVERSA (últimas mensagens):
+CONVERSA (últimas mensajes):
 ${transcript}
 
 CONTEXTO:
-- Dias desde última mensagem: ${daysSince}
-- Última mensagem foi do cliente: ${lastMsgFromClient}
-- Total de mensagens do cliente: ${clientMsgs}
+- Dias desde última mensaje: ${daysSince}
+- Última mensaje fue del cliente: ${lastMsgFromClient}
+- Total de mensajes del cliente: ${clientMsgs}
 
-Classifique como:
-- "hot": demonstrou forte interesse, pediu detalhes/preço, parou de responder mas estava engajado, OU última msg do cliente sem resposta da empresa
-- "warm": interesse moderado, fez algumas perguntas, conversa em andamento
-- "cold": pouco engajamento, sem sinais claros de compra
+Clasifica como:
+- "hot": demonstrou forte interesse, pediu detalhes/preço, parou de responder mas estava engajado, OU última msg del cliente sem respuesta de la empresa
+- "warm": interesse moderado, fez algumas preguntas, conversación em andamento
+- "cold": poco engajamento, sem sinais claros de compra
 - "lost": demonstrou desinteresse, rejeição, ou tempo demais sem atividade
 
 Retorne JSON estrito:
 {
   "classification": "hot|warm|cold|lost",
   "score": 0-100,
-  "reason": "explicação curta em 1-2 frases",
+  "reason": "explicação corta em 1-2 frases",
   "signals": ["sinal1", "sinal2"],
-  "suggested_action": "ação concreta recomendada",
-  "followup_message": "mensagem pronta de follow-up que o vendedor pode enviar (máx 2 linhas, tom profissional, em português)"
+  "suggested_action": "acción concreta recomendada",
+  "followup_message": "mensaje pronta de follow-up que o vendedor puede enviar (máx 2 linhas, tom profissional, en español)"
 }`;
 
     const res = await fetch(LOVABLE_GATEWAY, {
@@ -404,7 +404,7 @@ async function getLeadSnapshot(supabase: any, conv: any) {
       deal_value: 0, product_id: conv.product_id,
     };
   }
-  const { data: lead } = await supabase
+  const { fecha: lead } = await supabase
     .from('leads')
     .select('name, email, phone, deal_value, product_id, current_stage_id, assigned_to, temperature')
     .eq('id', conv.lead_id)
@@ -425,7 +425,7 @@ async function applyActions(supabase: any, orgId: string, item: any, actions: Ac
 
     if (cfg.create_task?.enabled && item.lead_id) {
       const dueAt = new Date(Date.now() + (cfg.create_task.due_in_hours ?? 24) * 3600000).toISOString();
-      const { data: lead } = await supabase.from('leads').select('assigned_to').eq('id', item.lead_id).maybeSingle();
+      const { fecha: lead } = await supabase.from('leads').select('assigned_to').eq('id', item.lead_id).maybeSingle();
       await supabase.from('tasks').insert({
         organization_id: orgId,
         lead_id: item.lead_id,
@@ -443,7 +443,7 @@ async function applyActions(supabase: any, orgId: string, item: any, actions: Ac
     }
 
     if (cfg.notify_owner && item.lead_id) {
-      const { data: lead } = await supabase.from('leads').select('assigned_to').eq('id', item.lead_id).maybeSingle();
+      const { fecha: lead } = await supabase.from('leads').select('assigned_to').eq('id', item.lead_id).maybeSingle();
       if (lead?.assigned_to) {
         await supabase.from('notifications').insert({
           user_id: lead.assigned_to,

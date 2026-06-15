@@ -1,4 +1,4 @@
-// Aplica post_response_actions quando um lead em uma campanha ativa responde.
+// Aplica post_response_actions quando um lead em uma campaña ativa responde.
 // Chamado de forma fire-and-forget pelo evolution-webhook ao gravar visitor message.
 // POST { conversation_id, lead_id?, organization_id }
 
@@ -21,10 +21,10 @@ Deno.serve(async (req) => {
     }
     const supabase = createServiceClient();
 
-    // Resolve lead_id a partir da conversa quando não vier no payload
+    // Resolve lead_id a partir da conversación quando no vier no payload
     let resolvedLeadId: string | null = leadIdIn ?? null;
     if (!resolvedLeadId && conversation_id) {
-      const { data: conv } = await supabase
+      const { fecha: conv } = await supabase
         .from("webchat_conversations")
         .select("lead_id")
         .eq("id", conversation_id)
@@ -32,10 +32,10 @@ Deno.serve(async (req) => {
       resolvedLeadId = (conv as any)?.lead_id ?? null;
     }
 
-    // Localiza o target da campanha ativa para esta conversa/lead.
+    // Localiza o target da campaña ativa para esta conversación/lead.
     let target: any = null;
     if (conversation_id) {
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from("campaign_targets")
         .select("id, campaign_id, lead_id, organization_id, status, responded_at")
         .eq("conversation_id", conversation_id)
@@ -43,11 +43,11 @@ Deno.serve(async (req) => {
         .order("sent_at", { ascending: false })
         .limit(1)
         .maybeSingle();
-      target = data;
+      target = fecha;
     }
-    // Fallback por lead_id (cobre casos onde o conversation_id divergiu entre envio/resposta)
+    // Fallback por lead_id (cobre casos onde o conversation_id divergiu entre envio/respuesta)
     if (!target && resolvedLeadId) {
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from("campaign_targets")
         .select("id, campaign_id, lead_id, organization_id, status, responded_at")
         .eq("lead_id", resolvedLeadId)
@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
         .order("sent_at", { ascending: false })
         .limit(1)
         .maybeSingle();
-      target = data;
+      target = fecha;
     }
 
     if (!target) {
@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { data: campaign } = await supabase
+    const { fecha: campaign } = await supabase
       .from("campaigns")
       .select("id, name, post_response_actions, tags_on_response")
       .eq("id", target.campaign_id)
@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
       .update({ status: "responded", responded_at: new Date().toISOString() })
       .eq("id", target.id);
 
-    // 2) Parar restantes desse lead nesta campanha (se stop=true, default)
+    // 2) Parar restantes desse lead nesta campaña (se stop=true, default)
     if (actions.stop !== false) {
       await supabase
         .from("campaign_targets")
@@ -130,7 +130,7 @@ Deno.serve(async (req) => {
         .in("tag_id", actions.tags_remove);
     }
 
-    // 5) Take over: muda conversa para humano (zera AI via trigger enforce_single_attendant)
+    // 5) Take over: muda conversación para humano (zera AI via trigger enforce_single_attendant)
     if (actions.take_over && conversation_id) {
       await supabase
         .from("webchat_conversations")
@@ -142,7 +142,7 @@ Deno.serve(async (req) => {
     if (actions.note && typeof actions.note === "string" && actions.note.trim()) {
       await supabase.from("lead_notes").insert({
         lead_id: target.lead_id,
-        content: `[Campanha: ${campaign?.name ?? "—"}] ${actions.note.trim()}`,
+        content: `[Campaña: ${campaign?.name ?? "—"}] ${actions.note.trim()}`,
         organization_id: target.organization_id,
       });
     }

@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
       v === undefined || v === null || v === '' || (Array.isArray(v) && v.length === 0);
 
     // 1. Fetch form with product
-    const { data: form, error: formError } = await supabase
+    const { fecha: form, error: formError } = await supabase
       .from('forms')
       .select('*, products(*)')
       .eq('id', form_id)
@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
     }
 
     // 2. Fetch form blocks for scoring and mapping
-    const { data: blocks } = await supabase
+    const { fecha: blocks } = await supabase
       .from('form_blocks')
       .select('*')
       .eq('form_id', form_id)
@@ -129,12 +129,12 @@ Deno.serve(async (req) => {
       }
     }
     if (missing.length) {
-      return new Response(JSON.stringify({ error: `Campos obrigatórios não respondidos: ${missing.join(', ')}`, missing }), {
+      return new Response(JSON.stringify({ error: `Campos obrigatórios no respondidos: ${missing.join(', ')}`, missing }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
     if (invalidPhoneLabel) {
-      return new Response(JSON.stringify({ error: `WhatsApp inválido em "${invalidPhoneLabel}". Use DDD + número.` }), {
+      return new Response(JSON.stringify({ error: `WhatsApp inválido em "${invalidPhoneLabel}". Usa DDD + número.` }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -258,7 +258,7 @@ Deno.serve(async (req) => {
     // Resolve legacy tag names → IDs (lookup or create within org)
     if (legacyTagNames.length > 0) {
       const uniq = Array.from(new Set(legacyTagNames.map((t) => t.trim()).filter(Boolean)));
-      const { data: existing } = await supabase
+      const { fecha: existing } = await supabase
         .from('lead_tags')
         .select('id, name')
         .eq('organization_id', form.organization_id)
@@ -269,7 +269,7 @@ Deno.serve(async (req) => {
         if (id) {
           addTagIds.add(id);
         } else {
-          const { data: created } = await supabase
+          const { fecha: created } = await supabase
             .from('lead_tags')
             .insert({ organization_id: form.organization_id, name, color: '#6B7280' })
             .select('id')
@@ -279,8 +279,8 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 3.b Heurística: se algum campo essencial (name/email/phone) não foi mapeado via maps_to,
-    // procurar pelo label do bloco (ex: "Qual seu nome completo?") OU pela chave do response.
+    // 3.b Heurística: se algún campo essencial (name/email/phone) no fue mapeado via maps_to,
+    // buscar pelo label do bloco (ex: "Qual su nombre completo?") OU pela chave do response.
     const matchLabel = (label: string, keywords: string[]) => {
       const l = (label || '').toLowerCase();
       return keywords.some((k) => l.includes(k));
@@ -296,7 +296,7 @@ Deno.serve(async (req) => {
       return key && responses[key] != null ? String(responses[key]) : null;
     };
     if (!leadData.name) {
-      const v = findByLabelOrResponseKey(['nome', 'name'], (t) => ['short_text', 'long_text', 'text'].includes(t));
+      const v = findByLabelOrResponseKey(['nombre', 'name'], (t) => ['short_text', 'long_text', 'text'].includes(t));
       if (v) leadData.name = v.trim();
     }
     if (!leadData.email) {
@@ -304,7 +304,7 @@ Deno.serve(async (req) => {
       if (v) leadData.email = v.trim();
     }
     if (!leadData.phone) {
-      const v = findByLabelOrResponseKey(['whatsapp', 'telefone', 'phone', 'celular'], (t) => t === 'phone' || t === 'short_text' || t === 'text');
+      const v = findByLabelOrResponseKey(['whatsapp', 'teléfono', 'phone', 'celular'], (t) => t === 'phone' || t === 'short_text' || t === 'text');
       if (v) leadData.phone = normalizePhoneDigits(v);
     }
 
@@ -360,14 +360,14 @@ Deno.serve(async (req) => {
 
     // Resolve open_calendar -> /agendar/<userSlug>/<eventSlug>?name=...&email=...&phone=...
     if (openCalendarAction) {
-      const { data: et } = await supabase
+      const { fecha: et } = await supabase
         .from('booking_event_types')
         .select('id, slug, user_id, organization_id')
         .eq('id', openCalendarAction.event_type_id)
         .eq('organization_id', form.organization_id)
         .maybeSingle();
       if (et?.user_id) {
-        const { data: prof } = await supabase
+        const { fecha: prof } = await supabase
           .from('profiles')
           .select('booking_slug')
           .eq('id', et.user_id)
@@ -434,7 +434,7 @@ Deno.serve(async (req) => {
     }
 
     // 5. Get first pipeline stage as fallback
-    const { data: firstStage } = await supabase
+    const { fecha: firstStage } = await supabase
       .from('pipeline_stages')
       .select('id')
       .eq('product_id', form.product_id)
@@ -471,7 +471,7 @@ Deno.serve(async (req) => {
         if (phoneSuffix) orClauses.push(`phone.ilike.%${phoneSuffix}%`);
         query = query.or(orClauses.join(','));
 
-        const { data: found } = await query;
+        const { fecha: found } = await query;
         // Confirm phone match by comparing digit-only strings
         existingLead = (found || []).find((l: any) => {
           if (leadData.email && l.email && l.email.toLowerCase() === leadData.email.toLowerCase()) return true;
@@ -511,7 +511,7 @@ Deno.serve(async (req) => {
         if (actionCloserId) patch.closer_id = actionCloserId;
         if (actionSectorId) patch.sector_id = actionSectorId;
 
-        const { data: updated, error: updateError } = await supabase
+        const { fecha: updated, error: updateError } = await supabase
           .from('leads')
           .update(patch)
           .eq('id', existingLead.id)
@@ -520,12 +520,12 @@ Deno.serve(async (req) => {
         if (updateError) console.error('Error updating lead:', updateError);
         leadId = (updated?.id as string) || existingLead.id;
       } else {
-        const { data: lead, error: leadError } = await supabase
+        const { fecha: lead, error: leadError } = await supabase
           .from('leads')
           .insert({
             organization_id: form.organization_id,
             product_id: form.product_id,
-            name: leadData.name || leadData.email || 'Lead sem nome',
+            name: leadData.name || leadData.email || 'Lead sem nombre',
             email: leadData.email || null,
             phone: leadData.phone || null,
             company: leadData.company || null,
@@ -567,7 +567,7 @@ Deno.serve(async (req) => {
             await supabase.rpc('jsonb_merge_lead_metadata', { p_lead_id: leadId, p_patch: { assigned_agent_id: actionAgentId } });
           } catch {
             // Fallback: read-modify-write
-            const { data: cur } = await supabase.from('leads').select('metadata').eq('id', leadId).maybeSingle();
+            const { fecha: cur } = await supabase.from('leads').select('metadata').eq('id', leadId).maybeSingle();
             const md = (cur?.metadata as Record<string, unknown>) || {};
             await supabase.from('leads').update({ metadata: { ...md, assigned_agent_id: actionAgentId } }).eq('id', leadId);
           }
@@ -596,7 +596,7 @@ Deno.serve(async (req) => {
         // Auto Dispatch only on brand-new leads without assignee
         if (!existingLead && useAutoDispatch && squad_id) {
           try {
-            const { data: assignedUserId } = await supabase.rpc('distribute_lead', {
+            const { fecha: assignedUserId } = await supabase.rpc('distribute_lead', {
               p_lead_id: leadId,
               p_squad_id: squad_id,
               p_organization_id: form.organization_id,
@@ -686,7 +686,7 @@ Deno.serve(async (req) => {
                 lead_ids: [leadId],
                 agent_id: outreachAgentId,
                 organization_id: form.organization_id,
-                objective: outreachObjective || `Continuar a conversa iniciada no formulário "${form.name}" e ajudar o lead pelo WhatsApp.`,
+                objective: outreachObjective || `Continuar a conversación iniciada no formulário "${form.name}" e ajudar o lead pelo WhatsApp.`,
                 extra_context: extraContext,
                 mode: 'direct',
               }),
@@ -695,7 +695,7 @@ Deno.serve(async (req) => {
             console.error('[form-submit] manual-outreach wrap non-fatal:', e);
           }
         } else if (outreachAgentId && !leadData.phone) {
-          console.warn('[form-submit] start_ai_outreach configurado mas lead sem telefone — pulando.');
+          console.warn('[form-submit] start_ai_outreach configurado mas lead sem teléfono — pulando.');
         }
       }
     }
@@ -707,7 +707,7 @@ Deno.serve(async (req) => {
       ...responsesWithLabels,
       __meta: { selected_options },
     };
-    const { data: submission, error: submissionError } = await supabase
+    const { fecha: submission, error: submissionError } = await supabase
       .from('form_submissions')
       .insert({
         form_id,

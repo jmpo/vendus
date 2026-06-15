@@ -19,7 +19,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Fetch messages
-    const { data: messages, error: msgError } = await supabase
+    const { fecha: messages, error: msgError } = await supabase
       .from("webchat_messages")
       .select("content, sender_type, created_at, direction")
       .eq("conversation_id", conversationId)
@@ -38,13 +38,13 @@ serve(async (req) => {
     }
 
     // Fetch conversation details
-    const { data: conv } = await supabase
+    const { fecha: conv } = await supabase
       .from("webchat_conversations")
       .select("*, webchat_widgets(products(name, description))")
       .eq("id", conversationId)
       .single();
 
-    const productName = conv?.webchat_widgets?.products?.name || "Produto não identificado";
+    const productName = conv?.webchat_widgets?.products?.name || "Producto no identificado";
 
     const transcript = messages
       .map((m: any) => `[${m.sender_type || m.direction}]: ${m.content}`)
@@ -53,7 +53,7 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const prompt = `Analise a seguinte conversa de atendimento comercial para o produto "${productName}".
+    const prompt = `Analiza a seguinte conversación de atención comercial para o producto "${productName}".
 
 Transcrição:
 ${transcript}
@@ -71,10 +71,10 @@ Retorne a análise usando a ferramenta analyze_conversation.`;
         messages: [
           {
             role: "system",
-            content: `Você é um analista de qualidade de vendas. Analise conversas de atendimento e forneça feedback detalhado. Avalie:
-- Tempo de resposta (rápido, adequado, lento)
-- Tom da conversa (profissional, amigável, frio)
-- Técnicas de vendas utilizadas (rapport, SPIN, gatilhos mentais, etc.)
+            content: `Usted é um analista de qualidade de ventas. Analiza conversaciones de atención e forneça feedback detalhado. Avalie:
+- Tempo de respuesta (rápido, adequado, lento)
+- Tom da conversación (profissional, amigável, frio)
+- Técnicas de ventas utilizadas (rapport, SPIN, gatilhos mentais, etc.)
 - Objeções identificadas e como foram tratadas
 - Nota geral de 1 a 10
 - Pontos fortes e fracos específicos

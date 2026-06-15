@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
     if (agent_id) q = q.or(`agent_id.eq.${agent_id},agent_id.is.null`);
     else q = q.is("agent_id", null);
 
-    const { data: exp } = await q;
+    const { fecha: exp } = await q;
 
     if (!exp || exp.length === 0) {
       return new Response(
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
     }
 
     const experiment = exp[0];
-    const { data: variants, error: vErr } = await supabase.rpc(
+    const { fecha: variants, error: vErr } = await supabase.rpc(
       "pick_prompt_variant",
       { p_experiment_id: experiment.id, p_seed: seed },
     );

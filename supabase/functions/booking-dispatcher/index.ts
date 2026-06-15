@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
   console.log("[booking-dispatcher] tick start");
 
   // Pull due jobs (idempotent: claim by transitioning pending -> processing).
-  const { data: candidates, error: pickErr } = await supabase
+  const { fecha: candidates, error: pickErr } = await supabase
     .from("booking_scheduled_jobs")
     .select("id")
     .eq("status", "pending")
@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
   }
 
   const ids = candidates.map((c) => c.id);
-  const { data: claimed } = await supabase
+  const { fecha: claimed } = await supabase
     .from("booking_scheduled_jobs")
     .update({ status: "processing", attempts: 1 })
     .in("id", ids)
@@ -101,7 +101,7 @@ Deno.serve(async (req) => {
 
 async function processJob(supabase: any, job: any, siteUrl: string) {
   // Load booking + event type + settings
-  const { data: booking, error: bErr } = await supabase
+  const { fecha: booking, error: bErr } = await supabase
     .from("booking_requests")
     .select("*, booking_event_types(name, location_type, location_details), profiles:host_user_id(full_name, email, organization_id)")
     .eq("id", job.booking_id)
@@ -116,15 +116,15 @@ async function processJob(supabase: any, job: any, siteUrl: string) {
     return;
   }
 
-  const { data: settings } = await supabase
+  const { fecha: settings } = await supabase
     .from("booking_notification_settings")
     .select("*")
     .eq("event_type_id", booking.event_type_id)
     .maybeSingle();
 
-  const { data: calendarEvent } = booking.calendar_event_id
+  const { fecha: calendarEvent } = booking.calendar_event_id
     ? await supabase.from("calendar_events").select("meet_link").eq("id", booking.calendar_event_id).maybeSingle()
-    : { data: null } as any;
+    : { fecha: null } as any;
 
   // Resolve meeting link: Google Meet > manual location_details (if URL) > empty
   const locDetails = booking.booking_event_types?.location_details || "";
@@ -137,7 +137,7 @@ async function processJob(supabase: any, job: any, siteUrl: string) {
     google_meet: "Google Meet",
     zoom: "Zoom",
     teams: "Microsoft Teams",
-    phone: "Telefone",
+    phone: "Teléfono",
     in_person: "Presencial",
     custom: locDetails || "Online",
   };
@@ -146,7 +146,7 @@ async function processJob(supabase: any, job: any, siteUrl: string) {
   // Resolve empresa name
   let empresa = "";
   if (booking.organization_id) {
-    const { data: org } = await supabase
+    const { fecha: org } = await supabase
       .from("organizations")
       .select("name")
       .eq("id", booking.organization_id)
@@ -180,19 +180,19 @@ async function processJob(supabase: any, job: any, siteUrl: string) {
     emailSubject = renderTemplate(settings?.confirmation_subject_email || DEFAULT_TEMPLATES.confirmation_email_subject, vars);
     emailBody = renderTemplate(settings?.confirmation_html_email || DEFAULT_TEMPLATES.confirmation_whatsapp.replace(/\n/g, "<br>"), vars);
   } else if (job.kind === "reminder") {
-    const { data: reminder } = job.reminder_id
+    const { fecha: reminder } = job.reminder_id
       ? await supabase.from("booking_reminders").select("*").eq("id", job.reminder_id).maybeSingle()
-      : { data: null } as any;
+      : { fecha: null } as any;
     waText = renderTemplate(reminder?.message_template || DEFAULT_TEMPLATES.reminder_whatsapp, vars);
     emailSubject = renderTemplate(reminder?.email_subject || `Lembrete: {{nome_evento}} às {{hora}}`, vars);
     emailBody = waText.replace(/\n/g, "<br>");
   } else if (job.kind === "recovery") {
     waText = renderTemplate(settings?.recovery_message || DEFAULT_TEMPLATES.recovery_whatsapp, vars);
-    emailSubject = renderTemplate(`Sentimos sua falta — {{nome_evento}}`, vars);
+    emailSubject = renderTemplate(`Sentimos su falta — {{nome_evento}}`, vars);
     emailBody = waText.replace(/\n/g, "<br>");
   } else if (job.kind === "internal_notification") {
     waText = renderTemplate(settings?.internal_message_template || DEFAULT_TEMPLATES.internal_whatsapp, vars);
-    emailSubject = renderTemplate(`Novo agendamento: {{nome_evento}}`, vars);
+    emailSubject = renderTemplate(`Novo reserva: {{nome_evento}}`, vars);
     emailBody = waText.replace(/\n/g, "<br>");
   }
 
@@ -210,7 +210,7 @@ async function processJob(supabase: any, job: any, siteUrl: string) {
   // === WhatsApp ===
   if ((channel === "whatsapp" || channel === "both") && targetPhone && settings?.whatsapp_instance_id) {
     try {
-      const { data: sendRes, error: sendErr } = await supabase.functions.invoke("evolution-send", {
+      const { fecha: sendRes, error: sendErr } = await supabase.functions.invoke("evolution-send", {
         body: {
           organization_id: job.organization_id,
           instance_id: settings.whatsapp_instance_id,
@@ -235,7 +235,7 @@ async function processJob(supabase: any, job: any, siteUrl: string) {
           bookingId: booking.id,
           guestName: isInternal ? (booking.profiles?.full_name || "Vendedor") : booking.guest_name,
           guestEmail: targetEmail,
-          eventName: booking.booking_event_types?.name || "Reunião",
+          eventName: booking.booking_event_types?.name || "Reunión",
           hostName: booking.profiles?.full_name || "Anfitrião",
           startTime: booking.start_time,
           endTime: booking.end_time,

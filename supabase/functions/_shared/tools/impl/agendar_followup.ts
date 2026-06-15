@@ -4,7 +4,7 @@ import type { ToolDefinition } from '../types.ts';
 export const agendarFollowupTool: ToolDefinition = {
   name: 'agendar_followup',
   description:
-    'Agenda um follow-up automático com o lead em uma data/hora futura. Use quando o lead pedir para retornar mais tarde, quando ficar de pensar, ou quando você quiser garantir uma reativação. Respeita horário comercial automaticamente.',
+    'Agenda um follow-up automático com o lead em uma fecha/hora futura. Usa quando o lead pedir para retornar mais tarde, quando ficar de pensar, ou quando usted quiser garantir uma reativação. Respeita horario comercial automaticamente.',
   categories: ['crm', 'communication'],
   estimated_cost_cents: 0,
   parameters: {
@@ -12,37 +12,37 @@ export const agendarFollowupTool: ToolDefinition = {
     properties: {
       hours_from_now: {
         type: 'number',
-        description: 'Em quantas horas o follow-up deve ser disparado (ex: 24 = amanhã).',
+        description: 'Em quantas horas o follow-up debe ser disparado (ex: 24 = mañana).',
       },
       objective: {
         type: 'string',
         description:
-          'Objetivo do follow-up (ex: "retomar conversa sobre plano anual", "lembrar do desconto").',
+          'Objetivo do follow-up (ex: "retomar conversación sobre plano anual", "lembrar do descuento").',
       },
       extra_context: {
         type: 'string',
-        description: 'Contexto adicional para o agente usar no follow-up.',
+        description: 'Contexto adicional para el agente usar no follow-up.',
       },
     },
     required: ['hours_from_now', 'objective'],
     additionalProperties: false,
   },
   handler: async (input, ctx) => {
-    if (!ctx.leadId) return { success: false, error: 'leadId obrigatório' };
+    if (!ctx.leadId) return { success: false, error: 'leadId obligatorio' };
 
     const hours = Math.max(0.25, Number(input.hours_from_now));
     const nextAt = new Date(Date.now() + hours * 60 * 60 * 1000);
 
-    // Carrega dados do lead para snapshot.
-    const { data: lead } = await ctx.supabase
+    // Carrega dados del lead para snapshot.
+    const { fecha: lead } = await ctx.supabase
       .from('leads')
       .select('name, email, phone, product_id')
       .eq('id', ctx.leadId)
       .single();
 
-    if (!lead) return { success: false, error: 'Lead não encontrado' };
+    if (!lead) return { success: false, error: 'Lead no encontrado' };
 
-    const { data: queued, error } = await ctx.supabase
+    const { fecha: queued, error } = await ctx.supabase
       .from('ai_outreach_queue')
       .insert({
         organization_id: ctx.organizationId,
@@ -71,7 +71,7 @@ export const agendarFollowupTool: ToolDefinition = {
 
     return {
       success: true,
-      data: { queue_id: queued.id, scheduled_for: nextAt.toISOString() },
+      fecha: { queue_id: queued.id, scheduled_for: nextAt.toISOString() },
       user_message: `Follow-up agendado para ${nextAt.toLocaleString('pt-BR')}.`,
     };
   },

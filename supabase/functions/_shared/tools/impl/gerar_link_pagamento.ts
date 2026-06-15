@@ -1,11 +1,11 @@
-// Gera um link de pagamento para o lead. Inicialmente integra com Cakto (suportado pela plataforma);
-// no futuro pode rotear para Asaas/Stripe baseado na configuração da organização.
+// Gera um link de pago para el lead. Inicialmente integra com Cakto (suportado pela plataforma);
+// no futuro puede rotear para Asaas/Stripe baseado na configuración da organização.
 import type { ToolDefinition } from '../types.ts';
 
 export const gerarLinkPagamentoTool: ToolDefinition = {
   name: 'gerar_link_pagamento',
   description:
-    'Gera um link de pagamento (Pix/cartão) para o lead finalizar a compra. Use quando o lead confirmar a intenção de pagar AGORA. O link já vem com o e-mail/telefone do lead pré-preenchido quando possível.',
+    'Gera um link de pago (Pix/tarjeta) para el lead finalizar a compra. Usa quando o lead confirmar a intenção de pagar AGORA. O link já vem com o e-mail/teléfono del lead pré-preenchido quando possível.',
   categories: ['finance'],
   estimated_cost_cents: 0,
   parameters: {
@@ -13,16 +13,16 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
     properties: {
       product_id: {
         type: 'string',
-        description: 'UUID do produto a ser vendido.',
+        description: 'UUID do producto a ser vendido.',
       },
       offer_id: {
         type: 'string',
-        description: 'UUID da oferta específica (opcional). Se omitido, usa a oferta padrão do produto.',
+        description: 'UUID da oferta específica (opcional). Se omitido, usa a oferta padrão do producto.',
       },
       payment_method: {
         type: 'string',
         enum: ['pix', 'credit_card', 'any'],
-        description: 'Método de pagamento preferido. "any" deixa o cliente escolher.',
+        description: 'Método de pago preferido. "any" deixa o cliente escolher.',
       },
     },
     required: ['product_id'],
@@ -30,17 +30,17 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
   },
   handler: async (input, ctx) => {
     if (!ctx.leadId) {
-      return { success: false, error: 'leadId obrigatório' };
+      return { success: false, error: 'leadId obligatorio' };
     }
 
-    // 1) Carrega o produto e busca a oferta com link público da Cakto.
-    const { data: product } = await ctx.supabase
+    // 1) Carrega o producto e busca a oferta com link público da Cakto.
+    const { fecha: product } = await ctx.supabase
       .from('products')
       .select('id, name')
       .eq('id', input.product_id)
       .single();
 
-    if (!product) return { success: false, error: 'Produto não encontrado' };
+    if (!product) return { success: false, error: 'Producto no encontrado' };
 
     let offerQuery = ctx.supabase
       .from('product_offers')
@@ -49,25 +49,25 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
 
     if (input.offer_id) offerQuery = offerQuery.eq('id', input.offer_id);
 
-    const { data: offers } = await offerQuery.limit(1);
+    const { fecha: offers } = await offerQuery.limit(1);
     const offer = offers?.[0];
 
     if (!offer?.checkout_url) {
       return {
         success: false,
         error:
-          'Produto não tem link de checkout configurado. Configure uma oferta com checkout_url (ex: link Cakto) na seção Produtos.',
+          'Producto no tiene link de checkout configurado. Configure uma oferta com checkout_url (ex: link Cakto) na seção Produtos.',
       };
     }
 
-    // 2) Carrega dados do lead para pré-preencher o checkout.
-    const { data: lead } = await ctx.supabase
+    // 2) Carrega dados del lead para pré-preencher o checkout.
+    const { fecha: lead } = await ctx.supabase
       .from('leads')
       .select('name, email, phone')
       .eq('id', ctx.leadId)
       .single();
 
-    // 3) Anexa parâmetros de tracking + dados do lead na URL.
+    // 3) Anexa parâmetros de tracking + dados del lead na URL.
     const url = new URL(offer.checkout_url);
     if (lead?.name) url.searchParams.set('name', lead.name);
     if (lead?.email) url.searchParams.set('email', lead.email);
@@ -83,13 +83,13 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
 
     return {
       success: true,
-      data: {
+      fecha: {
         checkout_url: checkoutUrl,
         offer_id: offer.id,
         offer_name: offer.name,
         price: offer.price,
       },
-      user_message: `Aqui está seu link de pagamento: ${checkoutUrl}`,
+      user_message: `Aqui está su link de pago: ${checkoutUrl}`,
     };
   },
 };

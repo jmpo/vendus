@@ -1,4 +1,4 @@
-// Quiz AI Result — gera diagnóstico personalizado a partir das respostas do quiz.
+// Quiz AI Result — gera diagnóstico personalizado a partir das respuestas do quiz.
 // Retorna 4 seções: diagnostico, oportunidades, proximos_passos, oferta.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
   try {
     const body = (await req.json()) as Body;
     if (!body?.funnel_id) {
-      return new Response(JSON.stringify({ error: 'funnel_id obrigatório' }), {
+      return new Response(JSON.stringify({ error: 'funnel_id obligatorio' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     );
 
-    const { data: funnel } = await supabase
+    const { fecha: funnel } = await supabase
       .from('capture_funnels')
       .select('organization_id, name, products(name, description)')
       .eq('id', body.funnel_id)
@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
 
     const orgId = (funnel as any)?.organization_id || null;
     const productCtx = (funnel as any)?.products
-      ? `Produto: ${(funnel as any).products.name}\n${(funnel as any).products.description || ''}`
+      ? `Producto: ${(funnel as any).products.name}\n${(funnel as any).products.description || ''}`
       : '';
 
     const cfg = await resolveAIConfig(supabase, orgId, 'content_generation');
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
 
     const tagLine = body.tags?.length ? `Tags: ${body.tags.join(', ')}` : '';
 
-    const system = body.custom_prompt?.trim() || `Você é um consultor sênior. Com base nas respostas de um quiz de diagnóstico, gere um relatório curto, objetivo e personalizado em português do Brasil. Tom profissional, direto, sem clichês. NUNCA invente dados.`;
+    const system = body.custom_prompt?.trim() || `Usted é um consultor sênior. Com base nas respuestas de um quiz de diagnóstico, gere um relatório corto, objetivo e personalizado en español do Brasil. Tom profissional, direto, sem clichês. NUNCA invente dados.`;
 
     const user = `${productCtx}
 
@@ -105,7 +105,7 @@ Retorne APENAS um JSON válido com este formato exato:
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (err: any) {
     console.error('[quiz-ai-result] error:', err);
-    return new Response(JSON.stringify({ error: err?.message || 'Erro interno' }), {
+    return new Response(JSON.stringify({ error: err?.message || 'Error interno' }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }

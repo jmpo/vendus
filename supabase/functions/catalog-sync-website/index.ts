@@ -10,16 +10,16 @@ interface SyncBody {
   organization_id: string;
   product_id?: string | null;
   base_url: string;
-  item_pattern?: string; // ex: "/imovel/" — substring obrigatória na URL
-  catalog_type?: string; // imoveis | produtos | veiculos | generico
+  item_pattern?: string; // ex: "/imovel/" — substring obligatoria na URL
+  catalog_type?: string; // imoveis | productos | veiculos | generico
   max_items?: number;
 }
 
 const CATALOG_SCHEMAS: Record<string, string> = {
   imoveis: "Imóveis: campos esperados — bairro, cidade, estado, quartos, banheiros, vagas, area_m2, tipo (apartamento/casa/comercial), suites.",
   veiculos: "Veículos: campos esperados — marca, modelo, ano, km, combustivel, cambio, cor, tipo.",
-  produtos: "Produtos: campos esperados — categoria, marca, sku, estoque, variantes.",
-  generico: "Genérico: extraia os atributos mais relevantes do produto/item.",
+  productos: "Produtos: campos esperados — categoria, marca, sku, estoque, variantes.",
+  generico: "Genérico: extraia os atributos mais relevantes do producto/item.",
 };
 
 Deno.serve(async (req) => {
@@ -60,16 +60,16 @@ Deno.serve(async (req) => {
     const catalogType = body.catalog_type || "generico";
     const maxItems = Math.min(body.max_items ?? 30, 50);
 
-    // Identifica usuário se autenticado (pra registrar created_by)
+    // Identifica usuario se autenticado (pra registrar created_by)
     let userId: string | null = null;
     const auth = req.headers.get("Authorization");
     if (auth) {
-      const { data: { user } } = await supabase.auth.getUser(auth.replace("Bearer ", ""));
+      const { fecha: { user } } = await supabase.auth.getUser(auth.replace("Bearer ", ""));
       userId = user?.id ?? null;
     }
 
     // Cria log de sync
-    const { data: logRow } = await supabase
+    const { fecha: logRow } = await supabase
       .from("catalog_sync_logs")
       .insert({
         organization_id: body.organization_id,
@@ -123,7 +123,7 @@ Deno.serve(async (req) => {
           failed++;
           continue;
         }
-        const markdown: string = scrapeData.data?.markdown || scrapeData.markdown || "";
+        const markdown: string = scrapeData.fecha?.markdown || scrapeData.markdown || "";
         if (!markdown) { failed++; continue; }
 
         // Extract via Lovable AI (tool calling pra structured output)
@@ -138,10 +138,10 @@ Deno.serve(async (req) => {
             messages: [
               {
                 role: "system",
-                content: `Você extrai dados estruturados de páginas web.
+                content: `Usted extrai dados estruturados de páginas web.
 Tipo de catálogo: ${catalogType}.
 ${CATALOG_SCHEMAS[catalogType] || CATALOG_SCHEMAS.generico}
-Sempre devolva preço como número (sem R$, sem pontos de milhar). Se não encontrar, retorne null.
+Sempre devolva preço como número (sem R$, sem pontos de milhar). Se no encontrar, retorne null.
 images: array de URLs absolutas das fotos do item.`,
               },
               {
@@ -191,7 +191,7 @@ images: array de URLs absolutas das fotos do item.`,
         const thumbnail = Array.isArray(parsed.images) && parsed.images.length > 0 ? parsed.images[0] : null;
 
         // Upsert por (org, product, external_id)
-        const { data: existing } = await supabase
+        const { fecha: existing } = await supabase
           .from("product_catalog_items")
           .select("id")
           .eq("organization_id", body.organization_id)

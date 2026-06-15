@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
           }
 
           // Fetch funnel by ID
-          const { data: funnel, error: funnelError } = await supabase
+          const { fecha: funnel, error: funnelError } = await supabase
             .from('capture_funnels')
             .select(`
               id,
@@ -123,7 +123,7 @@ Deno.serve(async (req) => {
 
           if (!funnel_id || !agent_id) {
             return new Response(
-              JSON.stringify({ error: 'funnel_id e agent_id são obrigatórios' }),
+              JSON.stringify({ error: 'funnel_id e agent_id son obrigatórios' }),
               { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
             );
           }
@@ -142,12 +142,12 @@ Deno.serve(async (req) => {
               .maybeSingle(),
           ]);
 
-          const funnelRow = funnelRes.data as any;
-          const agent = agentRes.data as any;
+          const funnelRow = funnelRes.fecha as any;
+          const agent = agentRes.fecha as any;
 
           if (!agent) {
             return new Response(
-              JSON.stringify({ error: 'Agente não encontrado' }),
+              JSON.stringify({ error: 'Agente no encontrado' }),
               { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
             );
           }
@@ -156,13 +156,13 @@ Deno.serve(async (req) => {
           let brainContext = '';
           if (agent.product_id || funnelRow?.product_id) {
             const pid = agent.product_id || funnelRow?.product_id;
-            const { data: product } = await supabase
+            const { fecha: product } = await supabase
               .from('products')
               .select('name, description, brain_summary')
               .eq('id', pid)
               .maybeSingle();
             if (product) {
-              brainContext = `\n\n## Produto: ${product.name}\n${product.description || ''}\n${product.brain_summary || ''}`.trim();
+              brainContext = `\n\n## Producto: ${product.name}\n${product.description || ''}\n${product.brain_summary || ''}`.trim();
             }
           }
 
@@ -170,15 +170,15 @@ Deno.serve(async (req) => {
           const can = Array.isArray(agent.can_do) ? agent.can_do.join('; ') : '';
           const cannot = Array.isArray(agent.cannot_do) ? agent.cannot_do.join('; ') : '';
           const systemPrompt = [
-            `Você é ${agent.name}, agente de vendas consultivo profissional (SPIN Selling).`,
+            `Usted é ${agent.name}, agente de ventas consultivo profissional (SPIN Selling).`,
             agent.primary_objective ? `Objetivo: ${agent.primary_objective}` : '',
-            agent.description ? `Descrição: ${agent.description}` : '',
-            can ? `Pode fazer: ${can}` : '',
-            cannot ? `Não deve fazer: ${cannot}` : '',
+            agent.description ? `Descripción: ${agent.description}` : '',
+            can ? `Pode hacer: ${can}` : '',
+            cannot ? `No debe hacer: ${cannot}` : '',
             agent.additional_prompt || '',
-            ai_context_prompt ? `\n## Contexto do fluxo\n${ai_context_prompt}` : '',
+            ai_context_prompt ? `\n## Contexto do flujo\n${ai_context_prompt}` : '',
             brainContext,
-            `\n## Diretrizes\n- Responda sempre em português do Brasil.\n- Máximo 2 linhas curtas por bloco e UMA pergunta por mensagem.\n- Tom profissional, sem clichês ("ótimo", "perfeito", "fico feliz").\n- Foque em entender a necessidade e conduzir para próximo passo (call/agendamento).`,
+            `\n## Diretrizes\n- Responda siempre en español do Brasil.\n- Máximo 2 linhas curtas por bloco e UMA pregunta por mensaje.\n- Tom profissional, sem clichês ("ótimo", "perfeito", "fico feliz").\n- Foque em entender a necessidade e conduzir para próximo passo (call/reserva).`,
           ].filter(Boolean).join('\n');
 
           const orgId = agent.organization_id || funnelRow?.organization_id || null;
@@ -212,7 +212,7 @@ Deno.serve(async (req) => {
               console.error('[funnel-api/agent-chat] AI error', aiResp.status, errText);
               return new Response(
                 JSON.stringify({
-                  reply: 'Desculpe, tive um problema técnico agora. Pode repetir, por favor?',
+                  reply: 'Desculpe, tive um problema técnico ahora. Pode repetir, por favor?',
                   error: `AI ${aiResp.status}`,
                 }),
                 { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
@@ -222,7 +222,7 @@ Deno.serve(async (req) => {
             const aiData = await aiResp.json();
             const reply =
               aiData?.choices?.[0]?.message?.content?.trim() ||
-              'Desculpe, não consegui processar agora. Pode reformular?';
+              'Desculpe, no consegui processar ahora. Pode reformular?';
 
             return new Response(
               JSON.stringify({ reply }),
@@ -232,7 +232,7 @@ Deno.serve(async (req) => {
             console.error('[funnel-api/agent-chat] exception', err);
             return new Response(
               JSON.stringify({
-                reply: 'Desculpe, tive um problema técnico agora. Pode repetir, por favor?',
+                reply: 'Desculpe, tive um problema técnico ahora. Pode repetir, por favor?',
               }),
               { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
             );
@@ -258,7 +258,7 @@ Deno.serve(async (req) => {
           }
 
           // Fetch funnel with flow_blocks for score/tag calculation
-          const { data: funnel, error: funnelError } = await supabase
+          const { fecha: funnel, error: funnelError } = await supabase
             .from('capture_funnels')
             .select(`
               id,
@@ -286,9 +286,9 @@ Deno.serve(async (req) => {
 
           // --- Variable to lead field mapping (aligned with funnel-submit) ---
           const VARIABLE_TO_LEAD_FIELD: Record<string, string> = {
-            'name': 'name', 'nome': 'name', 'nome_completo': 'name', 'full_name': 'name', 'primeiro_nome': 'name',
+            'name': 'name', 'nombre': 'name', 'nome_completo': 'name', 'full_name': 'name', 'primeiro_nome': 'name',
             'email': 'email', 'e-mail': 'email', 'e_mail': 'email',
-            'phone': 'phone', 'telefone': 'phone', 'whatsapp': 'phone', 'celular': 'phone', 'tel': 'phone', 'fone': 'phone',
+            'phone': 'phone', 'teléfono': 'phone', 'whatsapp': 'phone', 'celular': 'phone', 'tel': 'phone', 'fone': 'phone',
             'company': 'company', 'empresa': 'company',
             'cpf': 'cpf',
             'position': 'position', 'cargo': 'position',
@@ -313,7 +313,7 @@ Deno.serve(async (req) => {
           const flowBlocks = (funnel.flow_blocks || []) as Array<{
             id: string;
             type: string;
-            data: { score_value?: number; apply_tags?: string[]; };
+            fecha: { score_value?: number; apply_tags?: string[]; };
           }>;
 
           let totalScore = 0;
@@ -324,14 +324,14 @@ Deno.serve(async (req) => {
           if (Array.isArray(variables.__tags)) tags.push(...variables.__tags);
 
           for (const block of flowBlocks) {
-            if (block.data?.score_value) totalScore += block.data.score_value;
-            if (block.data?.apply_tags) tags.push(...block.data.apply_tags);
+            if (block.fecha?.score_value) totalScore += block.fecha.score_value;
+            if (block.fecha?.apply_tags) tags.push(...block.fecha.apply_tags);
           }
 
           const uniqueTags = [...new Set(tags)];
 
           // Get first stage of pipeline
-          const { data: firstStage } = await supabase
+          const { fecha: firstStage } = await supabase
             .from('pipeline_stages')
             .select('id')
             .eq('product_id', funnel.product_id)
@@ -366,7 +366,7 @@ Deno.serve(async (req) => {
           const utmTerm = metadata.utmTerm || metadata.utm_term || null;
 
           // Create lead
-          const { data: lead, error: leadError } = await supabase
+          const { fecha: lead, error: leadError } = await supabase
             .from('leads')
             .insert({
               organization_id: funnel.organization_id,
@@ -414,7 +414,7 @@ Deno.serve(async (req) => {
           // Auto Dispatch
           if (useAutoDispatch && squadId && lead) {
             try {
-              const { data: assignedUserId } = await supabase.rpc('distribute_lead', {
+              const { fecha: assignedUserId } = await supabase.rpc('distribute_lead', {
                 p_lead_id: lead.id,
                 p_squad_id: squadId,
                 p_organization_id: funnel.organization_id,
@@ -431,7 +431,7 @@ Deno.serve(async (req) => {
             lead_id: lead.id,
             channel: 'webchat',
             direction: 'inbound',
-            content: `Lead capturado via Widget do Funil: ${funnel.name}`,
+            content: `Lead capturado via Widget do Embudo: ${funnel.name}`,
             metadata: { 
               type: 'funnel_capture',
               funnel_id: funnel.id,
@@ -482,7 +482,7 @@ Deno.serve(async (req) => {
       }
 
       // Fetch funnel by slug
-      const { data: funnel, error: funnelError } = await supabase
+      const { fecha: funnel, error: funnelError } = await supabase
         .from('capture_funnels')
         .select(`
           id,
@@ -550,7 +550,7 @@ Deno.serve(async (req) => {
         p_channel: channel 
       });
 
-      // Return public funnel data (without sensitive info)
+      // Return public funnel fecha (without sensitive info)
       return new Response(
         JSON.stringify({
           id: funnel.id,

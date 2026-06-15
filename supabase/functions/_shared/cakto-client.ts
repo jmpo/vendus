@@ -1,4 +1,4 @@
-// Helpers compartilhados para integração com Cakto API
+// Helpers compartilhados para integración com Cakto API
 // https://docs.cakto.com.br/authentication
 
 export const CAKTO_BASE_URL = 'https://api.cakto.com.br';
@@ -78,7 +78,7 @@ export interface CaktoOrderItem {
 
 /**
  * Extrai a lista normalizada de itens de um pedido Cakto.
- * A Cakto pode enviar orderbumps em vários formatos:
+ * A Cakto puede enviar orderbumps em vários formatos:
  *  - order.bumps / order.orderBumps / order.order_bumps (array)
  *  - order.items (array completo, principal + bumps)
  *  - order.upsells / order.downsells

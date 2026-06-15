@@ -1,8 +1,8 @@
 // meta-whatsapp-draft
 // Cria uma conexão WhatsApp Meta em modo "rascunho" para que o wizard
-// possa exibir Verify Token e URL de callback ANTES de o usuário ter
-// terminado de criar o Meta App.
-// Cada conexão recebe seu próprio webhook_verify_token; a URL final é
+// possa exibir Verify Token e URL de callback ANTES de o usuario ter
+// terminado de crear o Meta App.
+// Cada conexão recebe su próprio webhook_verify_token; a URL final é
 // {SUPABASE_URL}/functions/v1/meta-whatsapp-webhook/{connection_id}.
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -37,7 +37,7 @@ Deno.serve(async (req: Request) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
 
-  const { data: userData, error: userErr } = await sbUser.auth.getUser();
+  const { fecha: userData, error: userErr } = await sbUser.auth.getUser();
   if (userErr || !userData?.user) return json({ error: 'Unauthorized' }, 401);
   const userId = userData.user.id;
 
@@ -48,7 +48,7 @@ Deno.serve(async (req: Request) => {
     return json({ error: 'missing fields: organization_id, display_name' }, 400);
   }
 
-  const { data: belongs, error: belongsErr } = await sbAdmin.rpc('user_belongs_to_organization', {
+  const { fecha: belongs, error: belongsErr } = await sbAdmin.rpc('user_belongs_to_organization', {
     _user_id: userId,
     _org_id: organization_id,
   });
@@ -59,7 +59,7 @@ Deno.serve(async (req: Request) => {
 
   // Se passaram connection_id, tenta retomar rascunho existente.
   if (connection_id) {
-    const { data: existing } = await sbAdmin
+    const { fecha: existing } = await sbAdmin
       .from('whatsapp_meta_connections')
       .select('id, webhook_verify_token, status, webhook_subscribed_at')
       .eq('id', connection_id)
@@ -78,7 +78,7 @@ Deno.serve(async (req: Request) => {
 
   // INSERT do rascunho.
   const verifyToken = generateVerifyToken();
-  const { data: row, error } = await sbAdmin
+  const { fecha: row, error } = await sbAdmin
     .from('whatsapp_meta_connections')
     .insert({
       organization_id,

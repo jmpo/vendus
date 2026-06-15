@@ -60,7 +60,7 @@ serve(async (req) => {
       }
 
       // Get widget config with product info
-      const { data: widget, error: widgetError } = await supabase
+      const { fecha: widget, error: widgetError } = await supabase
         .from('webchat_widgets')
         .select('*, webchat_agent_configs(*), products(name)')
         .eq('id', body.widget_id)
@@ -78,7 +78,7 @@ serve(async (req) => {
       const collectBeforeChat = agentConfig?.collect_before_chat !== false;
 
       // Try to find existing conversation (including closed ones)
-      let { data: existingConversations } = await supabase
+      let { fecha: existingConversations } = await supabase
         .from('webchat_conversations')
         .select('*')
         .eq('widget_id', body.widget_id)
@@ -93,7 +93,7 @@ serve(async (req) => {
         // so the next inbound message goes through triage from scratch.
         if (conversation.status === 'closed') {
           console.log('[webchat-api] Reopening closed conversation → back to human queue:', conversation.id);
-          const { data: reopened, error: reopenError } = await supabase
+          const { fecha: reopened, error: reopenError } = await supabase
             .from('webchat_conversations')
             .update({
               status: 'waiting_human',
@@ -127,11 +127,11 @@ serve(async (req) => {
         // we no longer auto-reassign to a previous agent, otherwise the
         // orchestrator would be skipped for returning visitors.
         // NOTE: status fica `bot_active` para o bot responder; a UI da inbox
-        // exibe `bot_active` na aba "Aguardando" enquanto nenhum humano aceitar.
+        // exibe `bot_active` na aba "Aguardando" enquanto ningún humano aceitar.
         const autoAssignUserId: string | null = null;
         const autoStatus = 'bot_active';
 
-        const { data: newConv, error: createError } = await supabase
+        const { fecha: newConv, error: createError } = await supabase
           .from('webchat_conversations')
           .insert({
             organization_id: widget.organization_id,
@@ -164,8 +164,8 @@ serve(async (req) => {
         conversation = newConv;
 
         // ===== AUTO-CREATE LEAD =====
-        // Toda conversa nova vira um lead imediatamente — sem vinculação manual.
-        // Se já existir lead pelo email/telefone, reaproveita.
+        // Toda conversación nova vira um lead imediatamente — sem vinculação manual.
+        // Se já existir lead pelo email/teléfono, reaproveita.
         try {
           let existingLeadId: string | null = null;
           if (body.visitor_email || body.visitor_phone) {
@@ -175,7 +175,7 @@ serve(async (req) => {
               orFilters.push(`phone.eq.${body.visitor_phone}`);
               orFilters.push(`phone_normalized.eq.${body.visitor_phone}`);
             }
-            const { data: existingLead } = await supabase
+            const { fecha: existingLead } = await supabase
               .from('leads')
               .select('id')
               .eq('organization_id', widget.organization_id)
@@ -188,7 +188,7 @@ serve(async (req) => {
           let leadId = existingLeadId;
           if (!leadId) {
             const visitorShort = String(body.visitor_id || '').slice(-6) || 'novo';
-            const { data: newLead, error: leadErr } = await supabase
+            const { fecha: newLead, error: leadErr } = await supabase
               .from('leads')
               .insert({
                 organization_id: widget.organization_id,
@@ -222,7 +222,7 @@ serve(async (req) => {
         // Check for active chat flow for this product
         let initialFlowMessage = null;
         if (widget.product_id) {
-          const { data: activeFlow } = await supabase
+          const { fecha: activeFlow } = await supabase
             .from('chat_flows')
             .select('*')
             .eq('product_id', widget.product_id)
@@ -254,7 +254,7 @@ serve(async (req) => {
           }
         }
 
-        // Only send greeting if NOT collecting data first and it's a new conversation AND no flow
+        // Only send greeting if NOT collecting fecha first and it's a new conversation AND no flow
         if (!collectBeforeChat && agentConfig?.greeting_message && !initialFlowMessage) {
           await supabase.from('webchat_messages').insert({
             conversation_id: conversation.id,
@@ -266,7 +266,7 @@ serve(async (req) => {
       }
 
       // Get messages for this conversation
-      const { data: messages } = await supabase
+      const { fecha: messages } = await supabase
         .from('webchat_messages')
         .select('*')
         .eq('conversation_id', conversation.id)
@@ -312,7 +312,7 @@ serve(async (req) => {
       }
 
       // Verify conversation exists and belongs to visitor
-      const { data: conversation, error: convError } = await supabase
+      const { fecha: conversation, error: convError } = await supabase
         .from('webchat_conversations')
         .select('*, webchat_widgets(*, webchat_agent_configs(*))')
         .eq('id', body.conversation_id)
@@ -327,7 +327,7 @@ serve(async (req) => {
       }
 
       // Save visitor message
-      const { data: message, error: msgError } = await supabase
+      const { fecha: message, error: msgError } = await supabase
         .from('webchat_messages')
         .insert({
           conversation_id: body.conversation_id,
@@ -375,13 +375,13 @@ serve(async (req) => {
               .eq('id', body.conversation_id);
 
             // Send handoff message
-            const { data: handoffMsg } = await supabase
+            const { fecha: handoffMsg } = await supabase
               .from('webchat_messages')
               .insert({
                 conversation_id: body.conversation_id,
                 direction: 'outbound',
                 sender_type: 'bot',
-                content: agentConfig.handoff_message || 'Estou transferindo você para um atendente. Aguarde um momento.',
+                content: agentConfig.handoff_message || 'Estou transferindo usted para um agente. Aguarde um momento.',
               })
               .select()
               .single();
@@ -389,7 +389,7 @@ serve(async (req) => {
             botResponse = handoffMsg;
 
             // Create notification for agents
-            const { data: profiles } = await supabase
+            const { fecha: profiles } = await supabase
               .from('profiles')
               .select('id')
               .eq('organization_id', conversation.organization_id);
@@ -397,8 +397,8 @@ serve(async (req) => {
             if (profiles) {
               const notifications = profiles.map((p: { id: string }) => ({
                 user_id: p.id,
-                title: 'Nova conversa aguardando atendimento',
-                message: `Visitante ${conversation.visitor_name || 'anônimo'} solicitou atendimento humano`,
+                title: 'Nova conversación aguardando atención',
+                message: `Visitante ${conversation.visitor_name || 'anônimo'} solicitou atención humano`,
                 type: 'opportunity',
                 action_url: '/admin?section=webchat',
               }));
@@ -415,7 +415,7 @@ serve(async (req) => {
               console.log('[webchat-api] Visitor name from request:', body.visitor_name);
               console.log('[webchat-api] Visitor name from conversation:', conversation.visitor_name);
               
-              // Use visitor_name from request body first, then fall back to conversation data
+              // Usa visitor_name from request body first, then fall back to conversation fecha
               const visitorName = body.visitor_name || conversation.visitor_name || '';
               
               // Build flow context from conversation
@@ -479,13 +479,13 @@ serve(async (req) => {
             } catch (error) {
               console.error('[webchat-api] Error calling AI:', error);
               // Send fallback message
-              const { data: fallbackMsg } = await supabase
+              const { fecha: fallbackMsg } = await supabase
                 .from('webchat_messages')
                 .insert({
                   conversation_id: body.conversation_id,
                   direction: 'outbound',
                   sender_type: 'bot',
-                  content: agentConfig.fallback_message || 'Desculpe, estou com dificuldades técnicas. Posso transferir você para um atendente?',
+                  content: agentConfig.fallback_message || 'Desculpe, estou com dificuldades técnicas. Posso transferir usted para um agente?',
                 })
                 .select()
                 .single();
@@ -519,7 +519,7 @@ serve(async (req) => {
       }
 
       // Verify conversation belongs to visitor
-      const { data: conversation } = await supabase
+      const { fecha: conversation } = await supabase
         .from('webchat_conversations')
         .select('id')
         .eq('id', conversationId)
@@ -533,7 +533,7 @@ serve(async (req) => {
         );
       }
 
-      const { data: messages } = await supabase
+      const { fecha: messages } = await supabase
         .from('webchat_messages')
         .select('*')
         .eq('conversation_id', conversationId)
@@ -557,7 +557,7 @@ serve(async (req) => {
       }
 
       // Verify and update conversation
-      const { data: conversation, error: convError } = await supabase
+      const { fecha: conversation, error: convError } = await supabase
         .from('webchat_conversations')
         .select('*, webchat_widgets(webchat_agent_configs(*))')
         .eq('id', body.conversation_id)
@@ -579,19 +579,19 @@ serve(async (req) => {
 
       // Send handoff message
       const agentConfig = conversation.webchat_widgets?.webchat_agent_configs?.[0];
-      const { data: handoffMsg } = await supabase
+      const { fecha: handoffMsg } = await supabase
         .from('webchat_messages')
         .insert({
           conversation_id: body.conversation_id,
           direction: 'outbound',
           sender_type: 'bot',
-          content: agentConfig?.handoff_message || 'Estou transferindo você para um atendente. Aguarde um momento.',
+          content: agentConfig?.handoff_message || 'Estou transferindo usted para um agente. Aguarde um momento.',
         })
         .select()
         .single();
 
       // Create notifications
-      const { data: profiles } = await supabase
+      const { fecha: profiles } = await supabase
         .from('profiles')
         .select('id')
         .eq('organization_id', conversation.organization_id);
@@ -599,8 +599,8 @@ serve(async (req) => {
       if (profiles) {
         const notifications = profiles.map((p: { id: string }) => ({
           user_id: p.id,
-          title: 'Nova conversa aguardando atendimento',
-          message: `Visitante ${conversation.visitor_name || 'anônimo'} solicitou atendimento humano`,
+          title: 'Nova conversación aguardando atención',
+          message: `Visitante ${conversation.visitor_name || 'anônimo'} solicitou atención humano`,
           type: 'opportunity',
           action_url: '/admin?section=webchat',
         }));
@@ -681,17 +681,17 @@ async function executeInitialFlowBlock(
 
     switch (block.type) {
       case 'message':
-        responseContent = block.data.content || '';
+        responseContent = block.fecha.content || '';
         break;
 
       case 'input':
-        responseContent = block.data.placeholder || 'Digite sua resposta...';
+        responseContent = block.fecha.placeholder || 'Digite su respuesta...';
         break;
 
       case 'buttons':
-        responseContent = block.data.content || 'Escolha uma opção:';
+        responseContent = block.fecha.content || 'Escolha uma opción:';
         messageType = 'buttons';
-        responseButtons = block.data.buttons?.map((btn: any, index: number) => ({
+        responseButtons = block.fecha.buttons?.map((btn: any, index: number) => ({
           id: btn.id,
           label: `${btn.emoji || ''} ${btn.label}`.trim(),
           type: btn.action_type === 'url' ? 'url' : 
@@ -707,8 +707,8 @@ async function executeInitialFlowBlock(
         break;
 
       case 'video':
-        responseContent = block.data.video_title || 'Assista a este vídeo:';
-        responseVideoUrl = block.data.video_url;
+        responseContent = block.fecha.video_title || 'Assista a este vídeo:';
+        responseVideoUrl = block.fecha.video_url;
         messageType = 'video';
         break;
 
@@ -718,7 +718,7 @@ async function executeInitialFlowBlock(
 
     // Save message if we have content
     if (responseContent) {
-      const { data: msg } = await supabase
+      const { fecha: msg } = await supabase
         .from('webchat_messages')
         .insert({
           conversation_id: conversationId,

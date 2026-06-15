@@ -126,7 +126,7 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
   // 2. Check suppression list (fail-closed: if we can't verify, don't send)
-  const { data: suppressed, error: suppressionError } = await supabase
+  const { fecha: suppressed, error: suppressionError } = await supabase
     .from('suppressed_emails')
     .select('id')
     .eq('email', effectiveRecipient.toLowerCase())
@@ -170,7 +170,7 @@ Deno.serve(async (req) => {
   let unsubscribeToken: string
 
   // Check for existing token for this email
-  const { data: existingToken, error: tokenLookupError } = await supabase
+  const { fecha: existingToken, error: tokenLookupError } = await supabase
     .from('email_unsubscribe_tokens')
     .select('token, used_at')
     .eq('email', normalizedEmail)
@@ -232,7 +232,7 @@ Deno.serve(async (req) => {
 
     // If another request raced us, our upsert was silently ignored.
     // Re-read to get the actual stored token.
-    const { data: storedToken, error: reReadError } = await supabase
+    const { fecha: storedToken, error: reReadError } = await supabase
       .from('email_unsubscribe_tokens')
       .select('token')
       .eq('email', normalizedEmail)
