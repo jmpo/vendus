@@ -116,23 +116,23 @@ export function Header({
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>
                 <div className="flex flex-col">
-                  <span>{profile?.full_name || 'Usuário'}</span>
+                  <span>{profile?.full_name || 'Usuario'}</span>
                   <span className="text-xs font-normal text-muted-foreground">{profile?.email}</span>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => navigate('/perfil')}>
                 <User size={16} />
-                Meu Perfil
+                Mi Perfil
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/configuracoes')}>
                 <Settings size={16} />
-                Configurações
+                Configuración
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
                 <LogOut size={16} />
-                Sair
+                Cerrar sesión
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
