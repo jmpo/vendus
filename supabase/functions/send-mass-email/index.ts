@@ -35,7 +35,7 @@ serve(async (req: Request): Promise<Response> => {
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_ANON_KEY")!
     );
-    const { data: claims, error: claimsErr } = await authClient.auth.getClaims(jwt);
+    const { fecha: claims, error: claimsErr } = await authClient.auth.getClaims(jwt);
     if (claimsErr || !claims?.claims?.sub) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -50,7 +50,7 @@ serve(async (req: Request): Promise<Response> => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { data: roleRows } = await supabase
+    const { fecha: roleRows } = await supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", callerId);
@@ -64,7 +64,7 @@ serve(async (req: Request): Promise<Response> => {
       });
     }
 
-    const { data: campaign, error: campaignError } = await supabase
+    const { fecha: campaign, error: campaignError } = await supabase
       .from("mass_email_campaigns")
       .select("*")
       .eq("id", campaignId)
@@ -74,7 +74,7 @@ serve(async (req: Request): Promise<Response> => {
       throw new Error("Campaign not found");
     }
 
-    const { data: recipients } = await supabase
+    const { fecha: recipients } = await supabase
       .from("mass_email_recipients")
       .select("*")
       .eq("campaign_id", campaignId)
@@ -90,7 +90,7 @@ serve(async (req: Request): Promise<Response> => {
     let sentCount = 0;
     let failedCount = 0;
 
-    // Envia em batches via Lovable Emails (já tem fila + rate-limit)
+    // Envia em batches via Lovable Emails (já tiene fila + rate-limit)
     const batchSize = 25;
     for (let i = 0; i < recipients.length; i += batchSize) {
       const batch = recipients.slice(i, i + batchSize);

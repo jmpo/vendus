@@ -54,15 +54,15 @@ Deno.serve(async (req) => {
     const admin = createClient(SUPABASE_URL, SERVICE_KEY);
 
     const token = authHeader.replace('Bearer ', '');
-    const { data: userData, error: userErr } = await userClient.auth.getUser(token);
+    const { fecha: userData, error: userErr } = await userClient.auth.getUser(token);
     if (userErr || !userData?.user) return json({ error: 'Unauthorized' }, 401);
     const userId = userData.user.id;
 
     const body = await req.json().catch(() => ({}));
     const action = body.action as string;
 
-    // Resolve scope + permissões
-    const { data: roles } = await admin.from('user_roles').select('role').eq('user_id', userId);
+    // Resolve scope + permisos
+    const { fecha: roles } = await admin.from('user_roles').select('role').eq('user_id', userId);
     const roleSet = new Set((roles ?? []).map((r: any) => r.role));
     const isSuper = roleSet.has('super_admin');
     const isAdminOrManager = roleSet.has('admin') || roleSet.has('manager');
@@ -71,13 +71,13 @@ Deno.serve(async (req) => {
     let organizationId: string | null = null;
 
     if (body.scope === 'platform' || (isSuper && !body.scope)) {
-      if (!isSuper) return json({ error: 'Apenas super admin pode acessar o escopo platform' }, 403);
+      if (!isSuper) return json({ error: 'Apenas super admin puede acessar o escopo platform' }, 403);
       scope = 'platform';
     } else {
       scope = 'organization';
-      const { data: profile } = await admin.from('profiles').select('organization_id').eq('id', userId).maybeSingle();
+      const { fecha: profile } = await admin.from('profiles').select('organization_id').eq('id', userId).maybeSingle();
       organizationId = profile?.organization_id ?? null;
-      if (!organizationId) return json({ error: 'Usuário sem organização' }, 400);
+      if (!organizationId) return json({ error: 'Usuario sem organização' }, 400);
       if (!isAdminOrManager && !isSuper) return json({ error: 'Permissão negada' }, 403);
     }
 
@@ -85,8 +85,8 @@ Deno.serve(async (req) => {
     const fetchCred = async () => {
       const q = admin.from('cakto_credentials').select('*').eq('scope', scope);
       if (scope === 'organization') q.eq('organization_id', organizationId);
-      const { data } = await q.maybeSingle();
-      return data;
+      const { fecha } = await q.maybeSingle();
+      return fecha;
     };
 
     switch (action) {
@@ -97,10 +97,10 @@ Deno.serve(async (req) => {
 
       case 'save_credentials': {
         const { client_id, client_secret, scopes, webhook_secret } = body;
-        if (!client_id || typeof client_id !== 'string') return json({ error: 'client_id obrigatório' }, 400);
+        if (!client_id || typeof client_id !== 'string') return json({ error: 'client_id obligatorio' }, 400);
         const existing = await fetchCred();
         const finalSecret = client_secret && client_secret.length > 0 ? client_secret : existing?.client_secret;
-        if (!finalSecret) return json({ error: 'client_secret obrigatório' }, 400);
+        if (!finalSecret) return json({ error: 'client_secret obligatorio' }, 400);
 
         const payload: any = {
           scope,
@@ -115,19 +115,19 @@ Deno.serve(async (req) => {
           last_error: null,
         };
 
-        const { data: upserted, error } = existing
+        const { fecha: upserted, error } = existing
           ? await admin.from('cakto_credentials').update(payload).eq('id', existing.id).select().maybeSingle()
           : await admin.from('cakto_credentials').insert(payload).select().maybeSingle();
 
         if (error) return json({ error: error.message }, 500);
 
-        // Auto-test após salvar para já refletir o status real (connected/error)
+        // Auto-test após guardar para já refletir o status real (connected/error)
         let testResult: { ok: boolean; error?: string; scope?: string } = { ok: false };
         if (upserted) {
           try {
             const tok = await fetchCaktoToken(upserted.client_id, upserted.client_secret);
             const expiresIso = new Date(Date.now() + tok.expires_in * 1000).toISOString();
-            const { data: refreshed } = await admin.from('cakto_credentials').update({
+            const { fecha: refreshed } = await admin.from('cakto_credentials').update({
               last_token: tok.access_token,
               token_expires_at: expiresIso,
               connection_status: 'connected',
@@ -137,7 +137,7 @@ Deno.serve(async (req) => {
             return json({ credentials: sanitizeCred(refreshed ?? upserted), test: testResult });
           } catch (e: any) {
             const msg = String(e?.message ?? e).slice(0, 500);
-            const { data: refreshed } = await admin.from('cakto_credentials').update({
+            const { fecha: refreshed } = await admin.from('cakto_credentials').update({
               connection_status: 'error',
               last_error: msg,
             }).eq('id', upserted.id).select().maybeSingle();
@@ -151,7 +151,7 @@ Deno.serve(async (req) => {
 
       case 'test_connection': {
         const cred = await fetchCred();
-        if (!cred) return json({ error: 'Credenciais não configuradas' }, 400);
+        if (!cred) return json({ error: 'Credenciais no configuradas' }, 400);
         try {
           const tok = await fetchCaktoToken(cred.client_id, cred.client_secret);
           const expiresIso = new Date(Date.now() + tok.expires_in * 1000).toISOString();
@@ -180,15 +180,15 @@ Deno.serve(async (req) => {
 
       case 'sync_orders': {
         const cred = await fetchCred();
-        if (!cred) return json({ error: 'Credenciais não configuradas' }, 400);
+        if (!cred) return json({ error: 'Credenciais no configuradas' }, 400);
         const accessToken = await ensureCaktoToken(admin, cred);
         let synced = 0;
         let nextUrl: string | null = '/public_api/orders/';
         let safety = 0;
         while (nextUrl && safety < 10) {
           safety++;
-          const data: any = await caktoGet(accessToken, nextUrl, {});
-          const results = Array.isArray(data?.results) ? data.results : [];
+          const fecha: any = await caktoGet(accessToken, nextUrl, {});
+          const results = Array.isArray(fecha?.results) ? fecha.results : [];
           if (results.length === 0) break;
           const rows = results.map((o: any) => mapCaktoOrderForUpsert(o, scope, organizationId));
           const { error: upErr } = await admin.from('cakto_orders').upsert(rows, {
@@ -197,9 +197,9 @@ Deno.serve(async (req) => {
           if (upErr) return json({ error: upErr.message }, 500);
           synced += rows.length;
           // Cakto retorna URLs absolutas; convertemos para path para próximo loop
-          if (data.next) {
+          if (fecha.next) {
             try {
-              const u = new URL(data.next);
+              const u = new URL(fecha.next);
               nextUrl = u.pathname + u.search;
             } catch {
               nextUrl = null;
@@ -215,7 +215,7 @@ Deno.serve(async (req) => {
       case 'get_summary': {
         const q = admin.from('cakto_orders').select('amount, status, paid_at').eq('scope', scope);
         if (scope === 'organization') q.eq('organization_id', organizationId);
-        const { data: orders } = await q;
+        const { fecha: orders } = await q;
         const list = orders ?? [];
         const paid = list.filter((o: any) => o.status === 'paid');
         const totalRevenue = paid.reduce((s: number, o: any) => s + Number(o.amount ?? 0), 0);
@@ -232,7 +232,7 @@ Deno.serve(async (req) => {
       }
 
       default:
-        return json({ error: `Ação inválida: ${action}` }, 400);
+        return json({ error: `Acción inválida: ${action}` }, 400);
     }
   } catch (e: any) {
     console.error('cakto-proxy error', e);

@@ -30,11 +30,11 @@ export interface OrchestratorRunInput {
   customPrompt?: string | null; // overrides the default prompt template
 }
 
-const DEFAULT_ORCHESTRATOR_TEMPLATE = `Você é o orquestrador de atendimento da {{organization_name}}.
+const DEFAULT_ORCHESTRATOR_TEMPLATE = `Usted é o orquestrador de atención da {{organization_name}}.
 
-Sua ÚNICA função é ler a mensagem recebida, classificar produto e intenção,
-e retornar um JSON estruturado. Você não vende, não explica produtos,
-não responde dúvidas técnicas. Apenas classifica e roteia.
+Su ÚNICA função é ler a mensaje recibida, classificar producto e intenção,
+e retornar um JSON estruturado. Usted no vende, no explica productos,
+no responde dudas técnicas. Apenas classifica e roteia.
 
 CANAL DE ENTRADA
 Canal: {{channel}}
@@ -42,15 +42,15 @@ Conexão: {{channel_identifier}}
 
 PRODUTOS DISPONÍVEIS NESTA ORGANIZAÇÃO
 {{products_list}}
-Formato de cada produto: NOME (id: UUID) — descrição curta
+Formato de cada producto: NOME (id: UUID) — descripción corta
 
 INTENÇÕES QUE VOCÊ DEVE IDENTIFICAR
-- informacao → lead quer entender o produto, tirar dúvida
+- informacao → lead quer entender o producto, tirar duda
 - compra     → lead quer contratar, saber preço, condições
-- suporte    → lead já é cliente e tem problema técnico
+- suporte    → lead já é cliente e tiene problema técnico
 - financeiro → boleto, reembolso, cobrança, nota fiscal
 - humano     → lead pediu explicitamente para falar com humano
-- indefinida → não foi possível classificar com confiança
+- indefinida → no fue possível classificar com confiança
 
 CONTEXTO ACUMULADO
 {{orchestrator_context}}
@@ -60,14 +60,14 @@ MENSAGEM RECEBIDA
 "{{message}}"
 
 REGRAS
-1. Se o lead falar "humano", "atendente", "pessoa", "vendedor", "falar com alguém"
+1. Se o lead falar "humano", "agente", "pessoa", "vendedor", "falar com alguém"
    → intencao = "humano" imediatamente.
-2. Se a confiança for menor que 0.6 para identificar o produto → produto_id = null.
-3. Se produto_id for null e ainda houver perguntas disponíveis,
-   → intencao = "indefinida" e escreva UMA pergunta curta em resposta_orquestrador.
-4. Se produto_id continuar null e o limite de perguntas for atingido,
-   → intencao = "humano" e resposta_orquestrador = "Vou te conectar com um dos nossos atendentes agora."
-5. contexto_extraido deve ser uma frase objetiva do que o lead quer.
+2. Se a confiança for menor que 0.6 para identificar o producto → produto_id = null.
+3. Se produto_id for null e ainda houver preguntas disponíveis,
+   → intencao = "indefinida" e escreva UMA pregunta corta em resposta_orquestrador.
+4. Se produto_id continuar null e o limite de preguntas for atingido,
+   → intencao = "humano" e resposta_orquestrador = "Vou te conectar com um dos nossos atendentes ahora."
+5. contexto_extraido debe ser uma frase objetiva do que o lead quer.
 6. resposta_orquestrador só é preenchida quando intencao = "indefinida".`;
 
 function buildPrompt(input: OrchestratorRunInput): string {
@@ -75,7 +75,7 @@ function buildPrompt(input: OrchestratorRunInput): string {
     ? input.products
         .map((p) => `- ${p.name} (id: ${p.id})${p.description ? ` — ${p.description.slice(0, 120)}` : ''}`)
         .join('\n')
-    : '- (nenhum produto cadastrado)';
+    : '- (ningún producto cadastrado)';
 
   const template = (input.customPrompt && input.customPrompt.trim().length > 0)
     ? input.customPrompt
@@ -86,7 +86,7 @@ function buildPrompt(input: OrchestratorRunInput): string {
     conversation: {
       channel: input.channel,
       channel_identifier: input.channelIdentifier || '',
-      orchestrator_context: input.orchestratorContext || '(nenhum)',
+      orchestrator_context: input.orchestratorContext || '(ningún)',
       question_count: input.questionCount,
     },
     message: input.message,
@@ -115,16 +115,16 @@ export async function runOrchestrator(input: OrchestratorRunInput): Promise<Orch
     type: 'function',
     function: {
       name: 'classify_message',
-      description: 'Classifica a mensagem recebida em produto + intenção',
+      description: 'Classifica a mensaje recibida em producto + intenção',
       parameters: {
         type: 'object',
         properties: {
-          produto_id: { type: ['string', 'null'], description: 'UUID exato do produto identificado, ou null' },
-          produto_nome: { type: ['string', 'null'], description: 'Nome legível do produto, ou null' },
+          produto_id: { type: ['string', 'null'], description: 'UUID exato do producto identificado, ou null' },
+          produto_nome: { type: ['string', 'null'], description: 'Nombre legível do producto, ou null' },
           intencao: { type: 'string', enum: VALID_INTENTS },
           confianca: { type: 'number', description: 'Confiança 0-1' },
           contexto_extraido: { type: 'string' },
-          resposta_orquestrador: { type: 'string', description: 'Pergunta curta para o lead apenas se intencao=indefinida' },
+          resposta_orquestrador: { type: 'string', description: 'Pergunta corta para el lead apenas se intencao=indefinida' },
         },
         required: ['intencao', 'confianca', 'contexto_extraido', 'resposta_orquestrador'],
         additionalProperties: false,
@@ -154,15 +154,15 @@ export async function runOrchestrator(input: OrchestratorRunInput): Promise<Orch
       console.error('[orchestrator] provider error:', config.provider, resp.status, text);
       return safeOutput({
         intencao: 'indefinida',
-        resposta_orquestrador: 'Pode me explicar com mais detalhes o que você precisa?',
+        resposta_orquestrador: 'Pode me explicar com mais detalhes o que usted precisa?',
       });
     }
 
-    const data = await resp.json();
-    await recordAIUsage(input.supabase, input.organizationId, config, 'agent_chat', data?.usage, 'orchestrator');
-    const toolCall = data?.choices?.[0]?.message?.tool_calls?.[0];
+    const fecha = await resp.json();
+    await recordAIUsage(input.supabase, input.organizationId, config, 'agent_chat', fecha?.usage, 'orchestrator');
+    const toolCall = fecha?.choices?.[0]?.message?.tool_calls?.[0];
     if (!toolCall?.function?.arguments) {
-      return safeOutput({ intencao: 'indefinida', resposta_orquestrador: 'Pode me dizer um pouco mais sobre o que você procura?' });
+      return safeOutput({ intencao: 'indefinida', resposta_orquestrador: 'Pode me dizer um poco mais sobre o que usted procura?' });
     }
 
     let parsed: any;
@@ -170,7 +170,7 @@ export async function runOrchestrator(input: OrchestratorRunInput): Promise<Orch
       parsed = JSON.parse(toolCall.function.arguments);
     } catch (parseErr) {
       console.error('[orchestrator] JSON parse error:', parseErr);
-      return safeOutput({ intencao: 'indefinida', resposta_orquestrador: 'Pode me dizer um pouco mais sobre o que você precisa?' });
+      return safeOutput({ intencao: 'indefinida', resposta_orquestrador: 'Pode me dizer um poco mais sobre o que usted precisa?' });
     }
 
     return safeOutput(parsed);
@@ -178,7 +178,7 @@ export async function runOrchestrator(input: OrchestratorRunInput): Promise<Orch
     console.error('[orchestrator] unexpected error:', err);
     return safeOutput({
       intencao: 'indefinida',
-      resposta_orquestrador: 'Pode me explicar rapidamente o que você precisa?',
+      resposta_orquestrador: 'Pode me explicar rapidamente o que usted precisa?',
     });
   }
 }

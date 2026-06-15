@@ -51,7 +51,7 @@ function replaceVariables(template: string, variables: Record<string, string>): 
   return result;
 }
 
-// Build smart variable map from lead data + template variables
+// Build smart variable map from lead fecha + template variables
 function buildTemplateVariables(
   lead: { name?: string; email?: string; phone?: string },
   templateVars?: Array<{ name: string; description?: string }>,
@@ -63,11 +63,11 @@ function buildTemplateVariables(
   if (templateVars && Array.isArray(templateVars)) {
     for (const v of templateVars) {
       const lower = v.name.toLowerCase();
-      if (lower.includes('name') || lower.includes('nome')) {
+      if (lower.includes('name') || lower.includes('nombre')) {
         map[v.name] = lead.name || '';
       } else if (lower.includes('email')) {
         map[v.name] = lead.email || '';
-      } else if (lower.includes('phone') || lower.includes('telefone') || lower.includes('fone')) {
+      } else if (lower.includes('phone') || lower.includes('teléfono') || lower.includes('fone')) {
         map[v.name] = lead.phone || '';
       }
     }
@@ -79,7 +79,7 @@ function buildTemplateVariables(
   map['lead_phone'] = lead.phone || '';
   map['userName'] = lead.name || '';
   map['name'] = lead.name || '';
-  map['nome'] = lead.name || '';
+  map['nombre'] = lead.name || '';
   map['email'] = lead.email || '';
 
   // Merge extras (e.g. organizationName)
@@ -140,9 +140,9 @@ function generateWelcomeHtml(leadName: string): string {
           <h1>Bem-vindo(a)!</h1>
         </div>
         <div class="content">
-          <p>Olá <strong>${leadName}</strong>,</p>
-          <p>Obrigado pelo seu interesse! Recebemos seus dados com sucesso.</p>
-          <p>Em breve nossa equipe entrará em contato com você.</p>
+          <p>Hola <strong>${leadName}</strong>,</p>
+          <p>Gracias pelo su interesse! Recebemos sus dados com éxito.</p>
+          <p>Em breve nossa equipo entrará em contato com usted.</p>
         </div>
       </div>
     </body>
@@ -161,11 +161,11 @@ function generateSellerNotificationHtml(
   const defaultMessage = customMessage 
     ? replaceVariables(customMessage, {
         lead_name: leadName,
-        lead_email: leadEmail || 'Não informado',
-        lead_phone: leadPhone || 'Não informado',
+        lead_email: leadEmail || 'No informado',
+        lead_phone: leadPhone || 'No informado',
         lead_url: leadUrl
       })
-    : `Um novo lead foi recebido via webhook e atribuído a você.`;
+    : `Um novo lead fue recibido via webhook e atribuído a usted.`;
 
   return `
     <!DOCTYPE html>
@@ -194,8 +194,8 @@ function generateSellerNotificationHtml(
           <p>${defaultMessage}</p>
           <div class="lead-card">
             <h3>${leadName}</h3>
-            <div class="lead-info"><strong>Email:</strong> ${leadEmail || 'Não informado'}</div>
-            <div class="lead-info"><strong>Telefone:</strong> ${leadPhone || 'Não informado'}</div>
+            <div class="lead-info"><strong>Email:</strong> ${leadEmail || 'No informado'}</div>
+            <div class="lead-info"><strong>Teléfono:</strong> ${leadPhone || 'No informado'}</div>
           </div>
           <p style="text-align: center;">
             <a href="${leadUrl}" class="button">Ver Lead no CRM</a>
@@ -247,13 +247,13 @@ Deno.serve(async (req) => {
     const contentType = (req.headers.get('content-type') || '').toLowerCase();
 
     try {
-      if (contentType.includes('multipart/form-data')) {
+      if (contentType.includes('multipart/form-fecha')) {
         const formData = await req.formData();
         formData.forEach((value, key) => {
           if (value instanceof File) {
             payload[key] = { filename: value.name, type: value.type, size: value.size };
           } else {
-            // Suporta múltiplos valores no mesmo campo
+            // Suporta múltiplos valores no mismo campo
             if (key in payload) {
               payload[key] = Array.isArray(payload[key]) ? [...payload[key], value] : [payload[key], value];
             } else {
@@ -287,7 +287,7 @@ Deno.serve(async (req) => {
           const params = new URLSearchParams(trimmed);
           params.forEach((v, k) => { payload[k] = v; });
         } else {
-          // text/plain ou sem content-type: tenta JSON, depois urlencoded
+          // text/plain ou sem content-type: tenta JSON, después urlencoded
           try {
             payload = JSON.parse(trimmed);
           } catch {
@@ -309,7 +309,7 @@ Deno.serve(async (req) => {
     console.log(`[Webhook] Payload:`, JSON.stringify(payload).slice(0, 500));
 
     // Fetch webhook configuration
-    const { data: webhook, error: webhookError } = await supabase
+    const { fecha: webhook, error: webhookError } = await supabase
       .from('webhooks')
       .select('*')
       .eq('id', webhookId)
@@ -362,7 +362,7 @@ Deno.serve(async (req) => {
     const flatFields = flattenObject(payload);
 
     // Create log entry
-    const { data: log, error: logError } = await supabase
+    const { fecha: log, error: logError } = await supabase
       .from('webhook_logs')
       .insert({
         webhook_id: webhookId,
@@ -514,14 +514,14 @@ async function executeAction(
       const incomingCompany = mappings.company ? getFieldValue(fields, mappings.company) : null;
 
       // ---------- DEDUPE: try to find an existing lead in this org ----------
-      // Use the same canonical normalization as the SQL `phone_normalized` generated column.
+      // Usa the same canonical normalization as the SQL `phone_normalized` generated column.
       const phoneNormalized = normalizePhoneBR(incomingPhone);
       const phoneDigits = incomingPhone ? String(incomingPhone).replace(/\D/g, '') : '';
 
       let existingLead: { id: string; name: string | null; email: string | null } | null = null;
 
       if (phoneNormalized) {
-        const { data: byPhone } = await supabase
+        const { fecha: byPhone } = await supabase
           .from('leads')
           .select('id, name, email')
           .eq('organization_id', webhook.organization_id)
@@ -532,7 +532,7 @@ async function executeAction(
       }
 
       if (!existingLead && incomingEmail) {
-        const { data: byEmail } = await supabase
+        const { fecha: byEmail } = await supabase
           .from('leads')
           .select('id, name, email')
           .eq('organization_id', webhook.organization_id)
@@ -581,7 +581,7 @@ async function executeAction(
       }
 
       if (webhook.product_id) {
-        const { data: firstStage } = await supabase
+        const { fecha: firstStage } = await supabase
           .from('pipeline_stages')
           .select('id')
           .eq('product_id', webhook.product_id)
@@ -600,7 +600,7 @@ async function executeAction(
       if (incomingPhone) leadData.phone = incomingPhone;
       if (incomingCompany) leadData.company = incomingCompany;
 
-      const { data: lead, error } = await supabase
+      const { fecha: lead, error } = await supabase
         .from('leads')
         .insert(leadData)
         .select()
@@ -610,7 +610,7 @@ async function executeAction(
       // fall back to reusing whichever lead now exists.
       if (error) {
         if ((error as any).code === '23505' && phoneNormalized) {
-          const { data: raceLead } = await supabase
+          const { fecha: raceLead } = await supabase
             .from('leads')
             .select('id')
             .eq('organization_id', webhook.organization_id)
@@ -634,7 +634,7 @@ async function executeAction(
 
       if (lead && webhook.squad_id) {
         try {
-          const { data: assignedUserId } = await supabase.rpc('distribute_lead', {
+          const { fecha: assignedUserId } = await supabase.rpc('distribute_lead', {
             p_lead_id: lead.id,
             p_squad_id: webhook.squad_id,
             p_organization_id: webhook.organization_id,
@@ -726,8 +726,8 @@ async function executeAction(
     case 'apply_tags': {
       if (!existingLeadId) throw new Error('No lead to tag');
 
-      // Resolver organization_id do lead (necessário para resolver tags por nome)
-      const { data: leadRow } = await supabase
+      // Resolver organization_id del lead (necessário para resolver tags por nombre)
+      const { fecha: leadRow } = await supabase
         .from('leads')
         .select('organization_id')
         .eq('id', existingLeadId)
@@ -736,11 +736,11 @@ async function executeAction(
 
       let tagIds: string[] = Array.isArray(config.tag_ids) ? [...config.tag_ids] : [];
 
-      // Compatibilidade: se vier nomes legados em config.tags, tenta resolver por nome (case-insensitive)
+      // Compatibilidade: se vier nomes legados em config.tags, tenta resolver por nombre (case-insensitive)
       if ((!tagIds || tagIds.length === 0) && Array.isArray(config.tags) && config.tags.length > 0 && orgId) {
         const names = config.tags.map((s: string) => String(s).trim()).filter(Boolean);
         if (names.length > 0) {
-          const { data: matched } = await supabase
+          const { fecha: matched } = await supabase
             .from('lead_tags')
             .select('id, name')
             .eq('organization_id', orgId);
@@ -803,8 +803,8 @@ async function executeAction(
     case 'send_email': {
       if (!existingLeadId) throw new Error('No lead for email');
 
-      // Get lead data
-      const { data: lead } = await supabase
+      // Get lead fecha
+      const { fecha: lead } = await supabase
         .from('leads')
         .select('name, email, phone, organization_id')
         .eq('id', existingLeadId)
@@ -815,8 +815,8 @@ async function executeAction(
       }
 
       // Get organization name for sender and variables
-      let orgName = 'Notificação';
-      const { data: org } = await supabase
+      let orgName = 'Notificación';
+      const { fecha: org } = await supabase
         .from('organizations')
         .select('name')
         .eq('id', lead.organization_id || webhook.organization_id)
@@ -824,11 +824,11 @@ async function executeAction(
       if (org?.name) orgName = org.name;
 
       // Get email template if configured
-      let subject = 'Obrigado pelo seu interesse!';
+      let subject = 'Gracias pelo su interesse!';
       let html = generateWelcomeHtml(lead.name || 'Cliente');
 
       if (config.email_template_id) {
-        const { data: template } = await supabase
+        const { fecha: template } = await supabase
           .from('email_templates')
           .select('subject, html_content, variables')
           .eq('id', config.email_template_id)
@@ -883,8 +883,8 @@ async function executeAction(
     case 'send_email_to_seller': {
       if (!existingLeadId) throw new Error('No lead for seller notification');
 
-      // Get lead data with assigned seller
-      const { data: lead } = await supabase
+      // Get lead fecha with assigned seller
+      const { fecha: lead } = await supabase
         .from('leads')
         .select('name, email, phone, assigned_to')
         .eq('id', existingLeadId)
@@ -895,7 +895,7 @@ async function executeAction(
       }
 
       // Get seller email and org name in parallel
-      const [{ data: seller }, { data: org }] = await Promise.all([
+      const [{ fecha: seller }, { fecha: org }] = await Promise.all([
         supabase.from('profiles').select('email, full_name').eq('id', lead.assigned_to).single(),
         supabase.from('organizations').select('name').eq('id', webhook.organization_id).single()
       ]);
@@ -922,7 +922,7 @@ async function executeAction(
       
       const subject = config.email_subject 
         ? replaceVariables(config.email_subject, vars)
-        : `Novo lead recebido: ${lead.name || 'Lead'}`;
+        : `Novo lead recibido: ${lead.name || 'Lead'}`;
 
       const html = generateSellerNotificationHtml(
         lead.name || 'Lead',
@@ -964,7 +964,7 @@ async function executeAction(
       }
 
       // Get lead's assigned user
-      const { data: lead } = await supabase
+      const { fecha: lead } = await supabase
         .from('leads')
         .select('assigned_to, name')
         .eq('id', existingLeadId)
@@ -980,7 +980,7 @@ async function executeAction(
         .insert({
           user_id: lead.assigned_to,
           title: 'Novo lead via Webhook',
-          message: config.notification_message || `Lead ${lead.name} recebido via webhook`,
+          message: config.notification_message || `Lead ${lead.name} recibido via webhook`,
           type: 'info',
           action_url: `/leads/${existingLeadId}`
         });
@@ -998,7 +998,7 @@ async function executeAction(
       if (!config.value_field) throw new Error('No value field specified');
 
       // Get custom field info
-      const { data: customField } = await supabase
+      const { fecha: customField } = await supabase
         .from('custom_fields')
         .select('field_key, name')
         .eq('id', config.custom_field_id)
@@ -1010,7 +1010,7 @@ async function executeAction(
       const fieldValue = getFieldValue(fields, config.value_field);
 
       // Get current lead metadata
-      const { data: lead } = await supabase
+      const { fecha: lead } = await supabase
         .from('leads')
         .select('metadata')
         .eq('id', existingLeadId)
@@ -1040,7 +1040,7 @@ async function executeAction(
       if (!existingLeadId) throw new Error('No lead to notify about');
 
       // Determine provider
-      const { data: wpSetting } = await supabase
+      const { fecha: wpSetting } = await supabase
         .from('integration_settings')
         .select('settings')
         .eq('organization_id', webhook.organization_id)
@@ -1056,18 +1056,18 @@ async function executeAction(
         return { lead_id: existingLeadId, skipped: true, reason: 'No WhatsApp provider configured' };
       }
 
-      // Get lead data for variable substitution
-      const { data: lead } = await supabase
+      // Get lead fecha for variable substitution
+      const { fecha: lead } = await supabase
         .from('leads')
         .select('name, email, phone')
         .eq('id', existingLeadId)
         .single();
 
-      const messageTemplate = config.whatsapp_message || 'Novo lead recebido: {{lead_name}}';
+      const messageTemplate = config.whatsapp_message || 'Novo lead recibido: {{lead_name}}';
       const message = replaceVariables(messageTemplate, {
         lead_name: lead?.name || 'Lead',
-        lead_phone: lead?.phone || 'Não informado',
-        lead_email: lead?.email || 'Não informado',
+        lead_phone: lead?.phone || 'No informado',
+        lead_email: lead?.email || 'No informado',
       });
 
       // Determine target numbers
@@ -1080,7 +1080,7 @@ async function executeAction(
         }
       } else if (whatsappTarget === 'specific_user') {
         if (config.whatsapp_user_id) {
-          const { data: profile } = await supabase
+          const { fecha: profile } = await supabase
             .from('profiles')
             .select('phone')
             .eq('id', config.whatsapp_user_id)
@@ -1091,7 +1091,7 @@ async function executeAction(
         }
       } else {
         // all_team — fetch all profiles in organization with phone
-        const { data: profiles } = await supabase
+        const { fecha: profiles } = await supabase
           .from('profiles')
           .select('phone')
           .eq('organization_id', webhook.organization_id)
@@ -1176,8 +1176,8 @@ async function executeAction(
 
       // Removed duplicate lovableApiKey check - already checked above
 
-      // 1. Get lead data
-      const { data: lead } = await supabase
+      // 1. Get lead fecha
+      const { fecha: lead } = await supabase
         .from('leads')
         .select('name, email, phone, metadata, temperature, deal_value')
         .eq('id', existingLeadId)
@@ -1196,7 +1196,7 @@ async function executeAction(
       const agentId = config.ai_agent_id;
       if (!agentId) throw new Error('No AI agent specified');
 
-      const { data: agent } = await supabase
+      const { fecha: agent } = await supabase
         .from('product_agents')
         .select('*')
         .eq('id', agentId)
@@ -1212,10 +1212,10 @@ async function executeAction(
         .eq('is_active', true)
         .order('created_at', { ascending: true })
         .limit(1)
-        .maybeSingle()).data;
+        .maybeSingle()).fecha;
 
       if (!outreachWidget?.id) {
-        const { data: createdWidget, error: createWidgetError } = await supabase
+        const { fecha: createdWidget, error: createWidgetError } = await supabase
           .from('webchat_widgets')
           .insert({
             organization_id: webhook.organization_id,
@@ -1225,13 +1225,13 @@ async function executeAction(
           .select('id')
           .single();
         if (createWidgetError || !createdWidget?.id) {
-          throw new Error(`Falha ao criar widget interno de outreach: ${createWidgetError?.message || 'sem id'}`);
+          throw new Error(`Falha ao crear widget interno de outreach: ${createWidgetError?.message || 'sem id'}`);
         }
         outreachWidget = createdWidget;
       }
 
       // 3. Get product knowledge (brain)
-      const { data: knowledgeSources } = await supabase
+      const { fecha: knowledgeSources } = await supabase
         .from('ai_knowledge_base')
         .select('title, content, category')
         .eq('product_id', agent.product_id)
@@ -1250,7 +1250,7 @@ async function executeAction(
         .join('\n');
 
       // 5. Build AI prompt
-      const systemPrompt = `Você é ${agent.name}, um agente de ${agent.agent_type} da empresa.
+      const systemPrompt = `Usted é ${agent.name}, um agente de ${agent.agent_type} de la empresa.
 
 MISSÃO: ${agent.primary_objective}
 
@@ -1266,19 +1266,19 @@ OBJETIVO DESTA ABORDAGEM: ${config.ai_objective || 'Abordar o lead de forma estr
 ${config.ai_extra_context ? `CONTEXTO ADICIONAL: ${config.ai_extra_context}` : ''}
 
 REGRAS:
-- Gere APENAS a mensagem, sem explicações ou prefixos
-- Seja natural e humano, NÃO pareça um bot
-- Personalize com as informações do lead
-- A mensagem deve ser para WhatsApp (curta, direta, sem formatação HTML)
-- Termine com uma pergunta ou CTA claro`;
+- Genera APENAS a mensaje, sem explicações ou prefixos
+- Sé natural e humano, NÃO pareça um bot
+- Personalize com as información del lead
+- A mensaje debe ser para WhatsApp (corta, direta, sem formatação HTML)
+- Termine com uma pregunta ou CTA claro`;
 
-      const userPrompt = `Gere uma mensagem de primeira abordagem via WhatsApp para este lead:
+      const userPrompt = `Genera uma mensaje de primeira abordagem via WhatsApp para este lead:
 
-Nome: ${lead?.name || 'Lead'}
-Email: ${lead?.email || 'Não informado'}
-Telefone: ${leadPhone}
+Nombre: ${lead?.name || 'Lead'}
+Email: ${lead?.email || 'No informado'}
+Teléfono: ${leadPhone}
 Temperatura: ${lead?.temperature || 'indefinida'}
-Valor do Deal: ${lead?.deal_value || 'Não definido'}
+Valor do Deal: ${lead?.deal_value || 'No definido'}
 ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
 
       // 6. Call AI to generate message
@@ -1314,7 +1314,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       console.log(`[Webhook/AIOutreach] Generated message for ${lead?.name}: ${generatedMessage.slice(0, 100)}...`);
 
       // 7. Determine WhatsApp provider
-      const { data: providerSetting } = await supabase
+      const { fecha: providerSetting } = await supabase
         .from('integration_settings')
         .select('settings')
         .eq('organization_id', webhook.organization_id)
@@ -1340,16 +1340,16 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           instanceQuery = instanceQuery.eq('status', 'connected').order('updated_at', { ascending: false }).limit(1);
         }
 
-        const { data: instances, error: instErr } = await instanceQuery;
+        const { fecha: instances, error: instErr } = await instanceQuery;
         const instance = instances?.[0];
 
         if (instErr || !instance) {
-          throw new Error(`Evolution Go: nenhuma instância conectada encontrada para esta organização (${instErr?.message || 'sem registros'})`);
+          throw new Error(`Evolution Go: ninguna instância conectada encontrada para esta organização (${instErr?.message || 'sem registros'})`);
         }
 
         console.log(`[Webhook/AIOutreach] Sending via Evolution Go instance ${instance.name} (${instance.id}) to ${leadPhone}`);
 
-        const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+        const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
           body: {
             organization_id: webhook.organization_id,
             instance_id: instance.id,
@@ -1376,7 +1376,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           if (lookupResp.status === 404) {
             console.warn(`[Webhook/AIOutreach] BotConversa subscriber not found for ${leadPhone} — skipping WhatsApp send`);
             // Still create conversation and outreach queue but mark as skipped
-            const { data: conversation } = await supabase
+            const { fecha: conversation } = await supabase
               .from('webchat_conversations')
               .insert({
                 organization_id: webhook.organization_id,
@@ -1444,7 +1444,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       }
 
       // 8. Create conversation in inbox
-      const { data: conversation } = await supabase
+      const { fecha: conversation } = await supabase
         .from('webchat_conversations')
         .insert({
           organization_id: webhook.organization_id,
@@ -1545,32 +1545,32 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       const sectorId: string | null = config.flow_sector_id || null;
       if (!flowId) throw new Error('flow_id is required');
 
-      // 1. Carrega lead, funil e (opcionalmente) agente
-      const { data: lead } = await supabase
+      // 1. Carrega lead, embudo e (opcionalmente) agente
+      const { fecha: lead } = await supabase
         .from('leads')
         .select('name, email, phone')
         .eq('id', existingLeadId)
         .single();
 
-      const { data: funnel } = await supabase
+      const { fecha: funnel } = await supabase
         .from('capture_funnels')
         .select('id, name, status, flow_blocks, start_block_id, organization_id')
         .eq('id', flowId)
         .maybeSingle();
-      if (!funnel) throw new Error('Funil não encontrado');
+      if (!funnel) throw new Error('Embudo no encontrado');
       if (funnel.organization_id !== webhook.organization_id) {
-        throw new Error('Funil pertence a outra organização');
+        throw new Error('Embudo pertence a otra organização');
       }
 
       if (agentId) {
-        const { data: agent } = await supabase
+        const { fecha: agent } = await supabase
           .from('product_agents')
           .select('id, name, organization_id')
           .eq('id', agentId)
           .maybeSingle();
-        if (!agent) throw new Error('Agente não encontrado');
+        if (!agent) throw new Error('Agente no encontrado');
         if (agent.organization_id !== webhook.organization_id) {
-          throw new Error('Agente pertence a outra organização');
+          throw new Error('Agente pertence a otra organização');
         }
       }
 
@@ -1579,12 +1579,12 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       const startBlockId: string | null = (funnel as any).start_block_id || blocks[0]?.id || null;
       const startBlock = blocks.find((b: any) => b.id === startBlockId) || blocks[0] || null;
 
-      // 3. Telefone normalizado (BR)
+      // 3. Teléfono normalizado (BR)
       let leadPhone = (lead?.phone || '').replace(/\D/g, '');
       if (leadPhone && !leadPhone.startsWith('55')) leadPhone = '55' + leadPhone;
 
       if (channel === 'whatsapp' && !leadPhone) {
-        return { lead_id: existingLeadId, skipped: true, reason: 'Lead sem telefone para WhatsApp' };
+        return { lead_id: existingLeadId, skipped: true, reason: 'Lead sem teléfono para WhatsApp' };
       }
 
       // 4. Resolve um widget ativo da organização (coluna widget_id é NOT NULL)
@@ -1595,10 +1595,10 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
         .eq('is_active', true)
         .order('created_at', { ascending: true })
         .limit(1)
-        .maybeSingle()).data;
+        .maybeSingle()).fecha;
 
       if (!widgetRow?.id) {
-        const { data: createdWidget, error: createWidgetError } = await supabase
+        const { fecha: createdWidget, error: createWidgetError } = await supabase
           .from('webchat_widgets')
           .insert({
             organization_id: webhook.organization_id,
@@ -1608,7 +1608,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           .select('id')
           .single();
         if (createWidgetError || !createdWidget?.id) {
-          throw new Error(`Falha ao criar widget interno de outreach: ${createWidgetError?.message || 'sem id'}`);
+          throw new Error(`Falha ao crear widget interno de outreach: ${createWidgetError?.message || 'sem id'}`);
         }
         widgetRow = createdWidget;
       }
@@ -1616,13 +1616,13 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       // 5. Determina status inicial conforme atribuição
       // - com agente IA  -> bot_active
       // - com vendedor   -> human_active (já aceito)
-      // - sem nada       -> waiting_human (entra na fila do setor)
+      // - sem nada       -> waiting_human (entra na fila do sector)
       let initialStatus: 'bot_active' | 'human_active' | 'waiting_human';
       if (agentId) initialStatus = 'bot_active';
       else if (assignedUserId) initialStatus = 'human_active';
       else initialStatus = 'waiting_human';
 
-      // 6. Cria/atualiza conversa com contexto do fluxo
+      // 6. Cria/atualiza conversación com contexto do flujo
       const conversationPayload: Record<string, any> = {
         organization_id: webhook.organization_id,
         widget_id: widgetRow.id,
@@ -1647,14 +1647,14 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
         },
       };
 
-      const { data: conversation, error: convErr } = await supabase
+      const { fecha: conversation, error: convErr } = await supabase
         .from('webchat_conversations')
         .insert(conversationPayload)
         .select()
         .single();
-      if (convErr) throw new Error(`Falha ao criar conversa: ${convErr.message}`);
+      if (convErr) throw new Error(`Falha ao crear conversación: ${convErr.message}`);
 
-      // Se vendedor foi atribuído, refletir no lead também (Single Attendant trigger cuida do resto)
+      // Se vendedor fue atribuído, refletir no lead também (Single Attendant trigger cuida do resto)
       if (assignedUserId) {
         await supabase
           .from('leads')
@@ -1662,10 +1662,10 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           .eq('id', existingLeadId);
       }
 
-      // 5. Se canal WhatsApp e bloco inicial é mensagem, envia primeira mensagem via Evolution Go
+      // 5. Se canal WhatsApp e bloco inicial é mensaje, envia primeira mensaje via Evolution Go
       let firstMessageSent: string | null = null;
       if (channel === 'whatsapp' && startBlock) {
-        const blockData = startBlock.data || {};
+        const blockData = startBlock.fecha || {};
         let messageText: string =
           blockData.content ||
           blockData.message ||
@@ -1695,13 +1695,13 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
               .order('updated_at', { ascending: false })
               .limit(1);
           }
-          const { data: instances } = await instanceQuery;
+          const { fecha: instances } = await instanceQuery;
           const instance = instances?.[0];
           if (!instance) {
             throw new Error('Nenhuma instância WhatsApp conectada para a organização');
           }
 
-          const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+          const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
             body: {
               organization_id: webhook.organization_id,
               instance_id: instance.id,
@@ -1712,10 +1712,10 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           });
           if (sendErr || (sendData as any)?.ok === false) {
             const errMsg = sendErr?.message || JSON.stringify(sendData).slice(0, 300);
-            throw new Error(`Falha ao enviar primeira mensagem: ${errMsg}`);
+            throw new Error(`Falha al enviar primeira mensaje: ${errMsg}`);
           }
 
-          // Salva mensagem outbound no histórico
+          // Salva mensaje outbound no histórico
           await supabase.from('webchat_messages').insert({
             conversation_id: conversation.id,
             content: messageText,

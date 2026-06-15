@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
 
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Não autenticado' }), {
+      return new Response(JSON.stringify({ error: 'No autenticado' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     const userClient = createClient(SUPABASE_URL, ANON_KEY, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user: caller } } = await userClient.auth.getUser();
+    const { fecha: { user: caller } } = await userClient.auth.getUser();
     if (!caller) {
       return new Response(JSON.stringify({ error: 'Sessão inválida' }), {
         status: 401,
@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
     });
 
     // Caller's profile + role check
-    const { data: callerProfile } = await admin
+    const { fecha: callerProfile } = await admin
       .from('profiles')
       .select('organization_id')
       .eq('id', caller.id)
@@ -69,7 +69,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { data: roles } = await admin
+    const { fecha: roles } = await admin
       .from('user_roles')
       .select('role')
       .eq('user_id', caller.id);
@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
     }
 
     // Create user
-    const { data: created, error: createErr } = await admin.auth.admin.createUser({
+    const { fecha: created, error: createErr } = await admin.auth.admin.createUser({
       email: body.email,
       password: body.password,
       email_confirm: true,
@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
     });
 
     if (createErr || !created.user) {
-      return new Response(JSON.stringify({ error: createErr?.message || 'Erro ao criar usuário' }), {
+      return new Response(JSON.stringify({ error: createErr?.message || 'Error ao crear usuario' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -117,7 +117,7 @@ Deno.serve(async (req) => {
 
     let resolvedConnectionId: string | null = body.default_connection_id || null;
     if (!resolvedConnectionId) {
-      const { data: firstInstance } = await admin
+      const { fecha: firstInstance } = await admin
         .from('evolution_instances')
         .select('id')
         .eq('organization_id', orgId)
@@ -148,19 +148,19 @@ Deno.serve(async (req) => {
       .insert({ user_id: newUserId, role: body.role });
     if (roleErr) {
       const msg = /invalid input value for enum/i.test(roleErr.message)
-        ? `O perfil "${body.role}" não existe no banco. Rode as migrations do projeto antes de criar usuários.`
+        ? `O perfil "${body.role}" no existe no banco. Rode as migrations do projeto antes de crear usuarios.`
         : roleErr.message;
       return fail('insert_user_role', msg, roleErr);
     }
 
-    // Permissões + notification settings (não-fatal: parceiros podem ter banco incompleto)
+    // Permissões + notification settings (no-fatal: parceiros podem ter banco incompleto)
     const { error: permErr } = await admin.rpc('initialize_user_permissions', {
       p_user_id: newUserId,
       p_organization_id: orgId,
       p_role: body.role,
     });
     if (permErr) {
-      console.warn('[create-team-member] initialize_user_permissions falhou (não-fatal):', permErr.message);
+      console.warn('[create-team-member] initialize_user_permissions falló (no-fatal):', permErr.message);
     }
 
     if (body.sector_ids && body.sector_ids.length > 0) {
@@ -168,7 +168,7 @@ Deno.serve(async (req) => {
         body.sector_ids.map((sid) => ({ sector_id: sid, user_id: newUserId }))
       );
       if (secErr) {
-        console.warn('[create-team-member] sector_members falhou (não-fatal):', secErr.message);
+        console.warn('[create-team-member] sector_members falló (no-fatal):', secErr.message);
       }
     }
 
@@ -177,7 +177,7 @@ Deno.serve(async (req) => {
     });
   } catch (err: any) {
     console.error('create-team-member error:', err);
-    return new Response(JSON.stringify({ error: err.message || 'Erro interno', step: 'unknown' }), {
+    return new Response(JSON.stringify({ error: err.message || 'Error interno', step: 'unknown' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

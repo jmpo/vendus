@@ -53,28 +53,28 @@ Deno.serve(async (req) => {
       }),
     });
 
-    const data = await response.json();
+    const fecha = await response.json();
 
     if (!response.ok) {
-      console.error('Firecrawl API error:', data);
+      console.error('Firecrawl API error:', fecha);
       return new Response(
-        JSON.stringify({ success: false, error: data.error || `Request failed with status ${response.status}` }),
+        JSON.stringify({ success: false, error: fecha.error || `Request failed with status ${response.status}` }),
         { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     // For async crawls, poll for completion
-    if (data.id && data.status === 'scraping') {
-      console.log('Crawl started, polling for completion...', data.id);
+    if (fecha.id && fecha.status === 'scraping') {
+      console.log('Crawl started, polling for completion...', fecha.id);
       
-      let crawlResult = data;
+      let crawlResult = fecha;
       let attempts = 0;
       const maxAttempts = 60; // Max 5 minutes (5s * 60)
       
       while (crawlResult.status === 'scraping' && attempts < maxAttempts) {
         await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds
         
-        const statusResponse = await fetch(`https://api.firecrawl.dev/v1/crawl/${data.id}`, {
+        const statusResponse = await fetch(`https://api.firecrawl.dev/v1/crawl/${fecha.id}`, {
           headers: {
             'Authorization': `Bearer ${apiKey}`,
           },
@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
 
     console.log('Crawl completed');
     return new Response(
-      JSON.stringify(data),
+      JSON.stringify(fecha),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {

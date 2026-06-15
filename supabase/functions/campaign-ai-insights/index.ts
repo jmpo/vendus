@@ -1,4 +1,4 @@
-// Gera insights de uma campanha (melhor agente/contexto/horário, riscos)
+// Gera insights de uma campaña (melhor agente/contexto/horario, riscos)
 // usando Lovable AI Gateway. POST { campaign_id }
 
 const corsHeaders = {
@@ -21,21 +21,21 @@ Deno.serve(async (req) => {
       });
     }
     if (!LOVABLE_API_KEY) {
-      return new Response(JSON.stringify({ error: "AI Gateway não configurado" }), {
+      return new Response(JSON.stringify({ error: "AI Gateway no configurado" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
-    const { data: campaign } = await supabase.from("campaigns").select("*").eq("id", campaign_id).maybeSingle();
+    const { fecha: campaign } = await supabase.from("campaigns").select("*").eq("id", campaign_id).maybeSingle();
     if (!campaign) {
       return new Response(JSON.stringify({ error: "Campaign not found" }), {
         status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const { data: targets } = await supabase
+    const { fecha: targets } = await supabase
       .from("campaign_targets")
       .select("status, context_id, instance_id, sent_at, responded_at")
       .eq("campaign_id", campaign_id)
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     const failed = list.filter((t: any) => t.status === "failed").length;
     const queued = list.filter((t: any) => ["queued", "sending"].includes(t.status)).length;
 
-    // Distribuição de horário das respostas
+    // Distribuição de horario das respuestas
     const respByHour: Record<number, number> = {};
     list.forEach((t: any) => {
       if (t.responded_at) {
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
       contexts: ctxStats,
     };
 
-    const prompt = `Você é o Assistente da Campanha Inteligente da Vendus. Analise os dados a seguir e produza 3 insights práticos para o gestor (em português, máximo 2 linhas cada, sem clichês). Cada insight deve ter: título curto + recomendação acionável.
+    const prompt = `Usted é o Assistente da Campaña Inteligente da Vendus. Analiza os dados a seguir e produza 3 insights práticos para o gestor (en español, máximo 2 linhas cada, sem clichês). Cada insight debe ter: título corto + recomendação acionável.
 
 Dados:
 ${JSON.stringify(summary, null, 2)}

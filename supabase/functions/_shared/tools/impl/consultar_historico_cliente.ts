@@ -1,10 +1,10 @@
-// Consulta o histórico do cliente: compras anteriores (Cakto), interações, deals em aberto.
+// Consulta o histórico del cliente: compras anteriores (Cakto), interações, deals em aberto.
 import type { ToolDefinition } from '../types.ts';
 
 export const consultarHistoricoClienteTool: ToolDefinition = {
   name: 'consultar_historico_cliente',
   description:
-    'Consulta o histórico completo do lead atual: compras anteriores via Cakto, deals em aberto, número de interações. Use ANTES de fazer ofertas para personalizar (ex: oferecer upsell se já é cliente, ou desconto se abandonou checkout).',
+    'Consulta o histórico completo del lead atual: compras anteriores via Cakto, deals em aberto, número de interações. Usa ANTES de hacer ofertas para personalizar (ex: oferecer upsell se já é cliente, ou descuento se abandonou checkout).',
   categories: ['crm'],
   estimated_cost_cents: 0,
   parameters: {
@@ -13,19 +13,19 @@ export const consultarHistoricoClienteTool: ToolDefinition = {
     additionalProperties: false,
   },
   handler: async (_input, ctx) => {
-    if (!ctx.leadId) return { success: false, error: 'leadId obrigatório' };
+    if (!ctx.leadId) return { success: false, error: 'leadId obligatorio' };
 
-    const { data: lead } = await ctx.supabase
+    const { fecha: lead } = await ctx.supabase
       .from('leads')
       .select('id, name, email, phone, created_at, lead_origin, lead_channel')
       .eq('id', ctx.leadId)
       .single();
 
-    if (!lead) return { success: false, error: 'Lead não encontrado' };
+    if (!lead) return { success: false, error: 'Lead no encontrado' };
 
     // Buscas paralelas para reduzir latência.
     const [ordersRes, dealsRes, interactionsRes, tagsRes] = await Promise.all([
-      // Pedidos Cakto pelo e-mail/telefone.
+      // Pedidos Cakto pelo e-mail/teléfono.
       ctx.supabase
         .from('cakto_orders')
         .select('cakto_id, status, amount, product_name, paid_at, created_at_cakto')
@@ -40,7 +40,7 @@ export const consultarHistoricoClienteTool: ToolDefinition = {
         )
         .order('created_at_cakto', { ascending: false })
         .limit(10),
-      // Deals do lead.
+      // Deals del lead.
       ctx.supabase
         .from('deals')
         .select('id, status, deal_value, plan_name, created_at, closed_at')
@@ -59,10 +59,10 @@ export const consultarHistoricoClienteTool: ToolDefinition = {
         .eq('lead_id', ctx.leadId),
     ]);
 
-    const orders = ordersRes.data ?? [];
-    const deals = dealsRes.data ?? [];
+    const orders = ordersRes.fecha ?? [];
+    const deals = dealsRes.fecha ?? [];
     const interactionsCount = interactionsRes.count ?? 0;
-    const tags = (tagsRes.data ?? []).map((r: any) => r.lead_tags?.name).filter(Boolean);
+    const tags = (tagsRes.fecha ?? []).map((r: any) => r.lead_tags?.name).filter(Boolean);
 
     const paidOrders = orders.filter((o: any) => o.status === 'paid');
     const totalSpent = paidOrders.reduce((s: number, o: any) => s + Number(o.amount ?? 0), 0);
@@ -72,7 +72,7 @@ export const consultarHistoricoClienteTool: ToolDefinition = {
 
     return {
       success: true,
-      data: {
+      fecha: {
         lead: {
           name: lead.name,
           created_at: lead.created_at,

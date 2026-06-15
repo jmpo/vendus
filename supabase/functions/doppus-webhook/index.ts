@@ -2,8 +2,8 @@
 // A Doppus envia POST com header `doppus-token` e body JSON.
 // Este endpoint:
 //   1. Sempre responde 2xx (Doppus exige isso para aceitar a URL).
-//   2. Identifica a empresa pelo produto Doppus (items[0].code) ou pelo token.
-//   3. Mapeia status reais da Doppus para a engine unificada de pós-venda.
+//   2. Identifica a empresa pelo producto Doppus (items[0].code) ou pelo token.
+//   3. Mapeia status reais da Doppus para a engine unificada de pós-venta.
 //
 // URL aceita:
 //   .../functions/v1/doppus-webhook
@@ -134,7 +134,7 @@ Deno.serve(async (req) => {
       !!payload.transaction ||
       !!payload.status ||
       Array.isArray(payload.items) ||
-      !!payload.data
+      !!payload.fecha
     );
 
   if (!looksLikeRealEvent) {
@@ -148,20 +148,20 @@ Deno.serve(async (req) => {
     const admin = createClient(SUPABASE_URL, SERVICE_KEY);
 
     // ====== Extrai dados do payload Doppus ======
-    const data = payload.data ?? payload;
-    const customer = data.customer ?? data.buyer ?? {};
-    const transaction = data.transaction ?? data.order ?? {};
-    const payment = data.payment ?? {};
-    const links = data.links ?? {};
-    const items: any[] = Array.isArray(data.items) ? data.items
+    const fecha = payload.fecha ?? payload;
+    const customer = fecha.customer ?? fecha.buyer ?? {};
+    const transaction = fecha.transaction ?? fecha.order ?? {};
+    const payment = fecha.payment ?? {};
+    const links = fecha.links ?? {};
+    const items: any[] = Array.isArray(fecha.items) ? fecha.items
       : Array.isArray(transaction.items) ? transaction.items : [];
-    const firstItem = items[0] ?? data.product ?? {};
-    const offer = firstItem.offer_data ?? data.offer ?? {};
-    const subscription = data.subscription ?? transaction.subscription ?? {};
-    const affiliate = data.affiliate ?? {};
-    const seller = data.seller ?? {};
+    const firstItem = items[0] ?? fecha.product ?? {};
+    const offer = firstItem.offer_data ?? fecha.offer ?? {};
+    const subscription = fecha.subscription ?? transaction.subscription ?? {};
+    const affiliate = fecha.affiliate ?? {};
+    const seller = fecha.seller ?? {};
 
-    const statusRaw = data.status ?? payload.status;
+    const statusRaw = fecha.status ?? payload.status;
     const statusCode: string = statusRaw && typeof statusRaw === 'object'
       ? String(statusRaw.code ?? statusRaw.name ?? '')
       : String(statusRaw ?? '');
@@ -170,18 +170,18 @@ Deno.serve(async (req) => {
       : '';
 
     const paymentMethod: string | null =
-      payment.method ?? data.payment_method ?? transaction.payment_method ?? null;
+      payment.method ?? fecha.payment_method ?? transaction.payment_method ?? null;
 
     const doppusProductId = String(firstItem.code ?? firstItem.id ?? firstItem.sku ?? '');
     const doppusProductName = firstItem.name ?? null;
     const offerName = firstItem.offer_name ?? offer.name ?? null;
     const offerId = firstItem.offer ?? offer.id ?? offer.code ?? null;
 
-    // ====== Resolve a organização e o produto interno ======
+    // ====== Resolve a organização e o producto interno ======
     // Estratégia (em ordem):
-    //   A) ?org=... + produto Doppus mapeado nessa org
-    //   B) qualquer org cuja config tenha esse produto Doppus mapeado
-    //   C) qualquer org cuja config tenha o token recebido
+    //   A) ?org=... + producto Doppus mapeado nessa org
+    //   B) qualquer org cuja config tenha esse producto Doppus mapeado
+    //   C) qualquer org cuja config tenha o token recibido
     //   D) compat legado: webhook_secret + product_mapping
     let resolvedOrgId: string | null = orgParam;
     let cred: any = null;
@@ -191,7 +191,7 @@ Deno.serve(async (req) => {
     } | null = null;
 
     type Row = { organization_id: string; settings: any; is_configured?: boolean };
-    const { data: rowsRaw } = await admin
+    const { fecha: rowsRaw } = await admin
       .from('integration_settings')
       .select('organization_id, settings, is_configured')
       .eq('integration_type', 'doppus')
@@ -227,7 +227,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // B) por produto Doppus
+    // B) por producto Doppus
     if (!matchedProduct && doppusProductId) {
       for (const row of rows) {
         const p = findInRow(row);
@@ -277,7 +277,7 @@ Deno.serve(async (req) => {
     }
 
     if (!resolvedOrgId || !matchedProduct?.internal_product_id) {
-      // Loga (sem org se não resolveu) e RESPONDE 200 — Doppus não pode rejeitar a URL.
+      // Loga (sem org se no resolveu) e RESPONDE 200 — Doppus no puede rejeitar a URL.
       await logEvent(admin, {
         orgId: resolvedOrgId,
         productId: null,
@@ -285,7 +285,7 @@ Deno.serve(async (req) => {
         leadId: null,
         payload,
         extra: {
-          reason: 'produto Doppus não mapeado em nenhuma organização',
+          reason: 'producto Doppus no mapeado em ninguna organização',
           doppus_product_id: doppusProductId || null,
           doppus_product_name: doppusProductName,
           token_fingerprint: tokenFingerprint(tokenReceived),
@@ -309,11 +309,11 @@ Deno.serve(async (req) => {
       await logEvent(admin, {
         orgId, productId: internalProductId, eventType: 'invalid_token', leadId: null, payload,
         extra: {
-          reason: 'token recebido não bate com o cadastrado para este produto',
+          reason: 'token recibido no bate com o cadastrado para este producto',
           token_fingerprint: tokenFingerprint(tokenReceived),
         },
       });
-      // Continua processando — produto foi identificado pelo items[0].code.
+      // Continua processando — producto fue identificado pelo items[0].code.
     }
 
     // ====== Valores ======
@@ -321,17 +321,17 @@ Deno.serve(async (req) => {
       transaction.total ?? transaction.subtotal ?? firstItem.value ?? payment.amount ?? 0,
     );
     const amount = amountCents > 0 ? amountCents / 100 : 0;
-    const currency = transaction.currency ?? data.currency ?? 'BRL';
+    const currency = transaction.currency ?? fecha.currency ?? 'BRL';
     const installments = payment.plots ?? payment.installments ?? transaction.installments ?? 1;
 
     const transactionId = String(
-      transaction.code ?? transaction.id ?? data.transaction_id ?? `doppus-${Date.now()}`,
+      transaction.code ?? transaction.id ?? fecha.transaction_id ?? `doppus-${Date.now()}`,
     );
-    const orderId = transaction.code ?? transaction.order_id ?? data.order_id ?? null;
+    const orderId = transaction.code ?? transaction.order_id ?? fecha.order_id ?? null;
 
-    const buyerEmail = (customer.email ?? data.email ?? '').toString().toLowerCase() || null;
-    const buyerPhone = normalizePhone(customer.phone ?? customer.whatsapp ?? data.phone);
-    const buyerName = customer.name ?? customer.full_name ?? data.name ?? null;
+    const buyerEmail = (customer.email ?? fecha.email ?? '').toString().toLowerCase() || null;
+    const buyerPhone = normalizePhone(customer.phone ?? customer.whatsapp ?? fecha.phone);
+    const buyerName = customer.name ?? customer.full_name ?? fecha.name ?? null;
     const buyerDocument = customer.doc ?? customer.document ?? customer.cpf ?? customer.cnpj ?? null;
 
     const mappedEvent = mapDoppusEvent(statusCode, paymentMethod);
@@ -375,16 +375,16 @@ Deno.serve(async (req) => {
       customer_document: buyerDocument,
       customer_doc_type: customer.doc_type ?? null,
       customer_ip: customer.ip_address ?? null,
-      pix_code: payment.brcode ?? payment.pix_code ?? data.pix?.code ?? null,
-      pix_qrcode_url: links.qrcode ?? payment.pix_qrcode_url ?? data.pix?.qrcode_url ?? null,
-      pix_expires_at: payment.expires_at ?? data.pix?.expires_at ?? null,
-      boleto_url: payment.boleto_url ?? links.boleto ?? data.boleto?.url ?? null,
-      boleto_barcode: payment.barcode ?? payment.line ?? data.boleto?.barcode ?? null,
-      boleto_expires_at: payment.expires_at ?? data.boleto?.expires_at ?? null,
-      payment_link: links.reprocess ?? payment.link ?? data.payment_link ?? null,
-      checkout_url: links.checkout ?? links.reprocess ?? data.checkout_url ?? null,
-      receipt_url: links.receipt ?? data.receipt_url ?? null,
-      invoice_url: links.invoice ?? data.invoice_url ?? null,
+      pix_code: payment.brcode ?? payment.pix_code ?? fecha.pix?.code ?? null,
+      pix_qrcode_url: links.qrcode ?? payment.pix_qrcode_url ?? fecha.pix?.qrcode_url ?? null,
+      pix_expires_at: payment.expires_at ?? fecha.pix?.expires_at ?? null,
+      boleto_url: payment.boleto_url ?? links.boleto ?? fecha.boleto?.url ?? null,
+      boleto_barcode: payment.barcode ?? payment.line ?? fecha.boleto?.barcode ?? null,
+      boleto_expires_at: payment.expires_at ?? fecha.boleto?.expires_at ?? null,
+      payment_link: links.reprocess ?? payment.link ?? fecha.payment_link ?? null,
+      checkout_url: links.checkout ?? links.reprocess ?? fecha.checkout_url ?? null,
+      receipt_url: links.receipt ?? fecha.receipt_url ?? null,
+      invoice_url: links.invoice ?? fecha.invoice_url ?? null,
       reprocess_url: links.reprocess ?? null,
       subscription_id: subscription.id ?? null,
       subscription_status: subscription.status ?? null,
@@ -395,11 +395,11 @@ Deno.serve(async (req) => {
     };
 
     // ====== Resolve/cria lead ======
-    // Busca por phone_normalized (mesma coluna usada na constraint única).
+    // Busca por phone_normalized (misma coluna usada na constraint única).
     let leadId: string | null = null;
 
     if (buyerPhone) {
-      const { data: existing } = await admin
+      const { fecha: existing } = await admin
         .from('leads')
         .select('id')
         .eq('organization_id', orgId)
@@ -416,7 +416,7 @@ Deno.serve(async (req) => {
         }).eq('id', leadId);
       }
     } else if (buyerEmail) {
-      const { data: existing } = await admin
+      const { fecha: existing } = await admin
         .from('leads')
         .select('id')
         .eq('organization_id', orgId)
@@ -433,7 +433,7 @@ Deno.serve(async (req) => {
     }
 
     if (!leadId && (buyerEmail || buyerPhone)) {
-      const { data: created, error: insertErr } = await admin.from('leads').insert({
+      const { fecha: created, error: insertErr } = await admin.from('leads').insert({
         organization_id: orgId,
         name: buyerName ?? buyerEmail ?? 'Comprador Doppus',
         email: buyerEmail,
@@ -446,7 +446,7 @@ Deno.serve(async (req) => {
         console.error('[doppus-webhook] lead insert failed', insertErr);
         // Recupera por unique conflict (org+phone_normalized) ou email
         if (buyerPhone) {
-          const { data: recovered } = await admin
+          const { fecha: recovered } = await admin
             .from('leads')
             .select('id')
             .eq('organization_id', orgId)
@@ -463,7 +463,7 @@ Deno.serve(async (req) => {
           }
         }
         if (!leadId && buyerEmail) {
-          const { data: recovered } = await admin
+          const { fecha: recovered } = await admin
             .from('leads')
             .select('id')
             .eq('organization_id', orgId)
@@ -497,7 +497,7 @@ Deno.serve(async (req) => {
     };
     const orderStatus = orderStatusMap[mappedEvent] ?? 'unknown';
 
-    const { data: leadInfo } = await admin
+    const { fecha: leadInfo } = await admin
       .from('leads').select('assigned_to').eq('id', leadId).maybeSingle();
 
     try {
@@ -538,7 +538,7 @@ Deno.serve(async (req) => {
     return json({ ok: true, statusCode, mappedEvent, leadId, engine: engineResult });
   } catch (err) {
     console.error('[doppus-webhook] fatal', err);
-    // Mesmo em erro inesperado, respondemos 200 para Doppus não desativar a URL.
+    // Mesmo em error inesperado, respondemos 200 para Doppus no desativar a URL.
     return json({ ok: false, error: (err as Error).message });
   }
 });

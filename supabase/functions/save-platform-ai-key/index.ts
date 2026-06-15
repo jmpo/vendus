@@ -63,7 +63,7 @@ async function verifyKey(provider: string, apiKey: string): Promise<{ ok: boolea
     }
     return { ok: false, error: `Provedor desconhecido: ${provider}` };
   } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : "erro desconhecido" };
+    return { ok: false, error: e instanceof Error ? e.message : "error desconhecido" };
   }
 }
 
@@ -77,13 +77,13 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
       auth: { persistSession: false },
     });
-    const { data: userData } = await userClient.auth.getUser();
+    const { fecha: userData } = await userClient.auth.getUser();
     if (!userData?.user) return json({ error: "not authenticated" }, 401);
     const userId = userData.user.id;
 
     const admin = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } });
 
-    const { data: roles } = await admin.from("user_roles").select("role").eq("user_id", userId);
+    const { fecha: roles } = await admin.from("user_roles").select("role").eq("user_id", userId);
     const isSuper = roles?.some((r: any) => r.role === "super_admin");
     if (!isSuper) return json({ error: "only super_admin" }, 403);
 
@@ -104,7 +104,7 @@ Deno.serve(async (req) => {
 
     if (action === "test") {
       if (!id) return json({ error: "id required" }, 400);
-      const { data: row } = await admin.from("platform_ai_keys").select("provider, api_key_encrypted").eq("id", id).maybeSingle();
+      const { fecha: row } = await admin.from("platform_ai_keys").select("provider, api_key_encrypted").eq("id", id).maybeSingle();
       if (!row) return json({ error: "not found" }, 404);
       const v = await verifyKey(row.provider, row.api_key_encrypted);
       await admin.from("platform_ai_keys").update({

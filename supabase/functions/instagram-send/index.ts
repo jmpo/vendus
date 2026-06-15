@@ -1,6 +1,6 @@
 // instagram-send
 // Envia DM via Graph: POST /{page_id}/messages
-// recipient.id = ig_sender_id (PSID do usuário IG).
+// recipient.id = ig_sender_id (PSID do usuario IG).
 // Detecta janela 24h via RPC is_within_24h_window.
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -40,7 +40,7 @@ Deno.serve(async (req: Request) => {
 
   // Resolver via conversation_id se faltar
   if (conversation_id && (!connId || !toId)) {
-    const { data: conv } = await sb
+    const { fecha: conv } = await sb
       .from('webchat_conversations')
       .select('instagram_connection_id, ig_sender_id, organization_id')
       .eq('id', conversation_id)
@@ -52,7 +52,7 @@ Deno.serve(async (req: Request) => {
 
   if (!connId || !toId) return json({ error: 'missing connection_id or recipient_id' }, 400);
 
-  const { data: conn, error: connErr } = await sb
+  const { fecha: conn, error: connErr } = await sb
     .from('instagram_connections')
     .select('*')
     .eq('id', connId)
@@ -63,11 +63,11 @@ Deno.serve(async (req: Request) => {
 
   // janela 24h
   if (conversation_id && !tag) {
-    const { data: ok } = await sb.rpc('is_within_24h_window', { _conversation_id: conversation_id });
+    const { fecha: ok } = await sb.rpc('is_within_24h_window', { _conversation_id: conversation_id });
     if (ok === false) {
       return json({
         error: 'OUT_OF_WINDOW',
-        message: 'Fora da janela 24h do Instagram. Para responder, use uma message tag (ex: HUMAN_AGENT) ou aguarde o usuário enviar nova mensagem.',
+        message: 'Fora da janela 24h do Instagram. Para responder, use uma message tag (ex: HUMAN_AGENT) ou aguarde o usuario enviar nova mensaje.',
       }, 422);
     }
   }

@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     }
 
     // Get agent
-    const { data: agent } = await supabase
+    const { fecha: agent } = await supabase
       .from("product_agents")
       .select("*")
       .eq("id", agent_id)
@@ -56,10 +56,10 @@ Deno.serve(async (req) => {
 
     if (!agent) throw new Error("Agent not found");
 
-    // Resolve widget ativo da organização (necessário para criar conversa no inbox)
+    // Resolve widget ativo da organização (necessário para crear conversación no inbox)
     let outreachWidgetId: string | null = null;
     {
-      const { data: existingWidget } = await supabase
+      const { fecha: existingWidget } = await supabase
         .from("webchat_widgets")
         .select("id")
         .eq("organization_id", organization_id)
@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
       if (existingWidget?.id) {
         outreachWidgetId = existingWidget.id;
       } else {
-        const { data: createdWidget, error: createWidgetErr } = await supabase
+        const { fecha: createdWidget, error: createWidgetErr } = await supabase
           .from("webchat_widgets")
           .insert({
             organization_id,
@@ -80,14 +80,14 @@ Deno.serve(async (req) => {
           .select("id")
           .single();
         if (createWidgetErr) {
-          console.error("[ManualOutreach] Falha ao criar widget interno:", createWidgetErr);
+          console.error("[ManualOutreach] Falha ao crear widget interno:", createWidgetErr);
         }
         outreachWidgetId = createdWidget?.id ?? null;
       }
     }
 
     // Get knowledge
-    const { data: knowledgeSources } = await supabase
+    const { fecha: knowledgeSources } = await supabase
       .from("ai_knowledge_base")
       .select("title, content, category")
       .eq("product_id", agent.product_id)
@@ -104,7 +104,7 @@ Deno.serve(async (req) => {
     for (const leadId of lead_ids) {
       try {
         // Get lead
-        const { data: lead } = await supabase
+        const { fecha: lead } = await supabase
           .from("leads")
           .select("name, email, phone, metadata, temperature, deal_value")
           .eq("id", leadId)
@@ -119,7 +119,7 @@ Deno.serve(async (req) => {
 
         // Dedupe: skip if there's already an active outreach for this (lead, agent)
         // OR if the same agent already messaged this lead in the last 24h.
-        const { data: existingOutreach } = await supabase
+        const { fecha: existingOutreach } = await supabase
           .from("ai_outreach_queue")
           .select("id, last_outreach_at, status")
           .eq("lead_id", leadId)
@@ -133,14 +133,14 @@ Deno.serve(async (req) => {
           const lastAt = existingOutreach.last_outreach_at ? new Date(existingOutreach.last_outreach_at).getTime() : 0;
           const hoursSince = (Date.now() - lastAt) / 3600000;
           if (hoursSince < 24) {
-            console.log(`[ManualOutreach] Dedupe: lead ${leadId} já tem outreach do agente ${agent_id} há ${hoursSince.toFixed(1)}h — pulando.`);
+            console.log(`[ManualOutreach] Dedupe: lead ${leadId} já tiene outreach del agente ${agent_id} há ${hoursSince.toFixed(1)}h — pulando.`);
             results.push({ leadId, skipped: true, reason: "Outreach ativo recente para este agente" });
             continue;
           }
         }
 
         // Reuse existing conversation for this lead+phone if present
-        const { data: existingConv } = await supabase
+        const { fecha: existingConv } = await supabase
           .from("webchat_conversations")
           .select("id, status")
           .eq("lead_id", leadId)
@@ -149,7 +149,7 @@ Deno.serve(async (req) => {
           .maybeSingle();
 
         // If conversation is already with a human, do NOT send AI outreach
-        // (a menos que o caller force — usado em automações pós-venda críticas)
+        // (a menos que o caller force — usado em automações pós-venta críticas)
         if (existingConv && !force_when_human && (existingConv.status === "human_active" || existingConv.status === "waiting_human")) {
           results.push({ leadId, skipped: true, reason: `Conversation in ${existingConv.status}` });
           continue;
@@ -171,16 +171,16 @@ Deno.serve(async (req) => {
 
         const modeRules = mode === 'conversational'
           ? `MODO: CONVERSA INTENCIONAL
-- Gere APENAS uma abertura curta (1–2 linhas, no máx. 25 palavras).
-- Faça UMA pergunta provocativa referenciando o evento (ex.: "Vi que você gerou um Pix, conseguiu finalizar?").
-- NÃO entregue Pix, link, código, instruções ou dados do evento agora — só pergunte.
-- Aguarde a resposta do lead antes de oferecer qualquer detalhe.`
+- Genera APENAS uma abertura corta (1–2 linhas, no máx. 25 palavras).
+- Faça UMA pregunta provocativa referenciando o evento (ex.: "Vi que usted gerou um Pix, conseguiu finalizar?").
+- NÃO entregue Pix, link, código, instruções ou dados do evento ahora — só pergunte.
+- Aguarde a respuesta del lead antes de oferecer qualquer detalhe.`
           : `MODO: MENSAGEM DIRETA
-- Gere uma mensagem completa, mas em no máx. 2 parágrafos curtos.
+- Genera uma mensaje completa, mas em no máx. 2 parágrafos curtos.
 - Se houver Pix/link, coloque cada um em linha própria, sem texto extra junto.
-- Sem despedidas longas. Termine com UMA pergunta ou CTA claro.`;
+- Sem despedidas longas. Termine com UMA pregunta ou CTA claro.`;
 
-        const systemPrompt = `Você é ${agent.name}, um agente de ${agent.agent_type} da empresa.
+        const systemPrompt = `Usted é ${agent.name}, um agente de ${agent.agent_type} de la empresa.
 MISSÃO: ${agent.primary_objective}
 TOM DE VOZ: ${agent.tone_style || "Consultivo"}
 ESTILO DE MENSAGEM: ${agent.message_style || "Curta e objetiva"}
@@ -192,15 +192,15 @@ ${extra_context ? `CONTEXTO ADICIONAL: ${extra_context}` : ""}
 ${eventCtxLines ? `CONTEXTO DO EVENTO:\n${eventCtxLines}` : ""}
 ${modeRules}
 REGRAS GERAIS:
-- Gere APENAS a mensagem, sem explicações ou prefixos.
-- Seja natural e humano, NÃO pareça um bot. Sem clichês ("espero que esteja bem", etc.).
-- Personalize com as informações do lead.
+- Genera APENAS a mensaje, sem explicações ou prefixos.
+- Sé natural e humano, NÃO pareça um bot. Sem clichês ("espero que esteja bem", etc.).
+- Personalize com as información del lead.
 - WhatsApp: sem markdown, sem HTML.`;
 
-        const userPrompt = `Gere a mensagem de primeira abordagem via WhatsApp para este lead:
-Nome: ${lead?.name || "Lead"}
-Email: ${lead?.email || "Não informado"}
-Telefone: ${leadPhone}
+        const userPrompt = `Genera a mensaje de primeira abordagem via WhatsApp para este lead:
+Nombre: ${lead?.name || "Lead"}
+Email: ${lead?.email || "No informado"}
+Teléfono: ${leadPhone}
 Temperatura: ${lead?.temperature || "indefinida"}
 ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
 
@@ -236,13 +236,13 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
 
         // Quebra em até 2 bolhas curtas (regra padrão WhatsApp do projeto)
         const bubbles = mode === 'conversational'
-          ? [generatedMessage] // já forçamos curto no prompt
+          ? [generatedMessage] // já forçamos corto no prompt
           : splitIntoBubbles(generatedMessage, { maxChunks: 2, targetCharsPerChunk: 280 });
 
         let sent = false;
         for (let i = 0; i < bubbles.length; i++) {
           try {
-            const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+            const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
               body: {
                 organization_id,
                 instance_id,
@@ -283,7 +283,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
 
         let conversation = existingConv ? { id: existingConv.id } : null;
         if (!conversation) {
-          const { data: newConv, error: convErr } = await supabase
+          const { fecha: newConv, error: convErr } = await supabase
             .from("webchat_conversations")
             .insert({
               organization_id,
@@ -307,8 +307,8 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
           }
           conversation = newConv;
         } else if (mode === 'conversational' && convMetadata.pending_payment_data) {
-          // Mescla payload pendente em conversa já existente
-          const { data: convRow } = await supabase
+          // Mescla payload pendente em conversación já existente
+          const { fecha: convRow } = await supabase
             .from('webchat_conversations')
             .select('metadata')
             .eq('id', existingConv!.id)

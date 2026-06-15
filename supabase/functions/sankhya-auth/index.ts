@@ -41,7 +41,7 @@ serve(async (req: Request): Promise<Response> => {
       const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
       const supabase = createClient(supabaseUrl, supabaseKey);
 
-      const { data: settings, error } = await supabase
+      const { fecha: settings, error } = await supabase
         .from("integration_settings")
         .select("settings")
         .eq("organization_id", organization_id)
@@ -49,7 +49,7 @@ serve(async (req: Request): Promise<Response> => {
         .single();
 
       if (error || !settings) {
-        throw new Error("Configurações do Sankhya não encontradas");
+        throw new Error("Configurações do Sankhya no encontradas");
       }
 
       const config = settings.settings as {
@@ -62,7 +62,7 @@ serve(async (req: Request): Promise<Response> => {
       clientSecret = config.client_secret;
       xToken = config.x_token;
     } else {
-      throw new Error("Credenciais ou organization_id são obrigatórios");
+      throw new Error("Credenciais ou organization_id son obrigatórios");
     }
 
     if (!clientId || !clientSecret || !xToken) {
@@ -97,20 +97,20 @@ serve(async (req: Request): Promise<Response> => {
 
     // Check for Sankhya-specific error
     if (authData.status === "0" || authData.statusMessage) {
-      throw new Error(authData.statusMessage || "Erro na autenticação Sankhya");
+      throw new Error(authData.statusMessage || "Error na autenticação Sankhya");
     }
 
     // Extract bearer token from response
     const bearerToken = authData.responseBody?.jsessionid?.$;
     
     if (!bearerToken && action === 'authenticate') {
-      throw new Error("Token de sessão não retornado");
+      throw new Error("Token de sessão no retornado");
     }
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: action === 'test' ? "Conexão estabelecida com sucesso" : "Autenticado",
+        message: action === 'test' ? "Conexão estabelecida com éxito" : "Autenticado",
         token: bearerToken,
         expiresIn: 300 // 5 minutes
       }),

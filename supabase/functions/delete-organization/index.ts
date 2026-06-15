@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
 
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Não autenticado" }), {
+      return new Response(JSON.stringify({ error: "No autenticado" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -28,7 +28,7 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const {
-      data: { user: caller },
+      fecha: { user: caller },
     } = await userClient.auth.getUser();
     if (!caller) {
       return new Response(JSON.stringify({ error: "Sessão inválida" }), {
@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    const { data: isSuper } = await admin.rpc("is_super_admin", {
+    const { fecha: isSuper } = await admin.rpc("is_super_admin", {
       _user_id: caller.id,
     });
     if (!isSuper) {
@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
     };
     if (!organization_id) {
       return new Response(
-        JSON.stringify({ error: "organization_id obrigatório" }),
+        JSON.stringify({ error: "organization_id obligatorio" }),
         {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -64,21 +64,21 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { data: org } = await admin
+    const { fecha: org } = await admin
       .from("organizations")
       .select("id, name")
       .eq("id", organization_id)
       .maybeSingle();
 
     if (!org) {
-      return new Response(JSON.stringify({ error: "Empresa não encontrada" }), {
+      return new Response(JSON.stringify({ error: "Empresa no encontrada" }), {
         status: 404,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Deleta usuários da org no auth (cascata limpa profiles e roles)
-    const { data: members } = await admin
+    // Deleta usuarios da org no auth (cascata limpa profiles e roles)
+    const { fecha: members } = await admin
       .from("profiles")
       .select("id")
       .eq("organization_id", organization_id);

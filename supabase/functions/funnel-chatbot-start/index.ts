@@ -1,7 +1,7 @@
-// Cria uma webchat_conversations a partir de um funil público (canal chat),
+// Cria uma webchat_conversations a partir de um embudo público (canal chat),
 // auto-criando o lead se possível. Usado pelo PublicChat (/c/:slug) quando
-// o fluxo encontra um bloco ai_takeover / agent_switch e precisa delegar
-// o atendimento para um Agente IA real via webchat-bot.
+// o flujo encontra um bloco ai_takeover / agent_switch e precisa delegar
+// o atención para um Agente IA real via webchat-bot.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -48,7 +48,7 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     );
 
-    const { data: funnel, error: funnelErr } = await supabase
+    const { fecha: funnel, error: funnelErr } = await supabase
       .from('capture_funnels')
       .select('id, organization_id, product_id, name')
       .eq('id', body.funnel_id)
@@ -60,8 +60,8 @@ serve(async (req) => {
       });
     }
 
-    // Reaproveita conversa recente do mesmo visitor (mesmo funil) se ainda aberta.
-    const { data: existing } = await supabase
+    // Reaproveita conversación recente do mismo visitor (mismo embudo) se ainda aberta.
+    const { fecha: existing } = await supabase
       .from('webchat_conversations')
       .select('id, lead_id, status')
       .eq('organization_id', funnel.organization_id)
@@ -80,7 +80,7 @@ serve(async (req) => {
     if (body.override_handoff_triggers?.length) flowVariables['__override_handoff_triggers'] = JSON.stringify(body.override_handoff_triggers);
 
     if (!conversation) {
-      const { data: created, error: insErr } = await supabase
+      const { fecha: created, error: insErr } = await supabase
         .from('webchat_conversations')
         .insert({
           organization_id: funnel.organization_id,
@@ -114,7 +114,7 @@ serve(async (req) => {
       }
       conversation = { ...created, status: 'bot_active' } as any;
     } else {
-      // Conversa reaproveitada → atualiza agente/contexto.
+      // Conversación reaproveitada → atualiza agente/contexto.
       await supabase
         .from('webchat_conversations')
         .update({
@@ -125,7 +125,7 @@ serve(async (req) => {
         .eq('id', conversation.id);
     }
 
-    // Auto-cria lead se ainda não houver
+    // Auto-cria lead se ainda no houver
     let leadId = conversation.lead_id || null;
     if (!leadId) {
       try {
@@ -136,7 +136,7 @@ serve(async (req) => {
             orFilters.push(`phone.eq.${body.visitor_phone}`);
             orFilters.push(`phone_normalized.eq.${body.visitor_phone}`);
           }
-          const { data: existingLead } = await supabase
+          const { fecha: existingLead } = await supabase
             .from('leads')
             .select('id')
             .eq('organization_id', funnel.organization_id)
@@ -147,7 +147,7 @@ serve(async (req) => {
         }
         if (!leadId) {
           const visitorShort = String(body.visitor_id || '').slice(-6) || 'novo';
-          const { data: newLead } = await supabase
+          const { fecha: newLead } = await supabase
             .from('leads')
             .insert({
               organization_id: funnel.organization_id,

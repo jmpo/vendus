@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
     const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const admin = createClient(SUPABASE_URL, SERVICE_KEY);
 
-    const { data: cred } = await admin
+    const { fecha: cred } = await admin
       .from('hotmart_credentials')
       .select('*')
       .eq('organization_id', orgId)
@@ -75,26 +75,26 @@ Deno.serve(async (req) => {
     if (!payload) return json({ error: 'invalid json' }, 400);
 
     // Hotmart manda hottok dentro do body também (campo "hottok")
-    const incomingHottok = hottokParam ?? payload.hottok ?? payload.data?.hottok;
+    const incomingHottok = hottokParam ?? payload.hottok ?? payload.fecha?.hottok;
     if (cred.hottok && cred.hottok !== incomingHottok) {
       console.warn('[hotmart-webhook] invalid hottok for org', orgId);
       return json({ error: 'invalid hottok' }, 401);
     }
 
     const event: string = payload.event ?? payload.type ?? 'UNKNOWN';
-    const data = payload.data ?? payload;
-    const purchase = data.purchase ?? data;
-    const buyer = data.buyer ?? purchase.buyer ?? {};
-    const product = data.product ?? purchase.product ?? {};
-    const subscription = data.subscription ?? purchase.subscription ?? null;
+    const fecha = payload.fecha ?? payload;
+    const purchase = fecha.purchase ?? fecha;
+    const buyer = fecha.buyer ?? purchase.buyer ?? {};
+    const product = fecha.product ?? purchase.product ?? {};
+    const subscription = fecha.subscription ?? purchase.subscription ?? null;
 
     const transactionId =
-      purchase.transaction ?? purchase.id ?? data.transaction ?? data.id ?? `${event}-${Date.now()}`;
+      purchase.transaction ?? purchase.id ?? fecha.transaction ?? fecha.id ?? `${event}-${Date.now()}`;
 
-    const rawStatus = (purchase.status ?? data.status ?? '').toString().toUpperCase();
+    const rawStatus = (purchase.status ?? fecha.status ?? '').toString().toUpperCase();
     const status = STATUS_MAP[rawStatus] ?? STATUS_MAP[event.replace('PURCHASE_', '')] ?? 'pending';
 
-    const paymentTypeRaw = (purchase.payment?.type ?? data.payment?.type ?? '').toString().toUpperCase();
+    const paymentTypeRaw = (purchase.payment?.type ?? fecha.payment?.type ?? '').toString().toUpperCase();
     let paymentMethod: string | null = null;
     if (paymentTypeRaw.includes('PIX')) paymentMethod = 'pix';
     else if (paymentTypeRaw.includes('BILLET') || paymentTypeRaw.includes('BOLETO')) paymentMethod = 'billet';
@@ -108,17 +108,17 @@ Deno.serve(async (req) => {
     }
 
     const amount = Number(
-      purchase.price?.value ?? purchase.full_price?.value ?? purchase.offer?.price ?? data.amount ?? 0,
+      purchase.price?.value ?? purchase.full_price?.value ?? purchase.offer?.price ?? fecha.amount ?? 0,
     );
     const currency = purchase.price?.currency_value ?? purchase.full_price?.currency_value ?? 'BRL';
 
     const hotmartProductId = String(product.id ?? product.ucode ?? '');
     const hotmartProductName = product.name ?? null;
 
-    // Resolve mapeamento → produto interno
+    // Resolve mapeamento → producto interno
     let internalProductId: string | null = null;
     if (hotmartProductId) {
-      const { data: mapping } = await admin
+      const { fecha: mapping } = await admin
         .from('hotmart_product_mapping')
         .select('product_id')
         .eq('organization_id', orgId)
@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
       if (mapping?.product_id) {
         internalProductId = mapping.product_id;
       } else {
-        // Auto-cria mapeamento órfão pra aparecer na tela de configuração
+        // Auto-cria mapeamento órfão pra aparecer na tela de configuración
         await admin
           .from('hotmart_product_mapping')
           .upsert(
@@ -166,8 +166,8 @@ Deno.serve(async (req) => {
           status,
           payment_method: paymentMethod,
           installments: purchase.payment?.installments_number ?? null,
-          affiliate_email: data.affiliates?.[0]?.email ?? null,
-          commission_amount: data.commissions?.[0]?.value ?? null,
+          affiliate_email: fecha.affiliates?.[0]?.email ?? null,
+          commission_amount: fecha.commissions?.[0]?.value ?? null,
           subscription_code: subscription?.subscriber?.code ?? subscription?.code ?? null,
           raw_payload: payload,
           created_at_hotmart: purchase.order_date
@@ -184,29 +184,29 @@ Deno.serve(async (req) => {
     }
 
     // Cria/atualiza Lead se temos identificação do comprador
-    // Busca por phone_normalized (mesma coluna usada na constraint única).
+    // Busca por phone_normalized (misma coluna usada na constraint única).
     let leadId: string | null = null;
     if (buyerEmail || buyerPhone) {
       let existingLead: { id: string } | null = null;
       if (buyerPhone) {
-        const { data } = await admin
+        const { fecha } = await admin
           .from('leads')
           .select('id')
           .eq('organization_id', orgId)
           .eq('phone_normalized', buyerPhone)
           .limit(1)
           .maybeSingle();
-        existingLead = data ?? null;
+        existingLead = fecha ?? null;
       }
       if (!existingLead && buyerEmail) {
-        const { data } = await admin
+        const { fecha } = await admin
           .from('leads')
           .select('id')
           .eq('organization_id', orgId)
           .eq('email', buyerEmail)
           .limit(1)
           .maybeSingle();
-        existingLead = data ?? null;
+        existingLead = fecha ?? null;
       }
 
       if (existingLead?.id) {
@@ -220,7 +220,7 @@ Deno.serve(async (req) => {
           })
           .eq('id', leadId);
       } else {
-        const { data: newLead, error: insertErr } = await admin
+        const { fecha: newLead, error: insertErr } = await admin
           .from('leads')
           .insert({
             organization_id: orgId,
@@ -236,7 +236,7 @@ Deno.serve(async (req) => {
           console.error('[hotmart-webhook] lead insert failed', insertErr);
           // Recupera por unique conflict
           if (buyerPhone) {
-            const { data: rec } = await admin
+            const { fecha: rec } = await admin
               .from('leads')
               .select('id')
               .eq('organization_id', orgId)
@@ -246,7 +246,7 @@ Deno.serve(async (req) => {
             if (rec?.id) leadId = rec.id;
           }
           if (!leadId && buyerEmail) {
-            const { data: rec } = await admin
+            const { fecha: rec } = await admin
               .from('leads')
               .select('id')
               .eq('organization_id', orgId)
@@ -261,7 +261,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Dispara automações de tag (mesmo motor da Cakto)
+    // Dispara automações de tag (mismo motor da Cakto)
     if (leadId && mappedEvent) {
       await admin.rpc('apply_tag_automations', {
         p_lead_id: leadId,

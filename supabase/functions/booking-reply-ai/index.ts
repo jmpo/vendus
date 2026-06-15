@@ -18,7 +18,7 @@ const TOOLS = [
     type: "function",
     function: {
       name: "confirm_booking",
-      description: "Confirma a reunião quando o lead aceita o horário atual.",
+      description: "Confirma a reunión quando o lead aceita o horario atual.",
       parameters: { type: "object", properties: {}, additionalProperties: false },
     },
   },
@@ -26,13 +26,13 @@ const TOOLS = [
     type: "function",
     function: {
       name: "reschedule_booking",
-      description: "Reagenda a reunião para um novo horário proposto pelo lead.",
+      description: "Reagenda a reunión para um novo horario proposto pelo lead.",
       parameters: {
         type: "object",
         properties: {
           new_start_iso: {
             type: "string",
-            description: "Novo horário em ISO 8601 com timezone (ex: 2026-06-13T16:00:00-03:00).",
+            description: "Novo horario em ISO 8601 com timezone (ex: 2026-06-13T16:00:00-03:00).",
           },
         },
         required: ["new_start_iso"],
@@ -44,7 +44,7 @@ const TOOLS = [
     type: "function",
     function: {
       name: "cancel_booking",
-      description: "Cancela a reunião quando o lead não pode mais e não quer reagendar agora.",
+      description: "Cancela a reunión quando o lead no puede mais e no quer reagendar ahora.",
       parameters: {
         type: "object",
         properties: { reason: { type: "string" } },
@@ -56,11 +56,11 @@ const TOOLS = [
     type: "function",
     function: {
       name: "propose_followup",
-      description: "Cria um follow-up futuro quando o lead pede para ser chamado depois (ex: semana que vem).",
+      description: "Cria um follow-up futuro quando o lead pede para ser chamado después (ex: semana que vem).",
       parameters: {
         type: "object",
         properties: {
-          when_iso: { type: "string", description: "Quando fazer o follow-up (ISO 8601)." },
+          when_iso: { type: "string", description: "Quando hacer o follow-up (ISO 8601)." },
           reason: { type: "string" },
         },
         required: ["when_iso"],
@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
   }
 
   // Load booking context
-  const { data: booking, error: bErr } = await supabase
+  const { fecha: booking, error: bErr } = await supabase
     .from("booking_requests")
     .select("*, booking_event_types(name, duration_minutes), profiles:host_user_id(full_name)")
     .eq("id", booking_id)
@@ -98,22 +98,22 @@ Deno.serve(async (req) => {
   const startStr = new Date(booking.start_time).toLocaleString("pt-BR", { timeZone: tz });
   const nowStr = new Date().toLocaleString("pt-BR", { timeZone: tz });
 
-  const systemPrompt = `Você é um assistente de agendamento profissional, consultivo e direto (estilo SPIN). Máximo 2 linhas por mensagem.
+  const systemPrompt = `Usted é um assistente de reserva profissional, consultivo e direto (estilo SPIN). Máximo 2 linhas por mensaje.
 
-Contexto da reunião:
+Contexto da reunión:
 - Lead: ${booking.guest_name}
 - Anfitrião: ${booking.profiles?.full_name || "Vendedor"}
-- Evento: ${booking.booking_event_types?.name || "Reunião"}
-- Horário atual: ${startStr} (${tz})
+- Evento: ${booking.booking_event_types?.name || "Reunión"}
+- Horario atual: ${startStr} (${tz})
 - Agora: ${nowStr}
 
-Sua tarefa: interpretar a resposta do lead e chamar UMA tool apropriada:
+Su tarea: interpretar a respuesta del lead e chamar UMA tool apropriada:
 - Se confirma/aceita → confirm_booking
-- Se pede outro horário específico → reschedule_booking(new_start_iso) — converta data/hora natural para ISO 8601 com offset -03:00 (Brasília). NÃO invente: se não der pra inferir data exata, prefira propose_followup.
+- Se pede otro horario específico → reschedule_booking(new_start_iso) — converta fecha/hora natural para ISO 8601 com offset -03:00 (Brasília). NÃO invente: se no der pra inferir fecha exata, prefira propose_followup.
 - Se cancela definitivamente → cancel_booking
-- Se diz "não posso agora, me chama depois/semana que vem/mês que vem" → propose_followup(when_iso) com data aproximada
+- Se diz "no posso ahora, me chama después/semana que vem/mes que vem" → propose_followup(when_iso) com fecha aproximada
 
-Sempre execute UMA tool. Depois escreva uma resposta curta e gentil para enviar ao lead via WhatsApp (máx 2 linhas, 1 emoji).`;
+Sempre execute UMA tool. Depois escreva uma respuesta corta e gentil para enviar al lead via WhatsApp (máx 2 linhas, 1 emoji).`;
 
   let aiCfg;
   try {
@@ -169,7 +169,7 @@ Sempre execute UMA tool. Depois escreva uma resposta curta e gentil para enviar 
       replyText = toolResult.reply || choice?.content || replyText;
     } catch (e: any) {
       console.error("[booking-reply-ai] tool exec failed:", e?.message || e);
-      replyText = "Tive um problema para processar agora. Pode reformular?";
+      replyText = "Tive um problema para processar ahora. Pode reformular?";
     }
   } else if (choice?.content) {
     replyText = String(choice.content).trim();
@@ -211,7 +211,7 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
     await supabase.from("booking_requests")
       .update({ status: "confirmado", confirmed_at: now, last_reply_at: now })
       .eq("id", booking.id);
-    return { reply: `Perfeito, ${firstName(booking.guest_name)}! Reunião confirmada ✅` };
+    return { reply: `Perfeito, ${firstName(booking.guest_name)}! Reunión confirmada ✅` };
   }
 
   if (intent === "cancel_booking") {
@@ -221,13 +221,13 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
     if (booking.calendar_event_id) {
       await supabase.from("calendar_events").update({ status: "cancelled" }).eq("id", booking.calendar_event_id);
     }
-    return { reply: "Tudo bem, cancelei aqui. Se quiser remarcar depois, é só me chamar 🙏" };
+    return { reply: "Tudo bem, cancelei aqui. Se quiser remarcar después, é só me chamar 🙏" };
   }
 
   if (intent === "reschedule_booking" && args?.new_start_iso) {
     const newStart = new Date(args.new_start_iso);
     if (isNaN(newStart.getTime())) {
-      return { reply: "Pode confirmar o dia e o horário novamente, por favor?" };
+      return { reply: "Pode confirmar o día e o horario novamente, por favor?" };
     }
     const durMin = booking.booking_event_types?.duration_minutes || 30;
     const newEnd = new Date(newStart.getTime() + durMin * 60_000);
@@ -247,7 +247,7 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
     }
 
     const niceWhen = newStart.toLocaleString("pt-BR", { timeZone: booking.timezone || "America/Sao_Paulo", dateStyle: "short", timeStyle: "short" });
-    return { reply: `Anotei o novo horário: ${niceWhen} 📅 Em breve te confirmo!` };
+    return { reply: `Anotei o novo horario: ${niceWhen} 📅 Em breve te confirmo!` };
   }
 
   if (intent === "propose_followup" && args?.when_iso) {
@@ -257,7 +257,7 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
       let leadId: string | null = null;
       if (booking.guest_phone) {
         const suffix = booking.guest_phone.replace(/\D/g, "").slice(-10);
-        const { data: leads } = await supabase
+        const { fecha: leads } = await supabase
           .from("leads")
           .select("id, phone")
           .eq("organization_id", booking.organization_id)
@@ -269,8 +269,8 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
       await supabase.from("tasks").insert({
         user_id: booking.host_user_id,
         lead_id: leadId,
-        title: `Follow-up agendamento — ${booking.guest_name}`,
-        description: `Lead pediu para ser chamado depois.${args?.reason ? " Motivo: " + args.reason : ""}`,
+        title: `Follow-up reserva — ${booking.guest_name}`,
+        description: `Lead pediu para ser chamado después.${args?.reason ? " Motivo: " + args.reason : ""}`,
         type: "callback",
         status: "pending",
         priority: "high",

@@ -1,5 +1,5 @@
 // Tipos compartilhados do registry de ferramentas dos agentes.
-// Cada ferramenta declara seu schema (formato OpenAI tool calling),
+// Cada ferramenta declara su schema (formato OpenAI tool calling),
 // recebe um contexto de execução e retorna um resultado padronizado.
 
 export interface ToolContext {
@@ -15,9 +15,9 @@ export interface ToolContext {
 
 export interface ToolResult {
   success: boolean;
-  data?: any;
+  fecha?: any;
   error?: string;
-  // Mensagem curta que o agente pode usar para confirmar a ação ao lead.
+  // Mensaje corta que o agente puede usar para confirmar a acción al lead.
   user_message?: string;
 }
 
@@ -28,7 +28,7 @@ export interface ToolDefinition {
   parameters: Record<string, any>;
   // Custo estimado por execução em centavos (para limites de orçamento).
   estimated_cost_cents?: number;
-  // Categorias para filtrar quais tools um agente específico pode usar.
+  // Categorias para filtrar quais tools um agente específico puede usar.
   categories: Array<'crm' | 'finance' | 'marketing' | 'operations' | 'communication'>;
   handler: (input: Record<string, any>, ctx: ToolContext) => Promise<ToolResult>;
 }

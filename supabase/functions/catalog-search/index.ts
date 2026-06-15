@@ -20,9 +20,9 @@ interface SearchBody {
 }
 
 /**
- * Expande filtros de preço quando o usuário menciona um valor exato.
+ * Expande filtros de preço quando o usuario menciona um valor exato.
  * Ex: cliente diz "13.5 milhões" → busca entre 11.5M e 15.5M (±15%).
- * Isso evita zero resultados quando o catálogo tem item próximo mas não exato.
+ * Isso evita zero resultados quando o catálogo tiene item próximo mas no exato.
  */
 function expandPriceRange(
   filters: SearchBody["filters"]
@@ -30,7 +30,7 @@ function expandPriceRange(
   if (!filters) return {};
   let { price_min, price_max } = filters;
 
-  // Se min e max são iguais (busca exata), expande ±15%
+  // Se min e max son iguais (busca exata), expande ±15%
   if (
     price_min != null &&
     price_max != null &&
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
     const expandedPrice = expandPriceRange(body.filters);
 
     // Chama a RPC inteligente que faz fulltext → fuzzy → fallback
-    const { data, error } = await supabase.rpc("search_catalog_smart", {
+    const { fecha, error } = await supabase.rpc("search_catalog_smart", {
       p_organization_id: body.organization_id,
       p_product_id: body.product_id ?? null,
       p_query: body.query?.trim() || null,
@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const items = (data ?? []).map((it: any) => {
+    const items = (fecha ?? []).map((it: any) => {
       const videos = Array.isArray(it.videos) ? it.videos : [];
       const documents = Array.isArray(it.documents) ? it.documents : [];
       return {
@@ -117,7 +117,7 @@ Deno.serve(async (req) => {
       };
     });
 
-    // Detecta se o resultado é fallback de alternativas (para o agente comunicar honestamente)
+    // Detecta se o resultado é fallback de alternativas (para el agente comunicar honestamente)
     const isAlternativeMatch =
       items.length > 0 && items[0].match_strategy === "alternatives";
     const isFuzzyMatch =
@@ -130,11 +130,11 @@ Deno.serve(async (req) => {
         count: items.length,
         is_alternative_match: isAlternativeMatch,
         is_fuzzy_match: isFuzzyMatch,
-        // Mensagem que o agente pode usar literalmente quando não achou exato
+        // Mensaje que o agente puede usar literalmente quando no achou exato
         agent_hint: isAlternativeMatch
-          ? "Não encontrei exatamente o que o cliente pediu, mas tenho essas opções similares. Apresente como alternativas, sem dizer 'não tenho'."
+          ? "No encontrei exatamente o que el cliente pediu, mas tenho essas opciones similares. Apresente como alternativas, sem dizer 'no tenho'."
           : isFuzzyMatch
-          ? "Encontrei estas opções aproximadas (pode ter sido erro de digitação do cliente). Confirme se é o que ele queria."
+          ? "Encontrei estas opciones aproximadas (puede ter sido error de digitação del cliente). Confirme se é o que ele queria."
           : null,
       }),
       {

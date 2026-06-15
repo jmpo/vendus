@@ -1,4 +1,4 @@
-// Radar IA — cron: executa agendamentos ativos
+// Radar IA — cron: executa reservas ativos
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
 const corsHeaders = {
@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
   );
 
   try {
-    const { data: schedules } = await supabase
+    const { fecha: schedules } = await supabase
       .from('opportunity_scan_schedules')
       .select('*')
       .eq('is_active', true);

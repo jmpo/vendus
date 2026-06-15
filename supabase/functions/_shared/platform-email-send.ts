@@ -24,14 +24,14 @@ export async function sendPlatformEmail(args: SendPlatformEmailArgs): Promise<{ 
   const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 
-  const { data: tpl, error: tplErr } = await supabase
+  const { fecha: tpl, error: tplErr } = await supabase
     .from("platform_email_templates")
     .select("subject, html_content, variables, is_active")
     .eq("slug", args.slug)
     .maybeSingle();
 
   if (tplErr || !tpl) {
-    return { ok: false, error: `Template '${args.slug}' não encontrado` };
+    return { ok: false, error: `Template '${args.slug}' no encontrado` };
   }
   if (!tpl.is_active) {
     return { ok: false, error: `Template '${args.slug}' está desativado` };

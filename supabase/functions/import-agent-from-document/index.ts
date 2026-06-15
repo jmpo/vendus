@@ -1,5 +1,5 @@
 // Importa um agente a partir de um documento (PDF / DOCX / TXT / Markdown).
-// Extrai o texto do arquivo e usa Lovable AI Gateway para estruturar nos campos do agente.
+// Extrai o texto do archivo e usa Lovable AI Gateway para estruturar nos campos del agente.
 //
 // Body: { filename: string, mime_type: string, file_base64: string, agent_type?: string }
 // Resp: { agent: GeneratedAgent }
@@ -18,7 +18,7 @@ const corsHeaders = {
 const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
 
 function base64ToBytes(b64: string): Uint8Array {
-  const clean = b64.replace(/^data:[^,]+,/, "");
+  const clean = b64.replace(/^fecha:[^,]+,/, "");
   const bin = atob(clean);
   const bytes = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
@@ -47,7 +47,7 @@ async function extractPdfText(bytes: Uint8Array): Promise<string> {
     return Array.isArray(text) ? text.join("\n") : String(text || "");
   } catch (err) {
     console.error("[import-agent-from-document] PDF parse error", err);
-    throw new Error("Não foi possível extrair texto do PDF.");
+    throw new Error("No fue possível extrair texto do PDF.");
   }
 }
 
@@ -56,7 +56,7 @@ serve(async (req) => {
 
   try {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY não configurada");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY no configurada");
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -65,20 +65,20 @@ serve(async (req) => {
     // Auth
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Não autenticado" }), {
+      return new Response(JSON.stringify({ error: "No autenticado" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
     const token = authHeader.replace("Bearer ", "");
-    const { data: userData } = await supabase.auth.getUser(token);
+    const { fecha: userData } = await supabase.auth.getUser(token);
     if (!userData?.user) {
       return new Response(JSON.stringify({ error: "Sessão inválida" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const { data: profileRow } = await supabase
+    const { fecha: profileRow } = await supabase
       .from('profiles').select('organization_id').eq('id', userData.user.id).maybeSingle();
     const billingOrgId = (profileRow as any)?.organization_id ?? null;
 
@@ -91,7 +91,7 @@ serve(async (req) => {
     };
 
     if (!file_base64 || !filename) {
-      return new Response(JSON.stringify({ error: "Arquivo ausente" }), {
+      return new Response(JSON.stringify({ error: "Archivo ausente" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -99,7 +99,7 @@ serve(async (req) => {
 
     const bytes = base64ToBytes(file_base64);
     if (bytes.byteLength > MAX_BYTES) {
-      return new Response(JSON.stringify({ error: "Arquivo acima de 5 MB" }), {
+      return new Response(JSON.stringify({ error: "Archivo acima de 5 MB" }), {
         status: 413,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -116,7 +116,7 @@ serve(async (req) => {
       extracted = await extractPdfText(bytes);
     } else {
       return new Response(
-        JSON.stringify({ error: "Formato não suportado. Use PDF, DOCX, TXT ou Markdown." }),
+        JSON.stringify({ error: "Formato no suportado. Usa PDF, DOCX, TXT ou Markdown." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -124,21 +124,21 @@ serve(async (req) => {
     extracted = extracted.replace(/\n{3,}/g, "\n\n").trim();
     if (!extracted || extracted.length < 30) {
       return new Response(
-        JSON.stringify({ error: "Não foi possível extrair conteúdo legível do arquivo." }),
+        JSON.stringify({ error: "No fue possível extrair conteúdo legível do archivo." }),
         { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
     if (extracted.length > 20000) extracted = extracted.slice(0, 20000);
 
-    const systemPrompt = `Você é especialista em projetar agentes de IA conversacionais para vendas e atendimento.
-A partir do briefing/documento abaixo, extraia uma configuração completa de agente.
+    const systemPrompt = `Usted é especialista em projetar agentes de IA conversacionais para ventas e atención.
+A partir do briefing/documento abaixo, extraia uma configuración completa de agente.
 
 REGRAS:
-- Identifique tom, missão, capacidades, restrições e gatilhos de transferência diretamente do texto.
-- Se o texto não menciona um campo, infira algo razoável e profissional, sem clichês.
+- Identifica tom, missão, capacidades, restrições e gatilhos de transferência diretamente do texto.
+- Se o texto no menciona um campo, infira algo razoável e profissional, sem clichês.
 - Mensagens devem seguir SPIN Selling: profissional, objetivo, no máximo 2 linhas por bloco.
 - Nunca use emojis em prompts.
-- additional_prompt deve consolidar TUDO que o documento diz sobre comportamento, em 3-6 parágrafos.`;
+- additional_prompt debe consolidar TUDO que o documento diz sobre comportamento, em 3-6 parágrafos.`;
 
     const userInstruction = `TIPO DE AGENTE SUGERIDO: ${agent_type || "custom"}
 
@@ -147,7 +147,7 @@ DOCUMENTO/BRIEFING:
 ${extracted}
 """
 
-Crie a configuração completa do agente baseada nisso.`;
+Crea a configuración completa del agente baseada nisso.`;
 
     const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -166,7 +166,7 @@ Crie a configuração completa do agente baseada nisso.`;
             type: "function",
             function: {
               name: "create_agent",
-              description: "Configuração completa de um agente de IA",
+              description: "Configuración completa de um agente de IA",
               parameters: {
                 type: "object",
                 properties: {
@@ -209,13 +209,13 @@ Crie a configuração completa do agente baseada nisso.`;
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      throw new Error("Erro no gateway de IA");
+      throw new Error("Error no gateway de IA");
     }
 
-    const data = await aiResp.json();
-    await recordLovableUsage(supabase, billingOrgId, 'content_generation', 'google/gemini-2.5-flash', data?.usage, 'import-agent-from-document');
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall?.function?.arguments) throw new Error("IA não retornou estrutura válida");
+    const fecha = await aiResp.json();
+    await recordLovableUsage(supabase, billingOrgId, 'content_generation', 'google/gemini-2.5-flash', fecha?.usage, 'import-agent-from-document');
+    const toolCall = fecha.choices?.[0]?.message?.tool_calls?.[0];
+    if (!toolCall?.function?.arguments) throw new Error("IA no retornou estrutura válida");
     const agent = JSON.parse(toolCall.function.arguments);
 
     return new Response(JSON.stringify({ agent }), {
@@ -224,7 +224,7 @@ Crie a configuração completa do agente baseada nisso.`;
   } catch (err) {
     console.error("[import-agent-from-document] error", err);
     return new Response(
-      JSON.stringify({ error: err instanceof Error ? err.message : "Erro desconhecido" }),
+      JSON.stringify({ error: err instanceof Error ? err.message : "Error desconhecido" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

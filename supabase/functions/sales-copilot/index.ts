@@ -28,7 +28,7 @@ serve(async (req) => {
     if (messages.length === 0) {
       console.warn("[sales-copilot] empty messages. body keys:", Object.keys(body || {}), "rawLen:", rawMessages.length);
       return new Response(
-        JSON.stringify({ error: "Nenhuma mensagem enviada ao copiloto." }),
+        JSON.stringify({ error: "Nenhuma mensaje enviada ao copiloto." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -37,7 +37,7 @@ serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceKey);
 
-    // Autenticação obrigatória: copiloto é ferramenta interna do vendedor.
+    // Autenticação obligatoria: copiloto é ferramenta interna do vendedor.
     let organizationId: string | null = null;
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
@@ -47,13 +47,13 @@ serve(async (req) => {
     }
     try {
       const token = authHeader.replace("Bearer ", "");
-      const { data: claimsData, error: claimsErr } = await supabase.auth.getClaims(token);
+      const { fecha: claimsData, error: claimsErr } = await supabase.auth.getClaims(token);
       if (claimsErr || !claimsData?.claims?.sub) {
         return new Response(JSON.stringify({ error: "Unauthorized" }), {
           status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { data: prof } = await supabase
+      const { fecha: prof } = await supabase
         .from("profiles").select("organization_id").eq("id", claimsData.claims.sub as string).maybeSingle();
       organizationId = prof?.organization_id ?? null;
     } catch (e) {
@@ -69,27 +69,27 @@ serve(async (req) => {
     if (productId) {
 
       // Fetch AI knowledge base (manual entries)
-      const { data: knowledge } = await supabase
+      const { fecha: knowledge } = await supabase
         .from("ai_knowledge_base")
         .select("title, content, category")
         .eq("product_id", productId)
         .eq("is_active", true);
 
       // Fetch product details
-      const { data: product } = await supabase
+      const { fecha: product } = await supabase
         .from("products")
         .select("name, description, pitch_15s, pitch_30s, pitch_2min, icp, differentials, organization_id")
         .eq("id", productId)
         .single();
 
       // Fetch objections
-      const { data: objections } = await supabase
+      const { fecha: objections } = await supabase
         .from("objections")
         .select("category, what_they_say, what_they_mean, suggested_response")
         .eq("product_id", productId);
 
       // Fetch Product Brain knowledge sources
-      const { data: brainSources } = await supabase
+      const { fecha: brainSources } = await supabase
         .from("product_knowledge_sources")
         .select("source_type, title, extracted_content, transcript, question, answer")
         .eq("product_id", productId)
@@ -104,7 +104,7 @@ serve(async (req) => {
           });
         }
         knowledgeContext += `\n## PRODUTO: ${product.name}\n`;
-        if (product.description) knowledgeContext += `Descrição: ${product.description}\n`;
+        if (product.description) knowledgeContext += `Descripción: ${product.description}\n`;
         if (product.pitch_15s) knowledgeContext += `Pitch 15s: ${product.pitch_15s}\n`;
         if (product.pitch_30s) knowledgeContext += `Pitch 30s: ${product.pitch_30s}\n`;
         if (product.pitch_2min) knowledgeContext += `Pitch 2min: ${product.pitch_2min}\n`;
@@ -176,7 +176,7 @@ serve(async (req) => {
       }
     }
 
-    const systemPrompt = `Você é o COPILOTO DE VENDAS — estrategista que ajuda vendedores a responder clientes.
+    const systemPrompt = `Usted é o COPILOTO DE VENDAS — estrategista que ajuda vendedores a responder clientes.
 
 ${productName ? `PRODUTO: ${productName}` : ""}
 
@@ -186,57 +186,57 @@ ${knowledgeContext ? knowledgeContext : ""}
 COMO USAR A BASE DE CONHECIMENTO
 ═══════════════════════════════════════
 
-- Para DADOS DO PRODUTO (preços, funcionalidades, prazos, specs): use SOMENTE o que está no contexto acima. Se não tiver, diga: "Sobre esse detalhe específico do produto, sugiro confirmar com o gestor antes de responder ao cliente."
-- Para ESTRATÉGIA DE VENDAS (como abordar, como reativar, como negociar, como contornar objeções): use seu conhecimento de vendas consultivas livremente, adaptando ao contexto do produto quando houver informação disponível
-- Quando existir uma FAQ ou treinamento que responda à pergunta, USE como base
-- NUNCA invente preços, custos ou dados técnicos do produto
+- Para DADOS DO PRODUTO (preços, funcionalidades, prazos, specs): use SOMENTE o que está no contexto acima. Se no tiver, diga: "Sobre esse detalhe específico do producto, sugiro confirmar com o gestor antes de responder al cliente."
+- Para ESTRATÉGIA DE VENDAS (como abordar, como reativar, como negociar, como contornar objeções): use su conhecimento de ventas consultivas livremente, adaptando ao contexto do producto quando houver información disponível
+- Quando existir uma FAQ ou treinamento que responda à pregunta, USE como base
+- NUNCA invente preços, custos ou dados técnicos do producto
 
 ═══════════════════════════════════════
 COMO RESPONDER
 ═══════════════════════════════════════
 
-Para TODA situação do vendedor, entregue exatamente neste formato:
+Para TODA situación do vendedor, entregue exatamente neste formato:
 
 **O QUE ELE QUIS DIZER:**
-[1-2 frases explicando a real intenção ou objeção oculta do cliente]
+[1-2 frases explicando a real intenção ou objeção oculta del cliente]
 
 **RESPOSTA ESTRATÉGICA:**
-[Mensagem pronta para copiar e enviar. 2-4 linhas. Tom humano e profissional]
+[Mensaje pronta para copiar e enviar. 2-4 linhas. Tom humano e profissional]
 
 **PERGUNTA DE RETORNO:**
-[1 pergunta para manter a conversa e avançar a venda]
+[1 pregunta para manter a conversación e avançar a venta]
 
 ═══════════════════════════════════════
 REGRAS
 ═══════════════════════════════════════
 
-- Resposta otimizada para WhatsApp (curta, direta)
+- Resposta otimizada para WhatsApp (corta, direta)
 - NÃO use emojis
-- NÃO use asteriscos ou formatação markdown nas respostas prontas
-- Use o nome do cliente quando souber
+- NÃO use asteriscos ou formatação markdown nas respuestas prontas
+- Usa o nombre del cliente quando souber
 - Linguagem natural e profissional
-- Foque em gerar ação, não explicar teoria
+- Foque em gerar acción, no explicar teoria
 
 ═══════════════════════════════════════
 ANÁLISE DE PRINTS
 ═══════════════════════════════════════
 
-Quando receber print de conversa:
-1. Analise rapidamente o contexto
-2. Entregue no mesmo formato das 3 partes
-3. Seja cirúrgico e objetivo
+Quando receber print de conversación:
+1. Analiza rapidamente o contexto
+2. Entregue no mismo formato das 3 partes
+3. Sé cirúrgico e objetivo
 
 ═══════════════════════════════════════
 O QUE NUNCA FAZER
 ═══════════════════════════════════════
 
-- Dar aula ou explicar conceitos de vendas
+- Dar aula ou explicar conceitos de ventas
 - Fazer listas longas
 - Usar emojis
 - Enrolar com introduções
 - Fugir do formato de 3 partes
-- Inventar preços, custos ou dados técnicos do produto
-- Recusar perguntas estratégicas de vendas alegando falta de informação`;
+- Inventar preços, custos ou dados técnicos do producto
+- Recusar preguntas estratégicas de ventas alegando falta de información`;
 
     // Resolve provedor via roteamento da organização (OpenAI direta ou Lovable Gateway)
     const cfg = await resolveAIConfig(supabase, organizationId, 'sales_copilot', 'google/gemini-2.5-flash');
@@ -266,8 +266,8 @@ O QUE NUNCA FAZER
 
     let response = await doCall(false);
 
-    // Não fazemos fallback automático para Lovable aqui: se a org escolheu OpenAI,
-    // qualquer erro deve aparecer como erro OpenAI, sem consumir créditos Lovable.
+    // No fazemos fallback automático para Lovable aqui: se a org escolheu OpenAI,
+    // qualquer error debe aparecer como error OpenAI, sem consumir créditos Lovable.
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => '');
@@ -280,20 +280,20 @@ O QUE NUNCA FAZER
       }
       if (response.status === 402) {
         const msg = cfg.provider === 'openai'
-          ? 'Sua conta OpenAI está sem créditos ou bloqueada. Verifique em platform.openai.com/billing.'
-          : 'Créditos de IA esgotados. Adicione créditos na sua conta Lovable.';
+          ? 'Su cuenta OpenAI está sem créditos ou bloqueada. Verifique em platform.openai.com/billing.'
+          : 'Créditos de IA esgotados. Adicione créditos na su cuenta Lovable.';
         return new Response(JSON.stringify({ error: msg }), {
           status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
       if (response.status === 401 || response.status === 403) {
         return new Response(
-          JSON.stringify({ error: `Chave do provedor "${cfg.provider}" inválida ou sem permissão. Verifique em Integrações.` }),
+          JSON.stringify({ error: `Chave do provedor "${cfg.provider}" inválida ou sem permiso. Verifique em Integrações.` }),
           { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
         );
       }
       return new Response(
-        JSON.stringify({ error: `Erro do provedor ${cfg.provider}: ${errorText.slice(0, 200) || response.statusText}` }),
+        JSON.stringify({ error: `Error do provedor ${cfg.provider}: ${errorText.slice(0, 200) || response.statusText}` }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
@@ -304,7 +304,7 @@ O QUE NUNCA FAZER
   } catch (error) {
     console.error("Sales copilot error:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Erro desconhecido" }),
+      JSON.stringify({ error: error instanceof Error ? error.message : "Error desconhecido" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

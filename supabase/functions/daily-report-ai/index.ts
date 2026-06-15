@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Get organizations with daily report enabled
-    const { data: allSettings, error: settingsError } = await supabase
+    const { fecha: allSettings, error: settingsError } = await supabase
       .from('auto_notification_settings')
       .select('*')
       .eq('daily_report_enabled', true);
@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
     for (const settings of allSettings || []) {
       try {
         // Get all sellers in the organization
-        const { data: sellers, error: sellersError } = await supabase
+        const { fecha: sellers, error: sellersError } = await supabase
           .from('profiles')
           .select('id, full_name, email, organization_id')
           .eq('organization_id', settings.organization_id)
@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
         for (const seller of sellers || []) {
           try {
             // Check if already sent today
-            const { data: existingLog } = await supabase
+            const { fecha: existingLog } = await supabase
               .from('notification_logs')
               .select('id')
               .eq('user_id', seller.id)
@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
               .insert({
                 user_id: seller.id,
                 type: 'system',
-                title: '☀️ Seu briefing do dia',
+                title: '☀️ Su briefing do día',
                 message: report.summary,
                 action_url: '/dashboard',
                 metadata: { full_report: report.full },
@@ -203,13 +203,13 @@ async function gatherSellerContext(supabase: any, userId: string, orgId: string)
   ]);
 
   return {
-    profile: profileResult.data,
-    tasksToday: tasksTodayResult.data || [],
-    overdueTasks: overdueTasksResult.data || [],
-    stalledLeads: stalledLeadsResult.data || [],
-    hotLeads: hotLeadsResult.data || [],
-    goalProgress: goalProgressResult.data || [],
-    recentDeals: recentDealsResult.data || [],
+    profile: profileResult.fecha,
+    tasksToday: tasksTodayResult.fecha || [],
+    overdueTasks: overdueTasksResult.fecha || [],
+    stalledLeads: stalledLeadsResult.fecha || [],
+    hotLeads: hotLeadsResult.fecha || [],
+    goalProgress: goalProgressResult.fecha || [],
+    recentDeals: recentDealsResult.fecha || [],
     pendingCadences: [], // Could be enhanced later
   };
 }
@@ -231,7 +231,7 @@ async function generateAIReport(context: SellerContext, sellerName: string): Pro
       ? Math.round((goal.achieved_value / goal.target_value) * 100) 
       : 0;
     const remaining = goal.target_value - goal.achieved_value;
-    goalSummary = `Meta do mês: ${progress}% (faltam ${formatCurrency(remaining)})`;
+    goalSummary = `Meta do mes: ${progress}% (faltam ${formatCurrency(remaining)})`;
   }
 
   // Build priorities list
@@ -239,13 +239,13 @@ async function generateAIReport(context: SellerContext, sellerName: string): Pro
   
   // Add overdue tasks
   context.overdueTasks.slice(0, 2).forEach(task => {
-    priorities.push(`⚠️ Tarefa atrasada: ${task.title}`);
+    priorities.push(`⚠️ Tarea atrasada: ${task.title}`);
   });
   
   // Add stalled leads
   context.stalledLeads.slice(0, 2).forEach(lead => {
     const daysSince = Math.floor((Date.now() - new Date(lead.last_contact_at).getTime()) / (1000 * 60 * 60 * 24));
-    priorities.push(`Retomar contato com ${lead.name} (${daysSince} dias sem contato)`);
+    priorities.push(`Retomar contato com ${lead.name} (${daysSince} días sem contato)`);
   });
   
   // Add today's important tasks
@@ -256,22 +256,22 @@ async function generateAIReport(context: SellerContext, sellerName: string): Pro
 
   // Build summary (for notification)
   const summaryParts = [];
-  if (taskCount > 0) summaryParts.push(`${taskCount} tarefa${taskCount > 1 ? 's' : ''} hoje`);
+  if (taskCount > 0) summaryParts.push(`${taskCount} tarea${taskCount > 1 ? 's' : ''} hoy`);
   if (overdueCount > 0) summaryParts.push(`${overdueCount} atrasada${overdueCount > 1 ? 's' : ''}`);
   if (stalledCount > 0) summaryParts.push(`${stalledCount} lead${stalledCount > 1 ? 's' : ''} precisa${stalledCount > 1 ? 'm' : ''} de atenção`);
   if (hotCount > 0) summaryParts.push(`${hotCount} lead${hotCount > 1 ? 's' : ''} quente${hotCount > 1 ? 's' : ''}`);
   
   const summary = summaryParts.length > 0 
     ? `📊 ${summaryParts.join(' • ')}` 
-    : 'Tudo em dia! Continue focado nas suas metas.';
+    : 'Tudo em día! Continue focado nas sus metas.';
 
   // Build full report
   const fullReport = `
-☀️ Bom dia, ${firstName}!
+☀️ Bom día, ${firstName}!
 
 📊 RESUMO DO DIA
-${taskCount > 0 ? `• ${taskCount} tarefa${taskCount > 1 ? 's' : ''} agendada${taskCount > 1 ? 's' : ''} para hoje` : '• Nenhuma tarefa agendada'}
-${overdueCount > 0 ? `• ⚠️ ${overdueCount} tarefa${overdueCount > 1 ? 's' : ''} atrasada${overdueCount > 1 ? 's' : ''}` : ''}
+${taskCount > 0 ? `• ${taskCount} tarea${taskCount > 1 ? 's' : ''} agendada${taskCount > 1 ? 's' : ''} para hoy` : '• Nenhuma tarea agendada'}
+${overdueCount > 0 ? `• ⚠️ ${overdueCount} tarea${overdueCount > 1 ? 's' : ''} atrasada${overdueCount > 1 ? 's' : ''}` : ''}
 ${stalledCount > 0 ? `• ${stalledCount} lead${stalledCount > 1 ? 's' : ''} precisa${stalledCount > 1 ? 'm' : ''} de atenção` : ''}
 ${goalSummary ? `• ${goalSummary}` : ''}
 
@@ -281,7 +281,7 @@ ${hotCount > 0 ? `🔥 LEADS QUENTES\n${context.hotLeads.map(l => `• ${l.name}
 
 ${context.recentDeals.length > 0 ? `✅ NEGÓCIOS RECENTES\n${context.recentDeals.slice(0, 3).map(d => `• ${d.leads?.name} - ${formatCurrency(d.deal_value)}`).join('\n')}` : ''}
 
-Boas vendas! 🚀
+Boas ventas! 🚀
 `.trim();
 
   return { summary, full: fullReport };
@@ -321,8 +321,8 @@ async function sendReportEmail(email: string, name: string, report: { summary: s
       </head>
       <body>
         <div class="header">
-          <h1 style="margin: 0; font-size: 24px;">☀️ Seu Briefing do Dia</h1>
-          <p style="margin: 10px 0 0; opacity: 0.9;">Bom dia, ${name.split(' ')[0]}!</p>
+          <h1 style="margin: 0; font-size: 24px;">☀️ Su Briefing do Dia</h1>
+          <p style="margin: 10px 0 0; opacity: 0.9;">Bom día, ${name.split(' ')[0]}!</p>
         </div>
         <div class="content">
           <div class="section">
@@ -330,7 +330,7 @@ async function sendReportEmail(email: string, name: string, report: { summary: s
           </div>
         </div>
         <div class="footer">
-          <p>Enviado automaticamente pelo seu assistente de vendas</p>
+          <p>Enviado automaticamente pelo su assistente de ventas</p>
         </div>
       </body>
       </html>
@@ -345,7 +345,7 @@ async function sendReportEmail(email: string, name: string, report: { summary: s
       body: JSON.stringify({
         from: 'Assistente de Vendas <noreply@resend.dev>',
         to: [email],
-        subject: `☀️ Seu briefing do dia - ${new Date().toLocaleDateString('pt-BR')}`,
+        subject: `☀️ Su briefing do día - ${new Date().toLocaleDateString('pt-BR')}`,
         html: htmlContent,
       }),
     });

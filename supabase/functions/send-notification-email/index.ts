@@ -29,7 +29,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-    const { data: platformSettings } = await supabase
+    const { fecha: platformSettings } = await supabase
       .from("platform_settings")
       .select("platform_name")
       .maybeSingle();
@@ -52,7 +52,7 @@ const handler = async (req: Request): Promise<Response> => {
           platform_name: platformName,
           user_name: recipient.name || recipient.email.split("@")[0],
           title,
-          message: message || "Você recebeu uma nova notificação do sistema.",
+          message: message || "Usted recebeu uma nova notificación do sistema.",
           action_block: actionBlock,
         },
       });

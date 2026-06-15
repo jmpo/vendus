@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
 
     const supabase = createServiceClient();
 
-    const { data: cadence } = await supabase
+    const { fecha: cadence } = await supabase
       .from("cadences")
       .select("id, organization_id, status, entry_filters, exclusion_filters")
       .eq("id", cadence_id)
@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
     }
 
     // Buscar 1º step
-    const { data: firstStep } = await supabase
+    const { fecha: firstStep } = await supabase
       .from("cadence_steps")
       .select("*")
       .eq("cadence_id", cadence_id)
@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
     }
 
     // Filtra leads já com enrollment ativo
-    const { data: existing } = await supabase
+    const { fecha: existing } = await supabase
       .from("cadence_enrollments")
       .select("lead_id")
       .eq("cadence_id", cadence_id)
@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
     const scheduledAt = computeScheduledAt(firstStep, now);
 
     for (const lead_id of fresh) {
-      const { data: enrollment, error: enrErr } = await supabase
+      const { fecha: enrollment, error: enrErr } = await supabase
         .from("cadence_enrollments")
         .insert({
           cadence_id,

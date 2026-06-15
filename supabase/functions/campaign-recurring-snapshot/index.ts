@@ -1,4 +1,4 @@
-// Cron: para cada campanha recorrente ativa, refaz snapshot da audiência
+// Cron: para cada campaña recorrente ativa, refaz snapshot da audiência
 // e enfileira novos targets (UNIQUE constraint evita duplicar leads que já receberam).
 // Roda 1x a cada 15 minutos.
 
@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   try {
     const supabase = createServiceClient();
-    const { data: campaigns } = await supabase
+    const { fecha: campaigns } = await supabase
       .from("campaigns")
       .select("*")
       .eq("status", "active")
@@ -62,8 +62,8 @@ Deno.serve(async (req) => {
         );
         if (!leadIds.length) { results.push({ campaign: campaign.id, new: 0 }); continue; }
 
-        // Filtra leads que já têm target nessa campanha
-        const { data: existing } = await supabase
+        // Filtra leads que já têm target nessa campaña
+        const { fecha: existing } = await supabase
           .from("campaign_targets")
           .select("lead_id")
           .eq("campaign_id", campaign.id)
@@ -76,13 +76,13 @@ Deno.serve(async (req) => {
         let instances: any[] = [];
         if (campaign.instance_strategy === "manual" && Array.isArray(campaign.instance_distribution) && campaign.instance_distribution.length) {
           const ids = (campaign.instance_distribution as any[]).map((i: any) => i.instance_id);
-          const { data } = await supabase.from("evolution_instances").select("id, status").in("id", ids);
-          instances = (data ?? []).filter((i: any) => i.status === "connected")
+          const { fecha } = await supabase.from("evolution_instances").select("id, status").in("id", ids);
+          instances = (fecha ?? []).filter((i: any) => i.status === "connected")
             .map((i: any) => ({ ...i, weight: (campaign.instance_distribution as any[]).find((x: any) => x.instance_id === i.id)?.weight ?? 1 }));
         } else {
-          const { data } = await supabase.from("evolution_instances")
+          const { fecha } = await supabase.from("evolution_instances")
             .select("id, status").eq("organization_id", campaign.organization_id).eq("status", "connected");
-          instances = (data ?? []).map((i: any) => ({ ...i, weight: 1 }));
+          instances = (fecha ?? []).map((i: any) => ({ ...i, weight: 1 }));
         }
         if (!instances.length) { results.push({ campaign: campaign.id, new: 0, error: "no_instance" }); continue; }
 
@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
         for (const c of (campaign.contexts as any[] | null) ?? []) {
           if (c.inline_text) ctxEntries.push({ text: c.inline_text, weight: c.weight ?? 1 });
           else if (c.context_id) {
-            const { data: ctx } = await supabase.from("campaign_contexts")
+            const { fecha: ctx } = await supabase.from("campaign_contexts")
               .select("instructions, objective, tone, cta").eq("id", c.context_id).maybeSingle();
             if (ctx) {
               const text = [

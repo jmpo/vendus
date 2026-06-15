@@ -89,11 +89,11 @@ export async function describeAIError(response: Response, providerLabel: string)
   if (response.status === 429) return 'Limite de requisições excedido. Tente novamente em alguns segundos.';
   if (response.status === 402) {
     return providerLabel === 'openai'
-      ? 'Sua conta OpenAI está sem créditos ou bloqueada. Verifique em platform.openai.com/billing.'
-      : 'Créditos de IA esgotados. Adicione créditos na sua conta Lovable.';
+      ? 'Su cuenta OpenAI está sem créditos ou bloqueada. Verifique em platform.openai.com/billing.'
+      : 'Créditos de IA esgotados. Adicione créditos na su cuenta Lovable.';
   }
   if (response.status === 401 || response.status === 403) {
-    return `Chave do provedor "${providerLabel}" inválida ou sem permissão. Verifique em Integrações → IA.`;
+    return `Chave do provedor "${providerLabel}" inválida ou sem permiso. Verifique em Integrações → IA.`;
   }
-  return `Erro do provedor ${providerLabel} (${response.status}): ${text.slice(0, 200) || response.statusText}`;
+  return `Error do provedor ${providerLabel} (${response.status}): ${text.slice(0, 200) || response.statusText}`;
 }

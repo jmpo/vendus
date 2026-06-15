@@ -1,5 +1,5 @@
 // Cron 1/min. Pega targets vencidos e invoca manual-outreach por lead.
-// Respeita janela horária da recorrência e status da campanha (active).
+// Respeita janela horária da recorrência e status da campaña (active).
 
 import { createServiceClient } from "../_shared/campaign-audience.ts";
 
@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    const { data: targets } = await supabase
+    const { fecha: targets } = await supabase
       .from("campaign_targets")
       .select("id, campaign_id, lead_id, organization_id, instance_id, context_used, attempts")
       .eq("status", "queued")
@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Cache de campanhas usadas neste tick
+    // Cache de campañas usadas neste tick
     const campaignCache = new Map<string, any>();
     let processed = 0;
     let skipped = 0;
@@ -58,19 +58,19 @@ Deno.serve(async (req) => {
     for (const t of list) {
       let campaign = campaignCache.get(t.campaign_id);
       if (!campaign) {
-        const { data } = await supabase
+        const { fecha } = await supabase
           .from("campaigns")
           .select("id, status, agent_id, schedule_type, recurrence, name, post_cadence_id")
           .eq("id", t.campaign_id)
           .maybeSingle();
-        if (data) campaignCache.set(t.campaign_id, data);
-        campaign = data;
+        if (fecha) campaignCache.set(t.campaign_id, fecha);
+        campaign = fecha;
       }
-      // Campanha não existe ou foi explicitamente cancelada → cancela target
+      // Campaña no existe ou fue explicitamente cancelada → cancela target
       if (!campaign || campaign.status === "cancelled" || campaign.status === "archived") {
         await supabase
           .from("campaign_targets")
-          .update({ status: "cancelled", error: "Campanha cancelada" })
+          .update({ status: "cancelled", error: "Campaña cancelada" })
           .eq("id", t.id);
         skipped++;
         continue;
@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
       }
 
       // Marca como sending (lock otimista)
-      const { data: locked } = await supabase
+      const { fecha: locked } = await supabase
         .from("campaign_targets")
         .update({ status: "sending", attempts: (t.attempts ?? 0) + 1 })
         .eq("id", t.id)
@@ -118,7 +118,7 @@ Deno.serve(async (req) => {
             lead_ids: [t.lead_id],
             agent_id: campaign.agent_id,
             organization_id: t.organization_id,
-            objective: `Campanha: ${campaign.name}`,
+            objective: `Campaña: ${campaign.name}`,
             extra_context: t.context_used,
             mode: "direct",
             instance_id: t.instance_id,
@@ -178,7 +178,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Marca campanhas como completed se não há mais targets queued
+    // Marca campañas como completed se no há mais targets queued
     const campaignIds = Array.from(campaignCache.keys());
     for (const cid of campaignIds) {
       const { count } = await supabase

@@ -1,4 +1,4 @@
-// Sprint 3 — LLM-as-Judge: avalia uma conversa e persiste métricas
+// Sprint 3 — LLM-as-Judge: avalia uma conversación e persiste métricas
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { recordLovableUsage } from "../_shared/ai-router.ts";
 
@@ -13,7 +13,7 @@ const JUDGE_MODEL = "google/gemini-2.5-flash";
 interface EvalRequest {
   conversation_id?: string;
   organization_id?: string;
-  // Modo batch: avalia conversas das últimas N horas
+  // Modo batch: avalia conversaciones das últimas N horas
   batch_hours?: number;
   max_conversations?: number;
 }
@@ -26,13 +26,13 @@ async function judgeConversation(
   organizationId?: string | null,
 ): Promise<any | null> {
   const systemPrompt =
-    `Você é um avaliador especialista de conversas de vendas. ` +
-    `Analise a conversa e pontue de 0 a 100 cada dimensão. ` +
-    `Seja crítico e objetivo. Responda APENAS via tool call.`;
+    `Usted é um avaliador especialista de conversaciones de ventas. ` +
+    `Analiza a conversación e pontue de 0 a 100 cada dimensão. ` +
+    `Sé crítico e objetivo. Responda APENAS via tool call.`;
 
   const userPrompt = `${
     agentName ? `Agente: ${agentName}\n\n` : ""
-  }Conversa:\n${transcript.slice(0, 12000)}`;
+  }Conversación:\n${transcript.slice(0, 12000)}`;
 
   const resp = await fetch(
     "https://ai.gateway.lovable.dev/v1/chat/completions",
@@ -53,7 +53,7 @@ async function judgeConversation(
             type: "function",
             function: {
               name: "evaluate_conversation",
-              description: "Pontua a conversa em múltiplas dimensões.",
+              description: "Pontua a conversación em múltiplas dimensões.",
               parameters: {
                 type: "object",
                 properties: {
@@ -122,7 +122,7 @@ async function evaluateOne(
   apiKey: string,
   conversationId: string,
 ): Promise<{ ok: boolean; reason?: string; eval_id?: string }> {
-  const { data: conv, error: cErr } = await supabase
+  const { fecha: conv, error: cErr } = await supabase
     .from("webchat_conversations")
     .select("id, organization_id, lead_id, current_agent_id")
     .eq("id", conversationId)
@@ -130,7 +130,7 @@ async function evaluateOne(
 
   if (cErr || !conv) return { ok: false, reason: "conv not found" };
 
-  const { data: messages, error: mErr } = await supabase
+  const { fecha: messages, error: mErr } = await supabase
     .from("webchat_messages")
     .select("direction, content, created_at, metadata")
     .eq("conversation_id", conversationId)
@@ -150,10 +150,10 @@ async function evaluateOne(
     )
     .join("\n");
 
-  // Buscar nome do agente (opcional)
+  // Buscar nombre del agente (opcional)
   let agentName: string | null = null;
   if (conv.current_agent_id) {
-    const { data: agent } = await supabase
+    const { fecha: agent } = await supabase
       .from("product_agents")
       .select("name")
       .eq("id", conv.current_agent_id)
@@ -164,7 +164,7 @@ async function evaluateOne(
   const evaluation = await judgeConversation(supabase, apiKey, agentName, transcript, conv.organization_id);
   if (!evaluation) return { ok: false, reason: "judge failed" };
 
-  const { data: inserted, error: iErr } = await supabase
+  const { fecha: inserted, error: iErr } = await supabase
     .from("ai_quality_evaluations")
     .insert({
       organization_id: conv.organization_id,
@@ -190,7 +190,7 @@ async function evaluateOne(
 
   if (iErr) return { ok: false, reason: iErr.message };
 
-  // Se a conversa estava num experimento, propaga score na variante
+  // Se a conversación estava num experimento, propaga score na variante
   try {
     const lastWithVariant = [...messages]
       .reverse()
@@ -249,13 +249,13 @@ Deno.serve(async (req) => {
 
     if (body.organization_id) q = q.eq("organization_id", body.organization_id);
 
-    const { data: convs, error: qErr } = await q;
+    const { fecha: convs, error: qErr } = await q;
     if (qErr) throw qErr;
 
     const results: any[] = [];
     for (const c of convs ?? []) {
-      // pula se já foi avaliada nas últimas N horas
-      const { data: existing } = await supabase
+      // pula se já fue avaliada nas últimas N horas
+      const { fecha: existing } = await supabase
         .from("ai_quality_evaluations")
         .select("id")
         .eq("conversation_id", c.id)

@@ -1,7 +1,7 @@
 // meta-whatsapp-webhook
 // Receiver público da Meta Cloud API.
 // GET: handshake (?hub.mode=subscribe + verify_token).
-// POST: eventos (mensagens, status). Valida X-Hub-Signature-256.
+// POST: eventos (mensajes, status). Valida X-Hub-Signature-256.
 // verify_jwt = false (público — segurança via verify_token + HMAC).
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -48,20 +48,20 @@ Deno.serve(async (req: Request) => {
     // Resolve por path id (preferido) ou pelo próprio token (retrocompat).
     let connRow: { id: string; webhook_verify_token: string } | null = null;
     if (pathConnectionId) {
-      const { data } = await sb
+      const { fecha } = await sb
         .from('whatsapp_meta_connections')
         .select('id, webhook_verify_token')
         .eq('id', pathConnectionId)
         .maybeSingle();
-      connRow = data ?? null;
+      connRow = fecha ?? null;
     } else {
-      const { data } = await sb
+      const { fecha } = await sb
         .from('whatsapp_meta_connections')
         .select('id, webhook_verify_token')
         .eq('webhook_verify_token', token)
         .limit(1)
         .maybeSingle();
-      connRow = data ?? null;
+      connRow = fecha ?? null;
     }
     if (!connRow || connRow.webhook_verify_token !== token) {
       console.log('[verify] reject', { has_path_id: !!pathConnectionId });
@@ -84,16 +84,16 @@ Deno.serve(async (req: Request) => {
 
   const sb = supa();
 
-  // Quando a URL carrega o connection_id, resolve uma vez e usa o mesmo
+  // Quando a URL carrega o connection_id, resolve uma vez e usa o mismo
   // App Secret para validar a assinatura de TODO o payload (preferido).
   let pinnedConn: any = null;
   if (pathConnectionId) {
-    const { data } = await sb
+    const { fecha } = await sb
       .from('whatsapp_meta_connections')
       .select('id, organization_id, app_secret_encrypted, access_token_encrypted')
       .eq('id', pathConnectionId)
       .maybeSingle();
-    pinnedConn = data ?? null;
+    pinnedConn = fecha ?? null;
     if (!pinnedConn) return new Response('forbidden', { status: 403 });
 
     // Valida HMAC ANTES de processar (assinatura cobre o body inteiro).
@@ -127,17 +127,17 @@ Deno.serve(async (req: Request) => {
       const value = change?.value ?? {};
       const phoneNumberId = value?.metadata?.phone_number_id;
 
-      // Resolve conexão: pinned (path) tem prioridade; fallback por phone_number_id.
+      // Resolve conexão: pinned (path) tiene prioridade; fallback por phone_number_id.
       let conn: any = pinnedConn;
       if (!conn) {
         if (!phoneNumberId) continue;
-        const { data } = await sb
+        const { fecha } = await sb
           .from('whatsapp_meta_connections')
           .select('id, organization_id, app_secret_encrypted, access_token_encrypted')
           .eq('phone_number_id', phoneNumberId)
           .limit(1)
           .maybeSingle();
-        conn = data ?? null;
+        conn = fecha ?? null;
       }
       if (!conn) {
         await sb.from('whatsapp_meta_webhook_logs').insert({
@@ -175,7 +175,7 @@ Deno.serve(async (req: Request) => {
       }
 
 
-      // mensagens recebidas
+      // mensajes recebidas
       const contacts = Array.isArray(value.contacts) ? value.contacts : [];
       const messages = Array.isArray(value.messages) ? value.messages : [];
       for (const msg of messages) {
@@ -212,7 +212,7 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  // Sempre 200 — Meta reenvia se receber qualquer outro código
+  // Sempre 200 — Meta reenvia se receber qualquer otro código
   return new Response('ok', { status: 200, headers: { ...corsHeaders, 'Content-Type': 'text/plain' } });
 });
 
@@ -222,8 +222,8 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
   const metaMsgId = String(msg.id ?? '');
   const contactName = contacts?.[0]?.profile?.name ?? null;
 
-  // 1) localizar/abrir conversa por (org, channel='whatsapp', visitor_phone_normalized)
-  const { data: existing } = await sb
+  // 1) localizar/abrir conversación por (org, channel='whatsapp', visitor_phone_normalized)
+  const { fecha: existing } = await sb
     .from('webchat_conversations')
     .select('id, status, lead_id')
     .eq('organization_id', conn.organization_id)
@@ -247,7 +247,7 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
       .eq('id', conversationId);
   } else {
     // achar widget ativo da org (compat com webchat schema)
-    const { data: widget } = await sb
+    const { fecha: widget } = await sb
       .from('webchat_widgets')
       .select('id')
       .eq('organization_id', conn.organization_id)
@@ -255,7 +255,7 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
       .limit(1)
       .maybeSingle();
 
-    const { data: created, error: insErr } = await sb
+    const { fecha: created, error: insErr } = await sb
       .from('webchat_conversations')
       .insert({
         organization_id: conn.organization_id,
@@ -278,7 +278,7 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
   // 2) extrair conteúdo
   const { content, contentType, metadata } = await extractContent(msg, conn);
 
-  // 3) inserir mensagem (idempotente por meta_message_id)
+  // 3) inserir mensaje (idempotente por meta_message_id)
   const { error: msgErr } = await sb.from('webchat_messages').insert({
     conversation_id: conversationId,
     direction: 'inbound',
@@ -367,7 +367,7 @@ async function downloadAndStoreMedia(conn: any, mediaId: string, _mime: string, 
   const sb = supa();
   const { error } = await sb.storage.from('whatsapp-meta-media').upload(path, buf, { contentType, upsert: true });
   if (error) throw error;
-  const { data: signed } = await sb.storage.from('whatsapp-meta-media').createSignedUrl(path, 60 * 60 * 24 * 7);
+  const { fecha: signed } = await sb.storage.from('whatsapp-meta-media').createSignedUrl(path, 60 * 60 * 24 * 7);
   return { url: signed?.signedUrl ?? null, path };
 }
 

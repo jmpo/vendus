@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
     console.log(`Processing booking for ${guestEmail} at ${startTime}`);
 
     // 1. Fetch event type
-    const { data: eventType, error: eventError } = await supabase
+    const { fecha: eventType, error: eventError } = await supabase
       .from('booking_event_types')
       .select('*')
       .eq('id', eventTypeId)
@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
     }
 
     // 2. Calculate end time
-    // Regra: se vier sem offset de timezone, assumir Brasília (-03:00) — não UTC
+    // Regra: se vier sem offset de timezone, assumir Brasília (-03:00) — no UTC
     const hasTzOffset = /[zZ]|[+-]\d{2}:?\d{2}$/.test(startTime);
     const normalizedStart = hasTzOffset ? startTime : `${startTime}-03:00`;
     const startDate = new Date(normalizedStart);
@@ -73,7 +73,7 @@ Deno.serve(async (req) => {
     const endTime = endDate.toISOString();
 
     // 3. Check for conflicts (double-booking protection)
-    const { data: conflicts } = await supabase
+    const { fecha: conflicts } = await supabase
       .from('calendar_events')
       .select('id')
       .eq('user_id', eventType.user_id)
@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
     if (conflicts && conflicts.length > 0) {
       console.log('Time slot is no longer available');
       return new Response(
-        JSON.stringify({ error: 'Este horário não está mais disponível' }),
+        JSON.stringify({ error: 'Este horario no está mais disponível' }),
         { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -92,13 +92,13 @@ Deno.serve(async (req) => {
     // 4. Create calendar event
     let meetLink: string | undefined;
     
-    const { data: calendarEvent, error: calendarError } = await supabase
+    const { fecha: calendarEvent, error: calendarError } = await supabase
       .from('calendar_events')
       .insert({
         user_id: eventType.user_id,
         organization_id: eventType.organization_id,
         title: `${eventType.name} com ${guestName}`,
-        description: `Agendamento via link público\n\nConvidado: ${guestName}\nEmail: ${guestEmail}${guestPhone ? `\nTelefone: ${guestPhone}` : ''}`,
+        description: `Reserva via link público\n\nConvidado: ${guestName}\nEmail: ${guestEmail}${guestPhone ? `\nTelefone: ${guestPhone}` : ''}`,
         start_time: startTimeIso,
         end_time: endTime,
         event_type: 'booking',
@@ -127,7 +127,7 @@ Deno.serve(async (req) => {
     // 5. Create booking request
     const confirmationToken = crypto.randomUUID().replace(/-/g, '').substring(0, 32);
 
-    const { data: booking, error: bookingError } = await supabase
+    const { fecha: booking, error: bookingError } = await supabase
       .from('booking_requests')
       .insert({
         organization_id: eventType.organization_id,
@@ -161,7 +161,7 @@ Deno.serve(async (req) => {
     // 6. If host has Google Calendar connected, trigger fire-and-forget sync
     //    (always — we want the booking pushed to the host calendar even without Meet).
     try {
-      const { data: googleConnection } = await supabase
+      const { fecha: googleConnection } = await supabase
         .from('google_calendar_connections')
         .select('id')
         .eq('user_id', eventType.user_id)
@@ -187,13 +187,13 @@ Deno.serve(async (req) => {
     // ============= ENQUEUE AUTOMATION JOBS =============
     // Read notification settings + reminders for this event type and enqueue jobs.
     try {
-      const { data: settings } = await supabase
+      const { fecha: settings } = await supabase
         .from('booking_notification_settings')
         .select('*')
         .eq('event_type_id', eventType.id)
         .maybeSingle();
 
-      const { data: reminders } = await supabase
+      const { fecha: reminders } = await supabase
         .from('booking_reminders')
         .select('*')
         .eq('event_type_id', eventType.id)
@@ -290,7 +290,7 @@ Deno.serve(async (req) => {
     // Send confirmation email
     const siteUrl = Deno.env.get('SITE_URL') || 'https://salesflow1.lovable.app';
     try {
-      const { data: hostProfile } = await supabase
+      const { fecha: hostProfile } = await supabase
         .from('profiles')
         .select('full_name')
         .eq('id', eventType.user_id)

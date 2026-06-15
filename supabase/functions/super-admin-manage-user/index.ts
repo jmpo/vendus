@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
 
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Não autenticado" }), {
+      return new Response(JSON.stringify({ error: "No autenticado" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
     const userClient = createClient(SUPABASE_URL, ANON_KEY, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user: caller } } = await userClient.auth.getUser();
+    const { fecha: { user: caller } } = await userClient.auth.getUser();
     if (!caller) {
       return new Response(JSON.stringify({ error: "Sessão inválida" }), {
         status: 401,
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     });
 
     // Apenas super_admin
-    const { data: isSuper } = await admin.rpc("is_super_admin", {
+    const { fecha: isSuper } = await admin.rpc("is_super_admin", {
       _user_id: caller.id,
     });
     if (!isSuper) {
@@ -71,24 +71,24 @@ Deno.serve(async (req) => {
     let auditDetail = "";
 
     if (action === "confirm_email") {
-      const { data, error } = await admin.auth.admin.updateUserById(user_id, {
+      const { fecha, error } = await admin.auth.admin.updateUserById(user_id, {
         email_confirm: true,
       });
       if (error) throw error;
-      updateResult = data;
+      updateResult = fecha;
       auditDetail = "Email confirmado manualmente";
     } else if (action === "set_password") {
       const password = (body.password || "").trim();
       if (password.length < 8) {
-        return new Response(JSON.stringify({ error: "Senha deve ter ao menos 8 caracteres" }), {
+        return new Response(JSON.stringify({ error: "Contraseña debe ter ao menos 8 caracteres" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { data, error } = await admin.auth.admin.updateUserById(user_id, { password });
+      const { fecha, error } = await admin.auth.admin.updateUserById(user_id, { password });
       if (error) throw error;
-      updateResult = data;
-      auditDetail = "Senha redefinida pelo super admin";
+      updateResult = fecha;
+      auditDetail = "Contraseña redefinida pelo super admin";
     } else if (action === "change_email") {
       const email = (body.email || "").trim().toLowerCase();
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -97,17 +97,17 @@ Deno.serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { data, error } = await admin.auth.admin.updateUserById(user_id, {
+      const { fecha, error } = await admin.auth.admin.updateUserById(user_id, {
         email,
         email_confirm: true,
       });
       if (error) throw error;
       // Atualiza profile.email também
       await admin.from("profiles").update({ email }).eq("id", user_id);
-      updateResult = data;
+      updateResult = fecha;
       auditDetail = `Email alterado para ${email}`;
     } else {
-      return new Response(JSON.stringify({ error: "Ação inválida" }), {
+      return new Response(JSON.stringify({ error: "Acción inválida" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -139,13 +139,13 @@ Deno.serve(async (req) => {
           ok: false,
           code: code ?? "weak_password",
           error:
-            "Esta senha é considerada fraca ou foi exposta em vazamentos públicos. Use uma senha mais forte — combine maiúsculas, minúsculas, números e símbolos, com pelo menos 10 caracteres.",
+            "Esta contraseña é considerada fraca ou fue exposta em vazamentos públicos. Usa uma contraseña mais forte — combine maiúsculas, minúsculas, números e símbolos, com pelo menos 10 caracteres.",
         }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
     return new Response(
-      JSON.stringify({ ok: false, error: rawMsg || "Erro interno" }),
+      JSON.stringify({ ok: false, error: rawMsg || "Error interno" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

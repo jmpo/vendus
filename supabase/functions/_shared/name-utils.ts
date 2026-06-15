@@ -1,6 +1,6 @@
-// Utilitário para extrair primeiro nome real do lead.
-// Retorna null quando o "nome" parece ser razão social / nome de empresa,
-// para a IA não tratar "Acesso Digital 360" como se fosse uma pessoa.
+// Utilitário para extrair primeiro nombre real del lead.
+// Retorna null quando o "nombre" parece ser razão social / nombre de empresa,
+// para a IA no tratar "Acesso Digital 360" como se fosse uma pessoa.
 
 const COMPANY_TOKENS = [
   'agencia', 'agência', 'marketing', 'digital', 'studio', 'ltda', 'me',
@@ -18,7 +18,7 @@ function stripDiacritics(s: string): string {
 function looksLikeCompany(raw: string): boolean {
   const t = raw.trim();
   if (!t) return true;
-  // Tem dígito → quase sempre razão social ("Acesso Digital 360", "AG7")
+  // Tem dígito → quase siempre razão social ("Acesso Digital 360", "AG7")
   if (/\d/.test(t)) return true;
   const norm = stripDiacritics(t.toLowerCase());
   const tokens = norm.split(/\s+/).filter(Boolean);
@@ -29,7 +29,7 @@ function looksLikeCompany(raw: string): boolean {
   if (words.length >= 2 && words.every((w) => w === w.toUpperCase() && /[A-ZÁÉÍÓÚÂÊÔÃÕÇ]/.test(w))) {
     return true;
   }
-  // Uma única "palavra" longa demais pra ser nome ("AcessoDigital360")
+  // Uma única "palavra" larga demais pra ser nombre ("AcessoDigital360")
   if (words.length === 1 && words[0].length > 18) return true;
   return false;
 }
@@ -40,14 +40,14 @@ function capitalize(s: string): string {
 }
 
 /**
- * Retorna o primeiro nome do lead (capitalizado), ou null se o input
- * parecer nome de empresa / razão social / lixo.
+ * Retorna o primeiro nombre del lead (capitalizado), ou null se o input
+ * parecer nombre de empresa / razão social / lixo.
  */
 export function extractFirstName(raw?: string | null): string | null {
   if (!raw) return null;
   const cleaned = String(raw).trim();
   if (!cleaned) return null;
-  // Telefone puro / só dígitos
+  // Teléfono puro / só dígitos
   if (/^[+\d\s().-]+$/.test(cleaned)) return null;
   if (looksLikeCompany(cleaned)) return null;
   const first = cleaned.split(/\s+/)[0].replace(/[^\p{L}\-']/gu, '');
@@ -56,8 +56,8 @@ export function extractFirstName(raw?: string | null): string | null {
 }
 
 /**
- * Retorna nome para exibir no prompt — "" quando não confiável.
- * Útil para `replaceAll('{{nome}}', safeFirstName(visitorName))`.
+ * Retorna nombre para exibir no prompt — "" quando no confiável.
+ * Útil para `replaceAll('{{nombre}}', safeFirstName(visitorName))`.
  */
 export function safeFirstName(raw?: string | null): string {
   return extractFirstName(raw) ?? '';

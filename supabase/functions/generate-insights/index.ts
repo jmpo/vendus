@@ -32,7 +32,7 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch pipeline data
+    // Fetch pipeline fecha
     let leadsQuery = supabase
       .from("leads")
       .select(`
@@ -49,7 +49,7 @@ serve(async (req) => {
       leadsQuery = leadsQuery.eq("assigned_to", userId);
     }
 
-    const { data: leads, error: leadsError } = await leadsQuery;
+    const { fecha: leads, error: leadsError } = await leadsQuery;
     if (leadsError) throw leadsError;
 
     // Fetch overdue tasks
@@ -62,7 +62,7 @@ serve(async (req) => {
       tasksQuery = tasksQuery.eq("user_id", userId);
     }
 
-    const { data: overdueTasks } = await tasksQuery;
+    const { fecha: overdueTasks } = await tasksQuery;
 
     // Fetch recent deals for conversion analysis
     let dealsQuery = supabase
@@ -75,9 +75,9 @@ serve(async (req) => {
       dealsQuery = dealsQuery.eq("product_id", productId);
     }
 
-    const { data: deals } = await dealsQuery;
+    const { fecha: deals } = await dealsQuery;
 
-    // Analyze data
+    // Analyze fecha
     const now = new Date();
     const analysis: PipelineAnalysis = {
       totalLeads: leads?.length || 0,
@@ -128,10 +128,10 @@ serve(async (req) => {
         if (lead.temperature === "cold") analysis.coldLeadsCount++;
       }
 
-      analysis.leadsByStage = Object.entries(stageGroups).map(([stage, data]) => ({
+      analysis.leadsByStage = Object.entries(stageGroups).map(([stage, fecha]) => ({
         stage,
-        count: data.count,
-        value: data.value,
+        count: fecha.count,
+        value: fecha.value,
       }));
 
       analysis.avgDaysInPipeline = Math.round(totalDays / leads.length);
@@ -149,34 +149,34 @@ serve(async (req) => {
     }
 
     // Build prompt for AI analysis
-    const analysisPrompt = `Você é um coach de vendas experiente analisando o pipeline de um vendedor.
+    const analysisPrompt = `Usted é um coach de ventas experiente analisando o pipeline de um vendedor.
 
 DADOS DO PIPELINE:
 - Total de leads: ${analysis.totalLeads}
 - Leads por estágio: ${JSON.stringify(analysis.leadsByStage)}
 - Leads em risco (sem contato): ${analysis.atRiskLeads.length}
-- Taxa de conversão (últimos 30 dias): ${analysis.conversionRate}%
-- Média de dias no pipeline: ${analysis.avgDaysInPipeline}
+- Taxa de conversão (últimos 30 días): ${analysis.conversionRate}%
+- Média de días no pipeline: ${analysis.avgDaysInPipeline}
 - Leads quentes: ${analysis.hotLeadsCount}
 - Leads frios: ${analysis.coldLeadsCount}
 - Tarefas atrasadas: ${analysis.overdueTasksCount}
 - Estágio com mais leads (potencial gargalo): ${analysis.bottleneckStage}
 
-LEADS EM RISCO (sem contato há 3+ dias):
-${analysis.atRiskLeads.slice(0, 5).map(l => `- ${l.name} (${l.company || 'sem empresa'}): ${l.daysWithoutContact} dias`).join("\n")}
+LEADS EM RISCO (sem contato há 3+ días):
+${analysis.atRiskLeads.slice(0, 5).map(l => `- ${l.name} (${l.company || 'sem empresa'}): ${l.daysWithoutContact} días`).join("\n")}
 
-Gere 3-5 insights acionáveis e específicos para este vendedor. Cada insight deve:
-1. Ter um título curto e impactante
-2. Explicar o problema ou oportunidade identificado
-3. Sugerir uma ação específica
+Genera 3-5 insights acionáveis e específicos para este vendedor. Cada insight debe:
+1. Ter um título corto e impactante
+2. Explicar o problema ou oportunidad identificado
+3. Sugerir uma acción específica
 4. Indicar a prioridade (high, medium, low)
 
 Responda APENAS no formato JSON abaixo, sem texto adicional:
 {
   "insights": [
     {
-      "title": "Título curto",
-      "insight": "Descrição do insight e ação recomendada",
+      "title": "Título corto",
+      "insight": "Descripción do insight e acción recomendada",
       "type": "opportunity|warning|action|tip",
       "priority": "high|medium|low"
     }
@@ -206,7 +206,7 @@ Responda APENAS no formato JSON abaixo, sem texto adicional:
       }
       if (response.status === 402) {
         const msg = aiConfig.source === 'external_key'
-          ? `Créditos esgotados na sua conta ${aiConfig.provider}. Verifique o saldo do provedor externo.`
+          ? `Créditos esgotados na su cuenta ${aiConfig.provider}. Verifique o saldo do provedor externo.`
           : "Créditos de IA esgotados. Configure uma chave externa (OpenAI) em Configurações > IA Roteamento ou adicione créditos Lovable.";
         return new Response(
           JSON.stringify({ error: msg }),
@@ -215,7 +215,7 @@ Responda APENAS no formato JSON abaixo, sem texto adicional:
       }
       const errorText = await response.text();
       console.error("AI gateway error:", response.status, errorText, "| provider:", aiConfig.provider, "| model:", aiConfig.model);
-      throw new Error(`Erro ao processar análise de IA (${response.status}): ${errorText.slice(0, 200)}`);
+      throw new Error(`Error ao processar análise de IA (${response.status}): ${errorText.slice(0, 200)}`);
     }
 
     const aiResult = await response.json();
@@ -236,7 +236,7 @@ Responda APENAS no formato JSON abaixo, sem texto adicional:
       insights = [
         {
           title: "Análise em andamento",
-          insight: "Não foi possível gerar insights automáticos no momento. Tente novamente.",
+          insight: "No fue possível gerar insights automáticos no momento. Tente novamente.",
           type: "tip",
           priority: "low"
         }
@@ -283,7 +283,7 @@ Responda APENAS no formato JSON abaixo, sem texto adicional:
   } catch (error) {
     console.error("Generate insights error:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Erro desconhecido" }),
+      JSON.stringify({ error: error instanceof Error ? error.message : "Error desconhecido" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

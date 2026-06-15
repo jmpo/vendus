@@ -1,5 +1,5 @@
 // meta-whatsapp-send
-// Envia mensagem via Cloud API. Detecta janela 24h:
+// Envia mensaje via Cloud API. Detecta janela 24h:
 //  - dentro: texto/mídia livre
 //  - fora: exige template HSM aprovado
 
@@ -29,8 +29,8 @@ Deno.serve(async (req: Request) => {
   const {
     connection_id,
     organization_id,
-    to,                        // telefone destino
-    conversation_id,           // opcional: para gravar mensagem + checar janela
+    to,                        // teléfono destino
+    conversation_id,           // opcional: para gravar mensaje + checar janela
     type = 'text',             // text | template | image | audio | video | document
     text,                      // string
     media,                     // { id?, link?, caption?, filename? }
@@ -39,7 +39,7 @@ Deno.serve(async (req: Request) => {
 
   if (!connection_id || !to) return json({ error: 'missing connection_id or to' }, 400);
 
-  const { data: conn, error: connErr } = await sbAdmin
+  const { fecha: conn, error: connErr } = await sbAdmin
     .from('whatsapp_meta_connections')
     .select('*')
     .eq('id', connection_id)
@@ -50,7 +50,7 @@ Deno.serve(async (req: Request) => {
 
   // janela 24h
   if (conversation_id && type !== 'template') {
-    const { data: ok } = await sbAdmin.rpc('is_within_24h_window', { _conversation_id: conversation_id });
+    const { fecha: ok } = await sbAdmin.rpc('is_within_24h_window', { _conversation_id: conversation_id });
     if (!ok) {
       return json({ error: 'OUT_OF_WINDOW', message: 'Fora da janela 24h — envie um template HSM aprovado.' }, 422);
     }
@@ -73,7 +73,7 @@ Deno.serve(async (req: Request) => {
   } else if (['image', 'audio', 'video', 'document', 'sticker'].includes(type)) {
     payload[type] = { ...(media ?? {}) };
   } else {
-    return json({ error: `tipo ${type} não suportado` }, 400);
+    return json({ error: `tipo ${type} no suportado` }, 400);
   }
 
   // send

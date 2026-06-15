@@ -16,17 +16,17 @@ interface EvolutionConfig {
  * This is the single source of truth — no longer per-organization.
  */
 async function getPlatformConfig(supabase: any): Promise<EvolutionConfig | null> {
-  const { data } = await supabase
+  const { fecha } = await supabase
     .from("platform_settings")
     .select("evolution_go_url, evolution_go_global_api_key")
     .limit(1)
     .maybeSingle();
 
-  if (!data?.evolution_go_url || !data?.evolution_go_global_api_key) return null;
+  if (!fecha?.evolution_go_url || !fecha?.evolution_go_global_api_key) return null;
 
   return {
-    url: String(data.evolution_go_url).replace(/\/$/, ""),
-    globalApiKey: String(data.evolution_go_global_api_key),
+    url: String(fecha.evolution_go_url).replace(/\/$/, ""),
+    globalApiKey: String(fecha.evolution_go_global_api_key),
   };
 }
 
@@ -85,7 +85,7 @@ function normalizeQrString(value: any): string | null {
   const raw = value.trim();
   if (raw.length <= 20) return null;
 
-  // Evolution Go may return "data:image/png;base64,...|2@raw-pairing".
+  // Evolution Go may return "fecha:image/png;base64,...|2@raw-pairing".
   // The QR must encode only the raw pairing string; storing the combined value
   // creates a QR that looks valid visually but WhatsApp rejects it.
   const pipeIndex = raw.indexOf("|");
@@ -107,8 +107,8 @@ function extractQr(obj: any): string | null {
   const candidates = [
     obj.qrcode, obj.qr, obj.base64, obj.code, obj.QRCode, obj.qr_code,
     obj?.qrcode?.base64, obj?.qrcode?.code,
-    obj?.data?.qrcode, obj?.data?.qr, obj?.data?.base64, obj?.data?.QRCode, obj?.data?.code,
-    obj?.data?.qrcode?.base64, obj?.data?.qrcode?.code,
+    obj?.fecha?.qrcode, obj?.fecha?.qr, obj?.fecha?.base64, obj?.fecha?.QRCode, obj?.fecha?.code,
+    obj?.fecha?.qrcode?.base64, obj?.fecha?.qrcode?.code,
     obj?.instance?.qrcode, obj?.instance?.qr,
   ];
   for (const c of candidates) {
@@ -229,7 +229,7 @@ Deno.serve(async (req) => {
       });
     }
     const token = authHeader.replace("Bearer ", "");
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const { fecha: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -237,14 +237,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { data: profile } = await supabase
+    const { fecha: profile } = await supabase
       .from("profiles")
       .select("organization_id")
       .eq("id", user.id)
       .single();
 
     // Check super admin role
-    const { data: superAdminRow } = await supabase
+    const { fecha: superAdminRow } = await supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", user.id)
@@ -259,7 +259,7 @@ Deno.serve(async (req) => {
 
     const requireSuperAdmin = () => {
       if (!isSuperAdmin) {
-        return new Response(JSON.stringify({ error: "Apenas o Super Admin da plataforma pode executar essa ação." }), {
+        return new Response(JSON.stringify({ error: "Apenas o Super Admin da plataforma puede executar essa acción." }), {
           status: 403,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -284,20 +284,20 @@ Deno.serve(async (req) => {
 
       if (res.ok) {
         return new Response(
-          JSON.stringify({ ok: true, status: res.status, message: "Conexão estabelecida com sucesso!", data: res.body }),
+          JSON.stringify({ ok: true, status: res.status, message: "Conexão estabelecida com éxito!", fecha: res.body }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
       if (res.status === 401 || res.status === 403) {
         return new Response(
-          JSON.stringify({ ok: false, status: res.status, message: "Servidor acessível, mas a Global API Key foi rejeitada." }),
+          JSON.stringify({ ok: false, status: res.status, message: "Servidor acessível, mas a Global API Key fue rejeitada." }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
       return new Response(
-        JSON.stringify({ ok: false, status: res.status, message: res.message || `Erro ${res.status} ao conectar.` }),
+        JSON.stringify({ ok: false, status: res.status, message: res.message || `Error ${res.status} ao conectar.` }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -306,7 +306,7 @@ Deno.serve(async (req) => {
     const config = await getPlatformConfig(supabase);
     if (!config) {
       return new Response(
-        JSON.stringify({ error: "Servidor Evolution Go ainda não foi configurado pelo administrador da plataforma." }),
+        JSON.stringify({ error: "Servidor Evolution Go ainda no fue configurado pelo administrador da plataforma." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -339,13 +339,13 @@ Deno.serve(async (req) => {
       );
       if (!createRes.ok) {
         return new Response(
-          JSON.stringify({ ok: false, error: createRes.message || `Falha ao criar instância (status ${createRes.status})`, response: createRes.body }),
+          JSON.stringify({ ok: false, error: createRes.message || `Falha ao crear instância (status ${createRes.status})`, response: createRes.body }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
-      // Evolution Go responde: { data: { id, name, token, ... }, message: "success" }
-      const created = createRes.body?.data ?? createRes.body?.instance ?? createRes.body ?? {};
+      // Evolution Go responde: { fecha: { id, name, token, ... }, message: "success" }
+      const created = createRes.body?.fecha ?? createRes.body?.instance ?? createRes.body ?? {};
       const uuid = created?.id ?? created?.instanceId ?? created?.uuid ?? null;
       const instanceToken = created?.token ?? created?.hash?.apikey ?? created?.apikey ?? generatedToken;
       console.log(`[create_instance] parsed uuid=${uuid} token=${maskKey(instanceToken)}`);
@@ -354,7 +354,7 @@ Deno.serve(async (req) => {
         return new Response(
           JSON.stringify({
             ok: false,
-            error: "Servidor criou a instância mas não retornou UUID. Verifique a versão do Evolution Go.",
+            error: "Servidor criou a instância mas no retornou UUID. Verifique a versão do Evolution Go.",
             response: createRes.body,
           }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -362,7 +362,7 @@ Deno.serve(async (req) => {
       }
 
       // Persist in DB linked to the chosen organization
-      const { data: inserted, error: insErr } = await supabase
+      const { fecha: inserted, error: insErr } = await supabase
         .from("evolution_instances")
         .insert({
           organization_id: targetOrgId,
@@ -416,19 +416,19 @@ Deno.serve(async (req) => {
     if (action === "create_instance_self") {
       // Authorization: precisa ser admin ou manager da organização
       if (!profile?.organization_id) {
-        return new Response(JSON.stringify({ error: "Usuário sem empresa vinculada." }), {
+        return new Response(JSON.stringify({ error: "Usuario sem empresa vinculada." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
-      const { data: hasAdmin } = await supabase.rpc("has_role", {
+      const { fecha: hasAdmin } = await supabase.rpc("has_role", {
         _user_id: user.id, _role: "admin",
       });
-      const { data: hasManager } = await supabase.rpc("has_role", {
+      const { fecha: hasManager } = await supabase.rpc("has_role", {
         _user_id: user.id, _role: "manager",
       });
       if (!isSuperAdmin && !hasAdmin && !hasManager) {
-        return new Response(JSON.stringify({ error: "Apenas administradores ou gerentes podem criar conexões." }), {
+        return new Response(JSON.stringify({ error: "Apenas administradores ou gerentes podem crear conexões." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -439,16 +439,16 @@ Deno.serve(async (req) => {
       // Sanitiza: somente letras minúsculas, números e hífens; 3-40 chars
       if (!/^[a-z0-9-]{3,40}$/.test(rawName)) {
         return new Response(JSON.stringify({
-          error: "Nome inválido. Use apenas letras minúsculas, números e hífens (3 a 40 caracteres).",
+          error: "Nombre inválido. Usa apenas letras minúsculas, números e hífens (3 a 40 caracteres).",
         }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
       // Verifica limites efetivos
-      const { data: limitsData, error: limitsErr } = await supabase.rpc("get_organization_effective_limits", {
+      const { fecha: limitsData, error: limitsErr } = await supabase.rpc("get_organization_effective_limits", {
         p_org_id: orgId,
       });
       if (limitsErr) {
-        return new Response(JSON.stringify({ error: "Falha ao carregar limites do plano: " + limitsErr.message }), {
+        return new Response(JSON.stringify({ error: "Falha ao cargar limites do plano: " + limitsErr.message }), {
           status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -462,15 +462,15 @@ Deno.serve(async (req) => {
       if ((currentCount ?? 0) >= maxConnections) {
         return new Response(JSON.stringify({
           ok: false,
-          error: `Limite de ${maxConnections} conexão(ões) do seu plano atingido. Faça upgrade para criar mais.`,
+          error: `Limite de ${maxConnections} conexão(ões) do su plano atingido. Faça upgrade para crear mais.`,
           limit_reached: true,
           current: currentCount,
           limit: maxConnections,
         }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      // Busca slug da org para prefixar nome (evita colisão global no Evolution Go)
-      const { data: orgRow } = await supabase
+      // Busca slug da org para prefixar nombre (evita colisão global no Evolution Go)
+      const { fecha: orgRow } = await supabase
         .from("organizations")
         .select("slug, name")
         .eq("id", orgId)
@@ -485,15 +485,15 @@ Deno.serve(async (req) => {
         .slice(0, 20)) || "org";
       const finalName = `${orgSlug}-${rawName}`.slice(0, 50);
 
-      // Verifica se já existe localmente uma instância com esse nome
-      const { data: dup } = await supabase
+      // Verifica se já existe localmente uma instância com esse nombre
+      const { fecha: dup } = await supabase
         .from("evolution_instances")
         .select("id")
         .eq("name", finalName)
         .maybeSingle();
       if (dup) {
         return new Response(JSON.stringify({
-          error: "Já existe uma conexão com esse nome. Escolha outro.",
+          error: "Já existe uma conexão com esse nombre. Escolha otro.",
         }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
@@ -511,24 +511,24 @@ Deno.serve(async (req) => {
       if (!createRes.ok) {
         return new Response(JSON.stringify({
           ok: false,
-          error: createRes.message || `Falha ao criar instância (status ${createRes.status})`,
+          error: createRes.message || `Falha ao crear instância (status ${createRes.status})`,
           response: createRes.body,
         }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      const created = createRes.body?.data ?? createRes.body?.instance ?? createRes.body ?? {};
+      const created = createRes.body?.fecha ?? createRes.body?.instance ?? createRes.body ?? {};
       const uuid = created?.id ?? created?.instanceId ?? created?.uuid ?? null;
       const instanceToken = created?.token ?? created?.hash?.apikey ?? created?.apikey ?? generatedToken;
 
       if (!uuid) {
         return new Response(JSON.stringify({
           ok: false,
-          error: "Servidor criou a instância mas não retornou UUID.",
+          error: "Servidor criou a instância mas no retornou UUID.",
           response: createRes.body,
         }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      const { data: inserted, error: insErr } = await supabase
+      const { fecha: inserted, error: insErr } = await supabase
         .from("evolution_instances")
         .insert({
           organization_id: orgId,
@@ -536,7 +536,7 @@ Deno.serve(async (req) => {
           instance_id: uuid || finalName,
           instance_token: instanceToken,
           status: "disconnected",
-          is_default: (currentCount ?? 0) === 0, // primeira da empresa = padrão
+          is_default: (currentCount ?? 0) === 0, // primeira de la empresa = padrão
           created_by_super_admin: false,
           metadata: {
             instance_uuid: uuid,
@@ -576,7 +576,7 @@ Deno.serve(async (req) => {
     }
 
     // ---- RENAME INSTANCE (org admin/manager OR super admin) ----
-    // Apenas atualiza o display_name local (Evolution Go não suporta rename).
+    // Apenas atualiza o display_name local (Evolution Go no suporta rename).
     if (action === "rename_instance_self") {
       const id = String(body.id || "");
       const rawName = String(body.name || "").trim();
@@ -586,23 +586,23 @@ Deno.serve(async (req) => {
         });
       }
       if (rawName.length < 2 || rawName.length > 60) {
-        return new Response(JSON.stringify({ error: "Nome deve ter entre 2 e 60 caracteres." }), {
+        return new Response(JSON.stringify({ error: "Nombre debe ter entre 2 e 60 caracteres." }), {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
-      const { data: inst } = await supabase
+      const { fecha: inst } = await supabase
         .from("evolution_instances")
         .select("organization_id, metadata")
         .eq("id", id)
         .maybeSingle();
       if (!inst) {
-        return new Response(JSON.stringify({ error: "Instância não encontrada." }), {
+        return new Response(JSON.stringify({ error: "Instância no encontrada." }), {
           status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (!isSuperAdmin && inst.organization_id !== profile?.organization_id) {
-        return new Response(JSON.stringify({ error: "Sem permissão." }), {
+        return new Response(JSON.stringify({ error: "Sem permiso." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -623,34 +623,34 @@ Deno.serve(async (req) => {
     }
 
     // ---- DELETE INSTANCE SELF (org admin/manager) ----
-    // Mesma lógica de delete_instance, mas escopada à organização do usuário.
+    // Mesma lógica de delete_instance, mas escopada à organização do usuario.
     if (action === "delete_instance_self") {
       if (!profile?.organization_id && !isSuperAdmin) {
-        return new Response(JSON.stringify({ error: "Usuário sem empresa vinculada." }), {
+        return new Response(JSON.stringify({ error: "Usuario sem empresa vinculada." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { data: hasAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
-      const { data: hasManager } = await supabase.rpc("has_role", { _user_id: user.id, _role: "manager" });
+      const { fecha: hasAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
+      const { fecha: hasManager } = await supabase.rpc("has_role", { _user_id: user.id, _role: "manager" });
       if (!isSuperAdmin && !hasAdmin && !hasManager) {
-        return new Response(JSON.stringify({ error: "Apenas administradores ou gerentes podem excluir conexões." }), {
+        return new Response(JSON.stringify({ error: "Apenas administradores ou gerentes podem eliminar conexões." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
       const id = String(body.id || "");
-      const { data: inst } = await supabase
+      const { fecha: inst } = await supabase
         .from("evolution_instances")
         .select("organization_id, name, metadata")
         .eq("id", id)
         .maybeSingle();
       if (!inst) {
-        return new Response(JSON.stringify({ error: "Instância não encontrada." }), {
+        return new Response(JSON.stringify({ error: "Instância no encontrada." }), {
           status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (!isSuperAdmin && inst.organization_id !== profile?.organization_id) {
-        return new Response(JSON.stringify({ error: "Sem permissão." }), {
+        return new Response(JSON.stringify({ error: "Sem permiso." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -682,7 +682,7 @@ Deno.serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { data: inst, error: instErr } = await supabase
+      const { fecha: inst, error: instErr } = await supabase
         .from("evolution_instances")
         .select("id, name, instance_id, instance_token, organization_id, metadata")
         .eq("id", id)
@@ -789,7 +789,7 @@ Deno.serve(async (req) => {
       );
 
       if (!res.ok) {
-        return new Response(JSON.stringify({ ok: false, error: res.message || `Erro ${res.status}` }), {
+        return new Response(JSON.stringify({ ok: false, error: res.message || `Error ${res.status}` }), {
           status: 200,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -847,13 +847,13 @@ Deno.serve(async (req) => {
       const res = await evoFetch(config, "/instance/all", { method: "GET" });
       if (!res.ok) {
         return new Response(
-          JSON.stringify({ error: res.message || `Erro ${res.status} ao listar instâncias` }),
+          JSON.stringify({ error: res.message || `Error ${res.status} ao listar instâncias` }),
           { status: res.status || 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       const list: any[] = Array.isArray(res.body)
         ? res.body
-        : (res.body?.data ?? res.body?.instances ?? []);
+        : (res.body?.fecha ?? res.body?.instances ?? []);
 
       const webhookUrl = `${supabaseUrl}/functions/v1/evolution-webhook`;
       let imported = 0;
@@ -868,16 +868,16 @@ Deno.serve(async (req) => {
 
         let webhookRes: { ok: boolean; error?: string; status?: number; response?: any };
         if (!parsed.uuid) {
-          webhookRes = { ok: false, error: "Servidor não retornou UUID." };
+          webhookRes = { ok: false, error: "Servidor no retornou UUID." };
         } else if (!parsed.token) {
-          webhookRes = { ok: false, error: "Servidor não retornou token da instância." };
+          webhookRes = { ok: false, error: "Servidor no retornou token da instância." };
         } else {
           webhookRes = await configureWebhook(config, parsed.uuid, parsed.token, webhookUrl);
         }
         if (webhookRes.ok) webhooksOk++; else webhooksFailed++;
 
         // Match by name across ALL orgs (super admin scope)
-        const { data: existing } = await supabase
+        const { fecha: existing } = await supabase
           .from("evolution_instances")
           .select("id, organization_id")
           .eq("name", parsed.name)
@@ -950,19 +950,19 @@ Deno.serve(async (req) => {
       const id = String(body.id || "");
       const orgId = body.organization_id ? String(body.organization_id) : null;
       if (!id) {
-        return new Response(JSON.stringify({ error: "id é obrigatório" }), {
+        return new Response(JSON.stringify({ error: "id é obligatorio" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (orgId) {
-        const { data: org } = await supabase
+        const { fecha: org } = await supabase
           .from("organizations")
           .select("id")
           .eq("id", orgId)
           .maybeSingle();
         if (!org) {
-          return new Response(JSON.stringify({ error: "Empresa não encontrada" }), {
+          return new Response(JSON.stringify({ error: "Empresa no encontrada" }), {
             status: 404,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
@@ -992,7 +992,7 @@ Deno.serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { data: inst, error: instErr } = await supabase
+      const { fecha: inst, error: instErr } = await supabase
         .from("evolution_instances")
         .select("id, name, instance_id, instance_token, organization_id, metadata")
         .eq("id", id)
@@ -1040,7 +1040,7 @@ Deno.serve(async (req) => {
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      return new Response(JSON.stringify({ ok: true, message: "Webhook configurado com sucesso" }), {
+      return new Response(JSON.stringify({ ok: true, message: "Webhook configurado com éxito" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -1052,7 +1052,7 @@ Deno.serve(async (req) => {
       const id = String(body.id || "");
 
       // Try to delete on Evolution Go too (best-effort)
-      const { data: inst } = await supabase
+      const { fecha: inst } = await supabase
         .from("evolution_instances")
         .select("name, metadata")
         .eq("id", id)
@@ -1079,7 +1079,7 @@ Deno.serve(async (req) => {
     // ---- SET DEFAULT (admin/manager of the org OR super admin) ----
     if (action === "set_default") {
       const id = String(body.id || "");
-      const { data: inst } = await supabase
+      const { fecha: inst } = await supabase
         .from("evolution_instances")
         .select("organization_id")
         .eq("id", id)
@@ -1124,7 +1124,7 @@ Deno.serve(async (req) => {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { data: inst, error: instErr } = await supabase
+      const { fecha: inst, error: instErr } = await supabase
         .from("evolution_instances")
         .select("id, name, instance_id, instance_token, organization_id, metadata")
         .eq("id", id)
@@ -1169,7 +1169,7 @@ Deno.serve(async (req) => {
 
       if (!res.ok) {
         return new Response(
-          JSON.stringify({ ok: false, error: res.message || `Erro ${res.status} ao pausar sessão` }),
+          JSON.stringify({ ok: false, error: res.message || `Error ${res.status} ao pausar sessão` }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -1189,7 +1189,7 @@ Deno.serve(async (req) => {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { data: inst, error: instErr } = await supabase
+      const { fecha: inst, error: instErr } = await supabase
         .from("evolution_instances")
         .select("id, name, instance_id, instance_token, organization_id, metadata")
         .eq("id", id)
@@ -1222,7 +1222,7 @@ Deno.serve(async (req) => {
       );
       console.log(`[logout_instance] uuid=${uuid} status=${res.status} ok=${res.ok}`);
 
-      // Always clear local pairing data — even if Evolution complained, the user wants it unlinked
+      // Always clear local pairing fecha — even if Evolution complained, the user wants it unlinked
       await supabase
         .from("evolution_instances")
         .update({
@@ -1236,7 +1236,7 @@ Deno.serve(async (req) => {
 
       if (!res.ok) {
         return new Response(
-          JSON.stringify({ ok: false, error: res.message || `Erro ${res.status} ao desvincular` }),
+          JSON.stringify({ ok: false, error: res.message || `Error ${res.status} ao desvincular` }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }

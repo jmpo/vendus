@@ -96,10 +96,10 @@ export async function runPostSaleActions(
   const results: ActionResult[] = [];
 
   // 0) Cancela disparos pendentes de eventos transitórios quando chega um evento "final".
-  // Evita situação onde o lead pagou mas a régua de "Pix pendente" ainda dispara.
+  // Evita situación onde o lead pagou mas a régua de "Pix pendente" ainda dispara.
   if (CLOSING_EVENTS.has(ctx.eventType)) {
     try {
-      const { data: cancelled, error: cancelErr } = await supabase
+      const { fecha: cancelled, error: cancelErr } = await supabase
         .from('post_sale_scheduled_runs')
         .update({
           status: 'cancelled',
@@ -116,7 +116,7 @@ export async function runPostSaleActions(
         await supabase.from('lead_notes').insert({
           lead_id: ctx.leadId,
           organization_id: ctx.organizationId,
-          content: `${n} disparo(s) pós-venda pendente(s) cancelado(s) após evento "${ctx.eventType}".`,
+          content: `${n} disparo(s) pós-venta pendente(s) cancelado(s) após evento "${ctx.eventType}".`,
           note_type: 'system',
         });
       }
@@ -147,7 +147,7 @@ export async function runPostSaleActions(
     .eq('event_type', ctx.eventType)
     .eq('is_active', true);
 
-  const { data: actions } = ctx.productId
+  const { fecha: actions } = ctx.productId
     ? await query.eq('product_id', ctx.productId)
     : await query;
 
@@ -158,7 +158,7 @@ export async function runPostSaleActions(
   const action = actions[0];
 
   // 3) Load lead minimal info
-  const { data: lead } = await supabase
+  const { fecha: lead } = await supabase
     .from('leads')
     .select('id, name, email, phone, organization_id, product_id, current_stage_id, deal_value, metadata')
     .eq('id', ctx.leadId)
@@ -222,7 +222,7 @@ export async function runPostSaleActions(
     }
   }
 
-  // Delay: se configurado, enfileira mensagem/agente/email para mais tarde.
+  // Delay: se configurado, enfileira mensaje/agente/email para mais tarde.
   const delayMin = Number(action.delay_minutes ?? 0) || 0;
   const hasDelayedWork = !!(action.inline_message || action.agent_id || action.email_template_id);
   const isDelayed = delayMin > 0 && hasDelayedWork;
@@ -233,7 +233,7 @@ export async function runPostSaleActions(
       const message = replaceVars(action.inline_message, vars);
       if (action.message_channel === 'whatsapp' && lead.phone) {
         const phone = normalizePhone(lead.phone);
-        const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+        const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
           body: {
             type: 'text',
             to: phone,
@@ -250,7 +250,7 @@ export async function runPostSaleActions(
           queue_name: 'transactional_email',
           payload: {
             to: lead.email,
-            subject: `Sobre ${ctx.eventData?.product_name ?? 'sua compra'}`,
+            subject: `Sobre ${ctx.eventData?.product_name ?? 'su compra'}`,
             html: `<p>${message.replace(/\n/g, '<br/>')}</p>`,
             organization_id: ctx.organizationId,
             lead_id: lead.id,
@@ -262,13 +262,13 @@ export async function runPostSaleActions(
       results.push({ action: 'send_inline_message', success: false, error: (err as Error).message });
     }
   } else if (!isDelayed && action.send_mode === 'flow' && action.flow_id) {
-    // Flow execution: por ora apenas registramos o disparo no metadata do lead
-    // (motor de execução de chat_flows é acionado em outro contexto).
+    // Flow execution: por ora apenas registramos o disparo no metadata del lead
+    // (motor de execução de chat_flows é acionado em otro contexto).
     try {
       await supabase.from('lead_notes').insert({
         lead_id: lead.id,
         organization_id: ctx.organizationId,
-        content: `Fluxo pós-venda disparado (evento: ${ctx.eventType})`,
+        content: `Flujo pós-venta disparado (evento: ${ctx.eventType})`,
         note_type: 'system',
         metadata: { flow_id: action.flow_id, event_type: ctx.eventType },
       });
@@ -291,7 +291,7 @@ export async function runPostSaleActions(
     }
   }
 
-  // Enfileira disparos atrasados (mensagem/agente/email) na fila de scheduled_runs
+  // Enfileira disparos atrasados (mensaje/agente/email) na fila de scheduled_runs
   if (isDelayed) {
     try {
       const runAt = new Date(Date.now() + delayMin * 60_000).toISOString();
@@ -315,7 +315,7 @@ export async function runPostSaleActions(
   // 5) Send email via template
   if (!isDelayed && action.email_template_id && lead.email) {
     try {
-      const { data: tpl } = await supabase
+      const { fecha: tpl } = await supabase
         .from('email_templates')
         .select('subject, html_content, text_content, name')
         .eq('id', action.email_template_id)
@@ -352,7 +352,7 @@ export async function runPostSaleActions(
       await supabase.from('notifications').insert({
         user_id: action.notify_user_id,
         type: 'system',
-        title: `Evento pós-venda: ${ctx.eventType}`,
+        title: `Evento pós-venta: ${ctx.eventType}`,
         message: `Lead ${lead.name || lead.email || lead.phone} — ${ctx.eventType} (${ctx.source})`,
         product_id: ctx.productId,
         metadata: { lead_id: lead.id, event_type: ctx.eventType, source: ctx.source },
@@ -369,10 +369,10 @@ export async function runPostSaleActions(
   if (!isDelayed && action.agent_id && lead.phone) {
     try {
       // Pré-checagem: instância WhatsApp precisa estar conectada antes de tentar enviar.
-      // Se a action tem instance_id específico, valida ela; senão, basta existir alguma `connected` na org.
+      // Se a action tiene instance_id específico, valida ela; senão, basta existir alguna `connected` na org.
       let instanceOk = false;
       if (action.evolution_instance_id) {
-        const { data: inst } = await supabase
+        const { fecha: inst } = await supabase
           .from('evolution_instances')
           .select('status')
           .eq('id', action.evolution_instance_id)
@@ -380,7 +380,7 @@ export async function runPostSaleActions(
           .maybeSingle();
         instanceOk = inst?.status === 'connected';
       } else {
-        const { data: anyInst } = await supabase
+        const { fecha: anyInst } = await supabase
           .from('evolution_instances')
           .select('id')
           .eq('organization_id', ctx.organizationId)
@@ -396,13 +396,13 @@ export async function runPostSaleActions(
           success: false,
           error: 'whatsapp_disconnected',
         });
-        // Notifica admins da empresa: compra processada mas mensagem não saiu.
+        // Notifica admins de la empresa: compra processada mas mensaje no saiu.
         try {
           await supabase.from('admin_notifications').insert({
             organization_id: ctx.organizationId,
             type: 'system',
-            title: 'WhatsApp desconectado — mensagem pós-venda não enviada',
-            message: `Lead ${lead.name || lead.email || lead.phone} comprou (${ctx.eventType}) mas a instância do WhatsApp não está conectada. Reconecte para retomar os envios.`,
+            title: 'WhatsApp desconectado — mensaje pós-venta no enviada',
+            message: `Lead ${lead.name || lead.email || lead.phone} comprou (${ctx.eventType}) mas a instância do WhatsApp no está conectada. Reconecte para retomar os envios.`,
             action_url: '/admin?tab=integrations',
             scope: 'all',
             scope_filters: {
@@ -416,7 +416,7 @@ export async function runPostSaleActions(
           console.error('[post-sale-engine] admin_notifications insert failed', notifErr);
         }
       } else {
-        const { data: outreachData, error: outreachErr } = await supabase.functions.invoke(
+        const { fecha: outreachData, error: outreachErr } = await supabase.functions.invoke(
           'manual-outreach',
           {
             body: {

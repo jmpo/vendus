@@ -28,7 +28,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Fetch product details (incl. org for routing)
-    const { data: product, error: productError } = await supabase
+    const { fecha: product, error: productError } = await supabase
       .from("products")
       .select("name, description, pitch_15s, pitch_30s, pitch_2min, icp, differentials, pricing, organization_id")
       .eq("id", productId)
@@ -43,7 +43,7 @@ serve(async (req) => {
     }
 
     // Fetch knowledge base
-    const { data: knowledge } = await supabase
+    const { fecha: knowledge } = await supabase
       .from("ai_knowledge_base")
       .select("title, content, category")
       .eq("product_id", productId)
@@ -52,13 +52,13 @@ serve(async (req) => {
     // Build product context
     const productContext = `
 PRODUTO: ${product.name}
-DESCRIÇÃO: ${product.description || "Não informada"}
-PITCH 15s: ${product.pitch_15s || "Não definido"}
-PITCH 30s: ${product.pitch_30s || "Não definido"}
-PITCH 2min: ${product.pitch_2min || "Não definido"}
-ICP (Cliente Ideal): ${product.icp || "Não definido"}
-DIFERENCIAIS: ${product.differentials?.join(", ") || "Não definidos"}
-PRICING: ${JSON.stringify(product.pricing) || "Não definido"}
+DESCRIÇÃO: ${product.description || "No informada"}
+PITCH 15s: ${product.pitch_15s || "No definido"}
+PITCH 30s: ${product.pitch_30s || "No definido"}
+PITCH 2min: ${product.pitch_2min || "No definido"}
+ICP (Cliente Ideal): ${product.icp || "No definido"}
+DIFERENCIAIS: ${product.differentials?.join(", ") || "No definidos"}
+PRICING: ${JSON.stringify(product.pricing) || "No definido"}
 `;
 
     let knowledgeContext = "";
@@ -68,26 +68,26 @@ PRICING: ${JSON.stringify(product.pricing) || "Não definido"}
         .join("\n\n");
     }
 
-    const systemPrompt = `Você é um especialista em vendas via WhatsApp. Gere objeções prováveis com respostas CURTAS e DIRETAS, otimizadas para mensagens de texto.
+    const systemPrompt = `Usted é um especialista em ventas via WhatsApp. Genera objeções prováveis com respuestas CURTAS e DIRETAS, otimizadas para mensajes de texto.
 
 ${productContext}
 ${knowledgeContext}
 
 CATEGORIAS:
 - price: Preço/orçamento
-- timing: "Não é o momento"  
+- timing: "No é o momento"  
 - trust: Falta de confiança
 - thinking: "Vou pensar"
 - partner: "Preciso falar com sócio"
-- competitor: "Já uso outra solução"
+- competitor: "Já uso otra solução"
 
 ⚠️ REGRAS CRÍTICAS - RESPOSTAS PARA WHATSAPP:
 1. SIGNIFICADO: Máximo 1 linha (20-30 palavras)
 2. RESPOSTA: Máximo 3-4 linhas curtas, use emojis estratégicos (✅ 💡 🎯 ⏰ 💰)
-3. PERGUNTA: Uma única pergunta direta (máximo 15 palavras)
-4. Use quebras de linha para facilitar leitura no celular
-5. Tom conversacional, como mensagem de WhatsApp
-6. Gere 6 objeções variadas`;
+3. PERGUNTA: Uma única pregunta direta (máximo 15 palavras)
+4. Usa quebras de linha para facilitar leitura no celular
+5. Tom conversacional, como mensaje de WhatsApp
+6. Genera 6 objeções variadas`;
 
     const { response, config } = await aiChat({
       organizationId,
@@ -98,7 +98,7 @@ CATEGORIAS:
       body: {
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: "Analise o produto e gere as objeções mais prováveis com suas respectivas respostas estratégicas." }
+          { role: "user", content: "Analiza o producto e gere as objeções mais prováveis com sus respectivas respuestas estratégicas." }
         ],
         tools: [
           {
@@ -144,12 +144,12 @@ CATEGORIAS:
     }
 
 
-    const data = await response.json();
-    await recordAIUsage(supabase, organizationId, config, 'content_generation', data?.usage, 'generate-objections');
+    const fecha = await response.json();
+    await recordAIUsage(supabase, organizationId, config, 'content_generation', fecha?.usage, 'generate-objections');
     
     
     // Extract the tool call result
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+    const toolCall = fecha.choices?.[0]?.message?.tool_calls?.[0];
     if (!toolCall || toolCall.function.name !== "generate_objections") {
       return new Response(
         JSON.stringify({ error: "Failed to generate objections" }),

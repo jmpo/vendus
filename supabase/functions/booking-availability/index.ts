@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
     console.log(`Calculating availability for event ${eventTypeId} on ${date}`);
 
     // 1. Fetch event type
-    const { data: eventType, error: eventError } = await supabase
+    const { fecha: eventType, error: eventError } = await supabase
       .from('booking_event_types')
       .select('*')
       .eq('id', eventTypeId)
@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
     const dayOfWeek = dateObj.getDay();
 
     // 2. Fetch weekly availability for this day
-    const { data: weeklyAvailability } = await supabase
+    const { fecha: weeklyAvailability } = await supabase
       .from('user_availability')
       .select('*')
       .eq('user_id', userId)
@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
       .eq('is_available', true);
 
     // 3. Check for date override
-    const { data: override } = await supabase
+    const { fecha: override } = await supabase
       .from('availability_overrides')
       .select('*')
       .eq('user_id', userId)
@@ -88,10 +88,10 @@ Deno.serve(async (req) => {
     let timeRanges: { start: string; end: string }[] = [];
     
     if (override && override.is_available && override.start_time && override.end_time) {
-      // Use override times
+      // Usa override times
       timeRanges = [{ start: override.start_time, end: override.end_time }];
     } else if (weeklyAvailability && weeklyAvailability.length > 0) {
-      // Use weekly availability
+      // Usa weekly availability
       timeRanges = weeklyAvailability.map(a => ({
         start: a.start_time,
         end: a.end_time
@@ -110,7 +110,7 @@ Deno.serve(async (req) => {
     const startOfDay = `${date}T00:00:00`;
     const endOfDay = `${date}T23:59:59`;
     
-    const { data: existingEvents } = await supabase
+    const { fecha: existingEvents } = await supabase
       .from('calendar_events')
       .select('start_time, end_time')
       .eq('user_id', userId)

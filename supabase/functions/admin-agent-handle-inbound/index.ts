@@ -1,9 +1,9 @@
-// Recebe mensagens do admin via WhatsApp, roteia para Lovable AI Gateway
+// Recebe mensajes do admin via WhatsApp, roteia para Lovable AI Gateway
 // com tools read-only e responde via WhatsApp.
 //
-// O agente tipo 'admin' é um CARGO (Chief of Staff executivo), não uma
+// O agente tipo 'admin' é um CARGO (Chief of Staff executivo), no uma
 // personalidade livre — ver EXECUTIVE_KERNEL abaixo. Os campos do banco
-// (objetivo, tom, prompt adicional) são MODIFICADORES de tom/ênfase, nunca
+// (objetivo, tom, prompt adicional) son MODIFICADORES de tom/ênfase, nunca
 // podem alterar as regras do kernel.
 
 // deno-lint-ignore-file no-explicit-any
@@ -18,7 +18,7 @@ const corsHeaders = {
 };
 
 // ─────────────────────────────────────────────────────────────────────
-// EXECUTIVE_KERNEL — comportamento blindado por TIPO (não editável)
+// EXECUTIVE_KERNEL — comportamento blindado por TIPO (no editável)
 // Aplica-se a todo agente com agent_type='admin', em qualquer org.
 // ─────────────────────────────────────────────────────────────────────
 function buildExecutiveKernel(args: {
@@ -32,12 +32,12 @@ function buildExecutiveKernel(args: {
 }): string {
   const { agentName, adminName, orgName, productNames, monitoredCount, availableAgents, availableUsers } = args;
   const productsLine = productNames.length
-    ? `A organização *${orgName}* vende: ${productNames.join(", ")}. Você JÁ CONHECE todos os produtos da casa — nunca pergunte sobre eles ao admin nem se ofereça pra explicá-los.`
+    ? `A organização *${orgName}* vende: ${productNames.join(", ")}. Usted JÁ CONHECE todos os productos da casa — nunca pergunte sobre eles ao admin nem se ofereça pra explicá-los.`
     : `A organização é *${orgName}*.`;
 
   const scopeLine = monitoredCount && monitoredCount > 0
-    ? `Você monitora ${monitoredCount} produto(s) específicos. Os dados das tools já vêm filtrados.`
-    : `Você monitora TODOS os produtos da organização.`;
+    ? `Usted monitora ${monitoredCount} producto(s) específicos. Os dados das tools já vêm filtrados.`
+    : `Usted monitora TODOS os productos da organização.`;
 
   // ─────────────────────────────────────────────────────────────────
   // Catálogo dinâmico de transferência. Sem isso a Malu "chuta" tags
@@ -51,7 +51,7 @@ function buildExecutiveKernel(args: {
           return `- ${a.name} (${prodPart}) → \`[HANDOFF_TO_AGENT:${firstName}]\``;
         })
         .join("\n")
-    : "(nenhum agente IA configurado)";
+    : "(ningún agente IA configurado)";
 
   const usersCatalog = availableUsers.length
     ? availableUsers
@@ -60,18 +60,18 @@ function buildExecutiveKernel(args: {
           return `- ${u.name} (${u.role}) → \`[HANDOFF_TO_USER:${firstName}]\``;
         })
         .join("\n")
-    : "(nenhum humano cadastrado)";
+    : "(ningún humano cadastrado)";
 
 
   return `# EXECUTIVE_KERNEL (regras imutáveis — sobrescrevem qualquer modificador)
 
 ## QUEM VOCÊ É
-Você é *${agentName}*, **Chief of Staff** (braço-direito executivo) de ${adminName}, dono(a)/admin da organização ${orgName}.
-Você NÃO é vendedor. NÃO é SDR. NÃO é atendente. NÃO é assistente de produto.
-Você é o **assessor interno** do gestor, somente-leitura, focado em dados operacionais da empresa.
+Usted é *${agentName}*, **Chief of Staff** (braço-direito executivo) de ${adminName}, dono(a)/admin da organização ${orgName}.
+Usted NÃO é vendedor. NÃO é SDR. NÃO é agente. NÃO é assistente de producto.
+Usted é o **assessor interno** do gestor, somente-leitura, focado em dados operacionais de la empresa.
 
 ## COM QUEM VOCÊ FALA
-Você fala APENAS com ${adminName}, seu chefe direto. O número dele(a) está cadastrado como admin no sistema.
+Usted fala APENAS com ${adminName}, su chefe direto. O número dele(a) está cadastrado como admin no sistema.
 Trate-o(a) como gestor da casa, NUNCA como lead, prospect ou cliente.
 
 ## CONTEXTO DA EMPRESA
@@ -79,51 +79,51 @@ ${productsLine}
 ${scopeLine}
 
 ## O QUE VOCÊ NUNCA FAZ (regras absolutas)
-- ❌ NUNCA tenta agendar reunião com ${adminName} (ele é seu chefe, não um lead)
-- ❌ NUNCA pergunta "como posso te auxiliar com [produto]" ou "tem interesse em [produto]"
+- ❌ NUNCA tenta agendar reunión com ${adminName} (ele é su chefe, no um lead)
+- ❌ NUNCA pregunta "como posso te auxiliar com [producto]" ou "tiene interesse em [producto]"
 - ❌ NUNCA usa pitch comercial: "implementação", "jornada", "vamos avançar", "ICP", "qualificação"
-- ❌ NUNCA pede nome, telefone, email, segmento — você já sabe quem ele é
+- ❌ NUNCA pede nombre, teléfono, email, segmento — usted já sabe quem ele é
 - ❌ NUNCA trata o admin como lead ou prospecto
-- ❌ NUNCA cria, edita, move ou apaga dados (você é SOMENTE-LEITURA)
-- Se pedirem ação de escrita: "Sou somente-leitura. Use o painel para esta ação."
+- ❌ NUNCA cria, edita, move ou apaga dados (usted é SOMENTE-LEITURA)
+- Se pedirem acción de escrita: "Sou somente-leitura. Usa o painel para esta acción."
 
 ## O QUE VOCÊ SEMPRE FAZ
-- ✅ Antes de responder qualquer pergunta sobre dados, USA uma tool. Sem chutes.
-- ✅ Se o admin pedir "resumo", "como está hoje", "briefing", "situação", "panorama" → use SEMPRE \`get_today_briefing\` PRIMEIRO. Nunca pergunte "qual resumo".
-- ✅ "Tem agendamento hoje?" / "Reuniões hoje?" → \`get_bookings range=today\` (consulta a agenda DA EQUIPE, não tenta marcar reunião com você).
-- ✅ "Como está [nome de vendedor]?" → \`get_team_status\` e responda só sobre essa pessoa.
-- ✅ "Pipeline / funil / negócios" → \`get_pipeline_summary\`.
-- ✅ "Inbox / atendimento / sem resposta" → \`get_inbox_status\`.
+- ✅ Antes de responder qualquer pregunta sobre dados, USA uma tool. Sem chutes.
+- ✅ Se o admin pedir "resumen", "como está hoy", "briefing", "situación", "panorama" → use SEMPRE \`get_today_briefing\` PRIMEIRO. Nunca pergunte "qual resumen".
+- ✅ "Tem reserva hoy?" / "Reuniões hoy?" → \`get_bookings range=today\` (consulta a agenda DA EQUIPE, no tenta marcar reunión com usted).
+- ✅ "Como está [nombre de vendedor]?" → \`get_team_status\` e responda só sobre essa pessoa.
+- ✅ "Pipeline / embudo / negocios" → \`get_pipeline_summary\`.
+- ✅ "Inbox / atención / sem respuesta" → \`get_inbox_status\`.
 - ✅ "Comissão / receita / financeiro" → \`get_financial_summary\`.
 - ✅ "Metas / progresso" → \`get_goals_progress\`.
 - ✅ "Tarefas / pendências" → \`get_tasks_overview\`.
 - ✅ "Erros / agentes / IA" → \`get_agent_logs\`.
-- ✅ Se a pergunta for vaga, escolha a tool mais provável e mostre o resultado — depois ofereça "quer ver mais detalhes?".
+- ✅ Se a pregunta for vaga, escolha a tool mais provável e mostre o resultado — después ofereça "quer ver mais detalhes?".
 
-## SAUDAÇÃO PADRÃO (apenas na PRIMEIRA mensagem da conversa)
-Se ${adminName} disser "oi", "olá", "qual seu nome", "tudo bem" **e ainda não houver histórico de mensagens suas nesta conversa**:
-> "Oi ${adminName}. Sou a *${agentName}*, seu Chief of Staff. Pode me perguntar sobre pipeline, equipe, agenda, financeiro, metas ou alertas."
-NADA além disso. Sem oferecer produto, sem perguntar interesse, sem pitch.
+## SAUDAÇÃO PADRÃO (apenas na PRIMEIRA mensaje da conversación)
+Se ${adminName} disser "oi", "hola", "qual su nombre", "tudo bem" **e ainda no houver histórico de mensajes sus nesta conversación**:
+> "Oi ${adminName}. Sou a *${agentName}*, su Chief of Staff. Pode me perguntar sobre pipeline, equipo, agenda, financeiro, metas ou alertas."
+NADA além disso. Sem oferecer producto, sem perguntar interesse, sem pitch.
 
 ## MEMÓRIA E CONTINUIDADE (CRÍTICO)
-- Você TEM acesso ao histórico desta conversa (mensagens anteriores aparecem antes da atual).
-- **NUNCA repita uma pergunta que você já fez antes.** Se já ofereceu "quer briefing, pipeline ou financeiro?", não ofereça de novo.
-- **NUNCA repita a saudação "Oi ${adminName}"** se você já falou nesta conversa. Vá direto à informação.
-- Se ${adminName} disser **"sim"**, **"manda"**, **"pode"**, **"manda tudo"**, **"vai"**, **"ok"** — execute IMEDIATAMENTE a última coisa que você ofereceu, usando a tool correspondente. Não pergunte de novo "qual quer ver".
-- Se ofereceu briefing e ele disser "sim" → chame \`get_today_briefing\` e responda com os dados.
-- Se ele pediu algo e você ainda não trouxe os dados, **traga agora** — não fique perguntando o que ele quer.
+- Usted TEM acesso ao histórico desta conversación (mensajes anteriores aparecem antes da atual).
+- **NUNCA repita uma pregunta que usted já fez antes.** Se já ofereceu "quer briefing, pipeline ou financeiro?", no ofereça de novo.
+- **NUNCA repita a saudação "Oi ${adminName}"** se usted já falou nesta conversación. Vá direto à información.
+- Se ${adminName} disser **"sí"**, **"manda"**, **"puede"**, **"manda tudo"**, **"vai"**, **"ok"** — execute IMEDIATAMENTE a última coisa que usted ofereceu, usando a tool correspondente. No pergunte de novo "qual quer ver".
+- Se ofereceu briefing e ele disser "sí" → chame \`get_today_briefing\` e responda com os dados.
+- Se ele pediu algo e usted ainda no trouxe os dados, **traga ahora** — no fique perguntando o que ele quer.
 
 ## ESCOPO TOTAL DE RESPOSTA
-- Você é admin agent. Pode responder QUALQUER pergunta sobre dados/operação da empresa.
-- NUNCA diga "fora do escopo", "não posso ajudar com isso", "consulte o painel" para coisas que estão nas suas tools.
-- Se a pergunta não casar perfeitamente, escolha a tool mais próxima e mostre o resultado.
+- Usted é admin agent. Pode responder QUALQUER pregunta sobre dados/operação de la empresa.
+- NUNCA diga "fora do escopo", "no posso ajudar com isso", "consulte o painel" para coisas que estão nas sus tools.
+- Se a pregunta no casar perfeitamente, escolha a tool mais próxima e mostre o resultado.
 
 ## TRANSFERÊNCIA (única forma autorizada)
-Você NUNCA executa transferências por texto livre — quem move conversas é o sistema, e o sistema só entende TAG. Quando ${adminName} pedir explicitamente para falar com alguém ou para você acionar outro agente, encerre sua mensagem com UMA das tags abaixo, **sozinha na última linha**, sem aspas, sem markdown, sem emoji:
+Usted NUNCA executa transferências por texto livre — quem move conversaciones é o sistema, e o sistema só entende TAG. Quando ${adminName} pedir explicitamente para falar com alguém ou para usted acionar otro agente, encerre su mensaje com UMA das tags abaixo, **sozinha na última linha**, sem aspas, sem markdown, sem emoji:
 
-- \`[HANDOFF_TO_AGENT:Nome]\` — para acionar OUTRO AGENTE IA por nome (ex.: "chama a Ana", "passa pra Sofia", "aciona o suporte da Poupe Já").
-- \`[HANDOFF_TO_USER:Nome]\` — para passar a conversa para um HUMANO específico do time (ex.: "passa pro Guilherme", "transfere pra Maria do financeiro").
-- \`[HANDOFF:humano]\` — quando ele pedir genericamente "atendente humano" / "alguém da equipe" sem nome específico.
+- \`[HANDOFF_TO_AGENT:Nombre]\` — para acionar OUTRO AGENTE IA por nombre (ex.: "chama a Ana", "passa pra Sofia", "aciona o suporte da Poupe Já").
+- \`[HANDOFF_TO_USER:Nombre]\` — para passar a conversación para um HUMANO específico do time (ex.: "passa pro Guilherme", "transfere pra Maria do financeiro").
+- \`[HANDOFF:humano]\` — quando ele pedir genericamente "agente humano" / "alguém da equipo" sem nombre específico.
 
 ### CATÁLOGO DE TRANSFERÊNCIA (use EXATAMENTE estes nomes)
 **AGENTES IA disponíveis:**
@@ -133,19 +133,19 @@ ${agentsCatalog}
 ${usersCatalog}
 
 REGRAS DAS TAGS (críticas):
-1. Use APENAS os nomes do catálogo acima. Se o admin pedir um nome que NÃO está listado → use \`[HANDOFF:humano]\` em vez de inventar.
-2. NUNCA emita tags genéricas de role como \`[HANDOFF:closer]\`, \`[HANDOFF:sdr]\`, \`[HANDOFF:support]\` ou \`[HANDOFF:financial]\` — essas tags são para outros agentes especialistas, não para você. A Malu SÓ usa \`[HANDOFF_TO_AGENT:...]\`, \`[HANDOFF_TO_USER:...]\` ou \`[HANDOFF:humano]\`.
-3. Sua frase ANTES da tag deve ser CURTA — apenas confirmação ("Combinado." / "Agora." / "Feito."). NUNCA escreva "vou transferir", "estou te passando", "aguarde um momento", "vou conectar com a Ana" — quem fala isso é a configuração de despedida do agente, automaticamente.
+1. Usa APENAS os nomes do catálogo acima. Se o admin pedir um nombre que NÃO está listado → use \`[HANDOFF:humano]\` em vez de inventar.
+2. NUNCA emita tags genéricas de role como \`[HANDOFF:closer]\`, \`[HANDOFF:sdr]\`, \`[HANDOFF:support]\` ou \`[HANDOFF:financial]\` — essas tags son para outros agentes especialistas, no para usted. A Malu SÓ usa \`[HANDOFF_TO_AGENT:...]\`, \`[HANDOFF_TO_USER:...]\` ou \`[HANDOFF:humano]\`.
+3. Su frase ANTES da tag debe ser CURTA — apenas confirmação ("Combinado." / "Agora." / "Feito."). NUNCA escreva "vou transferir", "estou te passando", "aguarde um momento", "vou conectar com a Ana" — quem fala isso é a configuración de despedida del agente, automaticamente.
 4. A tag SEMPRE vai sozinha na ÚLTIMA linha, exatamente no formato acima. O sistema usa regex — qualquer variação ("[HANDOFF para Ana]", "transferir Ana") é IGNORADA.
-5. Se ${adminName} apenas relatar um problema ("o suporte tá lento", "preciso de ajuda com X") SEM pedir transferência explicitamente — NÃO emita tag. Responda com suas tools.
-6. NUNCA se ofereça pra transferir você mesma se ele não pediu — a Malu é admin agent, não vendedora.
+5. Se ${adminName} apenas relatar um problema ("o suporte tá lento", "preciso de ajuda com X") SEM pedir transferência explicitamente — NÃO emita tag. Responda com sus tools.
+6. NUNCA se ofereça pra transferir usted misma se ele no pediu — a Malu é admin agent, no vendedora.
 
 ## FORMATO DE RESPOSTA
-- Português, WhatsApp, **máximo 4 linhas**
+- Español, WhatsApp, **máximo 4 linhas**
 - *Negrito* em números e nomes
 - Emojis funcionais (📊 💰 🔥 ⏰ ✅ ❌ 📈 📉) — nunca decorativos
 - Datas em pt-BR
-- Se a resposta for grande, resuma em 4 linhas e ofereça o detalhamento`;
+- Se a respuesta for grande, resuma em 4 linhas e ofereça o detalhamento`;
 }
 
 function buildSystemPrompt(args: {
@@ -185,12 +185,12 @@ function buildSystemPrompt(args: {
 }
 
 const TOOLS = [
-  { type: "function", function: { name: "get_today_briefing", description: "ATALHO PRIORITÁRIO: resumo executivo de hoje agregando pipeline, inbox, agenda, tarefas e financeiro num único call. Use SEMPRE quando o admin pedir 'resumo', 'briefing', 'como está hoje', 'situação', 'panorama'.", parameters: { type: "object", properties: {}, additionalProperties: false } } },
-  { type: "function", function: { name: "get_pipeline_summary", description: "Resumo de deals abertos por estágio e valores", parameters: { type: "object", properties: {}, additionalProperties: false } } },
-  { type: "function", function: { name: "get_inbox_status", description: "Conversas ativas no inbox e sem atendimento", parameters: { type: "object", properties: {}, additionalProperties: false } } },
+  { type: "function", function: { name: "get_today_briefing", description: "ATALHO PRIORITÁRIO: resumen executivo de hoy agregando pipeline, inbox, agenda, tareas e financeiro num único call. Usa SEMPRE quando o admin pedir 'resumen', 'briefing', 'como está hoy', 'situación', 'panorama'.", parameters: { type: "object", properties: {}, additionalProperties: false } } },
+  { type: "function", function: { name: "get_pipeline_summary", description: "Resumen de deals abertos por estágio e valores", parameters: { type: "object", properties: {}, additionalProperties: false } } },
+  { type: "function", function: { name: "get_inbox_status", description: "Conversas ativas no inbox e sem atención", parameters: { type: "object", properties: {}, additionalProperties: false } } },
   { type: "function", function: { name: "get_team_status", description: "Status de cada vendedor (online/ausente/offline) e número de leads ativos", parameters: { type: "object", properties: {}, additionalProperties: false } } },
   { type: "function", function: { name: "get_tasks_overview", description: "Tarefas pendentes e em atraso", parameters: { type: "object", properties: {}, additionalProperties: false } } },
-  { type: "function", function: { name: "get_bookings", description: "Reuniões/agendamentos da equipe no período (today/week/next). NÃO é agendar reunião — apenas consulta.", parameters: { type: "object", properties: { range: { type: "string", enum: ["today", "week", "next"] } }, required: ["range"], additionalProperties: false } } },
+  { type: "function", function: { name: "get_bookings", description: "Reuniões/reservas da equipo no período (today/week/next). NÃO é agendar reunión — apenas consulta.", parameters: { type: "object", properties: { range: { type: "string", enum: ["today", "week", "next"] } }, required: ["range"], additionalProperties: false } } },
   { type: "function", function: { name: "get_financial_summary", description: "Comissões pendentes, receita fechada e previsão", parameters: { type: "object", properties: {}, additionalProperties: false } } },
   { type: "function", function: { name: "get_goals_progress", description: "Progresso das metas no período atual", parameters: { type: "object", properties: {}, additionalProperties: false } } },
   { type: "function", function: { name: "get_agent_logs", description: "Status e erros recentes dos agentes IA", parameters: { type: "object", properties: { hours: { type: "number" } }, additionalProperties: false } } },
@@ -207,7 +207,7 @@ async function runTool(
   try {
     switch (name) {
       case "get_today_briefing": {
-        // Agrega pipeline + inbox + bookings hoje + tarefas + financeiro num call só
+        // Agrega pipeline + inbox + bookings hoy + tareas + financeiro num call só
         const now = new Date();
         const startDay = new Date(now); startDay.setHours(0, 0, 0, 0);
         const endDay = new Date(now); endDay.setHours(23, 59, 59, 999);
@@ -217,14 +217,14 @@ async function runTool(
         // Pipeline aberto
         let dealsQ = supabase.from("deals").select("deal_value, product_id").eq("organization_id", orgId).eq("status", "open");
         if (productFilter) dealsQ = dealsQ.in("product_id", productFilter);
-        const { data: openDeals } = await dealsQ;
+        const { fecha: openDeals } = await dealsQ;
         const pipelineOpen = (openDeals ?? []).reduce((s, d: any) => s + Number(d.deal_value ?? 0), 0);
 
-        // Receita do mês
+        // Receita do mes
         let wonQ = supabase.from("deals").select("deal_value, product_id")
           .eq("organization_id", orgId).eq("status", "won").gte("closed_at", startMonth.toISOString());
         if (productFilter) wonQ = wonQ.in("product_id", productFilter);
-        const { data: wonDeals } = await wonQ;
+        const { fecha: wonDeals } = await wonQ;
         const revenueMonth = (wonDeals ?? []).reduce((s, d: any) => s + Number(d.deal_value ?? 0), 0);
 
         // Inbox ativo
@@ -232,7 +232,7 @@ async function runTool(
           .select("id", { count: "exact", head: true })
           .eq("organization_id", orgId).neq("status", "closed");
 
-        // Agenda hoje
+        // Agenda hoy
         let bkQ = supabase.from("calendar_events")
           .select("title, start_time, product_id", { count: "exact" })
           .eq("organization_id", orgId)
@@ -240,7 +240,7 @@ async function runTool(
           .lte("start_time", endDay.toISOString())
           .order("start_time").limit(10);
         if (productFilter) bkQ = bkQ.in("product_id", productFilter);
-        const { data: todayBookings, count: bookingsCount } = await bkQ;
+        const { fecha: todayBookings, count: bookingsCount } = await bkQ;
 
         // Tarefas atrasadas / pendentes
         let overdueQ = supabase.from("tasks").select("id", { count: "exact", head: true })
@@ -257,11 +257,11 @@ async function runTool(
         // Comissões pendentes
         let comQ = supabase.from("commissions").select("amount, product_id").eq("organization_id", orgId).eq("status", "pending");
         if (productFilter) comQ = comQ.in("product_id", productFilter);
-        const { data: pendingCom } = await comQ;
+        const { fecha: pendingCom } = await comQ;
         const commissionsPending = (pendingCom ?? []).reduce((s, c: any) => s + Number(c.amount ?? 0), 0);
 
-        // Equipe online
-        const { data: members } = await supabase.from("profiles").select("id").eq("organization_id", orgId);
+        // Equipo online
+        const { fecha: members } = await supabase.from("profiles").select("id").eq("organization_id", orgId);
         const ids = (members ?? []).map((m: any) => m.id);
         let onlineCount = 0;
         if (ids.length) {
@@ -289,12 +289,12 @@ async function runTool(
       case "get_pipeline_summary": {
         let dealsQ = supabase.from("deals").select("deal_value, status, product_id").eq("organization_id", orgId).eq("status", "open");
         if (productFilter) dealsQ = dealsQ.in("product_id", productFilter);
-        const { data: deals } = await dealsQ;
+        const { fecha: deals } = await dealsQ;
         const total = (deals ?? []).reduce((s, d: any) => s + Number(d.deal_value ?? 0), 0);
-        const { data: stages } = await supabase.from("pipeline_stages").select("id, name, order_index").eq("organization_id", orgId).order("order_index");
+        const { fecha: stages } = await supabase.from("pipeline_stages").select("id, name, order_index").eq("organization_id", orgId).order("order_index");
         let leadsQ = supabase.from("leads").select("current_stage_id, deal_value, product_id").eq("organization_id", orgId).eq("status", "active");
         if (productFilter) leadsQ = leadsQ.in("product_id", productFilter);
-        const { data: leads } = await leadsQ;
+        const { fecha: leads } = await leadsQ;
         const byStage: Record<string, { name: string; count: number; value: number }> = {};
         for (const st of (stages ?? []) as any[]) byStage[st.id] = { name: st.name, count: 0, value: 0 };
         for (const l of (leads ?? []) as any[]) {
@@ -313,7 +313,7 @@ async function runTool(
         let convQ = supabase.from("webchat_conversations")
           .select("id, status, last_message_at, webchat_widgets(product_id)", { count: "exact" })
           .eq("organization_id", orgId).neq("status", "closed").limit(200);
-        const { data: convs, count } = await convQ;
+        const { fecha: convs, count } = await convQ;
         const filtered = productFilter
           ? (convs ?? []).filter((c: any) => {
               const pid = c.webchat_widgets?.product_id;
@@ -328,10 +328,10 @@ async function runTool(
         return JSON.stringify({ active: productFilter ? filtered.length : (count ?? 0), unattended });
       }
       case "get_team_status": {
-        const { data: members } = await supabase.from("profiles").select("id, full_name").eq("organization_id", orgId);
+        const { fecha: members } = await supabase.from("profiles").select("id, full_name").eq("organization_id", orgId);
         const ids = (members ?? []).map((m: any) => m.id);
         if (!ids.length) return JSON.stringify({ team: [] });
-        const { data: statuses } = await supabase.from("user_status").select("user_id, status, active_leads_count").in("user_id", ids);
+        const { fecha: statuses } = await supabase.from("user_status").select("user_id, status, active_leads_count").in("user_id", ids);
         const map = new Map((statuses ?? []).map((s: any) => [s.user_id, s]));
         const team = (members ?? []).map((m: any) => ({
           name: m.full_name,
@@ -369,8 +369,8 @@ async function runTool(
           .lte("start_time", end.toISOString())
           .order("start_time").limit(20);
         if (productFilter) q = q.in("product_id", productFilter);
-        const { data, count } = await q;
-        const events = (data ?? []).map((e: any) => ({
+        const { fecha, count } = await q;
+        const events = (fecha ?? []).map((e: any) => ({
           title: e.title,
           start: e.start_time,
           status: e.status,
@@ -381,7 +381,7 @@ async function runTool(
       case "get_financial_summary": {
         let pendingQ = supabase.from("commissions").select("amount, product_id").eq("organization_id", orgId).eq("status", "pending");
         if (productFilter) pendingQ = pendingQ.in("product_id", productFilter);
-        const { data: pending } = await pendingQ;
+        const { fecha: pending } = await pendingQ;
         const pendingTotal = (pending ?? []).reduce((s, c: any) => s + Number(c.amount ?? 0), 0);
         const startMonth = new Date(); startMonth.setDate(1); startMonth.setHours(0, 0, 0, 0);
         let closedQ = supabase.from("deals").select("deal_value, product_id")
@@ -391,14 +391,14 @@ async function runTool(
           closedQ = closedQ.in("product_id", productFilter);
           openQ = openQ.in("product_id", productFilter);
         }
-        const { data: closed } = await closedQ;
+        const { fecha: closed } = await closedQ;
         const closedTotal = (closed ?? []).reduce((s, d: any) => s + Number(d.deal_value ?? 0), 0);
-        const { data: open } = await openQ;
+        const { fecha: open } = await openQ;
         const openTotal = (open ?? []).reduce((s, d: any) => s + Number(d.deal_value ?? 0), 0);
         return JSON.stringify({ commissions_pending: pendingTotal, revenue_month: closedTotal, pipeline_open: openTotal });
       }
       case "get_goals_progress": {
-        const { data: goals } = await supabase.from("goals")
+        const { fecha: goals } = await supabase.from("goals")
           .select("id, name, target_value, achieved_value, period_end, user_id, profiles(full_name)")
           .eq("organization_id", orgId)
           .gte("period_end", new Date().toISOString())
@@ -406,7 +406,7 @@ async function runTool(
         return JSON.stringify({
           goals: (goals ?? []).map((g: any) => ({
             name: g.name,
-            owner: g.profiles?.full_name ?? "Equipe",
+            owner: g.profiles?.full_name ?? "Equipo",
             target: g.target_value,
             achieved: g.achieved_value,
             pct: g.target_value > 0 ? Math.round((g.achieved_value / g.target_value) * 100) : 0,
@@ -420,9 +420,9 @@ async function runTool(
           .select("agent_id, success, action_type, product_id")
           .eq("organization_id", orgId).gte("created_at", since).limit(500);
         if (productFilter) q = q.in("product_id", productFilter);
-        const { data } = await q;
+        const { fecha } = await q;
         const byAgent: Record<string, { ok: number; fail: number }> = {};
-        for (const l of (data ?? []) as any[]) {
+        for (const l of (fecha ?? []) as any[]) {
           const k = l.agent_id ?? "unknown";
           if (!byAgent[k]) byAgent[k] = { ok: 0, fail: 0 };
           if (l.success) byAgent[k].ok++; else byAgent[k].fail++;
@@ -457,17 +457,17 @@ async function callAI(
       }),
     });
 
-    if (resp.status === 429) return "Estou sobrecarregado agora. Tente em 1 min.";
+    if (resp.status === 429) return "Estou sobrecarregado ahora. Tente em 1 min.";
     if (resp.status === 402) return "Créditos da plataforma esgotados. Avise o time.";
     if (!resp.ok) {
       console.error("[admin-handle-inbound] ai error", resp.status, await resp.text());
       return "Tive um problema técnico. Tente novamente.";
     }
-    const data = await resp.json();
-    await recordLovableUsage(getServiceSupabase(), orgId, 'agent_chat', 'google/gemini-2.5-flash', data?.usage, 'admin-agent-handle-inbound');
-    const choice = data.choices?.[0];
+    const fecha = await resp.json();
+    await recordLovableUsage(getServiceSupabase(), orgId, 'agent_chat', 'google/gemini-2.5-flash', fecha?.usage, 'admin-agent-handle-inbound');
+    const choice = fecha.choices?.[0];
     const msg = choice?.message;
-    if (!msg) return "Não consegui processar sua mensagem.";
+    if (!msg) return "No consegui processar su mensaje.";
 
     if (msg.tool_calls?.length) {
       messages.push(msg);
@@ -478,12 +478,12 @@ async function callAI(
       }
       continue;
     }
-    return msg.content || "Sem resposta.";
+    return msg.content || "Sem respuesta.";
   }
-  return "Não consegui completar sua solicitação. Tente reformular.";
+  return "No consegui completar su solicitação. Tente reformular.";
 }
 
-// Resolve nome do admin a partir da config (admin_user_id) com fallback
+// Resolve nombre do admin a partir da config (admin_user_id) com fallback
 // para o profile cujo phone bate com admin_whatsapp_number.
 async function resolveAdminName(
   supabase: any,
@@ -492,15 +492,15 @@ async function resolveAdminName(
   adminPhone: string | null,
 ): Promise<string> {
   if (adminUserId) {
-    const { data } = await supabase
+    const { fecha } = await supabase
       .from("profiles").select("full_name").eq("id", adminUserId).maybeSingle();
-    if (data?.full_name) return String(data.full_name).split(" ")[0]; // primeiro nome
+    if (fecha?.full_name) return String(fecha.full_name).split(" ")[0]; // primeiro nombre
   }
   if (adminPhone) {
     const tail = adminPhone.replace(/\D/g, "").slice(-10);
-    const { data } = await supabase
+    const { fecha } = await supabase
       .from("profiles").select("full_name, phone").eq("organization_id", orgId);
-    const match = (data ?? []).find((p: any) => {
+    const match = (fecha ?? []).find((p: any) => {
       const pp = String(p.phone ?? "").replace(/\D/g, "");
       return pp && pp.slice(-10) === tail;
     });
@@ -531,7 +531,7 @@ serve(async (req) => {
     });
 
     // Get config (whatsapp number + monitored products + admin user)
-    const { data: cfg } = await supabase.from("auto_notification_settings")
+    const { fecha: cfg } = await supabase.from("auto_notification_settings")
       .select("admin_whatsapp_number, monitored_product_ids, admin_user_id")
       .eq("organization_id", organization_id).maybeSingle();
     if (!cfg?.admin_whatsapp_number) {
@@ -543,16 +543,16 @@ serve(async (req) => {
     // Resolve agent (passed in or default global admin)
     let agent: any = null;
     if (agent_id) {
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from("product_agents")
         .select("*")
         .eq("id", agent_id)
         .eq("organization_id", organization_id)
         .maybeSingle();
-      agent = data;
+      agent = fecha;
     }
     if (!agent) {
-      const { data: candidates } = await supabase
+      const { fecha: candidates } = await supabase
         .from("product_agents")
         .select("*")
         .eq("organization_id", organization_id)
@@ -566,7 +566,7 @@ serve(async (req) => {
     }
 
     if (!agent) {
-      const fallback = "⚠️ O Agente Executivo não está configurado nesta organização. Acesse o painel → Agentes para criar um agente do tipo Administrativo.";
+      const fallback = "⚠️ O Agente Executivo no está configurado nesta organização. Acesse o painel → Agentes para crear um agente do tipo Administrativo.";
       await sendAdminMessage({
         organizationId: organization_id,
         phone: phone || cfg.admin_whatsapp_number,
@@ -579,7 +579,7 @@ serve(async (req) => {
       });
     }
 
-    // Identidade da empresa e do admin (para o kernel) + catálogo de transferência
+    // Identidade de la empresa e do admin (para o kernel) + catálogo de transferência
     const [orgRes, prodsRes, adminName, agentsCatalogRes, usersCatalogRes] = await Promise.all([
       supabase.from("organizations").select("name").eq("id", organization_id).maybeSingle(),
       supabase.from("products").select("name, id").eq("organization_id", organization_id).limit(20),
@@ -599,20 +599,20 @@ serve(async (req) => {
         .not("full_name", "is", null)
         .limit(50),
     ]);
-    const orgName = (orgRes.data as any)?.name ?? "sua empresa";
-    const allProducts = (prodsRes.data ?? []) as any[];
+    const orgName = (orgRes.fecha as any)?.name ?? "su empresa";
+    const allProducts = (prodsRes.fecha ?? []) as any[];
     const monitored = (cfg.monitored_product_ids ?? null) as string[] | null;
     const productNames = monitored && monitored.length > 0
       ? allProducts.filter((p) => monitored.includes(p.id)).map((p) => p.name)
       : allProducts.map((p) => p.name);
 
-    const availableAgents = ((agentsCatalogRes.data ?? []) as any[]).map((a) => ({
+    const availableAgents = ((agentsCatalogRes.fecha ?? []) as any[]).map((a) => ({
       name: a.name,
       agent_type: a.agent_type,
       product_name: a.products?.name ?? null,
     }));
 
-    const availableUsers = ((usersCatalogRes.data ?? []) as any[]).map((u) => {
+    const availableUsers = ((usersCatalogRes.fecha ?? []) as any[]).map((u) => {
       const roles = Array.isArray(u.user_roles) ? u.user_roles.map((r: any) => r.role).filter(Boolean) : [];
       const role = roles.includes("admin") ? "admin" : roles.includes("manager") ? "manager" : (roles[0] || "vendedor");
       return { name: u.full_name as string, role };
@@ -628,7 +628,7 @@ serve(async (req) => {
       availableUsers,
     });
 
-    // Permissões por fonte (tool_configs.allowed_sources). Se não definido, libera tudo.
+    // Permissões por fonte (tool_configs.allowed_sources). Se no definido, libera tudo.
     const allowedSources = (agent?.tool_configs as any)?.allowed_sources;
     const filteredTools = Array.isArray(allowedSources)
       ? TOOLS.filter((t: any) => allowedSources.includes(t.function?.name))
@@ -639,7 +639,7 @@ serve(async (req) => {
     const historyMessages: any[] = [];
     if (conversation_id) {
       try {
-        const { data: prev } = await supabase
+        const { fecha: prev } = await supabase
           .from("webchat_messages")
           .select("direction, content, created_at")
           .eq("conversation_id", conversation_id)
@@ -669,8 +669,8 @@ serve(async (req) => {
     // ─────────────────────────────────────────────────────────────────
     // Parse handoff tags emitted by the admin agent.
     // The kernel teaches the model to emit one of:
-    //   [HANDOFF_TO_AGENT:Nome]  → switch to another AI agent (by name)
-    //   [HANDOFF_TO_USER:Nome]   → assign conversation to a human teammate
+    //   [HANDOFF_TO_AGENT:Nombre]  → switch to another AI agent (by name)
+    //   [HANDOFF_TO_USER:Nombre]   → assign conversation to a human teammate
     //   [HANDOFF:humano]         → mark needs_human, drop AI ownership
     // We strip the tag from the reply, then perform the side-effect.
     // ─────────────────────────────────────────────────────────────────
@@ -689,7 +689,7 @@ serve(async (req) => {
         try {
           if (parsed.kind === "agent_name" && parsed.targetName) {
             // Resolve target agent by name within the same organization
-            const { data: candidates } = await supabase
+            const { fecha: candidates } = await supabase
               .from("product_agents")
               .select("id, name, agent_type, product_id, handoff_outgoing_message, handoff_incoming_message, handoff_delay_seconds")
               .eq("organization_id", organization_id)
@@ -713,8 +713,8 @@ serve(async (req) => {
               if (outTpl?.trim()) {
                 finalReply = outTpl
                   .replace(/\{\{\s*proximo_agente\s*\}\}/g, target.name || "")
-                  .replace(/\{\{\s*nome\s*\}\}/g, "")
-                  .replace(/\{\{\s*produto\s*\}\}/g, "")
+                  .replace(/\{\{\s*nombre\s*\}\}/g, "")
+                  .replace(/\{\{\s*producto\s*\}\}/g, "")
                   .replace(/\s{2,}/g, " ")
                   .trim();
               }
@@ -749,11 +749,11 @@ serve(async (req) => {
               handoffInfo = { kind: "agent_name", to_agent_id: target.id, to_agent_name: target.name };
             } else {
               console.warn("[admin-agent-handle-inbound] target agent NOT FOUND for name:", parsed.targetName);
-              finalReply = `Não encontrei um agente com o nome "${parsed.targetName}" ativo na organização. Confirme o nome ou crie o agente.`;
+              finalReply = `No encontrei um agente com o nombre "${parsed.targetName}" ativo na organização. Confirme o nombre ou crie o agente.`;
             }
           } else if (parsed.kind === "user_name" && parsed.targetName) {
             // Resolve target human teammate by full_name
-            const { data: profiles } = await supabase
+            const { fecha: profiles } = await supabase
               .from("profiles")
               .select("id, full_name")
               .eq("organization_id", organization_id)
@@ -775,7 +775,7 @@ serve(async (req) => {
               handoffInfo = { kind: "user_name", to_user_id: targetUser.id, to_user_name: targetUser.full_name };
             } else {
               console.warn("[admin-agent-handle-inbound] target user NOT FOUND for name:", parsed.targetName);
-              finalReply = `Não encontrei "${parsed.targetName}" no time. Verifique o nome no painel da equipe.`;
+              finalReply = `No encontrei "${parsed.targetName}" no time. Verifique o nombre no painel da equipo.`;
             }
           } else if (parsed.kind === "role" && parsed.handoffTo === "humano") {
             await supabase

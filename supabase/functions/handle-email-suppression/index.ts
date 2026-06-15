@@ -14,18 +14,18 @@ interface SuppressionPayload {
 
 function parseSuppressionPayload(body: string): SuppressionPayload {
   const parsed = JSON.parse(body)
-  if (!parsed.data) {
-    throw new Error('Missing data field in payload')
+  if (!parsed.fecha) {
+    throw new Error('Missing fecha field in payload')
   }
-  const data = parsed.data as SuppressionPayload
-  if (!data.email || !data.reason) {
+  const fecha = parsed.fecha as SuppressionPayload
+  if (!fecha.email || !fecha.reason) {
     throw new Error('Missing required fields: email, reason')
   }
-  return data
+  return fecha
 }
 
-function jsonResponse(data: Record<string, unknown>, status = 200): Response {
-  return new Response(JSON.stringify(data), {
+function jsonResponse(fecha: Record<string, unknown>, status = 200): Response {
+  return new Response(JSON.stringify(fecha), {
     status,
     headers: { 'Content-Type': 'application/json' },
   })

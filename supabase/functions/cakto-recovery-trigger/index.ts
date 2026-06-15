@@ -1,14 +1,14 @@
 // Recebe eventos da Cakto (via cakto-webhook), decide se dispara o agente de
-// recuperação automática e envia a primeira mensagem via WhatsApp.
+// recuperação automática e envia a primeira mensaje via WhatsApp.
 //
-// Fluxo:
+// Flujo:
 // 1) Lê config da org (cakto_recovery_config)
 // 2) Verifica se o evento está habilitado
-// 3) Aplica cooldown (não dispara o mesmo evento pro mesmo lead em <X min)
-// 4) Localiza/cria o lead (pelo telefone/email da Cakto)
-// 5) Gera mensagem inicial com a IA usando o agente configurado
+// 3) Aplica cooldown (no dispara o mismo evento pro mismo lead em <X min)
+// 4) Localiza/cria o lead (pelo teléfono/email da Cakto)
+// 5) Gera mensaje inicial com a IA usando o agente configurado
 // 6) Envia via WhatsApp (BotConversa ou IsiChat)
-// 7) Cria a conversa (webchat_conversations) pra IA continuar respondendo
+// 7) Cria a conversación (webchat_conversations) pra IA continuar respondendo
 // 8) Loga em cakto_recovery_dispatches
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
   }
 
   // 1) Carrega o pedido
-  const { data: order, error: orderErr } = await supabase
+  const { fecha: order, error: orderErr } = await supabase
     .from('cakto_orders')
     .select(
       'id, organization_id, cakto_id, status, amount, product_id, product_name, customer_name, customer_email, customer_phone, payment_method, pix_code, checkout_url, items',
@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
     .maybeSingle<CaktoOrderRow>();
 
   if (orderErr || !order) {
-    return json({ error: 'pedido não encontrado', details: orderErr?.message }, 404);
+    return json({ error: 'pedido no encontrado', details: orderErr?.message }, 404);
   }
 
   const event = STATUS_TO_EVENT[order.status];
@@ -108,7 +108,7 @@ Deno.serve(async (req) => {
   }
 
   // 2) Config da org
-  const { data: config } = await supabase
+  const { fecha: config } = await supabase
     .from('cakto_recovery_config')
     .select('*')
     .eq('organization_id', organization_id)
@@ -145,13 +145,13 @@ Deno.serve(async (req) => {
       success: false,
       skipped_reason: 'no_phone',
     });
-    return json({ skipped: true, reason: 'sem telefone' });
+    return json({ skipped: true, reason: 'sem teléfono' });
   }
 
-  // 3) Localiza lead pelo telefone ou email (cria se não existir)
+  // 3) Localiza lead pelo teléfono ou email (cria se no existir)
   let leadId: string | null = null;
   {
-    const { data: existing } = await supabase
+    const { fecha: existing } = await supabase
       .from('leads')
       .select('id')
       .eq('organization_id', organization_id)
@@ -168,7 +168,7 @@ Deno.serve(async (req) => {
   }
 
   if (!leadId) {
-    const { data: created } = await supabase
+    const { fecha: created } = await supabase
       .from('leads')
       .insert({
         organization_id,
@@ -186,12 +186,12 @@ Deno.serve(async (req) => {
   }
 
   if (!leadId) {
-    return json({ error: 'falha ao criar/localizar lead' }, 500);
+    return json({ error: 'falla ao crear/localizar lead' }, 500);
   }
 
   // 4) Cooldown: já disparou esse evento pra esse lead recentemente?
   const cooldownAt = new Date(Date.now() - config.cooldown_minutes * 60_000).toISOString();
-  const { data: recent } = await supabase
+  const { fecha: recent } = await supabase
     .from('cakto_recovery_dispatches')
     .select('id')
     .eq('lead_id', leadId)
@@ -214,18 +214,18 @@ Deno.serve(async (req) => {
   }
 
   // 5) Agente
-  const { data: agent } = await supabase
+  const { fecha: agent } = await supabase
     .from('product_agents')
     .select('*')
     .eq('id', config.recovery_agent_id)
     .maybeSingle();
 
   if (!agent) {
-    return json({ error: 'agente de recuperação não encontrado' }, 404);
+    return json({ error: 'agente de recuperação no encontrado' }, 404);
   }
 
-  // Conhecimento (limitado pra não estourar contexto)
-  const { data: knowledgeSources } = await supabase
+  // Conhecimento (limitado pra no estourar contexto)
+  const { fecha: knowledgeSources } = await supabase
     .from('ai_knowledge_base')
     .select('title, content, category')
     .eq('product_id', agent.product_id)
@@ -236,8 +236,8 @@ Deno.serve(async (req) => {
     .map((k: any) => `[${k.category}] ${k.title}: ${String(k.content).slice(0, 600)}`)
     .join('\n\n');
 
-  // 5b) Carrega cenários pós-venda configurados pra esse evento
-  const { data: scenariosRaw } = await supabase
+  // 5b) Carrega cenários pós-venta configurados pra esse evento
+  const { fecha: scenariosRaw } = await supabase
     .from('agent_post_sale_scenarios')
     .select('name, instruction, links, tags_to_apply, filters, priority')
     .eq('organization_id', organization_id)
@@ -254,7 +254,7 @@ Deno.serve(async (req) => {
     priority: number;
   };
 
-  // Filtra cenários pelos filters (ex: produto específico, valor mínimo)
+  // Filtra cenários pelos filters (ex: producto específico, valor mínimo)
   const matchScenario = (s: Scenario): boolean => {
     const f = s.filters || {};
     if (f.product_cakto_id && order.product_cakto_id !== f.product_cakto_id) return false;
@@ -276,10 +276,10 @@ Deno.serve(async (req) => {
     new Set(scenarios.flatMap((s) => s.tags_to_apply || [])),
   );
 
-  // 6) (provider WhatsApp removido — sempre Evolution Go)
+  // 6) (provider WhatsApp eliminado — siempre Evolution Go)
 
-  // 7) Gera a mensagem inicial
-  // Monta a descrição da composição do pedido (principal + orderbumps)
+  // 7) Gera a mensaje inicial
+  // Monta a descripción da composição do pedido (principal + orderbumps)
   const items = Array.isArray(order.items) ? order.items : [];
   const mainItems = items.filter((i) => i.role === 'main');
   const bumpItems = items.filter((i) => i.role === 'orderbump');
@@ -299,17 +299,17 @@ Deno.serve(async (req) => {
 
   const productLabel =
     items.length > 1
-      ? `${order.product_name ?? 'o produto principal'} + ${bumpItems.length} bônus`
-      : order.product_name ?? 'o produto';
+      ? `${order.product_name ?? 'o producto principal'} + ${bumpItems.length} bônus`
+      : order.product_name ?? 'o producto';
 
   const eventBriefing =
     event === 'abandoned'
-      ? `O cliente acabou de gerar um ${order.payment_method || 'pagamento'} no valor de R$ ${order.amount?.toFixed(2) ?? '?'} para "${productLabel}" mas AINDA NÃO PAGOU.${cartDescription}\n\nSua missão: tirar dúvidas, criar urgência leve e ajudar a finalizar. Se útil, ofereça reenviar o link/Pix. Se houver order bumps, mencione o conjunto, não só o principal.`
+      ? `O cliente acabou de gerar um ${order.payment_method || 'pago'} no valor de R$ ${order.amount?.toFixed(2) ?? '?'} para "${productLabel}" mas AINDA NÃO PAGOU.${cartDescription}\n\nSua missão: tirar dudas, crear urgência leve e ajudar a finalizar. Se útil, ofereça reenviar o link/Pix. Se houver order bumps, mencione o conjunto, no só o principal.`
       : event === 'paid'
         ? `O cliente acabou de PAGAR R$ ${order.amount?.toFixed(2) ?? '?'} por "${productLabel}".${cartDescription}\n\nSua missão: agradecer, confirmar a compra, orientar próximos passos e — se fizer sentido — apresentar um upsell/cross-sell de algo que ele AINDA NÃO levou.`
-        : `O cliente teve um pedido REEMBOLSADO/ESTORNADO no valor de R$ ${order.amount?.toFixed(2) ?? '?'} ("${productLabel}").${cartDescription}\n\nSua missão: ser empático, entender o motivo, recuperar a relação e — se possível — propor uma alternativa.`;
+        : `O cliente tuvo um pedido REEMBOLSADO/ESTORNADO no valor de R$ ${order.amount?.toFixed(2) ?? '?'} ("${productLabel}").${cartDescription}\n\nSua missão: ser empático, entender o motivo, recuperar a relação e — se possível — propor uma alternativa.`;
 
-  const systemPrompt = `Você é ${agent.name}, agente de ${agent.agent_type} da empresa.
+  const systemPrompt = `Usted é ${agent.name}, agente de ${agent.agent_type} de la empresa.
 MISSÃO PRINCIPAL: ${agent.primary_objective}
 TOM: ${agent.tone_style || 'Consultivo, próximo, sem pressão'}
 ESTILO: ${agent.message_style || 'Curta, direta, humana'}
@@ -336,14 +336,14 @@ ${
 }
 
 REGRAS DA MENSAGEM INICIAL:
-- Gere APENAS a mensagem (sem prefixos, sem aspas, sem explicações)
-- Use o nome do cliente: ${order.customer_name || 'cliente'}
+- Genera APENAS a mensaje (sem prefixos, sem aspas, sem explicações)
+- Usa o nombre del cliente: ${order.customer_name || 'cliente'}
 - Mencione o que ele estava levando: ${productLabel}
-- WhatsApp: curta (máx 2 parágrafos), sem markdown, sem emoji exagerado (1 só)
-- Termine com pergunta clara
+- WhatsApp: corta (máx 2 parágrafos), sem markdown, sem emoji exagerado (1 só)
+- Termine com pregunta clara
 - NUNCA pareça um robô. Soa como vendedor humano que viu o pedido e resolveu chamar.`;
 
-  const userPrompt = `Gere a mensagem inicial de WhatsApp para esta situação. Cliente: ${order.customer_name || 'sem nome'}. Telefone: ${phone}.`;
+  const userPrompt = `Genera a mensaje inicial de WhatsApp para esta situación. Cliente: ${order.customer_name || 'sem nombre'}. Teléfono: ${phone}.`;
 
   const aiResp = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
     method: 'POST',
@@ -388,7 +388,7 @@ REGRAS DA MENSAGEM INICIAL:
   let sent = false;
   let sendError: string | null = null;
   try {
-    const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+    const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
       body: {
         organization_id,
         type: 'text',
@@ -419,9 +419,9 @@ REGRAS DA MENSAGEM INICIAL:
     return json({ error: 'send failed', detail: sendError }, 502);
   }
 
-  // 9) Cria/garante a conversa para o webchat-bot continuar conduzindo
+  // 9) Cria/garante a conversación para o webchat-bot continuar conduzindo
   let conversationId: string | null = null;
-  const { data: existingConv } = await supabase
+  const { fecha: existingConv } = await supabase
     .from('webchat_conversations')
     .select('id')
     .eq('lead_id', leadId)
@@ -441,7 +441,7 @@ REGRAS DA MENSAGEM INICIAL:
       })
       .eq('id', conversationId);
   } else {
-    const { data: created } = await supabase
+    const { fecha: created } = await supabase
       .from('webchat_conversations')
       .insert({
         organization_id,
@@ -477,7 +477,7 @@ REGRAS DA MENSAGEM INICIAL:
     try {
       for (const tagName of scenarioTagsToApply) {
         // Garante que a tag exista (busca ou cria)
-        const { data: existingTag } = await supabase
+        const { fecha: existingTag } = await supabase
           .from('lead_tags')
           .select('id')
           .eq('organization_id', organization_id)
@@ -486,7 +486,7 @@ REGRAS DA MENSAGEM INICIAL:
 
         let tagId = existingTag?.id;
         if (!tagId) {
-          const { data: createdTag } = await supabase
+          const { fecha: createdTag } = await supabase
             .from('lead_tags')
             .insert({ organization_id, name: tagName, color: '#3b82f6' })
             .select('id')

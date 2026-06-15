@@ -81,8 +81,8 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Carrega funil
-    const { data: funnel, error: funnelError } = await supabase
+    // Carrega embudo
+    const { fecha: funnel, error: funnelError } = await supabase
       .from('capture_funnels')
       .select('id, name, slug, organization_id, flow_blocks')
       .eq('id', input.funnel_id)
@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const cfg: WebhookConfig = block.data?.webhook_config || {};
+    const cfg: WebhookConfig = block.fecha?.webhook_config || {};
     if (!cfg.url) {
       return new Response(JSON.stringify({ error: 'Webhook URL not configured' }), {
         status: 400,
@@ -190,7 +190,7 @@ Deno.serve(async (req) => {
 
     const duration = Date.now() - startedAt;
 
-    // Grava log (não bloqueia resposta)
+    // Grava log (no bloqueia respuesta)
     await supabase.from('funnel_webhook_logs').insert({
       ...logRow,
       response_status: responseStatus || null,
@@ -213,7 +213,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('[funnel-execute-webhook] Error:', error);
-    // Tenta registrar o erro mesmo assim
+    // Tenta registrar o error mismo assim
     try {
       const supabase = createClient(
         Deno.env.get('SUPABASE_URL')!,
