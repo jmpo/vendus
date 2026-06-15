@@ -12,7 +12,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 const scopeLabels: Record<string, { label: string; icon: React.ReactNode }> = {
-  all: { label: 'Geral', icon: <Users className="h-3 w-3" /> },
+  all: { label: 'General', icon: <Users className="h-3 w-3" /> },
   product: { label: 'Produto', icon: <Package className="h-3 w-3" /> },
   squad: { label: 'Squad', icon: <UsersRound className="h-3 w-3" /> },
   custom: { label: 'Individual', icon: <User className="h-3 w-3" /> },
@@ -29,9 +29,9 @@ const typeColors: Record<string, string> = {
 const typeLabels: Record<string, string> = {
   system: 'Sistema',
   urgency: 'Urgente',
-  opportunity: 'Oportunidade',
-  cadence: 'Cadência',
-  audit: 'Auditoria',
+  opportunity: 'Oportunidad',
+  cadence: 'Secuencia',
+  audit: 'Auditoría',
 };
 
 export function NotificationManager() {
@@ -43,14 +43,14 @@ export function NotificationManager() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Central de Notificações</h1>
+          <h1 className="text-2xl font-bold">Central de Notificaciones</h1>
           <p className="text-muted-foreground">
-            Envie notificações manuais ou configure alertas automáticos
+            Envía notificaciones manuales o configura alertas automáticos
           </p>
         </div>
         <Button onClick={() => setIsCreateOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
-          Nova Notificação
+          Nueva Notificación
         </Button>
       </div>
       
@@ -59,7 +59,7 @@ export function NotificationManager() {
         <TabsList className="grid w-full max-w-md grid-cols-2">
           <TabsTrigger value="manual" className="flex items-center gap-2">
             <Send className="h-4 w-4" />
-            Envio Manual
+            Envío Manual
           </TabsTrigger>
           <TabsTrigger value="automatic" className="flex items-center gap-2">
             <Zap className="h-4 w-4" />
@@ -94,7 +94,7 @@ export function NotificationManager() {
                     <p className="text-2xl font-bold">
                       {notifications.reduce((acc, n) => acc + n.recipients_count, 0)}
                     </p>
-                    <p className="text-sm text-muted-foreground">Total de destinatários</p>
+                    <p className="text-sm text-muted-foreground">Total de destinatarios</p>
                   </div>
                 </div>
               </CardContent>
@@ -110,7 +110,7 @@ export function NotificationManager() {
                     <p className="text-2xl font-bold">
                       {notifications.reduce((acc, n) => acc + n.emails_sent, 0)}
                     </p>
-                    <p className="text-sm text-muted-foreground">Emails enviados</p>
+                    <p className="text-sm text-muted-foreground">Correos electrónicos enviados</p>
                   </div>
                 </div>
               </CardContent>
@@ -120,9 +120,9 @@ export function NotificationManager() {
           {/* History Table */}
           <Card>
             <CardHeader>
-              <CardTitle>Histórico de Notificações</CardTitle>
+              <CardTitle>Historial de Notificaciones</CardTitle>
               <CardDescription>
-                Últimas 50 notificações enviadas manualmente
+                Últimas 50 notificaciones enviadas manualmente
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -133,14 +133,14 @@ export function NotificationManager() {
               ) : notifications.length === 0 ? (
                 <div className="text-center py-12">
                   <Bell className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
-                  <p className="text-muted-foreground">Nenhuma notificação enviada ainda</p>
+                  <p className="text-muted-foreground">Ninguna notificación enviada aún</p>
                   <Button 
                     variant="outline" 
                     className="mt-4"
                     onClick={() => setIsCreateOpen(true)}
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    Enviar primeira notificação
+                    Enviar primera notificación
                   </Button>
                 </div>
               ) : (
@@ -148,12 +148,12 @@ export function NotificationManager() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Data</TableHead>
+                        <TableHead>Fecha</TableHead>
                         <TableHead>Tipo</TableHead>
                         <TableHead>Título</TableHead>
-                        <TableHead>Escopo</TableHead>
-                        <TableHead className="text-center">Destinatários</TableHead>
-                        <TableHead className="text-center">Canais</TableHead>
+                        <TableHead>Alcance</TableHead>
+                        <TableHead className="text-center">Destinatarios</TableHead>
+                        <TableHead className="text-center">Canales</TableHead>
                         <TableHead>Enviado por</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -161,7 +161,7 @@ export function NotificationManager() {
                       {notifications.map((notification) => (
                         <TableRow key={notification.id}>
                           <TableCell className="whitespace-nowrap">
-                            {format(new Date(notification.created_at), "dd/MM HH:mm", { locale: ptBR })}
+                            {format(new Date(notification.created_at), "dd/MM HH:mm", { locale: undefined })}
                           </TableCell>
                           <TableCell>
                             <Badge 

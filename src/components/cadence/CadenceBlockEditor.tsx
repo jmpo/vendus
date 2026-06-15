@@ -33,8 +33,8 @@ interface CadenceBlockEditorProps {
 }
 
 const blockTypeConfig = {
-  message: { icon: MessageSquare, label: 'Mensagem', color: 'text-blue-500' },
-  audio: { icon: Mic, label: 'Áudio', color: 'text-purple-500' },
+  message: { icon: MessageSquare, label: 'Mensaje', color: 'text-blue-500' },
+  audio: { icon: Mic, label: 'Audio', color: 'text-purple-500' },
   material: { icon: FileText, label: 'Material', color: 'text-orange-500' },
   cta: { icon: MousePointer, label: 'CTA', color: 'text-green-500' },
   image: { icon: Image, label: 'Imagem', color: 'text-pink-500' },
@@ -43,9 +43,9 @@ const blockTypeConfig = {
 };
 
 const variantLabels = {
-  short: 'Curta',
-  medium: 'Média',
-  long: 'Longa',
+  short: 'Corta',
+  medium: 'Media',
+  long: 'Larga',
 };
 
 export function CadenceBlockEditor({ 
@@ -64,7 +64,7 @@ export function CadenceBlockEditor({
   const handleCopy = async () => {
     await navigator.clipboard.writeText(block.content);
     setCopied(true);
-    toast.success('Copiado!');
+    toast.success('¡Copiado!');
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -75,7 +75,7 @@ export function CadenceBlockEditor({
     try {
       const url = await uploadMedia.mutateAsync({ file, productId });
       onUpdate({ ...block, mediaUrl: url });
-      toast.success('Upload concluído!');
+      toast.success('¡Carga completada!');
     } catch (error) {
       console.error('Upload error:', error);
     }
@@ -105,9 +105,9 @@ export function CadenceBlockEditor({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="short">Curta</SelectItem>
-                    <SelectItem value="medium">Média</SelectItem>
-                    <SelectItem value="long">Longa</SelectItem>
+                    <SelectItem value="short">Corta</SelectItem>
+                    <SelectItem value="medium">Media</SelectItem>
+                    <SelectItem value="long">Larga</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -136,18 +136,18 @@ export function CadenceBlockEditor({
             <Textarea
               value={block.content}
               onChange={(e) => onUpdate({ ...block, content: e.target.value })}
-              placeholder="Digite a mensagem..."
+              placeholder="Escribe el mensaje..."
               className="min-h-[80px] text-sm resize-none"
             />
 
             {/* Audio script field */}
             {block.type === 'audio' && (
               <div className="space-y-1.5">
-                <Label className="text-xs text-muted-foreground">Script do áudio</Label>
+                <Label className="text-xs text-muted-foreground">Guion del audio</Label>
                 <Textarea
                   value={block.audioScript || ''}
                   onChange={(e) => onUpdate({ ...block, audioScript: e.target.value })}
-                  placeholder="Script para gravar o áudio..."
+                  placeholder="Guion para grabar el audio..."
                   className="min-h-[60px] text-sm resize-none"
                 />
               </div>
@@ -160,7 +160,7 @@ export function CadenceBlockEditor({
                   <Input
                     value={block.mediaUrl || ''}
                     onChange={(e) => onUpdate({ ...block, mediaUrl: e.target.value })}
-                    placeholder={block.type === 'video' ? 'URL do vídeo (YouTube, etc.)' : 'URL da imagem'}
+                    placeholder={block.type === 'video' ? 'URL del video (YouTube, etc.)' : 'URL de la imagen'}
                     className="text-sm"
                   />
                   <label className="cursor-pointer">
@@ -191,11 +191,11 @@ export function CadenceBlockEditor({
             {block.type === 'link' && (
               <div className="grid gap-2 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Título do link</Label>
+                  <Label className="text-xs text-muted-foreground">Título del enlace</Label>
                   <Input
                     value={block.linkTitle || ''}
                     onChange={(e) => onUpdate({ ...block, linkTitle: e.target.value })}
-                    placeholder="Ex: Saiba mais"
+                    placeholder="Ej: Saber más"
                     className="text-sm"
                   />
                 </div>
@@ -220,7 +220,7 @@ export function CadenceBlockEditor({
                 onClick={onGenerateAI}
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                Gerar com IA
+                Generar con IA
               </Button>
             </div>
           </div>

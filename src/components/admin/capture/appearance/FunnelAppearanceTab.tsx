@@ -39,7 +39,7 @@ export function FunnelAppearanceTab({ funnel }: Props) {
 
   const handleSave = async () => {
     await update.mutateAsync({ id: funnel.id, appearance } as any);
-    toast.success('Aparência salva');
+    toast.success('Apariencia guardada');
   };
 
   const handleResetChannel = () => {
@@ -131,7 +131,7 @@ export function FunnelAppearanceTab({ funnel }: Props) {
           <div className="bg-muted/30 rounded-lg p-3 sm:p-4 flex flex-col gap-3 lg:h-full">
             <div className="flex items-center justify-between">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide truncate">
-                <span className="hidden sm:inline">Pré-visualização ao vivo — </span>
+                <span className="hidden sm:inline">Vista previa en vivo — </span>
                 {CHANNEL_META[channel].label}
               </p>
               <div className="flex gap-1 bg-background border rounded-md p-0.5 shrink-0">

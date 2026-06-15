@@ -73,7 +73,7 @@ export const AgentTreeNode = memo(function AgentTreeNode({
             onOpenExecutiveTab?.(agent);
           }}
           className="absolute -top-2.5 right-2 z-10 inline-flex items-center gap-1 h-5 px-2 rounded-full text-[10px] font-medium bg-amber-500 text-white shadow-sm hover:bg-amber-600 transition-colors"
-          title="Abrir aba Executivo"
+          title="Abrir pestaña Ejecutivo"
         >
           <Crown className="h-3 w-3" />
           Executivo
@@ -123,7 +123,7 @@ export const AgentTreeNode = memo(function AgentTreeNode({
             <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
               <button
                 className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-muted"
-                aria-label="Mais ações"
+                aria-label="Más acciones"
               >
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </button>
@@ -140,7 +140,7 @@ export const AgentTreeNode = memo(function AgentTreeNode({
               {agent.product_id && !agent.is_default && (
                 <DropdownMenuItem onClick={() => onSetDefault(agent)}>
                   <Star className="h-3.5 w-3.5 mr-2" />
-                  Tornar padrão
+                  Hacer predeterminado
                 </DropdownMenuItem>
               )}
               <DropdownMenuSeparator />

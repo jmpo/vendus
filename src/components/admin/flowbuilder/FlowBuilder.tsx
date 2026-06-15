@@ -99,7 +99,7 @@ export function FlowBuilder({ flow, onBack }: FlowBuilderProps) {
 
   const handleToggleActive = async () => {
     if (!flow.product_id) {
-      toast.error('Fluxo precisa estar vinculado a um produto');
+      toast.error('El flujo debe estar vinculado a un producto');
       return;
     }
     
@@ -127,7 +127,7 @@ export function FlowBuilder({ flow, onBack }: FlowBuilderProps) {
             className="w-64 font-semibold"
           />
           {hasChanges && (
-            <span className="text-xs text-muted-foreground">• alterações não salvas</span>
+            <span className="text-xs text-muted-foreground">• cambios no guardados</span>
           )}
         </div>
         
@@ -138,7 +138,7 @@ export function FlowBuilder({ flow, onBack }: FlowBuilderProps) {
               onCheckedChange={handleToggleActive}
               disabled={toggleActive.isPending}
             />
-            <Label className="text-sm">Ativo</Label>
+            <Label className="text-sm">Activo</Label>
           </div>
           
           <Button
@@ -146,7 +146,7 @@ export function FlowBuilder({ flow, onBack }: FlowBuilderProps) {
             disabled={saveBlocks.isPending || !hasChanges}
           >
             <Save className="w-4 h-4 mr-2" />
-            {saveBlocks.isPending ? 'Salvando...' : 'Salvar'}
+            {saveBlocks.isPending ? 'Guardando...' : 'Salvar'}
           </Button>
         </div>
       </div>

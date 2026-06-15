@@ -24,10 +24,10 @@ import { ptBR } from 'date-fns/locale';
 import { usePublicAppUrl } from '@/lib/publicUrl';
 
 const statusConfig: Record<FormStatus, { label: string; variant: 'default' | 'secondary' | 'outline' | 'destructive' }> = {
-  draft: { label: 'Rascunho', variant: 'secondary' },
-  active: { label: 'Ativo', variant: 'default' },
+  draft: { label: 'Borrador', variant: 'secondary' },
+  active: { label: 'Activo', variant: 'default' },
   paused: { label: 'Pausado', variant: 'outline' },
-  archived: { label: 'Arquivado', variant: 'destructive' },
+  archived: { label: 'Archivado', variant: 'destructive' },
 };
 
 export function FormsManager() {
@@ -109,7 +109,7 @@ export function FormsManager() {
   };
   
   const handleDeleteForm = async (formId: string) => {
-    if (confirm('Tem certeza que deseja excluir este formulário? Esta ação não pode ser desfeita.')) {
+    if (confirm('¿Estás seguro de que deseas eliminar este formulario? Esta acción no se puede deshacer.')) {
       await deleteForm.mutateAsync(formId);
     }
   };
@@ -145,12 +145,12 @@ export function FormsManager() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Formulários</h1>
-          <p className="text-muted-foreground">Capture leads qualificados com formulários inteligentes</p>
+          <h1 className="text-2xl font-bold">Formularios</h1>
+          <p className="text-muted-foreground">Captura leads calificados con formularios inteligentes</p>
         </div>
         <Button onClick={() => setIsCreateDialogOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
-          Novo Formulário
+          Nuevo Formulario
         </Button>
       </div>
       
@@ -159,7 +159,7 @@ export function FormsManager() {
         <div className="relative flex-1 min-w-[200px] max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar formulários..."
+            placeholder="Buscar formularios..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
@@ -168,10 +168,10 @@ export function FormsManager() {
         
         <Select value={selectedProductFilter} onValueChange={setSelectedProductFilter}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Produto" />
+            <SelectValue placeholder="Producto" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os produtos</SelectItem>
+            <SelectItem value="all">Todos los productos</SelectItem>
             {products?.map(product => (
               <SelectItem key={product.id} value={product.id}>{product.name}</SelectItem>
             ))}
@@ -180,14 +180,14 @@ export function FormsManager() {
         
         <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as FormStatus | 'all')}>
           <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Status" />
+            <SelectValue placeholder="Estado" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos</SelectItem>
-            <SelectItem value="active">Ativos</SelectItem>
-            <SelectItem value="draft">Rascunhos</SelectItem>
+            <SelectItem value="active">Activos</SelectItem>
+            <SelectItem value="draft">Borradors</SelectItem>
             <SelectItem value="paused">Pausados</SelectItem>
-            <SelectItem value="archived">Arquivados</SelectItem>
+            <SelectItem value="archived">Archivados</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -211,16 +211,16 @@ export function FormsManager() {
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileEdit className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">Nenhum formulário encontrado</h3>
+            <h3 className="text-lg font-medium mb-2">No se encontraron formularios</h3>
             <p className="text-muted-foreground text-center mb-4">
               {searchQuery || selectedProductFilter !== 'all' || statusFilter !== 'all'
-                ? 'Tente ajustar os filtros de busca'
-                : 'Crie seu primeiro formulário para começar a captar leads'}
+                ? 'Intenta ajustar los filtros de búsqueda'
+                : 'Crea tu primer formulario para comenzar a captar leads'}
             </p>
             {!searchQuery && selectedProductFilter === 'all' && statusFilter === 'all' && (
               <Button onClick={() => setIsCreateDialogOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" />
-                Criar Formulário
+                Crear Formulario
               </Button>
             )}
           </CardContent>
@@ -263,7 +263,7 @@ export function FormsManager() {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => navigator.clipboard.writeText(getPublicUrl(form))}>
                           <ExternalLink className="h-4 w-4 mr-2" />
-                          Copiar Link
+                          Copiar Enlace
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => copyEmbedCode(form)}>
                           <Code className="h-4 w-4 mr-2" />
@@ -311,20 +311,20 @@ export function FormsManager() {
                 <div className="grid grid-cols-3 gap-2 text-center py-3 bg-muted/50 rounded-lg">
                   <div>
                     <p className="text-lg font-semibold">{form.views_count}</p>
-                    <p className="text-xs text-muted-foreground">Visualizações</p>
+                    <p className="text-xs text-muted-foreground">Visualizaciones</p>
                   </div>
                   <div>
                     <p className="text-lg font-semibold">{form.submissions_count}</p>
-                    <p className="text-xs text-muted-foreground">Respostas</p>
+                    <p className="text-xs text-muted-foreground">Respuestas</p>
                   </div>
                   <div>
                     <p className="text-lg font-semibold">{getConversionRate(form)}</p>
-                    <p className="text-xs text-muted-foreground">Conversão</p>
+                    <p className="text-xs text-muted-foreground">Conversión</p>
                   </div>
                 </div>
                 
                 <p className="text-xs text-muted-foreground mt-3">
-                  Atualizado {format(new Date(form.updated_at), "d 'de' MMM", { locale: ptBR })}
+                  Actualizado {format(new Date(form.updated_at), "d 'de' MMM", { locale: ptBR })}
                 </p>
               </CardContent>
             </Card>
@@ -336,9 +336,9 @@ export function FormsManager() {
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle>Novo Formulário</DialogTitle>
+            <DialogTitle>Nuevo Formulario</DialogTitle>
             <DialogDescription>
-              Crie um formulário para captar leads qualificados
+              Crea un formulario para captar leads calificados
             </DialogDescription>
           </DialogHeader>
           
@@ -348,7 +348,7 @@ export function FormsManager() {
               <Label>Produto *</Label>
               <Select value={newFormProductId} onValueChange={setNewFormProductId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione o produto" />
+                  <SelectValue placeholder="Selecciona el producto" />
                 </SelectTrigger>
                 <SelectContent>
                   {products?.map(product => (
@@ -357,13 +357,13 @@ export function FormsManager() {
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                O formulário herdará o pipeline, ICP e cérebro do produto
+                El formulario heredará el pipeline, ICP y cerebro del producto
               </p>
             </div>
             
             {/* Creation Method */}
             <div className="space-y-2">
-              <Label>Como você quer criar?</Label>
+              <Label>¿Cómo quieres crearlo?</Label>
               <div className="grid grid-cols-3 gap-2">
                 <Button
                   type="button"
@@ -372,7 +372,7 @@ export function FormsManager() {
                   onClick={() => setCreateMethod('manual')}
                 >
                   <FileEdit className="h-5 w-5 mb-1" />
-                  <span className="text-xs">Do Zero</span>
+                  <span className="text-xs">Desde Cero</span>
                 </Button>
                 <Button
                   type="button"
@@ -397,7 +397,7 @@ export function FormsManager() {
                   disabled={!newFormProductId}
                 >
                   <Sparkles className="h-5 w-5 mb-1" />
-                  <span className="text-xs">Com IA</span>
+                  <span className="text-xs">Con IA</span>
                 </Button>
               </div>
             </div>
@@ -465,7 +465,7 @@ export function FormsManager() {
               onClick={handleCreateForm}
               disabled={!newFormName.trim() || !newFormProductId || createForm.isPending}
             >
-              {createForm.isPending ? 'Criando...' : 'Criar Formulário'}
+              {createForm.isPending ? 'Criando...' : 'Crear Formulario'}
             </Button>
           </DialogFooter>
         </DialogContent>

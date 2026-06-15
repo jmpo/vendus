@@ -41,17 +41,17 @@ export function CampaignsManager() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Campanhas Inteligentes</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Campañas Inteligentes</h1>
         <p className="text-sm text-muted-foreground">
-          Transforme listas em conversas reais. O agente IA recebe contexto e cria uma abordagem única para cada lead.
+          Transforma listas en conversaciones reales. El agente IA recibe contexto y crea un enfoque único para cada lead.
         </p>
       </header>
 
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
-          <TabsTrigger value="campaigns">Campanhas</TabsTrigger>
+          <TabsTrigger value="campaigns">Campañas</TabsTrigger>
           <TabsTrigger value="library">Biblioteca de Contextos</TabsTrigger>
-          <TabsTrigger value="reports">Relatórios</TabsTrigger>
+          <TabsTrigger value="reports">Reportes</TabsTrigger>
         </TabsList>
 
         <TabsContent value="campaigns" className="mt-4">

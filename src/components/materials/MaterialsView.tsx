@@ -32,10 +32,10 @@ const typeConfig = {
 };
 
 const tagConfig = {
-  proof: { label: 'Prova', color: 'bg-success/10 text-success border-success/20' },
-  presentation: { label: 'Apresentação', color: 'bg-primary/10 text-primary border-primary/20' },
-  objection: { label: 'Objeção', color: 'bg-warning/10 text-warning border-warning/20' },
-  closing: { label: 'Fechamento', color: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
+  proof: { label: 'Prueba', color: 'bg-success/10 text-success border-success/20' },
+  presentation: { label: 'Presentación', color: 'bg-primary/10 text-primary border-primary/20' },
+  objection: { label: 'Objeción', color: 'bg-warning/10 text-warning border-warning/20' },
+  closing: { label: 'Cierre', color: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
 };
 
 export function MaterialsView({ materials }: MaterialsViewProps) {
@@ -55,7 +55,7 @@ export function MaterialsView({ materials }: MaterialsViewProps) {
   const handleCopyLink = async (url: string, id: string) => {
     await navigator.clipboard.writeText(url);
     setCopiedId(id);
-    toast.success('Link copiado!');
+    toast.success('¡Enlace copiado!');
     setTimeout(() => setCopiedId(null), 2000);
   };
 
@@ -64,13 +64,13 @@ export function MaterialsView({ materials }: MaterialsViewProps) {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Materiais de Venda</h2>
+          <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Materiales de Venta</h2>
           <p className="text-muted-foreground mt-1 text-sm">
-            Cases, demos e materiais prontos para enviar
+            Casos, demos y materiales listos para enviar
           </p>
         </div>
         <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
-          {materials.filter(m => m.status === 'active').length} ativos
+          {materials.filter(m => m.status === 'active').length} activos
         </Badge>
       </div>
 
@@ -181,7 +181,7 @@ export function MaterialsView({ materials }: MaterialsViewProps) {
                       ) : (
                         <>
                           <Copy size={14} />
-                          Copiar link
+                          Copiar enlace
                         </>
                       )}
                     </Button>
@@ -204,7 +204,7 @@ export function MaterialsView({ materials }: MaterialsViewProps) {
         {filteredMaterials.length === 0 && (
           <div className={cn("text-center py-12", !isMobile && "col-span-2")}>
             <FileText size={48} className="mx-auto text-muted-foreground/50 mb-4" />
-            <p className="text-muted-foreground">Nenhum material encontrado</p>
+            <p className="text-muted-foreground">No se encontró ningún material</p>
           </div>
         )}
       </div>

@@ -287,8 +287,8 @@ export default function PublicQuizRunner() {
       <div className="min-h-screen flex items-center justify-center bg-background p-6 text-center">
         <div>
           <Sparkles className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-          <h1 className="text-lg font-semibold mb-1">Quiz não encontrado</h1>
-          <p className="text-sm text-muted-foreground">Este link pode estar inativo ou incorreto.</p>
+          <h1 className="text-lg font-semibold mb-1">Quiz no encontrado</h1>
+          <p className="text-sm text-muted-foreground">Este enlace puede estar inactivo o incorrecto.</p>
         </div>
       </div>
     );
@@ -359,7 +359,7 @@ export default function PublicQuizRunner() {
                   Obrigado!
                 </h2>
                 <p className="text-sm" style={{ color: mutedText }}>
-                  Suas respostas foram registradas com sucesso.
+                  Tus respuestas se registraron con éxito.
                 </p>
               </motion.div>
             ) : currentBlock ? (
@@ -381,7 +381,7 @@ export default function PublicQuizRunner() {
                         letterSpacing: '-0.02em',
                       }}
                     >
-                      {currentBlock.data.content || 'Pergunta'}
+                      {currentBlock.data.content || 'Pregunta'}
                     </h1>
                     {currentBlock.data.subtitle && (
                       <p

@@ -36,7 +36,7 @@ export function AutoSwitchConfig({ agents, config, onUpdate }: AutoSwitchConfigP
   return (
     <div className="space-y-3">
       <p className="text-xs text-muted-foreground">
-        Configure quando a IA deve trocar automaticamente de agente baseado no contexto da conversa.
+        Configura cuándo la IA debe cambiar automáticamente de agente según el contexto de la conversación.
       </p>
       
       {config.map((rule, idx) => {
@@ -50,7 +50,7 @@ export function AutoSwitchConfig({ agents, config, onUpdate }: AutoSwitchConfigP
                 onValueChange={(v) => updateRule(idx, { agent_id: v })}
               >
                 <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Trocar para..." />
+                  <SelectValue placeholder="Cambiar a..." />
                 </SelectTrigger>
                 <SelectContent>
                   {agents.map(agent => (
@@ -79,7 +79,7 @@ export function AutoSwitchConfig({ agents, config, onUpdate }: AutoSwitchConfigP
             <Input
               value={rule.trigger_condition}
               onChange={(e) => updateRule(idx, { trigger_condition: e.target.value })}
-              placeholder="Quando: Lead demonstra interesse alto de compra"
+              placeholder="Cuándo: El Lead demuestra alto interés de compra"
             />
             
             {selectedAgent && (
@@ -96,13 +96,13 @@ export function AutoSwitchConfig({ agents, config, onUpdate }: AutoSwitchConfigP
       
       <Button variant="outline" size="sm" onClick={addRule} className="w-full">
         <Plus className="h-3 w-3 mr-1" />
-        Adicionar Regra de Troca
+        Agregar Regla de Cambio
       </Button>
       
       {config.length > 0 && (
         <div className="p-2 rounded bg-orange-500/10 border border-orange-500/30">
           <p className="text-xs text-orange-600">
-            💡 A IA analisará a conversa e decidirá quando trocar de agente baseado nas condições configuradas.
+            💡 La IA analizará la conversación y decidirá cuándo cambiar de agente según las condiciones configuradas.
           </p>
         </div>
       )}

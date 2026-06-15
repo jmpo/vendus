@@ -133,7 +133,7 @@ export function AddActionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh]">
         <DialogHeader>
-          <DialogTitle>Adicionar Ação</DialogTitle>
+          <DialogTitle>Añadir Acción</DialogTitle>
         </DialogHeader>
         
         <ScrollArea className="max-h-[60vh] pr-4">

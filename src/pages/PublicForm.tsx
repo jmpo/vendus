@@ -51,7 +51,7 @@ export default function PublicForm() {
         .single();
 
       if (formError || !formData) {
-        setError('Formulário não encontrado ou inativo.');
+        setError('Formulario no encontrado o inactivo.');
         return;
       }
 
@@ -140,7 +140,7 @@ export default function PublicForm() {
 
     } catch (err: any) {
       console.error('Error loading form:', err);
-      setError('Erro ao carregar formulário.');
+      setError('Error al cargar el formulario.');
     } finally {
       setLoading(false);
     }
@@ -177,9 +177,9 @@ export default function PublicForm() {
     if (NON_INPUT_BLOCKS.has(block.block_type)) return null;
     const v = responses[block.id];
     const empty = v === undefined || v === null || v === '' || (Array.isArray(v) && v.length === 0);
-    if (block.required && empty) return 'Esta resposta é obrigatória.';
+    if (block.required && empty) return 'Esta respuesta es obligatoria.';
     if (!empty && block.block_type === 'phone' && !isValidBRPhone(v)) {
-      return 'WhatsApp inválido. Use DDD + número (ex.: (48) 99652-0589).';
+      return 'WhatsApp inválido. Usa DDD + número (ej.: (48) 99652-0589).';
     }
     if (!empty && block.block_type === 'email' && !isValidEmail(v)) {
       return 'E-mail inválido.';
@@ -348,11 +348,11 @@ export default function PublicForm() {
           }
         }
       } else {
-        throw new Error(data?.error || 'Erro ao enviar formulário');
+        throw new Error(data?.error || 'Error al enviar el formulario');
       }
     } catch (err: any) {
       console.error('Error submitting form:', err);
-      toast.error(err.message || 'Erro ao enviar formulário');
+      toast.error(err.message || 'Error al enviar el formulario');
     } finally {
       setSubmitting(false);
     }
@@ -380,7 +380,7 @@ export default function PublicForm() {
               <p className="text-lg text-muted-foreground">{block.description}</p>
             )}
             <Button size="lg" onClick={handleNext} variant={btn.variant} className={`gap-2 ${btn.className}`}>
-              Começar <ArrowRight className="h-4 w-4" />
+              Empezar <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
         );

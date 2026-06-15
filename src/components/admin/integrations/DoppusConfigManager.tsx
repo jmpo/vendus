@@ -149,10 +149,10 @@ export function DoppusConfigManager() {
 
       <Tabs defaultValue="products" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="products">Produtos</TabsTrigger>
+          <TabsTrigger value="products">Productos</TabsTrigger>
           <TabsTrigger value="events">Eventos</TabsTrigger>
           <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
-          <TabsTrigger value="advanced">Avançado</TabsTrigger>
+          <TabsTrigger value="advanced">Avanzado</TabsTrigger>
         </TabsList>
 
         <TabsContent value="products" className="space-y-3">
@@ -160,14 +160,14 @@ export function DoppusConfigManager() {
             <AlertDescription className="text-sm space-y-1">
               <p><strong>Como conectar:</strong></p>
               <ol className="list-decimal ml-5 space-y-0.5">
-                <li>Na Doppus, vá em <em>Postbacks</em> do produto e copie o <strong>Token de Segurança</strong>.</li>
-                <li>Cadastre aqui: cole o token, informe o <strong>ID do Produto</strong> da Doppus e escolha o produto interno.</li>
+                <li>En Doppus, ve a <em>Postbacks</em> del producto y copia el <strong>Token de Seguridad</strong>.</li>
+                <li>Regístralo aquí: pega el token, informa el <strong>ID del Producto</strong> de Doppus y elige el producto interno.</li>
                 <li>Na Doppus, no campo "URL para envio dos dados", cole esta URL:
                   <code className="block mt-1 p-1 bg-muted rounded text-xs break-all">
                     {`${supaUrl}/functions/v1/doppus-webhook`}
                   </code>
                 </li>
-                <li>Selecione todos os eventos acionadores e salve.</li>
+                <li>Selecciona todos los eventos disparadores y guarda.</li>
               </ol>
               <p className="text-xs text-muted-foreground pt-1">
                 A URL é única para todos os produtos. Identificamos o produto pelo <code>items[0].code</code> e validamos o token recebido no header <code>doppus-token</code>.
@@ -200,8 +200,8 @@ export function DoppusConfigManager() {
         <TabsContent value="events" className="space-y-3">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Eventos suportados</CardTitle>
-              <CardDescription>Cada evento dispara as ações de pós-venda do produto interno vinculado.</CardDescription>
+              <CardTitle className="text-base">Eventos soportados</CardTitle>
+              <CardDescription>Cada evento activa las acciones posventa del producto interno vinculado.</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -299,20 +299,20 @@ function ProductCard({
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="ex.: Assinatura Premium" />
           </div>
           <div>
-            <Label>ID do Produto na Doppus</Label>
+            <Label>ID del Producto en Doppus</Label>
             <Input value={doppusId} onChange={(e) => setDoppusId(e.target.value)} placeholder="ex.: 85616746" />
           </div>
         </div>
 
         <div>
-          <Label>Token de Segurança (gerado pela Doppus)</Label>
+          <Label>Token de Seguridad (generado por Doppus)</Label>
           <div className="relative">
             <Input
               type={showToken ? 'text' : 'password'}
               value={token}
               onChange={(e) => setToken(e.target.value)}
               className="font-mono pr-10"
-              placeholder="Cole aqui o token que a Doppus gerou para este produto"
+              placeholder="Pega aquí el token que Doppus generó para este producto"
             />
             <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8" onClick={() => setShowToken(v => !v)}>
               {showToken ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -324,9 +324,9 @@ function ProductCard({
         </div>
 
         <div>
-          <Label>Produto interno do CRM</Label>
+          <Label>Producto interno del CRM</Label>
           <Select value={internalId || ''} onValueChange={setInternalId}>
-            <SelectTrigger><SelectValue placeholder="Selecione o produto interno" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Selecciona el producto interno" /></SelectTrigger>
             <SelectContent>
               {internalProducts.map((p) => (
                 <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
@@ -336,7 +336,7 @@ function ProductCard({
         </div>
 
         <div>
-          <Label>URL do Webhook (cole na Doppus)</Label>
+          <Label>URL del Webhook (pega en Doppus)</Label>
           <div className="flex gap-2">
             <Input value={url} readOnly className="font-mono text-xs" />
             <Button variant="outline" size="icon" onClick={() => { navigator.clipboard.writeText(url); toast.success('URL copiada'); }}>
@@ -350,7 +350,7 @@ function ProductCard({
             variant="ghost"
             size="sm"
             className="text-destructive hover:text-destructive"
-            onClick={() => { if (confirm('Remover este produto?')) onRemove(); }}
+            onClick={() => { if (confirm('¿Eliminar este producto?')) onRemove(); }}
             disabled={busy}
           >
             <Trash2 className="h-4 w-4 mr-1" /> Remover
@@ -360,7 +360,7 @@ function ProductCard({
             disabled={!dirty || busy || !name || !doppusId || !token || !internalId}
             onClick={async () => {
               await onSave({ id: value.id, name, doppus_product_id: doppusId, token, internal_product_id: internalId });
-              toast.success('Produto atualizado');
+              toast.success('Producto actualizado');
             }}
           >
             {busy && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -401,7 +401,7 @@ function NewProductForm({
   return (
     <Card className="border-dashed">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base">Novo produto Doppus</CardTitle>
+        <CardTitle className="text-base">Nuevo producto Doppus</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -410,18 +410,18 @@ function NewProductForm({
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="ex.: Doppus" />
           </div>
           <div>
-            <Label>ID do Produto na Doppus</Label>
+            <Label>ID del Producto en Doppus</Label>
             <Input value={doppusId} onChange={(e) => setDoppusId(e.target.value)} placeholder="ex.: 85616746" />
           </div>
         </div>
 
         <div>
-          <Label>Token de Segurança (gerado pela Doppus)</Label>
+          <Label>Token de Seguridad (generado por Doppus)</Label>
           <Input
             value={token}
             onChange={(e) => setToken(e.target.value)}
             className="font-mono"
-            placeholder="Cole o token gerado na Doppus"
+            placeholder="Pega el token generado en Doppus"
           />
           <p className="text-xs text-muted-foreground mt-1">
             Vá em Doppus → Postbacks → copie o Token de Segurança do produto e cole aqui.
@@ -429,9 +429,9 @@ function NewProductForm({
         </div>
 
         <div>
-          <Label>Produto interno do CRM</Label>
+          <Label>Producto interno del CRM</Label>
           <Select value={internalId} onValueChange={setInternalId}>
-            <SelectTrigger><SelectValue placeholder="Selecione o produto interno" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Selecciona el producto interno" /></SelectTrigger>
             <SelectContent>
               {internalProducts.map((p) => (
                 <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>

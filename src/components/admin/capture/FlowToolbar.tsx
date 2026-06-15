@@ -45,9 +45,9 @@ export function FlowToolbar({
     if (onAutoDetectStart) {
       const changed = onAutoDetectStart();
       if (changed) {
-        toast.success('Bloco inicial detectado automaticamente!');
+        toast.success('¡Bloque inicial detectado automáticamente!');
       } else {
-        toast.info('O bloco inicial já está correto.');
+        toast.info('El bloque inicial ya es correcto.');
       }
     }
   };
@@ -140,7 +140,7 @@ export function FlowToolbar({
           onClick={onTest}
         >
           <Play className="h-4 w-4" />
-          <span className="text-xs">Testar</span>
+          <span className="text-xs">Probar</span>
         </Button>
       )}
       
@@ -158,7 +158,7 @@ export function FlowToolbar({
         ) : (
           <Save className="h-4 w-4" />
         )}
-        <span className="text-xs">Salvar</span>
+        <span className="text-xs">Guardar</span>
         {isDirty && (
           <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />
         )}

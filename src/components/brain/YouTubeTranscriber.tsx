@@ -37,7 +37,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
 
   const handleProcess = async () => {
     if (!url.trim()) {
-      toast({ title: 'Cole um link do YouTube', variant: 'destructive' });
+      toast({ title: 'Pegue un enlace de YouTube', variant: 'destructive' });
       return;
     }
 
@@ -53,12 +53,12 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
       if (!data.success) throw new Error(data.error);
 
       setPreview(data.data);
-      toast({ title: 'Vídeo processado!' });
+      toast({ title: '¡Video procesado!' });
     } catch (error) {
       console.error('Error processing YouTube video:', error);
       toast({
-        title: 'Erro ao processar vídeo',
-        description: error instanceof Error ? error.message : 'Verifique se o link está correto',
+        title: 'Error al procesar el video',
+        description: error instanceof Error ? error.message : 'Verifique si el enlace es correcto',
         variant: 'destructive',
       });
     } finally {
@@ -82,7 +82,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
         processing_status: 'completed',
       });
 
-      toast({ title: 'Vídeo adicionado ao cérebro!' });
+      toast({ title: '¡Video agregado al cerebro!' });
       setUrl('');
       setPreview(null);
     } catch (error) {
@@ -98,7 +98,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
   const handleDelete = async (id: string) => {
     try {
       await deleteSource.mutateAsync({ id, productId });
-      toast({ title: 'Vídeo removido' });
+      toast({ title: 'Video eliminado' });
     } catch (error) {
       toast({ title: 'Erro ao remover', variant: 'destructive' });
     }
@@ -116,7 +116,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
         transcript: editContent,
         extracted_content: editContent,
       });
-      toast({ title: 'Transcrição atualizada!' });
+      toast({ title: '¡Transcripción actualizada!' });
       setEditingId(null);
       setEditContent('');
     } catch (error) {
@@ -135,10 +135,10 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Youtube className="h-5 w-5 text-red-500" />
-            Adicionar Vídeo do YouTube
+            Agregar Video de YouTube
           </CardTitle>
           <CardDescription>
-            Cole o link de um vídeo para extrair informações e criar um resumo estruturado
+            Pegue el enlace de un video para extraer información y crear un resumen estructurado
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -160,7 +160,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
               ) : (
                 <>
                   <Play className="h-4 w-4 mr-2" />
-                  Processar Vídeo
+                  Procesar Video
                 </>
               )}
             </Button>
@@ -183,22 +183,22 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
                     <p className="text-sm text-muted-foreground">{preview.author}</p>
                     <Badge variant="outline" className="mt-2 text-green-600 border-green-600">
                       <Check className="h-3 w-3 mr-1" />
-                      Processado
+                      Procesado
                     </Badge>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Resumo / Transcrição</Label>
+                  <Label>Resumen / Transcripción</Label>
                   <Textarea
                     value={preview.content}
                     onChange={(e) => setPreview({ ...preview, content: e.target.value })}
                     rows={10}
                     className="font-mono text-sm"
-                    placeholder="Edite o conteúdo extraído..."
+                    placeholder="Edite el contenido extraído..."
                   />
                   <p className="text-xs text-muted-foreground">
-                    Você pode editar o conteúdo antes de salvar para adicionar informações específicas.
+                    Puede editar el contenido antes de guardar para agregar información específica.
                   </p>
                 </div>
 
@@ -225,9 +225,9 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
       {videos && videos.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Vídeos Salvos</CardTitle>
+            <CardTitle className="text-lg">Videos Guardados</CardTitle>
             <CardDescription>
-              {videos.length} {videos.length === 1 ? 'vídeo' : 'vídeos'} no cérebro
+              {videos.length} {videos.length === 1 ? 'video' : 'videos'} no cérebro
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -282,7 +282,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
                   {/* Edit Mode */}
                   {editingId === video.id && (
                     <div className="border-t p-4 bg-muted/30">
-                      <Label className="text-sm mb-2 block">Editar Transcrição</Label>
+                      <Label className="text-sm mb-2 block">Editar Transcripción</Label>
                       <Textarea
                         value={editContent}
                         onChange={(e) => setEditContent(e.target.value)}
@@ -310,7 +310,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
                           ) : (
                             <Save className="h-4 w-4 mr-2" />
                           )}
-                          Salvar
+                          Guardar
                         </Button>
                       </div>
                     </div>
@@ -327,9 +327,9 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
         <Card className="border-dashed">
           <CardContent className="p-8 text-center">
             <Youtube className="h-10 w-10 mx-auto text-red-500/50 mb-4" />
-            <h3 className="font-medium mb-2">Nenhum vídeo adicionado</h3>
+            <h3 className="font-medium mb-2">Nenhum video adicionado</h3>
             <p className="text-sm text-muted-foreground">
-              Adicione vídeos do YouTube para extrair conhecimento e treinar a IA.
+              Adicione videos do YouTube para extrair conhecimento e treinar a IA.
             </p>
           </CardContent>
         </Card>

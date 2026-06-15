@@ -133,15 +133,15 @@ export function HotmartConfigManager() {
 
       <Tabs defaultValue="credentials" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="credentials">Credenciais</TabsTrigger>
+          <TabsTrigger value="credentials">Credenciales</TabsTrigger>
           <TabsTrigger value="webhook">Webhook</TabsTrigger>
-          <TabsTrigger value="products">Produtos</TabsTrigger>
+          <TabsTrigger value="products">Productos</TabsTrigger>
         </TabsList>
 
         {/* CREDENCIAIS */}
         <TabsContent value="credentials" className="space-y-4">
           <Alert>
-            <AlertTitle>Onde encontrar?</AlertTitle>
+            <AlertTitle>¿Dónde encontrar?</AlertTitle>
             <AlertDescription className="text-sm">
               Acesse <strong>Hotmart → Ferramentas → Credenciais Hotmart</strong>, crie uma nova credencial e copie os 3
               campos abaixo.
@@ -167,7 +167,7 @@ export function HotmartConfigManager() {
                   type={showSecret ? 'text' : 'password'}
                   value={clientSecret}
                   onChange={(e) => setClientSecret(e.target.value)}
-                  placeholder="Cole o Client Secret"
+                  placeholder="Pega el Client Secret"
                 />
                 <Button
                   type="button"
@@ -226,7 +226,7 @@ export function HotmartConfigManager() {
         <TabsContent value="webhook" className="space-y-4">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">URL do Postback</CardTitle>
+              <CardTitle className="text-base">URL del Postback</CardTitle>
               <CardDescription>
                 Cole esta URL em <strong>Hotmart → Ferramentas → Notificações (Postback) → Nova URL</strong>
               </CardDescription>
@@ -242,7 +242,7 @@ export function HotmartConfigManager() {
           </Card>
 
           <div>
-            <Label htmlFor="hottok">Hottok (token de validação)</Label>
+            <Label htmlFor="hottok">Hottok (token de validación)</Label>
             <p className="text-xs text-muted-foreground mb-2">
               A Hotmart gera o Hottok no painel do postback. Cole aqui para validar a autenticidade dos eventos.
             </p>
@@ -250,7 +250,7 @@ export function HotmartConfigManager() {
               id="hottok"
               value={hottok}
               onChange={(e) => setHottok(e.target.value)}
-              placeholder="Cole o Hottok"
+              placeholder="Pega el Hottok"
             />
             <Button
               size="sm"
@@ -264,7 +264,7 @@ export function HotmartConfigManager() {
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Eventos para ativar na Hotmart</CardTitle>
+              <CardTitle className="text-base">Eventos para activar en Hotmart</CardTitle>
               <CardDescription>
                 Marque os eventos abaixo no postback para que apareçam aqui automaticamente
               </CardDescription>
@@ -293,8 +293,8 @@ export function HotmartConfigManager() {
 
           <div className="flex items-center justify-between rounded-md border p-3">
             <div>
-              <p className="text-sm font-medium">Sincronizar histórico</p>
-              <p className="text-xs text-muted-foreground">Importa vendas dos últimos 30 dias via API</p>
+              <p className="text-sm font-medium">Sincronizar historial</p>
+              <p className="text-xs text-muted-foreground">Importa ventas de los últimos 30 días vía API</p>
             </div>
             <Button variant="outline" size="sm" onClick={() => sync.mutate(30)} disabled={sync.isPending}>
               {sync.isPending ? (
@@ -309,7 +309,7 @@ export function HotmartConfigManager() {
           {orders.length > 0 && (
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base">Últimos pedidos recebidos</CardTitle>
+                <CardTitle className="text-base">Últimos pedidos recibidos</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-1 text-sm">
@@ -349,7 +349,7 @@ export function HotmartConfigManager() {
                     <div className="flex items-center gap-3">
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium truncate">
-                          {m.hotmart_product_name || 'Produto sem nome'}
+                          {m.hotmart_product_name || 'Producto sin nombre'}
                         </p>
                         <p className="text-xs text-muted-foreground">ID Hotmart: {m.hotmart_product_id}</p>
                       </div>
@@ -360,10 +360,10 @@ export function HotmartConfigManager() {
                         }
                       >
                         <SelectTrigger className="w-[220px]">
-                          <SelectValue placeholder="Vincular a produto..." />
+                          <SelectValue placeholder="Vincular a producto..." />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="none">— Não vinculado —</SelectItem>
+                          <SelectItem value="none">— No vinculado —</SelectItem>
                           {products.map((p) => (
                             <SelectItem key={p.id} value={p.id}>
                               {p.name}

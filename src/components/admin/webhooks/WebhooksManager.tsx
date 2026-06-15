@@ -127,12 +127,12 @@ export function WebhooksManager() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Webhooks</h1>
           <p className="text-muted-foreground">
-            Receba dados externos e execute ações automaticamente
+            Recibe datos externos y ejecuta acciones automáticamente
           </p>
         </div>
         <Button onClick={() => setIsCreateDialogOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
-          Criar Webhook
+          Crear Webhook
         </Button>
       </div>
 
@@ -145,7 +145,7 @@ export function WebhooksManager() {
                 <Activity className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Requisições este mês</p>
+                <p className="text-sm text-muted-foreground">Solicitudes este mes</p>
                 <p className="text-2xl font-bold">{totalRequestsThisMonth.toLocaleString()}</p>
               </div>
             </div>
@@ -179,24 +179,24 @@ export function WebhooksManager() {
           ) : filteredWebhooks.length === 0 ? (
             <div className="p-12 text-center">
               <Webhook className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">Nenhum webhook encontrado</h3>
+              <h3 className="text-lg font-medium mb-2">No se encontró ningún webhook</h3>
               <p className="text-muted-foreground mb-4">
-                Crie seu primeiro webhook para receber dados externos
+                Crea tu primer webhook para recibir datos externos
               </p>
               <Button onClick={() => setIsCreateDialogOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" />
-                Criar Webhook
+                Crear Webhook
               </Button>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-center">Req. Mês</TableHead>
-                  <TableHead className="text-center">Req. Total</TableHead>
-                  <TableHead>Última Requisição</TableHead>
+                  <TableHead>Nombre</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead className="text-center">Sol. Mes</TableHead>
+                  <TableHead className="text-center">Sol. Total</TableHead>
+                  <TableHead>Última Solicitud</TableHead>
                   <TableHead className="w-12"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -229,7 +229,7 @@ export function WebhooksManager() {
                             Ativo
                           </Badge>
                         ) : (
-                          <Badge variant="secondary">Inativo</Badge>
+                          <Badge variant="secondary">Inactivo</Badge>
                         )}
                         {webhook.is_test_mode && (
                           <Badge variant="outline" className="text-orange-600 border-orange-500/30">
@@ -246,7 +246,7 @@ export function WebhooksManager() {
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {webhook.last_request_at ? (
-                        format(new Date(webhook.last_request_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })
+                        format(new Date(webhook.last_request_at), "dd/MM/yyyy 'a las' HH:mm", { locale: undefined })
                       ) : (
                         '—'
                       )}
@@ -271,7 +271,7 @@ export function WebhooksManager() {
                             onClick={() => window.open(getWebhookUrl(webhook.id), '_blank')}
                           >
                             <ExternalLink className="h-4 w-4 mr-2" />
-                            Testar URL
+                            Probar URL
                           </DropdownMenuItem>
                           <DropdownMenuItem 
                             onClick={() => setDeleteConfirmId(webhook.id)}
@@ -295,11 +295,11 @@ export function WebhooksManager() {
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Criar Novo Webhook</DialogTitle>
+            <DialogTitle>Crear Nuevo Webhook</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome *</Label>
+              <Label htmlFor="name">Nombre *</Label>
               <Input
                 id="name"
                 placeholder="Ex: Ventas Hotmart"
@@ -308,16 +308,16 @@ export function WebhooksManager() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description">Descrição</Label>
+              <Label htmlFor="description">Descripción</Label>
               <Textarea
                 id="description"
-                placeholder="Descreva o propósito deste webhook..."
+                placeholder="Describe el propósito de este webhook..."
                 value={newWebhook.description}
                 onChange={(e) => setNewWebhook(prev => ({ ...prev, description: e.target.value }))}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="product">Produto (opcional)</Label>
+              <Label htmlFor="product">Producto (opcional)</Label>
               <Select
                 value={newWebhook.product_id}
                 onValueChange={(value) => 
@@ -328,10 +328,10 @@ export function WebhooksManager() {
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione um produto..." />
+                  <SelectValue placeholder="Selecciona un producto..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Nenhum produto</SelectItem>
+                  <SelectItem value="none">Ningún producto</SelectItem>
                   {products?.map(product => (
                     <SelectItem key={product.id} value={product.id}>
                       {product.name}
@@ -340,7 +340,7 @@ export function WebhooksManager() {
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                Leads criados por este webhook serão vinculados automaticamente ao produto selecionado
+                Los leads creados por este webhook se vincularán automáticamente al producto seleccionado
               </p>
             </div>
           </div>
@@ -352,7 +352,7 @@ export function WebhooksManager() {
               onClick={handleCreate}
               disabled={createWebhook.isPending}
             >
-              {createWebhook.isPending ? 'Criando...' : 'Criar Webhook'}
+              {createWebhook.isPending ? 'Criando...' : 'Crear Webhook'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -362,9 +362,9 @@ export function WebhooksManager() {
       <AlertDialog open={!!deleteConfirmId} onOpenChange={() => setDeleteConfirmId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir Webhook?</AlertDialogTitle>
+            <AlertDialogTitle>¿Eliminar Webhook?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Todos os logs e configurações serão perdidos.
+              Esta acción no se puede deshacer. Todos los registros y configuraciones se perderán.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

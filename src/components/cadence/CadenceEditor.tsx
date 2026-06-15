@@ -44,10 +44,10 @@ interface CadenceEditorProps {
 }
 
 const blockTypes = [
-  { type: 'message', icon: MessageSquare, label: 'Mensagem' },
-  { type: 'audio', icon: Mic, label: 'Áudio' },
-  { type: 'image', icon: Image, label: 'Imagem' },
-  { type: 'video', icon: Video, label: 'Vídeo' },
+  { type: 'message', icon: MessageSquare, label: 'Mensaje' },
+  { type: 'audio', icon: Mic, label: 'Audio' },
+  { type: 'image', icon: Image, label: 'Imagen' },
+  { type: 'video', icon: Video, label: 'Video' },
   { type: 'link', icon: Link, label: 'Link' },
   { type: 'material', icon: FileText, label: 'Material' },
   { type: 'cta', icon: MousePointer, label: 'CTA' },
@@ -80,7 +80,7 @@ export function CadenceEditor({ cadence, productId, productName }: CadenceEditor
     createDay.mutate({
       productId,
       dayNumber: newDayNumber,
-      title: `Dia ${newDayNumber}`,
+      title: `Día ${newDayNumber}`,
       trigger: '',
       blocks: [],
     });
@@ -183,13 +183,13 @@ export function CadenceEditor({ cadence, productId, productName }: CadenceEditor
         <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
           <Calendar className="h-8 w-8 text-primary" />
         </div>
-        <h3 className="text-lg font-semibold mb-2">Nenhuma cadência criada</h3>
+        <h3 className="text-lg font-semibold mb-2">No hay secuencias creadas</h3>
         <p className="text-muted-foreground text-sm mb-6 max-w-sm">
-          Crie dias de cadência com mensagens, mídias e CTAs para guiar suas vendas
+          Crea días de secuencia con mensajes, medios y CTAs para guiar tus ventas
         </p>
         <Button onClick={handleAddDay}>
           <Plus className="h-4 w-4 mr-2" />
-          Criar Primeiro Dia
+          Crear Primer Día
         </Button>
       </div>
     );
@@ -200,7 +200,7 @@ export function CadenceEditor({ cadence, productId, productName }: CadenceEditor
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">Cadencia de Ventas</h2>
+          <h2 className="text-lg font-semibold">Secuencia de Ventas</h2>
           <p className="text-sm text-muted-foreground">{productName}</p>
         </div>
         <div className="flex items-center gap-2">
@@ -211,12 +211,12 @@ export function CadenceEditor({ cadence, productId, productName }: CadenceEditor
               ) : (
                 <Save className="h-4 w-4 mr-2" />
               )}
-              Salvar
+              Guardar
             </Button>
           )}
           <Button variant="outline" onClick={handleAddDay}>
             <Plus className="h-4 w-4 mr-2" />
-            Adicionar Dia
+            Añadir Día
           </Button>
         </div>
       </div>
@@ -271,7 +271,7 @@ export function CadenceEditor({ cadence, productId, productName }: CadenceEditor
                 <Input
                   value={currentDay.trigger}
                   onChange={(e) => handleUpdateDay({ trigger: e.target.value })}
-                  placeholder="Gatilho: Ex: Após cadastro, 2 dias sem resposta..."
+                  placeholder="Disparador: Ej: Después del registro, 2 días sin respuesta..."
                   className="text-sm"
                 />
               </div>
@@ -304,7 +304,7 @@ export function CadenceEditor({ cadence, productId, productName }: CadenceEditor
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="w-full border-dashed">
                   <Plus className="h-4 w-4 mr-2" />
-                  Adicionar Bloco
+                  Añadir Bloque
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center" className="w-48">
@@ -329,14 +329,14 @@ export function CadenceEditor({ cadence, productId, productName }: CadenceEditor
                 onClick={() => setActiveDay(activeDay - 1)}
               >
                 <ChevronLeft className="h-4 w-4 mr-2" />
-                Dia anterior
+                Día anterior
               </Button>
               <Button
                 variant="ghost"
                 disabled={activeDay >= Math.max(...localCadence.map(d => d.day))}
                 onClick={() => setActiveDay(activeDay + 1)}
               >
-                Próximo dia
+                Próximo día
                 <ChevronRight className="h-4 w-4 ml-2" />
               </Button>
             </div>

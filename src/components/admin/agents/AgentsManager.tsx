@@ -213,7 +213,7 @@ export function AgentsManager() {
           <div>
             <h1 className="text-2xl font-bold">Agentes de IA</h1>
             <p className="text-muted-foreground text-sm">
-              Gerencie todos os agentes da sua organização — globais e por produto
+              Gestione todos los agentes de su organización — globales y por producto
             </p>
           </div>
         </div>
@@ -231,7 +231,7 @@ export function AgentsManager() {
               }
             >
               <Network className="h-3.5 w-3.5" />
-              Hierarquia
+              Jerarquía
             </button>
             <button
               type="button"
@@ -257,7 +257,7 @@ export function AgentsManager() {
           </Button>
           <Button onClick={handleCreate} size="lg">
             <Plus className="h-4 w-4 mr-2" />
-            Criar Agente
+            Crear agente
           </Button>
         </div>
       </div>
@@ -265,9 +265,9 @@ export function AgentsManager() {
       <Sheet open={supervisorOpen} onOpenChange={setSupervisorOpen}>
         <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>Supervisor Multi-agente</SheetTitle>
+            <SheetTitle>Supervisor multiagente</SheetTitle>
             <SheetDescription>
-              Configure especialistas e regras de roteamento. Quando nenhuma regra bater, o supervisor IA decide.
+              Configure especialistas y reglas de enrutamiento. Cuando ninguna regla coincida, el supervisor de IA decide.
             </SheetDescription>
           </SheetHeader>
           <div className="mt-4">
@@ -283,11 +283,11 @@ export function AgentsManager() {
             <SelectValue placeholder="Vínculo" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os vínculos</SelectItem>
+            <SelectItem value="all">Todos los vínculos</SelectItem>
             <SelectItem value="global">
               <div className="flex items-center gap-2">
                 <Globe className="h-3.5 w-3.5" />
-                Globais
+                Globales
               </div>
             </SelectItem>
             {products?.map((p) => (
@@ -306,7 +306,7 @@ export function AgentsManager() {
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os tipos</SelectItem>
+            <SelectItem value="all">Todos los tipos</SelectItem>
             {(Object.keys(AGENT_TYPE_LABELS) as AgentType[]).map((t) => (
               <SelectItem key={t} value={t}>
                 {AGENT_TYPE_LABELS[t]}
@@ -320,7 +320,7 @@ export function AgentsManager() {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar por nome..."
+            placeholder="Buscar por nombre..."
             className="pl-9"
           />
         </div>
@@ -342,21 +342,21 @@ export function AgentsManager() {
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Sparkles className="h-8 w-8 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Nenhum agente encontrado</h3>
+            <h3 className="text-lg font-semibold mb-2">No se encontró ningún agente</h3>
             <p className="text-muted-foreground text-center max-w-md mb-4">
               {agents && agents.length > 0
-                ? 'Nenhum agente bate com os filtros aplicados. Tente ajustar a busca.'
-                : 'Crie seu primeiro agente. Você pode criar agentes globais (Orquestrador, Soporte) ou específicos de um produto (SDR, Closer).'}
+                ? 'Ningún agente coincide con los filtros aplicados. Intente ajustar la búsqueda.'
+                : 'Cree su primer agente. Puede crear agentes globales (Orquestrador, Soporte) o específicos de un producto (SDR, Closer).'}
             </p>
             <Button onClick={handleCreate}>
               <Plus className="h-4 w-4 mr-2" />
-              Criar Agente
+              Crear agente
             </Button>
           </CardContent>
         </Card>
       )}
 
-      {/* Hierarquia (tree) */}
+      {/* Jerarquía (tree) */}
       {!isLoading && filtered.length > 0 && viewMode === 'tree' && (
         <Card className="p-4 sm:p-6 bg-muted/20">
           <AgentHierarchyView
@@ -373,13 +373,13 @@ export function AgentsManager() {
         </Card>
       )}
 
-      {/* Lista — Globais */}
+      {/* Lista — Globales */}
       {!isLoading && viewMode === 'list' && grouped.globals.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-center gap-2">
             <Globe className="h-4 w-4 text-primary" />
             <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Globais (sem produto)
+              Globales (sem produto)
             </h2>
             <span className="text-xs text-muted-foreground">· {grouped.globals.length}</span>
           </div>
@@ -455,9 +455,9 @@ export function AgentsManager() {
       <AlertDialog open={!!deletingAgent} onOpenChange={() => setDeletingAgent(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir agente?</AlertDialogTitle>
+            <AlertDialogTitle>¿Eliminar agente?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. O agente "{deletingAgent?.name}" será removido permanentemente.
+              Esta ação não pode ser desfeita. El agente "{deletingAgent?.name}" será eliminado permanentemente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

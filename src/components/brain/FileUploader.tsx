@@ -80,7 +80,7 @@ export function FileUploader({ productId }: FileUploaderProps) {
       });
       
       updatePendingFile(index, { status: 'completed', progress: 100 });
-      toast.success(`"${pending.title}" carregado com sucesso`);
+      toast.success(`"${pending.title}" cargado con éxito`);
       
       // Remove from pending after delay
       setTimeout(() => {
@@ -88,7 +88,7 @@ export function FileUploader({ productId }: FileUploaderProps) {
       }, 2000);
     } catch (error) {
       updatePendingFile(index, { status: 'error', progress: 0 });
-      toast.error(`Erro ao carregar "${pending.title}"`);
+      toast.error(`Error al cargar "${pending.title}"`);
     }
   };
 
@@ -107,10 +107,10 @@ export function FileUploader({ productId }: FileUploaderProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
-            Arquivos
+            Archivos
           </CardTitle>
           <CardDescription>
-            Faça upload de PDFs, documentos Word, apresentações e outros arquivos para treinar a IA.
+            Suba PDF, documentos de Word, presentaciones y otros archivos para entrenar a la IA.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -127,10 +127,10 @@ export function FileUploader({ productId }: FileUploaderProps) {
             <input {...getInputProps()} />
             <Upload className="h-10 w-10 mx-auto text-muted-foreground mb-4" />
             {isDragActive ? (
-              <p className="text-primary font-medium">Solte os arquivos aqui...</p>
+              <p className="text-primary font-medium">Suelte los archivos aquí...</p>
             ) : (
               <>
-                <p className="font-medium">Arraste arquivos ou clique para selecionar</p>
+                <p className="font-medium">Arrastre archivos o haga clic para seleccionar</p>
                 <p className="text-sm text-muted-foreground mt-1">
                   PDF, DOC, DOCX, PPT, PPTX, TXT (máx. 50MB)
                 </p>
@@ -142,7 +142,7 @@ export function FileUploader({ productId }: FileUploaderProps) {
           {pendingFiles.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="font-medium">Arquivos para upload</h4>
+                <h4 className="font-medium">Archivos para upload</h4>
                 <Button size="sm" onClick={uploadAll}>
                   <Upload className="h-4 w-4 mr-2" />
                   Enviar Todos
@@ -161,7 +161,7 @@ export function FileUploader({ productId }: FileUploaderProps) {
                       value={pending.title}
                       onChange={(e) => updatePendingFile(index, { title: e.target.value })}
                       className="h-8 text-sm"
-                      placeholder="Nome do arquivo"
+                      placeholder="Nombre del archivo"
                       disabled={pending.status !== 'pending'}
                     />
                     <div className="flex items-center gap-2 mt-1">
@@ -214,7 +214,7 @@ export function FileUploader({ productId }: FileUploaderProps) {
       {/* Existing Files */}
       {files && files.length > 0 && (
         <div className="space-y-3">
-          <h3 className="font-semibold">Arquivos Enviados</h3>
+          <h3 className="font-semibold">Archivos Enviados</h3>
           {files.map((file) => (
             <KnowledgeSourceCard key={file.id} source={file} />
           ))}
@@ -234,7 +234,7 @@ export function FileUploader({ productId }: FileUploaderProps) {
           <CardContent className="p-8 text-center">
             <FileText className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
             <p className="text-muted-foreground">
-              Nenhum arquivo enviado ainda. Arraste arquivos acima para começar.
+              Aún no se ha enviado ningún archivo. Arrastre archivos arriba para comenzar.
             </p>
           </CardContent>
         </Card>

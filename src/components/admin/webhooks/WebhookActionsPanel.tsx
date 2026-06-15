@@ -136,7 +136,7 @@ export function WebhookActionsPanel({
       <Card className="h-fit">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">Ações</CardTitle>
+            <CardTitle className="text-lg">Acciones</CardTitle>
             <Button size="sm" onClick={() => setIsAddDialogOpen(true)}>
               <Plus className="h-4 w-4 mr-1" />
               Adicionar

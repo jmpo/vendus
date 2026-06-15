@@ -63,7 +63,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
 
   const handleSingleScrape = async () => {
     if (!url.trim()) {
-      toast({ title: 'Digite uma URL', variant: 'destructive' });
+      toast({ title: 'Ingrese una URL', variant: 'destructive' });
       return;
     }
 
@@ -74,16 +74,16 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
       const result = await firecrawlApi.scrape(formatUrl(url));
       
       if (!result.success || !result.data) {
-        throw new Error(result.error || 'Falha ao extrair conteúdo');
+        throw new Error(result.error || 'Fallo al extraer contenido');
       }
 
       setPreview(result.data);
-      toast({ title: 'Conteúdo extraído com sucesso!' });
+      toast({ title: '¡Contenido extraído con éxito!' });
     } catch (error) {
       console.error('Error scraping:', error);
       toast({
-        title: 'Erro ao processar website',
-        description: error instanceof Error ? error.message : 'Tente novamente',
+        title: 'Error al procesar el sitio web',
+        description: error instanceof Error ? error.message : 'Intente de nuevo',
         variant: 'destructive',
       });
     } finally {
@@ -93,7 +93,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
 
   const handleFetchLinks = async () => {
     if (!url.trim()) {
-      toast({ title: 'Digite uma URL', variant: 'destructive' });
+      toast({ title: 'Ingrese una URL', variant: 'destructive' });
       return;
     }
 
@@ -107,7 +107,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
       });
 
       if (!result.success || !result.links) {
-        throw new Error(result.error || 'Falha ao descobrir links');
+        throw new Error(result.error || 'Fallo al descubrir enlaces');
       }
 
       const links: DiscoveredLink[] = result.links.map((link: string) => ({
@@ -118,14 +118,14 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
 
       setDiscoveredLinks(links);
       toast({ 
-        title: `${links.length} páginas encontradas!`,
-        description: 'Selecione as páginas que deseja extrair.',
+        title: `${links.length} ¡páginas encontradas!`,
+        description: 'Seleccione las páginas que desea extraer.',
       });
     } catch (error) {
       console.error('Error fetching links:', error);
       toast({
-        title: 'Erro ao descobrir links',
-        description: error instanceof Error ? error.message : 'Tente novamente',
+        title: 'Error al descubrir enlaces',
+        description: error instanceof Error ? error.message : 'Intente de nuevo',
         variant: 'destructive',
       });
     } finally {
@@ -136,7 +136,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
   const handleScrapeSelected = async () => {
     const selectedLinks = discoveredLinks.filter(l => l.selected);
     if (selectedLinks.length === 0) {
-      toast({ title: 'Selecione pelo menos uma página', variant: 'destructive' });
+      toast({ title: 'Seleccione al menos una página', variant: 'destructive' });
       return;
     }
 
@@ -178,7 +178,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
             processing_status: 'completed',
           });
         } else {
-          throw new Error(result.error || 'Falha na extração');
+          throw new Error(result.error || 'Fallo en la extracción');
         }
       } catch (error) {
         console.error('Error scraping link:', link.url, error);
@@ -186,7 +186,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
           prev.map(l => l.url === link.url ? { 
             ...l, 
             status: 'error' as const,
-            error: error instanceof Error ? error.message : 'Erro desconhecido',
+            error: error instanceof Error ? error.message : 'Error desconocido',
           } : l)
         );
       }
@@ -198,7 +198,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
     }
 
     setIsProcessing(false);
-    toast({ title: 'Extração concluída!' });
+    toast({ title: '¡Extracción completada!' });
   };
 
   const handleSaveSingle = async () => {
@@ -215,14 +215,14 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
         processing_status: 'completed',
       });
 
-      toast({ title: 'Website adicionado ao cérebro!' });
+      toast({ title: '¡Sitio web agregado al cerebro!' });
       setUrl('');
       setPreview(null);
     } catch (error) {
       console.error('Error saving website:', error);
       toast({
-        title: 'Erro ao salvar',
-        description: 'Tente novamente',
+        title: 'Error al guardar',
+        description: 'Intente de nuevo',
         variant: 'destructive',
       });
     }
@@ -231,9 +231,9 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
   const handleDelete = async (id: string) => {
     try {
       await deleteSource.mutateAsync({ id, productId });
-      toast({ title: 'Website removido' });
+      toast({ title: 'Sitio web eliminado' });
     } catch (error) {
-      toast({ title: 'Erro ao remover', variant: 'destructive' });
+      toast({ title: 'Error al eliminar', variant: 'destructive' });
     }
   };
 
@@ -263,10 +263,10 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Globe className="h-5 w-5 text-green-500" />
-            Adicionar Website
+            Agregar Sitio Web
           </CardTitle>
           <CardDescription>
-            Extraia conteúdo de páginas web para treinar a IA com informações atualizadas
+            Extraiga contenido de páginas web para entrenar a la IA con información actualizada
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -274,11 +274,11 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="single" className="gap-2">
                 <Link2 className="h-4 w-4" />
-                Link Individual
+                Enlace Individual
               </TabsTrigger>
               <TabsTrigger value="crawl" className="gap-2">
                 <Layers className="h-4 w-4" />
-                Crawl Completo
+                Rastreo Completo
               </TabsTrigger>
             </TabsList>
 
@@ -296,10 +296,10 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                   {isProcessing ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Processando...
+                      Procesando...
                     </>
                   ) : (
-                    'Extrair Conteúdo'
+                    'Extraer Contenido'
                   )}
                 </Button>
               </div>
@@ -321,14 +321,14 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
-                      <Label>Conteúdo Extraído</Label>
+                      <Label>Contenido Extraído</Label>
                       <ScrollArea className="h-64 rounded-md border p-4 bg-background">
                         <div className="prose prose-sm max-w-none dark:prose-invert">
                           <div className="whitespace-pre-wrap text-sm text-foreground leading-relaxed">
                             {preview.markdown?.substring(0, 5000)}
                             {(preview.markdown?.length || 0) > 5000 && (
                               <span className="text-muted-foreground italic">
-                                {'\n\n'}... e mais {((preview.markdown?.length || 0) - 5000).toLocaleString()} caracteres
+                                {'\n\n'}... y más {((preview.markdown?.length || 0) - 5000).toLocaleString()} caracteres
                               </span>
                             )}
                           </div>
@@ -349,7 +349,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                         ) : (
                           <Check className="h-4 w-4 mr-2" />
                         )}
-                        Adicionar ao Cérebro
+                        Agregar al Cerebro
                       </Button>
                     </div>
                   </CardContent>
@@ -381,7 +381,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                     ) : (
                       <>
                         <Search className="h-4 w-4 mr-2" />
-                        Descobrir Páginas
+                        Descubrir Páginas
                       </>
                     )}
                   </Button>
@@ -392,13 +392,13 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                   <CollapsibleTrigger asChild>
                     <Button variant="ghost" size="sm" className="gap-2">
                       {showAdvanced ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                      Opções Avançadas
+                      Opciones Avanzadas
                     </Button>
                   </CollapsibleTrigger>
                   <CollapsibleContent className="space-y-3 pt-2">
                     <div className="grid gap-4 sm:grid-cols-3">
                       <div className="space-y-2">
-                        <Label>Limite de páginas</Label>
+                        <Label>Límite de páginas</Label>
                         <Input
                           type="number"
                           value={pageLimit}
@@ -408,7 +408,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Incluir caminhos (ex: /blog/*)</Label>
+                        <Label>Incluir rutas (ex: /blog/*)</Label>
                         <Input
                           placeholder="/blog/*, /docs/*"
                           value={includePaths}
@@ -416,7 +416,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Excluir caminhos (ex: /admin/*)</Label>
+                        <Label>Excluir rutas (ex: /admin/*)</Label>
                         <Input
                           placeholder="/admin/*, /api/*"
                           value={excludePaths}
@@ -438,7 +438,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                           {discoveredLinks.length} páginas encontradas
                         </CardTitle>
                         <CardDescription>
-                          {selectedCount} selecionadas • {completedCount} extraídas
+                          {selectedCount} seleccionadas • {completedCount} extraídas
                         </CardDescription>
                       </div>
                       <div className="flex gap-2">
@@ -447,7 +447,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                           size="sm"
                           onClick={() => toggleAllLinks(selectedCount < discoveredLinks.length)}
                         >
-                          {selectedCount === discoveredLinks.length ? 'Desmarcar Todas' : 'Selecionar Todas'}
+                          {selectedCount === discoveredLinks.length ? 'Desmarcar Todas' : 'Seleccionar Todas'}
                         </Button>
                         <Button 
                           size="sm"
@@ -457,12 +457,12 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                           {isProcessing ? (
                             <>
                               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                              Extraindo...
+                              Extrayendo...
                             </>
                           ) : (
                             <>
                               <FileText className="h-4 w-4 mr-2" />
-                              Extrair Selecionadas
+                              Extraer Seleccionadas
                             </>
                           )}
                         </Button>

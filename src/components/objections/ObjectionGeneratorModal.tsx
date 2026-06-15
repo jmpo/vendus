@@ -41,12 +41,12 @@ interface ObjectionGeneratorModalProps {
 }
 
 const categoryConfig: Record<string, { label: string; icon: React.ComponentType<any>; color: string }> = {
-  price: { label: 'Preço', icon: DollarSign, color: 'text-green-500 bg-green-500/10' },
+  price: { label: 'Precio', icon: DollarSign, color: 'text-green-500 bg-green-500/10' },
   timing: { label: 'Timing', icon: Clock, color: 'text-blue-500 bg-blue-500/10' },
-  trust: { label: 'Confiança', icon: Shield, color: 'text-purple-500 bg-purple-500/10' },
-  thinking: { label: 'Vou Pensar', icon: Brain, color: 'text-amber-500 bg-amber-500/10' },
-  partner: { label: 'Sócio/Diretor', icon: Users, color: 'text-cyan-500 bg-cyan-500/10' },
-  competitor: { label: 'Concorrência', icon: Swords, color: 'text-red-500 bg-red-500/10' },
+  trust: { label: 'Confianza', icon: Shield, color: 'text-purple-500 bg-purple-500/10' },
+  thinking: { label: 'Lo voy a pensar', icon: Brain, color: 'text-amber-500 bg-amber-500/10' },
+  partner: { label: 'Socio/Director', icon: Users, color: 'text-cyan-500 bg-cyan-500/10' },
+  competitor: { label: 'Competencia', icon: Swords, color: 'text-red-500 bg-red-500/10' },
 };
 
 export function ObjectionGeneratorModal({
@@ -85,7 +85,7 @@ export function ObjectionGeneratorModal({
     const selectedObjections = objections.filter((_, i) => selectedIds.has(i));
     
     if (selectedObjections.length === 0) {
-      toast.error('Selecione pelo menos uma objeção');
+      toast.error('Seleccione al menos una objeción');
       return;
     }
 
@@ -94,12 +94,12 @@ export function ObjectionGeneratorModal({
         productId,
         objections: selectedObjections,
       });
-      toast.success(`${selectedObjections.length} objeções salvas com sucesso!`);
+      toast.success(`${selectedObjections.length} ¡objeciones guardadas con éxito!`);
       onOpenChange(false);
       setObjections([]);
       setSelectedIds(new Set());
     } catch (error) {
-      toast.error('Erro ao salvar objeções');
+      toast.error('Error al guardar objeciones');
     }
   };
 
@@ -109,10 +109,10 @@ export function ObjectionGeneratorModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Gerar Objeções com IA
+            Generar Objeciones con IA
           </DialogTitle>
           <DialogDescription>
-            A IA analisará o produto <strong>{productName}</strong> e gerará as objeções mais 
+            La IA analizará el producto <strong>{productName}</strong> e gerará as objeções mais 
             prováveis que seus vendedores irão enfrentar, com respostas estratégicas.
           </DialogDescription>
         </DialogHeader>
@@ -123,7 +123,7 @@ export function ObjectionGeneratorModal({
               <Sparkles className="h-8 w-8 text-primary" />
             </div>
             <div className="space-y-2">
-              <h3 className="font-semibold">Pronto para gerar objeções?</h3>
+              <h3 className="font-semibold">¿Listo para generar objeciones?</h3>
               <p className="text-sm text-muted-foreground max-w-sm mx-auto">
                 A IA irá analisar o pitch, ICP, diferenciais e base de conhecimento 
                 do produto para criar objeções realistas.
@@ -137,12 +137,12 @@ export function ObjectionGeneratorModal({
               {generateObjections.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Analisando produto...
+                  Analizando producto...
                 </>
               ) : (
                 <>
                   <Sparkles className="mr-2 h-4 w-4" />
-                  Gerar Objeções
+                  Generar Objeciones
                 </>
               )}
             </Button>
@@ -151,7 +151,7 @@ export function ObjectionGeneratorModal({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Badge variant="secondary">
-                {objections.length} objeções geradas
+                {objections.length} objeciones generadas
               </Badge>
               <div className="flex gap-2">
                 <Button
@@ -177,7 +177,7 @@ export function ObjectionGeneratorModal({
                     }
                   }}
                 >
-                  {selectedIds.size === objections.length ? 'Desmarcar Todas' : 'Selecionar Todas'}
+                  {selectedIds.size === objections.length ? 'Desmarcar Todas' : 'Seleccionar Todas'}
                 </Button>
               </div>
             </div>
@@ -229,14 +229,14 @@ export function ObjectionGeneratorModal({
 
                             <div className="text-muted-foreground">
                               <span className="text-xs uppercase font-medium text-primary">
-                                Resposta:
+                                Respuesta:
                               </span>{' '}
                               {obj.suggested_response}
                             </div>
 
                             <div className="text-muted-foreground">
                               <span className="text-xs uppercase font-medium text-primary">
-                                Pergunta:
+                                Pregunta:
                               </span>{' '}
                               {obj.follow_up_question}
                             </div>
@@ -251,7 +251,7 @@ export function ObjectionGeneratorModal({
 
             <div className="flex justify-between items-center pt-2 border-t">
               <span className="text-sm text-muted-foreground">
-                {selectedIds.size} de {objections.length} selecionadas
+                {selectedIds.size} de {objections.length} seleccionadas
               </span>
               <Button
                 onClick={handleSave}
@@ -265,7 +265,7 @@ export function ObjectionGeneratorModal({
                 ) : (
                   <>
                     <Save className="mr-2 h-4 w-4" />
-                    Salvar Selecionadas
+                    Guardar Seleccionadas
                   </>
                 )}
               </Button>

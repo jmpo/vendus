@@ -30,10 +30,10 @@ export function AgentSwitchEditor({ productId, agentId, onAgentChange }: AgentSw
       <div className="space-y-2">
         <Label className="flex items-center gap-2">
           <UserCog className="h-4 w-4" />
-          Selecionar Agente
+          Seleccionar Agente
         </Label>
         <p className="text-xs text-muted-foreground">
-          Produto não identificado. Salve o funil primeiro.
+          Producto no identificado. Guarda el embudo primero.
         </p>
       </div>
     );
@@ -44,11 +44,11 @@ export function AgentSwitchEditor({ productId, agentId, onAgentChange }: AgentSw
       <div className="space-y-2">
         <Label className="flex items-center gap-2">
           <UserCog className="h-4 w-4" />
-          Selecionar Agente
+          Seleccionar Agente
         </Label>
         <div className="flex items-center gap-2 text-muted-foreground text-sm">
           <Loader2 className="h-4 w-4 animate-spin" />
-          Carregando agentes...
+          Cargando agentes...
         </div>
       </div>
     );
@@ -59,10 +59,10 @@ export function AgentSwitchEditor({ productId, agentId, onAgentChange }: AgentSw
       <div className="space-y-2">
         <Label className="flex items-center gap-2">
           <UserCog className="h-4 w-4" />
-          Selecionar Agente
+          Seleccionar Agente
         </Label>
         <p className="text-xs text-muted-foreground">
-          Nenhum agente ativo encontrado para este produto.
+          No se encontraron agentes activos para este producto.
           <br />
           Crie agentes na aba "Agentes" do produto.
         </p>
@@ -74,7 +74,7 @@ export function AgentSwitchEditor({ productId, agentId, onAgentChange }: AgentSw
     <div className="space-y-3">
       <Label className="flex items-center gap-2">
         <UserCog className="h-4 w-4" />
-        Selecionar Agente
+        Seleccionar Agente
       </Label>
       
       <Select
@@ -82,7 +82,7 @@ export function AgentSwitchEditor({ productId, agentId, onAgentChange }: AgentSw
         onValueChange={onAgentChange}
       >
         <SelectTrigger>
-          <SelectValue placeholder="Escolha um agente..." />
+          <SelectValue placeholder="Elige un agente..." />
         </SelectTrigger>
         <SelectContent>
           {activeAgents.map(agent => (
@@ -113,11 +113,11 @@ export function AgentSwitchEditor({ productId, agentId, onAgentChange }: AgentSw
           </p>
           <div className="flex flex-wrap gap-1">
             <Badge variant="secondary" className="text-[10px]">
-              Tom: {selectedAgent.tone_style}
+              Tono: {selectedAgent.tone_style}
             </Badge>
             {selectedAgent.always_end_with_question && (
               <Badge variant="secondary" className="text-[10px]">
-                Pergunta final
+                Pregunta final
               </Badge>
             )}
           </div>

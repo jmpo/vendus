@@ -48,19 +48,19 @@ export function CadenceAIGenerator({
           messages: [
             {
               role: 'user',
-              content: `Gere uma mensagem de ${blockType} para o Dia ${dayNumber} da cadência de vendas.
+              content: `Genera un mensaje de ${blockType} para el Día ${dayNumber} de la secuencia de ventas.
           
-Variante: ${variant === 'short' ? 'Curta (2-3 linhas)' : variant === 'medium' ? 'Média (4-5 linhas)' : 'Longa (6-8 linhas)'}
+Variante: ${variant === 'short' ? 'Corta (2-3 líneas)' : variant === 'medium' ? 'Media (4-5 líneas)' : 'Larga (6-8 líneas)'}
 
-Contexto adicional: ${context || 'Nenhum contexto adicional'}
+Contexto adicional: ${context || 'Sin contexto adicional'}
 
 REGRAS:
-- Formato otimizado para WhatsApp
-- Use emojis estratégicos (✅ 💡 🎯 ⏰)
-- Quebre linhas para facilitar leitura
-- Tom conversacional e direto
-- Inclua variável {nome} para personalização
-- Retorne APENAS a mensagem pronta, sem explicações`
+- Formato optimizado para WhatsApp
+- Usa emojis estratégicos (✅ 💡 🎯 ⏰)
+- Salta líneas para facilitar la lectura
+- Tono conversacional y directo
+- Incluye la variable {nombre} para personalización
+- Devuelve SOLO el mensaje listo, sin explicaciones`
             }
           ],
           productId,
@@ -68,7 +68,7 @@ REGRAS:
       });
 
       if (!resp.ok || !resp.body) {
-        throw new Error('Falha ao gerar conteúdo');
+        throw new Error('Error al generar contenido');
       }
 
       const reader = resp.body.getReader();
@@ -108,7 +108,7 @@ REGRAS:
       }
     } catch (error) {
       console.error('Error generating content:', error);
-      toast.error('Erro ao gerar conteúdo');
+      toast.error('Error al generar contenido');
     } finally {
       setIsGenerating(false);
     }
@@ -117,7 +117,7 @@ REGRAS:
   const handleCopy = async () => {
     await navigator.clipboard.writeText(generatedContent);
     setCopied(true);
-    toast.success('Copiado!');
+    toast.success('¡Copiado!');
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -134,21 +134,21 @@ REGRAS:
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Gerar com IA
+            Generar con IA
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Tamanho da mensagem</Label>
+            <Label>Tamaño del mensaje</Label>
             <Select value={variant} onValueChange={(v) => setVariant(v as typeof variant)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="short">Curta (2-3 linhas)</SelectItem>
-                <SelectItem value="medium">Média (4-5 linhas)</SelectItem>
-                <SelectItem value="long">Longa (6-8 linhas)</SelectItem>
+                <SelectItem value="short">Corta (2-3 líneas)</SelectItem>
+                <SelectItem value="medium">Media (4-5 líneas)</SelectItem>
+                <SelectItem value="long">Larga (6-8 líneas)</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -158,7 +158,7 @@ REGRAS:
             <Textarea
               value={context}
               onChange={(e) => setContext(e.target.value)}
-              placeholder="Ex: Foco em urgência, mencionar promoção, etc."
+              placeholder="Ej: Enfoque en urgencia, mencionar promoción, etc."
               className="min-h-[80px]"
             />
           </div>
@@ -171,12 +171,12 @@ REGRAS:
             {isGenerating ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Gerando...
+                Generando...
               </>
             ) : (
               <>
                 <Sparkles className="h-4 w-4 mr-2" />
-                Gerar Mensagem
+                Generar Mensaje
               </>
             )}
           </Button>
@@ -194,10 +194,10 @@ REGRAS:
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" className="flex-1" onClick={() => handleGenerate()}>
-                  Gerar novamente
+                  Generar nuevamente
                 </Button>
                 <Button className="flex-1" onClick={handleUse}>
-                  Usar esta mensagem
+                  Usar este mensaje
                 </Button>
               </div>
             </div>

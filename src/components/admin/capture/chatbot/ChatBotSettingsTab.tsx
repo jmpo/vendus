@@ -46,7 +46,7 @@ export function ChatBotSettingsTab({ funnel }: Props) {
       assigned_user_id: formData.assigned_user_id || null,
     };
     await updateFunnel.mutateAsync({ id: funnel.id, ...updates });
-    toast.success('Configurações do ChatBot salvas');
+    toast.success('Configuraciones del ChatBot salvas');
   };
 
   return (
@@ -55,7 +55,7 @@ export function ChatBotSettingsTab({ funnel }: Props) {
         <div>
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <MessageCircle className="h-5 w-5 text-primary" />
-            Configurações do ChatBot
+            Configuraciones del ChatBot
           </h2>
           <p className="text-muted-foreground text-sm">
             Apenas opções relevantes para conversas em chat público.

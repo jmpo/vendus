@@ -31,7 +31,7 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
       {/* CORES */}
       <AccordionItem value="colors" className="border rounded-lg px-3">
         <AccordionTrigger className="hover:no-underline">
-          <span className="flex items-center gap-2"><Palette className="h-4 w-4" /> Cores</span>
+          <span className="flex items-center gap-2"><Palette className="h-4 w-4" /> Colores</span>
         </AccordionTrigger>
         <AccordionContent className="space-y-3 pt-2">
           <ColorPickerField label="Cor primária" value={appearance.primary_color} onChange={(v) => set('primary_color', v)} />
@@ -44,11 +44,11 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
       {/* TIPOGRAFIA */}
       <AccordionItem value="typography" className="border rounded-lg px-3">
         <AccordionTrigger className="hover:no-underline">
-          <span className="flex items-center gap-2"><Type className="h-4 w-4" /> Tipografia</span>
+          <span className="flex items-center gap-2"><Type className="h-4 w-4" /> Tipografía</span>
         </AccordionTrigger>
         <AccordionContent className="space-y-3 pt-2">
           <div className="space-y-1.5">
-            <Label>Fonte</Label>
+            <Label>Fuente</Label>
             <Select value={appearance.font_family} onValueChange={(v) => set('font_family', v)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -57,7 +57,7 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label>Tamanho base ({appearance.font_size_base}px)</Label>
+            <Label>Tamaño base ({appearance.font_size_base}px)</Label>
             <Slider min={12} max={20} step={1} value={[appearance.font_size_base]} onValueChange={([v]) => set('font_size_base', v)} />
           </div>
         </AccordionContent>
@@ -66,22 +66,22 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
       {/* LAYOUT & ESPAÇAMENTO */}
       <AccordionItem value="layout" className="border rounded-lg px-3">
         <AccordionTrigger className="hover:no-underline">
-          <span className="flex items-center gap-2"><LayoutGrid className="h-4 w-4" /> Layout & Espaçamento</span>
+          <span className="flex items-center gap-2"><LayoutGrid className="h-4 w-4" /> Layout y Espaciado</span>
         </AccordionTrigger>
         <AccordionContent className="space-y-3 pt-2">
           <div className="space-y-1.5">
-            <Label>Densidade</Label>
+            <Label>Densidad</Label>
             <Select value={appearance.density} onValueChange={(v) => set('density', v as any)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="compact">Compacto</SelectItem>
-                <SelectItem value="cozy">Confortável</SelectItem>
-                <SelectItem value="spacious">Espaçoso</SelectItem>
+                <SelectItem value="cozy">Cómodo</SelectItem>
+                <SelectItem value="spacious">Espacioso</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label>Cantos arredondados ({appearance.border_radius}px)</Label>
+            <Label>Esquinas redondeadas ({appearance.border_radius}px)</Label>
             <Slider min={0} max={32} step={2} value={[appearance.border_radius]} onValueChange={([v]) => set('border_radius', v)} />
           </div>
           <div className="space-y-1.5">
@@ -89,20 +89,20 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
             <Select value={appearance.shadow} onValueChange={(v) => set('shadow', v as any)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">Nenhuma</SelectItem>
+                <SelectItem value="none">Ninguna</SelectItem>
                 <SelectItem value="soft">Suave</SelectItem>
-                <SelectItem value="medium">Média</SelectItem>
-                <SelectItem value="strong">Forte</SelectItem>
+                <SelectItem value="medium">Media</SelectItem>
+                <SelectItem value="strong">Fuerte</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label>Animações</Label>
+            <Label>Animaciones</Label>
             <Select value={appearance.animations} onValueChange={(v) => set('animations', v as any)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="off">Desligadas</SelectItem>
-                <SelectItem value="subtle">Sutis</SelectItem>
+                <SelectItem value="off">Apagadas</SelectItem>
+                <SelectItem value="subtle">Sutiles</SelectItem>
                 <SelectItem value="full">Completas</SelectItem>
               </SelectContent>
             </Select>
@@ -114,7 +114,7 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
       {channel !== 'quiz' && (
         <AccordionItem value="branding" className="border rounded-lg px-3">
           <AccordionTrigger className="hover:no-underline">
-            <span className="flex items-center gap-2"><User className="h-4 w-4" /> Marca & Avatar</span>
+            <span className="flex items-center gap-2"><User className="h-4 w-4" /> Marca y Avatar</span>
           </AccordionTrigger>
           <AccordionContent className="space-y-4 pt-2">
             <ImageUploadField
@@ -124,11 +124,11 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
               folder="logos"
             />
             <div className="space-y-1.5">
-              <Label>Posição do logo</Label>
+              <Label>Posición del logo</Label>
               <Select value={appearance.logo_position || 'left'} onValueChange={(v) => set('logo_position', v as any)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="left">Esquerda</SelectItem>
+                  <SelectItem value="left">Izquierda</SelectItem>
                   <SelectItem value="center">Centro</SelectItem>
                 </SelectContent>
               </Select>
@@ -136,8 +136,8 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
 
             <div className="flex items-center justify-between pt-2 border-t">
               <Label className="flex flex-col gap-0.5">
-                <span>Mostrar avatar do bot</span>
-                <span className="text-xs text-muted-foreground font-normal">Exibir foto + nome no header</span>
+                <span>Mostrar avatar del bot</span>
+                <span className="text-xs text-muted-foreground font-normal">Mostrar foto + nombre en el header</span>
               </Label>
               <Switch checked={appearance.avatar_enabled} onCheckedChange={(v) => set('avatar_enabled', v)} />
             </div>
@@ -145,23 +145,23 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
             {appearance.avatar_enabled && (
               <>
                 <ImageUploadField
-                  label="Foto do avatar"
+                  label="Foto del avatar"
                   value={appearance.avatar_url}
                   onChange={(url) => set('avatar_url', url)}
                   folder="avatars"
                 />
                 <div className="space-y-1.5">
-                  <Label>Formato do avatar</Label>
+                  <Label>Formato del avatar</Label>
                   <Select value={appearance.avatar_shape} onValueChange={(v) => set('avatar_shape', v as any)}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="circle">Círculo</SelectItem>
-                      <SelectItem value="square">Quadrado</SelectItem>
+                      <SelectItem value="square">Cuadrado</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Nome exibido</Label>
+                  <Label>Nombre mostrado</Label>
                   <Input value={appearance.bot_name} onChange={(e) => set('bot_name', e.target.value)} placeholder="Assistente" />
                 </div>
                 <div className="flex items-center justify-between">
@@ -188,17 +188,17 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
               folder="logos"
             />
             <div className="space-y-1.5">
-              <Label>Posição do logo</Label>
+              <Label>Posición del logo</Label>
               <Select value={appearance.logo_position || 'center'} onValueChange={(v) => set('logo_position', v as any)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="left">Esquerda</SelectItem>
+                  <SelectItem value="left">Izquierda</SelectItem>
                   <SelectItem value="center">Centro</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <p className="text-xs text-muted-foreground">
-              O Quiz não usa avatar de bot — a experiência é 100% focada na pergunta do usuário.
+              El Quiz no usa avatar de bot — la experiencia está 100% enfocada en la pregunta del usuario.
             </p>
           </AccordionContent>
         </AccordionItem>
@@ -207,7 +207,7 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
       {/* FUNDO (imagem) */}
       <AccordionItem value="background" className="border rounded-lg px-3">
         <AccordionTrigger className="hover:no-underline">
-          <span className="flex items-center gap-2"><ImageIcon className="h-4 w-4" /> Imagem de fundo</span>
+          <span className="flex items-center gap-2"><ImageIcon className="h-4 w-4" /> Imagen de fondo</span>
         </AccordionTrigger>
         <AccordionContent className="space-y-3 pt-2">
           <ImageUploadField
@@ -223,14 +223,14 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
                 <Select value={appearance.background_image_mode || 'cover'} onValueChange={(v) => set('background_image_mode', v as any)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="cover">Preencher (cover)</SelectItem>
-                    <SelectItem value="contain">Encaixar (contain)</SelectItem>
+                    <SelectItem value="cover">Rellenar (cover)</SelectItem>
+                    <SelectItem value="contain">Ajustar (contain)</SelectItem>
                     <SelectItem value="repeat">Repetir</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label>Opacidade ({Math.round((appearance.background_image_opacity ?? 0.15) * 100)}%)</Label>
+                <Label>Opacidad ({Math.round((appearance.background_image_opacity ?? 0.15) * 100)}%)</Label>
                 <Slider min={0} max={100} step={5} value={[(appearance.background_image_opacity ?? 0.15) * 100]} onValueChange={([v]) => set('background_image_opacity', v / 100)} />
               </div>
             </>
@@ -241,7 +241,7 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
       {/* ESPECÍFICO DO CANAL */}
       <AccordionItem value="channel" className="border rounded-lg px-3">
         <AccordionTrigger className="hover:no-underline">
-          <span className="flex items-center gap-2"><Sliders className="h-4 w-4" /> Opções do canal — {channel}</span>
+          <span className="flex items-center gap-2"><Sliders className="h-4 w-4" /> Opciones del canal — {channel}</span>
         </AccordionTrigger>
         <AccordionContent className="space-y-3 pt-2">
           {channel === 'chat' && <ChatOptionsFields opts={appearance.channel_options as ChatChannelOptions} setOpt={setOpt} />}
@@ -264,7 +264,7 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
             placeholder=".meu-bloco { color: red; }"
             className="font-mono text-xs"
           />
-          <p className="text-xs text-muted-foreground">Aplicado apenas neste canal. Use com cuidado.</p>
+          <p className="text-xs text-muted-foreground">Aplicado solo en este canal. Úsalo con cuidado.</p>
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -277,25 +277,25 @@ function ChatOptionsFields({ opts, setOpt }: { opts: ChatChannelOptions; setOpt:
   return (
     <>
       <div className="space-y-1.5">
-        <Label>Estilo da bolha</Label>
+        <Label>Estilo de la burbuja</Label>
         <Select value={opts.bubble_style} onValueChange={(v) => setOpt({ bubble_style: v })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="rounded">Arredondada</SelectItem>
-            <SelectItem value="squared">Quadrada</SelectItem>
-            <SelectItem value="bubble">Bolha</SelectItem>
+            <SelectItem value="rounded">Redondeada</SelectItem>
+            <SelectItem value="squared">Cuadrada</SelectItem>
+            <SelectItem value="bubble">Burbuja</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <ColorPickerField label="Cor da bolha do bot" value={opts.bot_bubble_color} onChange={(v) => setOpt({ bot_bubble_color: v })} />
       <ColorPickerField label="Cor da bolha do usuário" value={opts.user_bubble_color} onChange={(v) => setOpt({ user_bubble_color: v })} />
       <div className="space-y-1.5">
-        <Label>Placeholder do campo</Label>
+        <Label>Placeholder del campo</Label>
         <Input value={opts.input_placeholder} onChange={(e) => setOpt({ input_placeholder: e.target.value })} />
       </div>
-      <div className="flex items-center justify-between"><Label>Gradiente no header</Label><Switch checked={opts.header_gradient} onCheckedChange={(v) => setOpt({ header_gradient: v })} /></div>
+      <div className="flex items-center justify-between"><Label>Gradiente en el header</Label><Switch checked={opts.header_gradient} onCheckedChange={(v) => setOpt({ header_gradient: v })} /></div>
       <div className="flex items-center justify-between"><Label>Mostrar "digitando…"</Label><Switch checked={opts.show_typing} onCheckedChange={(v) => setOpt({ show_typing: v })} /></div>
-      <div className="flex items-center justify-between"><Label>Som de notificação</Label><Switch checked={opts.notification_sound} onCheckedChange={(v) => setOpt({ notification_sound: v })} /></div>
+      <div className="flex items-center justify-between"><Label>Sonido de notificación</Label><Switch checked={opts.notification_sound} onCheckedChange={(v) => setOpt({ notification_sound: v })} /></div>
     </>
   );
 }
@@ -304,54 +304,54 @@ function FormOptionsFields({ opts, setOpt }: { opts: FormChannelOptions; setOpt:
   return (
     <>
       <div className="space-y-1.5">
-        <Label>Layout</Label>
+        <Label>Diseño</Label>
         <Select value={opts.layout} onValueChange={(v) => setOpt({ layout: v })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="single">Página única</SelectItem>
-            <SelectItem value="step">Passo a passo</SelectItem>
+            <SelectItem value="step">Paso a paso</SelectItem>
             <SelectItem value="conversational">Conversacional</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <div className="space-y-1.5">
-        <Label>Largura máxima ({opts.max_width}px)</Label>
+        <Label>Ancho máximo ({opts.max_width}px)</Label>
         <Slider min={400} max={1024} step={20} value={[opts.max_width]} onValueChange={([v]) => setOpt({ max_width: v })} />
       </div>
       <div className="space-y-1.5">
-        <Label>Alinhamento</Label>
+        <Label>Alineación</Label>
         <Select value={opts.alignment} onValueChange={(v) => setOpt({ alignment: v })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="left">Esquerda</SelectItem>
+            <SelectItem value="left">Izquierda</SelectItem>
             <SelectItem value="center">Centro</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <div className="space-y-1.5">
-        <Label>Estilo dos inputs</Label>
+        <Label>Estilo de los inputs</Label>
         <Select value={opts.input_style} onValueChange={(v) => setOpt({ input_style: v })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="filled">Preenchido</SelectItem>
-            <SelectItem value="outlined">Contornado</SelectItem>
-            <SelectItem value="underline">Sublinhado</SelectItem>
+            <SelectItem value="filled">Relleno</SelectItem>
+            <SelectItem value="outlined">Contorneado</SelectItem>
+            <SelectItem value="underline">Subrayado</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <div className="space-y-1.5">
-        <Label>Estilo dos botões</Label>
+        <Label>Estilo de los botones</Label>
         <Select value={opts.button_style} onValueChange={(v) => setOpt({ button_style: v })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="filled">Preenchido</SelectItem>
-            <SelectItem value="outlined">Contornado</SelectItem>
+            <SelectItem value="filled">Relleno</SelectItem>
+            <SelectItem value="outlined">Contorneado</SelectItem>
             <SelectItem value="ghost">Ghost</SelectItem>
           </SelectContent>
         </Select>
       </div>
-      <div className="flex items-center justify-between"><Label>Mostrar barra de progresso</Label><Switch checked={opts.show_progress} onCheckedChange={(v) => setOpt({ show_progress: v })} /></div>
-      <ImageUploadField label="Imagem lateral (split-screen)" value={opts.side_image_url} onChange={(url) => setOpt({ side_image_url: url })} folder="form-side" />
+      <div className="flex items-center justify-between"><Label>Mostrar barra de progreso</Label><Switch checked={opts.show_progress} onCheckedChange={(v) => setOpt({ show_progress: v })} /></div>
+      <ImageUploadField label="Imagen lateral (split-screen)" value={opts.side_image_url} onChange={(url) => setOpt({ side_image_url: url })} folder="form-side" />
     </>
   );
 }
@@ -436,7 +436,7 @@ function QuizOptionsFields({ opts, setOpt }: { opts: QuizChannelOptions; setOpt:
       <div className="flex items-center justify-between"><Label>Mostrar "X de Y"</Label><Switch checked={opts.show_counter} onCheckedChange={(v) => setOpt({ show_counter: v })} /></div>
       <ImageUploadField label="Imagem da tela de resultado" value={opts.result_image_url} onChange={(url) => setOpt({ result_image_url: url })} folder="quiz-result" />
       <div className="space-y-1.5">
-        <Label>Mensagem final</Label>
+        <Label>Mensaje final</Label>
         <Input value={opts.result_message} onChange={(e) => setOpt({ result_message: e.target.value })} />
       </div>
     </>

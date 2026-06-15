@@ -32,14 +32,14 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
 
   const handleCopy = () => {
     navigator.clipboard.writeText(response);
-    toast.success('Resposta copiada!');
+    toast.success('¡Respuesta copiada!');
   };
 
   const handleSave = async () => {
     // Parse the response to extract sections
-    const whatTheyMeanMatch = response.match(/\*\*O QUE ELE QUER DIZER:\*\*\s*([\s\S]*?)(?=\*\*RESPOSTA SUGERIDA:\*\*|$)/i);
-    const responseMatch = response.match(/\*\*RESPOSTA SUGERIDA:\*\*\s*([\s\S]*?)(?=\*\*PERGUNTA DE RETORNO:\*\*|$)/i);
-    const questionMatch = response.match(/\*\*PERGUNTA DE RETORNO:\*\*\s*([\s\S]*?)$/i);
+    const whatTheyMeanMatch = response.match(/\*\*LO QUE QUIERE DECIR:\*\*\s*([\s\S]*?)(?=\*\*RESPUESTA SUGERIDA:\*\*|$)/i);
+    const responseMatch = response.match(/\*\*RESPUESTA SUGERIDA:\*\*\s*([\s\S]*?)(?=\*\*PREGUNTA DE RETORNO:\*\*|$)/i);
+    const questionMatch = response.match(/\*\*PREGUNTA DE RETORNO:\*\*\s*([\s\S]*?)$/i);
 
     const parsedObjection = {
       category: 'thinking', // Default category
@@ -54,7 +54,7 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
         productId,
         objection: parsedObjection,
       });
-      toast.success('Objeção salva na base!');
+      toast.success('¡Objeción guardada en la base!');
       handleReset();
     } catch (error) {
       toast.error('Erro ao salvar objeção');
@@ -68,9 +68,9 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
 
   const formatResponse = (text: string) => {
     return text
-      .replace(/\*\*O QUE ELE QUER DIZER:\*\*/gi, '<div class="mt-4 mb-2"><span class="text-xs font-semibold text-primary uppercase tracking-wide">💭 O que ele quer dizer:</span></div>')
-      .replace(/\*\*RESPOSTA SUGERIDA:\*\*/gi, '<div class="mt-4 mb-2"><span class="text-xs font-semibold text-primary uppercase tracking-wide">💬 Resposta sugerida:</span></div>')
-      .replace(/\*\*PERGUNTA DE RETORNO:\*\*/gi, '<div class="mt-4 mb-2"><span class="text-xs font-semibold text-primary uppercase tracking-wide">❓ Pergunta de retorno:</span></div>');
+      .replace(/\*\*LO QUE QUIERE DECIR:\*\*/gi, '<div class="mt-4 mb-2"><span class="text-xs font-semibold text-primary uppercase tracking-wide">💭 Lo que quiere decir:</span></div>')
+      .replace(/\*\*RESPUESTA SUGERIDA:\*\*/gi, '<div class="mt-4 mb-2"><span class="text-xs font-semibold text-primary uppercase tracking-wide">💬 Respuesta sugerida:</span></div>')
+      .replace(/\*\*PREGUNTA DE RETORNO:\*\*/gi, '<div class="mt-4 mb-2"><span class="text-xs font-semibold text-primary uppercase tracking-wide">❓ Pregunta de retorno:</span></div>');
   };
 
   return (
@@ -82,7 +82,7 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
               <Sparkles className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <CardTitle className="text-base">Assistente de Objeções</CardTitle>
+              <CardTitle className="text-base">Asistente de Objeciones</CardTitle>
               {productName && (
                 <p className="text-xs text-muted-foreground">
                   Contexto: {productName}
@@ -99,7 +99,7 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">
-            Qual a objeção do cliente?
+            ¿Cuál es la objeción del cliente?
           </label>
           <div className="flex gap-2">
             <Textarea
@@ -119,12 +119,12 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Analisando...
+                  Analizando...
                 </>
               ) : (
                 <>
                   <Send className="mr-2 h-4 w-4" />
-                  Gerar Resposta Estratégica
+                  Generar Respuesta Estratégica
                 </>
               )}
             </Button>
@@ -141,7 +141,7 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
             {isLoading && !response && (
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm">Analisando contexto do produto e gerando resposta estratégica...</span>
+                <span className="text-sm">Analizando...ntexto do produto e gerando resposta estratégica...</span>
               </div>
             )}
             
@@ -168,7 +168,7 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
                     ) : (
                       <Save className="mr-2 h-3 w-3" />
                     )}
-                    Salvar na Base
+                    Guardar en la Base
                   </Button>
                 </div>
               </>

@@ -356,7 +356,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
         <DialogHeader>
           <DialogTitle>Importar Agente</DialogTitle>
           <DialogDescription>
-            Traga um agente pronto via JSON exportado, ou estruture um a partir de um briefing em PDF, Word, TXT ou Markdown.
+            Traiga un agente listo a través de JSON exportado, o estructure uno a partir de un briefing en PDF, Word, TXT o Markdown.
           </DialogDescription>
         </DialogHeader>
 
@@ -366,7 +366,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
             <Select value={productId} onValueChange={setProductId}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="__global__">Global (sem produto)</SelectItem>
+                <SelectItem value="__global__">Global (sin producto)</SelectItem>
                 {products?.map((p) => (
                   <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
                 ))}

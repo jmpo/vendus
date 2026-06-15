@@ -37,7 +37,7 @@ export function FunnelWebhookLogsTab({ funnelId }: FunnelWebhookLogsTabProps) {
         <div>
           <h2 className="text-lg font-semibold">Logs de Webhook</h2>
           <p className="text-sm text-muted-foreground">
-            Histórico dos disparos automáticos deste funil
+            Historial de disparos automáticos de este embudo
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -71,9 +71,9 @@ export function FunnelWebhookLogsTab({ funnelId }: FunnelWebhookLogsTabProps) {
       <ScrollArea className="flex-1">
         {filtered.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
-            <p>Nenhum disparo registrado ainda.</p>
+            <p>Ningún disparo registrado todavía.</p>
             <p className="text-xs mt-1">
-              Os logs aparecem automaticamente quando um lead passa por um bloco de Webhook.
+              Los logs aparecen automáticamente cuando un lead pasa por un bloque de Webhook.
             </p>
           </div>
         ) : (
@@ -145,7 +145,7 @@ export function FunnelWebhookLogsTab({ funnelId }: FunnelWebhookLogsTabProps) {
                       )}
                       {log.response_body && (
                         <div>
-                          <p className="font-semibold mb-1">Resposta recebida:</p>
+                          <p className="font-semibold mb-1">Respuesta recibida:</p>
                           <pre className="bg-muted p-2 rounded overflow-auto max-h-48 whitespace-pre-wrap">
                             {log.response_body}
                           </pre>

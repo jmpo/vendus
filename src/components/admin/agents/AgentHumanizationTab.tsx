@@ -199,10 +199,10 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
           <div>
             <div className="font-medium flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-primary" />
-              Humanização ativada
+              Humanización activada
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Quando desligado, mensagens são enviadas como antes (sem delays nem quebra).
+              Cuando está desactivado, los mensajes se envían como antes (sin retrasos ni interrupciones).
             </p>
           </div>
           <Switch checked={cfg.enabled !== false} onCheckedChange={(v) => set({ enabled: v })} />
@@ -210,17 +210,17 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
       </Card>
 
       <div className={cn(cfg.enabled === false && 'opacity-50 pointer-events-none')}>
-        {/* SECTION 1: Persona Estendida */}
+        {/* SECTION 1: Persona Extendida */}
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <User className="h-4 w-4 text-primary" /> Persona Estendida
+              <User className="h-4 w-4 text-primary" /> Persona Extendida
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-xs">Idade</Label>
+                <Label className="text-xs">Edad</Label>
                 <Input
                   type="number" min={18} max={90}
                   value={cfg.persona?.age ?? ''}
@@ -229,7 +229,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs">Cidade/Região</Label>
+                <Label className="text-xs">Ciudad/Región</Label>
                 <Input
                   value={cfg.persona?.city ?? ''}
                   onChange={(e) => setPersona({ city: e.target.value })}
@@ -238,7 +238,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               </div>
             </div>
             <div className="space-y-2">
-              <Label className="text-xs">Backstory profissional (até 500 chars)</Label>
+              <Label className="text-xs">Historia profesional (até 500 chars)</Label>
               <Textarea
                 rows={3} maxLength={500}
                 value={cfg.persona?.backstory ?? ''}
@@ -247,7 +247,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               />
             </div>
             <TagsInput
-              label="Hobbies/interesses pessoais (até 5)"
+              label="Hobbies/intereses personales (até 5)"
               max={5}
               items={cfg.persona?.hobbies ?? []}
               onChange={(items) => setPersona({ hobbies: items })}
@@ -258,13 +258,13 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               onChange={(items) => setPersona({ stories: items })}
             />
             <TagsInput
-              label="Palavras que ela ADORA usar"
+              label="Palabras que le ENCANTA usar"
               items={cfg.persona?.loved_words ?? []}
               onChange={(items) => setPersona({ loved_words: items })}
               placeholder="ex: show, top, massa"
             />
             <TagsInput
-              label="Palavras que ela NUNCA usa"
+              label="Palabras que NUNCA usa"
               items={cfg.persona?.forbidden_words ?? []}
               onChange={(items) => setPersona({ forbidden_words: items })}
               placeholder="ex: incrível, fantástico, maravilhoso"
@@ -276,18 +276,18 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
         <Card className="mt-4">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <Timer className="h-4 w-4 text-primary" /> Timing & Delays
+              <Timer className="h-4 w-4 text-primary" /> Timing y Retrasos
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <ToggleRow
-              label="Ativar timing humano"
+              label="Activar timing humano"
               checked={cfg.timing?.enabled !== false}
               onCheckedChange={(v) => setTiming({ enabled: v })}
             />
 
             <RangeSlider
-              label="Delay antes da primeira resposta"
+              label="Retraso antes de la primera respuesta"
               unit="s"
               min={1} max={15}
               minValue={cfg.timing?.first_reply_min_s ?? 4}
@@ -296,7 +296,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
             />
 
             <RangeSlider
-              label="Delay entre bolhas"
+              label="Retraso entre burbujas"
               unit="s"
               min={1} max={6}
               minValue={cfg.timing?.between_bubbles_min_s ?? 1}
@@ -305,19 +305,19 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
             />
 
             <ToggleRow
-              label='Mostrar "digitando..." real no WhatsApp'
+              label='Mostrar "escribiendo..." real en WhatsApp'
               hint="Dispara o status real (Evolution Go) no celular do cliente. Teste em Admin → WhatsApp → Instâncias → Testar presença."
               checked={cfg.timing?.typing_indicator !== false}
               onCheckedChange={(v) => setTiming({ typing_indicator: v })}
             />
             <ToggleRow
-              label="Variar por horário"
+              label="Variar por horario"
               hint="Fora do horário comercial (8h-18h) os delays aumentam ~50% (antes dobravam)"
               checked={cfg.timing?.vary_by_hours === true}
               onCheckedChange={(v) => setTiming({ vary_by_hours: v })}
             />
             <ToggleRow
-              label="Não responder de madrugada"
+              label="No responder de madrugada"
               hint="Mensagens recebidas entre 0h e 6h são respondidas a partir das 8h"
               checked={!!cfg.timing?.no_reply_dawn}
               onCheckedChange={(v) => setTiming({ no_reply_dawn: v })}
@@ -335,17 +335,17 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
         <Card className="mt-4">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <Scissors className="h-4 w-4 text-primary" /> Quebra de Mensagens
+              <Scissors className="h-4 w-4 text-primary" /> División de Mensajes
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <ToggleRow
-              label="Quebrar mensagens automaticamente"
+              label="Dividir mensajes automáticamente"
               checked={cfg.splitting?.enabled !== false}
               onCheckedChange={(v) => setSplit({ enabled: v })}
             />
             <SingleSlider
-              label="Agressividade da quebra"
+              label="Agresividad de la división"
               min={1} max={5} step={1}
               value={cfg.splitting?.aggressiveness ?? 3}
               onChange={(v) => setSplit({ aggressiveness: v })}
@@ -359,13 +359,13 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
             />
             <div className="grid grid-cols-2 gap-4">
               <NumberField
-                label="Mínimo de bolhas"
+                label="Mínimo de burbujas"
                 min={1} max={10}
                 value={cfg.splitting?.min_bubbles ?? 1}
                 onChange={(v) => setSplit({ min_bubbles: v })}
               />
               <NumberField
-                label="Máximo de bolhas"
+                label="Máximo de burbujas"
                 min={1} max={10}
                 value={cfg.splitting?.max_bubbles ?? 4}
                 onChange={(v) => setSplit({ max_bubbles: v })}
@@ -378,7 +378,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
         <Card className="mt-4">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <Type className="h-4 w-4 text-primary" /> Estilo de Escrita
+              <Type className="h-4 w-4 text-primary" /> Estilo de Escritura
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
@@ -398,7 +398,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               onChange={(v) => setStyle({ abbrev_prob: v })}
             />
             <div className="space-y-2">
-              <Label className="text-xs">Lista de abreviações (uma por linha, formato: original=abreviado)</Label>
+              <Label className="text-xs">Lista de abreviaciones (uma por linha, formato: original=abreviado)</Label>
               <Textarea
                 rows={5}
                 className="font-mono text-xs"
@@ -408,13 +408,13 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               />
             </div>
             <PercentSlider
-              label="Erro proposital + correção"
+              label="Error intencional + corrección"
               value={cfg.style?.typo_correction_prob ?? 0.05}
               onChange={(v) => setStyle({ typo_correction_prob: v })}
             />
             <div className="grid grid-cols-2 gap-4">
               <PercentSlider
-                label='Uso de "kkk"/"rs"/"haha"'
+                label='Uso de "jaja"/"jeje"'
                 value={cfg.style?.laughter_prob ?? 0.3}
                 onChange={(v) => setStyle({ laughter_prob: v })}
               />

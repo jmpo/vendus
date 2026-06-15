@@ -8,7 +8,7 @@ export type PromptRole = 'orchestrator' | 'sdr' | 'closer' | 'cs' | 'support' | 
 export const PROMPT_TEMPLATES: Record<PromptRole, { label: string; description: string; template: string }> = {
   orchestrator: {
     label: 'Orquestrador',
-    description: 'Classifica produto + intenção e roteia para o especialista',
+    description: 'Clasifica producto + intención y enruta al especialista',
     template: `Você é o orquestrador de atendimento da {{organization_name}}.
 
 Sua ÚNICA função é ler a mensagem recebida, classificar produto e intenção,
@@ -40,8 +40,8 @@ REGRAS
 5. contexto_extraido = frase objetiva do que o lead quer.`,
   },
   sdr: {
-    label: 'SDR Qualificador',
-    description: 'Acolhe, qualifica e identifica intenção de compra',
+    label: 'SDR Calificador',
+    description: 'Recibe, califica e identifica la intención de compra',
     template: `Você é {{agent_name}}, SDR da {{organization_name}}, especialista no produto {{product_name}}.
 
 Contexto recebido do orquestrador:
@@ -84,7 +84,7 @@ COMO TRANSFERIR (regra rígida):
   },
   closer: {
     label: 'Closer Premium',
-    description: 'Apresenta oferta, quebra objeções e fecha',
+    description: 'Presenta oferta, rompe objeciones y cierra',
     template: `Você é {{agent_name}}, Closer da {{organization_name}}, especialista em fechar vendas do produto {{product_name}}.
 
 Contexto recebido (já qualificado pelo SDR):
@@ -136,8 +136,8 @@ COMO TRANSFERIR (regra rígida):
 - PROIBIDO inventar tags: nada de \`[TRANSFER]\`, \`[TRANSFERIR]\`, \`[HANDOFF]\` (sem role), \`[PASSAR]\`, \`[ENVIAR PARA FULANO]\`. Só os 5 formatos acima.`,
   },
   cs: {
-    label: 'Customer Success',
-    description: 'Retém, resolve uso e identifica upsell',
+    label: 'Éxito del Cliente',
+    description: 'Retiene, resuelve el uso e identifica el upsell',
     template: `Você é {{agent_name}}, CS da {{organization_name}}, responsável pelo sucesso de clientes do produto {{product_name}}.
 
 Contexto recebido:
@@ -171,7 +171,7 @@ Tag de handoff sozinha na ÚLTIMA linha.`,
   },
   support: {
     label: 'Soporte Técnico',
-    description: 'Resolve dúvidas técnicas e problemas de uso',
+    description: 'Resuelve dudas técnicas y problemas de uso',
     template: `Você é o agente de suporte técnico da {{organization_name}}.
 
 Contexto recebido:
@@ -194,8 +194,8 @@ REGRAS
 Tag de handoff sozinha na ÚLTIMA linha.`,
   },
   financial: {
-    label: 'Financeiro',
-    description: 'Cobranças, boletos, reembolsos, NF',
+    label: 'Financiero',
+    description: 'Cobros, boletas, reembolsos, facturas',
     template: `Você é o agente financeiro da {{organization_name}}.
 
 Contexto recebido:

@@ -42,7 +42,7 @@ export function FAQBuilder({ productId }: FAQBuilderProps) {
 
   const handleCreate = async () => {
     if (!question.trim() || !answer.trim()) {
-      toast.error('Preencha a pergunta e a resposta');
+      toast.error('Complete la pregunta y la respuesta');
       return;
     }
 
@@ -53,25 +53,25 @@ export function FAQBuilder({ productId }: FAQBuilderProps) {
         title: question.substring(0, 100),
         question,
         answer,
-        extracted_content: `Pergunta: ${question}\nResposta: ${answer}`,
+        extracted_content: `Pregunta: ${question}\nRespuesta: ${answer}`,
         processing_status: 'completed',
       });
       
-      toast.success('FAQ criada com sucesso');
+      toast.success('FAQ creada con éxito');
       setQuestion('');
       setAnswer('');
       setIsDialogOpen(false);
     } catch (error) {
-      toast.error('Erro ao criar FAQ');
+      toast.error('Error al crear FAQ');
     }
   };
 
   const handleDelete = async (id: string) => {
     try {
       await deleteFaq.mutateAsync({ id, productId });
-      toast.success('FAQ removida');
+      toast.success('FAQ eliminada');
     } catch (error) {
-      toast.error('Erro ao remover FAQ');
+      toast.error('Error al eliminar FAQ');
     }
   };
 
@@ -83,10 +83,10 @@ export function FAQBuilder({ productId }: FAQBuilderProps) {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <MessageSquare className="h-5 w-5" />
-                FAQ - Perguntas Frequentes
+                FAQ - Preguntas Frecuentes
               </CardTitle>
               <CardDescription>
-                Crie perguntas e respostas padronizadas para a IA usar como referência.
+                Cree preguntas y respuestas estandarizadas para que la IA las use como referencia.
               </CardDescription>
             </div>
             
@@ -94,35 +94,35 @@ export function FAQBuilder({ productId }: FAQBuilderProps) {
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
-                  Nova FAQ
+                  Nueva FAQ
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>Nova Pergunta Frequente</DialogTitle>
+                  <DialogTitle>Nueva Pregunta Frecuente</DialogTitle>
                   <DialogDescription>
-                    Adicione uma pergunta comum e sua resposta ideal.
+                    Agregue una pregunta común y su respuesta ideal.
                   </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="question">Pergunta</Label>
+                    <Label htmlFor="question">Pregunta</Label>
                     <Input
                       id="question"
                       value={question}
                       onChange={(e) => setQuestion(e.target.value)}
-                      placeholder="Ex: Qual o prazo de implementação?"
+                      placeholder="Ej: ¿Cuál es el plazo de implementación?"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="answer">Resposta</Label>
+                    <Label htmlFor="answer">Respuesta</Label>
                     <Textarea
                       id="answer"
                       value={answer}
                       onChange={(e) => setAnswer(e.target.value)}
-                      placeholder="Digite a resposta ideal para esta pergunta..."
+                      placeholder="Escriba la respuesta ideal para esta pregunta..."
                       className="min-h-[150px]"
                     />
                   </div>
@@ -141,7 +141,7 @@ export function FAQBuilder({ productId }: FAQBuilderProps) {
                     ) : (
                       <>
                         <Save className="h-4 w-4 mr-2" />
-                        Salvar FAQ
+                        Guardar FAQ
                       </>
                     )}
                   </Button>
@@ -179,7 +179,7 @@ export function FAQBuilder({ productId }: FAQBuilderProps) {
                           onClick={() => handleDelete(faq.id)}
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
-                          Remover
+                          Eliminar
                         </Button>
                       </div>
                     </div>
@@ -191,7 +191,7 @@ export function FAQBuilder({ productId }: FAQBuilderProps) {
             <div className="text-center py-8">
               <MessageSquare className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
               <p className="text-muted-foreground">
-                Nenhuma FAQ criada ainda. Clique em "Nova FAQ" para começar.
+                Aún no se ha creado ninguna FAQ. Haga clic en "Nueva FAQ" para comenzar.
               </p>
             </div>
           )}
@@ -204,12 +204,12 @@ export function FAQBuilder({ productId }: FAQBuilderProps) {
           <div className="flex items-start gap-3">
             <Sparkles className="h-5 w-5 text-primary mt-0.5" />
             <div>
-              <h4 className="font-medium">Dicas para FAQs eficazes</h4>
+              <h4 className="font-medium">Consejos para FAQ eficaces</h4>
               <ul className="text-sm text-muted-foreground mt-2 space-y-1">
-                <li>• Use perguntas que seus clientes realmente fazem</li>
-                <li>• Inclua objeções comuns e como superá-las</li>
-                <li>• Adicione respostas com dados e provas concretas</li>
-                <li>• Mantenha as respostas concisas mas completas</li>
+                <li>• Use preguntas que sus clientes realmente hacen</li>
+                <li>• Incluya objeciones comunes y cómo superarlas</li>
+                <li>• Agregue respuestas con datos y pruebas concretas</li>
+                <li>• Mantenga las respuestas concisas pero completas</li>
               </ul>
             </div>
           </div>

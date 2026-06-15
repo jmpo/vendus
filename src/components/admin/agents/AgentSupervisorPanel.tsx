@@ -73,7 +73,7 @@ export function AgentSupervisorPanel() {
                 <GitBranch className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <CardTitle>Supervisor Multi-agente</CardTitle>
+                <CardTitle>Supervisor multiagente</CardTitle>
                 <CardDescription>
                   Roteamento inteligente: defina especialistas e regras. Quando nenhuma regra bate,
                   o supervisor IA decide automaticamente.
@@ -103,15 +103,15 @@ export function AgentSupervisorPanel() {
                 })
               }
             >
-              <Plus className="h-4 w-4 mr-1" /> Novo especialista
+              <Plus className="h-4 w-4 mr-1" /> Nuevo especialista
             </Button>
           </div>
         </CardHeader>
         <CardContent className="space-y-2">
-          {spLoading && <p className="text-sm text-muted-foreground">Carregando…</p>}
+          {spLoading && <p className="text-sm text-muted-foreground">Cargando...</p>}
           {!spLoading && specialists.length === 0 && (
             <p className="text-sm text-muted-foreground">
-              Nenhum especialista cadastrado. Vincule seus agentes a um papel pra ativar o roteamento.
+              Ningún especialista registrado. Vincule seus agentes a um papel pra ativar o roteamento.
             </p>
           )}
           {specialists.map((sp) => {
@@ -162,7 +162,7 @@ export function AgentSupervisorPanel() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Zap className="h-4 w-4 text-muted-foreground" />
-              <CardTitle className="text-base">Regras de Roteamento</CardTitle>
+              <CardTitle className="text-base">Reglas de enrutamiento</CardTitle>
             </div>
             <Button
               size="sm"
@@ -176,15 +176,15 @@ export function AgentSupervisorPanel() {
                 })
               }
             >
-              <Plus className="h-4 w-4 mr-1" /> Nova regra
+              <Plus className="h-4 w-4 mr-1" /> Nueva regla
             </Button>
           </div>
         </CardHeader>
         <CardContent className="space-y-2">
-          {rulesLoading && <p className="text-sm text-muted-foreground">Carregando…</p>}
+          {rulesLoading && <p className="text-sm text-muted-foreground">Cargando...</p>}
           {!rulesLoading && rules.length === 0 && (
             <p className="text-sm text-muted-foreground">
-              Nenhuma regra. Sem regras, o supervisor IA decide cada handoff automaticamente.
+              Ninguna regla. Sem regras, o supervisor IA decide cada handoff automaticamente.
             </p>
           )}
           {rules.map((r) => {
@@ -208,7 +208,7 @@ export function AgentSupervisorPanel() {
                     )}
                   </div>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    Prioridade {r.priority}
+                    Prioridad {r.priority}
                     {r.match_events?.length ? ` · eventos: ${r.match_events.join(', ')}` : ''}
                     {r.match_channels?.length ? ` · canais: ${r.match_channels.join(', ')}` : ''}
                     {r.deal_value_min != null ? ` · ≥ R$${r.deal_value_min}` : ''}
@@ -240,16 +240,16 @@ export function AgentSupervisorPanel() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingSpecialist?.id ? 'Editar especialista' : 'Novo especialista'}
+              {editingSpecialist?.id ? 'Editar especialista' : 'Nuevo especialista'}
             </DialogTitle>
             <DialogDescription>
-              Vincule um agente já existente a um papel pra que o supervisor possa rotear conversas pra ele.
+              Vincule un agente existente a un rol para que el supervisor pueda enrutarle conversaciones.
             </DialogDescription>
           </DialogHeader>
           {editingSpecialist && (
             <div className="space-y-4">
               <div>
-                <Label>Nome de exibição</Label>
+                <Label>Nombre a mostrar</Label>
                 <Input
                   value={editingSpecialist.display_name ?? ''}
                   onChange={(e) =>
@@ -259,7 +259,7 @@ export function AgentSupervisorPanel() {
                 />
               </div>
               <div>
-                <Label>Papel</Label>
+                <Label>Rol</Label>
                 <Select
                   value={editingSpecialist.role}
                   onValueChange={(v) => setEditingSpecialist({ ...editingSpecialist, role: v })}
@@ -295,7 +295,7 @@ export function AgentSupervisorPanel() {
                 </Select>
               </div>
               <div>
-                <Label>Descrição (ajuda o supervisor IA a escolher)</Label>
+                <Label>Descripción (ayuda al supervisor de IA a elegir)</Label>
                 <Input
                   value={editingSpecialist.description ?? ''}
                   onChange={(e) =>
@@ -306,7 +306,7 @@ export function AgentSupervisorPanel() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Prioridade</Label>
+                  <Label>Prioridad</Label>
                   <Input
                     type="number"
                     value={editingSpecialist.priority ?? 100}
@@ -319,7 +319,7 @@ export function AgentSupervisorPanel() {
                   />
                 </div>
                 <div className="flex items-center justify-between pt-6">
-                  <Label>Ativo</Label>
+                  <Label>Activo</Label>
                   <Switch
                     checked={editingSpecialist.is_active ?? true}
                     onCheckedChange={(v) =>
@@ -342,7 +342,7 @@ export function AgentSupervisorPanel() {
                 });
               }}
             >
-              Salvar
+              Guardar
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -353,10 +353,10 @@ export function AgentSupervisorPanel() {
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingRule?.id ? 'Editar regra' : 'Nova regra de roteamento'}
+              {editingRule?.id ? 'Editar regla' : 'Nueva regla de roteamento'}
             </DialogTitle>
             <DialogDescription>
-              Quando todas as condições preenchidas baterem, a conversa vai pro especialista escolhido.
+              Cuando se cumplan todas las condiciones, la conversación irá al especialista seleccionado.
             </DialogDescription>
           </DialogHeader>
           {editingRule && (
@@ -476,7 +476,7 @@ export function AgentSupervisorPanel() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Prioridade (menor = primeiro)</Label>
+                  <Label>Prioridad (menor = primeiro)</Label>
                   <Input
                     type="number"
                     value={editingRule.priority ?? 100}
@@ -507,7 +507,7 @@ export function AgentSupervisorPanel() {
                 });
               }}
             >
-              Salvar
+              Guardar
             </Button>
           </DialogFooter>
         </DialogContent>

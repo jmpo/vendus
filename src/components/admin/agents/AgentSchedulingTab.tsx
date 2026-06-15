@@ -129,10 +129,10 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
         <div className="space-y-1">
           <Label className="font-medium flex items-center gap-2">
             <Calendar className="h-4 w-4 text-primary" />
-            Este agente pode marcar reuniões
+            Este agente puede agendar reuniones
           </Label>
           <p className="text-xs text-muted-foreground">
-            Quando ativado, a IA pode consultar a agenda do anfitrião e confirmar horários com o lead.
+            Cuando está activado, la IA puede consultar la agenda del anfitrión y confirmar horarios con el lead.
           </p>
         </div>
         <Switch
@@ -144,7 +144,7 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
       {!canSchedule && (
         <div className="flex items-start gap-2 p-3 rounded-lg border border-dashed text-sm text-muted-foreground">
           <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
-          <span>Ative o switch acima para configurar o agendamento deste agente.</span>
+          <span>Active el interruptor de arriba para configurar el agendamiento de este agente.</span>
         </div>
       )}
 
@@ -154,10 +154,10 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
           <div className="space-y-2">
             <Label className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-primary" />
-              Calendário do anfitrião
+              Calendario del anfitrión
             </Label>
             <p className="text-xs text-muted-foreground">
-              Vendedor cuja agenda a IA vai consultar e onde a reunião será criada.
+              Vendedor cuya agenda consultará la IA y donde se creará la reunión.
             </p>
             <Select
               value={formData.default_schedule_user_id || '__none__'}
@@ -170,10 +170,10 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
               }
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecione o anfitrião" />
+                <SelectValue placeholder="Seleccione al anfitrión" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none__">— Não definido —</SelectItem>
+                <SelectItem value="__none__">— No definido —</SelectItem>
                 {members.map((m) => (
                   <SelectItem key={m.id} value={m.id}>
                     {m.full_name || m.email || m.id}
@@ -188,7 +188,7 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
             <div className="flex items-center justify-between">
               <Label className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-primary" />
-                Tipos de evento permitidos
+                Tipos de eventos permitidos
               </Label>
               <Button
                 variant="ghost"
@@ -198,7 +198,7 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
               >
                 <Link to="/admin?tab=booking">
                   <ExternalLink className="h-3 w-3 mr-1" />
-                  Gerenciar tipos
+                  Gestionar tipos
                 </Link>
               </Button>
             </div>
@@ -206,19 +206,19 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
               {hostMember
                 ? `Tipos cadastrados por ${hostMember.full_name || hostMember.email}.`
                 : 'Selecione um anfitrião para listar os tipos de evento dele.'}
-              {' '}Se mais de um for permitido, a IA pergunta ao lead qual quer marcar.
+              {' '}Si se permite más de uno, la IA le pregunta al lead cuál desea agendar.
             </p>
 
             {!formData.default_schedule_user_id ? (
               <div className="text-xs text-muted-foreground italic p-3 border border-dashed rounded-lg">
-                Defina o anfitrião primeiro.
+                Defina al anfitrión primero.
               </div>
             ) : eventTypes.length === 0 ? (
               linkedProduct?.name ? (
                 <div className="flex items-start gap-2 p-3 rounded-lg border border-emerald-500/40 bg-emerald-500/5 text-sm">
                   <Sparkles className="h-4 w-4 mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
                   <div className="space-y-1">
-                    <div className="font-medium">Pronto pra agendar automaticamente</div>
+                    <div className="font-medium">Listo para agendar automáticamente</div>
                     <p className="text-xs text-muted-foreground">
                       Sem tipo de evento configurado, o sistema cria automaticamente{' '}
                       <span className="font-medium text-foreground">"Apresentação {linkedProduct.name}"</span>{' '}
@@ -269,16 +269,16 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
           <div className="space-y-3 p-3 rounded-lg border bg-muted/40">
             <div className="flex items-center gap-2">
               <Bell className="h-4 w-4 text-primary" />
-              <Label className="font-medium">Notificar quando uma reunião for confirmada</Label>
+              <Label className="font-medium">Notificar cuando se confirme una reunión</Label>
             </div>
             <p className="text-xs text-muted-foreground">
-              Os usuários selecionados recebem aviso no sino de notificações da plataforma.
+              Los usuarios seleccionados recibirán un aviso en la campana de notificaciones de la plataforma.
             </p>
 
             <div className="flex items-center justify-between gap-4 p-2 rounded-md bg-background">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">Notificar todos os administradores</span>
+                <span className="text-sm">Notificar a todos los administradores</span>
               </div>
               <Switch
                 checked={notifyAdmins}
@@ -287,7 +287,7 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Usuários específicos</Label>
+              <Label className="text-xs text-muted-foreground">Usuarios específicos</Label>
               <div className="max-h-56 overflow-y-auto space-y-1 pr-1">
                 {members.map((m) => {
                   const checked = notifyIds.includes(m.id);
@@ -309,7 +309,7 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
                 })}
                 {members.length === 0 && (
                   <div className="text-xs text-muted-foreground italic p-2">
-                    Nenhum membro encontrado.
+                    No se encontró ningún miembro.
                   </div>
                 )}
               </div>

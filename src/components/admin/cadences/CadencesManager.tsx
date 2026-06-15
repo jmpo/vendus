@@ -42,17 +42,17 @@ export function CadencesManager() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Cadências Inteligentes</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Secuencias Inteligentes</h1>
         <p className="text-sm text-muted-foreground">
-          Jornadas automatizadas em que a IA recebe contexto e cria uma abordagem única para cada lead — nunca mensagens prontas.
+          Jornadas automatizadas en las que la IA recibe contexto y crea un enfoque único para cada lead — nunca mensajes preestablecidos.
         </p>
       </header>
 
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
-          <TabsTrigger value="cadences">Cadências</TabsTrigger>
+          <TabsTrigger value="cadences">Secuencias</TabsTrigger>
           <TabsTrigger value="library">Biblioteca de Contextos</TabsTrigger>
-          <TabsTrigger value="reports">Relatórios</TabsTrigger>
+          <TabsTrigger value="reports">Informes</TabsTrigger>
           <TabsTrigger value="api">API</TabsTrigger>
         </TabsList>
 

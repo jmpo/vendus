@@ -60,7 +60,7 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
   const handleCopy = async (content: string, id: string) => {
     await navigator.clipboard.writeText(content);
     setCopiedId(id);
-    toast.success('Copiado para a área de transferência!');
+    toast.success('¡Copiado al portapapeles!');
     setTimeout(() => setCopiedId(null), 2000);
   };
 
@@ -80,7 +80,7 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(downloadUrl);
-      toast.success('Download iniciado!');
+      toast.success('¡Descarga iniciada!');
     } catch (error) {
       // Fallback: abrir em nova aba
       window.open(url, '_blank');
@@ -102,12 +102,12 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
 
   const getBlockLabel = (type: string) => {
     switch (type) {
-      case 'message': return 'Mensagem';
-      case 'audio': return 'Áudio';
+      case 'message': return 'Mensaje';
+      case 'audio': return 'Audio';
       case 'material': return 'Material';
       case 'cta': return 'CTA';
-      case 'image': return 'Imagem';
-      case 'video': return 'Vídeo';
+      case 'image': return 'Imagen';
+      case 'video': return 'Video';
       case 'link': return 'Link';
       default: return 'Bloco';
     }
@@ -115,9 +115,9 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
 
   const getVariantLabel = (variant: string) => {
     switch (variant) {
-      case 'short': return 'Curta';
-      case 'medium': return 'Média';
-      case 'long': return 'Longa';
+      case 'short': return 'Corta';
+      case 'medium': return 'Media';
+      case 'long': return 'Larga';
       default: return variant;
     }
   };
@@ -128,17 +128,17 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
       <div className="space-y-6 animate-fade-in">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Cadencia de Ventas</h2>
+            <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Secuencia de Ventas</h2>
             <p className="text-muted-foreground mt-1 text-sm">
-              Siga o roteiro dia a dia para {productName}
+              Sigue el guion día a día para {productName}
             </p>
           </div>
         </div>
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <CalendarX size={48} className="text-muted-foreground/50 mb-4" />
-          <h3 className="text-lg font-medium text-foreground mb-1">Nenhuma cadência configurada</h3>
+          <h3 className="text-lg font-medium text-foreground mb-1">No hay secuencias configuradas</h3>
           <p className="text-sm text-muted-foreground">
-            Peça ao administrador para configurar a cadência deste produto
+            Pide al administrador que configure la secuencia de este producto
           </p>
         </div>
       </div>
@@ -152,14 +152,14 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Cadencia de Ventas</h2>
+          <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Secuencia de Ventas</h2>
           <p className="text-muted-foreground mt-1 text-sm">
-            Siga o roteiro dia a dia para {productName}
+            Sigue el guion día a día para {productName}
           </p>
         </div>
         <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
           <Zap size={14} className="mr-1" />
-          {cadence.length} dias • {totalBlocks} blocos
+          {cadence.length} días • {totalBlocks} bloques
         </Badge>
       </div>
 
@@ -180,7 +180,7 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
                 : "bg-card border-border hover:border-primary/50"
             )}
           >
-            <p className="text-xs font-medium opacity-70">Dia</p>
+            <p className="text-xs font-medium opacity-70">Día</p>
             <p className="text-2xl font-bold">{day.day}</p>
           </button>
         ))}
@@ -269,7 +269,7 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
                   {/* Audio Script (if applicable) */}
                   {block.audioScript && (
                     <div className="mt-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
-                      <p className="text-xs font-medium text-primary mb-2">Script para áudio:</p>
+                      <p className="text-xs font-medium text-primary mb-2">Guion para audio:</p>
                       <p className="text-sm text-muted-foreground italic">
                         "{block.audioScript}"
                       </p>
@@ -330,7 +330,7 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
                           onClick={() => handleOpenExternal(block.mediaUrl!)}
                         >
                           <ExternalLink className="h-4 w-4 mr-2" />
-                          Abrir em Nova Aba
+                          Abrir en Nueva Pestaña
                         </Button>
                       </div>
                     </div>
@@ -341,7 +341,7 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
                     <div className="mt-4 space-y-3">
                       <audio controls className="w-full rounded-lg">
                         <source src={block.mediaUrl} />
-                        Seu navegador não suporta áudio.
+                        Tu navegador no soporta audio.
                       </audio>
                       <Button 
                         variant="outline" 
@@ -349,7 +349,7 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
                         onClick={() => handleDownload(block.mediaUrl!, 'audio.mp3')}
                       >
                         <Download className="h-4 w-4 mr-2" />
-                        Baixar Áudio
+                        Descargar Audio
                       </Button>
                     </div>
                   )}
@@ -364,7 +364,7 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
                         className="gap-2"
                       >
                         <LinkIcon className="h-4 w-4" />
-                        {block.linkTitle || 'Acessar Link'}
+                        {block.linkTitle || 'Acceder al Enlace'}
                         <ExternalLink className="h-3 w-3 opacity-70" />
                       </Button>
                     </div>
@@ -404,14 +404,14 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
               onClick={() => setActiveDay(activeDay - 1)}
               size={isMobile ? "sm" : "default"}
             >
-              ← {isMobile ? "Anterior" : "Dia anterior"}
+              ← {isMobile ? "Anterior" : "Día anterior"}
             </Button>
             <Button
               disabled={activeDay === cadence.length}
               onClick={() => setActiveDay(activeDay + 1)}
               size={isMobile ? "sm" : "default"}
             >
-              {isMobile ? "Próximo" : "Próximo dia"}
+              {isMobile ? "Siguiente" : "Próximo día"}
               <ChevronRight size={16} className="ml-1" />
             </Button>
           </div>

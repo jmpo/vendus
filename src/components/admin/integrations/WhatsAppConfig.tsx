@@ -12,7 +12,7 @@ export function WhatsAppConfig() {
               <Smartphone className="h-5 w-5 text-green-500" />
             </div>
             <div>
-              <CardTitle className="text-lg">Conexões</CardTitle>
+              <CardTitle className="text-lg">Conexiones</CardTitle>
               <CardDescription>
                 Conecte WhatsApp (QR Code ou API Oficial Meta) e, em breve, Instagram. Tudo em um só lugar.
               </CardDescription>

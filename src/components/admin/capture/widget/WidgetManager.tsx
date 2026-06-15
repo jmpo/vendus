@@ -31,10 +31,10 @@ import { ptBR } from 'date-fns/locale';
 import { WidgetBuilder } from './WidgetBuilder';
 
 const statusConfig: Record<FunnelStatus, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-  draft: { label: 'Rascunho', variant: 'secondary' },
-  active: { label: 'Ativo', variant: 'default' },
+  draft: { label: 'Borrador', variant: 'secondary' },
+  active: { label: 'Activo', variant: 'default' },
   paused: { label: 'Pausado', variant: 'outline' },
-  archived: { label: 'Arquivado', variant: 'destructive' },
+  archived: { label: 'Archivado', variant: 'destructive' },
 };
 
 export function WidgetManager() {
@@ -89,18 +89,18 @@ export function WidgetManager() {
         <div>
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Code2 className="h-6 w-6 text-primary" />
-            Widget de Site
+            Widget de Sitio
           </h1>
           <p className="text-muted-foreground mt-1">
-            Bolha de chat embutida em sites externos via snippet <code className="text-xs bg-muted px-1 py-0.5 rounded">&lt;script&gt;</code>.
+            Burbuja de chat integrada en sitios externos vía snippet <code className="text-xs bg-muted px-1 py-0.5 rounded">&lt;script&gt;</code>.
           </p>
         </div>
         <Button onClick={() => {
-          if (!products?.length) { toast.error('Crie um produto primeiro'); return; }
+          if (!products?.length) { toast.error('Crea un producto primero'); return; }
           setIsCreateOpen(true);
         }} className="gap-2">
           <Plus className="h-4 w-4" />
-          Novo Widget
+          Nuevo Widget
         </Button>
       </div>
 
@@ -113,7 +113,7 @@ export function WidgetManager() {
         <Select value={productFilter} onValueChange={setProductFilter}>
           <SelectTrigger className="w-full sm:w-[200px]"><SelectValue placeholder="Produto" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os produtos</SelectItem>
+            <SelectItem value="all">Todos los productos</SelectItem>
             {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
           </SelectContent>
         </Select>
@@ -121,10 +121,10 @@ export function WidgetManager() {
           <SelectTrigger className="w-full sm:w-[160px]"><SelectValue placeholder="Status" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos</SelectItem>
-            <SelectItem value="draft">Rascunho</SelectItem>
-            <SelectItem value="active">Ativo</SelectItem>
+            <SelectItem value="draft">Borrador</SelectItem>
+            <SelectItem value="active">Activo</SelectItem>
             <SelectItem value="paused">Pausado</SelectItem>
-            <SelectItem value="archived">Arquivado</SelectItem>
+            <SelectItem value="archived">Archivado</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -139,15 +139,15 @@ export function WidgetManager() {
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Code2 className="h-8 w-8 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Nenhum Widget encontrado</h3>
+            <h3 className="text-lg font-semibold mb-2">No se encontraron Widgets</h3>
             <p className="text-muted-foreground text-center mb-4 max-w-md">
               {searchQuery || statusFilter !== 'all' || productFilter !== 'all'
-                ? 'Nenhum widget corresponde aos filtros.'
-                : 'Crie seu primeiro widget para instalar a bolha de chat em qualquer site.'}
+                ? 'Ningún widget coincide con los filtros.'
+                : 'Crea tu primer widget para instalar la burbuja de chat en cualquier sitio.'}
             </p>
             {!searchQuery && statusFilter === 'all' && productFilter === 'all' && (
               <Button onClick={() => setIsCreateOpen(true)} className="gap-2">
-                <Plus className="h-4 w-4" /> Criar primeiro Widget
+                <Plus className="h-4 w-4" /> Crear primer Widget
               </Button>
             )}
           </CardContent>
@@ -165,17 +165,17 @@ export function WidgetManager() {
                       <Badge variant={statusConfig[f.status].variant}>{statusConfig[f.status].label}</Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mb-3">
-                      {f.products?.name || 'Produto não definido'}
+                      {f.products?.name || 'Producto no definido'}
                     </p>
                     <div className="flex items-center gap-6 text-sm">
                       <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <Eye className="h-4 w-4" /><span>{formatViews(f.total_views)} sessões</span>
+                        <Eye className="h-4 w-4" /><span>{formatViews(f.total_views)} sesiones</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground">
                         <Users className="h-4 w-4" /><span>{f.total_leads} leads</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <TrendingUp className="h-4 w-4" /><span>{rate(f)} conversão</span>
+                        <TrendingUp className="h-4 w-4" /><span>{rate(f)} conversión</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground">
                         <Clock className="h-4 w-4" />
@@ -221,28 +221,28 @@ export function WidgetManager() {
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Novo Widget</DialogTitle>
+            <DialogTitle>Nuevo Widget</DialogTitle>
             <DialogDescription>
-              Crie um widget para instalar a bolha de chat em sites externos. O canal Widget será ativado automaticamente.
+              Crea un widget para instalar la burbuja de chat en sitios externos. El canal de Widget se activará automáticamente.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Produto *</Label>
+              <Label>Producto *</Label>
               <Select value={productId} onValueChange={setProductId}>
-                <SelectTrigger><SelectValue placeholder="Selecione o produto" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Selecciona el producto" /></SelectTrigger>
                 <SelectContent>
                   {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Nome do Widget *</Label>
-              <Input placeholder="Ex: Bolha do site principal" value={name} onChange={(e) => setName(e.target.value)} />
+              <Label>Nombre del Widget *</Label>
+              <Input placeholder="Ej: Burbuja del sitio principal" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>Descrição (opcional)</Label>
-              <Textarea placeholder="Descreva o objetivo..." value={description}
+              <Label>Descripción (opcional)</Label>
+              <Textarea placeholder="Describe el objetivo..." value={description}
                 onChange={(e) => setDescription(e.target.value)} rows={3} />
             </div>
           </div>
@@ -251,7 +251,7 @@ export function WidgetManager() {
             <Button onClick={handleCreate}
               disabled={!name.trim() || !productId || createFunnel.isPending}>
               {createFunnel.isPending
-                ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Criando...</>
+                ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Creando...</>
                 : 'Criar Widget'}
             </Button>
           </DialogFooter>
@@ -261,7 +261,7 @@ export function WidgetManager() {
       <AlertDialog open={!!deleteId} onOpenChange={(o) => !o && setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir Widget?</AlertDialogTitle>
+            <AlertDialogTitle>¿Eliminar Widget?</AlertDialogTitle>
             <AlertDialogDescription>
               Esta ação não pode ser desfeita. Todos os dados do fluxo serão perdidos
               e o snippet instalado em sites externos deixará de funcionar.

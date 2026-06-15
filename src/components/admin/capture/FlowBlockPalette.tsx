@@ -197,9 +197,9 @@ export const FlowBlockPalette = memo(function FlowBlockPalette({
             <Sparkles className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold">Blocos</h3>
+            <h3 className="text-sm font-semibold">Bloques</h3>
             <p className="text-[10px] text-muted-foreground">
-              Arraste para o canvas
+              Arrastra al canvas
             </p>
           </div>
         </div>
@@ -223,7 +223,7 @@ export const FlowBlockPalette = memo(function FlowBlockPalette({
       {/* Footer Tip */}
       <div className="px-3 py-2 border-t bg-muted/30 shrink-0">
         <p className="text-[10px] text-muted-foreground text-center">
-          Arraste o canvas para navegar
+          Arrastra el canvas para navegar
         </p>
       </div>
     </div>

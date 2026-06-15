@@ -38,25 +38,25 @@ type StepDraft = {
   };
 };
 
-const OBJECTIVES = ['Pós Live', 'Recuperação', 'Abandono de Checkout', 'Reativação', 'Pós Compra', 'Renovação', 'Personalizado'];
+const OBJECTIVES = ['Post Live', 'Recuperación', 'Abandono de Checkout', 'Reactivación', 'Post Compra', 'Renovación', 'Personalizado'];
 const WEEK_DAYS: { key: string; label: string }[] = [
-  { key: 'mon', label: 'Seg' }, { key: 'tue', label: 'Ter' }, { key: 'wed', label: 'Qua' },
-  { key: 'thu', label: 'Qui' }, { key: 'fri', label: 'Sex' }, { key: 'sat', label: 'Sáb' }, { key: 'sun', label: 'Dom' },
+  { key: 'mon', label: 'Lun' }, { key: 'tue', label: 'Mar' }, { key: 'wed', label: 'Mié' },
+  { key: 'thu', label: 'Jue' }, { key: 'fri', label: 'Vie' }, { key: 'sat', label: 'Sáb' }, { key: 'sun', label: 'Dom' },
 ];
 const STOP_OPTIONS: { key: string; label: string }[] = [
-  { key: 'responded', label: 'Lead respondeu' },
+  { key: 'responded', label: 'Lead respondió' },
   { key: 'purchased', label: 'Compra realizada' },
   { key: 'tag_buyer', label: 'Tag Comprador' },
-  { key: 'tag_dnd', label: 'Tag Não Perturbe' },
-  { key: 'pipeline_closed', label: 'Pipeline Fechado' },
-  { key: 'active_customer', label: 'Cliente Ativo' },
-  { key: 'meeting_scheduled', label: 'Reunião Agendada' },
-  { key: 'human_handover', label: 'Atendimento Humano' },
+  { key: 'tag_dnd', label: 'Tag No Molestar' },
+  { key: 'pipeline_closed', label: 'Pipeline Cerrado' },
+  { key: 'active_customer', label: 'Cliente Activo' },
+  { key: 'meeting_scheduled', label: 'Reunión Programada' },
+  { key: 'human_handover', label: 'Atención humana' },
 ];
 
 const STEPS_LABELS = [
-  '1. Configuração', '2. Entrada', '3. Exclusões', '4. Cronograma',
-  '5. Regras de Execução', '6. Horários', '7. Parada', '8. Ações', '9. Revisão',
+  '1. Configuración', '2. Entrada', '3. Exclusiones', '4. Cronograma',
+  '5. Reglas de Ejecución', '6. Horarios', '7. Parada', '8. Acciones', '9. Revisión',
 ];
 
 export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
@@ -69,7 +69,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
   const [description, setDescription] = useState('');
   const [objective, setObjective] = useState('Pós Live');
   const [agentId, setAgentId] = useState<string | null>(null);
-  const [status, setStatus] = useState<'draft' | 'active' | 'paused'>('draft');
+  const [status, setEstado] = useState<'draft' | 'active' | 'paused'>('draft');
 
   // Filters (simplified for v1 — can be extended like CampaignWizard)
   const [entryTags, setEntryTags] = useState<string[]>([]);
@@ -117,7 +117,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
         setDescription(cd.description ?? '');
         setObjective(cd.objective ?? 'Pós Live');
         setAgentId(cd.agent_id);
-        setStatus(cd.status);
+        setEstado(cd.status);
         setEntryTags(cd.entry_filters?.tags ?? []);
         setExclusionTags(cd.exclusion_filters?.tags ?? []);
         const win = cd.execution_window ?? {};
@@ -177,8 +177,8 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
 
   const save = async (activate = false) => {
     if (!orgId) return;
-    if (!name.trim()) { toast.error('Informe o nome da cadência'); setStep(0); return; }
-    if (steps.length === 0) { toast.error('Adicione ao menos uma etapa'); setStep(3); return; }
+    if (!name.trim()) { toast.error('Informa el nombre de la secuencia'); setStep(0); return; }
+    if (steps.length === 0) { toast.error('Añade al menos una etapa'); setStep(3); return; }
     setSaving(true);
     const payload = {
       organization_id: orgId,
@@ -203,7 +203,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
       await supabase.from('cadence_steps' as any).delete().eq('cadence_id', id);
     } else {
       const { data, error } = await supabase.from('cadences' as any).insert(payload).select('id').single();
-      if (error || !data) { toast.error(error?.message ?? 'Falha ao criar'); setSaving(false); return; }
+      if (error || !data) { toast.error(error?.message ?? 'Error al crear'); setSaving(false); return; }
       id = (data as any).id;
     }
 
@@ -226,12 +226,12 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
       if (error) { toast.error(error.message); setSaving(false); return; }
     }
 
-    toast.success(activate ? 'Cadência ativada!' : 'Cadência salva');
+    toast.success(activate ? '¡Secuencia activada!' : 'Secuencia guardada');
     setSaving(false);
     onClose();
   };
 
-  if (loading) return <div className="p-6">Carregando…</div>;
+  if (loading) return <div className="p-6">Cargando…</div>;
 
   return (
     <div className="p-4 md:p-6 space-y-4 max-w-5xl mx-auto">
@@ -239,18 +239,18 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
         <Button variant="ghost" size="sm" onClick={onClose}><ArrowLeft className="h-4 w-4 mr-2" /> Voltar</Button>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => save(false)} disabled={saving}>
-            <Save className="h-4 w-4 mr-2" /> Salvar rascunho
+            <Save className="h-4 w-4 mr-2" /> Guardar borrador
           </Button>
           {step === STEPS_LABELS.length - 1 && (
             <Button onClick={() => save(true)} disabled={saving}>
-              <Rocket className="h-4 w-4 mr-2" /> Ativar Cadência
+              <Rocket className="h-4 w-4 mr-2" /> Activar Secuencia
             </Button>
           )}
         </div>
       </div>
 
       <header>
-        <h1 className="text-xl font-semibold">{cadenceId ? 'Editar cadência' : 'Nova cadência'}</h1>
+        <h1 className="text-xl font-semibold">{cadenceId ? 'Editar secuencia' : 'Nueva secuencia'}</h1>
         <p className="text-sm text-muted-foreground">{STEPS_LABELS[step]}</p>
       </header>
 
@@ -265,28 +265,28 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
 
       {step === 0 && (
         <Card><CardContent className="p-5 space-y-4">
-          <Field label="Nome da cadência *"><Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Pós Live Replay Maio" /></Field>
-          <Field label="Descrição"><Textarea rows={2} value={description} onChange={(e) => setDescription(e.target.value)} /></Field>
+          <Field label="Nombre de la secuencia *"><Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej: Post Live Replay Mayo" /></Field>
+          <Field label="Descripción"><Textarea rows={2} value={description} onChange={(e) => setDescription(e.target.value)} /></Field>
           <Field label="Objetivo">
             <Select value={objective} onValueChange={setObjective}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>{OBJECTIVES.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
             </Select>
           </Field>
-          <Field label="Agente responsável">
+          <Field label="Agente responsable">
             <Select value={agentId ?? ''} onValueChange={(v) => setAgentId(v || null)}>
-              <SelectTrigger><SelectValue placeholder="Selecionar agente" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Seleccionar agente" /></SelectTrigger>
               <SelectContent>
                 {agents.map((a) => <SelectItem key={a.id} value={a.id}>{a.agent_name}</SelectItem>)}
               </SelectContent>
             </Select>
           </Field>
-          <Field label="Status">
-            <Select value={status} onValueChange={(v: any) => setStatus(v)}>
+          <Field label="Estado">
+            <Select value={status} onValueChange={(v: any) => setEstado(v)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="draft">Rascunho</SelectItem>
-                <SelectItem value="active">Ativa</SelectItem>
+                <SelectItem value="draft">Borrador</SelectItem>
+                <SelectItem value="active">Activa</SelectItem>
                 <SelectItem value="paused">Pausada</SelectItem>
               </SelectContent>
             </Select>
@@ -296,15 +296,15 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
 
       {step === 1 && (
         <Card><CardContent className="p-5 space-y-4">
-          <p className="text-sm text-muted-foreground">Selecione tags que filtram quem entra nesta cadência. Filtros avançados (origem, pipeline, campos personalizados) podem ser adicionados depois pelo editor.</p>
-          <TagsPicker label="Entrar se tiver QUALQUER destas tags" tags={tags} selected={entryTags} onChange={setEntryTags} />
+          <p className="text-sm text-muted-foreground">Selecciona etiquetas que filtren quién entra en esta secuencia. Los filtros avanzados (origen, pipeline, campos personalizados) se pueden añadir después desde el editor.</p>
+          <TagsPicker label="Entrar si tiene CUALQUIERA de estas etiquetas" tags={tags} selected={entryTags} onChange={setEntryTags} />
         </CardContent></Card>
       )}
 
       {step === 2 && (
         <Card><CardContent className="p-5 space-y-4">
-          <p className="text-sm text-muted-foreground">Leads com qualquer uma destas tags NÃO entram (ou saem) da cadência.</p>
-          <TagsPicker label="Excluir se tiver QUALQUER destas tags" tags={tags} selected={exclusionTags} onChange={setExclusionTags} />
+          <p className="text-sm text-muted-foreground">Los leads con cualquiera de estas etiquetas NO entran (o salen) de la secuencia.</p>
+          <TagsPicker label="Excluir si tiene CUALQUIERA de estas etiquetas" tags={tags} selected={exclusionTags} onChange={setExclusionTags} />
         </CardContent></Card>
       )}
 
@@ -316,32 +316,32 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
                 <div className="flex items-center gap-2">
                   <GripVertical className="h-4 w-4 text-muted-foreground" />
                   <Badge variant="secondary">Etapa {i + 1}</Badge>
-                  <Input value={s.name} onChange={(e) => updateStep(i, { name: e.target.value })} className="flex-1" placeholder="Nome da etapa" />
+                  <Input value={s.name} onChange={(e) => updateStep(i, { name: e.target.value })} className="flex-1" placeholder="Nombre de la etapa" />
                   <Button size="icon" variant="ghost" onClick={() => moveStep(i, -1)} disabled={i === 0}>↑</Button>
                   <Button size="icon" variant="ghost" onClick={() => moveStep(i, 1)} disabled={i === steps.length - 1}>↓</Button>
                   <Button size="icon" variant="ghost" onClick={() => removeStep(i)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                 </div>
-                <Input value={s.objective} onChange={(e) => updateStep(i, { objective: e.target.value })} placeholder="Objetivo (ex: Iniciar conversa)" />
+                <Input value={s.objective} onChange={(e) => updateStep(i, { objective: e.target.value })} placeholder="Objetivo (ej: Iniciar conversación)" />
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 items-end">
                   <div className="col-span-2 flex items-center gap-2">
                     <Switch checked={s.execute_immediately} onCheckedChange={(v) => updateStep(i, { execute_immediately: v })} />
-                    <Label className="text-sm">Executar imediatamente</Label>
+                    <Label className="text-sm">Ejecutar inmediatamente</Label>
                   </div>
                   {!s.execute_immediately && (
                     <>
                       <div>
-                        <Label className="text-xs">Após</Label>
+                        <Label className="text-xs">Después de</Label>
                         <Input type="number" min={1} value={s.delay_value} onChange={(e) => updateStep(i, { delay_value: parseInt(e.target.value) || 1 })} />
                       </div>
                       <div>
-                        <Label className="text-xs">Unidade</Label>
+                        <Label className="text-xs">Unidad</Label>
                         <Select value={s.delay_unit} onValueChange={(v: any) => updateStep(i, { delay_unit: v })}>
                           <SelectTrigger><SelectValue /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="minutes">Minutos</SelectItem>
                             <SelectItem value="hours">Horas</SelectItem>
-                            <SelectItem value="days">Dias</SelectItem>
+                            <SelectItem value="days">Días</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -351,7 +351,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
                           <SelectTrigger><SelectValue /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="previous_step">Etapa anterior</SelectItem>
-                            <SelectItem value="enrollment">Entrada na cadência</SelectItem>
+                            <SelectItem value="enrollment">Entrada en la secuencia</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -360,46 +360,46 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
                 </div>
 
                 <div>
-                  <Label className="text-xs">Contexto da biblioteca (opcional)</Label>
+                  <Label className="text-xs">Contexto de la biblioteca (opcional)</Label>
                   <Select value={s.context_id ?? '__none'} onValueChange={(v) => updateStep(i, { context_id: v === '__none' ? null : v })}>
-                    <SelectTrigger><SelectValue placeholder="Selecionar contexto" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="Seleccionar contexto" /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__none">Nenhum (usar inline)</SelectItem>
+                      <SelectItem value="__none">Ninguno (usar en línea)</SelectItem>
                       {contexts.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label className="text-xs">Contexto inline (instruções para o agente IA)</Label>
+                  <Label className="text-xs">Contexto en línea (instrucciones para el agente IA)</Label>
                   <Textarea rows={3} value={s.context_inline} onChange={(e) => updateStep(i, { context_inline: e.target.value })}
-                    placeholder="Ex: Esse lead participou da live e ainda não respondeu. Inicie uma conversa leve e descubra seu principal interesse." />
+                    placeholder="Ej: Este lead participó en el live y aún no ha respondido. Inicia una conversación ligera y descubre su principal interés." />
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs">Executar somente se</Label>
+                  <Label className="text-xs">Ejecutar solo si</Label>
                   <div className="flex flex-wrap gap-3">
-                    <CheckBoxItem checked={!!s.conditions.only_if_no_response} onChange={(v) => updateStep(i, { conditions: { ...s.conditions, only_if_no_response: v } })} label="Não respondeu" />
-                    <CheckBoxItem checked={!!s.conditions.only_if_no_purchase} onChange={(v) => updateStep(i, { conditions: { ...s.conditions, only_if_no_purchase: v } })} label="Não comprou" />
-                    <CheckBoxItem checked={!!s.conditions.only_if_not_human} onChange={(v) => updateStep(i, { conditions: { ...s.conditions, only_if_not_human: v } })} label="Não foi assumido por humano" />
+                    <CheckBoxItem checked={!!s.conditions.only_if_no_response} onChange={(v) => updateStep(i, { conditions: { ...s.conditions, only_if_no_response: v } })} label="No respondió" />
+                    <CheckBoxItem checked={!!s.conditions.only_if_no_purchase} onChange={(v) => updateStep(i, { conditions: { ...s.conditions, only_if_no_purchase: v } })} label="No compró" />
+                    <CheckBoxItem checked={!!s.conditions.only_if_not_human} onChange={(v) => updateStep(i, { conditions: { ...s.conditions, only_if_not_human: v } })} label="No fue asumido por un humano" />
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))}
-          <Button variant="outline" onClick={addStep} className="w-full"><Plus className="h-4 w-4 mr-2" /> Adicionar etapa</Button>
+          <Button variant="outline" onClick={addStep} className="w-full"><Plus className="h-4 w-4 mr-2" /> Añadir etapa</Button>
         </div>
       )}
 
       {step === 4 && (
         <Card><CardContent className="p-5 space-y-2 text-sm text-muted-foreground">
-          As regras de execução são configuradas dentro de cada etapa na seção "Cronograma" (etapa 4). Use os checkboxes "Executar somente se" em cada etapa.
+          As regras de execução são configuradas dentro de cada etapa na seção "Cronograma" (etapa 4). Use os checkboxes "Ejecutar solo si" em cada etapa.
         </CardContent></Card>
       )}
 
       {step === 5 && (
         <Card><CardContent className="p-5 space-y-4">
           <div>
-            <Label>Dias permitidos</Label>
+            <Label>Días permitidos</Label>
             <div className="flex flex-wrap gap-2 mt-2">
               {WEEK_DAYS.map((d) => (
                 <button key={d.key} type="button"
@@ -411,19 +411,19 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Horário inicial"><Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} /></Field>
-            <Field label="Horário final"><Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} /></Field>
+            <Field label="Horario inicial"><Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} /></Field>
+            <Field label="Horario final"><Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} /></Field>
           </div>
           <div className="flex items-center gap-2">
             <Switch checked={randomize} onCheckedChange={setRandomize} />
-            <Label className="text-sm">Aleatorizar horário dentro da janela (envio mais natural)</Label>
+            <Label className="text-sm">Aleatorizar horario dentro de la ventana (envío más natural)</Label>
           </div>
         </CardContent></Card>
       )}
 
       {step === 6 && (
         <Card><CardContent className="p-5 space-y-3">
-          <p className="text-sm text-muted-foreground">Quando interromper a cadência automaticamente?</p>
+          <p className="text-sm text-muted-foreground">¿Cuándo interrumpir la secuencia automáticamente?</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {STOP_OPTIONS.map((o) => (
               <CheckBoxItem key={o.key} label={o.label} checked={!!stopRules[o.key]}
@@ -435,11 +435,11 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
 
       {step === 7 && (
         <Card><CardContent className="p-5 space-y-4">
-          <p className="text-sm text-muted-foreground">Ao interromper a cadência:</p>
-          <TagsPicker label="Aplicar tags" tags={tags} selected={tagsAdd} onChange={setTagsAdd} />
-          <TagsPicker label="Remover tags" tags={tags} selected={tagsRemove} onChange={setTagsRemove} />
-          <Field label="Nota interna (adicionada no lead)">
-            <Textarea rows={2} value={internalNote} onChange={(e) => setInternalNote(e.target.value)} placeholder="Ex: Encerrou cadência pós-live" />
+          <p className="text-sm text-muted-foreground">Al interrumpir la secuencia:</p>
+          <TagsPicker label="Aplicar etiquetas" tags={tags} selected={tagsAdd} onChange={setTagsAdd} />
+          <TagsPicker label="Eliminar etiquetas" tags={tags} selected={tagsRemove} onChange={setTagsRemove} />
+          <Field label="Nota interna (añadida al lead)">
+            <Textarea rows={2} value={internalNote} onChange={(e) => setInternalNote(e.target.value)} placeholder="Ej: Terminó la secuencia post-live" />
           </Field>
         </CardContent></Card>
       )}
@@ -448,17 +448,17 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
         <Card><CardContent className="p-5 space-y-4">
           <div className="space-y-1">
             <h3 className="font-semibold">Revisão</h3>
-            <p className="text-sm text-muted-foreground">Confira antes de ativar.</p>
+            <p className="text-sm text-muted-foreground">Revisa antes de activar.</p>
           </div>
-          <Row k="Nome" v={name || '—'} />
+          <Row k="Nombre" v={name || '—'} />
           <Row k="Objetivo" v={objective} />
           <Row k="Agente" v={agents.find((a) => a.id === agentId)?.agent_name ?? '—'} />
           <Row k="Etapas" v={`${steps.length} etapa(s)`} />
-          <Row k="Janela" v={`${days.join(', ').toUpperCase()} · ${startTime}–${endTime}${randomize ? ' (aleatorizado)' : ''}`} />
-          <Row k="Parar se" v={Object.entries(stopRules).filter(([, v]) => v).map(([k]) => STOP_OPTIONS.find((o) => o.key === k)?.label ?? k).join(', ') || 'Nenhuma regra'} />
+          <Row k="Ventana" v={`${days.join(', ').toUpperCase()} · ${startTime}–${endTime}${randomize ? ' (aleatorizado)' : ''}`} />
+          <Row k="Parar si" v={Object.entries(stopRules).filter(([, v]) => v).map(([k]) => STOP_OPTIONS.find((o) => o.key === k)?.label ?? k).join(', ') || 'Ninguna regla'} />
 
           <div className="pt-4">
-            <h4 className="text-sm font-medium mb-2">Simulação visual</h4>
+            <h4 className="text-sm font-medium mb-2">Simulación visual</h4>
             <div className="space-y-1">
               {steps.map((s, i) => (
                 <div key={i} className="flex items-center gap-3 text-sm">
@@ -466,12 +466,12 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
                   <div className="flex-1 border rounded p-2">
                     <div className="font-medium">{s.name}</div>
                     <div className="text-xs text-muted-foreground">
-                      {s.execute_immediately ? 'Imediatamente' : `+${s.delay_value} ${s.delay_unit === 'minutes' ? 'min' : s.delay_unit === 'hours' ? 'h' : 'd'} (${s.delay_from === 'enrollment' ? 'da entrada' : 'da anterior'})`}
+                      {s.execute_immediately ? 'Imediatamente' : `+${s.delay_value} ${s.delay_unit === 'minutes' ? 'min' : s.delay_unit === 'hours' ? 'h' : 'd'} (${s.delay_from === 'enrollment' ? 'de la entrada' : 'de la anterior'})`}
                     </div>
                   </div>
                 </div>
               ))}
-              <div className="text-sm text-muted-foreground pl-10">↓ Encerrar</div>
+              <div className="text-sm text-muted-foreground pl-10">↓ Finalizar</div>
             </div>
           </div>
         </CardContent></Card>
@@ -482,7 +482,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
           <ArrowLeft className="h-4 w-4 mr-2" /> Anterior
         </Button>
         <Button onClick={() => setStep((s) => Math.min(STEPS_LABELS.length - 1, s + 1))} disabled={step === STEPS_LABELS.length - 1}>
-          Próximo <ArrowRight className="h-4 w-4 ml-2" />
+          Siguiente <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
       </div>
     </div>
@@ -507,7 +507,7 @@ function TagsPicker({ label, tags, selected, onChange }: { label: string; tags: 
     <div className="space-y-1.5">
       <Label className="text-sm">{label}</Label>
       <div className="flex flex-wrap gap-1.5">
-        {tags.length === 0 && <span className="text-xs text-muted-foreground">Nenhuma tag cadastrada.</span>}
+        {tags.length === 0 && <span className="text-xs text-muted-foreground">Ninguna etiqueta registrada.</span>}
         {tags.map((t) => {
           const on = selected.includes(t.id);
           return (

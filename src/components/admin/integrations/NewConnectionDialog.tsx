@@ -54,7 +54,7 @@ export function NewConnectionDialog({ open, onClose, onSelect }: Props) {
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Nova conexão</DialogTitle>
+          <DialogTitle>Nueva conexión</DialogTitle>
           <DialogDescription>
             Escolha qual tipo de canal você quer conectar.
           </DialogDescription>
@@ -64,8 +64,8 @@ export function NewConnectionDialog({ open, onClose, onSelect }: Props) {
           <Option
             icon={<Smartphone className="h-5 w-5 text-green-600" />}
             iconBg="bg-green-500/10"
-            title="WhatsApp via QR Code"
-            description="Evolution Go — conecta rápido escaneando o QR no celular. Sem precisar de Meta App."
+            title="WhatsApp vía QR Code"
+            description="Evolution Go — conecta rápido escaneando el QR en el celular. Sin necesidad de Meta App."
             badge={{ label: 'Recomendado', variant: 'default' }}
             onClick={() => handle('evolution')}
           />
@@ -73,16 +73,16 @@ export function NewConnectionDialog({ open, onClose, onSelect }: Props) {
             icon={<ShieldCheck className="h-5 w-5 text-emerald-600" />}
             iconBg="bg-emerald-500/10"
             title="WhatsApp Oficial (Meta Cloud API)"
-            description="API oficial da Meta com templates, automações e envio em escala. Requer que você crie seu próprio Meta App. Ideal para empresas que querem número próprio, templates aprovados e maior estabilidade."
-            badge={{ label: 'Avançado', variant: 'outline' }}
+            description="API oficial de Meta con plantillas, automatizaciones y envío a escala. Requiere que crees tu propia Meta App. Ideal para empresas que quieren número propio, plantillas aprobadas y mayor estabilidad."
+            badge={{ label: 'Avanzado', variant: 'outline' }}
             onClick={() => handle('meta_whatsapp')}
           />
           <Option
             icon={<Instagram className="h-5 w-5 text-pink-500" />}
             iconBg="bg-pink-500/10"
             title="Instagram Direct (Meta)"
-            description="API oficial para receber e responder mensagens do Instagram profissional via Meta. Requer Instagram Business/Creator vinculado a uma Página do Facebook."
-            badge={{ label: 'Avançado', variant: 'outline' }}
+            description="API oficial para recibir y responder mensajes de Instagram profesional vía Meta. Requiere Instagram Business/Creator vinculado a una Página de Facebook."
+            badge={{ label: 'Avanzado', variant: 'outline' }}
             onClick={() => handle('meta_instagram')}
           />
         </div>

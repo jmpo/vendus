@@ -28,7 +28,7 @@ export function PlaybookView({ product }: PlaybookViewProps) {
   const handleCopyPitch = async (pitch: string, type: string) => {
     await navigator.clipboard.writeText(pitch);
     setCopiedPitch(type);
-    toast.success('Pitch copiado!');
+    toast.success('¡Pitch copiado!');
     setTimeout(() => setCopiedPitch(null), 2000);
   };
 
@@ -36,7 +36,7 @@ export function PlaybookView({ product }: PlaybookViewProps) {
     { id: 'pitch', label: 'Pitches', icon: Target },
     { id: 'icp', label: 'ICP', icon: Users },
     { id: 'pricing', label: 'Pricing', icon: DollarSign },
-    { id: 'differentials', label: 'Diferenciais', icon: Sparkles },
+    { id: 'differentials', label: 'Diferenciales', icon: Sparkles },
   ];
 
   const pitches = [
@@ -51,7 +51,7 @@ export function PlaybookView({ product }: PlaybookViewProps) {
       <div>
         <h2 className={cn("font-bold text-foreground", isMobile ? "text-xl" : "text-2xl")}>Playbook Comercial</h2>
         <p className="text-muted-foreground mt-1 text-sm">
-          Tudo que você precisa saber sobre {product.name}
+          Todo lo que necesita saber sobre {product.name}
         </p>
       </div>
 
@@ -103,7 +103,7 @@ export function PlaybookView({ product }: PlaybookViewProps) {
                     <div>
                       <h3 className="font-semibold text-foreground">{pitch.label}</h3>
                       <p className="text-xs text-muted-foreground">
-                        {pitch.type === '15s' ? 'Elevator pitch' : pitch.type === '30s' ? 'Abordagem inicial' : 'Apresentação completa'}
+                        {pitch.type === '15s' ? 'Elevator pitch' : pitch.type === '30s' ? 'Enfoque inicial' : 'Presentación completa'}
                       </p>
                     </div>
                   </div>
@@ -144,8 +144,8 @@ export function PlaybookView({ product }: PlaybookViewProps) {
                 <Users size={24} className="text-primary-foreground" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-foreground">Perfil do Cliente Ideal</h3>
-                <p className="text-sm text-muted-foreground">Quem compra e por quê</p>
+                <h3 className="text-lg font-semibold text-foreground">Perfil del Cliente Ideal</h3>
+                <p className="text-sm text-muted-foreground">Quién compra y por qué</p>
               </div>
             </div>
             <div className="p-4 rounded-lg bg-secondary/50 border border-border">
@@ -157,19 +157,19 @@ export function PlaybookView({ product }: PlaybookViewProps) {
               isMobile ? "grid-cols-1" : "grid-cols-2"
             )}>
               <div className="p-4 rounded-lg bg-success/5 border border-success/20">
-                <h4 className="font-medium text-success mb-2">✓ Sinais de fit</h4>
+                <h4 className="font-medium text-success mb-2">✓ Señales de ajuste</h4>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• Base de clientes ativa</li>
-                  <li>• Budget para tecnologia</li>
-                  <li>• Problema de retenção</li>
+                  <li>• Base de clientes activa</li>
+                  <li>• Presupuesto para tecnología</li>
+                  <li>• Problema de retención</li>
                 </ul>
               </div>
               <div className="p-4 rounded-lg bg-destructive/5 border border-destructive/20">
-                <h4 className="font-medium text-destructive mb-2">✗ Red flags</h4>
+                <h4 className="font-medium text-destructive mb-2">✗ Señales de alerta</h4>
                 <ul className="text-sm text-muted-foreground space-y-1">
                   <li>• Menos de 1k clientes</li>
-                  <li>• Sem time técnico</li>
-                  <li>• Apenas preço importa</li>
+                  <li>• Sin equipo técnico</li>
+                  <li>• Solo importa el precio</li>
                 </ul>
               </div>
             </div>

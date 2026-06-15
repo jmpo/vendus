@@ -68,7 +68,7 @@ interface AgentEditorProps {
   productId: string | null;
   onSave: (agent: Partial<ProductAgent>) => void;
   isLoading?: boolean;
-  /** When true, opens directly on the "Executivo" tab (admin only). */
+  /** When true, opens directly on the "Ejecutivo" tab (admin only). */
   openOnExecutiveTab?: boolean;
 }
 
@@ -83,7 +83,7 @@ const DEFAULT_AGENT: Partial<ProductAgent> = {
   end_conversation_triggers: [],
   tone_style: 'friendly',
   message_style: 'balanced',
-  // ai_model removido — modelo agora vem de org_ai_routing (Integrações > Roteamento de IA)
+  // ai_model removido — modelo agora vem de org_ai_routing (Integrações > Enrutamiento de IA)
   always_end_with_question: true,
   additional_prompt: '',
   required_phrases: [],
@@ -162,14 +162,14 @@ export function AgentEditor({
 
   const runGenerateWithAI = async (contextOverride?: string) => {
     if (!formData.agent_type) {
-      toast.error('Selecione o tipo de agente primeiro');
+      toast.error('Seleccione el tipo de agente primero');
       setActiveTab('identity');
       return;
     }
     // Para tipos globais (admin/support/financial), permite gerar SEM produto
     // Para SDR/Closer/CS/custom, exige produto
     if (!formData.product_id && !isGlobalType(formData.agent_type)) {
-      toast.error('Selecione um produto antes de gerar com IA');
+      toast.error('Seleccione un producto antes de generar con IA');
       setActiveTab('identity');
       return;
     }
@@ -205,13 +205,13 @@ export function AgentEditor({
         agent_type: prev.agent_type,
         product_id: prev.product_id ?? null,
       }));
-      toast.success('Agente gerado! Revise as configurações e ajuste se necessário.');
+      toast.success('¡Agente generado! Revise las configuraciones y ajuste si es necesario.');
     }
   };
 
   const handleGenerateWithAI = async () => {
     if (!formData.agent_type) {
-      toast.error('Selecione o tipo de agente primeiro');
+      toast.error('Seleccione el tipo de agente primero');
       setActiveTab('identity');
       return;
     }
@@ -234,7 +234,7 @@ export function AgentEditor({
   const handleOptimizeField = async (field: keyof ProductAgent) => {
     const currentValue = formData[field];
     if (!currentValue || (Array.isArray(currentValue) && currentValue.length === 0)) {
-      toast.error('Preencha o campo antes de otimizar');
+      toast.error('Complete el campo antes de optimizar');
       return;
     }
 
@@ -251,7 +251,7 @@ export function AgentEditor({
         ...prev,
         [field]: result.optimized,
       }));
-      toast.success(result.reasoning || 'Campo otimizado!');
+      toast.success(result.reasoning || '¡Campo optimizado!');
     }
     setOptimizingField(null);
   };
@@ -313,7 +313,7 @@ export function AgentEditor({
       return;
     }
     if (!isGlobalType(formData.agent_type) && !formData.product_id) {
-      toast.error('Selecione um produto ou mude o tipo para Administrativo/Soporte/Financeiro (globais)');
+      toast.error('Seleccione un producto o cambie el tipo a Administrativo/Soporte/Financiero (globales)');
       setActiveTab('identity');
       return;
     }
@@ -342,9 +342,9 @@ export function AgentEditor({
         .update({ updated_at: new Date().toISOString() })
         .eq('id', agent.id);
       
-      toast.success('Agente retreinado! As alterações já estão ativas.');
+      toast.success('¡Agente reentrenado! Los cambios ya están activos.');
     } catch (err) {
-      toast.error('Erro ao retreinar o agente');
+      toast.error('Error al reentrenar al agente');
     } finally {
       setIsRetraining(false);
     }
@@ -361,7 +361,7 @@ export function AgentEditor({
               <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                 <Bot className="h-4 w-4 text-primary" />
               </div>
-              {isEditing ? 'Editar Agente' : 'Criar Novo Agente'}
+              {isEditing ? 'Editar Agente' : 'Crear Nuevo Agente'}
             </DialogTitle>
             {!isEditing && (
               <Button
@@ -377,7 +377,7 @@ export function AgentEditor({
                   <Wand2 className="h-4 w-4 text-violet-600" />
                 )}
                 <span className="text-violet-700 dark:text-violet-300">
-                  {isGenerating ? 'Gerando...' : 'Gerar com IA'}
+                  {isGenerating ? 'Generando...' : 'Generar con IA'}
                 </span>
               </Button>
             )}
@@ -385,10 +385,10 @@ export function AgentEditor({
           {!isEditing && missingFields.length > 0 && (
             <div className="flex items-center gap-2 mt-2">
               <Badge variant="destructive" className="text-xs font-normal">
-                Faltam: {missingFields.join(', ')}
+                Faltan: {missingFields.join(', ')}
               </Badge>
               <span className="text-xs text-muted-foreground">
-                Preencha para criar o agente
+                Complete para crear el agente
               </span>
             </div>
           )}
@@ -401,11 +401,11 @@ export function AgentEditor({
               <TabsList className="inline-flex h-auto w-max gap-1">
                 <TabsTrigger value="identity" className="text-xs whitespace-nowrap">
                   <Bot className="h-3 w-3 mr-1" />
-                  Identidade
+                  Identidad
                 </TabsTrigger>
                 <TabsTrigger value="tone" className="text-xs whitespace-nowrap">
                   <MessageSquare className="h-3 w-3 mr-1" />
-                  Personalidade
+                  Personalidad
                 </TabsTrigger>
                 <TabsTrigger value="objective" className="text-xs whitespace-nowrap">
                   <Target className="h-3 w-3 mr-1" />
@@ -413,33 +413,33 @@ export function AgentEditor({
                 </TabsTrigger>
                 <TabsTrigger value="executive" className="text-xs whitespace-nowrap">
                   <Crown className="h-3 w-3 mr-1" />
-                  Executivo
+                  Ejecutivo
                 </TabsTrigger>
                 <TabsTrigger value="test" className="text-xs whitespace-nowrap" disabled={!isEditing}>
                   <MessageCircle className="h-3 w-3 mr-1" />
-                  Histórico & Teste
+                  Historial y Prueba
                 </TabsTrigger>
               </TabsList>
             ) : isOrchestrator ? (
               // Orchestrator: classifier-only tabs + welcome/menu
               <TabsList className="inline-flex h-auto w-max gap-1">
                 <TabsTrigger value="identity" className="text-xs whitespace-nowrap">
-                  <Bot className="h-3 w-3 mr-1" />Identidade
+                  <Bot className="h-3 w-3 mr-1" />Identidad
                 </TabsTrigger>
                 <TabsTrigger value="objective" className="text-xs whitespace-nowrap">
                   <Target className="h-3 w-3 mr-1" />Objetivo
                 </TabsTrigger>
                 <TabsTrigger value="welcome" className="text-xs whitespace-nowrap">
-                  <Hand className="h-3 w-3 mr-1" />Boas-vindas
+                  <Hand className="h-3 w-3 mr-1" />Bienvenida
                 </TabsTrigger>
                 <TabsTrigger value="routing" className="text-xs whitespace-nowrap">
-                  <Compass className="h-3 w-3 mr-1" />Roteamento
+                  <Compass className="h-3 w-3 mr-1" />Enrutamiento
                 </TabsTrigger>
                 <TabsTrigger value="channels" className="text-xs whitespace-nowrap">
-                  <Zap className="h-3 w-3 mr-1" />Canais
+                  <Zap className="h-3 w-3 mr-1" />Canales
                 </TabsTrigger>
                 <TabsTrigger value="test" className="text-xs whitespace-nowrap" disabled={!isEditing}>
-                  <MessageCircle className="h-3 w-3 mr-1" />Testar
+                  <MessageCircle className="h-3 w-3 mr-1" />Probar
                 </TabsTrigger>
               </TabsList>
             ) : (
@@ -447,7 +447,7 @@ export function AgentEditor({
               <TabsList className="inline-flex h-auto w-max gap-1">
                 <TabsTrigger value="identity" className="text-xs whitespace-nowrap">
                   <Bot className="h-3 w-3 mr-1" />
-                  Identidade
+                  Identidad
                 </TabsTrigger>
                 <TabsTrigger value="objective" className="text-xs whitespace-nowrap">
                   <Target className="h-3 w-3 mr-1" />
@@ -455,7 +455,7 @@ export function AgentEditor({
                 </TabsTrigger>
                 <TabsTrigger value="behavior" className="text-xs whitespace-nowrap">
                   <Settings2 className="h-3 w-3 mr-1" />
-                  Regras
+                  Reglas
                 </TabsTrigger>
                 <TabsTrigger value="tone" className="text-xs whitespace-nowrap">
                   <MessageSquare className="h-3 w-3 mr-1" />
@@ -475,7 +475,7 @@ export function AgentEditor({
                 </TabsTrigger>
                 <TabsTrigger value="channels" className="text-xs whitespace-nowrap">
                   <Zap className="h-3 w-3 mr-1" />
-                  Canais
+                  Canales
                 </TabsTrigger>
                 {isSupport && (
                   <TabsTrigger value="support" className="text-xs whitespace-nowrap">
@@ -489,7 +489,7 @@ export function AgentEditor({
                 </TabsTrigger>
                 <TabsTrigger value="test" className="text-xs whitespace-nowrap" disabled={!isEditing}>
                   <MessageCircle className="h-3 w-3 mr-1" />
-                  Testar
+                  Probar
                 </TabsTrigger>
               </TabsList>
             )}
@@ -502,7 +502,7 @@ export function AgentEditor({
                 <div className="space-y-2">
                   <Label>Tipo de Agente</Label>
                   <p className="text-xs text-muted-foreground">
-                    Selecione o tipo e clique em "Gerar com IA" para criar automaticamente
+                    Selecione o tipo e clique em "Generar con IA" para criar automaticamente
                   </p>
                   <div className="grid grid-cols-3 gap-2">
                     {(Object.keys(AGENT_TEMPLATES) as AgentType[]).map((type) => {
@@ -693,7 +693,7 @@ export function AgentEditor({
                         <SelectContent>
                           {formData.agent_type === 'admin' ? (
                             <>
-                              <SelectItem value="admin_executive">Executivo direto</SelectItem>
+                              <SelectItem value="admin_executive">Ejecutivo direto</SelectItem>
                               <SelectItem value="admin_strategic">Consultor estratégico</SelectItem>
                               <SelectItem value="admin_auditor">Auditor crítico</SelectItem>
                               <SelectItem value="admin_coach">Coach da equipe</SelectItem>
@@ -969,7 +969,7 @@ export function AgentEditor({
                 <div className="rounded-md border border-dashed bg-muted/30 p-3">
                   <p className="text-xs text-muted-foreground">
                     💡 O <strong>modelo de IA</strong> usado pelos agentes de conversa é definido em{' '}
-                    <strong>Configurações → Integrações → Roteamento de IA</strong> (capacidade
+                    <strong>Configurações → Integrações → Enrutamiento de IA</strong> (capacidade
                     "Agentes de conversa") e vale para toda a organização.
                   </p>
                 </div>
@@ -1222,7 +1222,7 @@ export function AgentEditor({
             <Button 
               onClick={handleSave} 
               disabled={isLoading}
-              title={missingFields.length > 0 ? `Faltam: ${missingFields.join(', ')}` : undefined}
+              title={missingFields.length > 0 ? `Faltan: ${missingFields.join(', ')}` : undefined}
             >
               {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               {isEditing ? 'Salvar' : 'Criar Agente'}
@@ -1262,7 +1262,7 @@ export function AgentEditor({
               className="gap-2"
             >
               {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-              {isGenerating ? 'Gerando...' : 'Gerar Agente'}
+              {isGenerating ? 'Generando...' : 'Gerar Agente'}
             </Button>
           </div>
         </DialogContent>

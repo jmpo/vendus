@@ -27,11 +27,11 @@ import { Database as DatabaseIcon, ShieldCheck } from 'lucide-react';
 const DOW_LABELS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
 const KPI_OPTIONS = [
-  { id: 'leads_created', label: 'Leads criados' },
-  { id: 'conversions', label: 'Conversões' },
+  { id: 'leads_created', label: 'Leads creados' },
+  { id: 'conversions', label: 'Conversiones' },
   { id: 'pipeline_total', label: 'Pipeline total' },
-  { id: 'meetings', label: 'Reuniões' },
-  { id: 'overdue_tasks', label: 'Tarefas em atraso' },
+  { id: 'meetings', label: 'Reuniones' },
+  { id: 'overdue_tasks', label: 'Tareas atrasadas' },
   { id: 'top_sellers', label: 'Top vendedores' },
 ];
 
@@ -39,14 +39,14 @@ const KPI_OPTIONS = [
 // Each one maps to a tool in admin-agent-handle-inbound and can be turned off
 // to restrict what the agent is allowed to look at.
 const ADMIN_DATA_SOURCES = [
-  { id: 'get_pipeline_summary', label: 'Pipeline e deals abertos', description: 'Estágios, valores em aberto, distribuição' },
-  { id: 'get_inbox_status', label: 'Inbox e conversas', description: 'Conversas ativas e sem atendimento' },
-  { id: 'get_team_status', label: 'Equipe e status', description: 'Vendedores online/offline e carga de leads' },
-  { id: 'get_tasks_overview', label: 'Tarefas pendentes', description: 'Tarefas vencidas e em andamento' },
-  { id: 'get_bookings', label: 'Reuniões e agendamentos', description: 'Eventos do calendário' },
-  { id: 'get_financial_summary', label: 'Financeiro e comissões', description: 'Receita, comissões pendentes, previsões' },
-  { id: 'get_goals_progress', label: 'Metas e performance', description: 'Progresso individual e da equipe' },
-  { id: 'get_agent_logs', label: 'Logs dos agentes IA', description: 'Erros e ações recentes dos agentes' },
+  { id: 'get_pipeline_summary', label: 'Pipeline y negocios abiertos', description: 'Etapas, valores abiertos, distribución' },
+  { id: 'get_inbox_status', label: 'Inbox y conversaciones', description: 'Conversaciones activas y sin atención' },
+  { id: 'get_team_status', label: 'Equipo y estado', description: 'Vendedores en línea/fuera de línea y carga de leads' },
+  { id: 'get_tasks_overview', label: 'Tareas pendientes', description: 'Tareas vencidas y en curso' },
+  { id: 'get_bookings', label: 'Reuniones e agendamentos', description: 'Eventos del calendario' },
+  { id: 'get_financial_summary', label: 'Finanzas y comisiones', description: 'Ingresos, comisiones pendientes, pronósticos' },
+  { id: 'get_goals_progress', label: 'Metas y rendimiento', description: 'Progreso individual y del equipo' },
+  { id: 'get_agent_logs', label: 'Logs de los agentes IA', description: 'Errores y acciones recientes de los agentes' },
 ];
 
 function normalizePhoneInput(raw: string): string {
@@ -149,7 +149,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
 
   const toggleDataSource = async (sourceId: string) => {
     if (!adminAgent?.id) {
-      toast.error('Crie/ative o Agente Admin antes de configurar fontes.');
+      toast.error('Cree/active el Agente Admin antes de configurar las fuentes.');
       return;
     }
     const next = allowedSources.includes(sourceId)
@@ -165,7 +165,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
       .update({ tool_configs: newToolConfigs as any })
       .eq('id', adminAgent.id);
     if (error) {
-      toast.error('Falha ao salvar permissão: ' + error.message);
+      toast.error('Fallo al guardar el permiso: ' + error.message);
       return;
     }
     queryClient.invalidateQueries({ queryKey: ['default-admin-agent', profile?.organization_id] });
@@ -319,14 +319,14 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
           <div>
             <h3 className="text-lg font-semibold flex items-center gap-2">
               <Crown className="h-5 w-5 text-primary" />
-              Agente Admin Executivo
+              Agente Admin Ejecutivo
               <Badge variant="secondary" className="ml-2 text-xs">
                 <Sparkles className="h-3 w-3 mr-1" />
                 IA
               </Badge>
             </h3>
             <p className="text-sm text-muted-foreground max-w-2xl">
-              Assistente IA exclusivo do administrador. Tudo configurado dentro do próprio agente.
+              Asistente de IA exclusivo para el administrador. Todo configurado dentro del propio agente.
             </p>
           </div>
         </div>
@@ -339,10 +339,10 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
             <div>
               <CardTitle className="text-base flex items-center gap-2">
                 <Crown className="h-4 w-4 text-primary" />
-                Este é o Agente Executivo da organização
+                Este es el Agente Ejecutivo de la organización
               </CardTitle>
               <CardDescription>
-                Quando ativo, o agente envia resumos e responde apenas ao número configurado abaixo.
+                Cuando está activo, el agente envía resúmenes y responde solo al número configurado a continuación.
               </CardDescription>
             </div>
             <Switch
@@ -357,7 +357,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">
                   <Phone className="h-4 w-4" />
-                  WhatsApp do administrador
+                  WhatsApp del administrador
                 </Label>
                 <Input
                   placeholder="(11) 99999-9999"
@@ -365,17 +365,17 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                   onChange={(e) => update('admin_whatsapp_number', e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Apenas mensagens deste número são tratadas como admin. DDI 55 é adicionado automaticamente.
+                  Solo los mensajes de este número se tratan como administrador. El DDI 55 se agrega automáticamente.
                 </p>
               </div>
               <div className="space-y-2">
-                <Label>Vincular ao usuário admin</Label>
+                <Label>Vincular al usuario administrador</Label>
                 <Select value={form.admin_user_id || 'none'} onValueChange={(v) => update('admin_user_id', v === 'none' ? '' : v)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione" />
+                    <SelectValue placeholder="Seleccione" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">— Não vincular —</SelectItem>
+                    <SelectItem value="none">— No vincular —</SelectItem>
                     {(admins ?? []).map((a) => (
                       <SelectItem key={a.id} value={a.id}>
                         {a.full_name || a.email}
@@ -386,18 +386,18 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
               </div>
             </div>
 
-            {/* Produtos sob acompanhamento */}
+            {/* Productos bajo seguimiento */}
             <div className="space-y-2 pt-2">
               <Label className="flex items-center gap-2">
                 <Package className="h-4 w-4" />
-                Produtos sob acompanhamento
+                Productos bajo seguimiento
               </Label>
               <p className="text-xs text-muted-foreground">
-                Selecione quais produtos o agente deve vigiar. Vazio = todos os produtos da organização.
+                Seleccione quais produtos o agente deve vigiar. Vazio = todos os produtos da organização.
               </p>
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {(products ?? []).length === 0 && (
-                  <span className="text-xs text-muted-foreground italic">Nenhum produto cadastrado.</span>
+                  <span className="text-xs text-muted-foreground italic">Ningún producto registrado.</span>
                 )}
                 {(products ?? []).map((p) => {
                   const active = form.monitored_product_ids.includes(p.id);
@@ -687,7 +687,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
 
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <Label className="text-sm font-medium">Reuniões confirmadas/canceladas</Label>
+                      <Label className="text-sm font-medium">Reuniones confirmadas/canceladas</Label>
                       <p className="text-xs text-muted-foreground">Notificar quando o status de uma reunião muda</p>
                     </div>
                     <Switch
@@ -774,7 +774,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
               onValueChange={(v) => setSelectedInstanceId(v === 'auto' ? '' : v)}
             >
               <SelectTrigger className="w-full sm:w-[420px]">
-                <SelectValue placeholder="Selecione uma conexão" />
+                <SelectValue placeholder="Seleccione uma conexão" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="auto">

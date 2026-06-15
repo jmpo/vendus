@@ -80,9 +80,9 @@ export function QuickRepliesManager() {
       queryClient.invalidateQueries({ queryKey: ['quick-replies'] });
       setEditing(null);
       setCreating(false);
-      toast({ title: 'Resposta rápida salva' });
+      toast({ title: 'Respuesta rápida guardada' });
     },
-    onError: (e: any) => toast({ title: 'Erro ao salvar', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error al guardar', description: e.message, variant: 'destructive' }),
   });
 
   const deleteMutation = useMutation({
@@ -94,7 +94,7 @@ export function QuickRepliesManager() {
       queryClient.invalidateQueries({ queryKey: ['quick-replies-admin'] });
       queryClient.invalidateQueries({ queryKey: ['quick-replies'] });
       setDeleteId(null);
-      toast({ title: 'Resposta excluída' });
+      toast({ title: 'Respuesta eliminada' });
     },
   });
 
@@ -116,21 +116,21 @@ export function QuickRepliesManager() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <MessageSquare className="h-6 w-6" />
-            Respostas Rápidas
+            Respuestas Rápidas
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Crie atalhos para o time enviar mensagens prontas no chat. Use <code className="px-1 bg-muted rounded text-xs">{'{{nome}}'}</code> e <code className="px-1 bg-muted rounded text-xs">{'{{produto}}'}</code> como variáveis.
+            Crea atajos para que el equipo envíe mensajes listos en el chat. Use <code className="px-1 bg-muted rounded text-xs">{'{{nome}}'}</code> e <code className="px-1 bg-muted rounded text-xs">{'{{produto}}'}</code> como variáveis.
           </p>
         </div>
         <Button onClick={() => setCreating(true)}>
-          <Plus className="h-4 w-4 mr-2" /> Nova resposta
+          <Plus className="h-4 w-4 mr-2" /> Nueva respuesta
         </Button>
       </div>
 
       <div className="relative max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Buscar por título, conteúdo, atalho ou categoria..."
+          placeholder="Buscar por título, contenido, atajo o categoría..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="pl-9"
@@ -143,8 +143,8 @@ export function QuickRepliesManager() {
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
             <MessageSquare className="h-12 w-12 mx-auto mb-3 opacity-30" />
-            <p className="font-medium">Nenhuma resposta cadastrada</p>
-            <p className="text-sm mt-1">Crie sua primeira resposta rápida para acelerar o atendimento.</p>
+            <p className="font-medium">Ninguna respuesta registrada</p>
+            <p className="text-sm mt-1">Crea tu primera respuesta rápida para acelerar la atención.</p>
           </CardContent>
         </Card>
       ) : (
@@ -199,9 +199,9 @@ export function QuickRepliesManager() {
       <AlertDialog open={!!deleteId} onOpenChange={(o) => !o && setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir resposta rápida?</AlertDialogTitle>
+            <AlertDialogTitle>¿Eliminar respuesta rápida?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. A resposta deixará de aparecer no chat.
+              Esta acción no se puede deshacer. La respuesta dejará de aparecer en el chat.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -249,12 +249,12 @@ function ReplyFormDialog({ open, onClose, initial, onSave, isSaving }: FormProps
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="sm:max-w-[560px]">
         <DialogHeader>
-          <DialogTitle>{initial ? 'Editar resposta rápida' : 'Nova resposta rápida'}</DialogTitle>
+          <DialogTitle>{initial ? 'Editar resposta rápida' : 'Nueva respuesta rápida'}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label>Categoria</Label>
+              <Label>Categoría</Label>
               <Input
                 list="categories-list"
                 value={category}
@@ -266,7 +266,7 @@ function ReplyFormDialog({ open, onClose, initial, onSave, isSaving }: FormProps
               </datalist>
             </div>
             <div className="space-y-2">
-              <Label>Atalho (opcional)</Label>
+              <Label>Atajo (opcional)</Label>
               <Input
                 value={shortcut}
                 onChange={(e) => setShortcut(e.target.value)}
@@ -277,14 +277,14 @@ function ReplyFormDialog({ open, onClose, initial, onSave, isSaving }: FormProps
           </div>
           <div className="space-y-2">
             <Label>Título</Label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Apresentação do produto" maxLength={100} />
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Presentación del producto" maxLength={100} />
           </div>
           <div className="space-y-2">
-            <Label>Conteúdo</Label>
+            <Label>Contenido</Label>
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Olá {{nome}}! O {{produto}} é a solução..."
+              placeholder="¡Hola {{nombre}}! {{produto}} es la solución..."
               rows={6}
               maxLength={2000}
             />

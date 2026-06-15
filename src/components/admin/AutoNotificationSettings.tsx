@@ -64,10 +64,10 @@ export function AutoNotificationSettings() {
         <div>
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
-            Notificações Automáticas
+            Notificaciones Automáticas
           </h3>
           <p className="text-sm text-muted-foreground">
-            Configure alertas automáticos baseados em eventos do sistema
+            Configura alertas automáticos basados en eventos del sistema
           </p>
         </div>
         <Button 
@@ -79,12 +79,12 @@ export function AutoNotificationSettings() {
           ) : (
             <Save className="h-4 w-4 mr-2" />
           )}
-          Salvar
+          Guardar
         </Button>
       </div>
       
       <div className="grid gap-4">
-        {/* Lead Parado */}
+        {/* Lead Detenido */}
         <Card className="border-border/50">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
@@ -93,9 +93,9 @@ export function AutoNotificationSettings() {
                   <Clock className="h-5 w-5 text-orange-500" />
                 </div>
                 <div>
-                  <CardTitle className="text-base">Lead Parado</CardTitle>
+                  <CardTitle className="text-base">Lead Detenido</CardTitle>
                   <CardDescription>
-                    Alertar vendedor quando um lead ficar sem contato
+                    Alertar al vendedor cuando un lead se quede sin contacto
                   </CardDescription>
                 </div>
               </div>
@@ -108,7 +108,7 @@ export function AutoNotificationSettings() {
           {formData.stalled_lead_enabled && (
             <CardContent className="pt-0">
               <div className="flex items-center gap-3 pl-12">
-                <Label className="text-sm text-muted-foreground">Notificar após</Label>
+                <Label className="text-sm text-muted-foreground">Notificar después de</Label>
                 <Select
                   value={String(formData.stalled_lead_days)}
                   onValueChange={(value) => handleChange('stalled_lead_days', parseInt(value))}
@@ -122,13 +122,13 @@ export function AutoNotificationSettings() {
                     ))}
                   </SelectContent>
                 </Select>
-                <Label className="text-sm text-muted-foreground">dias sem contato</Label>
+                <Label className="text-sm text-muted-foreground">días sin contacto</Label>
               </div>
             </CardContent>
           )}
         </Card>
         
-        {/* Meta Atingida */}
+        {/* Meta Alcanzada */}
         <Card className="border-border/50">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
@@ -137,9 +137,9 @@ export function AutoNotificationSettings() {
                   <Target className="h-5 w-5 text-green-500" />
                 </div>
                 <div>
-                  <CardTitle className="text-base">Meta Atingida</CardTitle>
+                  <CardTitle className="text-base">Meta Alcanzada</CardTitle>
                   <CardDescription>
-                    Parabenizar vendedor ao atingir meta de vendas
+                    Felicitar al vendedor al alcanzar la meta de ventas
                   </CardDescription>
                 </div>
               </div>
@@ -151,7 +151,7 @@ export function AutoNotificationSettings() {
           </CardHeader>
         </Card>
         
-        {/* Comissão Aprovada */}
+        {/* Comisión Aprobada */}
         <Card className="border-border/50">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
@@ -160,9 +160,9 @@ export function AutoNotificationSettings() {
                   <DollarSign className="h-5 w-5 text-emerald-500" />
                 </div>
                 <div>
-                  <CardTitle className="text-base">Comissão Aprovada</CardTitle>
+                  <CardTitle className="text-base">Comisión Aprobada</CardTitle>
                   <CardDescription>
-                    Notificar quando uma comissão for aprovada
+                    Notificar cuando se apruebe una comisión
                   </CardDescription>
                 </div>
               </div>
@@ -174,7 +174,7 @@ export function AutoNotificationSettings() {
           </CardHeader>
         </Card>
         
-        {/* Relatório Diário com IA */}
+        {/* Informe Diario con IA */}
         <Card className="border-border/50 ring-1 ring-primary/20">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
@@ -184,11 +184,11 @@ export function AutoNotificationSettings() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <CardTitle className="text-base">Relatório Diário com IA</CardTitle>
+                    <CardTitle className="text-base">Informe Diario con IA</CardTitle>
                     <Badge variant="secondary" className="text-xs">IA</Badge>
                   </div>
                   <CardDescription>
-                    Briefing personalizado com tarefas, leads e prioridades do dia
+                    Briefing personalizado con tareas, leads y prioridades del día
                   </CardDescription>
                 </div>
               </div>
@@ -201,7 +201,7 @@ export function AutoNotificationSettings() {
           {formData.daily_report_enabled && (
             <CardContent className="pt-0 space-y-4">
               <div className="flex items-center gap-3 pl-12">
-                <Label className="text-sm text-muted-foreground">Enviar às</Label>
+                <Label className="text-sm text-muted-foreground">Enviar a las</Label>
                 <Select
                   value={String(formData.daily_report_hour)}
                   onValueChange={(value) => handleChange('daily_report_hour', parseInt(value))}
@@ -217,7 +217,7 @@ export function AutoNotificationSettings() {
                     ))}
                   </SelectContent>
                 </Select>
-                <Label className="text-sm text-muted-foreground">todos os dias</Label>
+                <Label className="text-sm text-muted-foreground">todos los días</Label>
               </div>
               
               <div className="flex items-center gap-3 pl-12">
@@ -227,7 +227,7 @@ export function AutoNotificationSettings() {
                   onCheckedChange={(checked) => handleChange('daily_report_send_email', checked)}
                 />
                 <Label htmlFor="daily_report_email" className="text-sm">
-                  Enviar também por email
+                  Enviar también por correo electrónico
                 </Label>
               </div>
             </CardContent>
@@ -240,11 +240,11 @@ export function AutoNotificationSettings() {
           <div className="flex items-start gap-3">
             <Bell className="h-5 w-5 text-muted-foreground mt-0.5" />
             <div className="text-sm text-muted-foreground">
-              <p className="font-medium text-foreground mb-1">Como funciona?</p>
+              <p className="font-medium text-foreground mb-1">¿Cómo funciona?</p>
               <p>
-                As notificações automáticas são processadas periodicamente pelo sistema. 
-                Cada vendedor receberá alertas personalizados no app e por email (quando habilitado).
-                O sistema evita duplicações e respeita as preferências configuradas.
+                Las notificaciones automáticas son procesadas periódicamente por el sistema. 
+                Cada vendedor recibirá alertas personalizadas en la aplicación y por correo electrónico (cuando esté habilitado).
+                El sistema evita duplicaciones y respeta las preferencias configuradas.
               </p>
             </div>
           </div>
@@ -282,15 +282,15 @@ function ExecutiveAgentShortcut() {
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <h4 className="font-semibold">Agente Admin Executivo</h4>
+                <h4 className="font-semibold">Agente Admin Ejecutivo</h4>
                 <Badge variant={enabled ? 'default' : 'outline'} className="text-[10px]">
-                  {enabled ? 'Ativo' : 'Desativado'}
+                  {enabled ? 'Activo' : 'Desactivado'}
                 </Badge>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 {enabled
-                  ? `WhatsApp: ${phone || 'não configurado'} · Resumo às ${String(settings?.daily_summary_hour ?? 8).padStart(2, '0')}:00 · ${enabledAlertsCount} alertas habilitados`
-                  : 'Configure o assistente IA do administrador dentro do próprio agente.'}
+                  ? `WhatsApp: ${phone || 'no configurado'} · Resumen a las ${String(settings?.daily_summary_hour ?? 8).padStart(2, '0')}:00 · ${enabledAlertsCount} alertas habilitadas`
+                  : 'Configura el asistente IA del administrador dentro del propio agente.'}
               </p>
             </div>
           </div>
@@ -299,7 +299,7 @@ function ExecutiveAgentShortcut() {
             variant="outline"
             className="gap-2 shrink-0"
           >
-            Configurar no agente
+            Configurar en el agente
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>

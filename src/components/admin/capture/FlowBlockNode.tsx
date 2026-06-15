@@ -109,34 +109,34 @@ interface FlowBlockNodeProps {
 function getBlockPreview(block: FunnelBlock): string {
   switch (block.type) {
     case 'message':
-      return block.data.content?.substring(0, 40) || 'Mensagem vazia...';
+      return block.data.content?.substring(0, 40) || 'Mensaje vacío...';
     case 'input':
       return `${block.data.input_type || 'texto'} → $${block.data.variable_name || 'var'}`;
     case 'buttons':
       const btnCount = block.data.options?.length || 0;
-      return `${btnCount} ${btnCount === 1 ? 'opção' : 'opções'}`;
+      return `${btnCount} ${btnCount === 1 ? 'opción' : 'opciones'}`;
     case 'ai_takeover':
       if (block.data.agent_id) {
         const hasAutoSwitch = block.data.auto_switch_enabled && block.data.auto_switch_agents?.length;
-        return hasAutoSwitch ? 'IA + Agente (auto-switch)' : 'IA + Agente selecionado';
+        return hasAutoSwitch ? 'IA + Agente (auto-switch)' : 'IA + Agente seleccionado';
       }
-      return 'IA assume (genérico)';
+      return 'IA asume (genérico)';
     case 'ai_decide':
-      return block.data.ai_objective || 'qualificar';
+      return block.data.ai_objective || 'calificar';
     case 'agent_switch':
-      return block.data.agent_id ? 'Agente configurado' : 'Selecionar agente...';
+      return block.data.agent_id ? 'Agente configurado' : 'Seleccionar agente...';
     case 'condition':
-      return block.data.condition?.variable || 'Condição';
+      return block.data.condition?.variable || 'Condición';
     case 'delay':
       return `${(block.data.delay_ms || 1000) / 1000}s`;
     case 'tag':
       return block.data.apply_tags?.slice(0, 2).join(', ') || 'Etiquetas';
     case 'video':
-      return block.data.video_type === 'custom_html' ? 'HTML personalizado' : block.data.video_url?.substring(0, 30) || 'Vídeo';
+      return block.data.video_type === 'custom_html' ? 'HTML personalizado' : block.data.video_url?.substring(0, 30) || 'Video';
     case 'image':
-      return block.data.image_url?.substring(0, 30) || 'Imagem';
+      return block.data.image_url?.substring(0, 30) || 'Imagen';
     case 'link':
-      return block.data.link_title || block.data.link_url?.substring(0, 30) || 'Link';
+      return block.data.link_title || block.data.link_url?.substring(0, 30) || 'Enlace';
     case 'handoff':
       return 'Transferir';
     case 'end':
@@ -214,7 +214,7 @@ export const FlowBlockNode = memo(function FlowBlockNode({
       {isStart && (
         <div className="absolute -top-7 left-1/2 -translate-x-1/2 flex items-center gap-1 text-[10px] font-semibold text-green-600 bg-green-500/10 px-2 py-0.5 rounded-full border border-green-500/30">
           <Play className="w-3 h-3 fill-green-600" />
-          INÍCIO
+          INICIO
         </div>
       )}
       
@@ -255,7 +255,7 @@ export const FlowBlockNode = memo(function FlowBlockNode({
                 e.stopPropagation();
                 onSetStart();
               }}
-              title="Definir como início"
+              title="Establecer como inicio"
             >
               <Play className="h-3 w-3" />
             </Button>
@@ -332,7 +332,7 @@ export const FlowBlockNode = memo(function FlowBlockNode({
             ? "bg-primary/20 border-2 border-primary scale-150 ring-4 ring-primary/30" 
             : "bg-background border-2 border-muted-foreground/40 hover:border-primary hover:bg-primary/10"
         )}
-        title="Entrada - Solte aqui para conectar"
+        title="Entrada - Suelta aquí para conectar"
         onMouseUp={handleInputMouseUp}
       >
         {/* Expanded invisible drop area */}
@@ -353,12 +353,12 @@ export const FlowBlockNode = memo(function FlowBlockNode({
         <div className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 flex flex-col gap-2">
           <div 
             className="w-4 h-4 rounded-full bg-green-500 border-2 border-green-500 hover:scale-150 active:scale-125 transition-transform cursor-crosshair"
-            title="Saída: Verdadeiro - Arraste para conectar"
+            title="Salida: Verdadero - Arrastra para conectar"
             onMouseDown={(e) => handleOutputMouseDown('condition_true', e)}
           />
           <div 
             className="w-4 h-4 rounded-full bg-red-500 border-2 border-red-500 hover:scale-150 active:scale-125 transition-transform cursor-crosshair"
-            title="Saída: Falso - Arraste para conectar"
+            title="Salida: Falso - Arrastra para conectar"
             onMouseDown={(e) => handleOutputMouseDown('condition_false', e)}
           />
         </div>
