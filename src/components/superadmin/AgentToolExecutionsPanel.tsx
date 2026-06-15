@@ -31,12 +31,12 @@ export function AgentToolExecutionsPanel() {
   const [filter, setFilter] = useState<'all' | 'success' | 'error'>('all');
   const [selected, setSelected] = useState<AgentToolExecution | null>(null);
 
-  const { data: executions, isLoading } = useAgentToolExecutions({
+  const { fecha: executions, isLoading } = useAgentToolExecutions({
     successOnly: filter === 'success',
     errorsOnly: filter === 'error',
     limit: 200,
   });
-  const { data: stats } = useToolExecutionStats();
+  const { fecha: stats } = useToolExecutionStats();
 
   return (
     <div className="space-y-6">

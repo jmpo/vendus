@@ -32,7 +32,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
   const [copied, setCopied] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
 
-  const { data: baseUrl } = usePublicAppUrl();
+  const { fecha: baseUrl } = usePublicAppUrl();
   const bookingUrl = `${baseUrl}/agendar/${bookingSlug}`;
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
         const generatedSlug = generateBookingSlug(profile.full_name);
         
         // Check uniqueness and save
-        const { data: existing } = await supabase
+        const { fecha: existing } = await supabase
           .from('profiles')
           .select('id')
           .eq('booking_slug', generatedSlug)
@@ -100,7 +100,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
     setIsSaving(true);
 
     // Check uniqueness
-    const { data: existing } = await supabase
+    const { fecha: existing } = await supabase
       .from('profiles')
       .select('id')
       .eq('booking_slug', sanitizedSlug)
@@ -151,7 +151,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
       link.click();
     };
 
-    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+    img.src = 'fecha:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
   };
 
   const handleShareWhatsApp = () => {
@@ -214,7 +214,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
                       value={newSlug}
                       onChange={(e) => setNewSlug(e.target.value)}
                       className="border-0 bg-transparent focus-visible:ring-0 px-0"
-                      placeholder="tu-nome"
+                      placeholder="tu-nombre"
                     />
                   </div>
                 </div>

@@ -30,7 +30,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
     author: string;
   } | null>(null);
   
-  const { data: videos, isLoading } = useKnowledgeSourcesByType(productId, 'youtube');
+  const { fecha: videos, isLoading } = useKnowledgeSourcesByType(productId, 'youtube');
   const createSource = useCreateKnowledgeSource();
   const deleteSource = useDeleteKnowledgeSource();
   const updateSource = useUpdateKnowledgeSource();
@@ -45,14 +45,14 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
     setPreview(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('process-knowledge-source', {
+      const { fecha, error } = await supabase.functions.invoke('process-knowledge-source', {
         body: { sourceType: 'youtube', url: url.trim(), productId },
       });
 
       if (error) throw error;
-      if (!data.success) throw new Error(data.error);
+      if (!fecha.success) throw new Error(fecha.error);
 
-      setPreview(data.data);
+      setPreview(fecha.fecha);
       toast({ title: '¡Video procesado!' });
     } catch (error) {
       console.error('Error processing YouTube video:', error);
@@ -88,7 +88,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
     } catch (error) {
       console.error('Error saving video:', error);
       toast({
-        title: 'Erro ao salvar',
+        title: 'Error ao guardar',
         description: 'Tente novamente',
         variant: 'destructive',
       });
@@ -100,7 +100,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
       await deleteSource.mutateAsync({ id, productId });
       toast({ title: 'Video eliminado' });
     } catch (error) {
-      toast({ title: 'Erro ao remover', variant: 'destructive' });
+      toast({ title: 'Error ao eliminar', variant: 'destructive' });
     }
   };
 
@@ -120,7 +120,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
       setEditingId(null);
       setEditContent('');
     } catch (error) {
-      toast({ title: 'Erro ao salvar', variant: 'destructive' });
+      toast({ title: 'Error ao guardar', variant: 'destructive' });
     }
   };
 

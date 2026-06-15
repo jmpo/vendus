@@ -37,7 +37,7 @@ export function AIResponseCorrector({
 
   const handleSubmit = async () => {
     if (!suggestedResponse.trim()) {
-      toast.error('Digite a resposta sugerida');
+      toast.error('Escribí a respuesta sugerida');
       return;
     }
 
@@ -55,7 +55,7 @@ export function AIResponseCorrector({
       setFeedbackType('correction');
       onOpenChange(false);
     } catch (error) {
-      toast.error('Erro ao salvar correção');
+      toast.error('Error ao guardar correção');
     }
   };
 
@@ -68,7 +68,7 @@ export function AIResponseCorrector({
             Corrigir Resposta da IA
           </DialogTitle>
           <DialogDescription>
-            Sugira uma resposta melhor para ensinar a IA
+            Sugiere uma respuesta melhor para ensinar a IA
           </DialogDescription>
         </DialogHeader>
 
@@ -86,7 +86,7 @@ export function AIResponseCorrector({
               id="suggested"
               value={suggestedResponse}
               onChange={(e) => setSuggestedResponse(e.target.value)}
-              placeholder="Digite como a IA deveria ter respondido..."
+              placeholder="Escribí como a IA deveria ter respondido..."
               className="min-h-[120px]"
             />
           </div>

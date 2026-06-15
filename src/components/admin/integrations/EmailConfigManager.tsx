@@ -9,7 +9,7 @@ import { useEmailConfig, useUpdateEmailConfig } from '@/hooks/useIntegrations';
 import { Loader2, AlertTriangle, Save } from 'lucide-react';
 
 export function EmailConfigManager() {
-  const { data: config, isLoading } = useEmailConfig();
+  const { fecha: config, isLoading } = useEmailConfig();
   const updateConfig = useUpdateEmailConfig();
 
   const [formData, setFormData] = useState({
@@ -67,7 +67,7 @@ export function EmailConfigManager() {
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="senderName">Nome do Remitente</Label>
+              <Label htmlFor="senderName">Nombre do Remitente</Label>
               <Input
                 id="senderName"
                 placeholder="Ex: Equipo de Ventas"
@@ -80,7 +80,7 @@ export function EmailConfigManager() {
               <Input
                 id="senderEmail"
                 type="email"
-                placeholder="Ex: vendas@suaempresa.com"
+                placeholder="Ex: ventas@suaempresa.com"
                 value={formData.senderEmail}
                 onChange={(e) => setFormData(prev => ({ ...prev, senderEmail: e.target.value }))}
               />
@@ -102,7 +102,7 @@ export function EmailConfigManager() {
         <CardContent>
           <div className="space-y-2">
             <Textarea
-              placeholder="Ex: Atenciosamente,&#10;Equipo de Ventas&#10;contato@empresa.com"
+              placeholder="Ex: Atenciosamente,&#10;Equipo de Ventas&#10;contacto@empresa.com"
               rows={4}
               value={formData.signature}
               onChange={(e) => setFormData(prev => ({ ...prev, signature: e.target.value }))}

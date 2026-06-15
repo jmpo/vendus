@@ -48,14 +48,14 @@ export function useAutoNotificationSettings() {
     queryFn: async () => {
       if (!profile?.organization_id) return null;
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('auto_notification_settings')
         .select('*')
         .eq('organization_id', profile.organization_id)
         .maybeSingle();
       
       if (error) throw error;
-      return data as AutoNotificationSettings | null;
+      return fecha as AutoNotificationSettings | null;
     },
     enabled: !!profile?.organization_id,
   });
@@ -69,7 +69,7 @@ export function useCreateAutoNotificationSettings() {
     mutationFn: async (settings: Partial<AutoNotificationSettings>) => {
       if (!profile?.organization_id) throw new Error('No organization');
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('auto_notification_settings')
         .insert({
           organization_id: profile.organization_id,
@@ -79,7 +79,7 @@ export function useCreateAutoNotificationSettings() {
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auto-notification-settings'] });
@@ -87,7 +87,7 @@ export function useCreateAutoNotificationSettings() {
     },
     onError: (error) => {
       console.error('Error creating settings:', error);
-      toast.error('Error al guardar configurações');
+      toast.error('Error al guardar configuraciones');
     },
   });
 }
@@ -100,7 +100,7 @@ export function useUpdateAutoNotificationSettings() {
     mutationFn: async (settings: Partial<AutoNotificationSettings>) => {
       if (!profile?.organization_id) throw new Error('No organization');
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('auto_notification_settings')
         .update(settings)
         .eq('organization_id', profile.organization_id)
@@ -108,7 +108,7 @@ export function useUpdateAutoNotificationSettings() {
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auto-notification-settings'] });
@@ -116,13 +116,13 @@ export function useUpdateAutoNotificationSettings() {
     },
     onError: (error) => {
       console.error('Error updating settings:', error);
-      toast.error('Error al actualizar configurações');
+      toast.error('Error al actualizar configuraciones');
     },
   });
 }
 
 export function useSaveAutoNotificationSettings() {
-  const { data: existingSettings } = useAutoNotificationSettings();
+  const { fecha: existingSettings } = useAutoNotificationSettings();
   const createSettings = useCreateAutoNotificationSettings();
   const updateSettings = useUpdateAutoNotificationSettings();
   

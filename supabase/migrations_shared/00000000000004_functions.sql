@@ -62,7 +62,7 @@ DECLARE
   v_tag_name text;
   v_inserted boolean;
 BEGIN
-  -- Resolve organization_id pelo lead se não passado
+  -- Resolve organization_id pelo lead se no passado
   IF v_org_id IS NULL THEN
     SELECT organization_id INTO v_org_id FROM leads WHERE id = p_lead_id;
     IF v_org_id IS NULL THEN
@@ -70,7 +70,7 @@ BEGIN
     END IF;
   END IF;
 
-  -- Itera automações ativas que casam com o evento
+  -- Itera automatizaciones ativas que casam com o evento
   -- Regras com product_id específico têm prioridade sobre globais (NULL)
   FOR v_automation IN
     SELECT ta.id, ta.tag_id_to_add, ta.product_id
@@ -84,7 +84,7 @@ BEGIN
       )
     ORDER BY ta.product_id NULLS LAST -- específicas primeiro
   LOOP
-    -- Tenta inserir; se já existe, ignora silenciosamente (preserva histórico original)
+    -- Tenta inserir; se ya existe, ignora silenciosamente (preserva histórico original)
     INSERT INTO lead_tag_assignments (lead_id, tag_id, source, applied_by)
     VALUES (p_lead_id, v_automation.tag_id_to_add, 'automation', NULL)
     ON CONFLICT (lead_id, tag_id) DO NOTHING;
@@ -92,7 +92,7 @@ BEGIN
     GET DIAGNOSTICS v_inserted = ROW_COUNT;
 
     IF v_inserted::int > 0 THEN
-      -- Busca nome da tag pra nota de auditoria
+      -- Busca nombre da tag pra nota de auditoria
       SELECT name INTO v_tag_name FROM lead_tags WHERE id = v_automation.tag_id_to_add;
 
       -- Registra nota de auditoria
@@ -140,7 +140,7 @@ BEGIN
     RETURN 0;
   END IF;
 
-  -- Calcular comissão baseado no tipo de regra
+  -- Calcular comisión baseado no tipo de regra
   IF v_rule.rule_type = 'percentage' THEN
     v_commission := p_deal_value * (v_rule.base_value / 100);
   ELSE
@@ -156,7 +156,7 @@ BEGIN
     v_commission := v_rule.max_value;
   END IF;
 
-  -- Inserir registro de comissão
+  -- Inserir registro de comisión
   INSERT INTO public.commissions (
     deal_id, user_id, product_id, organization_id, 
     amount, percentage_applied, rule_id, status
@@ -204,9 +204,9 @@ CREATE OR REPLACE FUNCTION public.create_product_tag_package(p_organization_id u
 AS $function$
 DECLARE
   v_specs jsonb := jsonb_build_array(
-    jsonb_build_object('event','pix_gerado',          'name','PIX Gerado',          'color','#EAB308', 'lifecycle', true),
-    jsonb_build_object('event','boleto_gerado',       'name','Boleto Gerado',       'color','#3B82F6', 'lifecycle', true),
-    jsonb_build_object('event','pix_gerado',          'name','Aguardando Pagamento','color','#F97316', 'lifecycle', true, 'also_event','boleto_gerado'),
+    jsonb_build_object('event','pix_gerado',          'name','PIX Generado',          'color','#EAB308', 'lifecycle', true),
+    jsonb_build_object('event','boleto_gerado',       'name','Boleto Generado',       'color','#3B82F6', 'lifecycle', true),
+    jsonb_build_object('event','pix_gerado',          'name','Aguardando Pago','color','#F97316', 'lifecycle', true, 'also_event','boleto_gerado'),
     jsonb_build_object('event','checkout_abandonado', 'name','Checkout Abandonado', 'color','#6B7280', 'lifecycle', true),
     jsonb_build_object('event','compra_aprovada',     'name','Cliente',             'color','#22C55E', 'lifecycle', false),
     jsonb_build_object('event','reembolso',           'name','Reembolso',           'color','#EF4444', 'lifecycle', false)
@@ -217,14 +217,14 @@ DECLARE
   v_created jsonb := '[]'::jsonb;
 BEGIN
   IF p_organization_id IS NULL OR p_product_id IS NULL OR p_product_label IS NULL THEN
-    RAISE EXCEPTION 'organization_id, product_id e product_label são obrigatórios';
+    RAISE EXCEPTION 'organization_id, product_id e product_label son obligatorios';
   END IF;
 
   FOR v_spec IN SELECT * FROM jsonb_array_elements(v_specs)
   LOOP
     v_full_name := (v_spec->>'name') || ' · ' || p_product_label;
 
-    -- Tag (idempotente por nome+org)
+    -- Tag (idempotente por nombre+org)
     SELECT id INTO v_tag_id
     FROM lead_tags
     WHERE organization_id = p_organization_id AND name = v_full_name
@@ -247,7 +247,7 @@ BEGIN
       WHERE id = v_tag_id;
     END IF;
 
-    -- Automação principal (idempotente por org+evento+produto+tag)
+    -- Automatización principal (idempotente por org+evento+producto+tag)
     INSERT INTO tag_automations (organization_id, product_id, event_type, tag_id_to_add, is_active)
     SELECT p_organization_id, p_product_id, v_spec->>'event', v_tag_id, true
     WHERE NOT EXISTS (
@@ -258,7 +258,7 @@ BEGIN
         AND tag_id_to_add = v_tag_id
     );
 
-    -- Caso especial "Aguardando Pagamento": vincula também a boleto_gerado
+    -- Caso especial "Aguardando Pago": vincula también a boleto_gerado
     IF v_spec ? 'also_event' THEN
       INSERT INTO tag_automations (organization_id, product_id, event_type, tag_id_to_add, is_active)
       SELECT p_organization_id, p_product_id, v_spec->>'also_event', v_tag_id, true
@@ -299,7 +299,7 @@ CREATE OR REPLACE FUNCTION public.delete_product_safe(p_product_id uuid)
  SET search_path TO 'public'
 AS $function$
 BEGIN
-  -- 1. Deletar atribuições de usuário ao produto
+  -- 1. Deletar atribuições de usuario ao producto
   DELETE FROM public.user_product_assignments WHERE product_id = p_product_id;
 
   -- 2. Nullify product_id em tabelas que aceitam NULL
@@ -313,7 +313,7 @@ BEGIN
   UPDATE public.webhooks SET product_id = NULL WHERE product_id = p_product_id;
   UPDATE public.notifications SET product_id = NULL WHERE product_id = p_product_id;
 
-  -- 3. Deletar o produto (as outras tabelas têm ON DELETE CASCADE)
+  -- 3. Deletar o producto (as outras tabelas têm ON DELETE CASCADE)
   DELETE FROM public.products WHERE id = p_product_id;
 END;
 $function$
@@ -367,7 +367,7 @@ BEGIN
   END IF;
 
   -- Get online members of this squad (SEM filtro de organization_id no user_status)
-  -- O filtro por squad_id já garante que são membros da organização correta
+  -- O filtro por squad_id ya garante que son membros da organización correta
   SELECT ARRAY_AGG(sm.user_id ORDER BY sm.user_id) INTO v_members
   FROM squad_members sm
   JOIN user_status us ON us.user_id = sm.user_id
@@ -431,7 +431,7 @@ BEGIN
   IF NEW.assigned_user_id IS NOT NULL
      AND NEW.assigned_user_id IS DISTINCT FROM OLD.assigned_user_id THEN
     NEW.current_agent_id := NULL;
-  -- IA definida (ou trocada) e humano não foi alterado nesta operação → humano sai
+  -- IA definida (ou trocada) e humano no fue alterado nesta operação → humano sai
   ELSIF NEW.current_agent_id IS NOT NULL
      AND NEW.current_agent_id IS DISTINCT FROM OLD.current_agent_id THEN
     NEW.assigned_user_id := NULL;
@@ -550,7 +550,7 @@ DECLARE
   v_sec uuid;
 BEGIN
   IF NEW.sector_id IS NULL AND NEW.organization_id IS NOT NULL THEN
-    -- Tenta achar setor padrão da org (mais antigo)
+    -- Tenta achar sector padrão da org (mais antigo)
     SELECT id INTO v_sec
     FROM public.sectors
     WHERE organization_id = NEW.organization_id
@@ -567,7 +567,7 @@ $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.get_booking_by_token(p_token text)
- RETURNS TABLE(id uuid, guest_name text, guest_email text, guest_phone text, start_time timestamp with time zone, end_time timestamp with time zone, timezone text, status text, confirmation_token text, additional_info jsonb, created_at timestamp with time zone, event_type_id uuid, host_user_id uuid, calendar_event_id uuid, organization_id uuid, cancellation_reason text)
+ RETURNS TABLE(id uuid, guest_name text, guest_email text, guest_phone text, start_time timestamp with equipo zone, end_time timestamp with equipo zone, timezone text, status text, confirmation_token text, additional_info jsonb, created_at timestamp with equipo zone, event_type_id uuid, host_user_id uuid, calendar_event_id uuid, organization_id uuid, cancellation_reason text)
  LANGUAGE sql
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
@@ -655,7 +655,7 @@ END;
 $function$
 ;
 
-CREATE OR REPLACE FUNCTION public.get_product_performance(p_org_id uuid, p_from timestamp with time zone DEFAULT NULL::timestamp with time zone, p_to timestamp with time zone DEFAULT NULL::timestamp with time zone)
+CREATE OR REPLACE FUNCTION public.get_product_performance(p_org_id uuid, p_from timestamp with equipo zone DEFAULT NULL::timestamp with equipo zone, p_to timestamp with equipo zone DEFAULT NULL::timestamp with equipo zone)
  RETURNS jsonb
  LANGUAGE plpgsql
  STABLE SECURITY DEFINER
@@ -897,8 +897,8 @@ END;
 $function$
 ;
 
-CREATE OR REPLACE FUNCTION public.inbox_list_conversations(p_user_id uuid, p_tab text DEFAULT 'attending'::text, p_product_ids uuid[] DEFAULT NULL::uuid[], p_include_no_product boolean DEFAULT false, p_sector_ids uuid[] DEFAULT NULL::uuid[], p_include_no_sector boolean DEFAULT false, p_assigned_user_ids uuid[] DEFAULT NULL::uuid[], p_include_unassigned boolean DEFAULT false, p_tag_ids uuid[] DEFAULT NULL::uuid[], p_channel text DEFAULT NULL::text, p_search text DEFAULT NULL::text, p_cursor_last_message_at timestamp with time zone DEFAULT NULL::timestamp with time zone, p_limit integer DEFAULT 50)
- RETURNS TABLE(id uuid, organization_id uuid, widget_id uuid, visitor_id text, lead_id uuid, product_id uuid, effective_product_id uuid, effective_product_name text, assigned_user_id uuid, assigned_user_name text, assigned_user_avatar text, current_agent_id uuid, current_agent_name text, current_agent_avatar text, sector_id uuid, sector_name text, sector_color text, evolution_instance_id uuid, status text, channel text, needs_human boolean, last_message_at timestamp with time zone, unread_count_agents integer, created_at timestamp with time zone, updated_at timestamp with time zone, closed_at timestamp with time zone, visitor_name text, visitor_email text, visitor_phone text, visitor_avatar_url text, visitor_whatsapp text, accepted_at timestamp with time zone, accepted_by uuid, widget_name text, widget_primary_color text, widget_product_id uuid, lead_name text, lead_email text, lead_phone text, lead_product_id uuid)
+CREATE OR REPLACE FUNCTION public.inbox_list_conversations(p_user_id uuid, p_tab text DEFAULT 'attending'::text, p_product_ids uuid[] DEFAULT NULL::uuid[], p_include_no_product boolean DEFAULT false, p_sector_ids uuid[] DEFAULT NULL::uuid[], p_include_no_sector boolean DEFAULT false, p_assigned_user_ids uuid[] DEFAULT NULL::uuid[], p_include_unassigned boolean DEFAULT false, p_tag_ids uuid[] DEFAULT NULL::uuid[], p_channel text DEFAULT NULL::text, p_search text DEFAULT NULL::text, p_cursor_last_message_at timestamp with equipo zone DEFAULT NULL::timestamp with equipo zone, p_limit integer DEFAULT 50)
+ RETURNS TABLE(id uuid, organization_id uuid, widget_id uuid, visitor_id text, lead_id uuid, product_id uuid, effective_product_id uuid, effective_product_name text, assigned_user_id uuid, assigned_user_name text, assigned_user_avatar text, current_agent_id uuid, current_agent_name text, current_agent_avatar text, sector_id uuid, sector_name text, sector_color text, evolution_instance_id uuid, status text, channel text, needs_human boolean, last_message_at timestamp with equipo zone, unread_count_agents integer, created_at timestamp with equipo zone, updated_at timestamp with equipo zone, closed_at timestamp with equipo zone, visitor_name text, visitor_email text, visitor_phone text, visitor_avatar_url text, visitor_whatsapp text, accepted_at timestamp with equipo zone, accepted_by uuid, widget_name text, widget_primary_color text, widget_product_id uuid, lead_name text, lead_email text, lead_phone text, lead_product_id uuid)
  LANGUAGE plpgsql
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
@@ -1095,10 +1095,10 @@ CREATE OR REPLACE FUNCTION public.increment_funnel_leads(p_funnel_id uuid, p_cha
  SET search_path TO 'public'
 AS $function$
 BEGIN
-  -- Atualiza contador agregado no funil
+  -- Atualiza contador agregado no embudo
   UPDATE capture_funnels SET total_leads = total_leads + 1 WHERE id = p_funnel_id;
   
-  -- Insere ou atualiza analytics por canal/dia
+  -- Insere ou atualiza analytics por canal/día
   INSERT INTO funnel_analytics (funnel_id, channel, date, leads_created, completions)
   VALUES (p_funnel_id, p_channel, CURRENT_DATE, 1, 1)
   ON CONFLICT (funnel_id, channel, date)
@@ -1116,10 +1116,10 @@ CREATE OR REPLACE FUNCTION public.increment_funnel_views(p_funnel_id uuid, p_cha
  SET search_path TO 'public'
 AS $function$
 BEGIN
-  -- Atualiza contador agregado no funil
+  -- Atualiza contador agregado no embudo
   UPDATE capture_funnels SET total_views = total_views + 1 WHERE id = p_funnel_id;
   
-  -- Insere ou atualiza analytics por canal/dia
+  -- Insere ou atualiza analytics por canal/día
   INSERT INTO funnel_analytics (funnel_id, channel, date, views)
   VALUES (p_funnel_id, p_channel, CURRENT_DATE, 1)
   ON CONFLICT (funnel_id, channel, date)
@@ -1229,7 +1229,7 @@ DECLARE
 BEGIN
   SELECT * INTO v_config FROM public.business_hours WHERE organization_id = p_org_id;
   
-  -- Sem configuração = sempre aberto
+  -- Sem configuración = siempre aberto
   IF NOT FOUND THEN
     RETURN TRUE;
   END IF;
@@ -1280,7 +1280,7 @@ CREATE OR REPLACE FUNCTION public.mark_default_password_changed()
  SET search_path TO 'public'
 AS $function$
 BEGIN
-  -- Só age se for o admin padrão E a senha realmente mudou
+  -- Só age se for o admin padrão E a contraseña realmente mudou
   IF NEW.email = 'admin@vendus.com.br'
      AND OLD.encrypted_password IS DISTINCT FROM NEW.encrypted_password THEN
     UPDATE public.platform_settings
@@ -1526,8 +1526,8 @@ BEGIN
     IF v_org_id IS NULL THEN RETURN; END IF;
   END IF;
 
-  -- Remove TODAS as tags transitórias (is_lifecycle_status=true) atualmente atribuídas ao lead
-  -- que pertencem a automações do MESMO produto (ou globais sem produto).
+  -- Remove TODAS as tags transitórias (is_lifecycle_status=true) atualmente atribuídas al lead
+  -- que pertencem a automatizaciones do MESMO producto (ou globais sem producto).
   -- NUNCA toca em tags permanentes (is_lifecycle_status=false).
   FOR v_tag IN
     SELECT DISTINCT lta.tag_id, lt.name AS tag_name
@@ -1687,7 +1687,7 @@ $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.search_lead_memory(p_lead_id uuid, p_query_embedding vector, p_match_count integer DEFAULT 8, p_min_similarity numeric DEFAULT 0.5)
- RETURNS TABLE(id uuid, content text, source text, role text, importance_score numeric, similarity numeric, metadata jsonb, created_at timestamp with time zone)
+ RETURNS TABLE(id uuid, content text, source text, role text, importance_score numeric, similarity numeric, metadata jsonb, created_at timestamp with equipo zone)
  LANGUAGE plpgsql
  STABLE SECURITY DEFINER
  SET search_path TO 'public'

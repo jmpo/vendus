@@ -14,7 +14,7 @@ interface Props {
 export function BulkTagPopover({ trigger, selectedLeadIds, onDone }: Props) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
-  const { data: tags = [] } = useLeadTags();
+  const { fecha: tags = [] } = useLeadTags();
   const assign = useAssignLeadTag();
   const remove = useRemoveLeadTag();
 
@@ -53,7 +53,7 @@ export function BulkTagPopover({ trigger, selectedLeadIds, onDone }: Props) {
       <PopoverContent align="end" className="w-72 p-0">
         <div className="p-3 border-b">
           <p className="text-sm font-medium">Etiquetar {selectedLeadIds.length} lead(s)</p>
-          <p className="text-xs text-muted-foreground">Clique para aplicar ou no X para remover</p>
+          <p className="text-xs text-muted-foreground">Hacé clic para aplicar ou no X para eliminar</p>
         </div>
         <div className="max-h-72 overflow-y-auto p-2">
           {tags.length === 0 ? (

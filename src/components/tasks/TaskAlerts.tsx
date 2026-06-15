@@ -6,8 +6,8 @@ import { AlertTriangle, Clock, Bell } from 'lucide-react';
 
 export function TaskAlerts() {
   const { user } = useAuth();
-  const { data: overdueTasks } = useOverdueTasks(user?.id);
-  const { data: upcomingTasks } = useUpcomingTasks(user?.id, 2); // Next 2 hours
+  const { fecha: overdueTasks } = useOverdueTasks(user?.id);
+  const { fecha: upcomingTasks } = useUpcomingTasks(user?.id, 2); // Next 2 hours
   const markOverdue = useMarkTasksOverdue();
 
   // Check and mark overdue tasks periodically
@@ -30,13 +30,13 @@ export function TaskAlerts() {
     if (overdueTasks && overdueTasks.length > 0) {
       const count = overdueTasks.length;
       toast.warning(
-        `Você tem ${count} tarefa${count > 1 ? 's' : ''} atrasada${count > 1 ? 's' : ''}!`,
+        `Usted tiene ${count} tarea${count > 1 ? 's' : ''} atrasada${count > 1 ? 's' : ''}!`,
         {
           id: 'overdue-tasks-alert',
           duration: 10000,
           icon: <AlertTriangle className="h-5 w-5 text-destructive" />,
           action: {
-            label: 'Ver tarefas',
+            label: 'Ver tareas',
             onClick: () => {
               // Could navigate to task center
               window.dispatchEvent(new CustomEvent('open-task-center'));

@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { QUIZ_TEMPLATES, type QuizTemplate } from '@/data/quizTemplates';
+import { QUIZ_TEMPLATES, type QuizTemplate } from '@/fecha/quizTemplates';
 import { FunnelBlock, generateBlockId } from '@/types/funnel';
 
 export interface DbQuizTemplate extends Omit<QuizTemplate, 'flow_blocks'> {
@@ -17,7 +17,7 @@ export interface DbQuizTemplate extends Omit<QuizTemplate, 'flow_blocks'> {
 }
 
 /**
- * Une os templates oficiais (seed em código) com os templates guardados pela organização.
+ * Une os templates oficiais (seed em código) com os templates guardados pela organización.
  */
 export function useQuizTemplates() {
   const { profile } = useAuth();
@@ -29,7 +29,7 @@ export function useQuizTemplates() {
 
       if (!profile?.organization_id) return seed;
 
-      const { data, error } = await (supabase as any)
+      const { fecha, error } = await (supabase as any)
         .from('quiz_templates')
         .select('*')
         .or(`organization_id.eq.${profile.organization_id},is_public.eq.true,organization_id.is.null`)
@@ -40,7 +40,7 @@ export function useQuizTemplates() {
         return seed;
       }
 
-      const dbTemplates: QuizTemplate[] = (data || []).map((row: any) => ({
+      const dbTemplates: QuizTemplate[] = (fecha || []).map((row: any) => ({
         id: row.id,
         name: row.name,
         description: row.description || '',
@@ -82,7 +82,7 @@ export function useCreateQuizTemplate() {
   return useMutation({
     mutationFn: async (input: CreateQuizTemplateInput) => {
       if (!profile?.organization_id) throw new Error('Organización no encontrada');
-      const { data, error } = await (supabase as any).from('quiz_templates').insert({
+      const { fecha, error } = await (supabase as any).from('quiz_templates').insert({
         organization_id: profile.organization_id,
         created_by: profile.id,
         name: input.name,
@@ -101,7 +101,7 @@ export function useCreateQuizTemplate() {
         settings_json: input.settings,
       }).select().single();
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['quiz-templates'] });
@@ -117,9 +117,9 @@ export function cloneFlowBlocks(blocks: FunnelBlock[]): FunnelBlock[] {
   blocks.forEach((b) => idMap.set(b.id, generateBlockId()));
   return blocks.map((b) => {
     const newId = idMap.get(b.id)!;
-    const data: any = JSON.parse(JSON.stringify(b.data || {}));
-    if (Array.isArray(data.options)) {
-      data.options = data.options.map((o: any) => ({
+    const fecha: any = JSON.parse(JSON.stringify(b.fecha || {}));
+    if (Array.isArray(fecha.options)) {
+      fecha.options = fecha.options.map((o: any) => ({
         ...o,
         next_block_id: o.next_block_id && idMap.get(o.next_block_id) || o.next_block_id || null,
       }));
@@ -127,7 +127,7 @@ export function cloneFlowBlocks(blocks: FunnelBlock[]): FunnelBlock[] {
     return {
       ...b,
       id: newId,
-      data,
+      fecha,
       next_block_id: b.next_block_id && idMap.get(b.next_block_id) || null,
     };
   });

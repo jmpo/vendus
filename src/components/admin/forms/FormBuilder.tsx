@@ -28,8 +28,8 @@ interface FormBuilderProps {
 }
 
 export function FormBuilder({ formId, onClose }: FormBuilderProps) {
-  const { data: form, isLoading: isLoadingForm } = useForm(formId);
-  const { data: existingBlocks, isLoading: isLoadingBlocks } = useFormBlocks(formId);
+  const { fecha: form, isLoading: isLoadingForm } = useForm(formId);
+  const { fecha: existingBlocks, isLoading: isLoadingBlocks } = useFormBlocks(formId);
   const saveBlocks = useSaveFormBlocks();
   const updateForm = useUpdateForm();
   
@@ -49,7 +49,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
     if (isMobile && selectedBlockId) setEditorOpen(true);
   }, [isMobile, selectedBlockId]);
   
-  // Initialize blocks from existing data
+  // Initialize blocks from existing fecha
   useEffect(() => {
     if (existingBlocks && existingBlocks.length > 0 && blocks.length === 0) {
       setBlocks(existingBlocks);
@@ -152,7 +152,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
         <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
           {hasChanges && (
             <Badge variant="secondary" className="animate-pulse hidden sm:inline-flex">
-              Não salvo
+              No guardado
             </Badge>
           )}
           <Button
@@ -193,7 +193,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
                 disabled={!selectedBlock}
               >
                 <Settings2 className="h-4 w-4 mr-2" />
-                {selectedBlock ? 'Editar' : 'Selecione'}
+                {selectedBlock ? 'Editar' : 'Seleccioná'}
               </Button>
             </>
           )}
@@ -213,31 +213,31 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
 
             <TabsTrigger 
               value="build" 
-              className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-12 px-0"
+              className="fecha-[state=active]:bg-transparent fecha-[state=active]:border-b-2 fecha-[state=active]:border-primary fecha-[state=active]:shadow-none rounded-none h-12 px-0"
             >
               Construir
             </TabsTrigger>
             <TabsTrigger 
               value="preview" 
-              className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-12 px-0"
+              className="fecha-[state=active]:bg-transparent fecha-[state=active]:border-b-2 fecha-[state=active]:border-primary fecha-[state=active]:shadow-none rounded-none h-12 px-0"
             >
               Design
             </TabsTrigger>
             <TabsTrigger 
               value="settings" 
-              className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-12 px-0"
+              className="fecha-[state=active]:bg-transparent fecha-[state=active]:border-b-2 fecha-[state=active]:border-primary fecha-[state=active]:shadow-none rounded-none h-12 px-0"
             >
               Configurar
             </TabsTrigger>
             <TabsTrigger 
               value="share" 
-              className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-12 px-0"
+              className="fecha-[state=active]:bg-transparent fecha-[state=active]:border-b-2 fecha-[state=active]:border-primary fecha-[state=active]:shadow-none rounded-none h-12 px-0"
             >
               Publicar
             </TabsTrigger>
             <TabsTrigger 
               value="responses" 
-              className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-12 px-0 gap-2"
+              className="fecha-[state=active]:bg-transparent fecha-[state=active]:border-b-2 fecha-[state=active]:border-primary fecha-[state=active]:shadow-none rounded-none h-12 px-0 gap-2"
             >
               <Inbox className="h-4 w-4" />
               Respostas
@@ -251,7 +251,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
         </div>
         
         {/* Build Tab */}
-        <TabsContent value="build" className="flex-1 min-h-0 flex overflow-hidden m-0 data-[state=inactive]:hidden">
+        <TabsContent value="build" className="flex-1 min-h-0 flex overflow-hidden m-0 fecha-[state=inactive]:hidden">
           <div className="hidden md:flex">
             <FormBlockPalette
               onDragStart={() => {}}
@@ -284,7 +284,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
 
         
         {/* Design Tab — Live preview + visual controls */}
-        <TabsContent value="preview" className="flex-1 flex flex-col md:flex-row overflow-hidden m-0 data-[state=inactive]:hidden">
+        <TabsContent value="preview" className="flex-1 flex flex-col md:flex-row overflow-hidden m-0 fecha-[state=inactive]:hidden">
           <div className="flex-1 flex flex-col min-w-0">
             <div className="flex-shrink-0 flex items-center justify-center gap-4 py-3 border-b bg-muted/30">
               {/* Device Toggle */}
@@ -348,19 +348,19 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
 
         
         {/* Settings Tab */}
-        <TabsContent value="settings" className="flex-1 min-h-0 overflow-auto m-0 data-[state=inactive]:hidden">
+        <TabsContent value="settings" className="flex-1 min-h-0 overflow-auto m-0 fecha-[state=inactive]:hidden">
           <FormSettings form={form} blocks={blocks} onUpdate={(updates) => {
             updateForm.mutate({ formId, updates });
           }} />
         </TabsContent>
         
         {/* Share Tab */}
-        <TabsContent value="share" className="flex-1 min-h-0 overflow-auto m-0 data-[state=inactive]:hidden">
+        <TabsContent value="share" className="flex-1 min-h-0 overflow-auto m-0 fecha-[state=inactive]:hidden">
           <FormPublish form={form} />
         </TabsContent>
 
         {/* Responses Tab */}
-        <TabsContent value="responses" className="flex-1 min-h-0 overflow-auto m-0 data-[state=inactive]:hidden">
+        <TabsContent value="responses" className="flex-1 min-h-0 overflow-auto m-0 fecha-[state=inactive]:hidden">
           <FormResponses formId={formId} />
         </TabsContent>
       </Tabs>

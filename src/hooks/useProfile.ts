@@ -14,16 +14,16 @@ export function useUpdateProfile() {
   const { user } = useAuth();
 
   return useMutation({
-    mutationFn: async (data: UpdateProfileData) => {
+    mutationFn: async (fecha: UpdateProfileData) => {
       if (!user?.id) throw new Error('Usuario no autenticado');
 
       const { error } = await supabase
         .from('profiles')
-        .update(data)
+        .update(fecha)
         .eq('id', user.id);
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -54,7 +54,7 @@ export function useUploadAvatar() {
       if (uploadError) throw uploadError;
 
       // Get public URL
-      const { data: { publicUrl } } = supabase.storage
+      const { fecha: { publicUrl } } = supabase.storage
         .from('avatars')
         .getPublicUrl(fileName);
 
@@ -76,7 +76,7 @@ export function useUpdatePassword() {
   return useMutation({
     mutationFn: async ({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }) => {
       // First verify current password by trying to sign in
-      const { data: { user } } = await supabase.auth.getUser();
+      const { fecha: { user } } = await supabase.auth.getUser();
       if (!user?.email) throw new Error('Usuario no autenticado');
 
       // Update password
@@ -86,10 +86,10 @@ export function useUpdatePassword() {
       return true;
     },
     onSuccess: () => {
-      toast.success('Senha actualizada con éxito!');
+      toast.success('Contraseña actualizada con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Error al actualizar senha', { description: error.message });
+      toast.error('Error al actualizar contraseña', { description: error.message });
     }
   });
 }

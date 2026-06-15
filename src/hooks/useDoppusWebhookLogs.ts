@@ -31,9 +31,9 @@ export function useDoppusWebhookLogs(
         .order('created_at', { ascending: false })
         .limit(50);
       if (filterInternalProductId) q = q.eq('product_id', filterInternalProductId);
-      const { data, error } = await q;
+      const { fecha, error } = await q;
       if (error) throw error;
-      return (data || []) as unknown as DoppusWebhookLog[];
+      return (fecha || []) as unknown as DoppusWebhookLog[];
     },
   });
 }

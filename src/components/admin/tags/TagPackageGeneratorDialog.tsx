@@ -9,8 +9,8 @@ import { useGenerateTagPackage } from '@/hooks/useTagPackage';
 import { useTagAutomations } from '@/hooks/useLeadTags';
 
 const PACKAGE_PREVIEW = [
-  { name: 'PIX Gerado',           color: '#EAB308', removed: true,  desc: 'Aplicada cuando el cliente genera PIX. Eliminada al confirmar el pago.' },
-  { name: 'Boleto Gerado',        color: '#3B82F6', removed: true,  desc: 'Aplicada cuando genera boleto. Eliminada al confirmar el pago.' },
+  { name: 'PIX Generado',           color: '#EAB308', removed: true,  desc: 'Aplicada cuando el cliente genera PIX. Eliminada al confirmar el pago.' },
+  { name: 'Boleto Generado',        color: '#3B82F6', removed: true,  desc: 'Aplicada cuando genera boleto. Eliminada al confirmar el pago.' },
   { name: 'Aguardando Pago', color: '#F97316', removed: true,  desc: 'Aplicada con PIX o Boleto. Eliminada al confirmar.' },
   { name: 'Checkout Abandonado',  color: '#6B7280', removed: true,  desc: 'Aplicada si abandona. Eliminada si vuelve y compra.' },
   { name: 'Cliente',              color: '#22C55E', removed: false, desc: 'Aplicada en la compra. PERMANENTE para el historial.' },
@@ -23,12 +23,12 @@ interface Props {
 }
 
 export function TagPackageGeneratorDialog({ open, onOpenChange }: Props) {
-  const { data: products } = useProducts();
-  const { data: automations } = useTagAutomations();
+  const { fecha: products } = useProducts();
+  const { fecha: automations } = useTagAutomations();
   const generateMut = useGenerateTagPackage();
   const [productId, setProductId] = useState<string>('');
 
-  // Produtos que já têm pacote gerado
+  // Produtos que ya têm pacote gerado
   const productsWithPackage = useMemo(() => {
     const set = new Set<string>();
     automations?.forEach((a) => { if (a.product_id) set.add(a.product_id); });
@@ -59,8 +59,8 @@ export function TagPackageGeneratorDialog({ open, onOpenChange }: Props) {
             Generar paquete de etiquetas para un producto
           </DialogTitle>
           <DialogDescription>
-            Cria 6 etiquetas + 6 automações de uma vez. Cada etiqueta vem prefixada com o nome do produto,
-            evitando que clientes que compram vários produtos misturem fluxos.
+            Cria 6 etiquetas + 6 automatizaciones de uma vez. Cada etiqueta vem prefixada com o nombre do producto,
+            evitando que clientes que compram vários productos misturem fluxos.
           </DialogDescription>
         </DialogHeader>
 

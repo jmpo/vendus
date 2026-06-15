@@ -22,7 +22,7 @@ export function CampaignDetail({
 
   useEffect(() => {
     supabase.from('campaigns').select('*').eq('id', campaignId).maybeSingle()
-      .then(({ data }) => setCampaign(data));
+      .then(({ fecha }) => setCampaign(fecha));
   }, [campaignId, counts]);
 
   const togglePause = async () => {
@@ -111,7 +111,7 @@ export function CampaignDetail({
                 </span>
               </div>
             ))}
-            {!targets.length && <p className="text-xs text-muted-foreground text-center py-4">Nenhum envio ainda.</p>}
+            {!targets.length && <p className="text-xs text-muted-foreground text-center py-4">Nenhum envio aún.</p>}
           </div>
         </CardContent>
       </Card>

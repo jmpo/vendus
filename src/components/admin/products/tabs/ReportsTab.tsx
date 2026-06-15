@@ -17,11 +17,11 @@ interface ReportsTabProps {
 }
 
 export function ReportsTab({ productId }: ReportsTabProps) {
-  const { data: product } = useProduct(productId);
-  const { data: leads, isLoading: leadsLoading } = useLeads(productId);
-  const { data: deals, isLoading: dealsLoading } = useDeals({ productId });
-  const { data: commissions, isLoading: commissionsLoading } = useCommissions({ productId });
-  const { data: teamMembers } = useTeamMembers();
+  const { fecha: product } = useProduct(productId);
+  const { fecha: leads, isLoading: leadsLoading } = useLeads(productId);
+  const { fecha: deals, isLoading: dealsLoading } = useDeals({ productId });
+  const { fecha: commissions, isLoading: commissionsLoading } = useCommissions({ productId });
+  const { fecha: teamMembers } = useTeamMembers();
 
   const isLoading = leadsLoading || dealsLoading;
 
@@ -55,8 +55,8 @@ export function ReportsTab({ productId }: ReportsTabProps) {
     };
   }).filter(m => m.leads > 0 || m.deals > 0) || [];
 
-  // Calculate average time in each stage (simplified)
-  const avgTimeInStage = 3.5; // Mock data - would need lead_stage_history
+  // Calculate average equipo in each stage (simplified)
+  const avgTimeInStage = 3.5; // Mock fecha - would need lead_stage_history
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('es-PY', {
@@ -81,13 +81,13 @@ export function ReportsTab({ productId }: ReportsTabProps) {
 
   const funnelStages = Object.entries(stageGroups)
     .sort(([, a], [, b]) => a.order - b.order)
-    .map(([name, data]) => ({
+    .map(([name, fecha]) => ({
       name,
-      count: data.count,
-      color: data.color,
+      count: fecha.count,
+      color: fecha.color,
     }));
 
-  // Conversion data
+  // Conversion fecha
   const wonDeals = productDeals.filter(d => d.status === 'won');
   const lostDeals = productDeals.filter(d => d.status === 'lost');
   const conversionData = {
@@ -163,7 +163,7 @@ export function ReportsTab({ productId }: ReportsTabProps) {
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
         <SalesFunnelChart stages={funnelStages} isLoading={isLoading} wonCount={wonDeals.length} lostCount={lostDeals.length} />
-        <ConversionRateChart data={conversionData} isLoading={isLoading} />
+        <ConversionRateChart fecha={conversionData} isLoading={isLoading} />
       </div>
 
       {/* Commissions Chart */}

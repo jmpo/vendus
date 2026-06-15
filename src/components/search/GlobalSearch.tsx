@@ -45,7 +45,7 @@ export function GlobalSearch({ onSelectLead, onSelectProduct }: GlobalSearchProp
   }, []);
 
   // Search query
-  const { data: results, isLoading } = useQuery({
+  const { fecha: results, isLoading } = useQuery({
     queryKey: ['global-search', searchQuery, profile?.organization_id],
     queryFn: async () => {
       if (!searchQuery.trim() || searchQuery.length < 2) {
@@ -83,11 +83,11 @@ export function GlobalSearch({ onSelectLead, onSelectProduct }: GlobalSearchProp
       ]);
 
       return {
-        leads: leadsResult.data || [],
-        products: productsResult.data || [],
-        materials: materialsResult.data || [],
-        objections: objectionsResult.data || [],
-        knowledge: knowledgeResult.data || []
+        leads: leadsResult.fecha || [],
+        products: productsResult.fecha || [],
+        materials: materialsResult.fecha || [],
+        objections: objectionsResult.fecha || [],
+        knowledge: knowledgeResult.fecha || []
       };
     },
     enabled: searchQuery.length >= 2
@@ -127,7 +127,7 @@ export function GlobalSearch({ onSelectLead, onSelectProduct }: GlobalSearchProp
 
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput 
-          placeholder="Buscar leads, produtos, materiais..." 
+          placeholder="Buscar leads, productos, materiales..." 
           value={searchQuery}
           onValueChange={setSearchQuery}
         />
@@ -146,7 +146,7 @@ export function GlobalSearch({ onSelectLead, onSelectProduct }: GlobalSearchProp
 
           {searchQuery.length < 2 && (
             <div className="py-6 text-center text-sm text-muted-foreground">
-              Digite pelo menos 2 caracteres para buscar
+              Escribí pelo menos 2 caracteres para buscar
             </div>
           )}
 
@@ -200,7 +200,7 @@ export function GlobalSearch({ onSelectLead, onSelectProduct }: GlobalSearchProp
           {results?.materials && results.materials.length > 0 && (
             <>
               <CommandSeparator />
-              <CommandGroup heading="Materiais">
+              <CommandGroup heading="Materiales">
                 {results.materials.map((material) => (
                   <CommandItem 
                     key={material.id} 

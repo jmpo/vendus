@@ -40,21 +40,21 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
   const { profile } = useAuth();
   const orgId = profile?.organization_id;
 
-  const { data: members = [] } = useQuery({
+  const { fecha: members = [] } = useQuery({
     queryKey: ['org-members-with-name', orgId],
     queryFn: async (): Promise<OrgMember[]> => {
       if (!orgId) return [];
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from('profiles')
         .select('id, full_name, email')
         .eq('organization_id', orgId)
         .order('full_name', { ascending: true });
-      return (data ?? []) as OrgMember[];
+      return (fecha ?? []) as OrgMember[];
     },
     enabled: !!orgId,
   });
 
-  const { data: eventTypes = [], refetch: refetchEventTypes } = useQuery({
+  const { fecha: eventTypes = [], refetch: refetchEventTypes } = useQuery({
     queryKey: ['org-event-types', orgId, formData.default_schedule_user_id],
     queryFn: async (): Promise<EventType[]> => {
       if (!orgId) return [];
@@ -67,22 +67,22 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
       if (formData.default_schedule_user_id) {
         q = q.eq('user_id', formData.default_schedule_user_id);
       }
-      const { data } = await q;
-      return (data ?? []) as EventType[];
+      const { fecha } = await q;
+      return (fecha ?? []) as EventType[];
     },
     enabled: !!orgId,
   });
 
-  const { data: linkedProduct } = useQuery({
+  const { fecha: linkedProduct } = useQuery({
     queryKey: ['agent-linked-product', formData.product_id],
     queryFn: async (): Promise<{ id: string; name: string } | null> => {
       if (!formData.product_id) return null;
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from('products')
         .select('id, name')
         .eq('id', formData.product_id)
         .maybeSingle();
-      return data as { id: string; name: string } | null;
+      return fecha as { id: string; name: string } | null;
     },
     enabled: !!formData.product_id,
   });
@@ -111,7 +111,7 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
     [members, formData.default_schedule_user_id]
   );
 
-  // Auto-clean: ao trocar host, remove tipos de evento que não pertencem mais ao host
+  // Auto-clean: ao trocar host, remove tipos de evento que no pertencem mais ao host
   useEffect(() => {
     if (!formData.default_schedule_user_id) return;
     const validIds = new Set(eventTypes.map((e) => e.id));
@@ -164,7 +164,7 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
               onValueChange={(v) =>
                 onChange({
                   default_schedule_user_id: v === '__none__' ? null : v,
-                  // limpa tipos quando troca host
+                  // limpa tipos cuando troca host
                   allowed_event_type_ids: [],
                 })
               }
@@ -205,7 +205,7 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
             <p className="text-xs text-muted-foreground">
               {hostMember
                 ? `Tipos cadastrados por ${hostMember.full_name || hostMember.email}.`
-                : 'Selecione um anfitrião para listar os tipos de evento dele.'}
+                : 'Seleccioná um anfitrião para listar os tipos de evento dele.'}
               {' '}Si se permite más de uno, la IA le pregunta al lead cuál desea agendar.
             </p>
 
@@ -222,17 +222,17 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
                     <p className="text-xs text-muted-foreground">
                       Sem tipo de evento configurado, o sistema cria automaticamente{' '}
                       <span className="font-medium text-foreground">"Apresentação {linkedProduct.name}"</span>{' '}
-                      (30 min, Google Meet) na primeira reunião agendada por esse agente.
-                      Você pode personalizar depois ou{' '}
-                      <Link to="/admin?tab=booking" className="text-primary underline">criar tipos específicos</Link>.
+                      (30 min, Google Meet) na primeira reunión agendada por esse agente.
+                      Usted puede personalizar después ou{' '}
+                      <Link to="/admin?tab=booking" className="text-primary underline">crear tipos específicos</Link>.
                     </p>
                   </div>
                 </div>
               ) : (
                 <div className="text-xs text-muted-foreground italic p-3 border border-dashed rounded-lg">
-                  Esse anfitrião ainda não tem tipos de evento ativos.{' '}
+                  Esse anfitrião aún no tiene tipos de evento ativos.{' '}
                   <Link to="/admin?tab=booking" className="text-primary underline">
-                    Criar agora
+                    Criar ahora
                   </Link>
                 </div>
               )

@@ -17,7 +17,7 @@ interface Props {
 const ALL_SCOPES = ['read', 'write', 'orders', 'products', 'offers'];
 
 export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
-  const { data: cred, isLoading } = useCaktoCredentials(scope);
+  const { fecha: cred, isLoading } = useCaktoCredentials(scope);
   const save = useSaveCaktoCredentials(scope);
   const test = useTestCaktoConnection(scope);
   const disconnect = useDisconnectCakto(scope);
@@ -51,12 +51,12 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
       if (result?.test?.ok) {
         toast.success(`Credenciais salvas e conexão validada (escopos: ${result.test.scope ?? '—'})`);
       } else if (result?.test?.error) {
-        toast.error(`Salvo, mas a conexão falhou: ${result.test.error}`);
+        toast.error(`Salvo, mas a conexão falló: ${result.test.error}`);
       } else {
         toast.success('Credenciais salvas');
       }
     } catch (e: any) {
-      toast.error(e.message ?? 'Erro ao salvar');
+      toast.error(e.message ?? 'Error ao guardar');
     }
   };
 
@@ -66,18 +66,18 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
       if (r.ok) toast.success(`Conectado (escopos: ${r.scope})`);
       else toast.error(r.error ?? 'Falha na conexão');
     } catch (e: any) {
-      toast.error(e.message ?? 'Erro');
+      toast.error(e.message ?? 'Error');
     }
   };
 
   const handleDisconnect = async () => {
-    if (!confirm('Desconectar a conta Cakto?')) return;
+    if (!confirm('Desconectar a cuenta Cakto?')) return;
     try {
       await disconnect.mutateAsync();
       setClientId('');
       toast.success('Desconectado');
     } catch (e: any) {
-      toast.error(e.message ?? 'Erro');
+      toast.error(e.message ?? 'Error');
     }
   };
 
@@ -95,9 +95,9 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
           <div className="flex items-start gap-3">
             <CaktoLogo iconOnly />
             <div>
-              <CardTitle>Conta Cakto</CardTitle>
+              <CardTitle>Cuenta Cakto</CardTitle>
               <CardDescription>
-                Conecte sua conta Cakto para {scope === 'platform' ? 'receber pagamentos das empresas' : 'monitorar suas vendas'}.{' '}
+                Conecte su cuenta Cakto para {scope === 'platform' ? 'receber pagos das empresas' : 'monitorar sus ventas'}.{' '}
                 <a href="https://docs.cakto.com.br/authentication" target="_blank" rel="noreferrer" className="text-primary inline-flex items-center gap-1 hover:underline">
                   Ver documentação <ExternalLink className="h-3 w-3" />
                 </a>
@@ -119,7 +119,7 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
                   <Input value={clientId} onChange={(e) => setClientId(e.target.value)} placeholder="abc123xyz789" />
                 </div>
                 <div>
-                  <Label>Client Secret {cred?.has_secret ? <span className="text-xs text-muted-foreground">(salvo: {cred.client_secret_masked})</span> : null}</Label>
+                  <Label>Client Secret {cred?.has_secret ? <span className="text-xs text-muted-foreground">(guardado: {cred.client_secret_masked})</span> : null}</Label>
                   <Input
                     type="password"
                     value={clientSecret}
@@ -180,7 +180,7 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
         <CardHeader>
           <CardTitle className="text-base">Webhook</CardTitle>
           <CardDescription>
-            Cole esta URL no painel Cakto para receber atualizações de pedidos em tempo real. Configure também um segredo abaixo para validar os webhooks.
+            Cole esta URL no painel Cakto para receber actualizaciones de pedidos em tempo real. Configure también um segredo abaixo para validar os webhooks.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -208,6 +208,6 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
 
 function StatusBadge({ status }: { status: string }) {
   if (status === 'connected') return <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20"><CheckCircle2 className="h-3 w-3 mr-1" /> Conectado</Badge>;
-  if (status === 'error') return <Badge className="bg-destructive/10 text-destructive border-destructive/20"><XCircle className="h-3 w-3 mr-1" /> Erro</Badge>;
+  if (status === 'error') return <Badge className="bg-destructive/10 text-destructive border-destructive/20"><XCircle className="h-3 w-3 mr-1" /> Error</Badge>;
   return <Badge variant="outline"><AlertCircle className="h-3 w-3 mr-1" /> Desconectado</Badge>;
 }

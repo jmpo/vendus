@@ -31,17 +31,17 @@ function validateWhatsApp(blocks: FunnelBlock[], channels: any): string[] {
   const warnings: string[] = [];
   const wa = channels?.whatsapp;
   if (!wa?.enabled) {
-    warnings.push('Canal WhatsApp desabilitado — habilite na aba Conexão para o fluxo disparar.');
+    warnings.push('Canal WhatsApp desabilitado — habilite na aba Conexão para o flujo disparar.');
   }
   if (!blocks || blocks.length === 0) {
-    warnings.push('Fluxo vazio — adicione pelo menos uma mensagem de boas-vindas.');
+    warnings.push('Flujo vazio — adicione pelo menos uma mensaje de boas-vindas.');
     return warnings;
   }
   const ids = new Set(blocks.map(b => b.id));
   const hasMessage = blocks.some(b => b.type === 'message');
-  if (!hasMessage) warnings.push('Sem bloco de mensagem inicial — o lead não recebe nada ao iniciar a conversa.');
+  if (!hasMessage) warnings.push('Sem bloco de mensaje inicial — o lead no recebe nada ao iniciar a conversación.');
   blocks.forEach(b => {
-    const next = (b.data as any)?.next_block_id || b.next_block_id;
+    const next = (b.fecha as any)?.next_block_id || b.next_block_id;
     if (next && !ids.has(next)) warnings.push(`Bloco "${b.type}" aponta para um bloco inexistente.`);
   });
   return warnings;
@@ -49,7 +49,7 @@ function validateWhatsApp(blocks: FunnelBlock[], channels: any): string[] {
 
 export function WhatsAppBuilder({ funnelId, onBack }: Props) {
   const [activeTab, setActiveTab] = useState('flow');
-  const { data: funnel, isLoading } = useFunnel(funnelId);
+  const { fecha: funnel, isLoading } = useFunnel(funnelId);
   const updateStatus = useUpdateFunnelStatus();
 
   const warnings = useMemo(
@@ -65,7 +65,7 @@ export function WhatsAppBuilder({ funnelId, onBack }: Props) {
       return;
     }
     await updateStatus.mutateAsync({ id: funnelId, status: 'active' });
-    toast.success('Fluxo WhatsApp publicado!');
+    toast.success('Flujo WhatsApp publicado!');
   };
 
   const handlePause = async () => {
@@ -83,7 +83,7 @@ export function WhatsAppBuilder({ funnelId, onBack }: Props) {
   if (!funnel) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Fluxo não encontrado</p>
+        <p className="text-muted-foreground">Flujo no encontrado</p>
         <Button variant="outline" onClick={onBack} className="mt-4">Voltar</Button>
       </div>
     );
@@ -134,7 +134,7 @@ export function WhatsAppBuilder({ funnelId, onBack }: Props) {
             <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
             <div className="flex-1">
               <p className="text-sm font-medium text-amber-900 dark:text-amber-200 mb-1">
-                Avisos do fluxo
+                Avisos do flujo
               </p>
               <ul className="text-xs text-amber-800 dark:text-amber-300 space-y-0.5 list-disc list-inside">
                 {warnings.slice(0, 4).map((w, i) => <li key={i}>{w}</li>)}
@@ -147,7 +147,7 @@ export function WhatsAppBuilder({ funnelId, onBack }: Props) {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col mt-4">
         <TabsList className="grid w-full max-w-2xl grid-cols-5">
-          <TabsTrigger value="flow" className="gap-2"><Workflow className="h-4 w-4" /><span className="hidden sm:inline">Fluxo</span></TabsTrigger>
+          <TabsTrigger value="flow" className="gap-2"><Workflow className="h-4 w-4" /><span className="hidden sm:inline">Flujo</span></TabsTrigger>
           <TabsTrigger value="preview" className="gap-2"><Eye className="h-4 w-4" /><span className="hidden sm:inline">Preview</span></TabsTrigger>
           <TabsTrigger value="connection" className="gap-2"><Smartphone className="h-4 w-4" /><span className="hidden sm:inline">Conexão</span></TabsTrigger>
           <TabsTrigger value="logs" className="gap-2"><Activity className="h-4 w-4" /><span className="hidden sm:inline">Webhooks</span></TabsTrigger>

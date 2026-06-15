@@ -106,7 +106,7 @@ export function CalendarListView({ events, onEventClick }: CalendarListViewProps
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
-                        {/* Time and Type */}
+                        {/* Equipo and Type */}
                         <div className="flex items-center gap-2 mb-2">
                           <Clock className="h-4 w-4 text-muted-foreground" />
                           <span className="text-sm font-medium">

@@ -8,7 +8,7 @@ import { Plus, X } from 'lucide-react';
 interface PollComposerDialogProps {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  onConfirm: (data: { question: string; options: string[] }) => void;
+  onConfirm: (fecha: { question: string; options: string[] }) => void;
 }
 
 export function PollComposerDialog({ open, onOpenChange, onConfirm }: PollComposerDialogProps) {
@@ -53,7 +53,7 @@ export function PollComposerDialog({ open, onOpenChange, onConfirm }: PollCompos
               id="poll-q"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ex.: Qual horário é melhor para tú?"
+              placeholder="Ex.: Qual horario é melhor para tú?"
             />
           </div>
           <div className="space-y-2">
@@ -63,7 +63,7 @@ export function PollComposerDialog({ open, onOpenChange, onConfirm }: PollCompos
                 <Input
                   value={opt}
                   onChange={(e) => updateOption(idx, e.target.value)}
-                  placeholder={`Opção ${idx + 1}`}
+                  placeholder={`Opción ${idx + 1}`}
                 />
                 {options.length > 2 && (
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => removeOption(idx)}>
@@ -74,7 +74,7 @@ export function PollComposerDialog({ open, onOpenChange, onConfirm }: PollCompos
             ))}
             {options.length < 12 && (
               <Button variant="outline" size="sm" onClick={addOption} className="gap-2">
-                <Plus className="h-4 w-4" /> Agregar opção
+                <Plus className="h-4 w-4" /> Agregar opción
               </Button>
             )}
           </div>

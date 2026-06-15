@@ -53,8 +53,8 @@ const TemperatureIcon = ({ temp }: { temp: string | null }) => {
 
 export function MobileKanban({ productId, productName, organizationId }: MobileKanbanProps) {
   const { user, profile } = useAuth();
-  const { data: leads, isLoading: leadsLoading } = useLeads(productId);
-  const { data: stages, isLoading: stagesLoading } = usePipelineStages(productId);
+  const { fecha: leads, isLoading: leadsLoading } = useLeads(productId);
+  const { fecha: stages, isLoading: stagesLoading } = usePipelineStages(productId);
   const moveLead = useMoveLead();
   const createLead = useCreateLead();
 
@@ -81,7 +81,7 @@ export function MobileKanban({ productId, productName, organizationId }: MobileK
     getLeadsByStage(stageId).reduce((sum, l) => sum + (l.deal_value || 0), 0);
 
   const handleAddLead = async () => {
-    if (!newLead.name.trim()) { toast.error('Nome é obrigatório'); return; }
+    if (!newLead.name.trim()) { toast.error('Nombre é obligatorio'); return; }
     try {
       await createLead.mutateAsync({
         name: newLead.name,
@@ -93,20 +93,20 @@ export function MobileKanban({ productId, productName, organizationId }: MobileK
         organization_id: profile?.organization_id || '',
         current_stage_id: sortedStages[0]?.id || null,
       });
-      toast.success('Lead criado!');
+      toast.success('Lead creado!');
       setNewLead({ name: '', company: '', email: '', phone: '' });
       setAddLeadOpen(false);
     } catch {
-      toast.error('Erro ao criar lead');
+      toast.error('Error ao crear lead');
     }
   };
 
   const handleMoveStage = async (leadId: string, stageId: string) => {
     try {
       await moveLead.mutateAsync({ leadId, stageId });
-      toast.success('Etapa atualizada!');
+      toast.success('Etapa actualizada!');
     } catch {
-      toast.error('Erro ao mover lead');
+      toast.error('Error ao mover lead');
     }
   };
 
@@ -132,7 +132,7 @@ export function MobileKanban({ productId, productName, organizationId }: MobileK
         <div className="h-16 w-16 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
           <Calendar size={32} className="text-primary" />
         </div>
-        <h3 className="text-lg font-semibold text-foreground mb-2">Pipeline não configurado</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-2">Pipeline no configurado</h3>
         <p className="text-sm text-muted-foreground">Um administrador precisa configurar as etapas do pipeline.</p>
       </div>
     );
@@ -360,9 +360,9 @@ export function MobileKanban({ productId, productName, organizationId }: MobileK
           </SheetHeader>
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1 block">Nome *</label>
+              <label className="text-xs font-medium text-muted-foreground mb-1 block">Nombre *</label>
               <Input
-                placeholder="Nome do lead"
+                placeholder="Nombre del lead"
                 value={newLead.name}
                 onChange={e => setNewLead({ ...newLead, name: e.target.value })}
               />
@@ -370,13 +370,13 @@ export function MobileKanban({ productId, productName, organizationId }: MobileK
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">Empresa</label>
               <Input
-                placeholder="Nome da empresa"
+                placeholder="Nombre de la empresa"
                 value={newLead.company}
                 onChange={e => setNewLead({ ...newLead, company: e.target.value })}
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1 block">WhatsApp / Telefone</label>
+              <label className="text-xs font-medium text-muted-foreground mb-1 block">WhatsApp / Teléfono</label>
               <Input
                 type="tel"
                 placeholder="(11) 99999-9999"

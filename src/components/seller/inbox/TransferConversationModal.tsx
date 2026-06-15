@@ -33,9 +33,9 @@ interface TransferConversationModalProps {
   onOpenChange: (open: boolean) => void;
   conversationId: string;
   currentAssignedUserId?: string;
-  /** Canal da conversa — usado para mostrar o seletor de conexão só em WhatsApp */
+  /** Canal da conversación — usado para mostrar o seletor de conexão só em WhatsApp */
   currentChannel?: string;
-  /** ID da instância Evolution atualmente vinculada à conversa (se houver) */
+  /** ID da instância Evolution atualmente vinculada à conversación (se houver) */
   currentEvolutionInstanceId?: string | null;
   onTransfer?: () => void;
 }
@@ -63,12 +63,12 @@ export function TransferConversationModal({
   const [isTransferring, setIsTransferring] = useState(false);
 
   // Fetch team members
-  const { data: teamMembers = [], isLoading: loadingTeam } = useQuery({
+  const { fecha: teamMembers = [], isLoading: loadingTeam } = useQuery({
     queryKey: ['team-members-transfer', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('profiles')
         .select('id, full_name, email, avatar_url')
         .eq('organization_id', profile.organization_id)
@@ -77,18 +77,18 @@ export function TransferConversationModal({
         .order('full_name', { ascending: true });
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
     enabled: !!profile?.organization_id && open,
   });
 
   // Fetch sectors (atención usa setores, no squads de venta)
-  const { data: sectors = [], isLoading: loadingSectors } = useQuery({
+  const { fecha: sectors = [], isLoading: loadingSectors } = useQuery({
     queryKey: ['sectors-transfer', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('sectors')
         .select('id, name, color, icon')
         .eq('organization_id', profile.organization_id)
@@ -97,19 +97,19 @@ export function TransferConversationModal({
         .order('name', { ascending: true });
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
     enabled: !!profile?.organization_id && open,
   });
 
-  // Verifica se o usuario pode transferir para Agente Admin (privado)
-  const { data: canTransferToAdmin = false } = useQuery({
+  // Verifica se o usuario puede transferir para Agente Admin (privado)
+  const { fecha: canTransferToAdmin = false } = useQuery({
     queryKey: ['can-transfer-admin', profile?.organization_id, user?.id],
     queryFn: async () => {
       if (!profile?.organization_id || !user?.id) return false;
 
       // Match #1: usuario cadastrado como admin_user_id em auto_notification_settings
-      const { data: settings } = await supabase
+      const { fecha: settings } = await supabase
         .from('auto_notification_settings')
         .select('admin_user_id')
         .eq('organization_id', profile.organization_id)
@@ -117,8 +117,8 @@ export function TransferConversationModal({
 
       if (settings?.admin_user_id === user.id) return true;
 
-      // Match #2: usuario tem role 'admin' (fallback)
-      const { data: roles } = await supabase
+      // Match #2: usuario tiene role 'admin' (fallback)
+      const { fecha: roles } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', user.id);
@@ -128,13 +128,13 @@ export function TransferConversationModal({
     enabled: !!profile?.organization_id && !!user?.id && open,
   });
 
-  // Fetch AI agents (filtra admin no client conforme permissão)
-  const { data: aiAgents = [], isLoading: loadingAgents } = useQuery({
+  // Fetch AI agents (filtra admin no client conforme permiso)
+  const { fecha: aiAgents = [], isLoading: loadingAgents } = useQuery({
     queryKey: ['ai-agents-transfer', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_agents')
         .select('id, name, description, agent_type, avatar_url, is_active, is_default, product_id, product:products(id, name)')
         .eq('organization_id', profile.organization_id)
@@ -143,7 +143,7 @@ export function TransferConversationModal({
         .order('name', { ascending: true });
 
       if (error) throw error;
-      return data as Array<{
+      return fecha as Array<{
         id: string;
         name: string;
         description: string | null;
@@ -158,20 +158,20 @@ export function TransferConversationModal({
     enabled: !!profile?.organization_id && open,
   });
 
-  // Fetch Evolution instances (somente para conversas WhatsApp)
+  // Fetch Evolution instances (somente para conversaciones WhatsApp)
   const isWhatsApp = (currentChannel || '').toLowerCase() === 'whatsapp';
-  const { data: evolutionInstances = [] } = useQuery({
+  const { fecha: evolutionInstances = [] } = useQuery({
     queryKey: ['evolution-instances-transfer', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('evolution_instances')
         .select('id, name, phone_number, status')
         .eq('organization_id', profile.organization_id)
         .order('is_default', { ascending: false })
         .order('name', { ascending: true });
       if (error) throw error;
-      return (data || []) as Array<{
+      return (fecha || []) as Array<{
         id: string;
         name: string;
         phone_number: string | null;
@@ -187,7 +187,7 @@ export function TransferConversationModal({
     member.email.toLowerCase().includes(searchUser.toLowerCase())
   );
 
-  // Filter agents by search + esconde admin se no houver permissão
+  // Filter agents by search + esconde admin se no houver permiso
   const filteredAgents = aiAgents
     .filter((a) => canTransferToAdmin || a.agent_type !== 'admin')
     .filter((a) => {
@@ -251,17 +251,17 @@ export function TransferConversationModal({
         updateData.sector_id = selectedSectorId;
         updateData.status = 'waiting_human';
       } else {
-        // agent: devolve a conversa para a IA com agente específico
+        // agent: devolve a conversación para a IA com agente específico
         updateData.assigned_user_id = null;
         updateData.current_agent_id = selectedAgentId;
         updateData.status = 'bot_active';
-        // Marca conversa como em atención pelo agente escolhido para que o
+        // Marca conversación como em atención pelo agente escolhido para que o
         // orquestrador no tente re-rotear (coluna é NOT NULL).
         updateData.orchestrator_state = 'em_atendimento';
       }
 
       // Troca opcional de conexão (instância Evolution / WhatsApp).
-      // No substitui as outras opções — funciona em conjunto.
+      // No substitui as outras opciones — funciona em conjunto.
       const willChangeInstance =
         isWhatsApp &&
         selectedInstanceId !== 'keep' &&
@@ -275,7 +275,7 @@ export function TransferConversationModal({
 
       // Read existing metadata to merge admin takeover flag
       if (adminTargetAgent) {
-        const { data: existingConv } = await supabase
+        const { fecha: existingConv } = await supabase
           .from('webchat_conversations')
           .select('metadata')
           .eq('id', conversationId)
@@ -296,8 +296,8 @@ export function TransferConversationModal({
 
       if (updateError) throw updateError;
 
-      // Create transfer record. Reaproveitamos `to_queue_id` para registrar o setor de destino,
-      // já que a tabela ainda usa esse nome de coluna por compatibilidade.
+      // Create transfer record. Reaproveitamos `to_queue_id` para registrar o sector de destino,
+      // ya que a tabela aún usa esse nombre de coluna por compatibilidade.
       const targetAgent =
         transferType === 'agent' && selectedAgentId
           ? aiAgents.find((a) => a.id === selectedAgentId)
@@ -344,7 +344,7 @@ export function TransferConversationModal({
         transferType === 'user'
           ? 'La conversación fue transferida con éxito.'
           : transferType === 'sector'
-          ? `A conversa foi enviada para o setor "${targetSector?.name ?? ''}".`
+          ? `A conversación fue enviada para o sector "${targetSector?.name ?? ''}".`
           : `Agente IA "${targetAgent?.name ?? ''}" ahora está atendendo.`;
       const fullDesc = newInstance
         ? `${baseDesc} Conexión cambiada a ${newInstance.name}.`
@@ -469,10 +469,10 @@ export function TransferConversationModal({
           {/* Sector Selection */}
           {transferType === 'sector' && (
             <div className="space-y-3">
-              <Label>Seleccionar setor</Label>
+              <Label>Seleccionar sector</Label>
               <Select value={selectedSectorId || ''} onValueChange={setSelectedSectorId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Escolha um setor..." />
+                  <SelectValue placeholder="Elegí um sector..." />
                 </SelectTrigger>
                 <SelectContent>
                   {loadingSectors ? (
@@ -481,7 +481,7 @@ export function TransferConversationModal({
                     </div>
                   ) : sectors.length === 0 ? (
                     <div className="p-4 text-center text-muted-foreground text-sm">
-                      Ninguno setor disponível
+                      Ninguno sector disponível
                     </div>
                   ) : (
                     sectors.map((sector) => (
@@ -499,7 +499,7 @@ export function TransferConversationModal({
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                A conversa entrará na fila do setor escolhido e ficará disponível para qualquer atendente do setor assumir.
+                A conversación se pondrá na fila do sector escolhido e ficará disponível para qualquer agente do sector assumir.
               </p>
             </div>
           )}
@@ -511,7 +511,7 @@ export function TransferConversationModal({
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Buscar agente por nome, descrição o producto..."
+                  placeholder="Buscar agente por nombre, descripción o producto..."
                   value={searchAgent}
                   onChange={(e) => setSearchAgent(e.target.value)}
                   className="pl-9"
@@ -569,8 +569,8 @@ export function TransferConversationModal({
               </ScrollArea>
               <p className="text-xs text-muted-foreground">
                 {hasAdminInList
-                  ? 'Agentes 🔒 Admin são privados do gestor — use apenas para teste o intervenção. A conversa volta ao modo IA com o agente escolhido.'
-                  : 'A conversa volta ao modo IA com este agente assumindo o atención.'}
+                  ? 'Agentes 🔒 Admin son privados do gestor — use apenas para teste o intervenção. A conversación volta ao modo IA com o agente escolhido.'
+                  : 'A conversación volta ao modo IA com este agente assumindo o atención.'}
               </p>
             </div>
           )}
@@ -612,7 +612,7 @@ export function TransferConversationModal({
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                Mude o número/conexão WhatsApp pelo qual essa conversa será atendida. O histórico é
+                Mude o número/conexão WhatsApp pelo qual essa conversación será atendida. O histórico é
                 preservado.
               </p>
             </div>
@@ -622,13 +622,13 @@ export function TransferConversationModal({
           <div className="space-y-2">
             <Label>Observações internas (opcional)</Label>
             <Textarea
-              placeholder="Adicione uma nota para o siguiente atendente..."
+              placeholder="Adicione uma nota para o siguiente agente..."
               value={internalNote}
               onChange={(e) => setInternalNote(e.target.value)}
               className="min-h-[80px]"
             />
             <p className="text-xs text-muted-foreground">
-              Esta mensaje é interna e no será visível para o cliente.
+              Esta mensaje é interna e no será visível para el cliente.
             </p>
           </div>
         </div>

@@ -61,8 +61,8 @@ export interface CreateEventTypeInput {
 }
 
 // Helper function to parse questions from JSON
-function parseEventType(data: unknown): BookingEventType {
-  const item = data as Record<string, unknown>;
+function parseEventType(fecha: unknown): BookingEventType {
+  const item = fecha as Record<string, unknown>;
   return {
     ...item,
     questions: Array.isArray(item.questions) ? item.questions as QuestionField[] : [],
@@ -73,12 +73,12 @@ export function useBookingEventTypes() {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data: eventTypes, isLoading, error } = useQuery({
+  const { fecha: eventTypes, isLoading, error } = useQuery({
     queryKey: ['booking-event-types', user?.id, profile?.organization_id],
     queryFn: async () => {
       if (!user?.id || !profile?.organization_id) return [];
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('booking_event_types')
         .select('*')
         .eq('user_id', user.id)
@@ -86,7 +86,7 @@ export function useBookingEventTypes() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return (data || []).map(parseEventType);
+      return (fecha || []).map(parseEventType);
     },
     enabled: !!user?.id && !!profile?.organization_id,
   });
@@ -97,7 +97,7 @@ export function useBookingEventTypes() {
         throw new Error('User not authenticated');
       }
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('booking_event_types')
         .insert({
           name: input.name,
@@ -122,7 +122,7 @@ export function useBookingEventTypes() {
         .single();
 
       if (error) throw error;
-      return parseEventType(data);
+      return parseEventType(fecha);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['booking-event-types'] });
@@ -141,7 +141,7 @@ export function useBookingEventTypes() {
         updateData.questions = questions as unknown as Json;
       }
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('booking_event_types')
         .update(updateData)
         .eq('id', id)
@@ -149,7 +149,7 @@ export function useBookingEventTypes() {
         .single();
 
       if (error) throw error;
-      return parseEventType(data);
+      return parseEventType(fecha);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['booking-event-types'] });
@@ -182,7 +182,7 @@ export function useBookingEventTypes() {
 
   const toggleActive = useMutation({
     mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('booking_event_types')
         .update({ is_active })
         .eq('id', id)
@@ -190,11 +190,11 @@ export function useBookingEventTypes() {
         .single();
 
       if (error) throw error;
-      return parseEventType(data);
+      return parseEventType(fecha);
     },
-    onSuccess: (data) => {
+    onSuccess: (fecha) => {
       queryClient.invalidateQueries({ queryKey: ['booking-event-types'] });
-      toast.success(data.is_active ? 'Evento ativado!' : 'Evento desativado!');
+      toast.success(fecha.is_active ? 'Evento ativado!' : 'Evento desativado!');
     },
     onError: (error: Error) => {
       console.error('Error toggling event type:', error);
@@ -213,7 +213,7 @@ export function useBookingEventTypes() {
   };
 }
 
-// Gerar slug a partir do nome
+// Gerar slug a partir do nombre
 export function generateSlug(name: string): string {
   return name
     .toLowerCase()

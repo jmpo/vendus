@@ -36,7 +36,7 @@ interface SectorFormDialogProps {
 
 export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialogProps) {
   const upsert = useUpsertSector();
-  const { data: members } = useTeamMembers();
+  const { fecha: members } = useTeamMembers();
 
   const [form, setForm] = useState({
     name: '',
@@ -118,7 +118,7 @@ export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialo
         </DialogHeader>
 
         <div className="space-y-5 py-2">
-          {/* Linha 1: Nome / Orden / Activo */}
+          {/* Linha 1: Nombre / Orden / Activo */}
           <div className="grid grid-cols-1 md:grid-cols-[1fr_120px_auto] gap-3 items-end">
             <div className="space-y-2">
               <Label htmlFor="name">Nombre *</Label>

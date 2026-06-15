@@ -17,7 +17,7 @@ export function useLeadTracking(leadId: string) {
   return useQuery({
     queryKey: ['lead-tracking', leadId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('leads')
         .select(`
           utm_source,
@@ -35,7 +35,7 @@ export function useLeadTracking(leadId: string) {
         .single();
 
       if (error) throw error;
-      return data as LeadTrackingData & { created_at: string };
+      return fecha as LeadTrackingData & { created_at: string };
     },
     enabled: !!leadId
   });
@@ -53,12 +53,12 @@ export function useLeadsByOrigin(productId?: string) {
         query = query.eq('product_id', productId);
       }
 
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
 
       // Group by origin
-      const grouped = data.reduce((acc, lead) => {
-        const origin = lead.lead_origin || 'Não informado';
+      const grouped = fecha.reduce((acc, lead) => {
+        const origin = lead.lead_origin || 'No informado';
         acc[origin] = (acc[origin] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
@@ -80,12 +80,12 @@ export function useLeadsByCampaign(productId?: string) {
         query = query.eq('product_id', productId);
       }
 
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
 
       // Group by campaign
-      const grouped = data.reduce((acc, lead) => {
-        const campaign = lead.utm_campaign || 'Sem campanha';
+      const grouped = fecha.reduce((acc, lead) => {
+        const campaign = lead.utm_campaign || 'Sem campaña';
         acc[campaign] = (acc[campaign] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
@@ -103,7 +103,7 @@ export const LEAD_ORIGINS = [
   { value: 'cold_call', label: 'Cold Call' },
   { value: 'redes_sociais', label: 'Redes Sociais' },
   { value: 'parceiro', label: 'Parceiro' },
-  { value: 'outro', label: 'Outro' }
+  { value: 'otro', label: 'Outro' }
 ];
 
 export const LEAD_CHANNELS = [

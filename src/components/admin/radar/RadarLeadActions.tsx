@@ -41,25 +41,25 @@ export function RadarLeadActions({ item, compact, onOpenConversation }: Props) {
     if (item.lead_id) {
       window.location.href = `/admin?tab=leads&lead=${item.lead_id}`;
     } else {
-      toast.error('Conversa não disponível');
+      toast.error('Conversación no disponível');
     }
   }
 
   async function handleOpenTransfer() {
     if (!item.lead_id) {
-      toast.error('Lead não encontrado');
+      toast.error('Lead no encontrado');
       return;
     }
-    const { data, error } = await supabase
+    const { fecha, error } = await supabase
       .from('leads')
       .select('id, name, assigned_to, squad_id, product_id, organization_id')
       .eq('id', item.lead_id)
       .maybeSingle();
-    if (error || !data) {
-      toast.error('Não foi possível carregar o lead');
+    if (error || !fecha) {
+      toast.error('No fue possível cargar o lead');
       return;
     }
-    setTransferLead(data);
+    setTransferLead(fecha);
     setTransferOpen(true);
   }
 
@@ -76,7 +76,7 @@ export function RadarLeadActions({ item, compact, onOpenConversation }: Props) {
           disabled={!item.conversation_id && !item.lead_id}
         >
           <MessageSquare className="h-3.5 w-3.5" />
-          Abrir conversa
+          Abrir conversación
         </Button>
 
         <Button
@@ -109,7 +109,7 @@ export function RadarLeadActions({ item, compact, onOpenConversation }: Props) {
           disabled={!item.lead_id}
         >
           <ListTodo className="h-3.5 w-3.5" />
-          Criar tarefa
+          Criar tarea
         </Button>
       </div>
 

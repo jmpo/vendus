@@ -197,7 +197,7 @@ export function FormLivePreview({ form, blocks, theme, onComplete }: FormLivePre
             transition={{ delay: 0.3 }}
             className={cn("text-3xl mb-3", themeStyles.text)}
           >
-            {endScreen?.label || 'Obrigado!'}
+            {endScreen?.label || 'Gracias!'}
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -205,7 +205,7 @@ export function FormLivePreview({ form, blocks, theme, onComplete }: FormLivePre
             transition={{ delay: 0.4 }}
             className={cn("text-lg max-w-md", themeStyles.muted)}
           >
-            {endScreen?.description || 'Suas respostas foram enviadas com sucesso.'}
+            {endScreen?.description || 'Sus respuestas foram enviadas com éxito.'}
           </motion.p>
           {endScreen?.block_settings?.cta_text && (
             <motion.div
@@ -280,7 +280,7 @@ export function FormLivePreview({ form, blocks, theme, onComplete }: FormLivePre
                   className={cn("gap-3 text-lg px-8 py-6 rounded-xl shadow-lg shadow-primary/30", btn.className)}
                   onClick={handleNext}
                 >
-                  Começar
+                  Comenzar
                   <ArrowRight className="h-5 w-5" />
                 </Button>
               </motion.div>
@@ -324,7 +324,7 @@ export function FormLivePreview({ form, blocks, theme, onComplete }: FormLivePre
                     "focus:ring-2 focus:ring-primary focus:border-primary",
                     themeStyles.input, themeStyles.text
                   )}
-                  placeholder={block.placeholder || 'Digite aqui...'}
+                  placeholder={block.placeholder || 'Escribí aqui...'}
                   rows={4}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
@@ -338,7 +338,7 @@ export function FormLivePreview({ form, blocks, theme, onComplete }: FormLivePre
                     "focus:ring-2 focus:ring-primary focus:border-primary",
                     themeStyles.input, themeStyles.text
                   )}
-                  placeholder={block.placeholder || 'Digite aqui...'}
+                  placeholder={block.placeholder || 'Escribí aqui...'}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   autoFocus
@@ -443,8 +443,8 @@ export function FormLivePreview({ form, blocks, theme, onComplete }: FormLivePre
             
             <div className="grid grid-cols-2 gap-4">
               {[
-                { value: true, label: 'Sim', key: 'Y', color: 'from-green-500 to-emerald-500' },
-                { value: false, label: 'Não', key: 'N', color: 'from-red-500 to-rose-500' },
+                { value: true, label: 'Sí', key: 'Y', color: 'from-green-500 to-emerald-500' },
+                { value: false, label: 'No', key: 'N', color: 'from-red-500 to-rose-500' },
               ].map((opt, idx) => {
                 const isSelected = responses[block.id] === opt.value;
                 return (

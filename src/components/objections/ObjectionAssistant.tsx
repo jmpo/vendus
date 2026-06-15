@@ -19,14 +19,14 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
 
   const handleSubmit = async () => {
     if (!objection.trim()) {
-      toast.error('Digite a objeção do cliente');
+      toast.error('Escribí a objeção del cliente');
       return;
     }
 
     try {
       await handleObjection(objection, productId);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro ao processar objeção');
+      toast.error(error instanceof Error ? error.message : 'Error ao processar objeção');
     }
   };
 
@@ -57,7 +57,7 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
       toast.success('¡Objeción guardada en la base!');
       handleReset();
     } catch (error) {
-      toast.error('Erro ao salvar objeção');
+      toast.error('Error ao guardar objeção');
     }
   };
 
@@ -103,7 +103,7 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
           </label>
           <div className="flex gap-2">
             <Textarea
-              placeholder='Ex: "Está muito caro para o meu orçamento atual"'
+              placeholder='Ex: "Está mucho caro para o meu presupuesto atual"'
               value={objection}
               onChange={(e) => setObjection(e.target.value)}
               className="min-h-[80px] resize-none bg-background"
@@ -141,7 +141,7 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
             {isLoading && !response && (
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm">Analizando...ntexto do produto e gerando resposta estratégica...</span>
+                <span className="text-sm">Analizando...ntexto do producto e gerando respuesta estratégica...</span>
               </div>
             )}
             

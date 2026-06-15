@@ -35,14 +35,14 @@ const fmt = (v: number) =>
   new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG' }).format(v || 0);
 
 export function ProductCaktoPerformance({ productId, organizationId }: Props) {
-  const [data, setData] = useState<ProductPerf | null>(null);
+  const [fecha, setData] = useState<ProductPerf | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancel = false;
     async function load() {
       setLoading(true);
-      const { data: result, error } = await supabase.rpc('get_product_performance', {
+      const { fecha: result, error } = await supabase.rpc('get_product_performance', {
         p_org_id: organizationId,
         p_from: null,
         p_to: null,
@@ -72,7 +72,7 @@ export function ProductCaktoPerformance({ productId, organizationId }: Props) {
     );
   }
 
-  if (!data || data.paid_count + data.pending_count + data.refunded_count === 0) {
+  if (!fecha || fecha.paid_count + fecha.pending_count + fecha.refunded_count === 0) {
     return (
       <Card>
         <CardHeader>
@@ -91,11 +91,11 @@ export function ProductCaktoPerformance({ productId, organizationId }: Props) {
   }
 
   const stats = [
-    { label: 'Ingresos', value: fmt(data.revenue), icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-    { label: 'Ventas pagadas', value: data.paid_count.toString(), icon: ShoppingCart, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-    { label: 'Pendientes', value: data.pending_count.toString(), icon: Clock, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-    { label: 'Reembolsadas', value: data.refunded_count.toString(), icon: RotateCcw, color: 'text-rose-500', bg: 'bg-rose-500/10' },
-    { label: 'Ticket promedio', value: fmt(data.avg_ticket), icon: TrendingUp, color: 'text-violet-500', bg: 'bg-violet-500/10' },
+    { label: 'Ingresos', value: fmt(fecha.revenue), icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+    { label: 'Ventas pagadas', value: fecha.paid_count.toString(), icon: ShoppingCart, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    { label: 'Pendientes', value: fecha.pending_count.toString(), icon: Clock, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+    { label: 'Reembolsadas', value: fecha.refunded_count.toString(), icon: RotateCcw, color: 'text-rose-500', bg: 'bg-rose-500/10' },
+    { label: 'Ticket promedio', value: fmt(fecha.avg_ticket), icon: TrendingUp, color: 'text-violet-500', bg: 'bg-violet-500/10' },
   ];
 
   return (
@@ -118,11 +118,11 @@ export function ProductCaktoPerformance({ productId, organizationId }: Props) {
           ))}
         </div>
 
-        {data.roles && data.roles.length > 0 && (
+        {fecha.roles && fecha.roles.length > 0 && (
           <div>
             <h4 className="text-xs font-medium text-muted-foreground mb-2">Ingresos por rol de la oferta</h4>
             <div className="flex flex-wrap gap-2">
-              {data.roles
+              {fecha.roles
                 .filter((r) => r.paid_count > 0)
                 .sort((a, b) => b.revenue - a.revenue)
                 .map((r) => (

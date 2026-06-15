@@ -75,15 +75,15 @@ export function ActionConfigDialog({
   const [pipelineStages, setPipelineStages] = useState<PipelineStageRow[]>([]);
   const [loadingStages, setLoadingStages] = useState(false);
   
-  const { data: teamMembers } = useTeamMembers();
-  const { data: squads } = useSquads();
-  const { data: emailTemplates } = useEmailTemplates();
+  const { fecha: teamMembers } = useTeamMembers();
+  const { fecha: squads } = useSquads();
+  const { fecha: emailTemplates } = useEmailTemplates();
   const { fields: customFields } = useCustomFields();
-  const { data: funnels } = useFunnels();
-  const { data: allAgents } = useAllAgents();
-  const { data: evolutionInstances } = useEvolutionInstances();
-  const { data: sectors } = useSectors();
-  const { data: leadTags } = useLeadTags();
+  const { fecha: funnels } = useFunnels();
+  const { fecha: allAgents } = useAllAgents();
+  const { fecha: evolutionInstances } = useEvolutionInstances();
+  const { fecha: sectors } = useSectors();
+  const { fecha: leadTags } = useLeadTags();
 
   useEffect(() => {
     let cancelled = false;
@@ -97,15 +97,15 @@ export function ActionConfigDialog({
       .select('id, name, color, order_index, is_won, is_lost')
       .eq('product_id', productId)
       .order('order_index', { ascending: true })
-      .then(({ data }) => {
+      .then(({ fecha }) => {
         if (cancelled) return;
-        setPipelineStages((data as PipelineStageRow[]) || []);
+        setPipelineStages((fecha as PipelineStageRow[]) || []);
         setLoadingStages(false);
       });
     return () => { cancelled = true; };
   }, [productId, action.type]);
 
-  // Migra config legado: se vier {tags: ["nome"]} sem tag_ids, tenta resolver pelos nomes
+  // Migra config legado: se vier {tags: ["nombre"]} sem tag_ids, tenta resolver pelos nomes
   useEffect(() => {
     if (action.type !== 'apply_tags') return;
     if (config.tag_ids && config.tag_ids.length > 0) return;
@@ -205,7 +205,7 @@ export function ActionConfigDialog({
   const renderCreateLeadConfig = () => (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Mapeie os campos do payload para os campos do lead
+        Mapeie os campos do payload para os campos del lead
       </p>
       
       {/* Field Mappings */}
@@ -259,7 +259,7 @@ export function ActionConfigDialog({
           onValueChange={(v) => setConfig(prev => ({ ...prev, target_user_id: v }))}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Selecione um vendedor" />
+            <SelectValue placeholder="Seleccioná um vendedor" />
           </SelectTrigger>
           <SelectContent>
             {teamMembers?.map((member) => (
@@ -282,7 +282,7 @@ export function ActionConfigDialog({
           onValueChange={(v) => setConfig(prev => ({ ...prev, target_squad_id: v }))}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Selecione um squad" />
+            <SelectValue placeholder="Seleccioná um squad" />
           </SelectTrigger>
           <SelectContent>
             {squads?.map((squad) => (
@@ -307,7 +307,7 @@ export function ActionConfigDialog({
             onValueChange={(v) => setConfig(prev => ({ ...prev, target_sector_id: v }))}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Selecione um setor" />
+              <SelectValue placeholder="Seleccioná um sector" />
             </SelectTrigger>
             <SelectContent>
               {activeSectors.map((sector: any) => (
@@ -319,7 +319,7 @@ export function ActionConfigDialog({
           </Select>
           {activeSectors.length === 0 && (
             <p className="text-xs text-muted-foreground">
-              Nenhum setor ativo. Crie um em Configurações → Setores.
+              Nenhum sector ativo. Crea um em Configurações → Setores.
             </p>
           )}
         </div>
@@ -331,7 +331,7 @@ export function ActionConfigDialog({
     if (!productId) {
       return (
         <p className="text-sm text-muted-foreground">
-          Vincule este webhook a um produto na aba de configuração para listar as etapas do pipeline.
+          Vincule este webhook a um producto na aba de configuración para listar as etapas do pipeline.
         </p>
       );
     }
@@ -344,7 +344,7 @@ export function ActionConfigDialog({
             onValueChange={(v) => setConfig(prev => ({ ...prev, target_stage_id: v }))}
           >
             <SelectTrigger>
-              <SelectValue placeholder={loadingStages ? 'Carregando...' : 'Selecione um estágio'} />
+              <SelectValue placeholder={loadingStages ? 'Carregando...' : 'Seleccioná um estágio'} />
             </SelectTrigger>
             <SelectContent>
               {pipelineStages.map((stage) => (
@@ -366,7 +366,7 @@ export function ActionConfigDialog({
           </Select>
           {!loadingStages && pipelineStages.length === 0 && (
             <p className="text-xs text-muted-foreground">
-              Esse produto ainda não tem etapas no pipeline.
+              Esse producto aún no tiene etapas no pipeline.
             </p>
           )}
         </div>
@@ -392,11 +392,11 @@ export function ActionConfigDialog({
         <div className="space-y-2">
           <Label>Etiquetas a aplicar</Label>
           <p className="text-xs text-muted-foreground">
-            Selecione as etiquetas cadastradas em <strong>Etiquetas</strong> que serão aplicadas no lead quando este webhook disparar.
+            Seleccioná as etiquetas cadastradas em <strong>Etiquetas</strong> que serão aplicadas no lead cuando este webhook disparar.
           </p>
           {(!leadTags || leadTags.length === 0) ? (
             <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-              Nenhuma etiqueta cadastrada ainda. Crie etiquetas em <strong>Leads → Etiquetas</strong>.
+              Nenhuma etiqueta cadastrada aún. Crea etiquetas em <strong>Leads → Etiquetas</strong>.
             </div>
           ) : (
             <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto p-1">
@@ -426,8 +426,8 @@ export function ActionConfigDialog({
           )}
           {orphanLegacy.length > 0 && (
             <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-2 text-xs text-amber-700 dark:text-amber-400">
-              <strong>Atenção:</strong> existem nomes antigos de tags que não casaram com nenhuma etiqueta cadastrada:{' '}
-              {orphanLegacy.join(', ')}. Crie/selecione as etiquetas reais acima.
+              <strong>Atenção:</strong> existem nomes antigos de tags que no casaram com ninguna etiqueta cadastrada:{' '}
+              {orphanLegacy.join(', ')}. Crea/selecione as etiquetas reais acima.
             </div>
           )}
         </div>
@@ -444,7 +444,7 @@ export function ActionConfigDialog({
           onValueChange={(v) => setConfig(prev => ({ ...prev, temperature: v as 'hot' | 'warm' | 'cold' }))}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Selecione a temperatura" />
+            <SelectValue placeholder="Seleccioná a temperatura" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="hot">🔥 Quente</SelectItem>
@@ -465,7 +465,7 @@ export function ActionConfigDialog({
           onValueChange={(v) => setConfig(prev => ({ ...prev, value_field: v }))}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Selecione o campo" />
+            <SelectValue placeholder="Seleccioná o campo" />
           </SelectTrigger>
           <SelectContent>
             {fieldPaths.map((path) => (
@@ -484,7 +484,7 @@ export function ActionConfigDialog({
       <div className="space-y-2">
         <Label>Mensaje de la Notificación</Label>
         <Input
-          placeholder="Ex: Novo lead recebido via webhook!"
+          placeholder="Ex: Novo lead recibido via webhook!"
           value={config.notification_message || ''}
           onChange={(e) => setConfig(prev => ({ ...prev, notification_message: e.target.value }))}
         />
@@ -513,7 +513,7 @@ export function ActionConfigDialog({
           </SelectContent>
         </Select>
         <p className="text-xs text-muted-foreground">
-          Se nenhum template for selecionado, será usado um email padrão de boas-vindas.
+          Se ningún template for selecionado, será usado um email padrão de boas-vindas.
         </p>
       </div>
     </div>
@@ -536,14 +536,14 @@ export function ActionConfigDialog({
           </TooltipProvider>
         </div>
         <Input
-          placeholder="Novo lead recebido: {{lead_name}}"
+          placeholder="Novo lead recibido: {{lead_name}}"
           value={config.email_subject || ''}
           onChange={(e) => setConfig(prev => ({ ...prev, email_subject: e.target.value }))}
         />
       </div>
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <Label>Mensagem</Label>
+          <Label>Mensaje</Label>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
@@ -556,7 +556,7 @@ export function ActionConfigDialog({
           </TooltipProvider>
         </div>
         <Textarea
-          placeholder="Um novo lead chamado {{lead_name}} foi recebido via webhook. Acesse: {{lead_url}}"
+          placeholder="Um novo lead chamado {{lead_name}} fue recibido via webhook. Acesse: {{lead_url}}"
           value={config.email_message || ''}
           onChange={(e) => setConfig(prev => ({ ...prev, email_message: e.target.value }))}
           rows={4}
@@ -584,7 +584,7 @@ export function ActionConfigDialog({
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Selecione o campo" />
+            <SelectValue placeholder="Seleccioná o campo" />
           </SelectTrigger>
           <SelectContent>
             {customFields.filter(f => f.is_active).map((field) => (
@@ -596,7 +596,7 @@ export function ActionConfigDialog({
         </Select>
         {customFields.length === 0 && (
           <p className="text-xs text-muted-foreground">
-            Nenhum campo personalizado criado. Vá em "Campos Personalizados" para criar.
+            Nenhum campo personalizado creado. Vá em "Campos Personalizados" para crear.
           </p>
         )}
       </div>
@@ -607,7 +607,7 @@ export function ActionConfigDialog({
           onValueChange={(v) => setConfig(prev => ({ ...prev, value_field: v }))}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Selecione o campo do payload" />
+            <SelectValue placeholder="Seleccioná o campo do payload" />
           </SelectTrigger>
           <SelectContent>
             {fieldPaths.map((path) => (
@@ -628,7 +628,7 @@ export function ActionConfigDialog({
         {/* Message */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <Label>Mensagem *</Label>
+            <Label>Mensaje *</Label>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
@@ -641,13 +641,13 @@ export function ActionConfigDialog({
             </TooltipProvider>
           </div>
           <Textarea
-            placeholder={`Olá! Um novo lead chegou: {{lead_name}}\nTelefone: {{lead_phone}}`}
+            placeholder={`Hola! Um novo lead chegou: {{lead_name}}\nTelefone: {{lead_phone}}`}
             value={config.whatsapp_message || ''}
             onChange={(e) => setConfig(prev => ({ ...prev, whatsapp_message: e.target.value }))}
             rows={4}
           />
           <p className="text-xs text-muted-foreground">
-            Use <code className="bg-muted px-1 rounded">{'{{lead_name}}'}</code>, <code className="bg-muted px-1 rounded">{'{{lead_phone}}'}</code>, <code className="bg-muted px-1 rounded">{'{{lead_email}}'}</code>
+            Usa <code className="bg-muted px-1 rounded">{'{{lead_name}}'}</code>, <code className="bg-muted px-1 rounded">{'{{lead_phone}}'}</code>, <code className="bg-muted px-1 rounded">{'{{lead_email}}'}</code>
           </p>
         </div>
 
@@ -662,22 +662,22 @@ export function ActionConfigDialog({
             <div className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-muted/50 cursor-pointer">
               <RadioGroupItem value="all_team" id="wa-all" />
               <label htmlFor="wa-all" className="cursor-pointer flex-1">
-                <div className="font-medium text-sm">Todos os membros da equipe</div>
-                <div className="text-xs text-muted-foreground">Envia para todos que possuem telefone cadastrado</div>
+                <div className="font-medium text-sm">Todos os membros da equipo</div>
+                <div className="text-xs text-muted-foreground">Envia para todos que possuem teléfono cadastrado</div>
               </label>
             </div>
             <div className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-muted/50 cursor-pointer">
               <RadioGroupItem value="specific_user" id="wa-user" />
               <label htmlFor="wa-user" className="cursor-pointer flex-1">
                 <div className="font-medium text-sm">Membro específico</div>
-                <div className="text-xs text-muted-foreground">Selecione um membro da equipe</div>
+                <div className="text-xs text-muted-foreground">Seleccioná um membro da equipo</div>
               </label>
             </div>
             <div className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-muted/50 cursor-pointer">
               <RadioGroupItem value="specific_number" id="wa-number" />
               <label htmlFor="wa-number" className="cursor-pointer flex-1">
                 <div className="font-medium text-sm">Número específico</div>
-                <div className="text-xs text-muted-foreground">Digite um número de WhatsApp fixo</div>
+                <div className="text-xs text-muted-foreground">Escribí um número de WhatsApp fixo</div>
               </label>
             </div>
           </RadioGroup>
@@ -686,13 +686,13 @@ export function ActionConfigDialog({
         {/* Conditional: specific user dropdown */}
         {target === 'specific_user' && (
           <div className="space-y-2">
-            <Label>Membro da equipe</Label>
+            <Label>Membro da equipo</Label>
             <Select
               value={config.whatsapp_user_id || ''}
               onValueChange={(v) => setConfig(prev => ({ ...prev, whatsapp_user_id: v }))}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecione um membro" />
+                <SelectValue placeholder="Seleccioná um membro" />
               </SelectTrigger>
               <SelectContent>
                 {teamMembers?.map((member) => (
@@ -703,7 +703,7 @@ export function ActionConfigDialog({
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              O telefone cadastrado no perfil do membro será usado como destino.
+              O teléfono cadastrado no perfil do membro será usado como destino.
             </p>
           </div>
         )}
@@ -731,12 +731,12 @@ export function ActionConfigDialog({
     
     useEffect(() => {
       const fetchAgents = async () => {
-        const { data } = await supabase
+        const { fecha } = await supabase
           .from('product_agents')
           .select('id, name, agent_type')
           .eq('is_active', true)
           .order('name');
-        if (data) setAgents(data);
+        if (fecha) setAgents(fecha);
       };
       fetchAgents();
     }, []);
@@ -751,7 +751,7 @@ export function ActionConfigDialog({
             onValueChange={(v) => setConfig(prev => ({ ...prev, ai_agent_id: v }))}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Selecione o agente" />
+              <SelectValue placeholder="Seleccioná o agente" />
             </SelectTrigger>
             <SelectContent>
               {agents.map((agent) => (
@@ -763,16 +763,16 @@ export function ActionConfigDialog({
           </Select>
           {agents.length === 0 && (
             <p className="text-xs text-muted-foreground">
-              Nenhum agente IA encontrado. Crie um agente no produto primeiro.
+              Nenhum agente IA encontrado. Crea um agente no producto primeiro.
             </p>
           )}
         </div>
 
         {/* Objective */}
         <div className="space-y-2">
-          <Label>Objetivo da Abordagem *</Label>
+          <Label>Objetivo da Abordaje *</Label>
           <Input
-            placeholder="Ex: Qualificar o lead e agendar uma call"
+            placeholder="Ex: Calificar o lead e agendar uma call"
             value={config.ai_objective || ''}
             onChange={(e) => setConfig(prev => ({ ...prev, ai_objective: e.target.value }))}
           />
@@ -785,7 +785,7 @@ export function ActionConfigDialog({
         <div className="space-y-2">
           <Label>Contexto Extra (opcional)</Label>
           <Textarea
-            placeholder="Ex: O lead veio da página de preços, provavelmente está comparando opções"
+            placeholder="Ex: O lead veio da página de preços, provavelmente está comparando opciones"
             value={config.ai_extra_context || ''}
             onChange={(e) => setConfig(prev => ({ ...prev, ai_extra_context: e.target.value }))}
             rows={3}
@@ -798,7 +798,7 @@ export function ActionConfigDialog({
             <div>
               <Label className="text-sm font-medium">Follow-up Automático</Label>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Reenvia mensagem estratégica se o lead não responder
+                Reenvia mensaje estratégica se o lead no responder
               </p>
             </div>
             <Switch
@@ -812,18 +812,18 @@ export function ActionConfigDialog({
               {/* Business Hours */}
               <div className="space-y-3">
                 <Label className="text-sm font-medium flex items-center gap-1.5">
-                  <Clock className="h-4 w-4" /> Horário Comercial
+                  <Clock className="h-4 w-4" /> Horario Comercial
                 </Label>
                 <div className="flex items-center gap-2">
                   <Input
-                    type="time"
+                    type="equipo"
                     className="w-28"
                     value={config.ai_business_hours_start || '09:00'}
                     onChange={(e) => setConfig(prev => ({ ...prev, ai_business_hours_start: e.target.value }))}
                   />
                   <span className="text-sm text-muted-foreground">às</span>
                   <Input
-                    type="time"
+                    type="equipo"
                     className="w-28"
                     value={config.ai_business_hours_end || '18:00'}
                     onChange={(e) => setConfig(prev => ({ ...prev, ai_business_hours_end: e.target.value }))}
@@ -904,11 +904,11 @@ export function ActionConfigDialog({
                           <SelectItem value="4">4 horas</SelectItem>
                           <SelectItem value="6">6 horas</SelectItem>
                           <SelectItem value="12">12 horas</SelectItem>
-                          <SelectItem value="24">1 dia</SelectItem>
-                          <SelectItem value="48">2 dias</SelectItem>
-                          <SelectItem value="72">3 dias</SelectItem>
-                          <SelectItem value="120">5 dias</SelectItem>
-                          <SelectItem value="168">7 dias</SelectItem>
+                          <SelectItem value="24">1 día</SelectItem>
+                          <SelectItem value="48">2 días</SelectItem>
+                          <SelectItem value="72">3 días</SelectItem>
+                          <SelectItem value="120">5 días</SelectItem>
+                          <SelectItem value="168">7 días</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -963,12 +963,12 @@ export function ActionConfigDialog({
             onValueChange={(v) => setConfig((prev) => ({ ...prev, flow_id: v }))}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Selecione um funil" />
+              <SelectValue placeholder="Seleccioná um embudo" />
             </SelectTrigger>
             <SelectContent>
               {activeFunnels.length === 0 && (
                 <SelectItem value="__none" disabled>
-                  Nenhum funil disponível
+                  Nenhum embudo disponível
                 </SelectItem>
               )}
               {activeFunnels.map((f: any) => (
@@ -984,7 +984,7 @@ export function ActionConfigDialog({
         </div>
 
         <div className="space-y-2">
-          <Label>Agente IA que conduzirá o fluxo (opcional)</Label>
+          <Label>Agente IA que conduzirá o flujo (opcional)</Label>
           <Select
             value={config.flow_agent_id || '__none'}
             onValueChange={(v) => setConfig((prev) => ({ ...prev, flow_agent_id: v === '__none' ? undefined : v }))}
@@ -1003,7 +1003,7 @@ export function ActionConfigDialog({
             </SelectContent>
           </Select>
           <p className="text-xs text-muted-foreground">
-            Se não selecionar agente, o fluxo dispara e a conversa fica aguardando atendimento humano.
+            Se no selecionar agente, o flujo dispara e a conversación fica aguardando atención humano.
           </p>
         </div>
 
@@ -1014,10 +1014,10 @@ export function ActionConfigDialog({
             onValueChange={(v) => setConfig((prev) => ({ ...prev, flow_assigned_user_id: v === '__none' ? undefined : v }))}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Não atribuir" />
+              <SelectValue placeholder="No atribuir" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="__none">Não atribuir</SelectItem>
+              <SelectItem value="__none">No atribuir</SelectItem>
               {(teamMembers || []).map((m: any) => (
                 <SelectItem key={m.user_id || m.id} value={m.user_id || m.id}>
                   {m.full_name || m.email}
@@ -1028,16 +1028,16 @@ export function ActionConfigDialog({
         </div>
 
         <div className="space-y-2">
-          <Label>Atribuir a setor (opcional)</Label>
+          <Label>Atribuir a sector (opcional)</Label>
           <Select
             value={config.flow_sector_id || '__none'}
             onValueChange={(v) => setConfig((prev) => ({ ...prev, flow_sector_id: v === '__none' ? undefined : v }))}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Sem setor" />
+              <SelectValue placeholder="Sem sector" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="__none">Sem setor</SelectItem>
+              <SelectItem value="__none">Sem sector</SelectItem>
               {(sectors || []).map((s: any) => (
                 <SelectItem key={s.id} value={s.id}>
                   {s.name}
@@ -1058,14 +1058,14 @@ export function ActionConfigDialog({
               <RadioGroupItem value="whatsapp" id="flow-wa" />
               <label htmlFor="flow-wa" className="cursor-pointer flex-1">
                 <div className="font-medium text-sm">WhatsApp</div>
-                <div className="text-xs text-muted-foreground">Envia o fluxo no WhatsApp do lead via Evolution Go</div>
+                <div className="text-xs text-muted-foreground">Envia o flujo no WhatsApp del lead via Evolution Go</div>
               </label>
             </div>
             <div className="flex items-center space-x-3 p-3 rounded-lg border border-border">
               <RadioGroupItem value="webchat" id="flow-web" />
               <label htmlFor="flow-web" className="cursor-pointer flex-1">
                 <div className="font-medium text-sm">WebChat</div>
-                <div className="text-xs text-muted-foreground">Cria a conversa no Inbox para o lead continuar via chat</div>
+                <div className="text-xs text-muted-foreground">Cria a conversación no Inbox para el lead continuar via chat</div>
               </label>
             </div>
           </RadioGroup>
@@ -1099,7 +1099,7 @@ export function ActionConfigDialog({
         )}
 
         <div className="rounded-lg bg-muted/40 p-3 text-xs text-muted-foreground">
-          O lead precisa ter telefone (WhatsApp) ou e-mail para que o fluxo seja iniciado corretamente.
+          O lead precisa ter teléfono (WhatsApp) ou e-mail para que o flujo seja iniciado corretamente.
         </div>
       </div>
     );
@@ -1141,7 +1141,7 @@ export function ActionConfigDialog({
       default:
         return (
           <p className="text-sm text-muted-foreground">
-            Configuração não disponível para esta ação.
+            Configuración no disponível para esta acción.
           </p>
         );
     }
@@ -1229,7 +1229,7 @@ function FieldMappingRow({
               </span>
             ) : (
               <span className="text-muted-foreground text-sm">
-                Selecione o campo do payload
+                Seleccioná o campo do payload
               </span>
             )}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

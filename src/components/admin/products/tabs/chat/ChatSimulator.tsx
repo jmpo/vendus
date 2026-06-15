@@ -40,8 +40,8 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   
-  const { data: knowledgeSources } = useKnowledgeSources(productId);
-  const { data: product } = useProduct(productId);
+  const { fecha: knowledgeSources } = useKnowledgeSources(productId);
+  const { fecha: product } = useProduct(productId);
 
   const activeSources = knowledgeSources?.filter(s => s.is_active && s.processing_status === 'completed') || [];
   
@@ -85,7 +85,7 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
             system_prompt: agentConfig?.system_prompt || '',
             knowledge_base: null,
             faq: agentConfig?.faq || [],
-            fallback_message: agentConfig?.fallback_message || 'Desculpe, não entendi.',
+            fallback_message: agentConfig?.fallback_message || 'Desculpe, no entendi.',
             temperature: agentConfig?.temperature ?? 0.7,
             max_tokens: agentConfig?.max_tokens ?? 500,
             persona_style: agentConfig?.persona_style || 'friendly',
@@ -98,11 +98,11 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
         throw new Error(response.error.message);
       }
 
-      const responseData = response.data;
+      const responseData = response.fecha;
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: responseData?.message?.content || responseData?.response || 'Erro ao processar resposta.',
+        content: responseData?.message?.content || responseData?.response || 'Error ao processar respuesta.',
         buttons: responseData?.buttons || responseData?.message?.buttons || undefined,
         video_url: responseData?.video_url || responseData?.message?.video_url || undefined,
       };
@@ -116,13 +116,13 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Error in chat simulator:', error);
-      toast.error('Erro ao enviar mensagem. Verifique a configuração.');
+      toast.error('Error al enviar mensaje. Verifique a configuración.');
       
       // Add error message to chat
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente.',
+        content: 'Desculpe, ocorreu um error ao processar su mensaje. Por favor, tente novamente.',
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
@@ -199,7 +199,7 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
                     {agentConfig?.agent_name || 'Assistente Virtual'}
                   </CardTitle>
                   <CardDescription className="text-xs">
-                    Simulador de conversa • Teste o comportamento da IA
+                    Simulador de conversación • Teste o comportamento da IA
                   </CardDescription>
                 </div>
               </div>
@@ -217,8 +217,8 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
                   <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p className="font-medium">Simulador de Chat</p>
                   <p className="text-sm">
-                    Faça perguntas como se fosse um visitante do seu site.
-                    <br />A IA responderá usando o conhecimento do Cérebro do Produto.
+                    Faça preguntas como se fosse um visitante do su site.
+                    <br />A IA responderá usando o conhecimento do Cérebro do Producto.
                   </p>
                 </div>
               )}
@@ -320,7 +320,7 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
               <Input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Digite uma mensagem de teste..."
+                placeholder="Escribí uma mensaje de teste..."
                 onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
                 disabled={isLoading}
               />
@@ -343,14 +343,14 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
               <Brain className="h-4 w-4" />
-              Cérebro do Produto
+              Cérebro do Producto
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="p-3 rounded-lg bg-muted/50">
-              <p className="font-medium text-sm">{product?.name || 'Produto'}</p>
+              <p className="font-medium text-sm">{product?.name || 'Producto'}</p>
               <p className="text-xs text-muted-foreground line-clamp-2">
-                {product?.short_description || product?.description || 'Sem descrição'}
+                {product?.short_description || product?.description || 'Sem descripción'}
               </p>
             </div>
 
@@ -379,7 +379,7 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
             {activeSources.length === 0 && (
               <div className="p-3 rounded-lg bg-warning/10 border border-warning/20">
                 <p className="text-xs text-warning-foreground">
-                  ⚠️ Nenhuma fonte de conhecimento ativa. A IA terá respostas limitadas.
+                  ⚠️ Nenhuma fonte de conhecimento ativa. A IA terá respuestas limitadas.
                 </p>
               </div>
             )}
@@ -391,7 +391,7 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
               <Bot className="h-4 w-4" />
-              Configuração Atual
+              Configuración Atual
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
@@ -414,7 +414,7 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
             <div className="flex justify-between">
               <span className="text-muted-foreground">Cérebro Ativo</span>
               <Badge variant={agentConfig?.use_product_brain ? 'default' : 'secondary'}>
-                {agentConfig?.use_product_brain ? 'Sim' : 'Não'}
+                {agentConfig?.use_product_brain ? 'Sí' : 'No'}
               </Badge>
             </div>
           </CardContent>
@@ -428,8 +428,8 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
           <CardContent className="text-xs text-muted-foreground space-y-2">
             <p>• Pergunte sobre preços, funcionalidades e diferenciais</p>
             <p>• Teste objeções comuns que clientes podem ter</p>
-            <p>• Verifique se as respostas estão coerentes</p>
-            <p>• Use palavras de transferência para testar handoff</p>
+            <p>• Verifique se as respuestas estão coerentes</p>
+            <p>• Usa palavras de transferência para testar handoff</p>
           </CardContent>
         </Card>
       </div>

@@ -23,7 +23,7 @@ export function InviteMemberDialog({ open, onOpenChange }: InviteMemberDialogPro
   const [copied, setCopied] = useState(false);
   
   const createInvitation = useCreateInvitation();
-  const { data: squads } = useSquads();
+  const { fecha: squads } = useSquads();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

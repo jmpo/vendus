@@ -38,18 +38,18 @@ export function QuickRepliesManager() {
   const [creating, setCreating] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const { data: replies = [], isLoading } = useQuery({
+  const { fecha: replies = [], isLoading } = useQuery({
     queryKey: ['quick-replies-admin', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('quick_replies')
         .select('*')
         .eq('organization_id', profile.organization_id)
         .order('category')
         .order('title');
       if (error) throw error;
-      return data as QuickReply[];
+      return fecha as QuickReply[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -57,7 +57,7 @@ export function QuickRepliesManager() {
   const saveMutation = useMutation({
     mutationFn: async (payload: Partial<QuickReply> & { id?: string }) => {
       if (!profile?.organization_id || !user?.id) throw new Error('Sin organización');
-      const data = {
+      const fecha = {
         organization_id: profile.organization_id,
         category: payload.category?.trim() || 'General',
         title: payload.title!.trim(),
@@ -66,12 +66,12 @@ export function QuickRepliesManager() {
         is_active: payload.is_active ?? true,
       };
       if (payload.id) {
-        const { error } = await supabase.from('quick_replies').update(data).eq('id', payload.id);
+        const { error } = await supabase.from('quick_replies').update(fecha).eq('id', payload.id);
         if (error) throw error;
       } else {
         const { error } = await supabase
           .from('quick_replies')
-          .insert({ ...data, created_by: user.id });
+          .insert({ ...fecha, created_by: user.id });
         if (error) throw error;
       }
     },
@@ -119,7 +119,7 @@ export function QuickRepliesManager() {
             Respuestas Rápidas
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Crea atajos para que el equipo envíe mensajes listos en el chat. Use <code className="px-1 bg-muted rounded text-xs">{'{{nome}}'}</code> e <code className="px-1 bg-muted rounded text-xs">{'{{produto}}'}</code> como variáveis.
+            Crea atajos para que el equipo envíe mensajes listos en el chat. Usa <code className="px-1 bg-muted rounded text-xs">{'{{nombre}}'}</code> e <code className="px-1 bg-muted rounded text-xs">{'{{producto}}'}</code> como variáveis.
           </p>
         </div>
         <Button onClick={() => setCreating(true)}>
@@ -192,7 +192,7 @@ export function QuickRepliesManager() {
         open={creating || !!editing}
         onClose={() => { setCreating(false); setEditing(null); }}
         initial={editing}
-        onSave={(data) => saveMutation.mutate({ ...data, id: editing?.id })}
+        onSave={(fecha) => saveMutation.mutate({ ...fecha, id: editing?.id })}
         isSaving={saveMutation.isPending}
       />
 
@@ -218,7 +218,7 @@ interface FormProps {
   open: boolean;
   onClose: () => void;
   initial: QuickReply | null;
-  onSave: (data: Partial<QuickReply>) => void;
+  onSave: (fecha: Partial<QuickReply>) => void;
   isSaving: boolean;
 }
 
@@ -284,12 +284,12 @@ function ReplyFormDialog({ open, onClose, initial, onSave, isSaving }: FormProps
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="¡Hola {{nombre}}! {{produto}} es la solución..."
+              placeholder="¡Hola {{nombre}}! {{producto}} es la solución..."
               rows={6}
               maxLength={2000}
             />
             <p className="text-xs text-muted-foreground">
-              Use <code className="px-1 bg-muted rounded">{'{{nome}}'}</code> e <code className="px-1 bg-muted rounded">{'{{produto}}'}</code> como variáveis dinâmicas.
+              Usa <code className="px-1 bg-muted rounded">{'{{nombre}}'}</code> e <code className="px-1 bg-muted rounded">{'{{producto}}'}</code> como variáveis dinâmicas.
             </p>
           </div>
         </div>

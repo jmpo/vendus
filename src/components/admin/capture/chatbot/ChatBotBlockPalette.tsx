@@ -20,7 +20,7 @@ interface Props {
   onAddBlock: (type: FunnelBlockType, position?: { x: number; y: number }) => void;
 }
 
-// Whitelist exclusiva do ChatBot — blocos que fazem sentido em conversa
+// Whitelist exclusiva do ChatBot — blocos que fazem sentido em conversación
 const CHATBOT_BLOCKS: FunnelBlockType[] = [
   'message', 'buttons', 'video', 'image', 'link', 'delay',
   'input', 'quick_form',
@@ -100,7 +100,7 @@ export const ChatBotBlockPalette = memo(function ChatBotBlockPalette({ onAddBloc
           </div>
           <div>
             <h3 className="text-sm font-semibold">Blocos do ChatBot</h3>
-            <p className="text-[10px] text-muted-foreground">Específicos para conversa</p>
+            <p className="text-[10px] text-muted-foreground">Específicos para conversación</p>
           </div>
         </div>
       </div>

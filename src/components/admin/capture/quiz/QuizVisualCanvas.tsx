@@ -36,7 +36,7 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
 };
 
 function blockTitle(b: FunnelBlock): string {
-  const d: any = b.data || {};
+  const d: any = b.fecha || {};
   return (
     d.content ||
     d.label ||
@@ -56,23 +56,23 @@ function blockTitle(b: FunnelBlock): string {
 }
 
 function blockKindLabel(b: FunnelBlock): string {
-  const sub = (b.data as any)?.quiz_subtype as string | undefined;
+  const sub = (b.fecha as any)?.quiz_subtype as string | undefined;
   if (sub) {
     const map: Record<string, string> = {
-      single: 'Escolha única', multiple: 'Múltipla escolha', yesno: 'Sim/Não',
+      single: 'Elegí única', multiple: 'Múltipla escolha', yesno: 'Sí/No',
       scale: 'Escala 1-10', nps: 'NPS', ranking: 'Ranking',
-      date: 'Data', upload: 'Upload', audio: 'Áudio',
+      date: 'Fecha', upload: 'Upload', audio: 'Áudio',
       result: 'Resultado', redirect: 'Redirecionamento', goto: 'Ir para',
     };
     if (map[sub]) return map[sub];
   }
   if (b.type === 'input') {
-    const t = (b.data as any)?.input_type;
-    return ({ text: 'Texto curto', textarea: 'Texto longo', email: 'Email', phone: 'Telefone',
-      number: 'Número', cpf: 'CPF/CNPJ', name: 'Nome' } as Record<string, string>)[t] || 'Pergunta';
+    const t = (b.fecha as any)?.input_type;
+    return ({ text: 'Texto corto', textarea: 'Texto largo', email: 'Email', phone: 'Teléfono',
+      number: 'Número', cpf: 'CPF/CNPJ', name: 'Nombre' } as Record<string, string>)[t] || 'Pergunta';
   }
   return ({
-    buttons: 'Escolha', message: 'Mensagem', image: 'Imagem', video: 'Vídeo',
+    buttons: 'Elegí', message: 'Mensaje', image: 'Imagen', video: 'Vídeo',
     end: 'Final', score: 'Score', tag: 'Tag', condition: 'Condição', link: 'Link',
   } as Record<string, string>)[b.type] || b.type;
 }
@@ -82,7 +82,7 @@ export function QuizVisualCanvas({
   onSelectBlock, onDeleteBlock, onDuplicateBlock, onReorder,
   onInsertAt, onSetStart, onPaletteDrop,
 }: Props) {
-  // Ordena blocos: start primeiro, depois seguindo next_block_id, depois resto em ordem original
+  // Ordena blocos: start primeiro, después seguindo next_block_id, después resto em ordem original
   const ordered = useMemo(() => {
     if (blocks.length === 0) return [];
     const byId = new Map(blocks.map(b => [b.id, b]));
@@ -92,7 +92,7 @@ export function QuizVisualCanvas({
     while (cur && !visited.has(cur.id)) {
       visited.add(cur.id);
       result.push(cur);
-      const nextId = cur.next_block_id || (cur.data as any)?.true_next_block_id;
+      const nextId = cur.next_block_id || (cur.fecha as any)?.true_next_block_id;
       cur = nextId ? byId.get(nextId) : undefined;
     }
     blocks.forEach(b => { if (!visited.has(b.id)) result.push(b); });
@@ -133,7 +133,7 @@ export function QuizVisualCanvas({
           <div className="w-12 h-12 mx-auto rounded-xl bg-primary/10 flex items-center justify-center mb-3">
             <Plus className="h-6 w-6 text-primary" />
           </div>
-          <h3 className="font-semibold mb-1">Comece seu quiz</h3>
+          <h3 className="font-semibold mb-1">Comece su quiz</h3>
           <p className="text-sm text-muted-foreground">
             Arraste um bloco da paleta à esquerda, ou clique em qualquer item para inserir aqui.
           </p>
@@ -145,10 +145,10 @@ export function QuizVisualCanvas({
   return (
     <div className="h-full overflow-auto bg-muted/20">
       <div className="max-w-2xl mx-auto py-8 px-4 space-y-1">
-        {/* Topo: chip Início */}
+        {/* Topo: chip Inicio */}
         <div className="flex justify-center mb-2">
           <Badge variant="outline" className="rounded-full text-[10px] tracking-wider uppercase bg-card">
-            <Flag className="h-3 w-3 mr-1" /> Início
+            <Flag className="h-3 w-3 mr-1" /> Inicio
           </Badge>
         </div>
 
@@ -156,7 +156,7 @@ export function QuizVisualCanvas({
           const isStart = block.id === startBlockId;
           const isSelected = block.id === selectedBlockId;
           const Icon = TYPE_ICONS[block.type];
-          const opts = (block.data as any)?.options as Array<any> | undefined;
+          const opts = (block.fecha as any)?.options as Array<any> | undefined;
 
           return (
             <div key={block.id}>
@@ -203,9 +203,9 @@ export function QuizVisualCanvas({
                       {isStart && (
                         <Badge variant="secondary" className="text-[9px] h-4 px-1.5">INÍCIO</Badge>
                       )}
-                      {(block.data as any)?.variable_name && (
+                      {(block.fecha as any)?.variable_name && (
                         <Badge variant="outline" className="text-[9px] h-4 px-1.5 font-mono">
-                          {`{{${(block.data as any).variable_name}}}`}
+                          {`{{${(block.fecha as any).variable_name}}}`}
                         </Badge>
                       )}
                     </div>
@@ -215,10 +215,10 @@ export function QuizVisualCanvas({
                     </p>
 
                     {/* Mídia thumb */}
-                    {(block.data as any)?.image_url && (
+                    {(block.fecha as any)?.image_url && (
                       <div className="mb-2 rounded-lg overflow-hidden border bg-muted aspect-[3/1] max-h-24">
                         <img
-                          src={(block.data as any).image_url}
+                          src={(block.fecha as any).image_url}
                           alt=""
                           className="w-full h-full object-cover"
                           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -238,7 +238,7 @@ export function QuizVisualCanvas({
                               {opt.letter || String.fromCharCode(65 + i)}
                             </span>
                             {opt.emoji && <span>{opt.emoji}</span>}
-                            <span className="flex-1 truncate text-foreground">{opt.label || `Opção ${i + 1}`}</span>
+                            <span className="flex-1 truncate text-foreground">{opt.label || `Opción ${i + 1}`}</span>
                             {typeof opt.score === 'number' && opt.score !== 0 && (
                               <Badge variant="outline" className="text-[9px] h-4 px-1">+{opt.score}</Badge>
                             )}
@@ -256,16 +256,16 @@ export function QuizVisualCanvas({
                           </div>
                         ))}
                         {opts.length > 5 && (
-                          <p className="text-[10px] text-muted-foreground pl-2">+{opts.length - 5} opções</p>
+                          <p className="text-[10px] text-muted-foreground pl-2">+{opts.length - 5} opciones</p>
                         )}
                       </div>
                     )}
 
                     {/* Condição: 2 caminhos */}
                     {block.type === 'condition' && (() => {
-                      const cond = (block.data as any)?.condition;
-                      const tId = (block.data as any)?.true_next_block_id;
-                      const fId = (block.data as any)?.false_next_block_id;
+                      const cond = (block.fecha as any)?.condition;
+                      const tId = (block.fecha as any)?.true_next_block_id;
+                      const fId = (block.fecha as any)?.false_next_block_id;
                       const tIdx = tId ? ordered.findIndex(b => b.id === tId) + 1 : 0;
                       const fIdx = fId ? ordered.findIndex(b => b.id === fId) + 1 : 0;
                       return (
@@ -280,13 +280,13 @@ export function QuizVisualCanvas({
                           <div className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md border bg-emerald-500/5 border-emerald-500/20 text-xs">
                             <span className="text-emerald-700 dark:text-emerald-400 font-medium">Verdadeiro</span>
                             <Badge variant="outline" className="text-[9px] h-4 px-1 border-emerald-400/50 text-emerald-700 dark:text-emerald-400">
-                              {tIdx ? `→ #${tIdx}` : '→ sequência'}
+                              {tIdx ? `→ #${tIdx}` : '→ secuencia'}
                             </Badge>
                           </div>
                           <div className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md border bg-rose-500/5 border-rose-500/20 text-xs">
                             <span className="text-rose-700 dark:text-rose-400 font-medium">Falso</span>
                             <Badge variant="outline" className="text-[9px] h-4 px-1 border-rose-400/50 text-rose-700 dark:text-rose-400">
-                              {fIdx ? `→ #${fIdx}` : '→ sequência'}
+                              {fIdx ? `→ #${fIdx}` : '→ secuencia'}
                             </Badge>
                           </div>
                         </div>
@@ -308,7 +308,7 @@ export function QuizVisualCanvas({
                       </DropdownMenuItem>
                       {!isStart && (
                         <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onSetStart(block.id); }}>
-                          <Flag className="h-4 w-4 mr-2" /> Definir como início
+                          <Flag className="h-4 w-4 mr-2" /> Definir como inicio
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuItem

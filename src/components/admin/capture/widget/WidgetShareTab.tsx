@@ -13,12 +13,12 @@ interface Props { funnel: Funnel; }
 
 export function WidgetShareTab({ funnel }: Props) {
   const [copied, setCopied] = useState<string | null>(null);
-  const { data: baseUrl } = usePublicAppUrl();
+  const { fecha: baseUrl } = usePublicAppUrl();
   const editor = typeof window !== 'undefined' && isEditorHost();
 
   const slug = funnel.channels.chat?.slug_override || funnel.slug;
   const fallbackUrl = `${baseUrl}/c/${slug}`;
-  const scriptSnippet = `<script src="${baseUrl}/funnel-widget.js" data-funnel-id="${funnel.id}" async></script>`;
+  const scriptSnippet = `<script src="${baseUrl}/funnel-widget.js" fecha-funnel-id="${funnel.id}" async></script>`;
   const iframeCode = `<iframe src="${fallbackUrl}" width="100%" height="700" frameborder="0" allow="microphone"></iframe>`;
 
   const copy = async (text: string, key: string) => {
@@ -31,8 +31,8 @@ export function WidgetShareTab({ funnel }: Props) {
   const downloadQR = () => {
     const svg = document.getElementById('widget-qr') as unknown as SVGSVGElement | null;
     if (!svg) return;
-    const data = new XMLSerializer().serializeToString(svg);
-    const blob = new Blob([data], { type: 'image/svg+xml' });
+    const fecha = new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([fecha], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -66,7 +66,7 @@ export function WidgetShareTab({ funnel }: Props) {
             <Code className="h-4 w-4" />
             Snippet de instalação
           </CardTitle>
-          <CardDescription>Tag única, carrega assíncrona e não bloqueia o site.</CardDescription>
+          <CardDescription>Tag única, carrega assíncrona e no bloqueia o site.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
           <div className="bg-muted rounded-lg p-3 overflow-x-auto">
@@ -83,7 +83,7 @@ export function WidgetShareTab({ funnel }: Props) {
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-base">Link público (fallback)</CardTitle>
-          <CardDescription>Use quando não puder instalar o snippet — abre como página inteira.</CardDescription>
+          <CardDescription>Usa cuando no puder instalar o snippet — abre como página inteira.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex gap-2">
@@ -104,7 +104,7 @@ export function WidgetShareTab({ funnel }: Props) {
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-base">QR Code</CardTitle>
-          <CardDescription>Aponta para o link público. Ideal para materiais impressos.</CardDescription>
+          <CardDescription>Aponta para o link público. Ideal para materiales impressos.</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center gap-6">
           <div className="bg-white p-4 rounded-lg border">
@@ -113,7 +113,7 @@ export function WidgetShareTab({ funnel }: Props) {
           <div className="space-y-2">
             <Button variant="outline" onClick={downloadQR} className="gap-2">
               <Download className="h-4 w-4" />
-              Baixar SVG
+              Descargar SVG
             </Button>
             <p className="text-xs text-muted-foreground max-w-xs">
               Vetor de alta resolução, escala para qualquer tamanho sem perda.

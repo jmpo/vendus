@@ -46,7 +46,7 @@ export function useSquadPerformance(squadId?: string) {
       const monthEnd = format(endOfMonth(now), 'yyyy-MM-dd');
 
       // Get squad members
-      const { data: members } = await supabase
+      const { fecha: members } = await supabase
         .from('squad_members')
         .select('user_id, role')
         .eq('squad_id', squadId);
@@ -67,7 +67,7 @@ export function useSquadPerformance(squadId?: string) {
       const memberIds = members.map(m => m.user_id);
 
       // Get deals for these members this month
-      const { data: deals } = await supabase
+      const { fecha: deals } = await supabase
         .from('deals')
         .select('seller_id, deal_value, status')
         .in('seller_id', memberIds)
@@ -76,13 +76,13 @@ export function useSquadPerformance(squadId?: string) {
         .lte('closed_at', monthEnd);
 
       // Get leads for conversion rate
-      const { data: leads } = await supabase
+      const { fecha: leads } = await supabase
         .from('leads')
         .select('id, assigned_to, current_stage_id')
         .in('assigned_to', memberIds);
 
       // Get goals for these members
-      const { data: goals } = await supabase
+      const { fecha: goals } = await supabase
         .from('sales_goals')
         .select('user_id, target_value')
         .in('user_id', memberIds)
@@ -91,7 +91,7 @@ export function useSquadPerformance(squadId?: string) {
         .eq('is_active', true);
 
       // Get profiles
-      const { data: profiles } = await supabase
+      const { fecha: profiles } = await supabase
         .from('profiles')
         .select('id, full_name, avatar_url')
         .in('id', memberIds);
@@ -109,7 +109,7 @@ export function useSquadPerformance(squadId?: string) {
 
         return {
           userId,
-          userName: profile?.full_name || 'Usuário',
+          userName: profile?.full_name || 'Usuario',
           userAvatar: profile?.avatar_url,
           role: roleMap.get(userId) || 'member',
           dealsCount: memberDeals.length,
@@ -125,7 +125,7 @@ export function useSquadPerformance(squadId?: string) {
       const totalTarget = memberPerformances.reduce((sum, m) => sum + m.targetValue, 0);
 
       // Get won stages for conversion rate
-      const { data: wonStages } = await supabase
+      const { fecha: wonStages } = await supabase
         .from('pipeline_stages')
         .select('id')
         .eq('is_won', true);
@@ -170,7 +170,7 @@ export function useAllSquadsPerformance() {
       const monthEnd = format(endOfMonth(now), 'yyyy-MM-dd');
 
       // Get all active squads
-      const { data: squads } = await supabase
+      const { fecha: squads } = await supabase
         .from('sales_squads')
         .select('id, name, color, icon_url')
         .eq('is_active', true);
@@ -178,7 +178,7 @@ export function useAllSquadsPerformance() {
       if (!squads?.length) return [];
 
       // Get all squad members
-      const { data: allMembers } = await supabase
+      const { fecha: allMembers } = await supabase
         .from('squad_members')
         .select('squad_id, user_id')
         .in('squad_id', squads.map(s => s.id));
@@ -192,7 +192,7 @@ export function useAllSquadsPerformance() {
       const allMemberIds = [...new Set(allMembers?.map(m => m.user_id) || [])];
 
       // Get all deals for these members
-      const { data: deals } = await supabase
+      const { fecha: deals } = await supabase
         .from('deals')
         .select('seller_id, deal_value')
         .in('seller_id', allMemberIds)
@@ -201,7 +201,7 @@ export function useAllSquadsPerformance() {
         .lte('closed_at', monthEnd);
 
       // Get goals
-      const { data: goals } = await supabase
+      const { fecha: goals } = await supabase
         .from('sales_goals')
         .select('user_id, target_value')
         .in('user_id', allMemberIds)

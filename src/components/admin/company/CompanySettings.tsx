@@ -30,7 +30,7 @@ function formatCEP(v: string) {
 }
 
 export function CompanySettings() {
-  const { data: company } = useCompanySettings();
+  const { fecha: company } = useCompanySettings();
   const { profile } = useAuth();
   const update = useUpdateCompanySettings();
   const fileInput = useRef<HTMLInputElement>(null);
@@ -63,7 +63,7 @@ export function CompanySettings() {
       setLogoUrl(url);
       toast({ title: 'Logo enviado' });
     } catch (err: any) {
-      toast({ title: 'Erro no upload', description: err.message, variant: 'destructive' });
+      toast({ title: 'Error no upload', description: err.message, variant: 'destructive' });
     } finally {
       setUploading(false);
     }
@@ -78,7 +78,7 @@ export function CompanySettings() {
       <div>
         <h1 className="text-2xl font-bold">Empresa</h1>
         <p className="text-sm text-muted-foreground">
-          Dados da sua empresa que aparecem em propostas, recibos e canais de atendimento.
+          Dados da su empresa que aparecem em propostas, recibos e canais de atención.
         </p>
       </div>
 
@@ -87,7 +87,7 @@ export function CompanySettings() {
           <CardTitle className="text-base flex items-center gap-2">
             <Building2 className="h-4 w-4" /> Identificação
           </CardTitle>
-          <CardDescription>Nome e dados fiscais da empresa.</CardDescription>
+          <CardDescription>Nombre e dados fiscais de la empresa.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center gap-4">
@@ -116,7 +116,7 @@ export function CompanySettings() {
 
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Nome fantasia</Label>
+              <Label>Nombre fantasia</Label>
               <Input value={name} onChange={(e) => setName(e.target.value)} />
             </div>
             <div className="space-y-2">
@@ -125,10 +125,10 @@ export function CompanySettings() {
             </div>
             <div className="space-y-2">
               <Label>E-mail</Label>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="contato@empresa.com" />
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="contacto@empresa.com" />
             </div>
             <div className="space-y-2">
-              <Label>Telefone</Label>
+              <Label>Teléfono</Label>
               <Input value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} placeholder="(00) 00000-0000" />
             </div>
           </div>
@@ -137,7 +137,7 @@ export function CompanySettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Endereço</CardTitle>
+          <CardTitle className="text-base">Dirección</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid sm:grid-cols-3 gap-4">
@@ -177,7 +177,7 @@ export function CompanySettings() {
 
       <div className="flex justify-end">
         <Button size="lg" onClick={handleSave} disabled={update.isPending}>
-          Salvar dados da empresa
+          Salvar dados de la empresa
         </Button>
       </div>
     </div>

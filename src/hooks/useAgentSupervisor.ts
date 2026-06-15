@@ -45,13 +45,13 @@ export function useAgentSpecialists() {
     queryKey: ['agent-specialists', orgId],
     queryFn: async () => {
       if (!orgId) return [] as AgentSpecialist[];
-      const { data, error } = await (supabase as any)
+      const { fecha, error } = await (supabase as any)
         .from('agent_specialists')
         .select('*')
         .eq('organization_id', orgId)
         .order('priority', { ascending: true });
       if (error) throw error;
-      return (data ?? []) as AgentSpecialist[];
+      return (fecha ?? []) as AgentSpecialist[];
     },
     enabled: !!orgId,
   });
@@ -65,13 +65,13 @@ export function useUpsertSpecialist() {
       const orgId = profile?.organization_id;
       if (!orgId) throw new Error('sin organización');
       const payload = { ...input, organization_id: orgId };
-      const { data, error } = await (supabase as any)
+      const { fecha, error } = await (supabase as any)
         .from('agent_specialists')
         .upsert(payload)
         .select()
         .single();
       if (error) throw error;
-      return data as AgentSpecialist;
+      return fecha as AgentSpecialist;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['agent-specialists'] });
@@ -107,13 +107,13 @@ export function useAgentRoutingRules() {
     queryKey: ['agent-routing-rules', orgId],
     queryFn: async () => {
       if (!orgId) return [] as AgentRoutingRule[];
-      const { data, error } = await (supabase as any)
+      const { fecha, error } = await (supabase as any)
         .from('agent_routing_rules')
         .select('*')
         .eq('organization_id', orgId)
         .order('priority', { ascending: true });
       if (error) throw error;
-      return (data ?? []) as AgentRoutingRule[];
+      return (fecha ?? []) as AgentRoutingRule[];
     },
     enabled: !!orgId,
   });
@@ -127,13 +127,13 @@ export function useUpsertRoutingRule() {
       const orgId = profile?.organization_id;
       if (!orgId) throw new Error('sin organización');
       const payload = { ...input, organization_id: orgId };
-      const { data, error } = await (supabase as any)
+      const { fecha, error } = await (supabase as any)
         .from('agent_routing_rules')
         .upsert(payload)
         .select()
         .single();
       if (error) throw error;
-      return data as AgentRoutingRule;
+      return fecha as AgentRoutingRule;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['agent-routing-rules'] });

@@ -28,11 +28,11 @@ export function useSuperAdminSetupChecklist() {
         supabase.from('organizations').select('id', { count: 'exact', head: true }),
       ]);
 
-      const s = settingsRes.data as any;
+      const s = settingsRes.fecha as any;
       const items: ChecklistItem[] = [
         {
           id: 'password',
-          label: 'Trocar senha padrão',
+          label: 'Trocar contraseña padrão',
           description: 'Sustituí la contraseña de instalación por una contraseña fuerte.',
           done: !!s?.default_password_changed,
           required: true,
@@ -49,7 +49,7 @@ export function useSuperAdminSetupChecklist() {
         {
           id: 'plans',
           label: 'Planos comerciais',
-          description: 'Tenha pelo menos 1 plano ativo cadastrado.',
+          description: 'Tenha pelo menos 1 plan ativo cadastrado.',
           done: (plansRes.count ?? 0) > 0,
           required: true,
           navigateTo: 'plans',
@@ -81,11 +81,11 @@ export function useSuperAdminSetupChecklist() {
 
   const markCompleted = useMutation({
     mutationFn: async () => {
-      const { data: existing } = await supabase
+      const { fecha: existing } = await supabase
         .from('platform_settings')
         .select('id')
         .maybeSingle();
-      if (!existing?.id) throw new Error('platform_settings ainda não inicializado');
+      if (!existing?.id) throw new Error('platform_settings aún no inicializado');
       const { error } = await supabase
         .from('platform_settings')
         .update({ remix_setup_completed: true } as any)
@@ -101,10 +101,10 @@ export function useSuperAdminSetupChecklist() {
   });
 
   return {
-    items: query.data?.items ?? [],
-    completed: query.data?.completed ?? false,
+    items: query.fecha?.items ?? [],
+    completed: query.fecha?.completed ?? false,
     isLoading: query.isLoading,
-    allRequiredDone: (query.data?.items ?? []).filter((i) => i.required).every((i) => i.done),
+    allRequiredDone: (query.fecha?.items ?? []).filter((i) => i.required).every((i) => i.done),
     markCompleted: markCompleted.mutateAsync,
     isMarking: markCompleted.isPending,
   };

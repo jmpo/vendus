@@ -79,7 +79,7 @@ export function PaymentLinkDialog({
       lines.push('', `🔗 ${url.trim()}`);
       onSend(lines.join('\n'));
 
-      toast({ title: 'Link de pagamento enviado' });
+      toast({ title: 'Link de pago enviado' });
       onOpenChange(false);
     } catch (e: any) {
       toast({ title: 'Error al enviar', description: e.message, variant: 'destructive' });
@@ -94,13 +94,13 @@ export function PaymentLinkDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CreditCard className="h-5 w-5 text-primary" />
-            Enviar link de pagamento
+            Enviar link de pago
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Descrição do pagamento *</Label>
+            <Label>Descripción do pago *</Label>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -128,7 +128,7 @@ export function PaymentLinkDialog({
 
           <div className="space-y-2">
             <Label className="flex items-center gap-1">
-              <LinkIcon className="h-3.5 w-3.5" /> URL do pagamento *
+              <LinkIcon className="h-3.5 w-3.5" /> URL do pago *
             </Label>
             <Input
               value={url}
@@ -142,11 +142,11 @@ export function PaymentLinkDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>Observação (opcional)</Label>
+            <Label>Observación (opcional)</Label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Pago via Pix com 5% de desconto à vista"
+              placeholder="Pago via Pix com 5% de descuento à vista"
               rows={2}
               maxLength={300}
             />

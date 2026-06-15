@@ -39,7 +39,7 @@ export function FormPreview({ form, blocks, theme }: FormPreviewProps) {
               <p className={cn("text-lg mb-8 max-w-md", mutedColor)}>{block.description}</p>
             )}
             <Button size="lg" className="gap-2">
-              Começar <ChevronRight className="h-4 w-4" />
+              Comenzar <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
         );
@@ -89,14 +89,14 @@ export function FormPreview({ form, blocks, theme }: FormPreviewProps) {
                     "w-full p-3 rounded-lg border text-lg resize-none",
                     inputBg, textColor
                   )}
-                  placeholder={block.placeholder || 'Digite aqui...'}
+                  placeholder={block.placeholder || 'Escribí aqui...'}
                   rows={4}
                 />
               ) : (
                 <Input
                   type={block.block_type === 'email' ? 'email' : block.block_type === 'phone' ? 'tel' : block.block_type === 'number' ? 'number' : 'text'}
                   className={cn("h-14 text-lg", inputBg, textColor)}
-                  placeholder={block.placeholder || 'Digite aqui...'}
+                  placeholder={block.placeholder || 'Escribí aqui...'}
                 />
               )}
               
@@ -175,7 +175,7 @@ export function FormPreview({ form, blocks, theme }: FormPreviewProps) {
                     <span className="w-6 h-6 rounded-full border-2 border-green-500 flex items-center justify-center text-xs font-medium text-green-500">
                       Y
                     </span>
-                    <span>Sim</span>
+                    <span>Sí</span>
                   </div>
                 </button>
                 <button className={cn(
@@ -186,7 +186,7 @@ export function FormPreview({ form, blocks, theme }: FormPreviewProps) {
                     <span className="w-6 h-6 rounded-full border-2 border-red-500 flex items-center justify-center text-xs font-medium text-red-500">
                       N
                     </span>
-                    <span>Não</span>
+                    <span>No</span>
                   </div>
                 </button>
               </div>

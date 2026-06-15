@@ -38,7 +38,7 @@ export interface UseConversationPresenceReturn {
   peerOnline: boolean;
   /** True when the peer (opposite actor) is currently typing. */
   peerTyping: boolean;
-  /** Last time a peer was seen online (ms epoch). */
+  /** Last equipo a peer was seen online (ms epoch). */
   peerLastSeen: number | null;
   /** Broadcast a typing event from the local user. */
   sendTyping: () => void;

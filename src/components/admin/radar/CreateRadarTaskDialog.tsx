@@ -41,7 +41,7 @@ export function CreateRadarTaskDialog({
 }: Props) {
   const { profile, user } = useAuth();
   const orgId = profile?.organization_id;
-  const { data: members } = useTeamMembers(orgId);
+  const { fecha: members } = useTeamMembers(orgId);
   const createTask = useCreateTask();
 
   const [title, setTitle] = useState(defaultTitle || '');
@@ -62,7 +62,7 @@ export function CreateRadarTaskDialog({
 
   async function handleSubmit() {
     if (!orgId || !assignee) {
-      toast.error('Selecione um responsável.');
+      toast.error('Seleccioná um responsável.');
       return;
     }
     if (!title.trim()) {
@@ -82,10 +82,10 @@ export function CreateRadarTaskDialog({
         due_date: due,
         created_by: user?.id || null,
       } as any);
-      toast.success('Tarefa criada');
+      toast.success('Tarea creada');
       onOpenChange(false);
     } catch (e: any) {
-      toast.error(e?.message || 'Erro ao criar tarefa');
+      toast.error(e?.message || 'Error ao crear tarea');
     }
   }
 
@@ -93,8 +93,8 @@ export function CreateRadarTaskDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Criar tarefa</DialogTitle>
-          <DialogDescription>Atribua um follow-up para a equipe sobre {lead.name}.</DialogDescription>
+          <DialogTitle>Criar tarea</DialogTitle>
+          <DialogDescription>Atribua um follow-up para a equipo sobre {lead.name}.</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-3">
@@ -104,7 +104,7 @@ export function CreateRadarTaskDialog({
           </div>
 
           <div className="space-y-1">
-            <Label className="text-xs">Descrição</Label>
+            <Label className="text-xs">Descripción</Label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -148,7 +148,7 @@ export function CreateRadarTaskDialog({
                 <SelectItem value="1">Em 1 hora</SelectItem>
                 <SelectItem value="4">Em 4 horas</SelectItem>
                 <SelectItem value="24">Amanhã</SelectItem>
-                <SelectItem value="72">Em 3 dias</SelectItem>
+                <SelectItem value="72">Em 3 días</SelectItem>
                 <SelectItem value="168">Em 1 semana</SelectItem>
               </SelectContent>
             </Select>
@@ -159,7 +159,7 @@ export function CreateRadarTaskDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSubmit} disabled={createTask.isPending}>
             {createTask.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            Criar tarefa
+            Criar tarea
           </Button>
         </DialogFooter>
       </DialogContent>

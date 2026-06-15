@@ -44,14 +44,14 @@ export function useMassEmailCampaigns() {
   return useQuery({
     queryKey: ['mass-email-campaigns', profile?.organization_id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('mass_email_campaigns')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as MassEmailCampaign[];
+      return fecha as MassEmailCampaign[];
     },
     enabled: !!profile?.organization_id
   });
@@ -61,14 +61,14 @@ export function useCampaignRecipients(campaignId: string | null) {
   return useQuery({
     queryKey: ['campaign-recipients', campaignId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('mass_email_recipients')
         .select('*')
         .eq('campaign_id', campaignId!)
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      return data as MassEmailRecipient[];
+      return fecha as MassEmailRecipient[];
     },
     enabled: !!campaignId
   });
@@ -80,7 +80,7 @@ export function useCreateCampaign() {
 
   return useMutation({
     mutationFn: async (campaign: Omit<MassEmailCampaign, 'id' | 'organization_id' | 'created_at' | 'sent_at' | 'stats' | 'created_by'>) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('mass_email_campaigns')
         .insert({
           organization_id: profile!.organization_id!,
@@ -92,14 +92,14 @@ export function useCreateCampaign() {
         .single();
 
       if (error) throw error;
-      return data as MassEmailCampaign;
+      return fecha as MassEmailCampaign;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mass-email-campaigns'] });
-      toast.success('Campanha creada');
+      toast.success('Campaña creada');
     },
     onError: (error) => {
-      toast.error('Error al crear campanha: ' + error.message);
+      toast.error('Error al crear campaña: ' + error.message);
     }
   });
 }
@@ -118,10 +118,10 @@ export function useUpdateCampaign() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mass-email-campaigns'] });
-      toast.success('Campanha actualizada');
+      toast.success('Campaña actualizada');
     },
     onError: (error) => {
-      toast.error('Error al actualizar campanha: ' + error.message);
+      toast.error('Error al actualizar campaña: ' + error.message);
     }
   });
 }
@@ -140,10 +140,10 @@ export function useDeleteCampaign() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mass-email-campaigns'] });
-      toast.success('Campanha eliminada');
+      toast.success('Campaña eliminada');
     },
     onError: (error) => {
-      toast.error('Error al eliminar campanha: ' + error.message);
+      toast.error('Error al eliminar campaña: ' + error.message);
     }
   });
 }
@@ -194,7 +194,7 @@ export function useSendCampaign() {
       toast.success('Campaña enviada');
     },
     onError: (error) => {
-      toast.error('Error al enviar campanha: ' + error.message);
+      toast.error('Error al enviar campaña: ' + error.message);
     }
   });
 }

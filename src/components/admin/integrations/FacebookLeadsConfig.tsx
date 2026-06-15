@@ -47,9 +47,9 @@ const DEFAULT_FIELD_MAPPING: Record<string, string> = {
 };
 
 const CRM_FIELDS = [
-  { value: 'name', label: 'Nome' },
+  { value: 'name', label: 'Nombre' },
   { value: 'email', label: 'Email' },
-  { value: 'phone', label: 'Telefone' },
+  { value: 'phone', label: 'Teléfono' },
   { value: 'company', label: 'Empresa' }
 ];
 
@@ -70,11 +70,11 @@ export function FacebookLeadsConfig() {
   const [assignedSquadId, setAssignedSquadId] = useState('');
   const [defaultTemperature, setDefaultTemperature] = useState('hot');
   
-  const { data: integrations, isLoading } = useFacebookLeadIntegrations();
-  const { data: logs } = useFacebookLeadLogs(selectedIntegration?.id);
-  const { data: products } = useProducts();
-  const { data: teamMembers } = useTeamMembers();
-  const { data: squads } = useSquads();
+  const { fecha: integrations, isLoading } = useFacebookLeadIntegrations();
+  const { fecha: logs } = useFacebookLeadLogs(selectedIntegration?.id);
+  const { fecha: products } = useProducts();
+  const { fecha: teamMembers } = useTeamMembers();
+  const { fecha: squads } = useSquads();
   
   const createMutation = useCreateFacebookIntegration();
   const updateMutation = useUpdateFacebookIntegration();
@@ -89,7 +89,7 @@ export function FacebookLeadsConfig() {
   
   const handleCreate = async () => {
     if (!productId || !pageId || !accessToken) {
-      toast.error('Preencha todos os campos obrigatórios');
+      toast.error('Preencha todos os campos obligatorios');
       return;
     }
     
@@ -126,7 +126,7 @@ export function FacebookLeadsConfig() {
   };
   
   const handleDelete = async (id: string) => {
-    if (confirm('Tem certeza que deseja remover esta integração?')) {
+    if (confirm('Tem certeza que desea eliminar esta integración?')) {
       await deleteMutation.mutateAsync(id);
     }
   };
@@ -178,11 +178,11 @@ export function FacebookLeadsConfig() {
           ) : integrations?.length === 0 ? (
             <div className="text-center py-8 border-2 border-dashed rounded-lg">
               <p className="text-muted-foreground mb-4">
-                Nenhuma integração configurada
+                Nenhuma integración configurada
               </p>
               <Button variant="outline" onClick={() => setShowAddDialog(true)}>
                 <Plus className="h-4 w-4 mr-2" />
-                Configurar primeira integração
+                Configurar primeira integración
               </Button>
             </div>
           ) : (
@@ -201,7 +201,7 @@ export function FacebookLeadsConfig() {
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground">
-                          Produto: {integration.products?.name}
+                          Producto: {integration.products?.name}
                         </p>
                         <p className="text-sm text-muted-foreground">
                           {integration.leads_count} leads recebidos
@@ -238,7 +238,7 @@ export function FacebookLeadsConfig() {
                     <Accordion type="single" collapsible className="mt-4">
                       <AccordionItem value="setup" className="border-none">
                         <AccordionTrigger className="text-sm py-2 hover:no-underline">
-                          Ver instruções de configuração
+                          Ver instruções de configuración
                         </AccordionTrigger>
                         <AccordionContent>
                           <div className="space-y-3 pt-2">
@@ -316,7 +316,7 @@ export function FacebookLeadsConfig() {
           <DialogHeader>
             <DialogTitle>Conectar Página do Facebook</DialogTitle>
             <DialogDescription>
-              Configure a integração para receber leads de anúncios do Facebook/Instagram
+              Configure a integración para receber leads de anúncios do Facebook/Instagram
             </DialogDescription>
           </DialogHeader>
           
@@ -324,15 +324,15 @@ export function FacebookLeadsConfig() {
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="credentials">Credenciais</TabsTrigger>
               <TabsTrigger value="mapping">Mapeamento</TabsTrigger>
-              <TabsTrigger value="distribution">Distribuição</TabsTrigger>
+              <TabsTrigger value="distribution">Distribución</TabsTrigger>
             </TabsList>
             
             <TabsContent value="credentials" className="space-y-4 mt-4">
               <div>
-                <Label>Produto destino *</Label>
+                <Label>Producto destino *</Label>
                 <Select value={productId} onValueChange={setProductId}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione o produto" />
+                    <SelectValue placeholder="Seleccioná o producto" />
                   </SelectTrigger>
                   <SelectContent>
                     {products?.map(p => (
@@ -350,12 +350,12 @@ export function FacebookLeadsConfig() {
                   onChange={e => setPageId(e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  ID numérico da sua página do Facebook
+                  ID numérico da su página do Facebook
                 </p>
               </div>
               
               <div>
-                <Label>Nome da Página</Label>
+                <Label>Nombre da Página</Label>
                 <Input 
                   placeholder="Minha Empresa" 
                   value={pageName}
@@ -372,7 +372,7 @@ export function FacebookLeadsConfig() {
                   onChange={e => setAccessToken(e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  Obtenha em Facebook Developers → Seu App → Ferramentas → Graph API Explorer
+                  Obtenha em Facebook Developers → Su App → Ferramentas → Graph API Explorer
                 </p>
               </div>
             </TabsContent>
@@ -393,7 +393,7 @@ export function FacebookLeadsConfig() {
                     onValueChange={v => setFieldMapping(prev => ({ ...prev, [fbField]: v }))}
                   >
                     <SelectTrigger className="w-40">
-                      <SelectValue placeholder="Selecione" />
+                      <SelectValue placeholder="Seleccioná" />
                     </SelectTrigger>
                     <SelectContent>
                       {CRM_FIELDS.map(f => (
@@ -407,7 +407,7 @@ export function FacebookLeadsConfig() {
             
             <TabsContent value="distribution" className="space-y-4 mt-4">
               <div>
-                <Label>Distribuição de Leads</Label>
+                <Label>Distribución de Leads</Label>
                 <Select value={distributionRule} onValueChange={setDistributionRule}>
                   <SelectTrigger>
                     <SelectValue />
@@ -425,7 +425,7 @@ export function FacebookLeadsConfig() {
                   <Label>Vendedor</Label>
                   <Select value={assignedUserId} onValueChange={setAssignedUserId}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione o vendedor" />
+                      <SelectValue placeholder="Seleccioná o vendedor" />
                     </SelectTrigger>
                     <SelectContent>
                       {teamMembers?.map(m => (
@@ -441,7 +441,7 @@ export function FacebookLeadsConfig() {
                   <Label>Squad</Label>
                   <Select value={assignedSquadId} onValueChange={setAssignedSquadId}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione o squad" />
+                      <SelectValue placeholder="Seleccioná o squad" />
                     </SelectTrigger>
                     <SelectContent>
                       {squads?.map(s => (
@@ -476,7 +476,7 @@ export function FacebookLeadsConfig() {
               onClick={handleCreate}
               disabled={createMutation.isPending}
             >
-              {createMutation.isPending ? 'Salvando...' : 'Criar Integração'}
+              {createMutation.isPending ? 'Salvando...' : 'Criar Integración'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -494,7 +494,7 @@ export function FacebookLeadsConfig() {
           
           {logs?.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              Nenhum lead recebido ainda
+              Nenhum lead recibido aún
             </div>
           ) : (
             <Table>

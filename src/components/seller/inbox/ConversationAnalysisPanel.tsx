@@ -44,13 +44,13 @@ export function ConversationAnalysisPanel({
   const runAnalysis = async () => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('analyze-conversation', {
+      const { fecha, error } = await supabase.functions.invoke('analyze-conversation', {
         body: { conversationId },
       });
       if (error) throw error;
-      setAnalysis(data);
+      setAnalysis(fecha);
     } catch {
-      toast({ title: 'Error al analisar conversa', variant: 'destructive' });
+      toast({ title: 'Error al analisar conversación', variant: 'destructive' });
     } finally {
       setIsLoading(false);
     }
@@ -75,17 +75,17 @@ export function ConversationAnalysisPanel({
         {!analysis && !isLoading ? (
           <div className="text-center py-8 space-y-4">
             <p className="text-sm text-muted-foreground">
-              A IA irá analisar toda a conversa e avaliar a qualidade do atención.
+              A IA irá analisar toda a conversación e avaliar a qualidade do atención.
             </p>
             <Button onClick={runAnalysis}>
               <BarChart3 className="h-4 w-4 mr-2" />
-              Analisar Conversa
+              Analisar Conversación
             </Button>
           </div>
         ) : isLoading ? (
           <div className="flex flex-col items-center py-12 gap-3">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-sm text-muted-foreground">Analisando conversa com IA...</p>
+            <p className="text-sm text-muted-foreground">Analisando conversación com IA...</p>
           </div>
         ) : analysis ? (
           <ScrollArea className="max-h-[70vh]">
@@ -102,7 +102,7 @@ export function ConversationAnalysisPanel({
               {/* Metrics */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 rounded-lg bg-muted/50">
-                  <p className="text-xs text-muted-foreground">Tempo médio resposta</p>
+                  <p className="text-xs text-muted-foreground">Tempo médio respuesta</p>
                   <p className="text-sm font-medium">{analysis.metrics.avgResponseTime}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-muted/50">

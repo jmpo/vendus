@@ -204,14 +204,14 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
         </AccordionItem>
       )}
 
-      {/* FUNDO (imagem) */}
+      {/* FUNDO (imagen) */}
       <AccordionItem value="background" className="border rounded-lg px-3">
         <AccordionTrigger className="hover:no-underline">
           <span className="flex items-center gap-2"><ImageIcon className="h-4 w-4" /> Imagen de fondo</span>
         </AccordionTrigger>
         <AccordionContent className="space-y-3 pt-2">
           <ImageUploadField
-            label="Imagem de fundo"
+            label="Imagen de fundo"
             value={appearance.background_image_url}
             onChange={(url) => set('background_image_url', url)}
             folder="backgrounds"
@@ -288,7 +288,7 @@ function ChatOptionsFields({ opts, setOpt }: { opts: ChatChannelOptions; setOpt:
         </Select>
       </div>
       <ColorPickerField label="Cor da bolha do bot" value={opts.bot_bubble_color} onChange={(v) => setOpt({ bot_bubble_color: v })} />
-      <ColorPickerField label="Cor da bolha do usuário" value={opts.user_bubble_color} onChange={(v) => setOpt({ user_bubble_color: v })} />
+      <ColorPickerField label="Cor da bolha do usuario" value={opts.user_bubble_color} onChange={(v) => setOpt({ user_bubble_color: v })} />
       <div className="space-y-1.5">
         <Label>Placeholder del campo</Label>
         <Input value={opts.input_placeholder} onChange={(e) => setOpt({ input_placeholder: e.target.value })} />
@@ -391,7 +391,7 @@ function WidgetOptionsFields({ opts, setOpt }: { opts: WidgetChannelOptions; set
         <Slider min={0} max={60} step={1} value={[opts.auto_open_delay]} onValueChange={([v]) => setOpt({ auto_open_delay: v })} />
         <p className="text-xs text-muted-foreground">0 = nunca abrir sozinho.</p>
       </div>
-      <div className="flex items-center justify-between"><Label>Badge de notificação</Label><Switch checked={opts.show_notification_badge} onCheckedChange={(v) => setOpt({ show_notification_badge: v })} /></div>
+      <div className="flex items-center justify-between"><Label>Badge de notificación</Label><Switch checked={opts.show_notification_badge} onCheckedChange={(v) => setOpt({ show_notification_badge: v })} /></div>
       <div className="flex items-center justify-between"><Label>Esconder em mobile</Label><Switch checked={opts.hide_on_mobile} onCheckedChange={(v) => setOpt({ hide_on_mobile: v })} /></div>
     </>
   );
@@ -401,7 +401,7 @@ function QuizOptionsFields({ opts, setOpt }: { opts: QuizChannelOptions; setOpt:
   return (
     <>
       <div className="space-y-1.5">
-        <Label>Layout das opções</Label>
+        <Label>Layout das opciones</Label>
         <Select value={opts.layout} onValueChange={(v) => setOpt({ layout: v })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
@@ -412,7 +412,7 @@ function QuizOptionsFields({ opts, setOpt }: { opts: QuizChannelOptions; setOpt:
         </Select>
       </div>
       <div className="space-y-1.5">
-        <Label>Colunas das opções</Label>
+        <Label>Colunas das opciones</Label>
         <Select value={String(opts.option_columns)} onValueChange={(v) => setOpt({ option_columns: Number(v) })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
@@ -423,7 +423,7 @@ function QuizOptionsFields({ opts, setOpt }: { opts: QuizChannelOptions; setOpt:
         </Select>
       </div>
       <div className="space-y-1.5">
-        <Label>Transição entre perguntas</Label>
+        <Label>Transição entre preguntas</Label>
         <Select value={opts.transition} onValueChange={(v) => setOpt({ transition: v })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
@@ -434,7 +434,7 @@ function QuizOptionsFields({ opts, setOpt }: { opts: QuizChannelOptions; setOpt:
         </Select>
       </div>
       <div className="flex items-center justify-between"><Label>Mostrar "X de Y"</Label><Switch checked={opts.show_counter} onCheckedChange={(v) => setOpt({ show_counter: v })} /></div>
-      <ImageUploadField label="Imagem da tela de resultado" value={opts.result_image_url} onChange={(url) => setOpt({ result_image_url: url })} folder="quiz-result" />
+      <ImageUploadField label="Imagen da tela de resultado" value={opts.result_image_url} onChange={(url) => setOpt({ result_image_url: url })} folder="quiz-result" />
       <div className="space-y-1.5">
         <Label>Mensaje final</Label>
         <Input value={opts.result_message} onChange={(e) => setOpt({ result_message: e.target.value })} />

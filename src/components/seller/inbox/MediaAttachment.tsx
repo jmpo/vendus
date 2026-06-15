@@ -153,7 +153,7 @@ function ImageViewer({ media }: { media: MediaPayload }) {
     return (
       <div className="flex items-center gap-2 py-1 opacity-70 text-xs">
         <ImageIcon className="h-4 w-4" />
-        Imagem indisponível
+        Imagen indisponível
       </div>
     );
   }
@@ -167,7 +167,7 @@ function ImageViewer({ media }: { media: MediaPayload }) {
       >
         <img
           src={media.thumbnail_url || media.url}
-          alt={media.caption || 'Imagem enviada'}
+          alt={media.caption || 'Imagen enviada'}
           className="w-full h-auto max-h-[280px] object-cover bg-black/5"
           loading="lazy"
           onError={() => setError(true)}
@@ -193,7 +193,7 @@ function ImageViewer({ media }: { media: MediaPayload }) {
               variant="ghost"
               className="absolute top-2 right-12 z-10 bg-background/70 hover:bg-background"
               asChild
-              aria-label="Baixar"
+              aria-label="Descargar"
             >
               <a href={media.url} download target="_blank" rel="noreferrer">
                 <Download className="h-4 w-4" />
@@ -201,7 +201,7 @@ function ImageViewer({ media }: { media: MediaPayload }) {
             </Button>
             <img
               src={media.url}
-              alt={media.caption || 'Imagem'}
+              alt={media.caption || 'Imagen'}
               className="w-full h-auto max-h-[92vh] object-contain"
             />
           </div>

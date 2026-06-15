@@ -60,7 +60,7 @@ const SOURCE_TYPES = [
     color: 'text-purple-500'
   },
   { 
-    id: 'data', 
+    id: 'fecha', 
     label: 'Dados', 
     icon: Database, 
     description: 'Tablas y comparativos',
@@ -83,8 +83,8 @@ const SOURCE_TYPES = [
 ];
 
 export function BrainTab({ productId }: BrainTabProps) {
-  const { data: sources, isLoading: sourcesLoading } = useKnowledgeSources(productId);
-  const { data: stats } = useKnowledgeSourceStats(productId);
+  const { fecha: sources, isLoading: sourcesLoading } = useKnowledgeSources(productId);
+  const { fecha: stats } = useKnowledgeSourceStats(productId);
   const [activeTab, setActiveTab] = useState('overview');
   const [activeSource, setActiveSource] = useState<string | null>(null);
 
@@ -123,7 +123,7 @@ export function BrainTab({ productId }: BrainTabProps) {
         <CardContent className="p-4">
           <p className="text-sm text-muted-foreground">
             Adicione conhecimento através de diferentes fontes. Quanto mais dados, mais inteligente 
-            a IA ficará para ajudar com objeções, cadências e respostas contextualizadas.
+            a IA ficará para ajudar com objeções, cadencias e respuestas contextualizadas.
           </p>
         </CardContent>
       </Card>

@@ -26,14 +26,14 @@ interface AnalysisResult {
 export function AISummaryTab({ conversationId }: AISummaryTabProps) {
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const { data, isLoading, isFetching, error, refetch } = useQuery({
+  const { fecha, isLoading, isFetching, error, refetch } = useQuery({
     queryKey: ['conversation-analysis', conversationId, refreshKey],
     queryFn: async (): Promise<AnalysisResult> => {
-      const { data, error } = await supabase.functions.invoke('analyze-conversation', {
+      const { fecha, error } = await supabase.functions.invoke('analyze-conversation', {
         body: { conversationId },
       });
       if (error) throw error;
-      return data as AnalysisResult;
+      return fecha as AnalysisResult;
     },
     enabled: !!conversationId,
     staleTime: 5 * 60_000,
@@ -44,26 +44,26 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
     return (
       <div className="flex flex-col items-center gap-2 py-8">
         <Loader2 className="h-5 w-5 animate-spin text-primary" />
-        <p className="text-xs text-muted-foreground">A IA está analisando esta conversa…</p>
+        <p className="text-xs text-muted-foreground">A IA está analisando esta conversación…</p>
       </div>
     );
   }
 
-  if (error || !data) {
+  if (error || !fecha) {
     return (
       <div className="text-center py-6 space-y-3">
         <p className="text-xs text-muted-foreground">
-          No foi possível gerar o resumo ahora.
+          No fue possível gerar o resumen ahora.
         </p>
         <Button size="sm" variant="outline" onClick={() => refetch()}>
           <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
-          Tentar de novo
+          Intentar de novo
         </Button>
       </div>
     );
   }
 
-  const score = Math.max(0, Math.min(10, data.score ?? 0));
+  const score = Math.max(0, Math.min(10, fecha.score ?? 0));
   const scoreColor =
     score >= 8 ? 'text-emerald-500' : score >= 5 ? 'text-yellow-500' : 'text-destructive';
 
@@ -100,50 +100,50 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
       </div>
 
       {/* Metrics */}
-      {data.metrics && (
+      {fecha.metrics && (
         <div className="flex flex-wrap gap-1.5">
-          {data.metrics.tone && (
+          {fecha.metrics.tone && (
             <Badge variant="outline" className="text-[10px]">
-              Tom: {data.metrics.tone}
+              Tom: {fecha.metrics.tone}
             </Badge>
           )}
-          {data.metrics.objectionsHandled !== undefined && (
+          {fecha.metrics.objectionsHandled !== undefined && (
             <Badge variant="outline" className="text-[10px]">
-              Objeções tratadas: {data.metrics.objectionsHandled}
+              Objeções tratadas: {fecha.metrics.objectionsHandled}
             </Badge>
           )}
-          {data.metrics.avgResponseTime && (
+          {fecha.metrics.avgResponseTime && (
             <Badge variant="outline" className="text-[10px]">
-              Tempo médio: {data.metrics.avgResponseTime}
+              Tempo médio: {fecha.metrics.avgResponseTime}
             </Badge>
           )}
         </div>
       )}
 
       {/* Strengths */}
-      {data.strengths?.length > 0 && (
+      {fecha.strengths?.length > 0 && (
         <Section
           icon={<ThumbsUp className="h-3.5 w-3.5 text-emerald-500" />}
           title="Pontos fortes"
-          items={data.strengths}
+          items={fecha.strengths}
         />
       )}
 
       {/* Weaknesses */}
-      {data.weaknesses?.length > 0 && (
+      {fecha.weaknesses?.length > 0 && (
         <Section
           icon={<AlertTriangle className="h-3.5 w-3.5 text-yellow-500" />}
           title="A melhorar"
-          items={data.weaknesses}
+          items={fecha.weaknesses}
         />
       )}
 
       {/* Suggestions */}
-      {data.suggestions?.length > 0 && (
+      {fecha.suggestions?.length > 0 && (
         <Section
           icon={<Lightbulb className="h-3.5 w-3.5 text-blue-500" />}
-          title="Próximas ações sugeridas"
-          items={data.suggestions}
+          title="Próximas acciones sugeridas"
+          items={fecha.suggestions}
         />
       )}
     </div>

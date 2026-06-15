@@ -53,23 +53,23 @@ export const FlowBlockNode = memo(function FlowBlockNode({
   const getBlockPreview = () => {
     switch (block.type) {
       case 'message':
-        return block.data.content?.substring(0, 50) + (block.data.content && block.data.content.length > 50 ? '...' : '') || 'Mensagem vazia';
+        return block.fecha.content?.substring(0, 50) + (block.fecha.content && block.fecha.content.length > 50 ? '...' : '') || 'Mensaje vazia';
       case 'input':
-        const inputType = INPUT_TYPES.find(t => t.type === block.data.input_type);
-        return `Captura: ${inputType?.label || 'Texto'} → $${block.data.variable_name || 'variavel'}`;
+        const inputType = INPUT_TYPES.find(t => t.type === block.fecha.input_type);
+        return `Captura: ${inputType?.label || 'Texto'} → $${block.fecha.variable_name || 'variavel'}`;
       case 'buttons':
-        const buttonCount = block.data.buttons?.length || 0;
+        const buttonCount = block.fecha.buttons?.length || 0;
         return `${buttonCount} ${buttonCount === 1 ? 'botão' : 'botões'}`;
       case 'ai_takeover':
-        return 'Sofia assume a conversa';
+        return 'Sofia assume a conversación';
       case 'handoff':
-        return block.data.handoff_message?.substring(0, 40) || 'Transferir para atendente';
+        return block.fecha.handoff_message?.substring(0, 40) || 'Transferir para agente';
       case 'tag':
-        return `Tag: ${block.data.tag_name || 'sem nome'}`;
+        return `Tag: ${block.fecha.tag_name || 'sem nombre'}`;
       case 'video':
-        return block.data.video_title || block.data.video_url?.substring(0, 30) || 'Sem vídeo';
+        return block.fecha.video_title || block.fecha.video_url?.substring(0, 30) || 'Sem vídeo';
       case 'delay':
-        return `Aguardar ${block.data.delay_seconds || 2}s`;
+        return `Aguardar ${block.fecha.delay_seconds || 2}s`;
       default:
         return '';
     }
@@ -136,9 +136,9 @@ export const FlowBlockNode = memo(function FlowBlockNode({
         </p>
         
         {/* Buttons preview */}
-        {block.type === 'buttons' && block.data.buttons && block.data.buttons.length > 0 && (
+        {block.type === 'buttons' && block.fecha.buttons && block.fecha.buttons.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1">
-            {block.data.buttons.slice(0, 3).map((btn, idx) => (
+            {block.fecha.buttons.slice(0, 3).map((btn, idx) => (
               <span 
                 key={idx}
                 className="text-xs bg-muted px-2 py-0.5 rounded-full"
@@ -146,9 +146,9 @@ export const FlowBlockNode = memo(function FlowBlockNode({
                 {btn.emoji} {btn.label}
               </span>
             ))}
-            {block.data.buttons.length > 3 && (
+            {block.fecha.buttons.length > 3 && (
               <span className="text-xs text-muted-foreground">
-                +{block.data.buttons.length - 3}
+                +{block.fecha.buttons.length - 3}
               </span>
             )}
           </div>

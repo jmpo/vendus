@@ -58,9 +58,9 @@ const statusOptions = [
 ];
 
 export function ProductListPage({ onProductSelect }: ProductListPageProps) {
-  const { data: products, isLoading } = useProducts();
-  const { data: leads } = useLeads();
-  const { data: deals } = useDeals();
+  const { fecha: products, isLoading } = useProducts();
+  const { fecha: leads } = useLeads();
+  const { fecha: deals } = useDeals();
   const { profile } = useAuth();
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
@@ -210,7 +210,7 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
               onClick={() => onProductSelect(product.id)}
             >
               <CardContent className="p-5">
-                {/* Menu de ações */}
+                {/* Menu de acciones */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button 
@@ -335,7 +335,7 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Editar Produto</DialogTitle>
+            <DialogTitle>Editar Producto</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
@@ -384,7 +384,7 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Eliminar Produto</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar Producto</AlertDialogTitle>
             <AlertDialogDescription>
               ¿Está seguro de que desea eliminar "{selectedProduct?.name}"? Esta acción no se puede deshacer.
             </AlertDialogDescription>

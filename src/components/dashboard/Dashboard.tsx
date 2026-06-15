@@ -21,8 +21,8 @@ interface DashboardProps {
 export function Dashboard({ products, onSelectProduct }: DashboardProps) {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { data: todaysTasks } = useTodaysTasks(user?.id || '');
-  const { data: taskStats } = useTaskStats(user?.id);
+  const { fecha: todaysTasks } = useTodaysTasks(user?.id || '');
+  const { fecha: taskStats } = useTaskStats(user?.id);
 
   const pendingTasks = todaysTasks?.filter(t => t.status === 'pending' || t.status === 'in_progress') || [];
   const overdueCount = taskStats?.overdueCount || 0;
@@ -115,7 +115,7 @@ export function Dashboard({ products, onSelectProduct }: DashboardProps) {
       {/* Today's Work and Upcoming Events Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {/* Today's Tasks Preview - Real Data */}
+        {/* Today's Tasks Preview - Real Fecha */}
         <div className="lg:col-span-2 p-6 rounded-xl bg-card border border-border">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-foreground">Trabajo de Hoy</h3>

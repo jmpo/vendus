@@ -16,8 +16,8 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 export function FinancialDashboard() {
-  const { data: products } = useProducts();
-  const { data: teamMembers } = useTeamMembers();
+  const { fecha: products } = useProducts();
+  const { fecha: teamMembers } = useTeamMembers();
   const [selectedProductId, setSelectedProductId] = useState<string>('all');
   const [selectedSellerId, setSelectedSellerId] = useState<string>('all');
   const [selectedCommissions, setSelectedCommissions] = useState<string[]>([]);
@@ -25,10 +25,10 @@ export function FinancialDashboard() {
   const productFilter = selectedProductId !== 'all' ? selectedProductId : undefined;
   const sellerFilter = selectedSellerId !== 'all' ? selectedSellerId : undefined;
 
-  const { data: deals } = useDeals({ productId: productFilter, sellerId: sellerFilter });
-  const { data: dealsSummary } = useDealsSummary(productFilter, sellerFilter);
-  const { data: commissions } = useCommissions({ productId: productFilter, userId: sellerFilter });
-  const { data: commissionsSummary } = useCommissionsSummary(sellerFilter, productFilter);
+  const { fecha: deals } = useDeals({ productId: productFilter, sellerId: sellerFilter });
+  const { fecha: dealsSummary } = useDealsSummary(productFilter, sellerFilter);
+  const { fecha: commissions } = useCommissions({ productId: productFilter, userId: sellerFilter });
+  const { fecha: commissionsSummary } = useCommissionsSummary(sellerFilter, productFilter);
 
   const approveCommission = useApproveCommission();
   const markPaid = useMarkCommissionPaid();
@@ -133,7 +133,7 @@ export function FinancialDashboard() {
         </div>
       </div>
 
-      {/* Cards de Resumo */}
+      {/* Cards de Resumen */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -251,8 +251,8 @@ export function FinancialDashboard() {
                       <TableHead>Producto</TableHead>
                       <TableHead>Lead</TableHead>
                       <TableHead>Valor de la Venta</TableHead>
-                      <TableHead>Comissão</TableHead>
-                      <TableHead>Data</TableHead>
+                      <TableHead>Comisión</TableHead>
+                      <TableHead>Fecha</TableHead>
                       <TableHead className="text-right">Acciones</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -331,7 +331,7 @@ export function FinancialDashboard() {
                       </TableHead>
                       <TableHead>Vendedor</TableHead>
                       <TableHead>Producto</TableHead>
-                      <TableHead>Comissão</TableHead>
+                      <TableHead>Comisión</TableHead>
                       <TableHead>Aprobada em</TableHead>
                       <TableHead className="text-right">Acciones</TableHead>
                     </TableRow>
@@ -391,7 +391,7 @@ export function FinancialDashboard() {
                       <TableHead>Producto</TableHead>
                       <TableHead>Valor</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Data</TableHead>
+                      <TableHead>Fecha</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>

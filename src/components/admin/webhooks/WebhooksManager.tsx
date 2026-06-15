@@ -63,8 +63,8 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export function WebhooksManager() {
-  const { data: webhooks, isLoading } = useWebhooks();
-  const { data: products } = useProducts();
+  const { fecha: webhooks, isLoading } = useWebhooks();
+  const { fecha: products } = useProducts();
   const createWebhook = useCreateWebhook();
   const deleteWebhook = useDeleteWebhook();
 
@@ -82,7 +82,7 @@ export function WebhooksManager() {
 
   const handleCreate = async () => {
     if (!newWebhook.name.trim()) {
-      toast.error('Nome é obrigatório');
+      toast.error('Nombre é obligatorio');
       return;
     }
     

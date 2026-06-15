@@ -14,30 +14,30 @@ export function AICampaignAssistant({ campaignId }: { campaignId: string }) {
 
   const run = async () => {
     setLoading(true);
-    const { data, error } = await supabase.functions.invoke('campaign-ai-insights', {
+    const { fecha, error } = await supabase.functions.invoke('campaign-ai-insights', {
       body: { campaign_id: campaignId },
     });
     setLoading(false);
     if (error) { toast.error(error.message); return; }
-    setInsights(data?.insights ?? []);
-    setSummary(data?.summary ?? null);
+    setInsights(fecha?.insights ?? []);
+    setSummary(fecha?.summary ?? null);
   };
 
   return (
     <Card className="border-primary/30 bg-primary/5">
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle className="text-base flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-primary" /> Assistente IA da Campanha
+          <Sparkles className="h-4 w-4 text-primary" /> Assistente IA da Campaña
         </CardTitle>
         <Button size="sm" onClick={run} disabled={loading}>
           {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
-          {insights ? 'Reanalisar' : 'Analisar campanha'}
+          {insights ? 'Reanalisar' : 'Analisar campaña'}
         </Button>
       </CardHeader>
       <CardContent className="space-y-3">
         {!insights && !loading && (
           <p className="text-sm text-muted-foreground">
-            Clique em "Analisar campanha" para receber recomendações sobre melhor horário, agente e contexto a partir dos dados reais.
+            Hacé clic em "Analisar campaña" para receber recomendações sobre melhor horario, agente e contexto a partir dos dados reais.
           </p>
         )}
         {summary && (

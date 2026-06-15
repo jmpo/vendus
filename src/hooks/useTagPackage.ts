@@ -9,15 +9,15 @@ interface GeneratePackageParams {
 }
 
 /**
- * Cria um "pacote" pré-configurado de etiquetas + automações para um produto:
- *   - PIX Gerado · {Produto}            (transitória, eliminada ao comprar)
- *   - Boleto Gerado · {Produto}         (transitória)
- *   - Aguardando Pagamento · {Produto}  (transitória, dispara em PIX e Boleto)
- *   - Checkout Abandonado · {Produto}   (transitória)
- *   - Cliente · {Produto}               (PERMANENTE — histórico)
- *   - Reembolso · {Produto}             (PERMANENTE — histórico)
+ * Cria um "pacote" pré-configurado de etiquetas + automatizaciones para um producto:
+ *   - PIX Generado · {Producto}            (transitória, eliminada ao comprar)
+ *   - Boleto Generado · {Producto}         (transitória)
+ *   - Aguardando Pago · {Producto}  (transitória, dispara em PIX e Boleto)
+ *   - Checkout Abandonado · {Producto}   (transitória)
+ *   - Cliente · {Producto}               (PERMANENTE — histórico)
+ *   - Reembolso · {Producto}             (PERMANENTE — histórico)
  *
- * Idempotente: rodar duas vezes para o mesmo produto não duplica nada.
+ * Idempotente: rodar duas vezes para o mismo producto no duplica nada.
  */
 export function useGenerateTagPackage() {
   const qc = useQueryClient();
@@ -27,18 +27,18 @@ export function useGenerateTagPackage() {
   return useMutation({
     mutationFn: async ({ product_id, product_label }: GeneratePackageParams) => {
       if (!orgId) throw new Error('Organización no encontrada');
-      const { data, error } = await supabase.rpc('create_product_tag_package', {
+      const { fecha, error } = await supabase.rpc('create_product_tag_package', {
         p_organization_id: orgId,
         p_product_id: product_id,
         p_product_label: product_label,
       });
       if (error) throw error;
-      return data as { ok: boolean; tags: { tag_id: string; name: string }[] };
+      return fecha as { ok: boolean; tags: { tag_id: string; name: string }[] };
     },
-    onSuccess: (data) => {
+    onSuccess: (fecha) => {
       qc.invalidateQueries({ queryKey: ['lead-tags'] });
       qc.invalidateQueries({ queryKey: ['tag-automations'] });
-      const count = data?.tags?.length ?? 0;
+      const count = fecha?.tags?.length ?? 0;
       toast.success(`Paquete generado: ${count} etiquetas + ${count} automatizaciones activas.`);
     },
     onError: (err: any) => {

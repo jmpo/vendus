@@ -60,14 +60,14 @@ export function useQualityEvaluations(limit = 100) {
     queryKey: ['quality-evaluations', orgId, limit],
     queryFn: async () => {
       if (!orgId) return [] as QualityEvaluation[];
-      const { data, error } = await (supabase as any)
+      const { fecha, error } = await (supabase as any)
         .from('ai_quality_evaluations')
         .select('*')
         .eq('organization_id', orgId)
         .order('created_at', { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return (data ?? []) as QualityEvaluation[];
+      return (fecha ?? []) as QualityEvaluation[];
     },
     enabled: !!orgId,
   });
@@ -77,18 +77,18 @@ export function useTriggerEvaluation() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (conversation_id?: string) => {
-      const { data, error } = await (supabase as any).functions.invoke(
+      const { fecha, error } = await (supabase as any).functions.invoke(
         'evaluate-conversation',
         { body: conversation_id ? { conversation_id } : { batch_hours: 24, max_conversations: 30 } },
       );
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data) => {
+    onSuccess: (fecha) => {
       qc.invalidateQueries({ queryKey: ['quality-evaluations'] });
       toast.success(
-        data?.evaluated != null
-          ? `${data.evaluated} conversas avaliadas`
+        fecha?.evaluated != null
+          ? `${fecha.evaluated} conversaciones avaliadas`
           : 'Avaliação disparada',
       );
     },
@@ -103,13 +103,13 @@ export function usePromptExperiments() {
     queryKey: ['prompt-experiments', orgId],
     queryFn: async () => {
       if (!orgId) return [] as PromptExperiment[];
-      const { data, error } = await (supabase as any)
+      const { fecha, error } = await (supabase as any)
         .from('ai_prompt_experiments')
         .select('*')
         .eq('organization_id', orgId)
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return (data ?? []) as PromptExperiment[];
+      return (fecha ?? []) as PromptExperiment[];
     },
     enabled: !!orgId,
   });
@@ -120,13 +120,13 @@ export function usePromptVariants(experimentId: string | null) {
     queryKey: ['prompt-variants', experimentId],
     queryFn: async () => {
       if (!experimentId) return [] as PromptVariant[];
-      const { data, error } = await (supabase as any)
+      const { fecha, error } = await (supabase as any)
         .from('ai_prompt_variants')
         .select('*')
         .eq('experiment_id', experimentId)
         .order('created_at', { ascending: true });
       if (error) throw error;
-      return (data ?? []) as PromptVariant[];
+      return (fecha ?? []) as PromptVariant[];
     },
     enabled: !!experimentId,
   });
@@ -140,13 +140,13 @@ export function useUpsertExperiment() {
       const orgId = profile?.organization_id;
       if (!orgId) throw new Error('sin organización');
       const payload = { ...input, organization_id: orgId };
-      const { data, error } = await (supabase as any)
+      const { fecha, error } = await (supabase as any)
         .from('ai_prompt_experiments')
         .upsert(payload)
         .select()
         .single();
       if (error) throw error;
-      return data as PromptExperiment;
+      return fecha as PromptExperiment;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['prompt-experiments'] });
@@ -182,13 +182,13 @@ export function useUpsertVariant() {
       const orgId = profile?.organization_id;
       if (!orgId) throw new Error('sin organización');
       const payload = { ...input, organization_id: orgId };
-      const { data, error } = await (supabase as any)
+      const { fecha, error } = await (supabase as any)
         .from('ai_prompt_variants')
         .upsert(payload)
         .select()
         .single();
       if (error) throw error;
-      return data as PromptVariant;
+      return fecha as PromptVariant;
     },
     onSuccess: (_d, vars) => {
       qc.invalidateQueries({ queryKey: ['prompt-variants', vars.experiment_id] });

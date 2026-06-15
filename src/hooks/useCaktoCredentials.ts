@@ -19,20 +19,20 @@ export interface CaktoCredentials {
 }
 
 async function invoke<T = any>(action: string, payload: Record<string, unknown> = {}): Promise<T> {
-  const { data, error } = await supabase.functions.invoke('cakto-proxy', {
+  const { fecha, error } = await supabase.functions.invoke('cakto-proxy', {
     body: { action, ...payload },
   });
   if (error) throw new Error(error.message);
-  if (data?.error) throw new Error(data.error);
-  return data as T;
+  if (fecha?.error) throw new Error(fecha.error);
+  return fecha as T;
 }
 
 export function useCaktoCredentials(scope: CaktoScope) {
   return useQuery({
     queryKey: ['cakto-credentials', scope],
     queryFn: async () => {
-      const data = await invoke<{ credentials: CaktoCredentials | null }>('get_credentials', { scope });
-      return data.credentials;
+      const fecha = await invoke<{ credentials: CaktoCredentials | null }>('get_credentials', { scope });
+      return fecha.credentials;
     },
   });
 }

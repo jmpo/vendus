@@ -37,7 +37,7 @@ export function useLeadTags() {
     queryKey: ['lead-tags', orgId],
     enabled: !!orgId,
     queryFn: async (): Promise<LeadTagWithCount[]> => {
-      const { data: tags, error } = await supabase
+      const { fecha: tags, error } = await supabase
         .from('lead_tags')
         .select('*')
         .eq('organization_id', orgId!)
@@ -48,7 +48,7 @@ export function useLeadTags() {
       const tagIds = (tags ?? []).map((t) => t.id);
       if (tagIds.length === 0) return [];
 
-      const { data: assignments } = await supabase
+      const { fecha: assignments } = await supabase
         .from('lead_tag_assignments')
         .select('tag_id')
         .in('tag_id', tagIds);
@@ -71,12 +71,12 @@ export function useLeadTagsForLead(leadId: string | undefined) {
     queryKey: ['lead-tag-assignments', leadId],
     enabled: !!leadId,
     queryFn: async (): Promise<(LeadTagAssignment & { tag: LeadTag })[]> => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('lead_tag_assignments')
         .select('*, tag:lead_tags(*)')
         .eq('lead_id', leadId!);
       if (error) throw error;
-      return (data ?? []) as any;
+      return (fecha ?? []) as any;
     },
   });
 }
@@ -87,7 +87,7 @@ export function useCreateLeadTag() {
   return useMutation({
     mutationFn: async (input: { name: string; color: string; description?: string; is_automatic?: boolean }) => {
       if (!profile?.organization_id) throw new Error('Sin organización');
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('lead_tags')
         .insert({
           organization_id: profile.organization_id,
@@ -100,7 +100,7 @@ export function useCreateLeadTag() {
         .select()
         .single();
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['lead-tags'] });
@@ -114,20 +114,20 @@ export function useUpdateLeadTag() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<LeadTag> & { id: string }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('lead_tags')
         .update(updates)
         .eq('id', id)
         .select()
         .single();
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['lead-tags'] });
       toast({ title: 'Etiqueta actualizada' });
     },
-    onError: (e: any) => toast({ title: 'Erro ao atualizar', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error ao actualizar', description: e.message, variant: 'destructive' }),
   });
 }
 
@@ -198,7 +198,7 @@ export interface TagAutomation {
 }
 
 export const TAG_EVENT_LABELS: Record<TagAutomation['event_type'], string> = {
-  compra_aprovada: 'Compra aprovada',
+  compra_aprovada: 'Compra aprobada',
   pix_gerado: 'PIX gerado',
   boleto_gerado: 'Boleto gerado',
   checkout_abandonado: 'Checkout abandonado',
@@ -215,13 +215,13 @@ export function useTagAutomations() {
     queryKey: ['tag-automations', orgId],
     enabled: !!orgId,
     queryFn: async (): Promise<TagAutomation[]> => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('tag_automations')
         .select('*')
         .eq('organization_id', orgId!)
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return (data ?? []) as TagAutomation[];
+      return (fecha ?? []) as TagAutomation[];
     },
   });
 }
@@ -242,28 +242,28 @@ export function useUpsertTagAutomation() {
         created_by: user?.id ?? null,
       };
       if (input.id) {
-        const { data, error } = await supabase
+        const { fecha, error } = await supabase
           .from('tag_automations')
           .update(payload)
           .eq('id', input.id)
           .select()
           .single();
         if (error) throw error;
-        return data;
+        return fecha;
       }
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('tag_automations')
         .insert(payload)
         .select()
         .single();
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['tag-automations'] });
       toast({ title: 'Automatización guardada' });
     },
-    onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
 }
 

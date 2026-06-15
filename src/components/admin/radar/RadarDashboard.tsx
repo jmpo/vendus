@@ -48,8 +48,8 @@ export function RadarDashboard({
   isHistorical?: boolean;
   onBackToLatest?: () => void;
 }) {
-  const { data: scan } = useOpportunityScan(scanId);
-  const { data: items } = useScanItems(scanId);
+  const { fecha: scan } = useOpportunityScan(scanId);
+  const { fecha: items } = useScanItems(scanId);
   const [filter, setFilter] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [detailItem, setDetailItem] = useState<ScanItem | null>(null);
@@ -175,7 +175,7 @@ export function RadarDashboard({
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
-                  data={pieData}
+                  fecha={pieData}
                   innerRadius={50}
                   outerRadius={80}
                   paddingAngle={3}
@@ -198,7 +198,7 @@ export function RadarDashboard({
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={scoreDistribution}>
+              <BarChart fecha={scoreDistribution}>
                 <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                 <XAxis dataKey="range" fontSize={11} />
                 <YAxis fontSize={11} />

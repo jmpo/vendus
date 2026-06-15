@@ -64,7 +64,7 @@ const SOURCE_TYPES = [
     color: 'text-purple-500'
   },
   { 
-    id: 'data', 
+    id: 'fecha', 
     label: 'Datos', 
     icon: Database, 
     description: 'Tablas y comparativas',
@@ -80,10 +80,10 @@ const SOURCE_TYPES = [
 ];
 
 export function ProductBrainHub({ productId, onProductChange }: ProductBrainHubProps) {
-  const { data: product, isLoading: productLoading } = useProduct(productId);
-  const { data: products } = useProducts();
-  const { data: sources, isLoading: sourcesLoading } = useKnowledgeSources(productId);
-  const { data: stats } = useKnowledgeSourceStats(productId);
+  const { fecha: product, isLoading: productLoading } = useProduct(productId);
+  const { fecha: products } = useProducts();
+  const { fecha: sources, isLoading: sourcesLoading } = useKnowledgeSources(productId);
+  const { fecha: stats } = useKnowledgeSourceStats(productId);
   const [activeTab, setActiveTab] = useState('overview');
   const [activeSource, setActiveSource] = useState<string | null>(null);
 
@@ -132,7 +132,7 @@ export function ProductBrainHub({ productId, onProductChange }: ProductBrainHubP
         <CardContent className="p-6">
           <p className="text-muted-foreground">
             Adicione conhecimento através de diferentes fontes. Quanto mais dados, mais inteligente 
-            a IA ficará para ajudar seus vendedores com respostas precisas e contextualizadas.
+            a IA ficará para ajudar sus vendedores com respuestas precisas e contextualizadas.
           </p>
         </CardContent>
       </Card>

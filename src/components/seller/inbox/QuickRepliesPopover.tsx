@@ -41,12 +41,12 @@ export function QuickRepliesPopover({
   const { profile } = useAuth();
   const [search, setSearch] = useState('');
 
-  const { data: quickReplies = [], isLoading } = useQuery({
+  const { fecha: quickReplies = [], isLoading } = useQuery({
     queryKey: ['quick-replies', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('quick_replies')
         .select('*')
         .eq('organization_id', profile.organization_id)
@@ -55,7 +55,7 @@ export function QuickRepliesPopover({
         .order('title', { ascending: true });
 
       if (error) throw error;
-      return data as QuickReply[];
+      return fecha as QuickReply[];
     },
     enabled: !!profile?.organization_id && open,
   });
@@ -79,7 +79,7 @@ export function QuickRepliesPopover({
   // Replace variables in content
   const processContent = (content: string) => {
     return content
-      .replace(/\{\{nome\}\}/gi, leadName)
+      .replace(/\{\{nombre\}\}/gi, leadName)
       .replace(/\{\{producto\}\}/gi, productName)
       .replace(/\{\{name\}\}/gi, leadName)
       .replace(/\{\{product\}\}/gi, productName);
@@ -97,14 +97,14 @@ export function QuickRepliesPopover({
       id: 'default-1',
       category: 'Saludos',
       title: 'Bienvenida',
-      content: '¡Hola {{nome}}! 👋\n\n¡Bienvenido(a)! ¿Cómo puedo ayudarte hoy?',
+      content: '¡Hola {{nombre}}! 👋\n\n¡Bienvenido(a)! ¿Cómo puedo ayudarte hoy?',
       shortcut: '/ola',
     },
     {
       id: 'default-2',
       category: 'Saludos',
       title: 'Buenos días',
-      content: '¡Buenos días, {{nome}}! ☀️\n\nEspero que estés teniendo un gran día. ¿En qué puedo ayudarte?',
+      content: '¡Buenos días, {{nombre}}! ☀️\n\nEspero que estés teniendo un gran día. ¿En qué puedo ayudarte?',
       shortcut: '/bomdia',
     },
     {
@@ -118,14 +118,14 @@ export function QuickRepliesPopover({
       id: 'default-4',
       category: 'Ventas',
       title: 'Próximos pasos',
-      content: '¡Perfecto, {{nome}}! ✅\n\n¿Agendamos una demostración para que conozcas mejor {{producto}}?\n\n¿Cuál sería el mejor horario para ti?',
+      content: '¡Perfecto, {{nombre}}! ✅\n\n¿Agendamos una demostración para que conozcas mejor {{producto}}?\n\n¿Cuál sería el mejor horario para ti?',
       shortcut: '/demo',
     },
     {
       id: 'default-5',
       category: 'Cierre',
       title: 'Despedida',
-      content: '¡Gracias por el contacto, {{nome}}! 🙏\n\nQuedo a disposición para cualquier duda. ¡Hasta luego!',
+      content: '¡Gracias por el contacto, {{nombre}}! 🙏\n\nQuedo a disposición para cualquier duda. ¡Hasta luego!',
       shortcut: '/tchau',
     },
   ];
@@ -222,7 +222,7 @@ export function QuickRepliesPopover({
         {/* Footer */}
         <div className="p-3 border-t bg-muted/30">
           <p className="text-xs text-muted-foreground text-center">
-            Usa <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px] font-mono">{'{{nome}}'}</kbd> e{' '}
+            Usa <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px] font-mono">{'{{nombre}}'}</kbd> e{' '}
             <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px] font-mono">{'{{producto}}'}</kbd> para variables dinámicas
           </p>
         </div>

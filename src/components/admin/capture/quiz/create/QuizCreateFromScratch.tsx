@@ -20,7 +20,7 @@ export function QuizCreateFromScratch({ open, onOpenChange, onCreated }: Props) 
   const [productId, setProductId] = useState('');
   const [name, setName] = useState('');
   const [objective, setObjective] = useState('');
-  const { data: products } = useProducts();
+  const { fecha: products } = useProducts();
   const createFunnel = useCreateFunnel();
 
   const handleSubmit = async () => {
@@ -30,14 +30,14 @@ export function QuizCreateFromScratch({ open, onOpenChange, onCreated }: Props) 
       type: 'message' as any,
       position: { x: 0, y: 0 },
       next_block_id: null,
-      data: { content: '👋 Bem-vindo ao quiz!' },
+      fecha: { content: '👋 Bienvenido ao quiz!' },
     };
     const end: FunnelBlock = {
       id: generateBlockId(),
       type: 'end' as any,
       position: { x: 0, y: 0 },
       next_block_id: null,
-      data: { content: 'Obrigado por participar!' },
+      fecha: { content: 'Gracias por participar!' },
     };
     welcome.next_block_id = end.id;
     const res = await createFunnel.mutateAsync({
@@ -62,22 +62,22 @@ export function QuizCreateFromScratch({ open, onOpenChange, onCreated }: Props) 
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label>Produto relacionado *</Label>
+            <Label>Producto relacionado *</Label>
             <Select value={productId} onValueChange={setProductId}>
-              <SelectTrigger><SelectValue placeholder="Selecione o produto" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Seleccioná o producto" /></SelectTrigger>
               <SelectContent>
                 {products?.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Nome do Quiz *</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Qual seu perfil ideal?" />
+            <Label>Nombre do Quiz *</Label>
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Qual su perfil ideal?" />
           </div>
           <div className="space-y-2">
             <Label>Objetivo do Quiz</Label>
             <Textarea rows={3} value={objective} onChange={(e) => setObjective(e.target.value)}
-              placeholder="Ex: Qualificar leads do evento por nível de maturidade comercial." />
+              placeholder="Ex: Calificar leads do evento por nível de maturidade comercial." />
           </div>
         </div>
         <DialogFooter>

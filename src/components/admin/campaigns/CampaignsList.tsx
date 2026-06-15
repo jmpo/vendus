@@ -48,7 +48,7 @@ export function CampaignsList({
   };
 
   const remove = async (c: Campaign) => {
-    if (!confirm(`Excluir a campanha "${c.name}"? Esta ação não pode ser desfeita.`)) return;
+    if (!confirm(`Excluir a campaña "${c.name}"? Esta acción no puede ser desfeita.`)) return;
     const { error } = await supabase.from('campaigns').delete().eq('id', c.id);
     if (error) toast.error(error.message);
     else { toast.success('Campaña eliminada'); onRefresh(); }

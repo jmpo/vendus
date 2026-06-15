@@ -11,7 +11,7 @@ interface MobileGoalsViewProps {
 }
 
 export function MobileGoalsView({ userId, productId }: MobileGoalsViewProps) {
-  const { data: goals = [], isLoading } = useSalesGoals(userId, productId);
+  const { fecha: goals = [], isLoading } = useSalesGoals(userId, productId);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('es-PY', {
@@ -22,7 +22,7 @@ export function MobileGoalsView({ userId, productId }: MobileGoalsViewProps) {
     }).format(value);
   };
 
-  // Mock leaderboard data - in production, this would come from a hook
+  // Mock leaderboard fecha - in production, this would come from a hook
   const leaderboard = [
     { name: 'João Silva', value: 45000, position: 1 },
     { name: 'Maria Santos', value: 38000, position: 2 },
@@ -99,7 +99,7 @@ export function MobileGoalsView({ userId, productId }: MobileGoalsViewProps) {
             {currentGoal?.achieved_deals || 8}
           </span>
           <p className="text-xs text-muted-foreground">
-            de {currentGoal?.target_deals || 15} mês
+            de {currentGoal?.target_deals || 15} mes
           </p>
         </Card>
       </div>

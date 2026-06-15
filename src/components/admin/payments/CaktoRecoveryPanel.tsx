@@ -31,10 +31,10 @@ import { ptBR } from 'date-fns/locale';
 import { PostSaleScenariosEditor } from './PostSaleScenariosEditor';
 
 export function CaktoRecoveryPanel() {
-  const { data: config, isLoading } = useCaktoRecoveryConfig();
-  const { data: agents } = useAllAgents();
+  const { fecha: config, isLoading } = useCaktoRecoveryConfig();
+  const { fecha: agents } = useAllAgents();
   const save = useSaveCaktoRecoveryConfig();
-  const { data: dispatches } = useCaktoRecoveryDispatches(20);
+  const { fecha: dispatches } = useCaktoRecoveryDispatches(20);
 
   const [draft, setDraft] = useState<CaktoRecoveryConfig | null>(null);
 
@@ -65,9 +65,9 @@ export function CaktoRecoveryPanel() {
             <div>
               <CardTitle>Recuperación Automática de Ventas</CardTitle>
               <CardDescription className="mt-1">
-                Quando a Cakto enviar um evento (Pix gerado, pagamento, reembolso),
-                o agente escolhido envia uma mensagem no WhatsApp do cliente — sem
-                você precisar fazer nada.
+                Quando a Cakto enviar um evento (Pix gerado, pago, reembolso),
+                o agente escolhido envia uma mensaje no WhatsApp del cliente — sem
+                usted precisar hacer nada.
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
@@ -90,7 +90,7 @@ export function CaktoRecoveryPanel() {
               onValueChange={(v) => update('recovery_agent_id', v || null)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecione um agente" />
+                <SelectValue placeholder="Seleccioná um agente" />
               </SelectTrigger>
               <SelectContent>
                 {(agents ?? []).map((a) => (
@@ -102,7 +102,7 @@ export function CaktoRecoveryPanel() {
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Recomendamos criar um agente dedicado em <b>Cérebro IA → Agentes</b>{' '}
+              Recomendamos crear um agente dedicado em <b>Cérebro IA → Agentes</b>{' '}
               com prompt de recuperação (vamos te ajudar com o template).
             </p>
           </div>
@@ -112,13 +112,13 @@ export function CaktoRecoveryPanel() {
             <div className="space-y-3 rounded-lg border p-4">
               <ToggleRow
                 title="Checkout abandonado"
-                description="Cliente gerou Pix/boleto mas ainda não pagou. Recupera carrinho abandonado."
+                description="Cliente gerou Pix/boleto mas aún no pagou. Recupera carrinho abandonado."
                 checked={draft.trigger_on_abandoned}
                 onChange={(v) => update('trigger_on_abandoned', v)}
               />
               <ToggleRow
                 title="Pago confirmado"
-                description="Cliente pagou. Mensagem de boas-vindas, próximo passo e upsell."
+                description="Cliente pagou. Mensaje de boas-vindas, próximo passo e upsell."
                 checked={draft.trigger_on_paid}
                 onChange={(v) => update('trigger_on_paid', v)}
               />
@@ -144,7 +144,7 @@ export function CaktoRecoveryPanel() {
                 }
               />
               <p className="text-xs text-muted-foreground">
-                Não envia o mesmo tipo de mensagem pro mesmo cliente nesse intervalo.
+                No envia o mismo tipo de mensaje pro mismo cliente nesse intervalo.
               </p>
             </div>
             <div className="space-y-2">
@@ -159,7 +159,7 @@ export function CaktoRecoveryPanel() {
                 }
               />
               <p className="text-xs text-muted-foreground">
-                Use 0 para envio imediato (recomendado para Pix).
+                Usa 0 para envio imediato (recomendado para Pix).
               </p>
             </div>
           </div>
@@ -168,7 +168,7 @@ export function CaktoRecoveryPanel() {
             <div className="flex items-start gap-2 rounded-md border border-yellow-500/50 bg-yellow-500/10 p-3 text-sm">
               <AlertCircle className="mt-0.5 h-4 w-4 text-yellow-600" />
               <span>
-                Selecione um agente antes de ativar. Sem agente, o sistema não
+                Seleccioná um agente antes de ativar. Sem agente, o sistema no
                 envia nada.
               </span>
             </div>
@@ -179,7 +179,7 @@ export function CaktoRecoveryPanel() {
               {save.isPending && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Salvar configuração
+              Salvar configuración
             </Button>
           </div>
         </CardContent>
@@ -191,13 +191,13 @@ export function CaktoRecoveryPanel() {
         <CardHeader>
           <CardTitle>Últimos disparos</CardTitle>
           <CardDescription>
-            Histórico das mensagens enviadas automaticamente pela recuperação.
+            Histórico das mensajes enviadas automaticamente pela recuperação.
           </CardDescription>
         </CardHeader>
         <CardContent>
           {!dispatches || dispatches.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              Nenhum disparo ainda. Quando a Cakto enviar um evento, ele aparecerá aqui.
+              Nenhum disparo aún. Quando a Cakto enviar um evento, ele aparecerá aqui.
             </p>
           ) : (
             <div className="space-y-2">
@@ -227,7 +227,7 @@ export function CaktoRecoveryPanel() {
                         )}
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {d.customer_phone || d.customer_email || 'sem contato'}
+                        {d.customer_phone || d.customer_email || 'sem contacto'}
                       </div>
                       {d.message_sent && (
                         <div className="mt-1 max-w-xl truncate text-xs">

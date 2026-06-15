@@ -50,7 +50,7 @@ export function EditVisitorDialog({
   const handleSave = async () => {
     const n = name.trim();
     if (!n) {
-      toast.error('Nome é obrigatório');
+      toast.error('Nombre é obligatorio');
       return;
     }
     setSaving(true);
@@ -64,7 +64,7 @@ export function EditVisitorDialog({
         })
         .eq('id', conversationId);
       if (error) throw error;
-      toast.success('Contato actualizado');
+      toast.success('Contacto actualizado');
       queryClient.invalidateQueries({ queryKey: ['webchat-conversation', conversationId] });
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
       onOpenChange(false);
@@ -80,11 +80,11 @@ export function EditVisitorDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Editar Contato</DialogTitle>
+          <DialogTitle>Editar Contacto</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>
-            <Label>Nome *</Label>
+            <Label>Nombre *</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div>

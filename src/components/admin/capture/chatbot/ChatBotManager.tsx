@@ -49,8 +49,8 @@ export function ChatBotManager() {
   const [description, setDescription] = useState('');
   const [productId, setProductId] = useState('');
 
-  const { data: funnels, isLoading } = useFunnels({ channelType: 'chatbot' });
-  const { data: products } = useProducts();
+  const { fecha: funnels, isLoading } = useFunnels({ channelType: 'chatbot' });
+  const { fecha: products } = useProducts();
   const createFunnel = useCreateFunnel();
   const deleteFunnel = useDeleteFunnel();
   const duplicateFunnel = useDuplicateFunnel();
@@ -113,7 +113,7 @@ export function ChatBotManager() {
             onChange={(e) => setSearchQuery(e.target.value)} className="pl-10" />
         </div>
         <Select value={productFilter} onValueChange={setProductFilter}>
-          <SelectTrigger className="w-full sm:w-[200px]"><SelectValue placeholder="Produto" /></SelectTrigger>
+          <SelectTrigger className="w-full sm:w-[200px]"><SelectValue placeholder="Producto" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos los productos</SelectItem>
             {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
@@ -268,7 +268,7 @@ export function ChatBotManager() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Eliminar ChatBot?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Todos los datos del flujo se perderán.
+              Esta acción no puede ser desfeita. Todos los datos del flujo se perderán.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -10,7 +10,7 @@ import { toast } from '@/hooks/use-toast';
 
 interface Props { productId: string }
 
-// CSV parser simples (linhas separadas por \n, vírgula como separador, com aspas)
+// CSV parser simple (linhas separadas por \n, vírgula como separador, com aspas)
 function parseCSV(text: string): string[][] {
   const rows: string[][] = [];
   let cur: string[] = [];
@@ -46,14 +46,14 @@ export function CatalogImporter({ productId }: Props) {
     const text = await file.text();
     const rows = parseCSV(text);
     if (rows.length < 2) {
-      toast({ title: 'Arquivo vazio ou inválido', variant: 'destructive' });
+      toast({ title: 'Archivo vazio ou inválido', variant: 'destructive' });
       return;
     }
     const hdr = rows[0].map((h) => h.trim().toLowerCase());
     setHeaders(hdr);
 
-    // Mapeamento: title, description, price, url, thumbnail_url, tags, external_id + qualquer outra coluna vira attribute
-    const STANDARD = new Set(['title', 'titulo', 'título', 'description', 'descricao', 'descrição', 'price', 'preco', 'preço', 'url', 'link', 'thumbnail_url', 'foto', 'imagem', 'tags', 'external_id', 'id', 'images']);
+    // Mapeamento: title, description, price, url, thumbnail_url, tags, external_id + qualquer otra coluna vira attribute
+    const STANDARD = new Set(['title', 'titulo', 'título', 'description', 'descricao', 'descripción', 'price', 'preco', 'preço', 'url', 'link', 'thumbnail_url', 'foto', 'imagen', 'tags', 'external_id', 'id', 'images']);
 
     const items = rows.slice(1).map((r) => {
       const item: any = { attributes: {}, tags: [], images: [] };
@@ -62,13 +62,13 @@ export function CatalogImporter({ productId }: Props) {
         const v = val.trim();
         if (!v) return;
         if (h === 'title' || h === 'titulo' || h === 'título') item.title = v;
-        else if (h === 'description' || h === 'descricao' || h === 'descrição') item.description = v;
+        else if (h === 'description' || h === 'descricao' || h === 'descripción') item.description = v;
         else if (h === 'price' || h === 'preco' || h === 'preço') {
           const n = Number(v.replace(/[^\d.,-]/g, '').replace(',', '.'));
           item.price = isNaN(n) ? null : n;
         }
         else if (h === 'url' || h === 'link') item.url = v;
-        else if (h === 'thumbnail_url' || h === 'foto' || h === 'imagem') item.thumbnail_url = v;
+        else if (h === 'thumbnail_url' || h === 'foto' || h === 'imagen') item.thumbnail_url = v;
         else if (h === 'images') item.images = v.split('|').map((s) => s.trim()).filter(Boolean);
         else if (h === 'tags') item.tags = v.split('|').map((s) => s.trim()).filter(Boolean);
         else if (h === 'external_id' || h === 'id') item.external_id = v;
@@ -103,11 +103,11 @@ export function CatalogImporter({ productId }: Props) {
         <div className="text-sm text-muted-foreground space-y-1">
           <p>Colunas reconhecidas: <code className="text-xs">title, description, price, url, thumbnail_url, images, tags, external_id</code></p>
           <p>Demais colunas viram <strong>atributos</strong> de busca (ex: bairro, cidade, quartos, ano).</p>
-          <p>Use <code className="text-xs">|</code> como separador para múltiplos valores em <code>images</code> e <code>tags</code>.</p>
+          <p>Usa <code className="text-xs">|</code> como separador para múltiplos valores em <code>images</code> e <code>tags</code>.</p>
         </div>
 
         <div>
-          <Label>Arquivo CSV</Label>
+          <Label>Archivo CSV</Label>
           <Input type="file" accept=".csv,text/csv" onChange={(e) => {
             const f = e.target.files?.[0]; if (f) handleFile(f);
           }} />

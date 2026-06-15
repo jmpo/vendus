@@ -17,9 +17,9 @@ function CategoryIcon({ name, className }: { name?: string | null; className?: s
 export default function HelpCenter() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
-  const { data: rawCategories = [] } = useHelpCategories();
-  const { data: articles = [] } = useHelpArticles({ published: true, search: search || undefined });
-  const { data: isSuperAdmin = false } = useIsSuperAdmin();
+  const { fecha: rawCategories = [] } = useHelpCategories();
+  const { fecha: articles = [] } = useHelpArticles({ published: true, search: search || undefined });
+  const { fecha: isSuperAdmin = false } = useIsSuperAdmin();
 
   const categories = useMemo(
     () => rawCategories.filter((c: any) => c.visibility !== 'super_admin_only' || isSuperAdmin),
@@ -48,7 +48,7 @@ export default function HelpCenter() {
             <h1 className="text-lg font-semibold">Centro de Ayuda</h1>
           </div>
           <div className="ml-auto">
-            <Link to="/novidades">
+            <Link to="/novedades">
               <Button variant="outline" size="sm" className="gap-2">
                 <Sparkles className="h-4 w-4" /> Novedades
               </Button>
@@ -103,7 +103,7 @@ export default function HelpCenter() {
                 </div>
                 <div className="space-y-2">
                   {items.map(article => (
-                    <Link key={article.id} to={`/ajuda/${article.slug}`} className="block">
+                    <Link key={article.id} to={`/ayuda/${article.slug}`} className="block">
                       <Card className="hover:border-primary/40 hover:shadow-sm transition-all">
                         <CardContent className="p-3 sm:p-4 flex items-start gap-3">
                           <FileText className="h-4 w-4 text-muted-foreground mt-1 shrink-0" />

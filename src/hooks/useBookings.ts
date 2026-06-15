@@ -22,7 +22,7 @@ export interface BookingRequest {
   lead_id: string | null;
   tracking: Record<string, unknown>;
   created_at: string;
-  // Joined data
+  // Joined fecha
   event_type?: {
     id: string;
     name: string;
@@ -48,7 +48,7 @@ export function useBookings(filter?: BookingsFilter) {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data: bookings, isLoading, error } = useQuery({
+  const { fecha: bookings, isLoading, error } = useQuery({
     queryKey: ['bookings', user?.id, profile?.organization_id, filter],
     queryFn: async () => {
       if (!user?.id || !profile?.organization_id) return [];
@@ -84,17 +84,17 @@ export function useBookings(filter?: BookingsFilter) {
         query = query.lte('start_time', filter.dateTo);
       }
 
-      const { data, error } = await query;
+      const { fecha, error } = await query;
 
       if (error) throw error;
-      return (data || []) as BookingRequest[];
+      return (fecha || []) as BookingRequest[];
     },
     enabled: !!user?.id && !!profile?.organization_id,
   });
 
   const cancelBooking = useMutation({
     mutationFn: async ({ id, reason }: { id: string; reason?: string }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('booking_requests')
         .update({ 
           status: 'cancelled',
@@ -106,15 +106,15 @@ export function useBookings(filter?: BookingsFilter) {
 
       if (error) throw error;
 
-      // Também cancelar o evento de calendário associado
-      if (data.calendar_event_id) {
+      // También cancelar o evento de calendario associado
+      if (fecha.calendar_event_id) {
         await supabase
           .from('calendar_events')
           .update({ status: 'cancelled' })
-          .eq('id', data.calendar_event_id);
+          .eq('id', fecha.calendar_event_id);
       }
 
-      return data as BookingRequest;
+      return fecha as BookingRequest;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
@@ -129,7 +129,7 @@ export function useBookings(filter?: BookingsFilter) {
 
   const markCompleted = useMutation({
     mutationFn: async (id: string) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('booking_requests')
         .update({ status: 'completed' })
         .eq('id', id)
@@ -137,7 +137,7 @@ export function useBookings(filter?: BookingsFilter) {
         .single();
 
       if (error) throw error;
-      return data as BookingRequest;
+      return fecha as BookingRequest;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
@@ -149,7 +149,7 @@ export function useBookings(filter?: BookingsFilter) {
     },
   });
 
-  // Agrupar por data
+  // Agrupar por fecha
   const bookingsByDate = (bookings || []).reduce((acc, booking) => {
     const date = booking.start_time.split('T')[0];
     if (!acc[date]) {
@@ -176,7 +176,7 @@ export function useBookingByToken(token: string | undefined) {
     queryFn: async () => {
       if (!token) return null;
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('booking_requests')
         .select(`
           *,
@@ -191,7 +191,7 @@ export function useBookingByToken(token: string | undefined) {
         .maybeSingle();
 
       if (error) throw error;
-      return data as BookingRequest | null;
+      return fecha as BookingRequest | null;
     },
     enabled: !!token,
   });

@@ -21,7 +21,7 @@ interface LeadJourneyTabProps {
 }
 
 export function LeadJourneyTab({ leadId, currentStageId, stages }: LeadJourneyTabProps) {
-  const { data: stageHistory, isLoading } = useLeadStageHistory(leadId);
+  const { fecha: stageHistory, isLoading } = useLeadStageHistory(leadId);
 
   const journeyData = useMemo(() => {
     if (!stages || stages.length === 0) return [];

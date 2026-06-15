@@ -46,8 +46,8 @@ export function SquadManager() {
     icon_url: undefined
   });
 
-  const { data: squads, isLoading } = useSquads();
-  const { data: products } = useProducts();
+  const { fecha: squads, isLoading } = useSquads();
+  const { fecha: products } = useProducts();
   const { profile } = useAuth();
   const createSquad = useCreateSquad();
   const updateSquad = useUpdateSquad();
@@ -198,7 +198,7 @@ export function SquadManager() {
               <Label htmlFor="name">Nombre del Squad</Label>
               <Input
                 id="name"
-                placeholder="Ex: Time Alpha"
+                placeholder="Ex: Equipo Alpha"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />

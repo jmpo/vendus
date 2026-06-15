@@ -17,9 +17,9 @@ export interface NotificationSettings {
 export const NOTIFICATION_LABELS: Record<keyof Omit<NotificationSettings, 'user_id' | 'organization_id' | 'push_enabled'>, string> = {
   notify_new_tickets: 'Notificaciones de novos tickets',
   notify_status_change: 'Notificaciones de alteração de status',
-  notify_new_messages: 'Notificaciones de novas mensagens',
+  notify_new_messages: 'Notificaciones de novas mensajes',
   notify_groups: 'Notificaciones de grupos',
-  notify_unassigned_sector_tickets: 'Notificaciones de tickets sem setor',
+  notify_unassigned_sector_tickets: 'Notificaciones de tickets sem sector',
   notify_appointments: 'Notificaciones de reservas',
 };
 
@@ -28,13 +28,13 @@ export function useNotificationSettings(userId: string | undefined) {
     queryKey: ['notification-settings', userId],
     queryFn: async () => {
       if (!userId) return null;
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('user_notification_settings')
         .select('*')
         .eq('user_id', userId)
         .maybeSingle();
       if (error) throw error;
-      return data as NotificationSettings | null;
+      return fecha as NotificationSettings | null;
     },
     enabled: !!userId,
   });
@@ -45,7 +45,7 @@ export function useUpsertNotificationSettings() {
   const { profile } = useAuth();
   return useMutation({
     mutationFn: async ({ userId, settings }: { userId: string; settings: Partial<NotificationSettings> }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('user_notification_settings')
         .upsert({
           user_id: userId,
@@ -55,7 +55,7 @@ export function useUpsertNotificationSettings() {
         .select()
         .maybeSingle();
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: (_, vars) => {
       queryClient.invalidateQueries({ queryKey: ['notification-settings', vars.userId] });

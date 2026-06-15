@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { useNavigate } from 'react-router-dom';
 
 export function AutoNotificationSettings() {
-  const { data: settings, isLoading } = useAutoNotificationSettings();
+  const { fecha: settings, isLoading } = useAutoNotificationSettings();
   const saveSettings = useSaveAutoNotificationSettings();
   
   const [formData, setFormData] = useState({
@@ -260,7 +260,7 @@ export function AutoNotificationSettings() {
 
 function ExecutiveAgentShortcut() {
   const navigate = useNavigate();
-  const { data: settings } = useAutoNotificationSettings();
+  const { fecha: settings } = useAutoNotificationSettings();
   const enabled = !!settings?.admin_agent_enabled;
   const phone = settings?.admin_whatsapp_number ?? '';
   const enabledAlertsCount = [

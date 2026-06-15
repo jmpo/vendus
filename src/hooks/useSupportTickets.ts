@@ -40,7 +40,7 @@ export const SUPPORT_STATUS_LABELS: Record<SupportStatus, string> = {
   open: 'Aberto',
   in_progress: 'Em andamento',
   resolved: 'Resolvido',
-  closed: 'Fechado',
+  closed: 'Cerrado',
 };
 
 export const SUPPORT_PRIORITY_LABELS: Record<SupportPriority, string> = {
@@ -64,9 +64,9 @@ export function useSupportTickets(scope: 'admin' | 'super_admin' = 'admin') {
       if (scope === 'admin' && profile?.organization_id) {
         q = q.eq('organization_id', profile.organization_id);
       }
-      const { data, error } = await q;
+      const { fecha, error } = await q;
       if (error) throw error;
-      return (data ?? []) as any;
+      return (fecha ?? []) as any;
     },
   });
 
@@ -110,13 +110,13 @@ export function useSupportMessages(ticketId: string | null) {
     queryKey: ['support-messages', ticketId],
     enabled: !!ticketId,
     queryFn: async (): Promise<SupportMessage[]> => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('support_messages')
         .select('*, author:profiles!support_messages_author_id_fkey(full_name, email)')
         .eq('ticket_id', ticketId!)
         .order('created_at');
       if (error) throw error;
-      return (data ?? []) as any;
+      return (fecha ?? []) as any;
     },
   });
 
@@ -142,7 +142,7 @@ export function useCreateTicket() {
   return useMutation({
     mutationFn: async (input: { subject: string; category?: string; priority?: SupportPriority; firstMessage: string }) => {
       if (!profile?.organization_id || !user) throw new Error('Sin usuario');
-      const { data: ticket, error } = await supabase
+      const { fecha: ticket, error } = await supabase
         .from('support_tickets')
         .insert({
           organization_id: profile.organization_id,
@@ -168,7 +168,7 @@ export function useCreateTicket() {
       qc.invalidateQueries({ queryKey: ['support-tickets'] });
       toast({ title: 'Chamado aberto' });
     },
-    onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
 }
 

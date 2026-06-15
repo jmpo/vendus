@@ -50,12 +50,12 @@ export function AgentSupportTab({ formData, onChange, agentId }: Props) {
           <BookOpen className="h-4 w-4 text-muted-foreground mt-0.5" />
           <div className="text-sm text-muted-foreground">
             <p className="font-medium text-foreground">Base de soporte de este agente</p>
-            <p>Materiais técnicos, links úteis e respostas rápidas que serão usados <strong>exclusivamente por este agente de Soporte</strong> ao responder dúvidas.</p>
+            <p>Materiales técnicos, links úteis e respuestas rápidas que serão usados <strong>exclusivamente por este agente de Soporte</strong> ao responder dudas.</p>
           </div>
         </div>
       </div>
 
-      {/* Materiais (PDFs, docs) */}
+      {/* Materiales (PDFs, docs) */}
       {agentId ? (
         <AgentTrainingSection agentId={agentId} productId={formData.product_id || ''} />
       ) : (
@@ -90,7 +90,7 @@ export function AgentSupportTab({ formData, onChange, agentId }: Props) {
             />
             <div className="flex gap-2">
               <Input
-                placeholder="Descrição curta (opcional)"
+                placeholder="Descripción corta (opcional)"
                 value={newLink.description || ''}
                 onChange={(e) => setNewLink({ ...newLink, description: e.target.value })}
                 className="h-8 text-sm flex-1"
@@ -145,7 +145,7 @@ export function AgentSupportTab({ formData, onChange, agentId }: Props) {
             <div>
               <Label className="text-xs">Pergunta</Label>
               <Input
-                placeholder="Ex: Como faço para resetar minha senha?"
+                placeholder="Ex: Como faço para resetar minha contraseña?"
                 value={newQA.question}
                 onChange={(e) => setNewQA({ ...newQA, question: e.target.value })}
                 className="h-8 text-sm"

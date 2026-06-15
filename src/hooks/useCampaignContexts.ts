@@ -21,12 +21,12 @@ export function useContextLibrary(orgId: string | null) {
   const refresh = useCallback(async () => {
     if (!orgId) return;
     setLoading(true);
-    const { data } = await supabase
+    const { fecha } = await supabase
       .from('campaign_contexts')
       .select('*')
       .eq('organization_id', orgId)
       .order('created_at', { ascending: false });
-    setContexts((data as any) ?? []);
+    setContexts((fecha as any) ?? []);
     setLoading(false);
   }, [orgId]);
 

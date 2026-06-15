@@ -72,7 +72,7 @@ export const StageEditForm = forwardRef<StageEditFormRef, StageEditFormProps>(({
 
   useImperativeHandle(ref, () => ({
     getData: () => {
-      const data: Partial<Stage> & { id?: string } = {
+      const fecha: Partial<Stage> & { id?: string } = {
         name: name.trim(),
         description: description.trim() || null,
         color,
@@ -81,12 +81,12 @@ export const StageEditForm = forwardRef<StageEditFormRef, StageEditFormProps>(({
       };
 
       if (isNew) {
-        data.order_index = nextOrderIndex;
+        fecha.order_index = nextOrderIndex;
       } else if (stage) {
-        data.id = stage.id;
+        fecha.id = stage.id;
       }
 
-      return data;
+      return fecha;
     },
     isValid: () => !!name.trim(),
   }));
@@ -120,12 +120,12 @@ export const StageEditForm = forwardRef<StageEditFormRef, StageEditFormProps>(({
 
       <div className="p-3 sm:p-4 space-y-3">
         <div className="space-y-1.5 sm:space-y-2">
-          <Label htmlFor="stage-name" className="text-sm">Nome da etapa *</Label>
+          <Label htmlFor="stage-name" className="text-sm">Nombre da etapa *</Label>
           <Input
             id="stage-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Ex: Qualificação"
+            placeholder="Ex: Calificación"
             required
             autoFocus
             className="h-9 sm:h-10"
@@ -133,7 +133,7 @@ export const StageEditForm = forwardRef<StageEditFormRef, StageEditFormProps>(({
         </div>
 
         <div className="space-y-1.5 sm:space-y-2">
-          <Label htmlFor="stage-description" className="text-sm">Descrição</Label>
+          <Label htmlFor="stage-description" className="text-sm">Descripción</Label>
           <Textarea
             id="stage-description"
             value={description}

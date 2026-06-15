@@ -44,18 +44,18 @@ export function LeadCadencesTab({ leadId, organizationId }: LeadCadencesTabProps
 
   const refresh = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase
+    const { fecha } = await supabase
       .from('cadence_enrollments' as any)
       .select('*, cadences(name)')
       .eq('lead_id', leadId)
       .order('enrolled_at', { ascending: false });
 
-    const rows = ((data as any[]) ?? []).map((r) => ({ ...r, cadence_name: r.cadences?.name }));
+    const rows = ((fecha as any[]) ?? []).map((r) => ({ ...r, cadence_name: r.cadences?.name }));
 
     // Siguiente execução + última mensaje (para enrollments ativos)
     const activeIds = rows.filter((r) => r.status === 'active').map((r) => r.id);
     if (activeIds.length) {
-      const { data: runs } = await supabase
+      const { fecha: runs } = await supabase
         .from('cadence_step_runs' as any)
         .select('enrollment_id, scheduled_at, status, agent_message, executed_at')
         .in('enrollment_id', activeIds);
@@ -86,12 +86,12 @@ export function LeadCadencesTab({ leadId, organizationId }: LeadCadencesTabProps
     if (!picked) return;
     setBusy(true);
     try {
-      const { data, error } = await supabase.functions.invoke('cadence-enroll', {
+      const { fecha, error } = await supabase.functions.invoke('cadence-enroll', {
         body: { cadence_id: picked, lead_ids: [leadId], source: 'manual' },
       });
       if (error) throw error;
-      if ((data as any)?.enrolled > 0) toast.success('Lead inscrito en la cadencia');
-      else if ((data as any)?.skipped_existing > 0) toast.info('El lead ya estaba en esta cadencia');
+      if ((fecha as any)?.enrolled > 0) toast.success('Lead inscrito en la cadencia');
+      else if ((fecha as any)?.skipped_existing > 0) toast.info('El lead ya estaba en esta cadencia');
       else toast.warning('No fue posible inscribir (verifique los filtros de exclusión)');
       setAddOpen(false);
       setPicked(null);

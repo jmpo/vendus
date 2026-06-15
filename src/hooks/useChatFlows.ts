@@ -4,26 +4,26 @@ import { ChatFlow, FlowBlock, TriggerConditions, CollectedVariable, TriggerType 
 import { toast } from 'sonner';
 
 // Helper para converter tipos do banco
-function parseChatFlow(data: any): ChatFlow {
+function parseChatFlow(fecha: any): ChatFlow {
   return {
-    id: data.id,
-    product_id: data.product_id,
-    organization_id: data.organization_id,
-    name: data.name,
-    description: data.description,
-    blocks: (data.blocks || []) as FlowBlock[],
-    start_block_id: data.start_block_id,
-    is_active: data.is_active ?? true,
-    trigger_type: (data.trigger_type || 'always') as TriggerType,
-    trigger_conditions: (data.trigger_conditions || {}) as TriggerConditions,
-    collected_variables: (data.collected_variables || []) as CollectedVariable[],
-    created_at: data.created_at,
-    updated_at: data.updated_at,
-    created_by: data.created_by,
+    id: fecha.id,
+    product_id: fecha.product_id,
+    organization_id: fecha.organization_id,
+    name: fecha.name,
+    description: fecha.description,
+    blocks: (fecha.blocks || []) as FlowBlock[],
+    start_block_id: fecha.start_block_id,
+    is_active: fecha.is_active ?? true,
+    trigger_type: (fecha.trigger_type || 'always') as TriggerType,
+    trigger_conditions: (fecha.trigger_conditions || {}) as TriggerConditions,
+    collected_variables: (fecha.collected_variables || []) as CollectedVariable[],
+    created_at: fecha.created_at,
+    updated_at: fecha.updated_at,
+    created_by: fecha.created_by,
   };
 }
 
-// Buscar todos os flujos de um produto
+// Buscar todos os flujos de um producto
 export function useChatFlows(productId?: string) {
   return useQuery({
     queryKey: ['chat-flows', productId],
@@ -37,10 +37,10 @@ export function useChatFlows(productId?: string) {
         query = query.eq('product_id', productId);
       }
       
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       
       if (error) throw error;
-      return (data || []).map(parseChatFlow);
+      return (fecha || []).map(parseChatFlow);
     },
     enabled: !!productId,
   });
@@ -53,27 +53,27 @@ export function useChatFlow(flowId?: string) {
     queryFn: async () => {
       if (!flowId) return null;
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('chat_flows')
         .select('*')
         .eq('id', flowId)
         .single();
       
       if (error) throw error;
-      return parseChatFlow(data);
+      return parseChatFlow(fecha);
     },
     enabled: !!flowId,
   });
 }
 
-// Buscar flujo ativo de um produto
+// Buscar flujo ativo de um producto
 export function useActiveChatFlow(productId?: string) {
   return useQuery({
     queryKey: ['chat-flow-active', productId],
     queryFn: async () => {
       if (!productId) return null;
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('chat_flows')
         .select('*')
         .eq('product_id', productId)
@@ -81,7 +81,7 @@ export function useActiveChatFlow(productId?: string) {
         .maybeSingle();
       
       if (error) throw error;
-      return data ? parseChatFlow(data) : null;
+      return fecha ? parseChatFlow(fecha) : null;
     },
     enabled: !!productId,
   });
@@ -98,12 +98,12 @@ export function useCreateChatFlow() {
       name?: string;
       description?: string;
     }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('chat_flows')
         .insert({
           product_id: params.productId,
           organization_id: params.organizationId,
-          name: params.name || 'Novo Fluxo',
+          name: params.name || 'Novo Flujo',
           description: params.description || null,
           blocks: [],
           start_block_id: null,
@@ -116,7 +116,7 @@ export function useCreateChatFlow() {
         .single();
       
       if (error) throw error;
-      return parseChatFlow(data);
+      return parseChatFlow(fecha);
     },
     onSuccess: (_, params) => {
       queryClient.invalidateQueries({ queryKey: ['chat-flows', params.productId] });
@@ -152,7 +152,7 @@ export function useUpdateChatFlow() {
         updated_at: new Date().toISOString(),
       };
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('chat_flows')
         .update(updatePayload)
         .eq('id', params.flowId)
@@ -160,12 +160,12 @@ export function useUpdateChatFlow() {
         .single();
       
       if (error) throw error;
-      return parseChatFlow(data);
+      return parseChatFlow(fecha);
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['chat-flows', data.product_id] });
-      queryClient.invalidateQueries({ queryKey: ['chat-flow', data.id] });
-      queryClient.invalidateQueries({ queryKey: ['chat-flow-active', data.product_id] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['chat-flows', fecha.product_id] });
+      queryClient.invalidateQueries({ queryKey: ['chat-flow', fecha.id] });
+      queryClient.invalidateQueries({ queryKey: ['chat-flow-active', fecha.product_id] });
     },
     onError: (error: Error) => {
       toast.error('Error al actualizar flujo: ' + error.message);
@@ -184,7 +184,7 @@ export function useSaveChatFlowBlocks() {
       startBlockId: string | null;
       collectedVariables: CollectedVariable[];
     }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('chat_flows')
         .update({
           blocks: params.blocks as any,
@@ -197,11 +197,11 @@ export function useSaveChatFlowBlocks() {
         .single();
       
       if (error) throw error;
-      return parseChatFlow(data);
+      return parseChatFlow(fecha);
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['chat-flows', data.product_id] });
-      queryClient.invalidateQueries({ queryKey: ['chat-flow', data.id] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['chat-flows', fecha.product_id] });
+      queryClient.invalidateQueries({ queryKey: ['chat-flow', fecha.id] });
       toast.success('Flujo guardado!');
     },
     onError: (error: Error) => {
@@ -216,7 +216,7 @@ export function useToggleChatFlowActive() {
   
   return useMutation({
     mutationFn: async (params: { flowId: string; isActive: boolean; productId: string }) => {
-      // Se ativando, desativar outros flujos do produto primeiro
+      // Se ativando, desativar outros flujos do producto primeiro
       if (params.isActive) {
         await supabase
           .from('chat_flows')
@@ -225,7 +225,7 @@ export function useToggleChatFlowActive() {
           .neq('id', params.flowId);
       }
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('chat_flows')
         .update({ 
           is_active: params.isActive,
@@ -236,13 +236,13 @@ export function useToggleChatFlowActive() {
         .single();
       
       if (error) throw error;
-      return parseChatFlow(data);
+      return parseChatFlow(fecha);
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['chat-flows', data.product_id] });
-      queryClient.invalidateQueries({ queryKey: ['chat-flow', data.id] });
-      queryClient.invalidateQueries({ queryKey: ['chat-flow-active', data.product_id] });
-      toast.success(data.is_active ? 'Flujo ativado!' : 'Flujo desativado!');
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['chat-flows', fecha.product_id] });
+      queryClient.invalidateQueries({ queryKey: ['chat-flow', fecha.id] });
+      queryClient.invalidateQueries({ queryKey: ['chat-flow-active', fecha.product_id] });
+      toast.success(fecha.is_active ? 'Flujo ativado!' : 'Flujo desativado!');
     },
     onError: (error: Error) => {
       toast.error('Error al cambiar status: ' + error.message);
@@ -282,7 +282,7 @@ export function useDuplicateChatFlow() {
   return useMutation({
     mutationFn: async (flowId: string) => {
       // Buscar flujo original
-      const { data: original, error: fetchError } = await supabase
+      const { fecha: original, error: fetchError } = await supabase
         .from('chat_flows')
         .select('*')
         .eq('id', flowId)
@@ -291,7 +291,7 @@ export function useDuplicateChatFlow() {
       if (fetchError) throw fetchError;
       
       // Criar cópia
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('chat_flows')
         .insert({
           product_id: original.product_id,
@@ -309,10 +309,10 @@ export function useDuplicateChatFlow() {
         .single();
       
       if (error) throw error;
-      return parseChatFlow(data);
+      return parseChatFlow(fecha);
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['chat-flows', data.product_id] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['chat-flows', fecha.product_id] });
       toast.success('Flujo duplicado!');
     },
     onError: (error: Error) => {

@@ -62,10 +62,10 @@ export function StageManagerDialog({
   const deleteStage = useDeletePipelineStage();
 
   // Fetch lead counts per stage
-  const { data: leadCounts = {} } = useQuery({
+  const { fecha: leadCounts = {} } = useQuery({
     queryKey: ['lead-counts-by-stage', productId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('leads')
         .select('current_stage_id')
         .eq('product_id', productId);
@@ -73,7 +73,7 @@ export function StageManagerDialog({
       if (error) throw error;
 
       const counts: Record<string, number> = {};
-      data?.forEach((lead) => {
+      fecha?.forEach((lead) => {
         if (lead.current_stage_id) {
           counts[lead.current_stage_id] = (counts[lead.current_stage_id] || 0) + 1;
         }
@@ -149,37 +149,37 @@ export function StageManagerDialog({
       onRefresh?.();
     } catch (error) {
       console.error('Error saving order:', error);
-      toast.error('Erro ao salvar ordem');
+      toast.error('Error ao guardar ordem');
     } finally {
       setIsSavingOrder(false);
     }
   };
 
-  const handleSaveStage = async (data: Partial<Stage> & { id?: string }) => {
+  const handleSaveStage = async (fecha: Partial<Stage> & { id?: string }) => {
     try {
-      if (data.id) {
+      if (fecha.id) {
         // Update existing
         await updateStage.mutateAsync({
-          id: data.id,
-          name: data.name,
-          description: data.description,
-          color: data.color,
-          is_won: data.is_won,
-          is_lost: data.is_lost,
+          id: fecha.id,
+          name: fecha.name,
+          description: fecha.description,
+          color: fecha.color,
+          is_won: fecha.is_won,
+          is_lost: fecha.is_lost,
         });
-        toast.success('Etapa atualizada!');
+        toast.success('Etapa actualizada!');
       } else {
         // Create new
         await createStage.mutateAsync({
           product_id: productId,
-          name: data.name!,
-          description: data.description || null,
-          color: data.color || '#6b7280',
-          order_index: data.order_index || localStages.length + 1,
-          is_won: data.is_won || false,
-          is_lost: data.is_lost || false,
+          name: fecha.name!,
+          description: fecha.description || null,
+          color: fecha.color || '#6b7280',
+          order_index: fecha.order_index || localStages.length + 1,
+          is_won: fecha.is_won || false,
+          is_lost: fecha.is_lost || false,
         });
-        toast.success('Etapa criada!');
+        toast.success('Etapa creada!');
       }
 
       setEditingStage(null);
@@ -187,7 +187,7 @@ export function StageManagerDialog({
       onRefresh?.();
     } catch (error) {
       console.error('Error saving stage:', error);
-      toast.error('Erro ao salvar etapa');
+      toast.error('Error ao guardar etapa');
     }
   };
 
@@ -204,11 +204,11 @@ export function StageManagerDialog({
   const handleSaveFromRef = async () => {
     if (!formRef.current) return;
     if (!formRef.current.isValid()) {
-      toast.error('Preencha o nome da etapa');
+      toast.error('Preencha o nombre da etapa');
       return;
     }
-    const data = formRef.current.getData();
-    await handleSaveStage(data);
+    const fecha = formRef.current.getData();
+    await handleSaveStage(fecha);
   };
 
   const nextOrderIndex = localStages.length + 1;
@@ -228,7 +228,7 @@ export function StageManagerDialog({
             )}
           </DialogTitle>
           <DialogDescription className="text-sm">
-            Configure as etapas do seu funil de vendas
+            Configure as etapas do su embudo de ventas
           </DialogDescription>
         </DialogHeader>
 
@@ -299,7 +299,7 @@ export function StageManagerDialog({
             {localStages.length === 0 && !isAddingNew && (
               <div className="text-center py-8 text-muted-foreground">
                 <p>Nenhuma etapa configurada.</p>
-                <p className="text-sm">Clique em "Nueva Etapa" para começar.</p>
+                <p className="text-sm">Hacé clic em "Nueva Etapa" para comenzar.</p>
               </div>
             )}
           </div>

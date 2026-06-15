@@ -43,43 +43,43 @@ export function useBookingByToken(token: string | undefined) {
     queryFn: async (): Promise<BookingDetails | null> => {
       if (!token) return null;
 
-      // Use SECURITY DEFINER RPC instead of direct table read.
+      // Usa SECURITY DEFINER RPC instead of direct table read.
       // The RPC validates the token server-side, preventing any anonymous
       // enumeration of booking PII.
-      const { data: rows, error } = await supabase
+      const { fecha: rows, error } = await supabase
         .rpc('get_booking_by_token', { p_token: token });
 
       if (error) throw error;
-      const data = Array.isArray(rows) ? rows[0] : rows;
-      if (!data) return null;
+      const fecha = Array.isArray(rows) ? rows[0] : rows;
+      if (!fecha) return null;
 
-      // Fetch related data
+      // Fetch related fecha
       const [eventTypeResult, hostResult, calendarEventResult] = await Promise.all([
         supabase
           .from('booking_event_types')
           .select('id, name, description, duration_minutes, color, location_type, thank_you_title, thank_you_message, what_happens, next_steps')
-          .eq('id', data.event_type_id)
+          .eq('id', fecha.event_type_id)
           .maybeSingle(),
         supabase
           .from('profiles')
           .select('id, full_name, avatar_url')
-          .eq('id', data.host_user_id)
+          .eq('id', fecha.host_user_id)
           .maybeSingle(),
-        data.calendar_event_id
+        fecha.calendar_event_id
           ? supabase
               .from('calendar_events')
               .select('id, meet_link')
-              .eq('id', data.calendar_event_id)
+              .eq('id', fecha.calendar_event_id)
               .maybeSingle()
-          : Promise.resolve({ data: null, error: null }),
+          : Promise.resolve({ fecha: null, error: null }),
       ]);
 
       return {
-        ...data,
-        additional_info: (data.additional_info as Record<string, unknown>) || {},
-        event_type: eventTypeResult.data,
-        host_profile: hostResult.data,
-        calendar_event: calendarEventResult.data,
+        ...fecha,
+        additional_info: (fecha.additional_info as Record<string, unknown>) || {},
+        event_type: eventTypeResult.fecha,
+        host_profile: hostResult.fecha,
+        calendar_event: calendarEventResult.fecha,
       };
     },
     enabled: !!token,
@@ -136,7 +136,7 @@ export function useCancelBookingByToken() {
     },
     onError: (error: Error) => {
       console.error('Error cancelling:', error);
-      toast.error('Erro ao cancelar');
+      toast.error('Error ao cancelar');
     },
   });
 }

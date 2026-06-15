@@ -15,7 +15,7 @@ import type { ProductAgent } from '@/types/agents';
 interface AgentImportModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  // Quando informado, importa já vinculado a este produto (sem mostrar seletor)
+  // Quando informado, importa ya vinculado a este producto (sem mostrar seletor)
   fixedProductId?: string | null;
   // Após gerar a partir de documento, abre o editor com o rascunho
   onDraftReady?: (draft: Partial<ProductAgent>, productId: string | null) => void;
@@ -131,9 +131,9 @@ function flattenNestedAgent(raw: Record<string, unknown>): Record<string, unknow
 
   const product = (r.product ?? {}) as Record<string, unknown>;
   if (Object.keys(product).length) {
-    const lines: string[] = ['# Produto'];
-    if (product.name) lines.push(`Nome: ${product.name}`);
-    if (product.one_sentence_description) lines.push(`Descrição: ${product.one_sentence_description}`);
+    const lines: string[] = ['# Producto'];
+    if (product.name) lines.push(`Nombre: ${product.name}`);
+    if (product.one_sentence_description) lines.push(`Descripción: ${product.one_sentence_description}`);
     if (product.positioning) lines.push(`Posicionamento: ${product.positioning}`);
     if (product.main_angle) lines.push(`Ângulo principal: ${product.main_angle}`);
     if (Array.isArray(product.core_beliefs)) lines.push(`Crenças centrais:\n- ${(product.core_beliefs as string[]).join('\n- ')}`);
@@ -141,7 +141,7 @@ function flattenNestedAgent(raw: Record<string, unknown>): Record<string, unknow
     if (Array.isArray(product.main_pains)) lines.push(`Principais dores:\n- ${(product.main_pains as string[]).join('\n- ')}`);
     if (Array.isArray(product.desired_transformation)) lines.push(`Transformação desejada:\n- ${(product.desired_transformation as string[]).join('\n- ')}`);
     if (Array.isArray(product.features)) lines.push(`Features:\n- ${(product.features as string[]).join('\n- ')}`);
-    if (product.sales_page_url) lines.push(`Página de vendas: ${product.sales_page_url}`);
+    if (product.sales_page_url) lines.push(`Página de ventas: ${product.sales_page_url}`);
     if (product.checkout_url) lines.push(`Checkout: ${product.checkout_url}`);
     sections.push(lines.join('\n'));
   }
@@ -154,7 +154,7 @@ function flattenNestedAgent(raw: Record<string, unknown>): Record<string, unknow
 
   const sales_flow = (r.sales_flow ?? {}) as Record<string, unknown>;
   if (Object.keys(sales_flow).length) {
-    const lines = ['# Fluxo de Vendas'];
+    const lines = ['# Flujo de Vendas'];
     for (const [k, v] of Object.entries(sales_flow)) lines.push(`- ${k}: ${v}`);
     sections.push(lines.join('\n'));
   }
@@ -168,10 +168,10 @@ function flattenNestedAgent(raw: Record<string, unknown>): Record<string, unknow
 
   const qualification = (r.qualification ?? {}) as Record<string, unknown>;
   if (Array.isArray(qualification.questions)) {
-    sections.push(`# Perguntas de qualificação\n- ${(qualification.questions as string[]).join('\n- ')}`);
+    sections.push(`# Perguntas de calificación\n- ${(qualification.questions as string[]).join('\n- ')}`);
   }
   if (qualification.lead_temperature) {
-    sections.push(`# Temperatura do lead\n${JSON.stringify(qualification.lead_temperature, null, 2)}`);
+    sections.push(`# Temperatura del lead\n${JSON.stringify(qualification.lead_temperature, null, 2)}`);
   }
 
   const follow_up = (r.follow_up ?? {}) as Record<string, unknown>;
@@ -180,7 +180,7 @@ function flattenNestedAgent(raw: Record<string, unknown>): Record<string, unknow
   }
 
   if (Array.isArray(r.closing_examples)) {
-    sections.push(`# Exemplos de fechamento\n${JSON.stringify(r.closing_examples, null, 2)}`);
+    sections.push(`# Exemplos de cierre\n${JSON.stringify(r.closing_examples, null, 2)}`);
   }
 
   if (Array.isArray(tone.personality)) sections.push(`Personalidade: ${(tone.personality as string[]).join(', ')}`);
@@ -215,7 +215,7 @@ function sanitizeAgentJson(raw: unknown): Partial<ProductAgent> {
     out[k] = v;
   }
   if (typeof out.name !== 'string' || !out.name.trim()) {
-    throw new Error('Campo obrigatório: name');
+    throw new Error('Campo obligatorio: name');
   }
   if (typeof out.primary_objective !== 'string') out.primary_objective = '';
   if (typeof out.agent_type !== 'string') out.agent_type = 'custom';
@@ -223,7 +223,7 @@ function sanitizeAgentJson(raw: unknown): Partial<ProductAgent> {
 }
 
 export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftReady }: AgentImportModalProps) {
-  const { data: products } = useProducts();
+  const { fecha: products } = useProducts();
   const createAgent = useCreateAgent();
 
   const [tab, setTab] = useState<'json' | 'doc'>('json');
@@ -285,7 +285,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
       { ...jsonPreview, product_id: finalProductId, is_default: false } as Partial<ProductAgent>,
       {
         onSuccess: () => {
-          toast.success('Agente importado com sucesso!');
+          toast.success('Agente importado com éxito!');
           close(false);
         },
         onSettled: () => setBusy(false),
@@ -296,11 +296,11 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
   const handleDocFile = (file: File) => {
     const ext = '.' + file.name.split('.').pop()?.toLowerCase();
     if (!ALLOWED_DOC_EXT.includes(ext)) {
-      toast.error('Formato não suportado. Use PDF, DOCX, TXT ou Markdown.');
+      toast.error('Formato no suportado. Usa PDF, DOCX, TXT ou Markdown.');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('Arquivo acima de 5 MB.');
+      toast.error('Archivo acima de 5 MB.');
       return;
     }
     setDocFile(file);
@@ -311,7 +311,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
     setBusy(true);
     try {
       const file_base64 = await fileToBase64(docFile);
-      const { data, error } = await supabase.functions.invoke('import-agent-from-document', {
+      const { fecha, error } = await supabase.functions.invoke('import-agent-from-document', {
         body: {
           filename: docFile.name,
           mime_type: docFile.type,
@@ -320,11 +320,11 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
         },
       });
       if (error) throw error;
-      if (!data?.agent) throw new Error('Resposta inválida da IA');
+      if (!fecha?.agent) throw new Error('Resposta inválida da IA');
 
       const finalProductId = (fixedProductId ?? null) || (productId === '__global__' ? null : productId);
       const draft: Partial<ProductAgent> = {
-        ...data.agent,
+        ...fecha.agent,
         agent_type: docAgentType as ProductAgent['agent_type'],
         product_id: finalProductId,
       };
@@ -334,10 +334,10 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
         toast.success('Rascunho gerado! Revise e salve.');
         close(false);
       } else {
-        // Cai direto no insert se ninguém quer revisar
+        // Cai direto no insert se ninguém quiere revisar
         createAgent.mutate(draft, {
           onSuccess: () => {
-            toast.success('Agente importado com sucesso!');
+            toast.success('Agente importado com éxito!');
             close(false);
           },
         });
@@ -392,8 +392,8 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
               />
               <label htmlFor="agent-json-input" className="cursor-pointer flex flex-col items-center gap-2">
                 <UploadCloud className="h-8 w-8 text-muted-foreground" />
-                <span className="text-sm font-medium">{jsonFile?.name ?? 'Selecionar arquivo .json'}</span>
-                <span className="text-xs text-muted-foreground">Use o "Exportar JSON" de outro agente</span>
+                <span className="text-sm font-medium">{jsonFile?.name ?? 'Selecionar archivo .json'}</span>
+                <span className="text-xs text-muted-foreground">Usa o "Exportar JSON" de otro agente</span>
               </label>
             </Card>
 
@@ -419,9 +419,9 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
               <Card className="p-4 space-y-1">
                 <div className="flex items-center gap-2 text-success">
                   <CheckCircle2 className="h-4 w-4" />
-                  <span className="text-sm font-medium">Arquivo válido</span>
+                  <span className="text-sm font-medium">Archivo válido</span>
                 </div>
-                <div className="text-sm"><strong>Nome:</strong> {String(jsonPreview.name)}</div>
+                <div className="text-sm"><strong>Nombre:</strong> {String(jsonPreview.name)}</div>
                 <div className="text-sm"><strong>Tipo:</strong> {String(jsonPreview.agent_type)}</div>
                 {jsonPreview.description && (
                   <div className="text-xs text-muted-foreground line-clamp-2">{String(jsonPreview.description)}</div>
@@ -437,7 +437,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
 
           <TabsContent value="doc" className="space-y-4">
             <div className="space-y-2">
-              <Label>Tipo do agente a criar</Label>
+              <Label>Tipo del agente a crear</Label>
               <Select value={docAgentType} onValueChange={setDocAgentType}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -462,14 +462,14 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
               />
               <label htmlFor="agent-doc-input" className="cursor-pointer flex flex-col items-center gap-2">
                 <UploadCloud className="h-8 w-8 text-muted-foreground" />
-                <span className="text-sm font-medium">{docFile?.name ?? 'Selecionar arquivo'}</span>
+                <span className="text-sm font-medium">{docFile?.name ?? 'Selecionar archivo'}</span>
                 <span className="text-xs text-muted-foreground">PDF, DOCX, TXT ou MD · até 5 MB</span>
               </label>
             </Card>
 
             <p className="text-xs text-muted-foreground">
-              A IA lê o conteúdo e gera um rascunho do agente (nome, missão, regras, tom, gatilhos).
-              Você revisa antes de salvar.
+              A IA lê o conteúdo e gera um rascunho del agente (nombre, missão, regras, tom, gatilhos).
+              Usted revisa antes de guardar.
             </p>
           </TabsContent>
         </Tabs>

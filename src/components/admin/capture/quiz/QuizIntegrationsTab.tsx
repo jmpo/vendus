@@ -39,9 +39,9 @@ const DEFAULT_ACTIONS: PostQuizActions = {
 
 export function QuizIntegrationsTab({ funnel }: Props) {
   const updateFunnel = useUpdateFunnel();
-  const { data: agents } = useAllAgents();
+  const { fecha: agents } = useAllAgents();
   const { cadences } = useCadences();
-  const { data: tags } = useLeadTags();
+  const { fecha: tags } = useLeadTags();
 
   const initialActions: PostQuizActions = {
     ...DEFAULT_ACTIONS,
@@ -71,7 +71,7 @@ export function QuizIntegrationsTab({ funnel }: Props) {
       post_quiz_cadence_id: cadenceId || null,
       post_quiz_actions: actions,
     } as any);
-    toast.success('Integrações pós-quiz salvas');
+    toast.success('Integraciones pós-quiz salvas');
   };
 
   const selectedTags = (tags || []).filter(t => actions.apply_tag_ids.includes(t.id));
@@ -82,10 +82,10 @@ export function QuizIntegrationsTab({ funnel }: Props) {
         <div>
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Integrações Inteligentes
+            Integraciones Inteligentes
           </h2>
           <p className="text-muted-foreground text-sm">
-            Conecte o quiz ao CRM: vincule um Agente IA, dispare cadências e qualifique automaticamente.
+            Conecte o quiz ao CRM: vincule um Agente IA, dispare cadencias e qualifique automaticamente.
           </p>
         </div>
         <Button onClick={handleSave} disabled={updateFunnel.isPending} className="gap-2">
@@ -101,7 +101,7 @@ export function QuizIntegrationsTab({ funnel }: Props) {
             <Bot className="h-4 w-4 text-primary" /> Agente IA pós-quiz
           </CardTitle>
           <CardDescription>
-            Vincule um agente para continuar a conversa, qualificar e agendar reuniões logo após o quiz.
+            Vincule um agente para continuar a conversación, calificar e agendar reuniões logo após o quiz.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -119,7 +119,7 @@ export function QuizIntegrationsTab({ funnel }: Props) {
           </Select>
           {agentId && (
             <p className="text-xs text-muted-foreground">
-              O agente receberá o contexto completo do quiz (respostas, score, tags) na primeira interação inbound do lead.
+              O agente receberá o contexto completo do quiz (respuestas, score, tags) na primeira interação inbound del lead.
             </p>
           )}
         </CardContent>
@@ -129,16 +129,16 @@ export function QuizIntegrationsTab({ funnel }: Props) {
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <Repeat className="h-4 w-4 text-primary" /> Cadência Inteligente
+            <Repeat className="h-4 w-4 text-primary" /> Cadencia Inteligente
           </CardTitle>
           <CardDescription>
-            Inscreve automaticamente todo lead que concluir o quiz numa sequência de mensagens.
+            Inscreve automaticamente todo lead que concluir o quiz numa secuencia de mensajes.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          <Label>Cadência</Label>
+          <Label>Cadencia</Label>
           <Select value={cadenceId || 'none'} onValueChange={(v) => setCadenceId(v === 'none' ? '' : v)}>
-            <SelectTrigger><SelectValue placeholder="Nenhuma cadência" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Nenhuma cadencia" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="none">Nenhuma</SelectItem>
               {activeCadences.map((c: any) => (
@@ -153,10 +153,10 @@ export function QuizIntegrationsTab({ funnel }: Props) {
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <Flame className="h-4 w-4 text-orange-500" /> Qualificação Automática
+            <Flame className="h-4 w-4 text-orange-500" /> Calificación Automática
           </CardTitle>
           <CardDescription>
-            Define a temperatura do lead com base no score do quiz.
+            Define a temperatura del lead com base no score do quiz.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -191,7 +191,7 @@ export function QuizIntegrationsTab({ funnel }: Props) {
             <TagIcon className="h-4 w-4 text-primary" /> Tags fixas
           </CardTitle>
           <CardDescription>
-            Tags aplicadas a todo lead que concluir o quiz (além das tags dinâmicas das respostas).
+            Tags aplicadas a todo lead que concluir o quiz (além das tags dinâmicas das respuestas).
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -228,7 +228,7 @@ export function QuizIntegrationsTab({ funnel }: Props) {
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-sm">Criar oportunidade no pipeline</Label>
+              <Label className="text-sm">Criar oportunidad no pipeline</Label>
               <p className="text-xs text-muted-foreground">Move o lead diretamente para o primeiro estágio com um deal aberto.</p>
             </div>
             <Switch
@@ -238,8 +238,8 @@ export function QuizIntegrationsTab({ funnel }: Props) {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-sm flex items-center gap-1"><Bell className="h-3 w-3" /> Notificar dono do lead</Label>
-              <p className="text-xs text-muted-foreground">Envia notificação interna quando um novo lead conclui o quiz.</p>
+              <Label className="text-sm flex items-center gap-1"><Bell className="h-3 w-3" /> Notificar dono del lead</Label>
+              <p className="text-xs text-muted-foreground">Envia notificación interna cuando um novo lead conclui o quiz.</p>
             </div>
             <Switch
               checked={actions.notify_owner}

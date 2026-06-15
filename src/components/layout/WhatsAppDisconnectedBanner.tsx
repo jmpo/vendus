@@ -6,21 +6,21 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 
 /**
- * Banner global de alerta quando a empresa tem instâncias Evolution
- * configuradas, mas nenhuma está `connected`. Aparece pra qualquer
- * usuário da org — assim quem comprou via Doppus/Cakto/Hotmart e ficou
- * sem mensagem de pós-venda dispara o alerta.
+ * Banner global de alerta cuando a empresa tiene instâncias Evolution
+ * configuradas, mas ninguna está `connected`. Aparece pra qualquer
+ * usuario da org — assim quem comprou via Doppus/Cakto/Hotmart e ficou
+ * sem mensaje de pós-venta dispara o alerta.
  */
 export function WhatsAppDisconnectedBanner() {
   const { profile, roles } = useAuth();
   const navigate = useNavigate();
   const orgId = profile?.organization_id;
 
-  const { data } = useQuery({
+  const { fecha } = useQuery({
     queryKey: ['evolution-instances-health', orgId],
     queryFn: async () => {
       if (!orgId) return { total: 0, connected: 0 };
-      const { data: rows } = await supabase
+      const { fecha: rows } = await supabase
         .from('evolution_instances')
         .select('status')
         .eq('organization_id', orgId);
@@ -33,7 +33,7 @@ export function WhatsAppDisconnectedBanner() {
     staleTime: 30_000,
   });
 
-  if (!data || data.total === 0 || data.connected > 0) return null;
+  if (!fecha || fecha.total === 0 || fecha.connected > 0) return null;
 
   const canManage = roles.includes('admin') || roles.includes('manager');
 
@@ -43,7 +43,7 @@ export function WhatsAppDisconnectedBanner() {
       <div className="flex-1 text-sm">
         <span className="font-medium text-destructive">WhatsApp desconectado.</span>{' '}
         <span className="text-foreground/80">
-          Mensagens automáticas de pós-venda e atendimento não estão sendo enviadas.
+          Mensagens automáticas de pós-venta e atención no estão siendo enviadas.
           {canManage ? ' Reconecte a instância para retomar.' : ' Avise um admin.'}
         </span>
       </div>

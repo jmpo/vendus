@@ -34,7 +34,7 @@ const FEATURE_LABELS: Record<string, string> = {
   feature_pipeline: 'Pipeline de ventas',
   feature_scheduling: 'Agendamientos',
   feature_campaigns: 'Campanhas',
-  feature_outreach: 'Cadência de follow-up',
+  feature_outreach: 'Cadencia de follow-up',
   feature_ai_agents: 'Agentes de IA',
   feature_voice_agents: 'Agentes de voz',
   feature_audio_transcription_ai: 'Transcrição de áudio IA',
@@ -42,7 +42,7 @@ const FEATURE_LABELS: Record<string, string> = {
   feature_capture_funnels: 'Funis de captura',
   feature_forms: 'Formulários',
   feature_external_api: 'API externa',
-  feature_integrations: 'Integrações nativas',
+  feature_integrations: 'Integraciones nativas',
   feature_webhooks: 'Webhooks',
 };
 
@@ -84,8 +84,8 @@ function PlanCardSkeleton() {
 
 export function PlanSelector() {
   const { profile } = useAuth();
-  const { data: plans, isLoading } = useActivePlans();
-  const { data: effective } = useOrganizationEffectivePlan(profile?.organization_id);
+  const { fecha: plans, isLoading } = useActivePlans();
+  const { fecha: effective } = useOrganizationEffectivePlan(profile?.organization_id);
   const [cycle, setCycle] = useState<BillingCycle>('monthly');
 
   const visiblePlans = useMemo(
@@ -95,7 +95,7 @@ export function PlanSelector() {
 
   const currentPlanId = effective?.plan_id || null;
 
-  // Para comparar upgrade/downgrade, usamos sempre o mesmo ciclo selecionado
+  // Para comparar upgrade/downgrade, usamos siempre o mismo ciclo selecionado
   const getPrice = (p: PlatformPlan) =>
     cycle === 'yearly' ? p.price_yearly : p.price_monthly;
 
@@ -208,7 +208,7 @@ export function PlanSelector() {
         </div>
       </div>
 
-      {/* Badge plano ativo */}
+      {/* Badge plan ativo */}
       {effective?.plan_name && currentPlanId && (
         <div className="flex justify-center mb-8">
           <Badge className="bg-emerald-500 hover:bg-emerald-500 text-white px-4 py-2 text-sm rounded-full">
@@ -248,8 +248,8 @@ export function PlanSelector() {
               { icon: Layers,        label: 'Setores',         value: plan.max_sectors },
               { icon: Package,       label: 'Produtos',        value: plan.max_products },
               { icon: Contact,       label: 'Contatos',        value: plan.max_contacts },
-              { icon: MessageSquare, label: 'Mensagens/mês',   value: plan.max_messages_month },
-              { icon: Brain,         label: 'Tokens IA/mês',   value: plan.max_ai_tokens_month },
+              { icon: MessageSquare, label: 'Mensagens/mes',   value: plan.max_messages_month },
+              { icon: Brain,         label: 'Tokens IA/mes',   value: plan.max_ai_tokens_month },
             ];
 
             return (
@@ -286,30 +286,30 @@ export function PlanSelector() {
                   </div>
                 </div>
 
-                {/* Nome */}
+                {/* Nombre */}
                 <h3 className="text-xl font-bold text-center mb-2">{plan.name}</h3>
 
                 {/* Preço */}
                 <div className="text-center mb-1">
                   <span className="text-3xl font-bold">{formatPrice(price)}</span>
                   <span className="text-muted-foreground text-sm ml-1">
-                    {cycle === 'yearly' ? '/ano' : '/mês'}
+                    {cycle === 'yearly' ? '/ano' : '/mes'}
                   </span>
                 </div>
                 {monthlyEquivalent !== null && monthlyEquivalent > 0 && (
                   <p className="text-xs text-muted-foreground text-center mb-2">
-                    equivale a {formatPrice(monthlyEquivalent)}/mês
+                    equivale a {formatPrice(monthlyEquivalent)}/mes
                   </p>
                 )}
 
-                {/* Descrição */}
+                {/* Descripción */}
                 {plan.description && (
                   <p className="text-sm text-muted-foreground text-center mb-5 min-h-[2.5rem]">
                     {plan.description}
                   </p>
                 )}
 
-                {/* Limites do plano */}
+                {/* Limites do plan */}
                 <div className={cn('rounded-xl p-4 mb-5', theme.soft)}>
                   <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">
                     Qué está incluido

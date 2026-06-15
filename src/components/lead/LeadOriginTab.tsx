@@ -21,7 +21,7 @@ interface LeadOriginTabProps {
 }
 
 export function LeadOriginTab({ leadId }: LeadOriginTabProps) {
-  const { data: tracking, isLoading } = useLeadTracking(leadId);
+  const { fecha: tracking, isLoading } = useLeadTracking(leadId);
 
   if (isLoading) {
     return (

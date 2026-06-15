@@ -64,10 +64,10 @@ export function InboxFiltersDrawer({
   trigger,
 }: InboxFiltersDrawerProps) {
   const { profile } = useAuth();
-  const { data: sectors = [] } = useSectors();
-  const { data: tags = [] } = useLeadTags();
-  const { data: members = [] } = useTeamMembers(profile?.organization_id);
-  const { data: products = [] } = useProducts();
+  const { fecha: sectors = [] } = useSectors();
+  const { fecha: tags = [] } = useLeadTags();
+  const { fecha: members = [] } = useTeamMembers(profile?.organization_id);
+  const { fecha: products = [] } = useProducts();
 
   const [section, setSection] = useState<Section>('root');
   const [subSearch, setSubSearch] = useState('');
@@ -165,7 +165,7 @@ export function InboxFiltersDrawer({
     </button>
   );
 
-  // Linha de opção dentro de uma sub-tela (com checkbox)
+  // Linha de opción dentro de uma sub-tela (com checkbox)
   const OptionRow = ({
     label,
     checked,
@@ -232,7 +232,7 @@ export function InboxFiltersDrawer({
             <ScrollArea className="flex-1">
               <CategoryRow label="Producto" count={counts.product} onClick={() => setSection('product')} />
               <CategoryRow label="Etiqueta" count={counts.tag} onClick={() => setSection('tag')} />
-              <CategoryRow label="Setor" count={counts.sector} onClick={() => setSection('sector')} />
+              <CategoryRow label="Sector" count={counts.sector} onClick={() => setSection('sector')} />
               {isAdmin && (
                 <CategoryRow label="Usuario" count={counts.user} onClick={() => setSection('user')} />
               )}

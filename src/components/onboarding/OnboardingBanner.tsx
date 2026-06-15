@@ -6,7 +6,7 @@ import { useGuidedOnboarding } from '@/hooks/useGuidedOnboarding';
 
 /**
  * Tarja amarela persistente que aparece no painel admin enquanto
- * o onboarding guiado não foi concluído. O botão X apenas oculta
+ * o onboarding guiado no fue concluído. O botão X apenas oculta
  * a tarja na sessão atual — ela retorna em novos acessos até a
  * conclusão definitiva.
  */
@@ -16,7 +16,7 @@ export function OnboardingBanner() {
   const [openWizard, setOpenWizard] = useState(false);
 
   if (!shouldShow || dismissedThisSession) {
-    // Mesmo oculto, ainda renderizamos o wizard caso esteja aberto.
+    // Mesmo oculto, aún renderizamos o wizard caso esteja aberto.
     if (openWizard) {
       return (
         <GuidedOnboarding
@@ -27,7 +27,7 @@ export function OnboardingBanner() {
             setOpenWizard(false);
           }}
           onSkipAll={() => {
-            // Não marca como pulado permanentemente — apenas fecha o wizard.
+            // No marca como pulado permanentemente — apenas fecha o wizard.
             // A tarja continuará aparecendo até a conclusão definitiva.
             setOpenWizard(false);
           }}
@@ -46,7 +46,7 @@ export function OnboardingBanner() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-yellow-900 dark:text-yellow-100">
-              Conclua a configuração inicial da sua conta
+              Conclua a configuración inicial da su cuenta
             </p>
             <p className="text-xs text-yellow-800/80 dark:text-yellow-200/80 hidden sm:block">
               Termine o cadastro guiado para liberar todo o potencial da plataforma.
@@ -79,7 +79,7 @@ export function OnboardingBanner() {
             setOpenWizard(false);
           }}
           onSkipAll={() => {
-            // Não marca como pulado permanentemente.
+            // No marca como pulado permanentemente.
             setOpenWizard(false);
           }}
         />

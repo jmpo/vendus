@@ -38,9 +38,9 @@ interface WebhookEditorProps {
 }
 
 export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
-  const { data: webhook, isLoading } = useWebhook(webhookId);
-  const { data: samples } = useWebhookSamples(webhookId);
-  const { data: squads } = useSquads();
+  const { fecha: webhook, isLoading } = useWebhook(webhookId);
+  const { fecha: samples } = useWebhookSamples(webhookId);
+  const { fecha: squads } = useSquads();
   const updateWebhook = useUpdateWebhook();
   
   const [activeTab, setActiveTab] = useState('config');
@@ -84,7 +84,7 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
       id: webhookId,
       squad_id: squadId || undefined
     });
-    toast.success(squadId ? 'Squad de destino configurado!' : 'Squad removido');
+    toast.success(squadId ? 'Squad de destino configurado!' : 'Squad eliminado');
   };
 
 
@@ -264,8 +264,8 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
           <CardContent className="py-4">
             <p className="text-sm font-semibold text-destructive">⚠️ Webhook sin producto vinculado</p>
             <p className="text-xs text-muted-foreground mt-1">
-              Leads criados por este webhook não terão pipeline stage, não aparecerão no Kanban e ações como "Agente IA" não funcionarão. 
-              Configure um produto nas ações de "Criar Lead" ou vincule um produto ao webhook.
+              Leads criados por este webhook no terão pipeline stage, no aparecerão no Kanban e acciones como "Agente IA" no funcionarão. 
+              Configure um producto nas acciones de "Criar Lead" ou vincule um producto ao webhook.
             </p>
           </CardContent>
         </Card>

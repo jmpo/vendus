@@ -37,7 +37,7 @@ export interface CalendarEvent {
   created_by: string | null;
   meet_link: string | null;
   create_meet: boolean;
-  // Joined data
+  // Joined fecha
   lead?: { id: string; name: string } | null;
   product?: { id: string; name: string } | null;
   user?: { id: string; full_name: string } | null;
@@ -107,10 +107,10 @@ export function useCalendarEvents(filters: CalendarFilters) {
         query = query.eq('event_type', filters.eventType);
       }
 
-      const { data, error } = await query;
+      const { fecha, error } = await query;
 
       if (error) throw error;
-      return (data || []) as CalendarEvent[];
+      return (fecha || []) as CalendarEvent[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -126,7 +126,7 @@ export function useUpcomingEvents(days: number = 7) {
     queryFn: async () => {
       if (!user?.id) return [];
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('calendar_events')
         .select(`
           *,
@@ -140,7 +140,7 @@ export function useUpcomingEvents(days: number = 7) {
         .limit(10);
 
       if (error) throw error;
-      return (data || []) as CalendarEvent[];
+      return (fecha || []) as CalendarEvent[];
     },
     enabled: !!user?.id,
   });
@@ -152,15 +152,15 @@ export function useCreateEvent() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (data: CreateEventData) => {
+    mutationFn: async (fecha: CreateEventData) => {
       if (!user?.id || !profile?.organization_id) {
         throw new Error('Usuario no autenticado');
       }
 
-      const { data: event, error } = await supabase
+      const { fecha: event, error } = await supabase
         .from('calendar_events')
         .insert({
-          ...data,
+          ...fecha,
           user_id: user.id,
           organization_id: profile.organization_id,
           created_by: user.id,
@@ -177,7 +177,7 @@ export function useCreateEvent() {
         .eq('user_id', user.id)
         .eq('is_active', true)
         .maybeSingle()
-        .then(({ data: conn }) => {
+        .then(({ fecha: conn }) => {
           if (conn) {
             supabase.functions
               .invoke('google-calendar-sync', { body: { userId: user.id, direction: 'export', daysAhead: 60 } })
@@ -210,10 +210,10 @@ export function useUpdateEvent() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async ({ id, ...data }: Partial<CreateEventData> & { id: string }) => {
-      const { data: event, error } = await supabase
+    mutationFn: async ({ id, ...fecha }: Partial<CreateEventData> & { id: string }) => {
+      const { fecha: event, error } = await supabase
         .from('calendar_events')
-        .update(data)
+        .update(fecha)
         .eq('id', id)
         .select()
         .single();
@@ -228,7 +228,7 @@ export function useUpdateEvent() {
           .eq('user_id', event.user_id)
           .eq('is_active', true)
           .maybeSingle()
-          .then(({ data: conn }) => {
+          .then(({ fecha: conn }) => {
             if (conn) {
               supabase.functions
                 .invoke('google-calendar-sync', { body: { userId: event.user_id, direction: 'export', daysAhead: 60 } })
@@ -275,7 +275,7 @@ export function useDeleteEvent() {
       queryClient.invalidateQueries({ queryKey: ['upcoming-events'] });
       toast({
         title: 'Evento eliminado',
-        description: 'O evento foi eliminado da agenda.',
+        description: 'O evento fue eliminado da agenda.',
       });
     },
     onError: (error) => {

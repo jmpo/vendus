@@ -46,13 +46,13 @@ export function useHotmartCredentials() {
   return useQuery({
     queryKey: ['hotmart-credentials', profile?.organization_id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('hotmart_credentials')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
         .maybeSingle();
       if (error && error.code !== 'PGRST116') throw error;
-      return (data as HotmartCredentials | null) ?? null;
+      return (fecha as HotmartCredentials | null) ?? null;
     },
     enabled: !!profile?.organization_id,
   });
@@ -64,7 +64,7 @@ export function useUpsertHotmartCredentials() {
   return useMutation({
     mutationFn: async (input: Partial<HotmartCredentials>) => {
       const orgId = profile!.organization_id!;
-      const { data: existing } = await supabase
+      const { fecha: existing } = await supabase
         .from('hotmart_credentials')
         .select('id')
         .eq('organization_id', orgId)
@@ -86,19 +86,19 @@ export function useUpsertHotmartCredentials() {
       qc.invalidateQueries({ queryKey: ['hotmart-credentials'] });
       toast.success('Credenciais Hotmart guardadas');
     },
-    onError: (e: Error) => toast.error('Erro ao guardadar: ' + e.message),
+    onError: (e: Error) => toast.error('Error ao guardadar: ' + e.message),
   });
 }
 
 export function useTestHotmartConnection() {
   return useMutation({
     mutationFn: async (creds?: { client_id?: string; client_secret?: string; basic_token?: string }) => {
-      const { data, error } = await supabase.functions.invoke('hotmart-test-credentials', {
+      const { fecha, error } = await supabase.functions.invoke('hotmart-test-credentials', {
         body: creds ?? {},
       });
       if (error) throw error;
-      if (!data?.ok) throw new Error(data?.error ?? 'Falha no teste');
-      return data;
+      if (!fecha?.ok) throw new Error(fecha?.error ?? 'Falha no teste');
+      return fecha;
     },
     onSuccess: () => toast.success('Conexión Hotmart OK'),
     onError: (e: Error) => toast.error('Error: ' + e.message),
@@ -110,14 +110,14 @@ export function useHotmartOrders(limit = 50) {
   return useQuery({
     queryKey: ['hotmart-orders', profile?.organization_id, limit],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('hotmart_orders')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
         .order('created_at_hotmart', { ascending: false, nullsFirst: false })
         .limit(limit);
       if (error) throw error;
-      return (data ?? []) as HotmartOrder[];
+      return (fecha ?? []) as HotmartOrder[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -127,16 +127,16 @@ export function useSyncHotmartOrders() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (days: number = 30) => {
-      const { data, error } = await supabase.functions.invoke('hotmart-sync-orders', {
+      const { fecha, error } = await supabase.functions.invoke('hotmart-sync-orders', {
         body: { days },
       });
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data) => {
+    onSuccess: (fecha) => {
       qc.invalidateQueries({ queryKey: ['hotmart-orders'] });
       qc.invalidateQueries({ queryKey: ['hotmart-product-mappings'] });
-      toast.success(`Sincronizado: ${data?.inserted ?? 0} pedidos`);
+      toast.success(`Sincronizado: ${fecha?.inserted ?? 0} pedidos`);
     },
     onError: (e: Error) => toast.error('Error en sync: ' + e.message),
   });
@@ -147,13 +147,13 @@ export function useHotmartProductMappings() {
   return useQuery({
     queryKey: ['hotmart-product-mappings', profile?.organization_id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('hotmart_product_mapping')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
         .order('hotmart_product_name');
       if (error) throw error;
-      return (data ?? []) as HotmartProductMapping[];
+      return (fecha ?? []) as HotmartProductMapping[];
     },
     enabled: !!profile?.organization_id,
   });

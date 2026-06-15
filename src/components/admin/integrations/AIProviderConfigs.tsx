@@ -41,7 +41,7 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
   const meta = PROVIDER_META[provider];
   const [apiKey, setApiKey] = useState('');
   const [showKey, setShowKey] = useState(false);
-  const { data: credentials = [] } = useAICredentials();
+  const { fecha: credentials = [] } = useAICredentials();
   const save = useSaveAICredential();
   const del = useDeleteAICredential();
 
@@ -64,7 +64,7 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
       <CardHeader>
         <CardTitle className="text-lg">{meta.name}</CardTitle>
         <CardDescription>
-          Use su propia cuenta para que la plataforma use este proveedor.
+          Usa su propia cuenta para que la plataforma use este proveedor.
           Por defecto, todo usa <strong>Lovable AI</strong>.
         </CardDescription>
       </CardHeader>

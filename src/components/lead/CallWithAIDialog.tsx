@@ -43,7 +43,7 @@ interface CallWithAIDialogProps {
 const OBJECTIVE_PRESETS = [
   { value: 'agendar', label: 'Programar reunión', text: 'Programar una reunión con el lead.' },
   { value: 'retomar', label: 'Retomar conversación', text: 'Retomar la conversación donde se quedó y dar continuidad a la atención.' },
-  { value: 'qualificar', label: 'Calificar (BANT)', text: 'Calificar al lead usando BANT (presupuesto, autoridad, necesidad, plazo).' },
+  { value: 'calificar', label: 'Calificar (BANT)', text: 'Calificar al lead usando BANT (presupuesto, autoridad, necesidad, plazo).' },
   { value: 'oferta', label: 'Presentar oferta', text: 'Presentar la oferta principal y conducir al cierre.' },
   { value: 'recuperar', label: 'Recuperar carrito', text: 'Recuperar carrito abandonado y ayudar a finalizar la compra.' },
   { value: 'custom', label: 'Otro (escribir)', text: '' },
@@ -55,8 +55,8 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
   const productAgentsQuery = useProductAgents(lead.product_id || '');
   const allAgentsQuery = useAllAgents();
 
-  // Se o lead tem producto, usa agentes do producto; senão fallback p/ todos da org.
-  const agents = lead.product_id ? productAgentsQuery.data : allAgentsQuery.data;
+  // Se o lead tiene producto, usa agentes do producto; senão fallback p/ todos da org.
+  const agents = lead.product_id ? productAgentsQuery.fecha : allAgentsQuery.fecha;
   const loadingAgents = lead.product_id ? productAgentsQuery.isLoading : allAgentsQuery.isLoading;
 
   const [agentId, setAgentId] = useState<string>('');
@@ -118,7 +118,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
 
     setIsSending(true);
     try {
-      const { data, error } = await supabase.functions.invoke('manual-outreach', {
+      const { fecha, error } = await supabase.functions.invoke('manual-outreach', {
         body: {
           lead_ids: [lead.id],
           agent_id: agentId,
@@ -131,7 +131,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
 
       if (error) throw error;
 
-      const result = Array.isArray((data as any)?.results) ? (data as any).results[0] : null;
+      const result = Array.isArray((fecha as any)?.results) ? (fecha as any).results[0] : null;
       if (result?.skipped) {
         toast.info(`La IA no se activó: ${result.reason || 'ya existe un outreach reciente'}`);
       } else if (result?.error) {
@@ -168,7 +168,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
             Llamar con IA
           </DialogTitle>
           <DialogDescription>
-            La IA entrará en contacto y conducirá la atención de forma autónoma.
+            La IA se pondrá en contacto y conducirá la atención de forma autónoma.
           </DialogDescription>
         </DialogHeader>
 
@@ -196,7 +196,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
             <Label>Agente de IA</Label>
             <Select value={agentId} onValueChange={setAgentId} disabled={loadingAgents || !agents?.length}>
               <SelectTrigger>
-                <SelectValue placeholder={loadingAgents ? 'Cargando...' : 'Selecione um agente'} />
+                <SelectValue placeholder={loadingAgents ? 'Cargando...' : 'Seleccioná um agente'} />
               </SelectTrigger>
               <SelectContent>
                 {agents?.map((a: any) => (

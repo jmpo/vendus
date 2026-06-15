@@ -64,20 +64,20 @@ export const FormBlockNode = memo(function FormBlockNode({
     switch (block.block_type) {
       case 'welcome_screen':
       case 'end_screen':
-        return block.description || 'Clique para configurar';
+        return block.description || 'Hacé clic para configurar';
       case 'text':
       case 'email':
       case 'phone':
       case 'number':
       case 'textarea':
-        return block.placeholder || 'Digite aqui...';
+        return block.placeholder || 'Escribí aqui...';
       case 'select':
       case 'multi_select':
         const selectOptions = block.options as SelectOption[];
         if (Array.isArray(selectOptions) && selectOptions.length > 0) {
-          return `${selectOptions.length} opções`;
+          return `${selectOptions.length} opciones`;
         }
-        return 'Adicionar opções';
+        return 'Adicionar opciones';
       case 'scale':
         const scaleOpts = block.options as ScaleOptions;
         if (scaleOpts && typeof scaleOpts === 'object' && 'min' in scaleOpts) {
@@ -85,7 +85,7 @@ export const FormBlockNode = memo(function FormBlockNode({
         }
         return '1 a 10';
       case 'yes_no':
-        return 'Sim / Não';
+        return 'Sí / No';
       case 'score':
         return `+${block.score_value} pontos`;
       case 'tag':
@@ -96,14 +96,14 @@ export const FormBlockNode = memo(function FormBlockNode({
       case 'ai_followup':
         return 'Pergunta adaptativa';
       case 'image':
-        return (block.block_settings as any)?.url ? 'Imagem configurada' : 'Configure a URL/upload';
+        return (block.block_settings as any)?.url ? 'Imagen configurada' : 'Configure a URL/upload';
       case 'video_upload':
         return (block.block_settings as any)?.url ? 'Vídeo enviado' : 'Faça upload de um vídeo';
       case 'video_embed':
         return (block.block_settings as any)?.url || 'Cole URL do YouTube/Vimeo/Loom';
       case 'carousel': {
         const imgs = ((block.block_settings as any)?.images as string[]) || [];
-        return imgs.length ? `${imgs.length} imagem(ns)` : 'Adicione imagens';
+        return imgs.length ? `${imgs.length} imagen(ns)` : 'Adicione imagens';
       }
       case 'divider':
         return 'Divisor visual';
@@ -146,7 +146,7 @@ export const FormBlockNode = memo(function FormBlockNode({
             </Badge>
             {isFinalBlock && (
               <Badge className="text-xs font-normal gap-1 bg-emerald-500/15 text-emerald-600 border border-emerald-500/30 hover:bg-emerald-500/20">
-                🏁 Página de Obrigado
+                🏁 Página de Gracias
               </Badge>
             )}
             {block.required && (

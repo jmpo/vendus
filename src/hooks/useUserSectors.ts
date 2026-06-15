@@ -28,16 +28,16 @@ export function useUserSectors() {
 
       if (isAdmin) {
         if (!orgId) return [];
-        const { data } = await supabase
+        const { fecha } = await supabase
           .from('sectors')
           .select('id, name, color')
           .eq('is_active', true)
           .eq('organization_id', orgId)
           .order('name');
-        return (data || []).map((s) => ({ ...s, is_member: true }));
+        return (fecha || []).map((s) => ({ ...s, is_member: true }));
       }
 
-      const { data: memberships } = await supabase
+      const { fecha: memberships } = await supabase
         .from('sector_members')
         .select('sector_id, sectors(id, name, color, is_active)')
         .eq('user_id', user.id);

@@ -12,7 +12,7 @@ export function useIsSuperAdmin() {
     queryFn: async () => {
       if (!user?.id) return false;
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .rpc('is_super_admin', { _user_id: user.id });
       
       if (error) {
@@ -20,7 +20,7 @@ export function useIsSuperAdmin() {
         return false;
       }
       
-      return data || false;
+      return fecha || false;
     },
     enabled: !!user?.id,
   });
@@ -31,14 +31,14 @@ export function usePlatformSettings() {
   return useQuery({
     queryKey: ['platform-settings'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('platform_settings')
         .select('*')
         .limit(1)
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
   });
 }
@@ -48,14 +48,14 @@ export function useUpdatePlatformSettings() {
 
   return useMutation({
     mutationFn: async (settings: Record<string, any>) => {
-      const { data: existing } = await supabase
+      const { fecha: existing } = await supabase
         .from('platform_settings')
         .select('id')
         .limit(1)
         .single();
 
       if (existing) {
-        const { data: updated, error } = await supabase
+        const { fecha: updated, error } = await supabase
           .from('platform_settings')
           .update(settings)
           .eq('id', existing.id)
@@ -67,7 +67,7 @@ export function useUpdatePlatformSettings() {
       return null;
     },
     onSuccess: (updated) => {
-      // Limpa o cache local antigo (placeholder visual) para não voltar ao estado anterior
+      // Limpa o cache local antigo (placeholder visual) para no voltar ao estado anterior
       try {
         localStorage.removeItem('platform-branding-cache-v1');
       } catch {
@@ -75,7 +75,7 @@ export function useUpdatePlatformSettings() {
       }
 
       // Semeia imediatamente o resultado na query canônica de branding
-      // para que Logo, Login, favicon, cores etc. atualizem na mesma sessão
+      // para que Logo, Login, favicon, cores etc. atualizem na misma sessão
       // sem precisar de refresh manual.
       if (updated) {
         try {
@@ -103,14 +103,14 @@ export function usePlatformEmailSettings() {
   return useQuery({
     queryKey: ['platform-email-settings'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('platform_email_settings')
         .select('*')
         .limit(1)
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
   });
 }
@@ -130,7 +130,7 @@ export function useUpdatePlatformEmailSettings() {
       alert_days_after?: number;
       suspend_days_after?: number;
     }) => {
-      const { data: existing } = await supabase
+      const { fecha: existing } = await supabase
         .from('platform_email_settings')
         .select('id')
         .limit(1)
@@ -155,7 +155,7 @@ export function useAllOrganizations() {
   return useQuery({
     queryKey: ['all-organizations'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('organizations')
         .select(`
           *,
@@ -164,7 +164,7 @@ export function useAllOrganizations() {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
   });
 }
@@ -176,7 +176,7 @@ export function useOrganizationDetails(orgId: string | null) {
       if (!orgId) return null;
       
       // Fetch organization with subscriptions and profiles
-      const { data: org, error: orgError } = await supabase
+      const { fecha: org, error: orgError } = await supabase
         .from('organizations')
         .select(`
           *,
@@ -199,7 +199,7 @@ export function useOrganizationDetails(orgId: string | null) {
       // Fetch user roles for each profile
       if (org?.profiles && org.profiles.length > 0) {
         const userIds = org.profiles.map((p: any) => p.id);
-        const { data: roles } = await supabase
+        const { fecha: roles } = await supabase
           .from('user_roles')
           .select('user_id, role')
           .in('user_id', userIds);
@@ -242,13 +242,13 @@ export function useDeleteOrganization() {
 
   return useMutation({
     mutationFn: async (organization_id: string) => {
-      const { data, error } = await supabase.functions.invoke(
+      const { fecha, error } = await supabase.functions.invoke(
         'delete-organization',
         { body: { organization_id } }
       );
       if (error) throw error;
-      if (data && data.ok === false) throw new Error(data.error || 'Falha ao excluir');
-      return data;
+      if (fecha && fecha.ok === false) throw new Error(fecha.error || 'Falha ao eliminar');
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['all-organizations'] });
@@ -263,7 +263,7 @@ export function useAllSubscriptions() {
   return useQuery({
     queryKey: ['all-subscriptions'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('subscriptions')
         .select(`
           *,
@@ -272,7 +272,7 @@ export function useAllSubscriptions() {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
   });
 }
@@ -339,9 +339,9 @@ export function useBillingHistory(orgId?: string) {
         query = query.eq('organization_id', orgId);
       }
       
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
-      return data;
+      return fecha;
     },
   });
 }
@@ -351,7 +351,7 @@ export function useAuditLogs(limit = 50) {
   return useQuery({
     queryKey: ['audit-logs', limit],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('platform_audit_logs')
         .select(`
           *,
@@ -361,7 +361,7 @@ export function useAuditLogs(limit = 50) {
         .limit(limit);
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
   });
 }
@@ -408,7 +408,7 @@ export function useSuperAdminStats() {
         .from('profiles')
         .select('*', { count: 'exact', head: true });
 
-      const { data: subscriptions } = await supabase
+      const { fecha: subscriptions } = await supabase
         .from('subscriptions')
         .select('price_monthly, status, plan_type');
 
@@ -419,12 +419,12 @@ export function useSuperAdminStats() {
         .from('leads')
         .select('*', { count: 'exact', head: true });
 
-      const { data: deals } = await supabase
+      const { fecha: deals } = await supabase
         .from('deals')
         .select('deal_value');
       const totalDealsValue = deals?.reduce((sum, d) => sum + (Number(d.deal_value) || 0), 0) || 0;
 
-      // Distribuição dinâmica baseada nos planos reais cadastrados
+      // Distribución dinâmica baseada nos planes reais cadastrados
       const [plansRes, orgsRes] = await Promise.all([
         supabase
           .from('platform_plans')
@@ -436,8 +436,8 @@ export function useSuperAdminStats() {
           .select('plan_id'),
       ]);
 
-      const planList = (plansRes.data || []) as Array<{ id: string; name: string; slug: string; display_order: number }>;
-      const orgs = (orgsRes.data || []) as Array<{ plan_id: string | null }>;
+      const planList = (plansRes.fecha || []) as Array<{ id: string; name: string; slug: string; display_order: number }>;
+      const orgs = (orgsRes.fecha || []) as Array<{ plan_id: string | null }>;
 
       const PALETTE = ['#9ca3af', '#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899'];
       const colorFor = (slug: string) => {
@@ -458,7 +458,7 @@ export function useSuperAdminStats() {
       if (unassignedCount > 0) {
         planDistribution.push({
           id: 'unassigned',
-          name: 'Sem plano',
+          name: 'Sem plan',
           slug: 'unassigned',
           color: '#6b7280',
           count: unassignedCount,
@@ -495,14 +495,14 @@ export function useCreateOrganization() {
       plan_id?: string | null;
       features?: Record<string, any>;
     }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('organizations')
         .insert(org)
         .select()
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['all-organizations'] });
@@ -516,8 +516,8 @@ export function useAllUsers() {
   return useQuery({
     queryKey: ['all-users'],
     queryFn: async () => {
-      // Buscar profiles primeiro (evita erro 300 de múltiplos relacionamentos)
-      const { data: profiles, error: profilesError } = await supabase
+      // Buscar profiles primeiro (evita error 300 de múltiplos relacionamentos)
+      const { fecha: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('*')
         .order('created_at', { ascending: false });
@@ -528,12 +528,12 @@ export function useAllUsers() {
       }
       if (!profiles || profiles.length === 0) return [];
       
-      // Buscar organizações (apenas se houver org_ids válidos)
+      // Buscar organizaciones (apenas se houver org_ids válidos)
       const orgIds = [...new Set(profiles.map(p => p.organization_id).filter(Boolean))] as string[];
       let organizations: { id: string; name: string }[] = [];
       
       if (orgIds.length > 0) {
-        const { data: orgsData, error: orgsError } = await supabase
+        const { fecha: orgsData, error: orgsError } = await supabase
           .from('organizations')
           .select('id, name')
           .in('id', orgIds);
@@ -550,7 +550,7 @@ export function useAllUsers() {
       let roles: { user_id: string; role: string }[] = [];
       
       if (userIds.length > 0) {
-        const { data: rolesData, error: rolesError } = await supabase
+        const { fecha: rolesData, error: rolesError } = await supabase
           .from('user_roles')
           .select('user_id, role')
           .in('user_id', userIds);
@@ -653,8 +653,8 @@ export function useCreateOrganizationInvitation() {
       role: 'admin' | 'manager' | 'seller';
       organizationId: string;
     }) => {
-      // Verificar se já existe convite pendente
-      const { data: existing } = await supabase
+      // Verificar se ya existe convite pendente
+      const { fecha: existing } = await supabase
         .from('team_invitations')
         .select('id')
         .eq('email', email.toLowerCase())
@@ -667,7 +667,7 @@ export function useCreateOrganizationInvitation() {
       }
       
       // Criar convite
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('team_invitations')
         .insert({
           email: email.toLowerCase(),
@@ -680,8 +680,8 @@ export function useCreateOrganizationInvitation() {
       
       if (error) throw error;
       
-      // Buscar nome da organização para o email
-      const { data: org } = await supabase
+      // Buscar nombre da organización para o email
+      const { fecha: org } = await supabase
         .from('organizations')
         .select('name')
         .eq('id', organizationId)
@@ -691,14 +691,14 @@ export function useCreateOrganizationInvitation() {
       await supabase.functions.invoke('send-invite-email', {
         body: {
           email: email.toLowerCase(),
-          inviteLink: `${getPublicAppUrl()}/aceitar-convite?token=${data.token}`,
+          inviteLink: `${getPublicAppUrl()}/aceitar-convite?token=${fecha.token}`,
           role,
           organizationName: org?.name,
           invitedByName: 'Super Admin',
         },
       });
       
-      return data;
+      return fecha;
     },
     onSuccess: (_, { organizationId }) => {
       queryClient.invalidateQueries({ queryKey: ['organization-details', organizationId] });
@@ -714,7 +714,7 @@ export function useOrganizationInvitations(orgId: string | null) {
     queryFn: async () => {
       if (!orgId) return [];
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('team_invitations')
         .select('*')
         .eq('organization_id', orgId)
@@ -722,7 +722,7 @@ export function useOrganizationInvitations(orgId: string | null) {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     enabled: !!orgId,
   });

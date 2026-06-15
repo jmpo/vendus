@@ -67,24 +67,24 @@ interface ChatAreaProps {
   currentUserId?: string;
   /** Quando true, exibe a barra "Aceptar Atención" no rodapé em vez do composer */
   needsAccept?: boolean;
-  /** Callback acionado quando o agente clica em "Aceptar Atención" */
+  /** Callback acionado cuando o agente clica em "Aceptar Atención" */
   onAcceptTicket?: (squadId?: string) => Promise<void> | void;
   isAccepting?: boolean;
-  /** Modo espectador: admin vendo conversa de outro agente. Esconde composer e mostra banner. */
+  /** Modo espectador: admin vendo conversación de otro agente. Esconde composer e mostra banner. */
   viewerMode?: boolean;
-  /** Nome do agente que está atendendo atualmente — exibido no banner de espectador */
+  /** Nombre del agente que está atendendo atualmente — exibido no banner de espectador */
   attendantName?: string | null;
-  /** Callback acionado quando admin clica em "Assumir conversa" */
+  /** Callback acionado cuando admin clica em "Assumir conversación" */
   onTakeover?: () => void;
-  /** Identificador curto exibido no header (ex.: #6145) */
+  /** Identificador corto exibido no header (ex.: #6145) */
   ticketCode?: string;
-  /** Nome do setor atribuído — exibido no subtítulo do header */
+  /** Nombre do sector atribuído — exibido no subtítulo do header */
   sectorName?: string;
-  /** Cor do setor — usada como acento no header */
+  /** Cor do sector — usada como acento no header */
   sectorColor?: string;
-  /** Nome do agente IA atual atendendo a conversa (ex.: "Ana") */
+  /** Nombre del agente IA atual atendendo a conversación (ex.: "Ana") */
   currentAgentName?: string | null;
-  /** ID do lead vinculado — usado para carregar etiquetas do lead no header */
+  /** ID del lead vinculado — usado para cargar etiquetas del lead no header */
   leadId?: string | null;
   onSendMessage: (content: string, replyToMessageId?: string, media?: import('./MediaAttachment').MediaPayload) => void;
   onEditMessage?: (messageId: string, newContent: string) => void;
@@ -111,11 +111,11 @@ interface ChatAreaProps {
   onSendCadence?: () => void;
   onAnalyze?: () => void;
   onScheduleMessage?: () => void;
-  /** Cria um evento de calendário associado à conversa/lead. */
+  /** Cria um evento de calendario associado à conversación/lead. */
   onCreateEvent?: () => void;
-  /** Cria uma oportunidade (deal). Disponível apenas com lead vinculado. */
+  /** Cria uma oportunidad (deal). Disponível apenas com lead vinculado. */
   onCreateDeal?: () => void;
-  /** Abre os "Dados do Contato" (no mobile, abre o drawer). */
+  /** Abre os "Dados do Contacto" (no mobile, abre o drawer). */
   onViewLead?: () => void;
   /** Move o lead para um novo estágio do embudo (popover rápido). */
   onMoveStageQuick?: (stageId: string) => void;
@@ -127,7 +127,7 @@ interface ChatAreaProps {
   peerOnline?: boolean;
   /** Abre o seletor de catálogo (envia producto rico no chat). */
   onPickCatalog?: () => void;
-  /** Abre o dialog de geração de link de pagamento. */
+  /** Abre o dialog de geração de link de pago. */
   onSendPaymentLink?: () => void;
 }
 
@@ -202,12 +202,12 @@ export function ChatArea({
   // Reações por emoji (realtime)
   const { summarize: summarizeReactions, react: reactToMessage } = useMessageReactions(conversationId);
 
-  // Etiquetas do lead (carregadas só quando há lead vinculado)
-  const { data: leadTagAssignments = [] } = useLeadTagsForLead(leadId || undefined);
+  // Etiquetas del lead (carregadas só cuando há lead vinculado)
+  const { fecha: leadTagAssignments = [] } = useLeadTagsForLead(leadId || undefined);
 
   // Group messages by date
   const groupedMessages = useMemo(() => {
-    // Dedup visual: quando a mesma mensaje outbound aparece em duplicidade
+    // Dedup visual: cuando a misma mensaje outbound aparece em duplicidade
     // (ex.: bolha "Agente" + bolha "Agente IA", o eco "via aparelho"),
     // mantém apenas UMA bolha — a de maior prioridade visual.
     const WINDOW_MS = 5 * 60 * 1000;
@@ -244,7 +244,7 @@ export function ChatArea({
         // duplicata — esconde a de menor prioridade
         const loser = priority(a) >= priority(b) ? b : a;
         hidden.add(loser.id);
-        if (loser.id === a.id) break; // a foi escondido, segue p/ siguiente i
+        if (loser.id === a.id) break; // a fue escondido, segue p/ siguiente i
       }
     }
 
@@ -266,17 +266,17 @@ export function ChatArea({
     return groups;
   }, [messages]);
 
-  // Auto-scroll suave: dispara só quando muda o nº de mensajes o estado de digitação
+  // Auto-scroll suave: dispara só cuando muda o nº de mensajes o estado de digitação
   useEffect(() => {
     if (scrollRef.current) {
-      const scrollElement = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      const scrollElement = scrollRef.current.querySelector('[fecha-radix-scroll-area-viewport]');
       if (scrollElement) {
         scrollElement.scrollTo({ top: scrollElement.scrollHeight, behavior: 'smooth' });
       }
     }
   }, [messages.length, isTyping]);
 
-  // Helper: formata o label do separador de día (Hoy, Ayer, día da semana, o data completa)
+  // Helper: formata o label do separador de día (Hoy, Ayer, día da semana, o fecha completa)
   const formatDayLabel = (dateStr: string) => {
     const d = new Date(dateStr);
     if (isToday(d)) return 'Hoy';
@@ -353,7 +353,7 @@ export function ChatArea({
     }
   };
 
-  // Acento do setor no header (pequena barra colorida + chip do setor)
+  // Acento do sector no header (pequena barra colorida + chip do sector)
   const headerAccent = sectorColor || 'hsl(var(--primary))';
 
   // Status dinâmico do header mobile (Online / Digitando / Última interação)
@@ -469,7 +469,7 @@ export function ChatArea({
         </div>
       )}
 
-      {/* ─────────── Header DESKTOP (mantém o layout antigo, más informações) ─────────── */}
+      {/* ─────────── Header DESKTOP (mantém o layout antigo, más información) ─────────── */}
       {!isMobile && (
       <div
         className="h-16 min-w-0 flex-shrink-0 px-3 sm:px-4 border-b border-border flex items-center justify-between bg-background relative gap-2 overflow-hidden"
@@ -525,7 +525,7 @@ export function ChatArea({
               )}
             </div>
 
-            {/* Linha de Tags: setor + etiquetas do lead */}
+            {/* Linha de Tags: sector + etiquetas del lead */}
             {(sectorName || currentAgentName || leadTagAssignments.length > 0) && (
               <div className="flex items-center gap-1 mt-1 flex-wrap">
                 {sectorName && (
@@ -648,7 +648,7 @@ export function ChatArea({
                 <UserCircle className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Dados do Contato</TooltipContent>
+            <TooltipContent>Dados do Contacto</TooltipContent>
           </Tooltip>
 
           <DropdownMenu>
@@ -670,7 +670,7 @@ export function ChatArea({
               {status !== 'closed' && onClose && (
                 <DropdownMenuItem onClick={onClose} className="text-destructive">
                   <X className="h-4 w-4 mr-2" />
-                  Finalizar conversa
+                  Finalizar conversación
                 </DropdownMenuItem>
               )}
               {status === 'closed' && onReopen && (
@@ -709,8 +709,8 @@ export function ChatArea({
             </div>
           ) : messages.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              <p className="text-sm">Ninguna mensaje ainda</p>
-              <p className="text-xs mt-1">Envie uma mensaje para iniciar</p>
+              <p className="text-sm">Ninguna mensaje aún</p>
+              <p className="text-xs mt-1">Enviá uma mensaje para iniciar</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -779,11 +779,11 @@ export function ChatArea({
             <span className="font-medium text-amber-900 dark:text-amber-200">
               Estás visualizando esta atención{attendantName ? ` de ${attendantName}` : ''}.
             </span>
-            <p className="text-xs text-amber-700 dark:text-amber-300">Para responder, assuma a conversa.</p>
+            <p className="text-xs text-amber-700 dark:text-amber-300">Para responder, assuma a conversación.</p>
           </div>
           {onTakeover && (
             <Button size="sm" variant="default" onClick={onTakeover}>
-              Assumir conversa
+              Assumir conversación
             </Button>
           )}
         </div>

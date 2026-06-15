@@ -71,7 +71,7 @@ export function CatalogMediaUploader({
   const handleFiles = useCallback(
     async (files: File[]) => {
       if (!organizationId || !productId) {
-        toast.error('Salve o produto antes de fazer upload.');
+        toast.error('Salve o producto antes de hacer upload.');
         return;
       }
       setUploading(true);
@@ -83,19 +83,19 @@ export function CatalogMediaUploader({
       for (const file of files) {
         const kind = classify(file);
         if (!kind) {
-          toast.error(`Formato não suportado: ${file.name}`);
+          toast.error(`Formato no suportado: ${file.name}`);
           continue;
         }
         if (kind === 'image' && file.size > MAX_IMAGE_BYTES) {
-          toast.error(`Imagem muito grande (máx 5MB): ${file.name}`);
+          toast.error(`Imagen mucho grande (máx 5MB): ${file.name}`);
           continue;
         }
         if (kind === 'video' && file.size > MAX_VIDEO_BYTES) {
-          toast.error(`Vídeo muito grande (máx 25MB): ${file.name}`);
+          toast.error(`Vídeo mucho grande (máx 25MB): ${file.name}`);
           continue;
         }
         if (kind === 'document' && file.size > MAX_DOC_BYTES) {
-          toast.error(`PDF muito grande (máx 10MB): ${file.name}`);
+          toast.error(`PDF mucho grande (máx 10MB): ${file.name}`);
           continue;
         }
         if (kind === 'image' && newImages.length >= MAX_IMAGES) {
@@ -118,12 +118,12 @@ export function CatalogMediaUploader({
 
         if (upErr) {
           console.error('upload error', upErr);
-          toast.error(`Falha ao enviar ${file.name}: ${upErr.message}`);
+          toast.error(`Falha al enviar ${file.name}: ${upErr.message}`);
           continue;
         }
 
-        const { data } = supabase.storage.from('catalog-media').getPublicUrl(path);
-        const url = data.publicUrl;
+        const { fecha } = supabase.storage.from('catalog-media').getPublicUrl(path);
+        const url = fecha.publicUrl;
 
         if (kind === 'image') {
           newImages.push(url);
@@ -201,13 +201,13 @@ export function CatalogMediaUploader({
         {uploading ? (
           <div className="flex flex-col items-center gap-2">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-sm text-muted-foreground">Enviando arquivos...</p>
+            <p className="text-sm text-muted-foreground">Enviando archivos...</p>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2">
             <Upload className="h-8 w-8 text-muted-foreground" />
             <p className="text-sm font-medium">
-              {isDragActive ? 'Solte os arquivos aqui' : 'Arraste fotos, vídeos ou PDFs'}
+              {isDragActive ? 'Solte os archivos aqui' : 'Arraste fotos, vídeos ou PDFs'}
             </p>
             <p className="text-xs text-muted-foreground">
               📷 JPG/PNG/WEBP até 5MB · 🎬 MP4/MOV até 25MB · 📄 PDF até 10MB
@@ -222,7 +222,7 @@ export function CatalogMediaUploader({
             <p className="text-xs font-medium text-muted-foreground">
               📷 Imagens ({images.length}/{MAX_IMAGES})
             </p>
-            <p className="text-xs text-muted-foreground">Clique na ⭐ para definir como capa</p>
+            <p className="text-xs text-muted-foreground">Hacé clic na ⭐ para definir como capa</p>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
             {images.map((url) => (

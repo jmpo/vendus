@@ -19,11 +19,11 @@ const formatCurrency = (value: number) => {
 const COLORS = ['hsl(173, 80%, 45%)', 'hsl(190, 80%, 50%)', 'hsl(142, 71%, 45%)', 'hsl(38, 92%, 50%)', 'hsl(280, 70%, 50%)'];
 
 export function AdminDashboard() {
-  const { data: kpis, isLoading: kpisLoading } = useAdminKPIs();
-  const { data: topSellers, isLoading: sellersLoading } = useTopSellers(5);
-  const { data: productDistribution } = useProductSalesDistribution();
-  const { data: monthlyData } = useMonthlySalesEvolution(6);
-  const { data: squadsPerformance } = useAllSquadsPerformance();
+  const { fecha: kpis, isLoading: kpisLoading } = useAdminKPIs();
+  const { fecha: topSellers, isLoading: sellersLoading } = useTopSellers(5);
+  const { fecha: productDistribution } = useProductSalesDistribution();
+  const { fecha: monthlyData } = useMonthlySalesEvolution(6);
+  const { fecha: squadsPerformance } = useAllSquadsPerformance();
 
   if (kpisLoading) {
     return (
@@ -138,7 +138,7 @@ export function AdminDashboard() {
           <CardContent>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={monthlyData}>
+                <LineChart fecha={monthlyData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis 
@@ -177,7 +177,7 @@ export function AdminDashboard() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={productDistribution}
+                    fecha={productDistribution}
                     dataKey="totalValue"
                     nameKey="productName"
                     cx="50%"
@@ -268,7 +268,7 @@ export function AdminDashboard() {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart 
-                  data={squadsPerformance} 
+                  fecha={squadsPerformance} 
                   layout="vertical"
                   margin={{ left: 80 }}
                 >

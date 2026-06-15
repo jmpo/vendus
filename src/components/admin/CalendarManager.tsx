@@ -49,7 +49,7 @@ import {
 type ViewMode = 'month' | 'week' | 'day' | 'list';
 
 /**
- * Visão de calendário (mês/semana/dia/lista) + Google Calendar.
+ * Visão de calendario (mes/semana/día/lista) + Google Calendar.
  * Extraída em sub-componente para que CalendarManager seja só a casca de abas.
  */
 function AgendaCalendarView() {
@@ -63,8 +63,8 @@ function AgendaCalendarView() {
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [clickedDate, setClickedDate] = useState<Date | undefined>();
 
-  const { data: products } = useProducts();
-  const { data: teamMembers } = useTeamMembers();
+  const { fecha: products } = useProducts();
+  const { fecha: teamMembers } = useTeamMembers();
 
   const dateRange = useMemo(() => {
     switch (viewMode) {
@@ -94,7 +94,7 @@ function AgendaCalendarView() {
     }
   }, [currentDate, viewMode]);
 
-  const { data: events, isLoading } = useCalendarEvents({
+  const { fecha: events, isLoading } = useCalendarEvents({
     ...dateRange,
     userId: selectedUserId || undefined,
     productId: selectedProductId || undefined,
@@ -351,9 +351,9 @@ function AgendaCalendarView() {
 
 /**
  * Casca do módulo Agenda no Admin: agrupa em uma única tela
- *  - Agenda (calendário visual)
+ *  - Agenda (calendario visual)
  *  - Reuniones (bookings recebidos)
- *  - Tipos de Evento (pré-configuração do admin)
+ *  - Tipos de Evento (pré-configuración do admin)
  *  - Disponibilidad (horários)
  *  - Enlaces del Equipo (centralização para o admin enviar links de cada vendedor)
  */

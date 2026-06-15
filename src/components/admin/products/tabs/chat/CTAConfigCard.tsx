@@ -35,7 +35,7 @@ interface CTAConfigCardProps {
 const CTA_TYPES = [
   { value: 'checkout', label: 'Checkout / Compra', icon: ShoppingCart, color: 'bg-green-500' },
   { value: 'whatsapp', label: 'WhatsApp', icon: MessageCircle, color: 'bg-emerald-500' },
-  { value: 'calendar', label: 'Agendar Reunião', icon: Calendar, color: 'bg-blue-500' },
+  { value: 'calendar', label: 'Agendar Reunión', icon: Calendar, color: 'bg-blue-500' },
   { value: 'callback', label: 'Solicitar Ligação', icon: Phone, color: 'bg-orange-500' },
   { value: 'video', label: 'Vídeo (YouTube/Vimeo)', icon: Play, color: 'bg-red-500' },
   { value: 'custom', label: 'Link Personalizado', icon: Link, color: 'bg-purple-500' },
@@ -48,7 +48,7 @@ const INTENT_LEVELS = [
 ] as const;
 
 export function CTAConfigCard({ productId }: CTAConfigCardProps) {
-  const { data: ctas, isLoading } = useProductCTAs(productId);
+  const { fecha: ctas, isLoading } = useProductCTAs(productId);
   const createCTA = useCreateProductCTA();
   const updateCTA = useUpdateProductCTA();
   const deleteCTA = useDeleteProductCTA();
@@ -139,7 +139,7 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
           CTAs Inteligentes
         </CardTitle>
         <CardDescription>
-          Configure botões de ação que a IA pode enviar automaticamente durante a conversa
+          Configure botões de acción que a IA puede enviar automaticamente durante a conversación
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -274,9 +274,9 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Mensagem Pré-definida (opcional)</Label>
+                  <Label>Mensaje Pré-definida (opcional)</Label>
                   <Textarea
-                    placeholder="Olá! Vim do chat e gostaria de saber mais..."
+                    placeholder="Hola! Vim do chat e gostaria de saber mais..."
                     value={newCTA.whatsapp_message}
                     onChange={(e) => setNewCTA({ ...newCTA, whatsapp_message: e.target.value })}
                     rows={2}
@@ -292,21 +292,21 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
                   onChange={(e) => setNewCTA({ ...newCTA, video_url: e.target.value })}
                 />
                 <p className="text-xs text-muted-foreground">
-                  🎬 O vídeo será exibido em um player inline quando a IA detectar que o cliente precisa de mais informações visuais
+                  🎬 O vídeo será exibido em um player inline cuando a IA detectar que el cliente precisa de mais información visuais
                 </p>
               </div>
             ) : newCTA.cta_type !== 'callback' ? (
               <div className="space-y-2">
                 <Label>URL de Destino</Label>
                 <Input
-                  placeholder="https://checkout.com/produto ou https://calendly.com/empresa"
+                  placeholder="https://checkout.com/producto ou https://calendly.com/empresa"
                   value={newCTA.action_url}
                   onChange={(e) => setNewCTA({ ...newCTA, action_url: e.target.value })}
                 />
               </div>
             ) : (
               <p className="text-sm text-muted-foreground bg-muted p-3 rounded">
-                💡 O botão "Solicitar Ligação" irá coletar os dados do visitante e criar um lead no CRM para que sua equipe possa retornar a ligação.
+                💡 O botão "Solicitar Ligação" irá coletar os dados do visitante e crear um lead no CRM para que su equipo possa retornar a ligação.
               </p>
             )}
 
@@ -318,7 +318,7 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
                 onChange={(e) => setNewCTA({ ...newCTA, trigger_keywords: e.target.value })}
               />
               <p className="text-xs text-muted-foreground">
-                A IA usará essas palavras para identificar quando mostrar este CTA
+                A IA usará essas palavras para identificar cuando mostrar este CTA
               </p>
             </div>
 
@@ -357,10 +357,10 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
           <h4 className="font-medium text-primary mb-2">💡 Como funciona</h4>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• A IA analisa a conversa e identifica a intenção do cliente</li>
+            <li>• A IA analisa a conversación e identifica a intenção del cliente</li>
             <li>• Quando detecta alta intenção de compra, exibe botões de checkout</li>
-            <li>• Para dúvidas complexas, oferece WhatsApp ou ligação</li>
-            <li>• Os botões aparecem como opções clicáveis no chat</li>
+            <li>• Para dudas complexas, oferece WhatsApp ou ligação</li>
+            <li>• Os botões aparecem como opciones clicáveis no chat</li>
           </ul>
         </div>
       </CardContent>

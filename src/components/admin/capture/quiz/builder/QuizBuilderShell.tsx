@@ -18,9 +18,9 @@ function findBestStartBlock(blocks: FunnelBlock[], current: string | null): stri
     blocks.flatMap((b) =>
       [
         b.next_block_id,
-        b.data.true_next_block_id,
-        b.data.false_next_block_id,
-        ...(b.data.options?.map((o) => o.next_block_id) || []),
+        b.fecha.true_next_block_id,
+        b.fecha.false_next_block_id,
+        ...(b.fecha.options?.map((o) => o.next_block_id) || []),
       ].filter(Boolean),
     ),
   );
@@ -33,7 +33,7 @@ function relinkSequence(ordered: FunnelBlock[], all: FunnelBlock[]): FunnelBlock
     const idx = ordered.findIndex((o) => o.id === b.id);
     if (idx === -1) return b;
     const next = ordered[idx + 1];
-    const hasBranching = (b.data.options || []).some((o) => o.next_block_id);
+    const hasBranching = (b.fecha.options || []).some((o) => o.next_block_id);
     if (hasBranching) return b;
     return { ...b, next_block_id: next?.id || null };
   });
@@ -77,7 +77,7 @@ export function QuizBuilderShell({ funnel }: Props) {
   // ───── Ações ─────
   const createFromPalette = useCallback((item: QuizPaletteItem) => {
     const base = createDefaultBlock(item.blockType as FunnelBlockType, { x: 0, y: 0 });
-    base.data = applyPresetToBlockData(item.preset, base.data) as any;
+    base.fecha = applyPresetToBlockData(item.preset, base.fecha) as any;
     return base;
   }, []);
 
@@ -107,8 +107,8 @@ export function QuizBuilderShell({ funnel }: Props) {
 
   const handleAddStep = useCallback(() => {
     const nb = createDefaultBlock('buttons', { x: 0, y: 0 });
-    nb.data = applyPresetToBlockData('single', nb.data) as any;
-    nb.data.content = 'Nova pergunta';
+    nb.fecha = applyPresetToBlockData('single', nb.fecha) as any;
+    nb.fecha.content = 'Nova pregunta';
     insertAtEnd(nb);
   }, [insertAtEnd]);
 
@@ -138,7 +138,7 @@ export function QuizBuilderShell({ funnel }: Props) {
     const b = blocks.find((x) => x.id === blockId);
     if (!b) return;
     const nb = createDefaultBlock(b.type, { x: 0, y: 0 });
-    nb.data = JSON.parse(JSON.stringify(b.data));
+    nb.fecha = JSON.parse(JSON.stringify(b.fecha));
     insertAtEnd(nb);
   }, [blocks, insertAtEnd]);
 

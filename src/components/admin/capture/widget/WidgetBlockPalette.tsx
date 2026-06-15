@@ -21,7 +21,7 @@ interface Props {
 }
 
 // Whitelist do Widget — paleta enxuta para bolha embed em sites externos.
-// Sem create_lead/update_lead (sempre são criados automaticamente) e sem ab_test.
+// Sem create_lead/update_lead (siempre son criados automaticamente) e sem ab_test.
 const WIDGET_BLOCKS: FunnelBlockType[] = [
   'message', 'buttons', 'video', 'image', 'link', 'delay',
   'input', 'quick_form',
@@ -133,7 +133,7 @@ export const WidgetBlockPalette = memo(function WidgetBlockPalette({ onAddBlock 
 
       <div className="px-3 py-2 border-t bg-muted/30 shrink-0">
         <p className="text-[10px] text-muted-foreground text-center">
-          Lead é criado automaticamente ao capturar dados
+          Lead é creado automaticamente ao capturar dados
         </p>
       </div>
     </div>

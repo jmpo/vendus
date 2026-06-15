@@ -20,7 +20,7 @@ interface PlaybookTabProps {
 }
 
 export function PlaybookTab({ productId }: PlaybookTabProps) {
-  const { data: product } = useProduct(productId);
+  const { fecha: product } = useProduct(productId);
   const { profile } = useAuth();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('pitches');
@@ -33,10 +33,10 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
   });
 
   // Fetch training videos
-  const { data: trainingVideos, isLoading: loadingVideos } = useQuery({
+  const { fecha: trainingVideos, isLoading: loadingVideos } = useQuery({
     queryKey: ['training-videos', productId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_training_videos')
         .select('*')
         .eq('product_id', productId)
@@ -44,7 +44,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
         .order('order_index');
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     enabled: !!productId,
   });
@@ -52,7 +52,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
   // Create video mutation
   const createVideo = useMutation({
     mutationFn: async (video: typeof videoForm) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_training_videos')
         .insert({
           product_id: productId,
@@ -67,7 +67,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['training-videos', productId] });
@@ -98,7 +98,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
 
   const handleAddVideo = () => {
     if (!videoForm.title.trim() || !videoForm.video_url.trim()) {
-      toast.error('Título e URL do vídeo são obrigatórios');
+      toast.error('Título e URL do vídeo son obligatorios');
       return;
     }
     createVideo.mutate(videoForm);
@@ -290,7 +290,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
                             <AlertDialogHeader>
                               <AlertDialogTitle>¿Eliminar video?</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Esta ação irá remover o vídeo "{video.title}" do playbook.
+                                Esta acción irá eliminar o vídeo "{video.title}" do playbook.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -351,7 +351,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
                 id="videoTitle"
                 value={videoForm.title}
                 onChange={(e) => setVideoForm({ ...videoForm, title: e.target.value })}
-                placeholder="Ex: Introdução ao Produto"
+                placeholder="Ex: Introdução ao Producto"
               />
             </div>
             <div className="space-y-2">

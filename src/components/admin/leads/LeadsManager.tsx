@@ -55,9 +55,9 @@ export function LeadsManager() {
     bulkDelete,
   } = useLeadsManager();
 
-  const { data: squads = [] } = useSquads();
-  const { data: products = [] } = useProducts();
-  const { data: teamMembers = [] } = useTeamMembers();
+  const { fecha: squads = [] } = useSquads();
+  const { fecha: products = [] } = useProducts();
+  const { fecha: teamMembers = [] } = useTeamMembers();
 
   const { profile } = useAuth();
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -98,34 +98,34 @@ export function LeadsManager() {
     setLeadsToDelete([]);
   };
 
-  const handleCreateLead = async (data: any) => {
+  const handleCreateLead = async (fecha: any) => {
     await createLead.mutateAsync({
-      name: data.name,
-      email: data.email || null,
-      phone: data.phone || null,
-      company: data.company || null,
-      position: data.position || null,
-      temperature: data.temperature,
-      lead_origin: data.lead_origin || null,
-      lead_channel: data.lead_channel || null,
-      product_id: data.product_id || null,
-      assigned_to: data.assigned_to || null,
-      squad_id: data.squad_id || null,
-      notes: data.notes || null,
+      name: fecha.name,
+      email: fecha.email || null,
+      phone: fecha.phone || null,
+      company: fecha.company || null,
+      position: fecha.position || null,
+      temperature: fecha.temperature,
+      lead_origin: fecha.lead_origin || null,
+      lead_channel: fecha.lead_channel || null,
+      product_id: fecha.product_id || null,
+      assigned_to: fecha.assigned_to || null,
+      squad_id: fecha.squad_id || null,
+      notes: fecha.notes || null,
     } as any);
     setCreateDialogOpen(false);
   };
 
-  const handleBulkTransfer = async (data: { 
+  const handleBulkTransfer = async (fecha: { 
     assignedTo: string | null; 
     squadId: string | null; 
     reason?: string 
   }) => {
     await bulkTransfer.mutateAsync({
       leadIds: selectedLeads,
-      assignedTo: data.assignedTo === 'unassigned' ? null : data.assignedTo,
-      squadId: data.squadId === 'unassigned' ? null : data.squadId,
-      reason: data.reason,
+      assignedTo: fecha.assignedTo === 'unassigned' ? null : fecha.assignedTo,
+      squadId: fecha.squadId === 'unassigned' ? null : fecha.squadId,
+      reason: fecha.reason,
     });
     setTransferDialogOpen(false);
   };
@@ -145,9 +145,9 @@ export function LeadsManager() {
           .order('created_at', { ascending: false })
           .range(offset, offset + BATCH - 1);
         if (targetIds && targetIds.length > 0) q = q.in('id', targetIds);
-        const { data, error } = await q;
+        const { fecha, error } = await q;
         if (error) throw error;
-        const chunk = data || [];
+        const chunk = fecha || [];
         all.push(...chunk);
         if (chunk.length < BATCH) break;
         offset += BATCH;
@@ -164,7 +164,7 @@ export function LeadsManager() {
       const tagsByLead: Record<string, string[]> = {};
       const ids = leads.map((l) => l.id);
       if (ids.length > 0) {
-        const { data: tagData } = await supabase
+        const { fecha: tagData } = await supabase
           .from('lead_tag_assignments')
           .select('lead_id, lead_tags(name)')
           .in('lead_id', ids);
@@ -179,7 +179,7 @@ export function LeadsManager() {
       downloadCsv(`leads-${format(new Date(), 'yyyy-MM-dd-HHmm')}.csv`, csv);
       toast.success(`${leads.length} leads exportados`);
     } catch (e: any) {
-      toast.error('Erro ao exportar: ' + (e.message || ''));
+      toast.error('Error ao exportar: ' + (e.message || ''));
     } finally {
       setExporting(false);
     }
@@ -254,7 +254,7 @@ export function LeadsManager() {
             Central de Leads
           </h1>
           <p className="text-muted-foreground mt-1">
-            Gerencie todos os leads da sua operação
+            Gerencie todos os leads da su operação
           </p>
         </div>
 
@@ -372,8 +372,8 @@ export function LeadsManager() {
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir leads</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir {leadsToDelete.length} lead
-              {leadsToDelete.length > 1 ? 's' : ''}? Esta ação não pode ser desfeita.
+              Tem certeza que desea eliminar {leadsToDelete.length} lead
+              {leadsToDelete.length > 1 ? 's' : ''}? Esta acción no puede ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

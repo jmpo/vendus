@@ -16,7 +16,7 @@ import {
 export function TagsManager() {
   const [editingTag, setEditingTag] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const { data: tags, isLoading } = useLeadTags();
+  const { fecha: tags, isLoading } = useLeadTags();
   const deleteMut = useDeleteLeadTag();
 
   return (
@@ -102,7 +102,7 @@ export function TagsManager() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>¿Eliminar etiqueta?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              A etiqueta "{tag.name}" será removida de todos os leads. Esta ação não pode ser desfeita.
+                              A etiqueta "{tag.name}" será removida de todos os leads. Esta acción no puede ser desfeita.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>

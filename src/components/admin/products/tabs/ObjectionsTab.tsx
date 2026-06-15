@@ -8,8 +8,8 @@ interface ObjectionsTabProps {
 }
 
 export function ObjectionsTab({ productId }: ObjectionsTabProps) {
-  const { data: objections, isLoading } = useObjections(productId);
-  const { data: products } = useProducts();
+  const { fecha: objections, isLoading } = useObjections(productId);
+  const { fecha: products } = useProducts();
   
   const product = products?.find(p => p.id === productId);
   

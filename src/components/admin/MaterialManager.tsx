@@ -30,18 +30,18 @@ const typeConfig = {
 
 export function MaterialManager() {
   const { profile } = useAuth();
-  const { data: products } = useProducts();
+  const { fecha: products } = useProducts();
   
-  // Use raw DB query for admin to get full material data
-  const { data: materials, isLoading } = useQuery({
+  // Usa raw DB query for admin to get full material fecha
+  const { fecha: materials, isLoading } = useQuery({
     queryKey: ['materials-admin'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('materials')
         .select('*')
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return data as Material[];
+      return fecha as Material[];
     },
   });
   
@@ -97,7 +97,7 @@ export function MaterialManager() {
 
   const handleSubmit = async () => {
     if (!formData.name.trim() || !formData.url.trim()) {
-      toast.error('Nome e URL são obrigatórios');
+      toast.error('Nombre e URL son obligatorios');
       return;
     }
 
@@ -123,7 +123,7 @@ export function MaterialManager() {
       setIsDialogOpen(false);
       resetForm();
     } catch (error) {
-      toast.error('Erro ao salvar material');
+      toast.error('Error ao guardar material');
     }
   };
 
@@ -132,7 +132,7 @@ export function MaterialManager() {
       await deleteMaterial.mutateAsync(id);
       toast.success('¡Material eliminado!');
     } catch (error) {
-      toast.error('Erro ao excluir material');
+      toast.error('Error ao eliminar material');
     }
   };
 
@@ -239,7 +239,7 @@ export function MaterialManager() {
                       <AlertDialogHeader>
                         <AlertDialogTitle>Excluir material?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Esta ação não pode ser desfeita.
+                          Esta acción no puede ser desfeita.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
@@ -287,12 +287,12 @@ export function MaterialManager() {
           
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome *</Label>
+              <Label htmlFor="name">Nombre *</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Ex: Case de sucesso - Empresa X"
+                placeholder="Ex: Case de éxito - Empresa X"
               />
             </div>
 
@@ -320,7 +320,7 @@ export function MaterialManager() {
               </div>
 
               <div className="space-y-2">
-                <Label>Produto (opcional)</Label>
+                <Label>Producto (opcional)</Label>
                 <Select
                   value={formData.product_id}
                   onValueChange={(v) => setFormData({ ...formData, product_id: v })}
@@ -354,7 +354,7 @@ export function MaterialManager() {
                 id="objective"
                 value={formData.objective}
                 onChange={(e) => setFormData({ ...formData, objective: e.target.value })}
-                placeholder="Descreva quando usar este material..."
+                placeholder="Descreva cuando usar este material..."
                 rows={2}
               />
             </div>

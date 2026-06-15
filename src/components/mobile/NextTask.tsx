@@ -127,10 +127,10 @@ export function NextTask({
             </div>
             <div className="flex-1">
               <h4 className="text-sm font-semibold text-foreground">
-                Tudo em dia! 🎉
+                Tudo em día! 🎉
               </h4>
               <p className="text-xs text-muted-foreground">
-                Nenhuma tarefa pendente no momento
+                Nenhuma tarea pendente no momento
               </p>
             </div>
           </div>
@@ -172,7 +172,7 @@ export function NextTask({
           <div className="flex items-center gap-2">
             <Clock size={14} className="text-muted-foreground" />
             <span className="text-xs font-medium text-muted-foreground">
-              Próxima Tarefa
+              Próxima Tarea
             </span>
           </div>
           {onViewAll && (

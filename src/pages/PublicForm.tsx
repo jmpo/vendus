@@ -43,7 +43,7 @@ export default function PublicForm() {
       setLoading(true);
       
       // Fetch form by slug
-      const { data: formData, error: formError } = await supabase
+      const { fecha: formData, error: formError } = await supabase
         .from('forms')
         .select('*')
         .eq('slug', slug)
@@ -114,7 +114,7 @@ export default function PublicForm() {
       setForm(parsedForm);
 
       // Fetch blocks
-      const { data: blocksData, error: blocksError } = await supabase
+      const { fecha: blocksData, error: blocksError } = await supabase
         .from('form_blocks')
         .select('*')
         .eq('form_id', formData.id)
@@ -202,7 +202,7 @@ export default function PublicForm() {
     return out;
   };
 
-  // Compute union of actions across all answered blocks (used at submit time).
+  // Compute union of actions across all answered blocks (used at submit equipo).
   const collectAllSelectedActions = (): FormOptionAction[] => {
     const out: FormOptionAction[] = [];
     for (const b of blocks) out.push(...getActionsForBlock(b));
@@ -323,7 +323,7 @@ export default function PublicForm() {
       const selected_actions = collectAllSelectedActions();
       const selected_options = collectSelectedOptions();
 
-      const { data, error } = await supabase.functions.invoke('form-submit', {
+      const { fecha, error } = await supabase.functions.invoke('form-submit', {
         body: {
           form_id: form.id,
           responses: cleanResponses,
@@ -335,11 +335,11 @@ export default function PublicForm() {
 
       if (error) throw error;
 
-      if (data?.success) {
+      if (fecha?.success) {
         setSubmitted(true);
         // Server may override the theme redirect (e.g. open_calendar action builds a /agendar URL)
-        const target: string | null = data.redirect_url || form.theme.redirect_url || null;
-        const newTab: boolean = !!data.redirect_new_tab;
+        const target: string | null = fecha.redirect_url || form.theme.redirect_url || null;
+        const newTab: boolean = !!fecha.redirect_new_tab;
         if (target) {
           if (newTab) {
             window.open(target, '_blank', 'noopener');
@@ -348,7 +348,7 @@ export default function PublicForm() {
           }
         }
       } else {
-        throw new Error(data?.error || 'Error al enviar el formulario');
+        throw new Error(fecha?.error || 'Error al enviar el formulario');
       }
     } catch (err: any) {
       console.error('Error submitting form:', err);
@@ -552,7 +552,7 @@ export default function PublicForm() {
                 className="flex-1"
                 onClick={() => handleResponse(block.id, true)}
               >
-                Sim
+                Sí
               </Button>
               <Button
                 variant={value === false ? 'default' : 'outline'}
@@ -560,7 +560,7 @@ export default function PublicForm() {
                 className="flex-1"
                 onClick={() => handleResponse(block.id, false)}
               >
-                Não
+                No
               </Button>
             </div>
           </div>
@@ -610,7 +610,7 @@ export default function PublicForm() {
               <p className="text-muted-foreground">{block.description}</p>
             )}
             <Textarea
-              placeholder={block.placeholder || 'Digite sua resposta...'}
+              placeholder={block.placeholder || 'Escribí su respuesta...'}
               value={(value as string) || ''}
               onChange={(e) => handleResponse(block.id, e.target.value)}
               className="text-lg min-h-[120px]"
@@ -667,8 +667,8 @@ export default function PublicForm() {
         <Card className="max-w-md mx-auto">
           <CardContent className="pt-6 text-center space-y-4">
             <AlertCircle className="h-12 w-12 mx-auto text-destructive" />
-            <h2 className="text-xl font-semibold">Formulário não encontrado</h2>
-            <p className="text-muted-foreground">{error || 'O formulário que você está procurando não existe ou está inativo.'}</p>
+            <h2 className="text-xl font-semibold">Formulário no encontrado</h2>
+            <p className="text-muted-foreground">{error || 'O formulário que usted está procurando no existe ou está inativo.'}</p>
           </CardContent>
         </Card>
       </div>
@@ -693,7 +693,7 @@ export default function PublicForm() {
               <FormBlockMedia block={customFinalBlock} />
             ) : (
               <div className="text-center space-y-4">
-                <h1 className="text-3xl md:text-4xl">{customFinalBlock.label || 'Obrigado!'}</h1>
+                <h1 className="text-3xl md:text-4xl">{customFinalBlock.label || 'Gracias!'}</h1>
                 {customFinalBlock.description && (
                   <p className="text-lg text-muted-foreground">{customFinalBlock.description}</p>
                 )}
@@ -714,10 +714,10 @@ export default function PublicForm() {
         >
           <CheckCircle className="h-20 w-20 mx-auto text-green-500" />
           <h1 className="text-3xl md:text-4xl">
-            {endBlock?.label || 'Obrigado!'}
+            {endBlock?.label || 'Gracias!'}
           </h1>
           <p className="text-lg text-muted-foreground">
-            {endBlock?.description || 'Suas respostas foram enviadas com sucesso.'}
+            {endBlock?.description || 'Sus respuestas foram enviadas com éxito.'}
           </p>
         </motion.div>
       </div>

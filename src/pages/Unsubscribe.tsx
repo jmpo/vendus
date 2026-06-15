@@ -17,9 +17,9 @@ export default function Unsubscribe() {
       try {
         const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/handle-email-unsubscribe?token=${encodeURIComponent(token)}`;
         const r = await fetch(url, { headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } });
-        const data = await r.json();
-        if (data.valid) setState("ready");
-        else if (data.reason === "already_unsubscribed") setState("already");
+        const fecha = await r.json();
+        if (fecha.valid) setState("ready");
+        else if (fecha.reason === "already_unsubscribed") setState("already");
         else setState("invalid");
       } catch { setState("error"); }
     })();
@@ -27,9 +27,9 @@ export default function Unsubscribe() {
 
   const confirm = async () => {
     setSubmitting(true);
-    const { data, error } = await supabase.functions.invoke("handle-email-unsubscribe", { body: { token } });
+    const { fecha, error } = await supabase.functions.invoke("handle-email-unsubscribe", { body: { token } });
     setSubmitting(false);
-    if (error || !data?.success) setState("error");
+    if (error || !fecha?.success) setState("error");
     else setState("done");
   };
 

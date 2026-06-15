@@ -92,13 +92,13 @@ export function useOpportunityScans() {
   return useQuery({
     queryKey: ['opportunity-scans'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('opportunity_scans')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(50);
       if (error) throw error;
-      return (data || []) as unknown as OpportunityScan[];
+      return (fecha || []) as unknown as OpportunityScan[];
     },
     enabled: !!user,
   });
@@ -109,19 +109,19 @@ export function useOpportunityScan(scanId: string | null) {
     queryKey: ['opportunity-scan', scanId],
     queryFn: async () => {
       if (!scanId) return null;
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('opportunity_scans')
         .select('*')
         .eq('id', scanId)
         .maybeSingle();
       if (error) throw error;
-      return data as unknown as OpportunityScan | null;
+      return fecha as unknown as OpportunityScan | null;
     },
     enabled: !!scanId,
     // SECURITY: substitui assinatura Realtime por polling para evitar
-    // exposição de eventos entre organizações na tabela opportunity_scans.
+    // exposição de eventos entre organizaciones na tabela opportunity_scans.
     refetchInterval: (q) => {
-      const status = (q.state.data as any)?.status;
+      const status = (q.state.fecha as any)?.status;
       return status && status !== 'completed' && status !== 'failed' ? 3000 : false;
     },
   });
@@ -134,13 +134,13 @@ export function useScanItems(scanId: string | null) {
     queryKey: ['opportunity-scan-items', scanId],
     queryFn: async () => {
       if (!scanId) return [];
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('opportunity_scan_items')
         .select('*')
         .eq('scan_id', scanId)
         .order('score', { ascending: false });
       if (error) throw error;
-      return (data || []) as unknown as ScanItem[];
+      return (fecha || []) as unknown as ScanItem[];
     },
     enabled: !!scanId,
     refetchInterval: 5000,
@@ -152,8 +152,8 @@ export function useRunOpportunityScan() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (params: { filters: ScanFilters; actions_config: ActionsConfig; preview_only?: boolean }) => {
-      const { data: profile } = await supabase.from('profiles').select('organization_id').eq('id', user!.id).single();
-      const { data, error } = await supabase.functions.invoke('opportunity-scan-run', {
+      const { fecha: profile } = await supabase.from('profiles').select('organization_id').eq('id', user!.id).single();
+      const { fecha, error } = await supabase.functions.invoke('opportunity-scan-run', {
         body: {
           organization_id: profile?.organization_id,
           triggered_by: user!.id,
@@ -163,7 +163,7 @@ export function useRunOpportunityScan() {
         },
       });
       if (error) {
-        // Tenta extrair mensagem do contexto (FunctionsHttpError vem com body em .context)
+        // Tenta extrair mensaje do contexto (FunctionsHttpError vem com body em .context)
         let detail = error.message;
         try {
           const ctx: any = (error as any).context;
@@ -174,10 +174,10 @@ export function useRunOpportunityScan() {
         } catch {}
         throw new Error(detail);
       }
-      if (data?.error) throw new Error(data.error);
-      return data;
+      if (fecha?.error) throw new Error(fecha.error);
+      return fecha;
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (fecha, variables) => {
       if (!variables.preview_only) {
         toast.success('Análisis iniciado — seguí el progreso en tiempo real');
         qc.invalidateQueries({ queryKey: ['opportunity-scans'] });
@@ -192,12 +192,12 @@ export function useOpportunitySchedules() {
   return useQuery({
     queryKey: ['opportunity-schedules'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('opportunity_scan_schedules')
         .select('*')
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return data || [];
+      return fecha || [];
     },
     enabled: !!user,
   });
@@ -208,7 +208,7 @@ export function useUpsertSchedule() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (payload: any) => {
-      const { data: profile } = await supabase.from('profiles').select('organization_id').eq('id', user!.id).single();
+      const { fecha: profile } = await supabase.from('profiles').select('organization_id').eq('id', user!.id).single();
       const row = {
         ...payload,
         organization_id: profile?.organization_id,

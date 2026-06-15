@@ -57,7 +57,7 @@ export function useSquads() {
   return useQuery({
     queryKey: ['squads'],
     queryFn: async () => {
-      const { data: squads, error } = await supabase
+      const { fecha: squads, error } = await supabase
         .from('sales_squads')
         .select(`
           *,
@@ -71,7 +71,7 @@ export function useSquads() {
       // Get member counts
       const squadIds = squads?.map(s => s.id) || [];
       if (squadIds.length > 0) {
-        const { data: membersData } = await supabase
+        const { fecha: membersData } = await supabase
           .from('squad_members')
           .select('squad_id')
           .in('squad_id', squadIds);
@@ -99,7 +99,7 @@ export function useSquad(id: string | undefined) {
     queryFn: async () => {
       if (!id) return null;
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('sales_squads')
         .select(`
           *,
@@ -109,7 +109,7 @@ export function useSquad(id: string | undefined) {
         .single();
 
       if (error) throw error;
-      return data as Squad;
+      return fecha as Squad;
     },
     enabled: !!id
   });
@@ -121,7 +121,7 @@ export function useSquadMembers(squadId: string | undefined) {
     queryFn: async () => {
       if (!squadId) return [];
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('squad_members')
         .select('*')
         .eq('squad_id', squadId)
@@ -130,22 +130,22 @@ export function useSquadMembers(squadId: string | undefined) {
       if (error) throw error;
 
       // Get profiles for each member
-      const userIds = data?.map(m => m.user_id) || [];
+      const userIds = fecha?.map(m => m.user_id) || [];
       if (userIds.length > 0) {
-        const { data: profiles } = await supabase
+        const { fecha: profiles } = await supabase
           .from('profiles')
           .select('id, full_name, email, avatar_url')
           .in('id', userIds);
 
         const profileMap = new Map(profiles?.map(p => [p.id, p]));
 
-        return data?.map(m => ({
+        return fecha?.map(m => ({
           ...m,
           profile: profileMap.get(m.user_id)
         })) as SquadMember[];
       }
 
-      return data as SquadMember[];
+      return fecha as SquadMember[];
     },
     enabled: !!squadId
   });
@@ -157,13 +157,13 @@ export function useCreateSquad() {
   const organizationId = profile?.organization_id;
 
   return useMutation({
-    mutationFn: async (data: CreateSquadData) => {
+    mutationFn: async (fecha: CreateSquadData) => {
       if (!organizationId) throw new Error('No organization');
 
-      const { data: squad, error } = await supabase
+      const { fecha: squad, error } = await supabase
         .from('sales_squads')
         .insert({
-          ...data,
+          ...fecha,
           organization_id: organizationId,
           created_by: user?.id
         })
@@ -188,10 +188,10 @@ export function useUpdateSquad() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, ...data }: UpdateSquadData) => {
-      const { data: squad, error } = await supabase
+    mutationFn: async ({ id, ...fecha }: UpdateSquadData) => {
+      const { fecha: squad, error } = await supabase
         .from('sales_squads')
-        .update(data)
+        .update(fecha)
         .eq('id', id)
         .select()
         .single();
@@ -239,7 +239,7 @@ export function useAddSquadMember() {
 
   return useMutation({
     mutationFn: async ({ squadId, userId, role = 'member' }: { squadId: string; userId: string; role?: string }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('squad_members')
         .insert({
           squad_id: squadId,
@@ -250,7 +250,7 @@ export function useAddSquadMember() {
         .single();
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['squad-members', variables.squadId] });
@@ -327,14 +327,14 @@ export function useUploadSquadIcon() {
 
       if (uploadError) throw uploadError;
 
-      const { data } = supabase.storage
+      const { fecha } = supabase.storage
         .from('squad-icons')
         .getPublicUrl(fileName);
 
-      return data.publicUrl;
+      return fecha.publicUrl;
     },
     onError: (error) => {
-      toast.error('Error al subir el archivo da imagem');
+      toast.error('Error al subir el archivo da imagen');
       console.error(error);
     }
   });

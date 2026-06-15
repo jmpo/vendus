@@ -47,7 +47,7 @@ export function AgentActivationRules({ formData, onChange }: Props) {
     const v = kwInput.trim();
     if (!v) return;
     if (v.length < 3) {
-      toast.error('Use palabras con al menos 3 letras');
+      toast.error('Usa palabras con al menos 3 letras');
       return;
     }
     if (keywords.includes(v)) {
@@ -66,7 +66,7 @@ export function AgentActivationRules({ formData, onChange }: Props) {
     const v = phraseInput.trim();
     if (!v) return;
     if (v.length < 3) {
-      toast.error('Use frases con al menos 3 caracteres');
+      toast.error('Usa frases con al menos 3 caracteres');
       return;
     }
     if (phrases.includes(v)) {
@@ -109,7 +109,7 @@ export function AgentActivationRules({ formData, onChange }: Props) {
                 <Info className="h-3 w-3 text-muted-foreground" />
               </TooltipTrigger>
               <TooltipContent side="top" className="max-w-xs">
-                Match por palavra isolada (ex.: "preço" bate em "qual o preço?", mas não em "imprecisão").
+                Match por palavra isolada (ex.: "preço" bate em "qual o preço?", mas no em "imprecisão").
                 Mínimo 3 letras.
               </TooltipContent>
             </Tooltip>
@@ -152,8 +152,8 @@ export function AgentActivationRules({ formData, onChange }: Props) {
                 <Info className="h-3 w-3 text-muted-foreground" />
               </TooltipTrigger>
               <TooltipContent side="top" className="max-w-xs">
-                Match por substring (ignorando acentos/maiúsculas). Ex.: "quero contratar" bate em
-                "Eu quero contratar agora".
+                Match por substring (ignorando acentos/maiúsculas). Ex.: "quiero contratar" bate em
+                "Eu quiero contratar ahora".
               </TooltipContent>
             </Tooltip>
           </div>

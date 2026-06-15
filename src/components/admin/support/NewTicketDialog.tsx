@@ -33,13 +33,13 @@ export function NewTicketDialog({ open, onOpenChange }: Props) {
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Abrir chamado</DialogTitle>
-          <DialogDescription>Descreva sua dúvida ou problema. Nossa equipe responderá em breve.</DialogDescription>
+          <DialogDescription>Descreva su duda ou problema. Nossa equipo responderá em breve.</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>Assunto</Label>
-            <Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Ex.: Dúvida sobre cobrança" />
+            <Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Ex.: Dúvida sobre cobro" />
           </div>
           <div className="grid sm:grid-cols-2 gap-3">
             <div className="space-y-2">
@@ -59,7 +59,7 @@ export function NewTicketDialog({ open, onOpenChange }: Props) {
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Descrição</Label>
+            <Label>Descripción</Label>
             <Textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={5} placeholder="Conte com detalhes o que está acontecendo..." />
           </div>
         </div>

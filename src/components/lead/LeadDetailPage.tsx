@@ -41,11 +41,11 @@ export function LeadDetailPage({ leadId, onBack, isAdminView = false, onWhatsApp
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   
   const { isAdmin } = useAuth();
-  const { data: lead, isLoading, refetch } = useLead(leadId);
-  const { data: stages } = usePipelineStages(lead?.product_id || '');
-  const { data: interactions } = useInteractions(leadId);
+  const { fecha: lead, isLoading, refetch } = useLead(leadId);
+  const { fecha: stages } = usePipelineStages(lead?.product_id || '');
+  const { fecha: interactions } = useInteractions(leadId);
   const updateLead = useUpdateLead();
-  const { data: teamMembers } = useTeamMembers();
+  const { fecha: teamMembers } = useTeamMembers();
 
   // Admin controls only for certain actions like delete
   const showAdminControls = isAdminView || (typeof isAdmin === 'boolean' ? isAdmin : false);
@@ -75,7 +75,7 @@ export function LeadDetailPage({ leadId, onBack, isAdminView = false, onWhatsApp
     );
   }
 
-  // Use related data from the query if available, fallback to placeholder
+  // Usa related fecha from the query if available, fallback to placeholder
   const formattedLead = {
     ...lead,
     assignee: (lead as any).assignee || (lead.assigned_to ? {
@@ -128,35 +128,35 @@ export function LeadDetailPage({ leadId, onBack, isAdminView = false, onWhatsApp
         <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
           <div className="border-b border-border px-4 md:px-6 overflow-x-auto">
             <TabsList className="h-12 bg-transparent gap-2 w-max md:w-auto">
-              <TabsTrigger value="summary" className="gap-2 data-[state=active]:bg-primary/10">
+              <TabsTrigger value="summary" className="gap-2 fecha-[state=active]:bg-primary/10">
                 <LayoutDashboard className="h-4 w-4" />
                 <span className="hidden sm:inline">Resumen</span>
               </TabsTrigger>
-              <TabsTrigger value="bant" className="gap-2 data-[state=active]:bg-primary/10">
+              <TabsTrigger value="bant" className="gap-2 fecha-[state=active]:bg-primary/10">
                 <ClipboardCheck className="h-4 w-4" />
                 <span className="hidden sm:inline">BANT</span>
               </TabsTrigger>
-              <TabsTrigger value="timeline" className="gap-2 data-[state=active]:bg-primary/10">
+              <TabsTrigger value="timeline" className="gap-2 fecha-[state=active]:bg-primary/10">
                 <Clock className="h-4 w-4" />
                 <span className="hidden sm:inline">Timeline</span>
               </TabsTrigger>
-              <TabsTrigger value="journey" className="gap-2 data-[state=active]:bg-primary/10">
+              <TabsTrigger value="journey" className="gap-2 fecha-[state=active]:bg-primary/10">
                 <Route className="h-4 w-4" />
                 <span className="hidden sm:inline">Jornada</span>
               </TabsTrigger>
-              <TabsTrigger value="origin" className="gap-2 data-[state=active]:bg-primary/10">
+              <TabsTrigger value="origin" className="gap-2 fecha-[state=active]:bg-primary/10">
                 <Globe className="h-4 w-4" />
                 <span className="hidden sm:inline">Origen</span>
               </TabsTrigger>
-              <TabsTrigger value="wallet" className="gap-2 data-[state=active]:bg-primary/10">
+              <TabsTrigger value="wallet" className="gap-2 fecha-[state=active]:bg-primary/10">
                 <Wallet className="h-4 w-4" />
                 <span className="hidden sm:inline">Cartera</span>
               </TabsTrigger>
-              <TabsTrigger value="notes" className="gap-2 data-[state=active]:bg-primary/10">
+              <TabsTrigger value="notes" className="gap-2 fecha-[state=active]:bg-primary/10">
                 <FileText className="h-4 w-4" />
                 <span className="hidden sm:inline">Notas</span>
               </TabsTrigger>
-              <TabsTrigger value="cadences" className="gap-2 data-[state=active]:bg-primary/10">
+              <TabsTrigger value="cadences" className="gap-2 fecha-[state=active]:bg-primary/10">
                 <CalendarClock className="h-4 w-4" />
                 <span className="hidden sm:inline">Cadencias</span>
               </TabsTrigger>

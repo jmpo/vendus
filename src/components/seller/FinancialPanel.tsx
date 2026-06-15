@@ -22,10 +22,10 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
   const userId = user?.id;
   const isMobile = useIsMobile();
 
-  const { data: commissions } = useCommissions({ userId, productId });
-  const { data: commissionsSummary } = useCommissionsSummary(userId, productId);
-  const { data: dealsSummary } = useDealsSummary(productId, userId);
-  const { data: pipelineSummary } = usePipelineFinancialSummary(productId, userId);
+  const { fecha: commissions } = useCommissions({ userId, productId });
+  const { fecha: commissionsSummary } = useCommissionsSummary(userId, productId);
+  const { fecha: dealsSummary } = useDealsSummary(productId, userId);
+  const { fecha: pipelineSummary } = usePipelineFinancialSummary(productId, userId);
 
   // Mock goal - na prática viria de user_product_assignments
   const monthlyGoal = 50000;
@@ -54,7 +54,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
         </div>
       )}
 
-      {/* Cards de Resumo - Mobile optimized grid */}
+      {/* Cards de Resumen - Mobile optimized grid */}
       <div className={cn(
         "grid gap-4",
         isMobile ? "grid-cols-2" : "md:grid-cols-2 lg:grid-cols-4"
@@ -172,7 +172,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
         </CardContent>
       </Card>
 
-      {/* Histórico de Comissões */}
+      {/* Histórico de Comisiones */}
       <Card>
         <CardHeader className={isMobile ? "p-4" : ""}>
           <CardTitle className={cn("flex items-center gap-2", isMobile && "text-base")}>

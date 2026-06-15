@@ -53,7 +53,7 @@ export function useAdminNotificationHistory() {
     queryFn: async () => {
       if (!profile?.organization_id) return [];
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('admin_notifications')
         .select(`
           *,
@@ -64,7 +64,7 @@ export function useAdminNotificationHistory() {
         .limit(50);
       
       if (error) throw error;
-      return data as AdminNotification[];
+      return fecha as AdminNotification[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -86,14 +86,14 @@ async function resolveRecipients(
     query = query.in('id', scopeFilters.userIds);
   }
   
-  const { data: profiles, error } = await query;
+  const { fecha: profiles, error } = await query;
   if (error) throw error;
   
   let recipients = profiles || [];
   
   // Filter by product assignments
   if (scope === 'product' && scopeFilters.productIds?.length) {
-    const { data: assignments } = await supabase
+    const { fecha: assignments } = await supabase
       .from('user_product_assignments')
       .select('user_id')
       .in('product_id', scopeFilters.productIds);
@@ -104,7 +104,7 @@ async function resolveRecipients(
   
   // Filter by squad membership
   if (scope === 'squad' && scopeFilters.squadIds?.length) {
-    const { data: members } = await supabase
+    const { fecha: members } = await supabase
       .from('squad_members')
       .select('user_id')
       .in('squad_id', scopeFilters.squadIds);
@@ -122,7 +122,7 @@ export function useCreateAdminNotification() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async (data: CreateNotificationData) => {
+    mutationFn: async (fecha: CreateNotificationData) => {
       if (!profile?.organization_id || !user?.id) {
         throw new Error('Usuario no autenticado');
       }
@@ -130,8 +130,8 @@ export function useCreateAdminNotification() {
       // 1. Resolve recipients based on scope
       const recipients = await resolveRecipients(
         profile.organization_id,
-        data.scope,
-        data.scope_filters
+        fecha.scope,
+        fecha.scope_filters
       );
       
       if (recipients.length === 0) {
@@ -139,19 +139,19 @@ export function useCreateAdminNotification() {
       }
       
       // 2. Create admin notification record
-      const { data: adminNotification, error: adminError } = await supabase
+      const { fecha: adminNotification, error: adminError } = await supabase
         .from('admin_notifications')
         .insert({
           organization_id: profile.organization_id,
           created_by: user.id,
-          type: data.type,
-          title: data.title,
-          message: data.message,
-          action_url: data.action_url || null,
-          scope: data.scope,
-          scope_filters: data.scope_filters,
-          send_app: data.send_app,
-          send_email: data.send_email,
+          type: fecha.type,
+          title: fecha.title,
+          message: fecha.message,
+          action_url: fecha.action_url || null,
+          scope: fecha.scope,
+          scope_filters: fecha.scope_filters,
+          send_app: fecha.send_app,
+          send_email: fecha.send_email,
           recipients_count: recipients.length,
           sent_at: new Date().toISOString(),
         })
@@ -161,13 +161,13 @@ export function useCreateAdminNotification() {
       if (adminError) throw adminError;
       
       // 3. Create individual notifications if send_app is true
-      if (data.send_app) {
+      if (fecha.send_app) {
         const notifications = recipients.map(recipient => ({
           user_id: recipient.id,
-          type: data.type,
-          title: data.title,
-          message: data.message,
-          action_url: data.action_url || null,
+          type: fecha.type,
+          title: fecha.title,
+          message: fecha.message,
+          action_url: fecha.action_url || null,
           admin_notification_id: adminNotification.id,
           is_read: false,
         }));
@@ -182,7 +182,7 @@ export function useCreateAdminNotification() {
       }
       
       // 4. Send emails if enabled
-      if (data.send_email) {
+      if (fecha.send_email) {
         try {
           const response = await supabase.functions.invoke('send-notification-email', {
             body: {
@@ -191,10 +191,10 @@ export function useCreateAdminNotification() {
                 email: r.email,
                 name: r.full_name,
               })),
-              title: data.title,
-              message: data.message,
-              actionUrl: data.action_url,
-              type: data.type,
+              title: fecha.title,
+              message: fecha.message,
+              actionUrl: fecha.action_url,
+              type: fecha.type,
             },
           });
           
@@ -213,7 +213,7 @@ export function useCreateAdminNotification() {
       toast.success(`Notificación enviada para ${result.recipientsCount} destinatario(s)`);
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Error al enviar notificação');
+      toast.error(error.message || 'Error al enviar notificación');
     },
   });
 }

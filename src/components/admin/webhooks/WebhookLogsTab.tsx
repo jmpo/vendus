@@ -37,14 +37,14 @@ interface WebhookLogsTabProps {
 }
 
 export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
-  const { data: logs, isLoading, refetch } = useWebhookLogs(webhookId);
+  const { fecha: logs, isLoading, refetch } = useWebhookLogs(webhookId);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedLog, setSelectedLog] = useState<WebhookLog | null>(null);
   const [reprocessingId, setReprocessingId] = useState<string | null>(null);
 
   const handleReprocess = async (log: WebhookLog) => {
     if (!log.request_body) {
-      toast.error('Este log não possui payload para reprocessar');
+      toast.error('Este log no possui payload para reprocessar');
       return;
     }
     setReprocessingId(log.id);
@@ -59,10 +59,10 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
         const errText = await resp.text();
         throw new Error(errText || `HTTP ${resp.status}`);
       }
-      toast.success('Requisição reprocessada com sucesso!');
+      toast.success('Requisição reprocessada com éxito!');
       refetch();
     } catch (err: any) {
-      toast.error(`Erro ao reprocessar: ${err.message}`);
+      toast.error(`Error ao reprocessar: ${err.message}`);
     } finally {
       setReprocessingId(null);
     }
@@ -177,7 +177,7 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
                       <div className="flex items-center gap-2">
                         {log.actions_executed && log.actions_executed.length > 0 && (
                           <Badge variant="secondary">
-                            {log.actions_executed.length} ações
+                            {log.actions_executed.length} acciones
                           </Badge>
                         )}
                         <Button 
@@ -241,7 +241,7 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
                 {/* Meta Info */}
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-muted-foreground">Data/Hora</p>
+                    <p className="text-muted-foreground">Fecha/Hora</p>
                     <p className="font-medium">
                       {format(new Date(selectedLog.created_at), "dd/MM/yyyy 'às' HH:mm:ss", { locale: ptBR })}
                     </p>

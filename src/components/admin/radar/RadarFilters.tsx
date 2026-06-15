@@ -32,7 +32,7 @@ const CHANNELS = [
 
 const STATUSES = [
   { id: 'waiting_human', label: 'Aguardando' },
-  { id: 'human_active', label: 'Em atendimento' },
+  { id: 'human_active', label: 'Em atención' },
   { id: 'bot_active', label: 'Com IA' },
 ];
 
@@ -44,11 +44,11 @@ const TEMPERATURES = [
 
 export function RadarFilters({ value, onChange }: Props) {
   const { user, profile } = useAuth();
-  const { data: products } = useProducts();
-  const { data: tags } = useLeadTags();
-  const { data: sectors } = useSectors();
-  const { data: members } = useTeamMembers(profile?.organization_id || (user as any)?.organization_id);
-  const { data: squads } = useSquads();
+  const { fecha: products } = useProducts();
+  const { fecha: tags } = useLeadTags();
+  const { fecha: sectors } = useSectors();
+  const { fecha: members } = useTeamMembers(profile?.organization_id || (user as any)?.organization_id);
+  const { fecha: squads } = useSquads();
 
   function toggle<T extends keyof ScanFilters>(key: T, val: string) {
     const arr = (value[key] as unknown as string[]) || [];
@@ -108,7 +108,7 @@ export function RadarFilters({ value, onChange }: Props) {
       <CardContent className="space-y-5">
         {/* Janela de inatividade */}
         <div>
-          <Label className="text-xs text-muted-foreground">Período de inatividade (dias)</Label>
+          <Label className="text-xs text-muted-foreground">Período de inatividade (días)</Label>
           <div className="flex items-center gap-3 mt-2">
             <span className="text-sm w-8 text-center">{value.inactivity_days_min ?? 0}</span>
             <Slider
@@ -126,7 +126,7 @@ export function RadarFilters({ value, onChange }: Props) {
         </div>
 
         <div>
-          <Label className="text-xs text-muted-foreground">Mínimo de mensagens do cliente</Label>
+          <Label className="text-xs text-muted-foreground">Mínimo de mensajes del cliente</Label>
           <div className="flex items-center gap-3 mt-2">
             <Slider
               value={[value.min_client_messages ?? 1]}
@@ -144,7 +144,7 @@ export function RadarFilters({ value, onChange }: Props) {
 
         {/* Status (apenas inclusão) */}
         <div className="space-y-2">
-          <Label className="text-xs text-muted-foreground">Status da conversa</Label>
+          <Label className="text-xs text-muted-foreground">Status da conversación</Label>
           <div className="flex flex-wrap gap-1.5">
             {STATUSES.map((s) => {
               const sel = (value.statuses || []).includes(s.id);
@@ -162,9 +162,9 @@ export function RadarFilters({ value, onChange }: Props) {
           </div>
         </div>
 
-        {/* Temperatura do lead */}
+        {/* Temperatura del lead */}
         <div className="space-y-2">
-          <Label className="text-xs text-muted-foreground">Temperatura do lead</Label>
+          <Label className="text-xs text-muted-foreground">Temperatura del lead</Label>
           <div className="flex flex-wrap gap-1.5">
             {TEMPERATURES.map((t) => {
               const sel = (value.temperatures || []).includes(t.id as any);
@@ -187,9 +187,9 @@ export function RadarFilters({ value, onChange }: Props) {
           </div>
         </div>
 
-        {/* Valor mínimo do negócio */}
+        {/* Valor mínimo do negocio */}
         <div className="space-y-1">
-          <Label className="text-xs text-muted-foreground">Valor mínimo do negócio (R$)</Label>
+          <Label className="text-xs text-muted-foreground">Valor mínimo do negocio (R$)</Label>
           <Input
             type="number"
             min={0}
@@ -218,7 +218,7 @@ export function RadarFilters({ value, onChange }: Props) {
         />
 
         <FilterMultiSelect
-          title="Setor"
+          title="Sector"
           items={(sectors || []).map((s: any) => ({ id: s.id, label: s.name, color: s.color }))}
           included={value.sector_ids || []}
           excluded={value.exclude_sector_ids || []}
@@ -233,7 +233,7 @@ export function RadarFilters({ value, onChange }: Props) {
           excluded={value.exclude_assigned_user_ids || []}
           onToggleInclude={(id) => toggle('assigned_user_ids', id)}
           onToggleExclude={(id) => toggle('exclude_assigned_user_ids', id)}
-          placeholder="Buscar atendente..."
+          placeholder="Buscar agente..."
         />
 
         <FilterMultiSelect
@@ -246,7 +246,7 @@ export function RadarFilters({ value, onChange }: Props) {
         />
 
         <FilterMultiSelect
-          title="Produto"
+          title="Producto"
           items={(products || []).map((p: any) => ({ id: p.id, label: p.name }))}
           included={value.product_ids || []}
           excluded={value.exclude_product_ids || []}
@@ -269,28 +269,28 @@ export function RadarFilters({ value, onChange }: Props) {
         {/* Toggles especiais */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label className="text-sm">Apenas conversas sem etiqueta</Label>
+            <Label className="text-sm">Apenas conversaciones sem etiqueta</Label>
             <Switch
               checked={!!value.require_no_tags}
               onCheckedChange={(v) => onChange({ ...value, require_no_tags: v })}
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label className="text-sm">Apenas conversas sem setor</Label>
+            <Label className="text-sm">Apenas conversaciones sem sector</Label>
             <Switch
               checked={!!value.require_no_sector}
               onCheckedChange={(v) => onChange({ ...value, require_no_sector: v })}
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label className="text-sm">Apenas conversas sem atendente</Label>
+            <Label className="text-sm">Apenas conversaciones sem agente</Label>
             <Switch
               checked={!!value.require_no_assigned}
               onCheckedChange={(v) => onChange({ ...value, require_no_assigned: v })}
             />
           </div>
           <div className="flex items-center justify-between pt-2 border-t">
-            <Label className="text-sm">Incluir conversas com IA ativa</Label>
+            <Label className="text-sm">Incluir conversaciones com IA ativa</Label>
             <Switch
               checked={!!value.include_ai_active}
               onCheckedChange={(v) => onChange({ ...value, include_ai_active: v })}

@@ -15,7 +15,7 @@ export function useCustomFieldValues(fieldKey: string | null) {
     queryKey: ['custom-field-values', orgId, fieldKey],
     queryFn: async () => {
       if (!orgId || !fieldKey) return [] as string[];
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('leads')
         .select('metadata')
         .eq('organization_id', orgId)
@@ -23,7 +23,7 @@ export function useCustomFieldValues(fieldKey: string | null) {
         .limit(500);
       if (error) throw error;
       const set = new Set<string>();
-      (data || []).forEach((row: any) => {
+      (fecha || []).forEach((row: any) => {
         const v = row?.metadata?.custom_fields?.[fieldKey];
         if (v !== undefined && v !== null && String(v).trim() !== '') {
           set.add(String(v));

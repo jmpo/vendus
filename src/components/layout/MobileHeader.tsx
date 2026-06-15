@@ -22,7 +22,7 @@ interface MobileHeaderProps {
   subtitle?: string;
   showBack?: boolean;
   onBack?: () => void;
-  /** Lista de produtos disponíveis para troca rápida */
+  /** Lista de productos disponíveis para troca rápida */
   products?: DBProduct[];
   selectedProduct?: DBProduct | null;
   onSelectProduct?: (product: DBProduct) => void;

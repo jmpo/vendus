@@ -165,7 +165,7 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
           <h3 className="text-lg font-medium text-foreground mb-1">Ninguna objeción registrada</h3>
           <p className="text-sm text-muted-foreground mb-4">
             {showAdminActions 
-              ? 'Use la IA para generar objeciones o agréguelas manualmente arriba'
+              ? 'Usa la IA para generar objeciones o agréguelas manualmente arriba'
               : 'Pida al administrador que registre las objeciones de este producto'}
           </p>
           {showAdminActions && productId && productName && (
@@ -181,7 +181,7 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
-              placeholder={isMobile ? "Buscar objeción..." : "Buscar objeción... ex: 'caro', 'não é o momento', 'vou pensar'"}
+              placeholder={isMobile ? "Buscar objeción..." : "Buscar objeción... ex: 'caro', 'no é o momento', 'vou pensar'"}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={cn("pl-12 text-base bg-card border-border", isMobile ? "h-11" : "h-12")}
@@ -269,10 +269,10 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
                         <div className="flex items-center gap-2 mb-2">
                           <Brain size={16} className="text-muted-foreground" />
                           <span className="text-sm font-medium text-muted-foreground">
-                            O que ele quer dizer:
+                            O que ele quiere dizer:
                           </span>
                         </div>
-                        <p className="text-foreground text-sm">{objection.whatTheyMean || 'Não definido'}</p>
+                        <p className="text-foreground text-sm">{objection.whatTheyMean || 'No definido'}</p>
                       </div>
 
                       {/* Suggested Response */}

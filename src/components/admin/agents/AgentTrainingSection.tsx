@@ -44,10 +44,10 @@ const CATEGORIES = [
   { value: 'sales_techniques', label: '🎯 Técnicas de ventas', description: 'SPIN Selling, Challenger, etc.' },
   { value: 'communication', label: '💬 Comunicación', description: 'Rapport, escuta ativa, linguagem corporal' },
   { value: 'objections', label: '🛡️ Objeciones', description: 'Técnicas de contorno de objeções' },
-  { value: 'closing', label: '✅ Cierre', description: 'Técnicas de fechamento de vendas' },
+  { value: 'closing', label: '✅ Cierre', description: 'Técnicas de cierre de ventas' },
   { value: 'prospecting', label: '🔍 Prospección', description: 'Como encontrar e abordar leads' },
-  { value: 'negotiation', label: '🤝 Negociación', description: 'Táticas de negociação' },
-  { value: 'general', label: '📋 Geral', description: 'Outros materiais de treinamento' },
+  { value: 'negotiation', label: '🤝 Negociación', description: 'Táticas de negociación' },
+  { value: 'general', label: '📋 Geral', description: 'Outros materiales de treinamento' },
 ];
 
 export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectionProps) {
@@ -64,22 +64,22 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
   const [previewMaterial, setPreviewMaterial] = useState<TrainingMaterial | null>(null);
 
   // Fetch training materials - FILTERED BY AGENT
-  const { data: materials, isLoading } = useQuery({
+  const { fecha: materials, isLoading } = useQuery({
     queryKey: ['agent-training-materials', agentId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('agent_training_materials')
         .select('*')
         .eq('agent_id', agentId)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as TrainingMaterial[];
+      return fecha as TrainingMaterial[];
     },
     enabled: !!agentId,
     refetchInterval: (query) => {
-      const data = query.state.data;
-      const hasProcessing = data?.some(m => m.processing_status === 'processing' || m.processing_status === 'pending');
+      const fecha = query.state.fecha;
+      const hasProcessing = fecha?.some(m => m.processing_status === 'processing' || m.processing_status === 'pending');
       return hasProcessing ? 5000 : false;
     },
   });
@@ -87,7 +87,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
   // Process material mutation
   const processMaterial = useMutation({
     mutationFn: async ({ materialId, fileUrl, filePath }: { materialId: string; fileUrl: string; filePath: string }) => {
-      const { data, error } = await supabase.functions.invoke('process-training-material', {
+      const { fecha, error } = await supabase.functions.invoke('process-training-material', {
         body: { 
           material_id: materialId, 
           file_url: fileUrl,
@@ -98,7 +98,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
       });
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['agent-training-materials', agentId] });
@@ -164,11 +164,11 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
 
       if (uploadError) throw uploadError;
 
-      const { data: urlData } = supabase.storage
+      const { fecha: urlData } = supabase.storage
         .from('product-documents')
         .getPublicUrl(filePath);
 
-      const { data: insertData, error: insertError } = await supabase
+      const { fecha: insertData, error: insertError } = await supabase
         .from('agent_training_materials')
         .insert({
           organization_id: profile.organization_id,
@@ -203,7 +203,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
       
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Erro ao fazer upload do material');
+      toast.error('Error ao hacer upload do material');
     } finally {
       setIsUploading(false);
     }
@@ -230,7 +230,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
       case 'processing':
         return <Badge variant="secondary" className="gap-1"><Loader2 className="h-3 w-3 animate-spin" />Processando</Badge>;
       case 'failed':
-        return <Badge variant="destructive" className="gap-1"><XCircle className="h-3 w-3" />Erro</Badge>;
+        return <Badge variant="destructive" className="gap-1"><XCircle className="h-3 w-3" />Error</Badge>;
       default:
         return <Badge variant="outline" className="gap-1"><Clock className="h-3 w-3" />Pendiente</Badge>;
     }
@@ -248,7 +248,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
           <GraduationCap className="h-4 w-4 text-muted-foreground mt-0.5" />
           <div className="text-sm text-muted-foreground">
             <p className="font-medium text-foreground">Entrenamiento específico</p>
-            <p>Adicione PDFs e documentos que serão usados <strong>apenas por este agente</strong>, além do conhecimento geral do produto.</p>
+            <p>Adicione PDFs e documentos que serão usados <strong>apenas por este agente</strong>, além do conhecimento geral do producto.</p>
           </div>
         </div>
       </div>

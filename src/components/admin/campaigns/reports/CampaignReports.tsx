@@ -29,7 +29,7 @@ export function CampaignReports({ campaigns }: { campaigns: Campaign[] }) {
   useEffect(() => {
     if (!user) return;
     supabase.from('profiles').select('organization_id').eq('id', user.id).maybeSingle()
-      .then(({ data }) => setOrgId(data?.organization_id ?? null));
+      .then(({ fecha }) => setOrgId(fecha?.organization_id ?? null));
   }, [user]);
 
   useEffect(() => {
@@ -47,10 +47,10 @@ export function CampaignReports({ campaigns }: { campaigns: Campaign[] }) {
         sb.from('evolution_instances').select('id, name').eq('organization_id', orgId),
         sb.from('campaign_contexts').select('id, name').eq('organization_id', orgId),
       ]);
-      setRows(t.data ?? []);
-      setAgents(Object.fromEntries((a.data ?? []).map((x: any) => [x.id, x.name])));
-      setInstances(Object.fromEntries((i.data ?? []).map((x: any) => [x.id, x.name ?? '—'])));
-      setContexts(Object.fromEntries((c.data ?? []).map((x: any) => [x.id, x.name])));
+      setRows(t.fecha ?? []);
+      setAgents(Object.fromEntries((a.fecha ?? []).map((x: any) => [x.id, x.name])));
+      setInstances(Object.fromEntries((i.fecha ?? []).map((x: any) => [x.id, x.name ?? '—'])));
+      setContexts(Object.fromEntries((c.fecha ?? []).map((x: any) => [x.id, x.name])));
       setLoading(false);
     })();
   }, [orgId, campaigns.length]);
@@ -115,7 +115,7 @@ export function CampaignReports({ campaigns }: { campaigns: Campaign[] }) {
         <KPI label="Finalizadas" value={completed} />
         <KPI label="Mensagens enviadas" value={summary.sent} />
         <KPI label="Respostas recebidas" value={summary.responded} accent />
-        <KPI label="Taxa de resposta" value={pct(summary.responded, summary.sent)} accent />
+        <KPI label="Taxa de respuesta" value={pct(summary.responded, summary.sent)} accent />
       </div>
 
       {loading ? (
@@ -124,7 +124,7 @@ export function CampaignReports({ campaigns }: { campaigns: Campaign[] }) {
         <Card>
           <CardContent className="p-10 flex flex-col items-center gap-3 text-muted-foreground text-sm">
             <BarChart3 className="h-8 w-8" />
-            Nenhum dado ainda. Dispare uma campanha para popular os relatórios.
+            Nenhum dado aún. Dispare uma campaña para popular os relatórios.
           </CardContent>
         </Card>
       ) : (

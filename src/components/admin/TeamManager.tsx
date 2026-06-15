@@ -21,9 +21,9 @@ import { UserFormDialog } from './team/UserFormDialog';
 import { SectorsManager } from './sectors/SectorsManager';
 
 export function TeamManager() {
-  const { data: members, isLoading } = useTeamMembers();
-  const { data: squads } = useSquads();
-  const { data: products } = useProducts();
+  const { fecha: members, isLoading } = useTeamMembers();
+  const { fecha: squads } = useSquads();
+  const { fecha: products } = useProducts();
   const updateRole = useUpdateUserRole();
   const removeMember = useRemoveTeamMember();
   
@@ -293,7 +293,7 @@ export function TeamManager() {
       <Dialog open={!!editingMember} onOpenChange={() => setEditingMember(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Alterar Rol do Usuário</DialogTitle>
+            <DialogTitle>Alterar Rol do Usuario</DialogTitle>
           </DialogHeader>
           
           {editingMember && (

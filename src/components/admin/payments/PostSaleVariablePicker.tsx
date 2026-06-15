@@ -12,16 +12,16 @@ export const POST_SALE_VARIABLE_GROUPS: VariableGroup[] = [
   {
     label: 'Lead',
     vars: [
-      { key: 'lead_name', description: 'Nome do lead' },
-      { key: 'lead_email', description: 'E-mail do lead' },
-      { key: 'lead_phone', description: 'Telefone do lead' },
+      { key: 'lead_name', description: 'Nombre del lead' },
+      { key: 'lead_email', description: 'E-mail del lead' },
+      { key: 'lead_phone', description: 'Teléfono del lead' },
     ],
   },
   {
-    label: 'Produto / Oferta',
+    label: 'Producto / Oferta',
     vars: [
-      { key: 'product_name', description: 'Nome do produto' },
-      { key: 'offer_name', description: 'Nome da oferta' },
+      { key: 'product_name', description: 'Nombre do producto' },
+      { key: 'offer_name', description: 'Nombre da oferta' },
     ],
   },
   {
@@ -32,14 +32,14 @@ export const POST_SALE_VARIABLE_GROUPS: VariableGroup[] = [
       { key: 'currency', description: 'Moeda' },
       { key: 'transaction_id', description: 'ID da transação' },
       { key: 'order_id', description: 'ID/código do pedido' },
-      { key: 'payment_method', description: 'Forma de pagamento' },
+      { key: 'payment_method', description: 'Forma de pago' },
       { key: 'installments', description: 'Parcelas' },
     ],
   },
   {
     label: 'Links',
     vars: [
-      { key: 'payment_link', description: 'Link de pagamento' },
+      { key: 'payment_link', description: 'Link de pago' },
       { key: 'checkout_url', description: 'URL do checkout' },
       { key: 'receipt_url', description: 'Link do recibo' },
       { key: 'invoice_url', description: 'Link da fatura' },
@@ -49,7 +49,7 @@ export const POST_SALE_VARIABLE_GROUPS: VariableGroup[] = [
     label: 'PIX',
     vars: [
       { key: 'pix_code', description: 'Código copia-e-cola do PIX' },
-      { key: 'pix_qrcode_url', description: 'Imagem do QR Code' },
+      { key: 'pix_qrcode_url', description: 'Imagen do QR Code' },
       { key: 'pix_expires_at', description: 'Validade do PIX' },
     ],
   },
@@ -64,9 +64,9 @@ export const POST_SALE_VARIABLE_GROUPS: VariableGroup[] = [
   {
     label: 'Comprador',
     vars: [
-      { key: 'customer_name', description: 'Nome do comprador' },
+      { key: 'customer_name', description: 'Nombre do comprador' },
       { key: 'customer_email', description: 'E-mail do comprador' },
-      { key: 'customer_phone', description: 'Telefone do comprador' },
+      { key: 'customer_phone', description: 'Teléfono do comprador' },
       { key: 'customer_document', description: 'CPF/CNPJ' },
     ],
   },
@@ -112,7 +112,7 @@ export function PostSaleVariablePicker({ targetRef, value, onChange }: Props) {
         <div className="border-b px-3 py-2">
           <p className="text-sm font-medium">Inserir variável</p>
           <p className="text-xs text-muted-foreground">
-            Clique para inserir na posição do cursor.
+            Hacé clic para inserir na posição do cursor.
           </p>
         </div>
         <div className="max-h-80 overflow-y-auto p-2 space-y-3">

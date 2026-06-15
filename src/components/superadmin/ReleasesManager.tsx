@@ -21,8 +21,8 @@ const TYPES = [
 ];
 
 export function ReleasesManager() {
-  const { data: releases = [] } = useReleases();
-  const { data: categories = [] } = useHelpCategories();
+  const { fecha: releases = [] } = useReleases();
+  const { fecha: categories = [] } = useHelpCategories();
   const upsert = useUpsertRelease();
   const del = useDeleteRelease();
 
@@ -34,7 +34,7 @@ export function ReleasesManager() {
   };
 
   const save = async () => {
-    if (!editing?.title) { toast.error('Título obrigatório'); return; }
+    if (!editing?.title) { toast.error('Título obligatorio'); return; }
     const payload: any = {
       ...editing,
       published_at: editing.is_published ? (editing.published_at || new Date().toISOString()) : null,
@@ -44,7 +44,7 @@ export function ReleasesManager() {
       return;
     }
     await upsert.mutateAsync(payload);
-    toast.success(editing.publish_as_article && editing.is_published ? 'Atualização publicada e artigo criado na Central de Ajuda' : 'Atualização salva');
+    toast.success(editing.publish_as_article && editing.is_published ? 'Atualização publicada e artigo creado na Centro de Ayuda' : 'Atualização salva');
     setEditing(null);
   };
 
@@ -101,7 +101,7 @@ export function ReleasesManager() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2">
                   <Label>Título</Label>
-                  <Input value={editing.title || ''} onChange={(e) => setEditing({ ...editing, title: e.target.value })} placeholder="Ex: Nova Central de Ajuda" />
+                  <Input value={editing.title || ''} onChange={(e) => setEditing({ ...editing, title: e.target.value })} placeholder="Ex: Nova Centro de Ayuda" />
                 </div>
                 <div>
                   <Label>Versión</Label>

@@ -6,8 +6,8 @@ import { useAuth } from '@/hooks/useAuth';
 // behind Supabase's auto-refresh, causing 401 "Invalid token" errors right
 // after the JWT expires. getSession() returns the up-to-date token.
 async function getFreshAccessToken(): Promise<string | null> {
-  const { data } = await supabase.auth.getSession();
-  return data.session?.access_token ?? null;
+  const { fecha } = await supabase.auth.getSession();
+  return fecha.session?.access_token ?? null;
 }
 
 // Types
@@ -95,7 +95,7 @@ export interface WebChatConversation {
   created_at: string;
   updated_at: string;
   closed_at: string | null;
-  // Joined data
+  // Joined fecha
   webchat_widgets?: { name: string; primary_color: string; product_id?: string };
   profiles?: { id: string; full_name: string; avatar_url: string | null };
   leads?: { id: string; name: string; email: string | null; phone: string | null };
@@ -128,13 +128,13 @@ export function useWebChatWidgets() {
   return useQuery({
     queryKey: ['webchat-widgets', profile?.organization_id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('webchat_widgets')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as WebChatWidget[];
+      return fecha as WebChatWidget[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -144,7 +144,7 @@ export function useWebChatWidget(widgetId: string) {
   return useQuery({
     queryKey: ['webchat-widget', widgetId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('webchat_widgets')
         .select('*, webchat_agent_configs(*)')
         .eq('id', widgetId)
@@ -152,8 +152,8 @@ export function useWebChatWidget(widgetId: string) {
 
       if (error) throw error;
       
-      // Transform data to match our types
-      const widget = data as any;
+      // Transform fecha to match our types
+      const widget = fecha as any;
       return {
         ...widget,
         business_hours: widget.business_hours || null,
@@ -175,24 +175,24 @@ export function useWebChatWidget(widgetId: string) {
   });
 }
 
-// Hook para buscar widget por produto
+// Hook para buscar widget por producto
 export function useWebChatWidgetByProduct(productId: string) {
   const { profile } = useAuth();
   
   return useQuery({
     queryKey: ['webchat-widget-product', productId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('webchat_widgets')
         .select('*, webchat_agent_configs(*)')
         .eq('product_id', productId)
         .maybeSingle();
 
       if (error) throw error;
-      if (!data) return null;
+      if (!fecha) return null;
       
-      // Transform data to match our types
-      const widget = data as any;
+      // Transform fecha to match our types
+      const widget = fecha as any;
       return {
         ...widget,
         business_hours: widget.business_hours || null,
@@ -214,7 +214,7 @@ export function useWebChatWidgetByProduct(productId: string) {
   });
 }
 
-// Hook para criar widget para produto
+// Hook para crear widget para producto
 export function useCreateProductWidget() {
   const queryClient = useQueryClient();
   const { profile } = useAuth();
@@ -223,7 +223,7 @@ export function useCreateProductWidget() {
     mutationFn: async ({ productId, productName }: { productId: string; productName: string }) => {
       if (!profile?.organization_id) throw new Error('No organization');
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('webchat_widgets')
         .insert({
           name: `Chat - ${productName}`,
@@ -237,7 +237,7 @@ export function useCreateProductWidget() {
 
       // Create default agent config linked to product
       await supabase.from('webchat_agent_configs').insert({
-        widget_id: data.id,
+        widget_id: fecha.id,
         organization_id: profile.organization_id,
         product_id: productId,
         agent_name: 'Assistente Virtual',
@@ -246,7 +246,7 @@ export function useCreateProductWidget() {
         required_fields: ['name', 'whatsapp'],
       });
 
-      return data;
+      return fecha;
     },
     onSuccess: (_, { productId }) => {
       queryClient.invalidateQueries({ queryKey: ['webchat-widgets'] });
@@ -263,7 +263,7 @@ export function useCreateWebChatWidget() {
     mutationFn: async (widget: { name?: string }) => {
       if (!profile?.organization_id) throw new Error('No organization');
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('webchat_widgets')
         .insert({
           name: widget.name || 'Novo Widget',
@@ -276,11 +276,11 @@ export function useCreateWebChatWidget() {
 
       // Create default agent config
       await supabase.from('webchat_agent_configs').insert({
-        widget_id: data.id,
+        widget_id: fecha.id,
         organization_id: profile.organization_id,
       });
 
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['webchat-widgets'] });
@@ -293,7 +293,7 @@ export function useUpdateWebChatWidget() {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: { id: string; [key: string]: unknown }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('webchat_widgets')
         .update(updates as Record<string, unknown>)
         .eq('id', id)
@@ -301,11 +301,11 @@ export function useUpdateWebChatWidget() {
         .single();
 
       if (error) throw error;
-      return data as WebChatWidget;
+      return fecha as WebChatWidget;
     },
-    onSuccess: (data) => {
+    onSuccess: (fecha) => {
       queryClient.invalidateQueries({ queryKey: ['webchat-widgets'] });
-      queryClient.invalidateQueries({ queryKey: ['webchat-widget', data.id] });
+      queryClient.invalidateQueries({ queryKey: ['webchat-widget', fecha.id] });
     },
   });
 }
@@ -329,7 +329,7 @@ export function useUpdateAgentConfig() {
         }
       });
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('webchat_agent_configs')
         .update(dbUpdates)
         .eq('id', id)
@@ -337,23 +337,23 @@ export function useUpdateAgentConfig() {
         .single();
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['webchat-widget', data.widget_id] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['webchat-widget', fecha.widget_id] });
     },
   });
 }
 
 // ============================================================================
-// Hooks for Conversations (Inbox) — todos os filtros são aplicados no backend
+// Hooks for Conversations (Inbox) — todos os filtros son aplicados no backend
 // ============================================================================
 
 export interface InboxBackendFilters {
   tab?: 'attending' | 'waiting' | 'resolved' | 'all';
-  product_ids?: string[];        // pode incluir '__none__'
-  sector_ids?: string[];         // pode incluir '__none__'
-  assigned_user_ids?: string[];  // pode incluir 'unassigned'
+  product_ids?: string[];        // puede incluir '__none__'
+  sector_ids?: string[];         // puede incluir '__none__'
+  assigned_user_ids?: string[];  // puede incluir 'unassigned'
   tag_ids?: string[];
   channel?: string | null;
   search?: string | null;
@@ -390,8 +390,8 @@ export function useWebChatConversations(filters?: InboxBackendFilters & { limit?
       });
 
       if (!res.ok) throw new Error('Failed to fetch conversations');
-      const data = await res.json();
-      return data.conversations as WebChatConversation[];
+      const fecha = await res.json();
+      return fecha.conversations as WebChatConversation[];
     },
     enabled: !!session?.access_token,
     // Mostra dados em cache instantaneamente e revalida em background (estilo WhatsApp)
@@ -454,17 +454,17 @@ export function useWebChatConversation(conversationId: string) {
         err.details = body?.details;
         throw err;
       }
-      const data = await res.json();
+      const fecha = await res.json();
       return {
-        conversation: data.conversation as WebChatConversation,
-        messages: data.messages as WebChatMessage[],
+        conversation: fecha.conversation as WebChatConversation,
+        messages: fecha.messages as WebChatMessage[],
       };
     },
     enabled: !!session?.access_token && !!conversationId,
     staleTime: 30000,
-    // Mantém a conversa anterior visível enquanto a nova carrega — elimina o "flash" de loading
+    // Mantém a conversación anterior visível enquanto a nova carrega — elimina o "flash" de loading
     placeholderData: (prev) => prev,
-    // Pinta cabeçalho/última mensagem instantaneamente a partir do cache da lista de conversas
+    // Pinta cabeçalho/última mensaje instantaneamente a partir do cache da lista de conversaciones
     initialData: () => {
       if (!conversationId) return undefined;
       const list = queryClient.getQueryData<any>(['webchat-conversations']);
@@ -473,11 +473,11 @@ export function useWebChatConversation(conversationId: string) {
       if (!found) return undefined;
       return { conversation: found as WebChatConversation, messages: [] as WebChatMessage[] };
     },
-    initialDataUpdatedAt: 0, // força refetch em background mesmo com initialData
+    initialDataUpdatedAt: 0, // força refetch em background mismo com initialData
     refetchInterval: 15000,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: false,
-    // Não insiste em IDs inválidos / sem permissão
+    // No insiste em IDs inválidos / sem permiso
     retry: (failureCount, error: any) => {
       if (error?.status === 404 || error?.status === 403) return false;
       return failureCount < 2;
@@ -560,7 +560,7 @@ export function useSendAgentMessage() {
     // Optimistic update - show message immediately.
     // Usa um clientTempId estável que é enviado para o backend e ecoado de volta
     // no broadcast `new_message` — assim o listener consegue SUBSTITUIR a bolha
-    // otimista pela mensagem persistida em vez de duplicar.
+    // otimista pela mensaje persistida em vez de duplicar.
     onMutate: async (vars) => {
       const { conversationId, content, media } = vars;
       const clientTempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -593,7 +593,7 @@ export function useSendAgentMessage() {
               created_at: new Date().toISOString(),
               profiles: {
                 id: user?.id,
-                full_name: profile?.full_name || 'Você',
+                full_name: profile?.full_name || 'Usted',
                 avatar_url: profile?.avatar_url || null,
               },
             },
@@ -610,7 +610,7 @@ export function useSendAgentMessage() {
       }
     },
     onSettled: (_, __, { conversationId }) => {
-      // Always refetch after error or success to ensure data is in sync
+      // Always refetch after error or success to ensure fecha is in sync
       queryClient.invalidateQueries({ queryKey: ['webchat-conversation', conversationId] });
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
     },
@@ -669,8 +669,8 @@ export function useLinkLead() {
 }
 
 /**
- * Define (ou limpa) o produto de uma conversa do Inbox manualmente.
- * Override manual feito pelo atendente no painel direito.
+ * Define (ou limpa) o producto de uma conversación do Inbox manualmente.
+ * Override manual feito pelo agente no painel direito.
  */
 export function useSetConversationProduct() {
   const queryClient = useQueryClient();
@@ -721,7 +721,7 @@ export function useSetConversationSector() {
 }
 
 // New hooks for conversation management
-// Mapeia ação -> status alvo para atualização otimista da UI.
+// Mapeia acción -> status alvo para atualização otimista da UI.
 const ACTION_TO_STATUS: Record<string, string | undefined> = {
   reopen: 'human_active',
   resume: 'human_active',
@@ -769,12 +769,12 @@ function useConversationAction(actionName: string) {
 
       // Atualiza todas as listas em cache (qualquer filtro)
       const listQueries = queryClient.getQueriesData<any>({ queryKey: ['webchat-conversations'] });
-      const previousList = listQueries.map(([key, data]) => [key, data] as const);
-      listQueries.forEach(([key, data]) => {
-        if (!Array.isArray(data)) return;
+      const previousList = listQueries.map(([key, fecha]) => [key, fecha] as const);
+      listQueries.forEach(([key, fecha]) => {
+        if (!Array.isArray(fecha)) return;
         queryClient.setQueryData(
           key,
-          data.map((c: any) => (c.id === conversationId ? { ...c, status: targetStatus } : c)),
+          fecha.map((c: any) => (c.id === conversationId ? { ...c, status: targetStatus } : c)),
         );
       });
 
@@ -785,7 +785,7 @@ function useConversationAction(actionName: string) {
         queryClient.setQueryData(['webchat-conversation', conversationId], ctx.previousDetail);
       }
       if (ctx?.previousList) {
-        ctx.previousList.forEach(([key, data]: any) => queryClient.setQueryData(key, data));
+        ctx.previousList.forEach(([key, fecha]: any) => queryClient.setQueryData(key, fecha));
       }
     },
     onSettled: (_data, _err, conversationId) => {

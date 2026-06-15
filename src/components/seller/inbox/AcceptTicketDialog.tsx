@@ -41,7 +41,7 @@ export function AcceptTicketDialog({
   previousAssigneeName,
   onAccepted,
 }: AcceptTicketDialogProps) {
-  const { data: sectors = [], isLoading: loadingSectors } = useUserSectors();
+  const { fecha: sectors = [], isLoading: loadingSectors } = useUserSectors();
   const acceptMutation = useAcceptConversation();
   const { toast } = useToast();
   const [sectorId, setSectorId] = useState<string>('');

@@ -9,8 +9,8 @@ export type PostSaleEventLog = Tables<'post_sale_event_logs'>;
 
 export const POST_SALE_EVENT_TYPES = [
   { value: 'compra_aprovada', label: 'Compra Aprovada', description: 'Pago confirmado, entregar acceso' },
-  { value: 'pix_gerado', label: 'PIX Gerado', description: 'Lembrar e converter PIX pendente' },
-  { value: 'boleto_gerado', label: 'Boleto Gerado', description: 'Lembrar do boleto antes do vencimento' },
+  { value: 'pix_gerado', label: 'PIX Generado', description: 'Lembrar e converter PIX pendente' },
+  { value: 'boleto_gerado', label: 'Boleto Generado', description: 'Lembrar do boleto antes do vencimento' },
   { value: 'carrinho_abandonado', label: 'Carrinho Abandonado', description: 'Recuperar checkout no finalizado' },
   { value: 'reembolso', label: 'Reembolso / Estorno', description: 'Gestionar cancelación e intento de retención' },
   { value: 'chargeback', label: 'Chargeback', description: 'Disputa de pago iniciada' },
@@ -23,13 +23,13 @@ export function usePostSaleEventActions(productId: string) {
   return useQuery({
     queryKey: ['post-sale-event-actions', productId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('post_sale_event_actions')
         .select('*')
         .eq('product_id', productId)
         .order('event_type', { ascending: true });
       if (error) throw error;
-      return (data || []) as PostSaleEventAction[];
+      return (fecha || []) as PostSaleEventAction[];
     },
     enabled: !!productId && !!profile?.organization_id,
   });
@@ -50,7 +50,7 @@ export function useUpsertPostSaleEventAction() {
         if (error) throw error;
         return id;
       }
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('post_sale_event_actions')
         .insert({
           ...input,
@@ -60,13 +60,13 @@ export function useUpsertPostSaleEventAction() {
         .select('id')
         .single();
       if (error) throw error;
-      return data.id;
+      return fecha.id;
     },
     onSuccess: (_id, vars) => {
       qc.invalidateQueries({ queryKey: ['post-sale-event-actions', vars.product_id] });
       toast.success('Acción guardada');
     },
-    onError: (e: any) => toast.error('Erro ao guardadar: ' + e.message),
+    onError: (e: any) => toast.error('Error ao guardadar: ' + e.message),
   });
 }
 
@@ -89,14 +89,14 @@ export function usePostSaleEventLogs(productId: string, limit = 20) {
   return useQuery({
     queryKey: ['post-sale-event-logs', productId, limit],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('post_sale_event_logs')
         .select('*')
         .eq('product_id', productId)
         .order('created_at', { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return (data || []) as PostSaleEventLog[];
+      return (fecha || []) as PostSaleEventLog[];
     },
     enabled: !!productId,
   });

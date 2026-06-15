@@ -15,11 +15,11 @@ export interface PipelineStage {
 
 export const DEFAULT_PIPELINE_STAGES = [
   { name: 'Novo Lead', color: '#3b82f6', order_index: 1, is_won: false, is_lost: false, description: 'Primer contacto con el cliente potencial' },
-  { name: 'Primeiro Contato', color: '#8b5cf6', order_index: 2, is_won: false, is_lost: false, description: 'Estabelecendo primeiro contato' },
-  { name: 'Qualificação', color: '#f59e0b', order_index: 3, is_won: false, is_lost: false, description: 'Avaliando necessidades e fit' },
-  { name: 'Proposta Enviada', color: '#ec4899', order_index: 4, is_won: false, is_lost: false, description: 'Propuesta comercial enviada' },
-  { name: 'Negociação', color: '#14b8a6', order_index: 5, is_won: false, is_lost: false, description: 'Negociando términos y condiciones' },
-  { name: 'Fechado (Ganho)', color: '#22c55e', order_index: 6, is_won: true, is_lost: false, description: 'Negocio fechado con éxito' },
+  { name: 'Primeiro Contacto', color: '#8b5cf6', order_index: 2, is_won: false, is_lost: false, description: 'Estabelecendo primeiro contacto' },
+  { name: 'Calificación', color: '#f59e0b', order_index: 3, is_won: false, is_lost: false, description: 'Avaliando necesidades e fit' },
+  { name: 'Propuesta Enviada', color: '#ec4899', order_index: 4, is_won: false, is_lost: false, description: 'Propuesta comercial enviada' },
+  { name: 'Negociación', color: '#14b8a6', order_index: 5, is_won: false, is_lost: false, description: 'Negociando términos y condiciones' },
+  { name: 'Cerrado (Ganado)', color: '#22c55e', order_index: 6, is_won: true, is_lost: false, description: 'Negocio cerrado con éxito' },
   { name: 'Perdido', color: '#ef4444', order_index: 7, is_won: false, is_lost: true, description: 'Oportunidade perdida' },
 ];
 
@@ -29,14 +29,14 @@ export function usePipelineStages(productId?: string) {
     queryFn: async () => {
       if (!productId) return [];
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('pipeline_stages')
         .select('*')
         .eq('product_id', productId)
         .order('order_index', { ascending: true });
 
       if (error) throw error;
-      return data as PipelineStage[];
+      return fecha as PipelineStage[];
     },
     enabled: !!productId,
   });
@@ -52,13 +52,13 @@ export function useCreateDefaultPipelineStages() {
         product_id: productId,
       }));
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('pipeline_stages')
         .insert(stages)
         .select();
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: (_, productId) => {
       queryClient.invalidateQueries({ queryKey: ['pipeline-stages', productId] });
@@ -74,7 +74,7 @@ export function useUpdatePipelineStage() {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<PipelineStage> & { id: string }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('pipeline_stages')
         .update(updates)
         .eq('id', id)
@@ -82,10 +82,10 @@ export function useUpdatePipelineStage() {
         .single();
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['pipeline-stages', data.product_id] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['pipeline-stages', fecha.product_id] });
       toast.success('Etapa actualizada!');
     },
     onError: (error) => {
@@ -100,17 +100,17 @@ export function useCreatePipelineStage() {
 
   return useMutation({
     mutationFn: async (stage: Omit<PipelineStage, 'id'>) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('pipeline_stages')
         .insert(stage)
         .select()
         .single();
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['pipeline-stages', data.product_id] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['pipeline-stages', fecha.product_id] });
       toast.success('Etapa creada!');
     },
     onError: (error) => {

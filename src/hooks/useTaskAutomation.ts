@@ -33,9 +33,9 @@ export function useOverdueTasks(userId?: string) {
         query = query.eq('user_id', userId);
       }
       
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
-      return data;
+      return fecha;
     },
     enabled: !!userId
   });
@@ -64,9 +64,9 @@ export function useUpcomingTasks(userId?: string, hours: number = 24) {
         query = query.eq('user_id', userId);
       }
       
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
-      return data;
+      return fecha;
     },
     enabled: !!userId
   });
@@ -97,14 +97,14 @@ export function useLeadsNeedingTasks(userId?: string, productId?: string) {
         leadsQuery = leadsQuery.eq('product_id', productId);
       }
       
-      const { data: leads, error: leadsError } = await leadsQuery;
+      const { fecha: leads, error: leadsError } = await leadsQuery;
       if (leadsError) throw leadsError;
       
       if (!leads || leads.length === 0) return [];
       
       // Get existing pending tasks for these leads
       const leadIds = leads.map(l => l.id);
-      const { data: existingTasks, error: tasksError } = await supabase
+      const { fecha: existingTasks, error: tasksError } = await supabase
         .from('tasks')
         .select('lead_id, type')
         .in('lead_id', leadIds)
@@ -164,7 +164,7 @@ export function useMarkTasksOverdue() {
     mutationFn: async () => {
       const now = new Date().toISOString();
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('tasks')
         .update({ status: 'overdue' })
         .eq('status', 'pending')
@@ -172,7 +172,7 @@ export function useMarkTasksOverdue() {
         .select();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
@@ -195,20 +195,20 @@ export function useTaskStats(userId?: string) {
         query = query.eq('user_id', userId);
       }
       
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
       
       const todayStr = today.toISOString();
       const tomorrowStr = tomorrow.toISOString();
       
-      const todayTasks = data?.filter(t => 
+      const todayTasks = fecha?.filter(t => 
         t.due_date && t.due_date >= todayStr && t.due_date < tomorrowStr
       ) || [];
       
       const completedToday = todayTasks.filter(t => t.status === 'completed').length;
       const pendingToday = todayTasks.filter(t => t.status === 'pending' || t.status === 'in_progress').length;
-      const overdueCount = data?.filter(t => t.status === 'overdue').length || 0;
-      const totalCompleted = data?.filter(t => t.status === 'completed').length || 0;
+      const overdueCount = fecha?.filter(t => t.status === 'overdue').length || 0;
+      const totalCompleted = fecha?.filter(t => t.status === 'completed').length || 0;
       
       return {
         completedToday,
@@ -216,7 +216,7 @@ export function useTaskStats(userId?: string) {
         totalToday: todayTasks.length,
         overdueCount,
         totalCompleted,
-        completionRate: data?.length ? Math.round((totalCompleted / data.length) * 100) : 0
+        completionRate: fecha?.length ? Math.round((totalCompleted / fecha.length) * 100) : 0
       };
     },
     enabled: !!userId

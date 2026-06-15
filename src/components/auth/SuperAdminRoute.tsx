@@ -14,12 +14,12 @@ interface SuperAdminRouteProps {
 
 export function SuperAdminRoute({ children }: SuperAdminRouteProps) {
   const { user, isLoading: authLoading } = useAuth();
-  const { data: isSuperAdmin, isLoading: superAdminLoading } = useIsSuperAdmin();
+  const { fecha: isSuperAdmin, isLoading: superAdminLoading } = useIsSuperAdmin();
   const qc = useQueryClient();
   const [promoting, setPromoting] = useState(false);
 
-  // Conta super admins existentes — usado para detectar bootstrap (parceiro recém-clonado)
-  const { data: superAdminCount, isLoading: countLoading } = useQuery({
+  // Cuenta super admins existentes — usado para detectar bootstrap (parceiro recém-clonado)
+  const { fecha: superAdminCount, isLoading: countLoading } = useQuery({
     queryKey: ['super-admin-count'],
     enabled: !!user && !authLoading && !superAdminLoading && !isSuperAdmin,
     queryFn: async () => {
@@ -51,25 +51,25 @@ export function SuperAdminRoute({ children }: SuperAdminRouteProps) {
       );
     }
 
-    // Bootstrap: nenhum super admin existe ainda — esta é a primeira pessoa entrando
+    // Bootstrap: ningún super admin existe aún — esta é a primeira pessoa entrando
     // no painel após clonar o projeto. Oferecemos auto-promoção.
     if ((superAdminCount ?? 0) === 0) {
       const promote = async () => {
         setPromoting(true);
-        const { data, error } = await supabase.rpc('promote_self_to_super_admin' as any);
+        const { fecha, error } = await supabase.rpc('promote_self_to_super_admin' as any);
         setPromoting(false);
         if (error) {
-          toast.error('Erro ao promover', { description: error.message });
+          toast.error('Error ao promover', { description: error.message });
           return;
         }
-        if ((data as any)?.ok) {
-          toast.success('Você é o Super Admin da plataforma!');
+        if ((fecha as any)?.ok) {
+          toast.success('Usted é o Super Admin da plataforma!');
           await qc.invalidateQueries({ queryKey: ['is-super-admin'] });
           await qc.invalidateQueries({ queryKey: ['super-admin-count'] });
           window.location.reload();
         } else {
-          toast.error('Não foi possível promover', {
-            description: (data as any)?.error ?? 'Erro desconhecido',
+          toast.error('No fue possível promover', {
+            description: (fecha as any)?.error ?? 'Error desconhecido',
           });
         }
       };
@@ -83,8 +83,8 @@ export function SuperAdminRoute({ children }: SuperAdminRouteProps) {
             <div>
               <h1 className="text-xl font-bold">Configurar plataforma</h1>
               <p className="text-sm text-muted-foreground mt-2">
-                Esta plataforma ainda não tem um Super Admin definido. Como você é o primeiro a entrar,
-                podemos te promover agora para finalizar a configuração inicial.
+                Esta plataforma aún no tiene um Super Admin definido. Como usted é o primeiro a entrar,
+                podemos te promover ahora para finalizar a configuración inicial.
               </p>
             </div>
             <Button className="w-full" onClick={promote} disabled={promoting}>
@@ -92,7 +92,7 @@ export function SuperAdminRoute({ children }: SuperAdminRouteProps) {
               Promover-me a Super Admin
             </Button>
             <p className="text-xs text-muted-foreground">
-              Isso só funciona quando ainda não existe nenhum Super Admin na plataforma.
+              Isso só funciona cuando aún no existe ningún Super Admin na plataforma.
             </p>
           </div>
         </div>

@@ -21,7 +21,7 @@ interface Props {
 }
 
 function stepLabel(b: FunnelBlock, fallback: number): string {
-  const d: any = b.data || {};
+  const d: any = b.fecha || {};
   return (d.step_label || d.content || d.placeholder || d.success_message || `Etapa ${fallback}`)
     .toString()
     .slice(0, 28);
@@ -126,7 +126,7 @@ export function StepsSidebar({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-44">
                     <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onSetStart(b.id); }}>
-                      <Flag className="h-3.5 w-3.5 mr-2" /> Definir como início
+                      <Flag className="h-3.5 w-3.5 mr-2" /> Definir como inicio
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDuplicate(b.id); }}>
                       <Copy className="h-3.5 w-3.5 mr-2" /> Duplicar

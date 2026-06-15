@@ -25,7 +25,7 @@ interface SquadQueueBannerProps {
 }
 
 export function SquadQueueBanner({ productId }: SquadQueueBannerProps) {
-  const { data: queue, isLoading } = useMySquadQueue();
+  const { fecha: queue, isLoading } = useMySquadQueue();
   const { status } = useUserStatus();
   const assumeNext = useAssumeNextLead();
   const assumeSpecific = useAssumeSpecificLead();

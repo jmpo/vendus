@@ -63,9 +63,9 @@ export function useAIUsageSummary(f: UsageFilters) {
   return useQuery({
     queryKey: ['ai-usage-summary', f],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_ai_usage_summary' as any, args(f));
+      const { fecha, error } = await supabase.rpc('get_ai_usage_summary' as any, args(f));
       if (error) throw error;
-      const row = Array.isArray(data) ? data[0] : data;
+      const row = Array.isArray(fecha) ? fecha[0] : fecha;
       return row as UsageSummary;
     },
   });
@@ -75,9 +75,9 @@ export function useAIUsageTimeseries(f: UsageFilters) {
   return useQuery({
     queryKey: ['ai-usage-timeseries', f],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_ai_usage_timeseries' as any, args(f));
+      const { fecha, error } = await supabase.rpc('get_ai_usage_timeseries' as any, args(f));
       if (error) throw error;
-      return (data ?? []) as UsageTimeseriesPoint[];
+      return (fecha ?? []) as UsageTimeseriesPoint[];
     },
   });
 }
@@ -86,11 +86,11 @@ export function useAIUsageByOrg(f: UsageFilters, limit = 10) {
   return useQuery({
     queryKey: ['ai-usage-by-org', f, limit],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_ai_usage_by_org' as any, {
+      const { fecha, error } = await supabase.rpc('get_ai_usage_by_org' as any, {
         p_start: f.startDate, p_end: f.endDate, p_provider: f.provider || null, p_limit: limit,
       });
       if (error) throw error;
-      return (data ?? []) as UsageByOrg[];
+      return (fecha ?? []) as UsageByOrg[];
     },
   });
 }
@@ -99,11 +99,11 @@ export function useAIUsageByModel(f: UsageFilters, limit = 30) {
   return useQuery({
     queryKey: ['ai-usage-by-model', f, limit],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_ai_usage_by_model' as any, {
+      const { fecha, error } = await supabase.rpc('get_ai_usage_by_model' as any, {
         p_start: f.startDate, p_end: f.endDate, p_provider: f.provider || null, p_org_id: f.organizationId || null, p_limit: limit,
       });
       if (error) throw error;
-      return (data ?? []) as UsageByModel[];
+      return (fecha ?? []) as UsageByModel[];
     },
   });
 }
@@ -112,11 +112,11 @@ export function useAIUsageByKey(f: UsageFilters, limit = 30) {
   return useQuery({
     queryKey: ['ai-usage-by-key', f, limit],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_ai_usage_by_key' as any, {
+      const { fecha, error } = await supabase.rpc('get_ai_usage_by_key' as any, {
         p_start: f.startDate, p_end: f.endDate, p_provider: f.provider || null, p_limit: limit,
       });
       if (error) throw error;
-      return (data ?? []) as UsageByKey[];
+      return (fecha ?? []) as UsageByKey[];
     },
   });
 }

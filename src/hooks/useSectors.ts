@@ -42,14 +42,14 @@ export function useSectors() {
     queryKey: ['sectors', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('sectors')
         .select('*, sector_members(user_id, profiles:user_id(full_name, avatar_url))')
         .eq('organization_id', profile.organization_id)
         .order('bot_order', { ascending: true })
         .order('name', { ascending: true });
       if (error) throw error;
-      return (data || []).map((s: any) => ({
+      return (fecha || []).map((s: any) => ({
         ...s,
         member_count: s.sector_members?.length || 0,
         members: (s.sector_members || []).map((m: any) => ({
@@ -69,12 +69,12 @@ export function useMySectors() {
     queryKey: ['my-sectors', user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('sector_members')
         .select('sector_id, sectors:sector_id(*)')
         .eq('user_id', user.id);
       if (error) throw error;
-      return (data || []).map((r: any) => r.sectors).filter(Boolean) as Sector[];
+      return (fecha || []).map((r: any) => r.sectors).filter(Boolean) as Sector[];
     },
     enabled: !!user?.id,
   });
@@ -98,7 +98,7 @@ export function useUpsertSector() {
           .eq('id', id);
         if (error) throw error;
       } else {
-        const { data, error } = await supabase
+        const { fecha, error } = await supabase
           .from('sectors')
           .insert({
             ...fields,
@@ -108,7 +108,7 @@ export function useUpsertSector() {
           .select('id')
           .single();
         if (error) throw error;
-        sectorId = data.id;
+        sectorId = fecha.id;
       }
 
       if (member_ids && sectorId) {

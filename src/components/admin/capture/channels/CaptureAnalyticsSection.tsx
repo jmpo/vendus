@@ -18,9 +18,9 @@ import {
 } from 'recharts';
 
 const PERIODS = [
-  { value: '7', label: 'Últimos 7 dias' },
-  { value: '30', label: 'Últimos 30 dias' },
-  { value: '90', label: 'Últimos 90 dias' },
+  { value: '7', label: 'Últimos 7 días' },
+  { value: '30', label: 'Últimos 30 días' },
+  { value: '90', label: 'Últimos 90 días' },
 ];
 
 const TIER_COLORS: Record<string, string> = {
@@ -29,17 +29,17 @@ const TIER_COLORS: Record<string, string> = {
 
 export function CaptureAnalyticsSection() {
   const { profile } = useAuth();
-  const { data: funnels } = useFunnels({ channelType: 'quiz' } as any);
+  const { fecha: funnels } = useFunnels({ channelType: 'quiz' } as any);
   const [days, setDays] = useState('30');
   const [funnelId, setFunnelId] = useState('all');
 
-  const { data, isLoading } = useQuery({
+  const { fecha, isLoading } = useQuery({
     queryKey: ['quiz-analytics', profile?.organization_id, days, funnelId],
     enabled: !!profile?.organization_id,
     queryFn: async () => {
       const since = new Date();
       since.setDate(since.getDate() - Number(days));
-      const { data: leads, error } = await supabase
+      const { fecha: leads, error } = await supabase
         .from('leads')
         .select('id, temperature, created_at, metadata')
         .eq('organization_id', profile!.organization_id)
@@ -64,7 +64,7 @@ export function CaptureAnalyticsSection() {
   }, [funnels, funnelId]);
 
   const stats = useMemo(() => {
-    const rows = data || [];
+    const rows = fecha || [];
     const total = rows.length;
     const tempCount = { hot: 0, warm: 0, cold: 0 };
     const scores: number[] = [];
@@ -111,7 +111,7 @@ export function CaptureAnalyticsSection() {
       .map(([date, count]) => ({ date: date.slice(5), count }));
 
     return { total, avgScore, conversionRate, tempCount, topTags, scoreDist, temperatureData, daily };
-  }, [data, totalViews]);
+  }, [fecha, totalViews]);
 
   return (
     <div className="max-w-7xl mx-auto py-6 space-y-6">
@@ -121,9 +121,9 @@ export function CaptureAnalyticsSection() {
             <BarChart3 className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-semibold">Analytics de Captação</h1>
+            <h1 className="text-2xl font-semibold">Analytics de Captación</h1>
             <p className="text-sm text-muted-foreground">
-              Performance dos seus quizzes em tempo real.
+              Performance dos sus quizzes em tempo real.
             </p>
           </div>
         </div>
@@ -163,7 +163,7 @@ export function CaptureAnalyticsSection() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <Card className="lg:col-span-2">
               <CardHeader>
-                <CardTitle className="text-base">Conclusões por dia</CardTitle>
+                <CardTitle className="text-base">Conclusões por día</CardTitle>
                 <CardDescription>Tendência diária de leads gerados.</CardDescription>
               </CardHeader>
               <CardContent>
@@ -171,7 +171,7 @@ export function CaptureAnalyticsSection() {
                   <EmptyState />
                 ) : (
                   <ResponsiveContainer width="100%" height={240}>
-                    <BarChart data={stats.daily}>
+                    <BarChart fecha={stats.daily}>
                       <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={11} />
                       <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} allowDecimals={false} />
                       <Tooltip contentStyle={{ background: 'hsl(var(--popover))', border: '1px solid hsl(var(--border))' }} />
@@ -187,7 +187,7 @@ export function CaptureAnalyticsSection() {
                 <CardTitle className="text-base flex items-center gap-2">
                   <Flame className="h-4 w-4 text-orange-500" /> Temperatura
                 </CardTitle>
-                <CardDescription>Qualificação automática dos leads.</CardDescription>
+                <CardDescription>Calificación automática dos leads.</CardDescription>
               </CardHeader>
               <CardContent>
                 {stats.temperatureData.length === 0 ? (
@@ -195,7 +195,7 @@ export function CaptureAnalyticsSection() {
                 ) : (
                   <ResponsiveContainer width="100%" height={240}>
                     <PieChart>
-                      <Pie data={stats.temperatureData} dataKey="value" nameKey="name" innerRadius={50} outerRadius={80} paddingAngle={3}>
+                      <Pie fecha={stats.temperatureData} dataKey="value" nameKey="name" innerRadius={50} outerRadius={80} paddingAngle={3}>
                         {stats.temperatureData.map((d, i) => <Cell key={i} fill={d.color} />)}
                       </Pie>
                       <Tooltip contentStyle={{ background: 'hsl(var(--popover))', border: '1px solid hsl(var(--border))' }} />
@@ -217,15 +217,15 @@ export function CaptureAnalyticsSection() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Distribuição de Score</CardTitle>
-                <CardDescription>Como seus leads se distribuem por faixa.</CardDescription>
+                <CardTitle className="text-base">Distribución de Score</CardTitle>
+                <CardDescription>Como sus leads se distribuem por faixa.</CardDescription>
               </CardHeader>
               <CardContent>
                 {stats.scoreDist.every(s => s.count === 0) ? (
                   <EmptyState />
                 ) : (
                   <ResponsiveContainer width="100%" height={220}>
-                    <BarChart data={stats.scoreDist}>
+                    <BarChart fecha={stats.scoreDist}>
                       <XAxis dataKey="range" stroke="hsl(var(--muted-foreground))" fontSize={11} />
                       <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} allowDecimals={false} />
                       <Tooltip contentStyle={{ background: 'hsl(var(--popover))', border: '1px solid hsl(var(--border))' }} />
@@ -241,7 +241,7 @@ export function CaptureAnalyticsSection() {
                 <CardTitle className="text-base flex items-center gap-2">
                   <TagIcon className="h-4 w-4 text-primary" /> Top tags dinâmicas
                 </CardTitle>
-                <CardDescription>Tags mais aplicadas pelas respostas do quiz.</CardDescription>
+                <CardDescription>Tags mais aplicadas pelas respuestas do quiz.</CardDescription>
               </CardHeader>
               <CardContent>
                 {stats.topTags.length === 0 ? (

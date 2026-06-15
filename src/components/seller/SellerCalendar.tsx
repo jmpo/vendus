@@ -76,7 +76,7 @@ export function SellerCalendar({ userId, productId }: SellerCalendarProps) {
   }, [currentDate, viewMode]);
 
   // Fetch events - filtered to current user only
-  const { data: events = [], isLoading } = useCalendarEvents({
+  const { fecha: events = [], isLoading } = useCalendarEvents({
     ...dateRange,
     userId,
     productId,

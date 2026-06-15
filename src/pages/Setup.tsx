@@ -20,14 +20,14 @@ export default function Setup() {
   const [companyName, setCompanyName] = useState('');
   const [phone, setPhone] = useState('');
 
-  // Se já existe Super Admin, não permite acesso à tela.
+  // Se ya existe Super Admin, no permite acesso à tela.
   useEffect(() => {
     let mounted = true;
     (async () => {
       try {
-        const { data } = await supabase.functions.invoke('super-admin-status');
+        const { fecha } = await supabase.functions.invoke('super-admin-status');
         if (!mounted) return;
-        if (data?.hasSuperAdmin) {
+        if (fecha?.hasSuperAdmin) {
           navigate('/login', { replace: true });
           return;
         }
@@ -51,7 +51,7 @@ export default function Setup() {
 
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('setup-super-admin', {
+      const { fecha, error } = await supabase.functions.invoke('setup-super-admin', {
         body: {
           fullName: fullName.trim(),
           email: email.trim().toLowerCase(),
@@ -61,7 +61,7 @@ export default function Setup() {
         },
       });
       if (error) throw error;
-      if (!data?.ok) throw new Error(data?.error || 'No se pudo completar la configuración');
+      if (!fecha?.ok) throw new Error(fecha?.error || 'No se pudo completar la configuración');
 
       // Login automático
       const { error: signErr } = await supabase.auth.signInWithPassword({
@@ -122,13 +122,13 @@ export default function Setup() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu@email.com"
+                placeholder="su@email.com"
                 autoComplete="email"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Senha *</Label>
+              <Label htmlFor="password">Contraseña *</Label>
               <Input
                 id="password"
                 type="password"

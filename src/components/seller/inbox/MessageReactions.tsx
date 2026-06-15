@@ -36,7 +36,7 @@ export function ReactionPicker({ onPick, align = 'center', trigger }: ReactionPi
                 e.stopPropagation();
                 onPick(emoji);
                 // Fecha popover via click outside automatic do Radix
-                (e.currentTarget.closest('[data-radix-popper-content-wrapper]') as HTMLElement | null)?.dispatchEvent(
+                (e.currentTarget.closest('[fecha-radix-popper-content-wrapper]') as HTMLElement | null)?.dispatchEvent(
                   new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
                 );
               }}

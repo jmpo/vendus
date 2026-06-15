@@ -11,7 +11,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { LayoutGrid, Sparkles, Clock, ListChecks, Rocket, Loader2 } from 'lucide-react';
-import { QUIZ_TEMPLATES, CATEGORY_LABELS, type QuizTemplate } from '@/data/quizTemplates';
+import { QUIZ_TEMPLATES, CATEGORY_LABELS, type QuizTemplate } from '@/fecha/quizTemplates';
 import { useCreateFunnel } from '@/hooks/useFunnels';
 import { useProducts } from '@/hooks/useProducts';
 import { cn } from '@/lib/utils';
@@ -25,7 +25,7 @@ export function CaptureTemplatesSection() {
   const [productId, setProductId] = useState<string>('');
   const [name, setName] = useState('');
   const createFunnel = useCreateFunnel();
-  const { data: products } = useProducts();
+  const { fecha: products } = useProducts();
 
   const filtered = filter === 'todos'
     ? QUIZ_TEMPLATES
@@ -39,7 +39,7 @@ export function CaptureTemplatesSection() {
 
   const handleClone = async () => {
     if (!selected || !productId) {
-      toast.error('Selecione um produto');
+      toast.error('Seleccioná um producto');
       return;
     }
     try {
@@ -51,10 +51,10 @@ export function CaptureTemplatesSection() {
         flow_blocks: selected.flow_blocks,
         start_block_id: selected.flow_blocks[0]?.id,
       });
-      toast.success(`Quiz "${name}" criado a partir do template`);
+      toast.success(`Quiz "${name}" creado a partir do template`);
       setSelected(null);
     } catch (e: any) {
-      toast.error('Erro ao clonar template: ' + e.message);
+      toast.error('Error ao clonar template: ' + e.message);
     }
   };
 
@@ -67,7 +67,7 @@ export function CaptureTemplatesSection() {
         <div>
           <h1 className="text-2xl font-semibold">Templates de Quiz</h1>
           <p className="text-sm text-muted-foreground">
-            Comece em 1 clique. Quizzes prontos com perguntas, scoring, ramificação e resultado já configurados.
+            Comece em 1 clique. Quizzes prontos com preguntas, scoring, ramificação e resultado ya configurados.
           </p>
         </div>
       </div>
@@ -114,7 +114,7 @@ export function CaptureTemplatesSection() {
               <p className="text-xs text-muted-foreground line-clamp-2">{t.description}</p>
               <div className="flex items-center gap-3 text-xs text-muted-foreground pt-2 border-t">
                 <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {t.estimated_time}</span>
-                <span className="flex items-center gap-1"><ListChecks className="h-3 w-3" /> {t.question_count} perguntas</span>
+                <span className="flex items-center gap-1"><ListChecks className="h-3 w-3" /> {t.question_count} preguntas</span>
               </div>
             </CardContent>
           </Card>
@@ -139,13 +139,13 @@ export function CaptureTemplatesSection() {
 
               <div className="space-y-4 py-2">
                 <div className="space-y-1.5">
-                  <Label>Nome do seu quiz</Label>
+                  <Label>Nombre do su quiz</Label>
                   <Input value={name} onChange={(e) => setName(e.target.value)} />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Produto vinculado</Label>
+                  <Label>Producto vinculado</Label>
                   <Select value={productId} onValueChange={setProductId}>
-                    <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="Seleccioná" /></SelectTrigger>
                     <SelectContent>
                       {(products || []).map((p: any) => (
                         <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>

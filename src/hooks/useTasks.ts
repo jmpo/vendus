@@ -24,9 +24,9 @@ export function useTasks(userId?: string, productId?: string) {
         query = query.eq('product_id', productId);
       }
       
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
-      return data;
+      return fecha;
     }
   });
 }
@@ -40,7 +40,7 @@ export function useTodaysTasks(userId: string) {
       const tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate() + 1);
       
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('tasks')
         .select(`
           *,
@@ -53,7 +53,7 @@ export function useTodaysTasks(userId: string) {
         .order('priority', { ascending: false });
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     enabled: !!userId
   });
@@ -64,14 +64,14 @@ export function useCreateTask() {
   
   return useMutation({
     mutationFn: async (task: TablesInsert<'tasks'>) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('tasks')
         .insert(task)
         .select()
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
@@ -84,7 +84,7 @@ export function useUpdateTask() {
   
   return useMutation({
     mutationFn: async ({ id, ...updates }: TablesUpdate<'tasks'> & { id: string }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('tasks')
         .update(updates)
         .eq('id', id)
@@ -92,7 +92,7 @@ export function useUpdateTask() {
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
@@ -105,7 +105,7 @@ export function useCompleteTask() {
   
   return useMutation({
     mutationFn: async (id: string) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('tasks')
         .update({ 
           status: 'completed',
@@ -116,7 +116,7 @@ export function useCompleteTask() {
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
@@ -129,7 +129,7 @@ export function useUncompleteTask() {
   
   return useMutation({
     mutationFn: async (id: string) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('tasks')
         .update({ 
           status: 'pending',
@@ -140,7 +140,7 @@ export function useUncompleteTask() {
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
@@ -170,7 +170,7 @@ export function useLeadTasks(leadId: string) {
   return useQuery({
     queryKey: ['tasks', 'lead', leadId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('tasks')
         .select(`
           *,
@@ -182,7 +182,7 @@ export function useLeadTasks(leadId: string) {
         .order('due_date', { ascending: true });
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
     enabled: !!leadId
   });

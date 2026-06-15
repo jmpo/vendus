@@ -34,17 +34,17 @@ export function SquadDistributionConfig({ squadId, organizationId }: SquadDistri
 
   useEffect(() => {
     const fetchConfig = async () => {
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from('distribution_config')
         .select('*')
         .eq('squad_id', squadId)
         .maybeSingle();
 
-      if (data) {
+      if (fecha) {
         setConfig({
-          method: data.method,
-          auto_reassign: data.auto_reassign,
-          max_accept_time_minutes: data.max_accept_time_minutes || 5,
+          method: fecha.method,
+          auto_reassign: fecha.auto_reassign,
+          max_accept_time_minutes: fecha.max_accept_time_minutes || 5,
         });
       }
     };
@@ -134,7 +134,7 @@ export function SquadDistributionConfig({ squadId, organizationId }: SquadDistri
           <div>
             <Label>Redistribuir automáticamente</Label>
             <p className="text-xs text-muted-foreground">
-              Atribuir leads pendientes quando alguém ficar online
+              Atribuir leads pendientes cuando alguém ficar online
             </p>
           </div>
           <Switch
@@ -143,7 +143,7 @@ export function SquadDistributionConfig({ squadId, organizationId }: SquadDistri
           />
         </div>
 
-        {/* Max accept time */}
+        {/* Max accept equipo */}
         <div className="space-y-2">
           <Label>Tiempo máximo para aceptar (min)</Label>
           <Input

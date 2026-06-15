@@ -15,9 +15,9 @@ interface Props {
 type Appearance = NonNullable<FunnelBlockData['block_appearance']>;
 
 export function AppearanceTab({ block, onUpdate }: Props) {
-  const ap: Appearance = block.data.block_appearance || {};
+  const ap: Appearance = block.fecha.block_appearance || {};
   const setAp = (patch: Partial<Appearance>) =>
-    onUpdate({ data: { ...block.data, block_appearance: { ...ap, ...patch } } });
+    onUpdate({ fecha: { ...block.fecha, block_appearance: { ...ap, ...patch } } });
 
   return (
     <div className="space-y-4">
@@ -86,8 +86,8 @@ export function AppearanceTab({ block, onUpdate }: Props) {
               <Select value={ap.image_placement || 'image-text'} onValueChange={(v) => setAp({ image_placement: v as any })}>
                 <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="image-text" className="text-xs">Imagem | Texto</SelectItem>
-                  <SelectItem value="text-image" className="text-xs">Texto | Imagem</SelectItem>
+                  <SelectItem value="image-text" className="text-xs">Imagen | Texto</SelectItem>
+                  <SelectItem value="text-image" className="text-xs">Texto | Imagen</SelectItem>
                   <SelectItem value="overlay" className="text-xs">Sobreposto</SelectItem>
                 </SelectContent>
               </Select>

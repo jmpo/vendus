@@ -17,7 +17,7 @@ interface FormPublishProps {
 export function FormPublish({ form }: FormPublishProps) {
   const [copied, setCopied] = useState<string | null>(null);
 
-  const { data: baseUrl } = usePublicAppUrl();
+  const { fecha: baseUrl } = usePublicAppUrl();
   const publicUrl = `${baseUrl}/f/${form.slug}`;
   const embedUrl = `${baseUrl}/embed/form/${form.id}`;
   
@@ -54,7 +54,7 @@ export function FormPublish({ form }: FormPublishProps) {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>Status do Formulário</CardTitle>
-              <CardDescription>Estado atual e informações de publicação</CardDescription>
+              <CardDescription>Estado atual e información de publicação</CardDescription>
             </div>
             <Badge variant={form.status === 'active' ? 'default' : 'secondary'} className="text-sm">
               {form.status === 'active' ? '🟢 Publicado' : 
@@ -89,7 +89,7 @@ export function FormPublish({ form }: FormPublishProps) {
       <Card>
         <CardHeader>
           <CardTitle>Compartilhar Formulário</CardTitle>
-          <CardDescription>Escolha como deseja disponibilizar seu formulário</CardDescription>
+          <CardDescription>Elegí como desea disponibilizar su formulário</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="link" className="w-full">
@@ -129,7 +129,7 @@ export function FormPublish({ form }: FormPublishProps) {
               
               <div className="p-4 bg-muted rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  💡 <strong>Dica:</strong> Use este link em campanhas de email, posts em redes sociais ou compartilhe diretamente com seus leads.
+                  💡 <strong>Dica:</strong> Usa este link em campañas de email, posts em redes sociais ou compartilhe diretamente com sus leads.
                 </p>
               </div>
             </TabsContent>
@@ -179,7 +179,7 @@ export function FormPublish({ form }: FormPublishProps) {
               
               <div className="p-4 bg-muted rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  💡 <strong>Dica:</strong> O widget JavaScript oferece mais controle e flexibilidade. Você pode customizar o container e o tema.
+                  💡 <strong>Dica:</strong> O widget JavaScript oferece mais controle e flexibilidade. Usted puede customizar o container e o tema.
                 </p>
               </div>
             </TabsContent>
@@ -191,7 +191,7 @@ export function FormPublish({ form }: FormPublishProps) {
       <Card>
         <CardHeader>
           <CardTitle>QR Code</CardTitle>
-          <CardDescription>Compartilhe o formulário em materiais impressos</CardDescription>
+          <CardDescription>Compartilhe o formulário em materiales impressos</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center gap-6">
           <div className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center">
@@ -201,10 +201,10 @@ export function FormPublish({ form }: FormPublishProps) {
           </div>
           <div className="flex-1">
             <p className="text-sm text-muted-foreground mb-4">
-              Baixe o QR Code para usar em materiais impressos, cartões de visita ou apresentações.
+              Baixe o QR Code para usar em materiales impressos, cartões de visita ou apresentações.
             </p>
             <Button variant="outline" disabled={form.status !== 'active'}>
-              Baixar QR Code
+              Descargar QR Code
             </Button>
           </div>
         </CardContent>

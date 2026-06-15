@@ -15,7 +15,7 @@ import type { FunnelBlockType } from '@/types/funnel';
 export interface QuizPaletteItem {
   /** Tipo de bloco real persistido */
   blockType: FunnelBlockType;
-  /** Subtipo visual (preset aplicado ao criar) */
+  /** Subtipo visual (preset aplicado ao crear) */
   preset?: string;
   label: string;
   icon: LucideIcon;
@@ -39,12 +39,12 @@ export const QUIZ_PALETTE: QuizPaletteCategory[] = [
     accent: 'text-blue-600 dark:text-blue-400',
     bg: 'bg-blue-500/10',
     items: [
-      { blockType: 'input', preset: 'text', label: 'Texto curto', icon: Type },
-      { blockType: 'input', preset: 'textarea', label: 'Texto longo', icon: AlignLeft },
+      { blockType: 'input', preset: 'text', label: 'Texto corto', icon: Type },
+      { blockType: 'input', preset: 'textarea', label: 'Texto largo', icon: AlignLeft },
       { blockType: 'input', preset: 'email', label: 'Email', icon: Mail },
-      { blockType: 'input', preset: 'phone', label: 'Telefone', icon: Phone },
+      { blockType: 'input', preset: 'phone', label: 'Teléfono', icon: Phone },
       { blockType: 'input', preset: 'number', label: 'Número', icon: Hash },
-      { blockType: 'input', preset: 'date', label: 'Data', icon: Calendar },
+      { blockType: 'input', preset: 'date', label: 'Fecha', icon: Calendar },
       { blockType: 'input', preset: 'cpf', label: 'CPF/CNPJ', icon: IdCard },
     ],
   },
@@ -55,9 +55,9 @@ export const QUIZ_PALETTE: QuizPaletteCategory[] = [
     accent: 'text-emerald-600 dark:text-emerald-400',
     bg: 'bg-emerald-500/10',
     items: [
-      { blockType: 'buttons', preset: 'single', label: 'Escolha única', icon: CircleDot },
+      { blockType: 'buttons', preset: 'single', label: 'Elegí única', icon: CircleDot },
       { blockType: 'buttons', preset: 'multiple', label: 'Múltipla escolha', icon: ListChecks },
-      { blockType: 'buttons', preset: 'yesno', label: 'Sim / Não', icon: ToggleLeft },
+      { blockType: 'buttons', preset: 'yesno', label: 'Sí / No', icon: ToggleLeft },
       { blockType: 'buttons', preset: 'scale', label: 'Escala 1-10', icon: Gauge },
       { blockType: 'buttons', preset: 'nps', label: 'NPS', icon: Star },
       { blockType: 'buttons', preset: 'ranking', label: 'Ranking', icon: ArrowUpDown },
@@ -70,7 +70,7 @@ export const QUIZ_PALETTE: QuizPaletteCategory[] = [
     accent: 'text-violet-600 dark:text-violet-400',
     bg: 'bg-violet-500/10',
     items: [
-      { blockType: 'image', label: 'Imagem', icon: ImageIcon },
+      { blockType: 'image', label: 'Imagen', icon: ImageIcon },
       { blockType: 'video', label: 'Vídeo', icon: Video },
       { blockType: 'message', preset: 'audio', label: 'Áudio', icon: Music },
       { blockType: 'input', preset: 'upload', label: 'Upload', icon: Upload },
@@ -84,7 +84,7 @@ export const QUIZ_PALETTE: QuizPaletteCategory[] = [
     bg: 'bg-amber-500/10',
     items: [
       { blockType: 'condition', label: 'Condição', icon: GitBranch, description: 'Se / Então / Senão' },
-      { blockType: 'condition', preset: 'goto', label: 'Ir para', icon: Forward, description: 'Pular para outro bloco' },
+      { blockType: 'condition', preset: 'goto', label: 'Ir para', icon: Forward, description: 'Pular para otro bloco' },
       { blockType: 'score', label: 'Score', icon: TrendingUp },
       { blockType: 'tag', label: 'Segmentação', icon: TagIcon },
     ],
@@ -109,7 +109,7 @@ export const QUIZ_PALETTE: QuizPaletteCategory[] = [
     accent: 'text-cyan-600 dark:text-cyan-400',
     bg: 'bg-cyan-500/10',
     items: [
-      { blockType: 'input', preset: 'name', label: 'Capturar nome', icon: User },
+      { blockType: 'input', preset: 'name', label: 'Capturar nombre', icon: User },
       { blockType: 'input', preset: 'email', label: 'Capturar email', icon: AtSign },
       { blockType: 'input', preset: 'phone', label: 'Capturar WhatsApp', icon: MessageCircle },
     ],
@@ -175,23 +175,23 @@ export const QuizCategorizedPalette = memo(function QuizCategorizedPalette({ onA
   );
 });
 
-/** Aplica o preset escolhido sobre um FunnelBlock recém-criado. */
+/** Aplica o preset escolhido sobre um FunnelBlock recém-creado. */
 export function applyPresetToBlockData(
   preset: string | undefined,
-  data: Record<string, any>,
+  fecha: Record<string, any>,
 ): Record<string, any> {
-  if (!preset) return data;
-  const next = { ...data };
+  if (!preset) return fecha;
+  const next = { ...fecha };
   switch (preset) {
-    case 'text':     next.input_type = 'text';     next.placeholder = 'Digite sua resposta...'; break;
-    case 'textarea': next.input_type = 'textarea'; next.placeholder = 'Escreva aqui...'; break;
-    case 'email':    next.input_type = 'email';    next.placeholder = 'seu@email.com'; break;
+    case 'text':     next.input_type = 'text';     next.placeholder = 'Escribí su respuesta...'; break;
+    case 'textarea': next.input_type = 'textarea'; next.placeholder = 'Escribe aqui...'; break;
+    case 'email':    next.input_type = 'email';    next.placeholder = 'su@email.com'; break;
     case 'phone':    next.input_type = 'phone';    next.placeholder = '(11) 99999-9999'; break;
     case 'number':   next.input_type = 'number';   next.placeholder = '0'; break;
     case 'date':     next.input_type = 'text';     next.placeholder = 'DD/MM/AAAA'; next.quiz_subtype = 'date'; break;
     case 'cpf':      next.input_type = 'cpf';      next.placeholder = '000.000.000-00'; break;
-    case 'name':     next.input_type = 'name';     next.variable_name = 'name';     next.placeholder = 'Seu nome'; break;
-    case 'upload':   next.input_type = 'text';     next.quiz_subtype = 'upload';    next.placeholder = 'Anexar arquivo (em breve)'; break;
+    case 'name':     next.input_type = 'name';     next.variable_name = 'name';     next.placeholder = 'Su nombre'; break;
+    case 'upload':   next.input_type = 'text';     next.quiz_subtype = 'upload';    next.placeholder = 'Anexar archivo (em breve)'; break;
     case 'audio':    next.quiz_subtype = 'audio';  next.content = 'Áudio (cole a URL no painel)'; break;
     case 'single':   next.layout = 'vertical';     next.quiz_subtype = 'single'; break;
     case 'multiple': next.layout = 'vertical';     next.quiz_subtype = 'multiple'; break;
@@ -199,8 +199,8 @@ export function applyPresetToBlockData(
       next.layout = 'horizontal';
       next.quiz_subtype = 'yesno';
       next.options = [
-        { id: `opt_${Date.now()}_y`, label: 'Sim', letter: 'A' },
-        { id: `opt_${Date.now()}_n`, label: 'Não', letter: 'B' },
+        { id: `opt_${Date.now()}_y`, label: 'Sí', letter: 'A' },
+        { id: `opt_${Date.now()}_n`, label: 'No', letter: 'B' },
       ];
       break;
     case 'scale':
@@ -222,11 +222,11 @@ export function applyPresetToBlockData(
       next.layout = 'vertical';
       break;
     case 'goto':     next.quiz_subtype = 'goto'; break;
-    case 'result':   next.quiz_subtype = 'result'; next.success_message = 'Seu resultado:'; break;
+    case 'result':   next.quiz_subtype = 'result'; next.success_message = 'Su resultado:'; break;
     case 'result_ai':
       next.quiz_subtype = 'result_ai';
       next.result_ai_enabled = true;
-      next.success_message = 'Sua análise personalizada';
+      next.success_message = 'Su análise personalizada';
       next.result_ai_prompt = '';
       break;
     case 'redirect': next.quiz_subtype = 'redirect'; next.link_open_new_tab = false; break;

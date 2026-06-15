@@ -51,14 +51,14 @@ export function useKanbanData(productId: string, filters: KanbanFilters) {
   const stagesQuery = useQuery({
     queryKey: ['kanban-stages', productId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('pipeline_stages')
         .select('*')
         .eq('product_id', productId)
         .order('order_index', { ascending: true });
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     enabled: !!productId,
   });
@@ -99,15 +99,15 @@ export function useKanbanData(productId: string, filters: KanbanFilters) {
       // Apply sorting
       query = query.order(filters.sortBy, { ascending: filters.sortDirection === 'asc' });
 
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
 
       // Fetch profiles for assigned leads
-      const assignedIds = [...new Set(data?.filter(l => l.assigned_to).map(l => l.assigned_to) || [])];
+      const assignedIds = [...new Set(fecha?.filter(l => l.assigned_to).map(l => l.assigned_to) || [])];
       let profilesMap: Record<string, { id: string; full_name: string; avatar_url: string | null }> = {};
       
       if (assignedIds.length > 0) {
-        const { data: profilesData } = await supabase
+        const { fecha: profilesData } = await supabase
           .from('profiles')
           .select('id, full_name, avatar_url')
           .in('id', assignedIds);
@@ -116,7 +116,7 @@ export function useKanbanData(productId: string, filters: KanbanFilters) {
       }
 
       // Map leads with profiles
-      return (data || []).map(lead => ({
+      return (fecha || []).map(lead => ({
         ...lead,
         profiles: lead.assigned_to ? profilesMap[lead.assigned_to] || null : null,
       })) as KanbanLead[];
@@ -128,10 +128,10 @@ export function useKanbanData(productId: string, filters: KanbanFilters) {
   const teamQuery = useQuery({
     queryKey: ['kanban-team'],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const { fecha: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      const { data: profile } = await supabase
+      const { fecha: profile } = await supabase
         .from('profiles')
         .select('organization_id')
         .eq('id', user.id)
@@ -139,20 +139,20 @@ export function useKanbanData(productId: string, filters: KanbanFilters) {
 
       if (!profile?.organization_id) return [];
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('profiles')
         .select('id, full_name, avatar_url')
         .eq('organization_id', profile.organization_id)
         .eq('is_active', true);
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
   });
 
-  // Process data into stages with leads
-  const kanbanStages: KanbanStage[] = (stagesQuery.data || []).map(stage => {
-    const stageLeads = (leadsQuery.data || []).filter(
+  // Process fecha into stages with leads
+  const kanbanStages: KanbanStage[] = (stagesQuery.fecha || []).map(stage => {
+    const stageLeads = (leadsQuery.fecha || []).filter(
       lead => lead.current_stage_id === stage.id
     );
     
@@ -165,7 +165,7 @@ export function useKanbanData(productId: string, filters: KanbanFilters) {
   });
 
   // Add unassigned stage for leads without stage
-  const unassignedLeads = (leadsQuery.data || []).filter(
+  const unassignedLeads = (leadsQuery.fecha || []).filter(
     lead => !lead.current_stage_id
   );
 
@@ -189,7 +189,7 @@ export function useKanbanData(productId: string, filters: KanbanFilters) {
 
   return {
     stages: kanbanStages,
-    team: teamQuery.data || [],
+    team: teamQuery.fecha || [],
     totalPipelineValue,
     totalLeads,
     isLoading: stagesQuery.isLoading || leadsQuery.isLoading,

@@ -20,10 +20,10 @@ interface SquadTabProps {
 
 export function SquadTab({ productId }: SquadTabProps) {
   const { profile } = useAuth();
-  const { data: product } = useProduct(productId);
-  const { data: teamMembers, isLoading: loadingMembers } = useTeamMembers();
-  const { data: squads } = useSquads();
-  const { data: goals } = useSalesGoals(undefined, productId);
+  const { fecha: product } = useProduct(productId);
+  const { fecha: teamMembers, isLoading: loadingMembers } = useTeamMembers();
+  const { fecha: squads } = useSquads();
+  const { fecha: goals } = useSalesGoals(undefined, productId);
   const createGoal = useCreateSalesGoal();
   const updateGoal = useUpdateSalesGoal();
 
@@ -102,7 +102,7 @@ export function SquadTab({ productId }: SquadTabProps) {
       toast.success('Meta salva!');
       setGoalDialogOpen(false);
     } catch (error) {
-      toast.error('Erro ao salvar meta');
+      toast.error('Error ao guardar meta');
     }
   };
 
@@ -182,7 +182,7 @@ export function SquadTab({ productId }: SquadTabProps) {
         <CardContent>
           {availableMembers.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              Nenhum vendedor cadastrado na equipe
+              Nenhum vendedor cadastrado na equipo
             </p>
           ) : (
             <div className="space-y-3">

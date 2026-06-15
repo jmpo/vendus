@@ -47,9 +47,9 @@ export function useDeals(filters?: { productId?: string; sellerId?: string; stat
         query = query.eq('status', filters.status);
       }
 
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
-      return data as unknown as Deal[];
+      return fecha as unknown as Deal[];
     }
   });
 }
@@ -69,7 +69,7 @@ export function useDealsSummary(productId?: string, sellerId?: string) {
         query = query.eq('seller_id', sellerId);
       }
 
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
 
       const now = new Date();
@@ -83,7 +83,7 @@ export function useDealsSummary(productId?: string, sellerId?: string) {
         monthlyDealsCount: 0
       };
 
-      data?.forEach(deal => {
+      fecha?.forEach(deal => {
         if (deal.status === 'won') {
           summary.totalWon += Number(deal.deal_value);
           summary.dealsCount++;
@@ -110,7 +110,7 @@ export function useCreateDeal() {
     mutationFn: async (deal: Omit<Deal, 'id' | 'created_at' | 'updated_at' | 'leads' | 'profiles' | 'products'>) => {
       // Criar o deal
       const { plan_name, ...dealData } = deal;
-      const { data: newDeal, error: dealError } = await supabase
+      const { fecha: newDeal, error: dealError } = await supabase
         .from('deals')
         .insert({ ...dealData, plan_name } as any)
         .select()
@@ -118,7 +118,7 @@ export function useCreateDeal() {
 
       if (dealError) throw dealError;
 
-      // Calcular comissão usando a rol do banco
+      // Calcular comisión usando a rol do banco
       const { error: commissionError } = await supabase.rpc('calculate_commission', {
         p_deal_id: newDeal.id,
         p_deal_value: deal.deal_value,
@@ -147,7 +147,7 @@ export function useUpdateDeal() {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<Deal> & { id: string }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('deals')
         .update(updates)
         .eq('id', id)
@@ -155,7 +155,7 @@ export function useUpdateDeal() {
         .single();
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['deals'] });

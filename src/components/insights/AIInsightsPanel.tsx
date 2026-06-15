@@ -35,7 +35,7 @@ export function AIInsightsPanel({
   maxHeight = "400px"
 }: AIInsightsPanelProps) {
   const { user, profile } = useAuth();
-  const { data: insights, isLoading } = useAIInsights(user?.id, productId);
+  const { fecha: insights, isLoading } = useAIInsights(user?.id, productId);
   const dismissInsight = useDismissInsight();
   const generateInsights = useGenerateInsights();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -59,7 +59,7 @@ export function AIInsightsPanel({
       } else if (error.message?.includes('402')) {
         toast.error('Créditos de IA esgotados.');
       } else {
-        toast.error('Erro ao gerar insights');
+        toast.error('Error ao gerar insights');
       }
     } finally {
       setIsGenerating(false);
@@ -70,7 +70,7 @@ export function AIInsightsPanel({
     try {
       await dismissInsight.mutateAsync(id);
     } catch {
-      toast.error('Erro ao dispensar insight');
+      toast.error('Error ao dispensar insight');
     }
   };
 
@@ -164,7 +164,7 @@ export function AIInsightsPanel({
           ) : (
             <div className="text-center py-6 text-muted-foreground text-sm">
               <Brain className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              Clique em atualizar para gerar insights
+              Hacé clic em actualizar para gerar insights
             </div>
           )}
         </CardContent>
@@ -198,7 +198,7 @@ export function AIInsightsPanel({
                 <Sparkles className="h-4 w-4 text-warning absolute -top-1 -right-1 animate-bounce" />
               </div>
               <p className="text-muted-foreground mt-4">
-                Analisando seu pipeline...
+                Analisando su pipeline...
               </p>
             </div>
           ) : insights && insights.length > 0 ? (
@@ -254,7 +254,7 @@ export function AIInsightsPanel({
                 Nenhum insight disponível
               </h3>
               <p className="text-muted-foreground text-center max-w-md mb-4">
-                Clique em "Atualizar" para que a IA analise seu pipeline e gere insights personalizados.
+                Hacé clic em "Atualizar" para que a IA analise su pipeline e gere insights personalizados.
               </p>
               <Button onClick={handleRefresh} disabled={isGenerating}>
                 <Sparkles className="h-4 w-4 mr-2" />

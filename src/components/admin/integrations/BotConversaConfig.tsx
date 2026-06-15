@@ -27,15 +27,15 @@ export function BotConversaConfig() {
 
   const loadConfig = async () => {
     try {
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from('integration_settings')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
         .eq('integration_type', 'whatsapp_provider')
         .maybeSingle();
 
-      if (data?.settings) {
-        const settings = data.settings as Record<string, unknown>;
+      if (fecha?.settings) {
+        const settings = fecha.settings as Record<string, unknown>;
         setApiKey((settings.botconversa_api_key as string) || '');
         setIsActive((settings.provider as string) === 'botconversa');
       }
@@ -56,7 +56,7 @@ export function BotConversaConfig() {
         botconversa_api_key: apiKey,
       };
 
-      const { data: existing } = await supabase
+      const { fecha: existing } = await supabase
         .from('integration_settings')
         .select('id')
         .eq('organization_id', profile.organization_id)
@@ -87,7 +87,7 @@ export function BotConversaConfig() {
       queryClient.invalidateQueries({ queryKey: ['integration-settings'] });
       toast.success('¡Configuración de BotConversa guardada!');
     } catch (e: any) {
-      toast.error('Erro ao salvar: ' + e.message);
+      toast.error('Error ao guardar: ' + e.message);
     } finally {
       setSaving(false);
     }
@@ -113,7 +113,7 @@ export function BotConversaConfig() {
               <div>
                 <CardTitle className="text-lg">WhatsApp vía BotConversa</CardTitle>
                 <CardDescription>
-                  Use a API do BotConversa para enviar mensagens WhatsApp
+                  Usa a API do BotConversa para enviar mensajes WhatsApp
                 </CardDescription>
               </div>
             </div>
@@ -128,7 +128,7 @@ export function BotConversaConfig() {
             <div>
               <Label className="text-base font-medium">Usar BotConversa como proveedor principal</Label>
               <p className="text-sm text-muted-foreground">
-                Quando ativo, todas as mensagens WhatsApp serão enviadas via BotConversa em vez do IsiChat
+                Quando ativo, todas as mensajes WhatsApp serão enviadas via BotConversa em vez do IsiChat
               </p>
             </div>
             <Switch checked={isActive} onCheckedChange={setIsActive} />
@@ -138,7 +138,7 @@ export function BotConversaConfig() {
           <div className="space-y-2">
             <Label>API-KEY de BotConversa</Label>
             <p className="text-xs text-muted-foreground">
-              Encontre sua API-KEY no painel do BotConversa em Configurações → Integrações → API
+              Encontre su API-KEY no painel do BotConversa em Configurações → Integraciones → API
             </p>
             <div className="relative">
               <Input
@@ -173,16 +173,16 @@ export function BotConversaConfig() {
           <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-2">
             <h4 className="font-medium text-sm">ℹ️ Cómo funciona</h4>
             <ul className="text-sm text-muted-foreground space-y-1">
-              <li>• Mensagens do Inbox, outreach e follow-ups são enviadas via API do BotConversa</li>
-              <li>• O sistema busca o contato pelo telefone e envia a mensagem automaticamente</li>
-              <li>• Você pode alternar entre BotConversa e IsiChat a qualquer momento</li>
+              <li>• Mensagens do Inbox, outreach e follow-ups son enviadas via API do BotConversa</li>
+              <li>• O sistema busca o contacto pelo teléfono e envia a mensaje automaticamente</li>
+              <li>• Usted puede alternar entre BotConversa e IsiChat a qualquer momento</li>
             </ul>
           </div>
 
           <div className="flex gap-3">
             <Button onClick={handleSave} disabled={saving}>
               {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-              Salvar Configuração
+              Salvar Configuración
             </Button>
             <Button variant="outline" asChild>
               <a href="https://app.botconversa.com.br" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">

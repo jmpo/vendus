@@ -24,31 +24,31 @@ interface Props {
 }
 
 export function RadarLeadDetailSheet({ item, open, onOpenChange, onOpenConversation }: Props) {
-  const { data: messages, isLoading: loadingMsgs } = useQuery({
+  const { fecha: messages, isLoading: loadingMsgs } = useQuery({
     queryKey: ['radar-conv-preview', item?.conversation_id],
     queryFn: async () => {
       if (!item?.conversation_id) return [];
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from('webchat_messages')
         .select('id, direction, content, created_at')
         .eq('conversation_id', item.conversation_id)
         .order('created_at', { ascending: false })
         .limit(10);
-      return (data || []).reverse();
+      return (fecha || []).reverse();
     },
     enabled: !!item?.conversation_id && open,
   });
 
-  const { data: lead } = useQuery({
+  const { fecha: lead } = useQuery({
     queryKey: ['radar-lead-extra', item?.lead_id],
     queryFn: async () => {
       if (!item?.lead_id) return null;
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from('leads')
         .select('id, name, phone, email, temperature, deal_value, assigned_to, sector_id, product_id, created_at')
         .eq('id', item.lead_id)
         .maybeSingle();
-      return data;
+      return fecha;
     },
     enabled: !!item?.lead_id && open,
   });
@@ -57,7 +57,7 @@ export function RadarLeadDetailSheet({ item, open, onOpenChange, onOpenConversat
   const Icon = ICONS[item.classification];
   const color = COLORS[item.classification];
   const snap = item.lead_snapshot || {};
-  const name = snap.name || lead?.name || 'Sem nome';
+  const name = snap.name || lead?.name || 'Sem nombre';
 
   function copy(text: string) {
     navigator.clipboard.writeText(text);
@@ -111,7 +111,7 @@ export function RadarLeadDetailSheet({ item, open, onOpenChange, onOpenConversat
 
               {item.followup_message && (
                 <div className="rounded-md border p-2 text-sm space-y-2">
-                  <div className="text-xs text-muted-foreground font-medium">Mensagem sugerida</div>
+                  <div className="text-xs text-muted-foreground font-medium">Mensaje sugerida</div>
                   <p className="italic">"{item.followup_message}"</p>
                   <Button size="sm" variant="ghost" className="h-7 gap-1" onClick={() => copy(item.followup_message!)}>
                     <Copy className="h-3 w-3" /> Copiar
@@ -124,11 +124,11 @@ export function RadarLeadDetailSheet({ item, open, onOpenChange, onOpenConversat
 
             {/* Snapshot */}
             <section className="space-y-2">
-              <h3 className="text-sm font-semibold">Dados do lead</h3>
+              <h3 className="text-sm font-semibold">Dados del lead</h3>
               <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs">
                 <Info label="Canal" value={snap.channel} />
-                <Info label="Produto" value={snap.product_name || snap.product_id} />
-                <Info label="Setor" value={snap.sector_name} />
+                <Info label="Producto" value={snap.product_name || snap.product_id} />
+                <Info label="Sector" value={snap.sector_name} />
                 <Info label="Atendente" value={snap.assigned_name} />
                 <Info label="Temperatura" value={lead?.temperature || snap.temperature} />
                 <Info
@@ -153,10 +153,10 @@ export function RadarLeadDetailSheet({ item, open, onOpenChange, onOpenConversat
 
             {/* Timeline */}
             <section className="space-y-2">
-              <h3 className="text-sm font-semibold">Últimas mensagens</h3>
+              <h3 className="text-sm font-semibold">Últimas mensajes</h3>
               {loadingMsgs && <Loader2 className="h-4 w-4 animate-spin" />}
               {!loadingMsgs && (!messages || messages.length === 0) && (
-                <p className="text-xs text-muted-foreground">Nenhuma mensagem disponível.</p>
+                <p className="text-xs text-muted-foreground">Nenhuma mensaje disponível.</p>
               )}
               <div className="space-y-2">
                 {(messages || []).map((m: any) => (

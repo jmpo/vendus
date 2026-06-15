@@ -19,7 +19,7 @@ export function CatalogManager({ productId }: CatalogManagerProps) {
   const [search, setSearch] = useState('');
   const [editing, setEditing] = useState<CatalogItem | null>(null);
   const [creatingNew, setCreatingNew] = useState(false);
-  const { data: items, isLoading } = useCatalogItems(productId, search);
+  const { fecha: items, isLoading } = useCatalogItems(productId, search);
   const { remove } = useCatalogItemMutations(productId);
 
   const handleDelete = (id: string, title: string) => {

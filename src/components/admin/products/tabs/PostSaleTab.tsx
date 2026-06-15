@@ -45,14 +45,14 @@ interface Props {
 }
 
 export function PostSaleTab({ productId }: Props) {
-  const { data: actions, isLoading } = usePostSaleEventActions(productId);
-  const { data: agents } = useProductAgents(productId);
-  const { data: templates } = useEmailTemplates();
-  const { data: tags } = useLeadTags();
-  const { data: flows } = useChatFlows(productId);
-  const { data: sectors } = useSectors();
+  const { fecha: actions, isLoading } = usePostSaleEventActions(productId);
+  const { fecha: agents } = useProductAgents(productId);
+  const { fecha: templates } = useEmailTemplates();
+  const { fecha: tags } = useLeadTags();
+  const { fecha: flows } = useChatFlows(productId);
+  const { fecha: sectors } = useSectors();
   const { profile } = useAuth();
-  const { data: team } = useTeamMembers(profile?.organization_id);
+  const { fecha: team } = useTeamMembers(profile?.organization_id);
   const upsert = useUpsertPostSaleEventAction();
   const remove = useDeletePostSaleEventAction(productId);
   const [packageOpen, setPackageOpen] = useState(false);
@@ -60,13 +60,13 @@ export function PostSaleTab({ productId }: Props) {
   const stagesQuery = useQuery({
     queryKey: ['pipeline-stages', productId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('pipeline_stages')
         .select('id, name, order_index')
         .eq('product_id', productId)
         .order('order_index', { ascending: true });
       if (error) throw error;
-      return (data || []) as Array<{ id: string; name: string }>;
+      return (fecha || []) as Array<{ id: string; name: string }>;
     },
     enabled: !!productId,
   });
@@ -90,7 +90,7 @@ export function PostSaleTab({ productId }: Props) {
       <div>
         <h2 className="text-lg font-semibold">Eventos Post-venta</h2>
         <p className="text-sm text-muted-foreground">
-          O webhook do gateway (Hotmart, Cakto, Doppus, Kiwify) já está conectado. Aqui você define <strong>o que acontece</strong> quando cada evento chega.
+          O webhook do gateway (Hotmart, Cakto, Doppus, Kiwify) ya está conectado. Aqui usted define <strong>o que acontece</strong> cuando cada evento chega.
         </p>
       </div>
 
@@ -116,7 +116,7 @@ export function PostSaleTab({ productId }: Props) {
             existing={byEvent.get(evt.value)}
             agents={agents || []}
             templates={templates || []}
-            stages={stagesQuery.data || []}
+            stages={stagesQuery.fecha || []}
             tags={tags || []}
             flows={flows || []}
             sectors={sectors || []}
@@ -165,7 +165,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
   const [inlineMessage, setInlineMessage] = useState<string>((existing as any)?.inline_message ?? '');
   const [messageChannel, setMessageChannel] = useState<'whatsapp' | 'email'>((existing as any)?.message_channel ?? 'whatsapp');
   const [evolutionInstanceId, setEvolutionInstanceId] = useState<string | null>((existing as any)?.evolution_instance_id ?? null);
-  const { data: evolutionInstances } = useEvolutionInstances();
+  const { fecha: evolutionInstances } = useEvolutionInstances();
   const [targetStageId, setTargetStageId] = useState<string | null>(existing?.target_stage_id ?? null);
   const [dealOutcome, setDealOutcome] = useState<'none' | 'won' | 'lost'>((existing as any)?.deal_outcome ?? 'none');
   const [dealValueSource, setDealValueSource] = useState<'none' | 'webhook' | 'manual'>((existing as any)?.deal_value_source ?? 'none');
@@ -263,7 +263,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
             <div className="min-w-0">
               <Label>Retraso antes de disparar</Label>
               <p className="text-xs text-muted-foreground mt-1">
-                0 = imediato. Vale para mensagem, agente IA e e-mail. Etiquetas, etapa e encaminhamento são imediatos.
+                0 = imediato. Vale para mensaje, agente IA e e-mail. Etiquetas, etapa e encaminhamento son imediatos.
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
@@ -306,7 +306,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
               {sendMode === 'flow' && (
                 flows.length === 0 ? (
                   <p className="text-xs text-muted-foreground">
-                    Nenhum fluxo criado para este produto. Crie um na aba <strong>Flujos</strong> primeiro.
+                    Nenhum flujo creado para este producto. Crea um na aba <strong>Flujos</strong> primeiro.
                   </p>
                 ) : (
                   <Select value={flowId ?? ''} onValueChange={(v) => setFlowId(v || null)}>
@@ -356,12 +356,12 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
                   <Textarea
                     ref={inlineMessageRef}
                     rows={5}
-                    placeholder={'Olá {{lead_name}}! Segue o PIX da sua compra de {{product_name}}:\n{{pix_code}}'}
+                    placeholder={'Hola {{lead_name}}! Segue o PIX da su compra de {{product_name}}:\n{{pix_code}}'}
                     value={inlineMessage}
                     onChange={(e) => setInlineMessage(e.target.value)}
                   />
                   <p className="text-xs text-muted-foreground">
-                    Use o botão <strong>Variáveis</strong> para inserir dados do lead, pedido, PIX, boleto e links.
+                    Usa o botão <strong>Variáveis</strong> para inserir dados del lead, pedido, PIX, boleto e links.
                   </p>
                 </div>
               )}
@@ -374,9 +374,9 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
               <div className="space-y-2">
                 <Label className="text-xs text-muted-foreground">Mover para etapa</Label>
                 <Select value={targetStageId ?? NONE} onValueChange={(v) => setTargetStageId(v === NONE ? null : v)}>
-                  <SelectTrigger><SelectValue placeholder="Não mover" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="No mover" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={NONE}>Não mover</SelectItem>
+                    <SelectItem value={NONE}>No mover</SelectItem>
                     {stages.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
@@ -393,11 +393,11 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground">Valor do negócio</Label>
+                <Label className="text-xs text-muted-foreground">Valor do negocio</Label>
                 <Select value={dealValueSource} onValueChange={(v: any) => setDealValueSource(v)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">Não atualizar</SelectItem>
+                    <SelectItem value="none">No actualizar</SelectItem>
                     <SelectItem value="webhook">Puxar do webhook (amount)</SelectItem>
                     <SelectItem value="manual">Valor manual</SelectItem>
                   </SelectContent>
@@ -422,8 +422,8 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
               <Select value={forwardKind} onValueChange={(v: any) => setForwardKind(v)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Não encaminhar</SelectItem>
-                  <SelectItem value="sector">Setor</SelectItem>
+                  <SelectItem value="none">No encaminhar</SelectItem>
+                  <SelectItem value="sector">Sector</SelectItem>
                   <SelectItem value="user">Pessoa</SelectItem>
                   <SelectItem value="agent">Agente de IA</SelectItem>
                 </SelectContent>
@@ -431,7 +431,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
 
               {forwardKind === 'sector' && (
                 <Select value={assignSectorId ?? NONE} onValueChange={(v) => setAssignSectorId(v === NONE ? null : v)}>
-                  <SelectTrigger><SelectValue placeholder="Selecionar setor" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Selecionar sector" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value={NONE}>—</SelectItem>
                     {sectors.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
@@ -458,11 +458,11 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
                       {agents.map(a => <SelectItem key={a.id} value={a.id}>{a.name}{a.is_default ? ' (padrão)' : ''}</SelectItem>)}
                     </SelectContent>
                   </Select>
-                  <Input placeholder="Objetivo do contato" value={objective} onChange={(e) => setObjective(e.target.value)} />
+                  <Input placeholder="Objetivo do contacto" value={objective} onChange={(e) => setObjective(e.target.value)} />
                   <Textarea rows={3} placeholder="Contexto extra para a IA (opcional)" value={extraContext} onChange={(e) => setExtraContext(e.target.value)} />
 
                   <div className="space-y-2 pt-2 border-t">
-                    <Label className="text-xs text-muted-foreground">Modo de abordagem</Label>
+                    <Label className="text-xs text-muted-foreground">Modo de abordaje</Label>
                     <div className="grid grid-cols-1 gap-2">
                       <label
                         className={`flex items-start gap-2 p-2 rounded-md border cursor-pointer transition-colors ${agentOutreachMode === 'direct' ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/50'}`}
@@ -476,7 +476,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
                         />
                         <div className="text-xs">
                           <div className="font-medium text-foreground">Mensaje direta</div>
-                          <div className="text-muted-foreground">Envia tudo de uma vez (Pix, link, instruções) em até 2 bolhas curtas.</div>
+                          <div className="text-muted-foreground">Envia tudo de uma vez (Pix, link, instruções) en hasta 2 bolhas curtas.</div>
                         </div>
                       </label>
                       <label
@@ -490,8 +490,8 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
                           onChange={() => setAgentOutreachMode('conversational')}
                         />
                         <div className="text-xs">
-                          <div className="font-medium text-foreground">Conversa intencional</div>
-                          <div className="text-muted-foreground">Abre com uma pergunta curta. A IA só entrega Pix/link conforme o lead reage.</div>
+                          <div className="font-medium text-foreground">Conversación intencional</div>
+                          <div className="text-muted-foreground">Abre com uma pregunta corta. A IA só entrega Pix/link conforme o lead reage.</div>
                         </div>
                       </label>
                     </div>
@@ -501,7 +501,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
             </div>
           </Section>
 
-          {/* E-mail por template (mantido como opção avançada) */}
+          {/* E-mail por template (mantido como opción avançada) */}
           <Section icon={<Mail className="h-4 w-4" />} title="E-mail por template (opcional)">
             <Select value={emailTemplateId ?? NONE} onValueChange={(v) => setEmailTemplateId(v === NONE ? null : v)}>
               <SelectTrigger><SelectValue placeholder="Nenhum" /></SelectTrigger>
@@ -559,7 +559,7 @@ function TagMultiSelect({
       if (created?.id) onToggle(created.id);
       setQuery('');
     } catch (e) {
-      // toast já é exibido pelo hook
+      // toast ya é exibido pelo hook
     }
   };
 
@@ -575,7 +575,7 @@ function TagMultiSelect({
               type="button"
               onClick={() => onToggle(t.id)}
               className="text-xs px-2 py-1 rounded-md border border-primary bg-primary/10 hover:bg-primary/20 transition"
-              title="Clique para remover"
+              title="Hacé clic para eliminar"
             >
               <span className="inline-block w-2 h-2 rounded-full mr-1.5 align-middle" style={{ background: t.color }} />
               {t.name} ×
@@ -592,7 +592,7 @@ function TagMultiSelect({
         </PopoverTrigger>
         <PopoverContent className="p-0 w-72" align="start">
           <Command shouldFilter={false}>
-            <CommandInput placeholder="Buscar ou criar etiqueta..." value={query} onValueChange={setQuery} />
+            <CommandInput placeholder="Buscar ou crear etiqueta..." value={query} onValueChange={setQuery} />
             <CommandList>
               <CommandEmpty>
                 {query.trim() ? (
@@ -606,7 +606,7 @@ function TagMultiSelect({
                     Criar "<strong>{query.trim()}</strong>"
                   </button>
                 ) : (
-                  <p className="px-3 py-2 text-sm text-muted-foreground">Digite para buscar ou criar</p>
+                  <p className="px-3 py-2 text-sm text-muted-foreground">Escribí para buscar ou crear</p>
                 )}
               </CommandEmpty>
               <CommandGroup>
@@ -641,19 +641,19 @@ function TagMultiSelect({
 }
 
 function RecentLogs({ productId }: { productId: string }) {
-  const { data: logs, isLoading } = usePostSaleEventLogs(productId, 15);
+  const { fecha: logs, isLoading } = usePostSaleEventLogs(productId, 15);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2"><History className="h-4 w-4" />Histórico recente</CardTitle>
-        <CardDescription>Últimos eventos pós-venda processados para este produto.</CardDescription>
+        <CardDescription>Últimos eventos pós-venta processados para este producto.</CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading ? (
           <div className="text-sm text-muted-foreground">Carregando...</div>
         ) : !logs || logs.length === 0 ? (
-          <div className="text-sm text-muted-foreground">Nenhum evento registrado ainda.</div>
+          <div className="text-sm text-muted-foreground">Nenhum evento registrado aún.</div>
         ) : (
           <div className="space-y-2">
             {logs.map(log => {
@@ -667,12 +667,12 @@ function RecentLogs({ productId }: { productId: string }) {
                     <div className="min-w-0">
                       <div className="font-medium">{log.event_type}</div>
                       <div className="text-xs text-muted-foreground">
-                        {log.source || 'webhook'} · {executed.length} ação(ões) · {format(new Date(log.created_at), "dd/MM 'às' HH:mm", { locale: es })}
+                        {log.source || 'webhook'} · {executed.length} acción(ões) · {format(new Date(log.created_at), "dd/MM 'às' HH:mm", { locale: es })}
                       </div>
                     </div>
                   </div>
                   <Badge variant={ok ? 'default' : 'destructive'} className="shrink-0">
-                    {ok ? 'sucesso' : 'falha parcial'}
+                    {ok ? 'éxito' : 'falla parcial'}
                   </Badge>
                 </div>
               );

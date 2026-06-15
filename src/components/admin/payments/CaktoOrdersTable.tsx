@@ -45,9 +45,9 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
   const [status, setStatus] = useState('all');
   const [reprocessingId, setReprocessingId] = useState<string | null>(null);
   const [selected, setSelected] = useState<CaktoOrder | null>(null);
-  const { data: orders, isLoading } = useCaktoOrders(scope, { search, status, provider });
+  const { fecha: orders, isLoading } = useCaktoOrders(scope, { search, status, provider });
   const sync = useSyncCaktoOrders(scope);
-  const { data: isSuperAdmin } = useIsSuperAdmin();
+  const { fecha: isSuperAdmin } = useIsSuperAdmin();
   const showReprocess = scope === 'platform' && !!isSuperAdmin;
 
   const handleSync = async () => {
@@ -55,26 +55,26 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
       const r = await sync.mutateAsync();
       toast.success(`${r.synced} pedidos sincronizados`);
     } catch (e: any) {
-      toast.error(e.message ?? 'Erro');
+      toast.error(e.message ?? 'Error');
     }
   };
 
   const handleReprocess = async (orderId: string) => {
     setReprocessingId(orderId);
     try {
-      const { data, error } = await supabase.functions.invoke('cakto-reprocess-order', {
+      const { fecha, error } = await supabase.functions.invoke('cakto-reprocess-order', {
         body: { order_id: orderId },
       });
       if (error) throw error;
-      if (!data?.ok) {
-        const skipped = data?.result?.skipped;
-        const errs = data?.result?.errors?.join(' · ');
+      if (!fecha?.ok) {
+        const skipped = fecha?.result?.skipped;
+        const errs = fecha?.result?.errors?.join(' · ');
         toast.warning(`Reprocesso concluído com avisos${skipped ? `: ${skipped}` : ''}${errs ? ` — ${errs}` : ''}`);
       } else {
         toast.success('Pedido reprocessado');
       }
     } catch (e: any) {
-      toast.error(e.message ?? 'Erro ao reprocessar');
+      toast.error(e.message ?? 'Error ao reprocessar');
     } finally {
       setReprocessingId(null);
     }
@@ -98,7 +98,7 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
         <div className="flex flex-wrap gap-2 pt-2">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar cliente, ref, produto…" className="pl-9" />
+            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar cliente, ref, producto…" className="pl-9" />
           </div>
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger className="w-[180px]"><SelectValue /></SelectTrigger>
@@ -119,10 +119,10 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Data</TableHead>
+                <TableHead>Fecha</TableHead>
                 <TableHead>Plataforma</TableHead>
                 <TableHead>Cliente</TableHead>
-                <TableHead>Produto</TableHead>
+                <TableHead>Producto</TableHead>
                 <TableHead>Método</TableHead>
                 <TableHead className="text-right">Valor</TableHead>
                 <TableHead>Status</TableHead>

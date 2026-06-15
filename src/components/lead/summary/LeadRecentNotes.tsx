@@ -12,7 +12,7 @@ interface Props {
 }
 
 export function LeadRecentNotes({ leadId, onSeeAll }: Props) {
-  const { data: notes = [], isLoading } = useLeadNotes(leadId);
+  const { fecha: notes = [], isLoading } = useLeadNotes(leadId);
   const recent = notes.slice(0, 3);
 
   return (

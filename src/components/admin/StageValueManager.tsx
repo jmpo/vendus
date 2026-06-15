@@ -13,23 +13,23 @@ import { Save, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function StageValueManager() {
-  const { data: products } = useProducts();
+  const { fecha: products } = useProducts();
   const [selectedProductId, setSelectedProductId] = useState<string>('');
-  const { data: stages } = usePipelineStages(selectedProductId);
-  const { data: stageValues } = useStageValues(selectedProductId);
+  const { fecha: stages } = usePipelineStages(selectedProductId);
+  const { fecha: stageValues } = useStageValues(selectedProductId);
   const upsertStageValue = useUpsertStageValue();
 
   const [localValues, setLocalValues] = useState<Record<string, { expected_value: number; probability_percent: number }>>({});
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Selecionar primeiro produto automaticamente
+  // Selecionar primeiro producto automaticamente
   useEffect(() => {
     if (products?.length && !selectedProductId) {
       setSelectedProductId(products[0].id);
     }
   }, [products, selectedProductId]);
 
-  // Inicializar valores locais quando os dados carregam
+  // Inicializar valores locais cuando os dados carregam
   useEffect(() => {
     if (stageValues && stages) {
       const values: Record<string, { expected_value: number; probability_percent: number }> = {};

@@ -60,13 +60,13 @@ export function useBusinessHours() {
     queryKey: ['business-hours', orgId],
     enabled: !!orgId,
     queryFn: async (): Promise<BusinessHours | null> => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('business_hours')
         .select('*')
         .eq('organization_id', orgId!)
         .maybeSingle();
       if (error) throw error;
-      return data as any;
+      return fecha as any;
     },
   });
 }
@@ -84,19 +84,19 @@ export function useUpsertBusinessHours() {
         out_of_hours_message: input.out_of_hours_message ?? '',
         out_of_hours_enabled: input.out_of_hours_enabled ?? false,
       };
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('business_hours')
         .upsert(payload, { onConflict: 'organization_id' })
         .select()
         .single();
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['business-hours'] });
       toast({ title: 'Horários guardados' });
     },
-    onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
 }
 
@@ -107,13 +107,13 @@ export function useBusinessHolidays() {
     queryKey: ['business-holidays', orgId],
     enabled: !!orgId,
     queryFn: async (): Promise<BusinessHoliday[]> => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('business_holidays')
         .select('*')
         .eq('organization_id', orgId!)
         .order('date');
       if (error) throw error;
-      return (data ?? []) as any;
+      return (fecha ?? []) as any;
     },
   });
 }
@@ -154,7 +154,7 @@ export function isWithinBusinessHoursLocal(
   now: Date = new Date()
 ): boolean {
   if (!bh) return true;
-  // Build local time string in tz
+  // Build local equipo string in tz
   try {
     const fmt = new Intl.DateTimeFormat('en-US', {
       timeZone: bh.timezone,
@@ -177,8 +177,8 @@ export function isWithinBusinessHoursLocal(
     if (holidays.some((h) => h.date === isoDate)) return false;
     const blocks = bh.schedule?.[day] ?? [];
     if (blocks.length === 0) return false;
-    const time = `${get('hour')}:${get('minute')}`;
-    return blocks.some((b) => time >= b.start && time < b.end);
+    const equipo = `${get('hour')}:${get('minute')}`;
+    return blocks.some((b) => equipo >= b.start && equipo < b.end);
   } catch {
     return true;
   }

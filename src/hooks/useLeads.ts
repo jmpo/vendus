@@ -21,9 +21,9 @@ export function useLeads(productId?: string) {
         query = query.eq('product_id', productId);
       }
       
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
-      return data;
+      return fecha;
     }
   });
 }
@@ -32,7 +32,7 @@ export function useLead(id: string) {
   return useQuery({
     queryKey: ['lead', id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('leads')
         .select(`
           *,
@@ -47,7 +47,7 @@ export function useLead(id: string) {
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     enabled: !!id
   });
@@ -57,14 +57,14 @@ export function usePipelineStages(productId: string) {
   return useQuery({
     queryKey: ['pipeline-stages', productId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('pipeline_stages')
         .select('*')
         .eq('product_id', productId)
         .order('order_index', { ascending: true });
       
       if (error) throw error;
-      return data as PipelineStage[];
+      return fecha as PipelineStage[];
     },
     enabled: !!productId
   });
@@ -75,14 +75,14 @@ export function useCreateLead() {
   
   return useMutation({
     mutationFn: async (lead: TablesInsert<'leads'>) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('leads')
         .insert(lead)
         .select()
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
@@ -95,7 +95,7 @@ export function useUpdateLead() {
   
   return useMutation({
     mutationFn: async ({ id, ...updates }: TablesUpdate<'leads'> & { id: string }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('leads')
         .update(updates)
         .eq('id', id)
@@ -103,11 +103,11 @@ export function useUpdateLead() {
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data) => {
+    onSuccess: (fecha) => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
-      queryClient.invalidateQueries({ queryKey: ['lead', data.id] });
+      queryClient.invalidateQueries({ queryKey: ['lead', fecha.id] });
     }
   });
 }
@@ -118,7 +118,7 @@ export function useMoveLead() {
   return useMutation({
     mutationFn: async ({ leadId, stageId }: { leadId: string; stageId: string }) => {
       // Update lead stage
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('leads')
         .update({ current_stage_id: stageId })
         .eq('id', leadId)
@@ -135,7 +135,7 @@ export function useMoveLead() {
           stage_id: stageId
         });
 
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });

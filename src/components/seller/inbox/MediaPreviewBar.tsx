@@ -10,7 +10,7 @@ export interface PendingAttachment {
   /** URL local (createObjectURL) para prévia */
   previewUrl: string;
   caption: string;
-  /** Para áudios gravados: duração em ms */
+  /** Para áudios gravados: duración em ms */
   durationMs?: number;
 }
 
@@ -64,7 +64,7 @@ export function MediaPreviewBar({
         {/* Info + caption */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2 mb-1">
-            <p className="text-xs font-medium truncate">{file.name || 'arquivo'}</p>
+            <p className="text-xs font-medium truncate">{file.name || 'archivo'}</p>
             <span className="text-[10px] text-muted-foreground flex-shrink-0">
               {formatBytes(file.size)}
             </span>

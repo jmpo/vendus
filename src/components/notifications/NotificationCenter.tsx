@@ -60,8 +60,8 @@ export function NotificationCenter() {
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
   
-  const { data: notifications, isLoading } = useNotifications(user?.id || '');
-  const { data: unreadCount } = useUnreadNotificationsCount(user?.id || '');
+  const { fecha: notifications, isLoading } = useNotifications(user?.id || '');
+  const { fecha: unreadCount } = useUnreadNotificationsCount(user?.id || '');
   const markRead = useMarkNotificationRead();
   const markAllRead = useMarkAllNotificationsRead();
   const deleteNotification = useDeleteNotification();

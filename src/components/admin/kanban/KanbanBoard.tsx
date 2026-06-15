@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { toast } from 'sonner';
 export function KanbanBoard() {
-  const { data: products, isLoading: productsLoading } = useProducts();
+  const { fecha: products, isLoading: productsLoading } = useProducts();
   const [selectedProductId, setSelectedProductId] = useState<string>('');
   const [stageManagerOpen, setStageManagerOpen] = useState(false);
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);

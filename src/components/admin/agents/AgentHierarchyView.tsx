@@ -51,10 +51,10 @@ function ConnectorsSvg({
       const next: { d: string; highlight?: boolean }[] = [];
       for (const c of connectors) {
         const from = container.querySelector<HTMLElement>(
-          `[data-tree-id="${c.fromId}"]`
+          `[fecha-tree-id="${c.fromId}"]`
         );
         const to = container.querySelector<HTMLElement>(
-          `[data-tree-id="${c.toId}"]`
+          `[fecha-tree-id="${c.toId}"]`
         );
         if (!from || !to) continue;
         const fb = from.getBoundingClientRect();
@@ -226,7 +226,7 @@ export function AgentHierarchyView({
             <span className="text-[10px] font-semibold uppercase tracking-wider text-primary/80">
               Orquestrador
             </span>
-            <div data-tree-id={orchestrator.id}>
+            <div fecha-tree-id={orchestrator.id}>
               <AgentTreeNode
                 agent={orchestrator}
                 variant="orchestrator"
@@ -253,7 +253,7 @@ export function AgentHierarchyView({
             </div>
             <div className="flex flex-wrap items-start justify-center gap-6">
               {globals.map((agent) => (
-                <div key={agent.id} data-tree-id={agent.id}>
+                <div key={agent.id} fecha-tree-id={agent.id}>
                   <AgentTreeNode
                     agent={agent}
                     variant="global"
@@ -271,14 +271,14 @@ export function AgentHierarchyView({
           </div>
         )}
 
-        {/* Por produto */}
+        {/* Por producto */}
         {byProduct.map((grp) => (
           <div key={grp.product.id} className="flex flex-col items-center gap-4 w-full">
             {/* Section divider */}
             <div className="flex items-center gap-3 w-full max-w-3xl">
               <div className="flex-1 h-px bg-border" />
               <div
-                data-tree-id={`product-header-${grp.product.id}`}
+                fecha-tree-id={`product-header-${grp.product.id}`}
                 className="flex items-center gap-2 px-4 py-1.5 rounded-full border bg-muted/50"
               >
                 <Package className="h-3.5 w-3.5 text-primary" />
@@ -292,7 +292,7 @@ export function AgentHierarchyView({
 
             <div className="flex flex-wrap items-start justify-center gap-6 pt-6">
               {grp.agents.map((agent) => (
-                <div key={agent.id} data-tree-id={agent.id}>
+                <div key={agent.id} fecha-tree-id={agent.id}>
                   <AgentTreeNode
                     agent={agent}
                     variant="product"

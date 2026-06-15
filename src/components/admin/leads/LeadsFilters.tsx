@@ -47,9 +47,9 @@ const temperatures = [
 
 const datePresets: { value: Exclude<DatePreset, null>; label: string }[] = [
   { value: 'today', label: 'Hoje' },
-  { value: '7d', label: '7 dias' },
-  { value: '30d', label: '30 dias' },
-  { value: 'month', label: 'Este mês' },
+  { value: '7d', label: '7 días' },
+  { value: '30d', label: '30 días' },
+  { value: 'month', label: 'Este mes' },
   { value: 'custom', label: 'Personalizado' },
 ];
 
@@ -88,7 +88,7 @@ const OPERATORS_BY_TYPE: Record<
   ],
   boolean: [
     { value: 'eq', label: 'É verdadeiro/falso' },
-    { value: 'is_empty', label: 'Não definido' },
+    { value: 'is_empty', label: 'No definido' },
   ],
   date: [
     { value: 'eq', label: 'Em' },
@@ -116,7 +116,7 @@ function CustomFieldRuleRow({
   const { fields } = useCustomFields();
   const field = fields.find((f) => f.field_key === rule.fieldKey);
   const operators = OPERATORS_BY_TYPE[rule.fieldType] || OPERATORS_BY_TYPE.text;
-  const { data: distinctValues } = useCustomFieldValues(
+  const { fecha: distinctValues } = useCustomFieldValues(
     rule.fieldType === 'text' && (!field?.options || field.options.length === 0)
       ? rule.fieldKey
       : null
@@ -193,7 +193,7 @@ function CustomFieldRuleRow({
           onValueChange={(v) => onChange({ ...rule, value: v === 'true' })}
         >
           <SelectTrigger className="h-8 text-xs">
-            <SelectValue placeholder="Selecione" />
+            <SelectValue placeholder="Seleccioná" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="true">Verdadeiro</SelectItem>
@@ -208,7 +208,7 @@ function CustomFieldRuleRow({
           onValueChange={(v) => onChange({ ...rule, value: v })}
         >
           <SelectTrigger className="h-8 text-xs">
-            <SelectValue placeholder="Selecione um valor" />
+            <SelectValue placeholder="Seleccioná um valor" />
           </SelectTrigger>
           <SelectContent>
             {field.options.map((opt) => (
@@ -289,7 +289,7 @@ export function LeadsFilters({
   const [dateFromOpen, setDateFromOpen] = useState(false);
   const [dateToOpen, setDateToOpen] = useState(false);
   const [tagSearch, setTagSearch] = useState('');
-  const { data: leadTags } = useLeadTags();
+  const { fecha: leadTags } = useLeadTags();
   const { fields: customFields } = useCustomFields();
 
   const activeFiltersCount = [
@@ -357,7 +357,7 @@ export function LeadsFilters({
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar por nome, email, telefone..."
+            placeholder="Buscar por nombre, email, teléfono..."
             value={filters.search}
             onChange={(e) => onFilterChange('search', e.target.value)}
             className="pl-9"
@@ -390,7 +390,7 @@ export function LeadsFilters({
             <div className="max-h-[70vh] overflow-y-auto p-4 space-y-5">
               {/* Período */}
               <div className="space-y-2">
-                <label className="text-sm font-medium">Data de inscrição</label>
+                <label className="text-sm font-medium">Fecha de inscrição</label>
                 <div className="flex flex-wrap gap-2">
                   {datePresets.map((p) => {
                     const active = filters.datePreset === p.value;
@@ -608,7 +608,7 @@ export function LeadsFilters({
                   <label className="text-sm font-medium text-destructive">Excluir do resultado</label>
                 </div>
 
-                {/* Etiquetas a excluir */}
+                {/* Etiquetas a eliminar */}
                 {leadTags && leadTags.length > 0 && (
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-muted-foreground">
@@ -642,7 +642,7 @@ export function LeadsFilters({
                   </div>
                 )}
 
-                {/* Origens a excluir */}
+                {/* Origens a eliminar */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-muted-foreground">Sem as origens</label>
                   <div className="flex flex-wrap gap-1.5">
@@ -666,7 +666,7 @@ export function LeadsFilters({
                   </div>
                 </div>
 
-                {/* Canais a excluir */}
+                {/* Canais a eliminar */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-muted-foreground">Sem os canais</label>
                   <div className="flex flex-wrap gap-1.5">
@@ -753,16 +753,16 @@ export function LeadsFilters({
 
               {/* Product */}
               <div className="space-y-2">
-                <label className="text-sm font-medium">Produto</label>
+                <label className="text-sm font-medium">Producto</label>
                 <Select
                   value={filters.productId || '__all__'}
                   onValueChange={(v) => onFilterChange('productId', v === '__all__' ? null : v)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Todos os produtos" />
+                    <SelectValue placeholder="Todos os productos" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__all__">Todos os produtos</SelectItem>
+                    <SelectItem value="__all__">Todos os productos</SelectItem>
                     {products.map((product) => (
                       <SelectItem key={product.id} value={product.id}>
                         {product.name}

@@ -35,8 +35,8 @@ const formatCurrency = (value: number) =>
   new Intl.NumberFormat( 'es' , { style: 'currency', currency: 'PYG' }).format(value || 0);
 
 export function PlansManager() {
-  const { data: plans, isLoading } = useAllPlans();
-  const { data: usage } = usePlanUsageCounts();
+  const { fecha: plans, isLoading } = useAllPlans();
+  const { fecha: usage } = usePlanUsageCounts();
   const deletePlan = useDeletePlan();
 
   const [editing, setEditing] = useState<PlatformPlan | null>(null);
@@ -53,10 +53,10 @@ export function PlansManager() {
     }
     try {
       await deletePlan.mutateAsync(deleting.id);
-      toast.success('Plano excluído');
+      toast.success('Plano eliminado');
       setDeleting(null);
     } catch (err: any) {
-      toast.error(err.message || 'Erro ao excluir plano');
+      toast.error(err.message || 'Error ao eliminar plan');
     }
   };
 
@@ -183,7 +183,7 @@ export function PlansManager() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Eliminar plan?</AlertDialogTitle>
             <AlertDialogDescription>
-              O plano "{deleting?.name}" será eliminado. Esta acción no se puede deshacer.
+              O plan "{deleting?.name}" será eliminado. Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

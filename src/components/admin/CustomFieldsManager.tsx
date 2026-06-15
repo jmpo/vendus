@@ -197,8 +197,8 @@ export function CustomFieldsManager() {
                   <SelectItem value="text">Texto</SelectItem>
                   <SelectItem value="number">Número</SelectItem>
                   <SelectItem value="select">Seleção</SelectItem>
-                  <SelectItem value="boolean">Sim/Não</SelectItem>
-                  <SelectItem value="date">Data</SelectItem>
+                  <SelectItem value="boolean">Sí/No</SelectItem>
+                  <SelectItem value="date">Fecha</SelectItem>
                 </SelectContent>
               </Select>
             </div>

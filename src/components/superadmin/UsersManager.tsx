@@ -34,7 +34,7 @@ export function UsersManager() {
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
 
-  const { data: users, isLoading } = useAllUsers();
+  const { fecha: users, isLoading } = useAllUsers();
 
   const filteredUsers = users?.filter((user: any) => {
     const matchesSearch = 

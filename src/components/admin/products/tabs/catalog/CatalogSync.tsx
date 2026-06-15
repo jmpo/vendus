@@ -65,7 +65,7 @@ export function CatalogSync({ productId }: Props) {
               <SelectContent>
                 <SelectItem value="imoveis">Imóveis</SelectItem>
                 <SelectItem value="veiculos">Veículos</SelectItem>
-                <SelectItem value="produtos">Produtos</SelectItem>
+                <SelectItem value="productos">Produtos</SelectItem>
                 <SelectItem value="generico">Genérico</SelectItem>
               </SelectContent>
             </Select>

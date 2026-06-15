@@ -20,9 +20,9 @@ import { useProductPipelineStages } from '@/hooks/useProductPipelineStages';
 import { OptionActionsEditor } from './OptionActionsEditor';
 
 const LEAD_FIELD_MAPPINGS = [
-  { value: 'name', label: 'Nome' },
+  { value: 'name', label: 'Nombre' },
   { value: 'email', label: 'E-mail' },
-  { value: 'phone', label: 'Telefone' },
+  { value: 'phone', label: 'Teléfono' },
   { value: 'company', label: 'Empresa' },
   { value: 'position', label: 'Cargo' },
   { value: 'notes', label: 'Observações' },
@@ -45,7 +45,7 @@ const TEMPERATURE_LABELS: Record<LeadTemperature, string> = {
 };
 
 const OPERATOR_LABELS: Record<AutomationOperator, string> = {
-  any: 'Qualquer resposta',
+  any: 'Qualquer respuesta',
   equals: 'Igual a',
   contains: 'Contém',
   gte: 'Maior ou igual',
@@ -78,8 +78,8 @@ export function FormBlockEditor({
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const carouselInputRef = useRef<HTMLInputElement>(null);
-  const { data: leadTags } = useLeadTags();
-  const { data: pipelineStages } = useProductPipelineStages(form?.product_id);
+  const { fecha: leadTags } = useLeadTags();
+  const { fecha: pipelineStages } = useProductPipelineStages(form?.product_id);
 
   useEffect(() => {
     setLocalBlock(block);
@@ -88,7 +88,7 @@ export function FormBlockEditor({
   if (!localBlock) {
     return (
       <div className="w-full md:w-80 bg-card md:border-l flex items-center justify-center text-muted-foreground p-4 text-center">
-        <p>Selecione um bloco para editar suas propriedades</p>
+        <p>Seleccioná um bloco para editar sus propriedades</p>
       </div>
     );
   }
@@ -111,7 +111,7 @@ export function FormBlockEditor({
     const currentOptions = (localBlock.options as SelectOption[]) || [];
     const newOption: SelectOption = {
       value: `option_${currentOptions.length + 1}`,
-      label: `Opção ${currentOptions.length + 1}`,
+      label: `Opción ${currentOptions.length + 1}`,
     };
     handleOptionsChange([...currentOptions, newOption]);
   };
@@ -148,7 +148,7 @@ export function FormBlockEditor({
 
   const uploadToBucket = async (file: File): Promise<string | null> => {
     if (!profile?.organization_id) {
-      toast.error('Organização não encontrada');
+      toast.error('Organización no encontrada');
       return null;
     }
     const ext = file.name.split('.').pop() || 'bin';
@@ -161,8 +161,8 @@ export function FormBlockEditor({
       toast.error('Falha no upload: ' + error.message);
       return null;
     }
-    const { data } = supabase.storage.from('form-media').getPublicUrl(path);
-    return data.publicUrl;
+    const { fecha } = supabase.storage.from('form-media').getPublicUrl(path);
+    return fecha.publicUrl;
   };
 
   const handleSingleUpload = async (file: File) => {
@@ -266,17 +266,17 @@ export function FormBlockEditor({
             <Textarea
               value={localBlock.label}
               onChange={(e) => handleChange('label', e.target.value)}
-              placeholder="Digite a pergunta..."
+              placeholder="Escribí a pregunta..."
               rows={2}
             />
           </div>
           
           <div className="space-y-2">
-            <Label>Descrição (opcional)</Label>
+            <Label>Descripción (opcional)</Label>
             <Textarea
               value={localBlock.description || ''}
               onChange={(e) => handleChange('description', e.target.value)}
-              placeholder="Texto de ajuda ou contexto..."
+              placeholder="Texto de ayuda ou contexto..."
               rows={2}
             />
           </div>
@@ -300,7 +300,7 @@ export function FormBlockEditor({
               <div className="flex items-center justify-between">
                 <div>
                   <Label className="text-sm font-medium">Obrigatório</Label>
-                  <p className="text-xs text-muted-foreground">O usuário deve responder</p>
+                  <p className="text-xs text-muted-foreground">O usuario debe responder</p>
                 </div>
                 <Switch
                   checked={localBlock.required}
@@ -333,7 +333,7 @@ export function FormBlockEditor({
                           label: e.target.value,
                           value: e.target.value.toLowerCase().replace(/\s+/g, '_')
                         })}
-                        placeholder="Texto da opção"
+                        placeholder="Texto da opción"
                         className="flex-1 h-8"
                       />
                       <OptionActionsEditor
@@ -354,7 +354,7 @@ export function FormBlockEditor({
                   ))}
                 </div>
                 <p className="text-[10px] text-muted-foreground leading-tight">
-                  Use o ícone ⚡ ao lado de cada opção para configurar ações como redirecionar para pagamento, abrir o calendário, atribuir setor/agente, ou adicionar etiquetas.
+                  Usa o ícone ⚡ ao lado de cada opción para configurar acciones como redirecionar para pago, abrir o calendario, atribuir sector/agente, ou adicionar etiquetas.
                 </p>
               </div>
             </>
@@ -365,7 +365,7 @@ export function FormBlockEditor({
             <>
               <Separator />
               <div className="space-y-3">
-                <Label>Configuração da Escala</Label>
+                <Label>Configuración da Escala</Label>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <Label className="text-xs text-muted-foreground">Valor Mínimo</Label>
@@ -431,7 +431,7 @@ export function FormBlockEditor({
                   placeholder="10"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Pontos adicionados ao score do lead
+                  Pontos adicionados ao score del lead
                 </p>
               </div>
             </>
@@ -509,7 +509,7 @@ export function FormBlockEditor({
                   onValueChange={(value) => handleChange('maps_to', value === 'none' ? null : value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione..." />
+                    <SelectValue placeholder="Seleccioná..." />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">Nenhum</SelectItem>
@@ -521,7 +521,7 @@ export function FormBlockEditor({
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  A resposta será salva neste campo do lead
+                  A respuesta será salva neste campo del lead
                 </p>
               </div>
             </>
@@ -534,10 +534,10 @@ export function FormBlockEditor({
               <div className="space-y-4 rounded-lg border border-primary/20 bg-primary/5 p-3">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-primary" />
-                  <Label className="text-sm font-semibold">Automações no CRM</Label>
+                  <Label className="text-sm font-semibold">Automatizaciones no CRM</Label>
                 </div>
 
-                {/* Tags sempre que responder */}
+                {/* Tags siempre que responder */}
                 <div className="space-y-2">
                   <Label className="text-xs flex items-center gap-1.5">
                     <TagIcon className="w-3 h-3" /> Tags ao responder
@@ -551,7 +551,7 @@ export function FormBlockEditor({
                     </PopoverTrigger>
                     <PopoverContent className="w-64 p-2 max-h-64 overflow-auto">
                       {(leadTags || []).length === 0 ? (
-                        <p className="text-xs text-muted-foreground p-2">Nenhuma tag criada ainda.</p>
+                        <p className="text-xs text-muted-foreground p-2">Nenhuma tag creada aún.</p>
                       ) : (
                         <div className="space-y-1">
                           {(leadTags || []).map((t) => {
@@ -602,7 +602,7 @@ export function FormBlockEditor({
                   >
                     <SelectTrigger className="h-8"><SelectValue placeholder="Nenhum" /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">Não alterar</SelectItem>
+                      <SelectItem value="none">No alterar</SelectItem>
                       {(pipelineStages || []).map((s) => (
                         <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
                       ))}
@@ -619,9 +619,9 @@ export function FormBlockEditor({
                     value={crm.set_temperature || 'none'}
                     onValueChange={(v) => updateCrm({ set_temperature: v === 'none' ? null : (v as LeadTemperature) })}
                   >
-                    <SelectTrigger className="h-8"><SelectValue placeholder="Não alterar" /></SelectTrigger>
+                    <SelectTrigger className="h-8"><SelectValue placeholder="No alterar" /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">Não alterar</SelectItem>
+                      <SelectItem value="none">No alterar</SelectItem>
                       {(['cold','warm','hot'] as LeadTemperature[]).map((t) => (
                         <SelectItem key={t} value={t}>{TEMPERATURE_LABELS[t]}</SelectItem>
                       ))}
@@ -641,7 +641,7 @@ export function FormBlockEditor({
                     className="h-8"
                   />
                   <p className="text-[10px] text-muted-foreground">
-                    Resposta gravada em <code>metadata.custom_fields.{`{chave}`}</code> do lead.
+                    Resposta gravada em <code>metadata.custom_fields.{`{chave}`}</code> del lead.
                   </p>
                 </div>
 
@@ -655,7 +655,7 @@ export function FormBlockEditor({
                   </div>
                   {(crm.automations || []).length === 0 && (
                     <p className="text-[10px] text-muted-foreground">
-                      Aplique tags/estágio/temperatura apenas quando a resposta atender uma condição.
+                      Aplique tags/estágio/temperatura apenas cuando a respuesta atender uma condición.
                     </p>
                   )}
                   {(crm.automations || []).map((rule, idx) => (
@@ -771,7 +771,7 @@ export function FormBlockEditor({
             <>
               <Separator />
               <div className="space-y-3">
-                <Label>Configuração da Tela Final</Label>
+                <Label>Configuración da Tela Final</Label>
                 <div className="space-y-2">
                   <Label className="text-xs text-muted-foreground">Texto do Botão</Label>
                   <Input
@@ -803,7 +803,7 @@ export function FormBlockEditor({
             <>
               <Separator />
               <div className="space-y-3">
-                <Label>Imagem</Label>
+                <Label>Imagen</Label>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -930,7 +930,7 @@ export function FormBlockEditor({
                 {(localBlock.block_settings as any)?.url && (
                   toEmbedUrl((localBlock.block_settings as any).url)
                     ? <p className="text-xs text-emerald-600">✓ URL reconhecida</p>
-                    : <p className="text-xs text-destructive">URL não reconhecida</p>
+                    : <p className="text-xs text-destructive">URL no reconhecida</p>
                 )}
                 <div className="space-y-2">
                   <Label className="text-xs">Orientação</Label>
@@ -1052,7 +1052,7 @@ export function FormBlockEditor({
           {localBlock.block_type === 'divider' && (
             <>
               <Separator />
-              <p className="text-xs text-muted-foreground">Divisor visual entre seções. Sem configuração.</p>
+              <p className="text-xs text-muted-foreground">Divisor visual entre seções. Sem configuración.</p>
             </>
           )}
 
@@ -1065,7 +1065,7 @@ export function FormBlockEditor({
                   <strong>Pergunta com IA</strong>
                 </p>
                 <p className="text-xs text-pink-600 dark:text-pink-400 mt-1">
-                  Esta pergunta será gerada dinamicamente com base no contexto do produto e nas respostas anteriores do usuário.
+                  Esta pregunta será gerada dinamicamente com base no contexto do producto e nas respuestas anteriores do usuario.
                 </p>
               </div>
             </>

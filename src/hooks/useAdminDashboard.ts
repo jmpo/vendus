@@ -52,7 +52,7 @@ export function useAdminKPIs() {
       const lastMonthEnd = format(endOfMonth(subMonths(now, 1)), 'yyyy-MM-dd');
 
       // Get this month's deals
-      const { data: thisMonthDeals } = await supabase
+      const { fecha: thisMonthDeals } = await supabase
         .from('deals')
         .select('deal_value')
         .eq('status', 'won')
@@ -60,7 +60,7 @@ export function useAdminKPIs() {
         .lte('closed_at', thisMonthEnd);
 
       // Get last month's deals
-      const { data: lastMonthDeals } = await supabase
+      const { fecha: lastMonthDeals } = await supabase
         .from('deals')
         .select('deal_value')
         .eq('status', 'won')
@@ -68,18 +68,18 @@ export function useAdminKPIs() {
         .lte('closed_at', lastMonthEnd);
 
       // Get all leads for conversion rate
-      const { data: leads } = await supabase
+      const { fecha: leads } = await supabase
         .from('leads')
         .select('id, current_stage_id');
 
       // Get won stages
-      const { data: wonStages } = await supabase
+      const { fecha: wonStages } = await supabase
         .from('pipeline_stages')
         .select('id')
         .eq('is_won', true);
 
       // Get active goals
-      const { data: goals } = await supabase
+      const { fecha: goals } = await supabase
         .from('sales_goals')
         .select('target_value, achieved_value')
         .gte('period_end', thisMonthStart)
@@ -87,7 +87,7 @@ export function useAdminKPIs() {
         .eq('is_active', true);
 
       // Get pending commissions
-      const { data: pendingCommissions } = await supabase
+      const { fecha: pendingCommissions } = await supabase
         .from('commissions')
         .select('amount')
         .eq('status', 'pending');
@@ -141,7 +141,7 @@ export function useTopSellers(limit = 5) {
       const monthEnd = format(endOfMonth(now), 'yyyy-MM-dd');
 
       // Get all deals this month
-      const { data: deals } = await supabase
+      const { fecha: deals } = await supabase
         .from('deals')
         .select('seller_id, deal_value')
         .eq('status', 'won')
@@ -163,7 +163,7 @@ export function useTopSellers(limit = 5) {
       const sellerIds = [...sellerMap.keys()];
 
       // Get profiles
-      const { data: profiles } = await supabase
+      const { fecha: profiles } = await supabase
         .from('profiles')
         .select('id, full_name, avatar_url')
         .in('id', sellerIds);
@@ -175,7 +175,7 @@ export function useTopSellers(limit = 5) {
         const stats = sellerMap.get(id)!;
         return {
           id,
-          name: profile?.full_name || 'Usuário',
+          name: profile?.full_name || 'Usuario',
           avatar: profile?.avatar_url,
           totalValue: stats.totalValue,
           dealsCount: stats.dealsCount
@@ -200,7 +200,7 @@ export function useProductSalesDistribution() {
       const monthEnd = format(endOfMonth(now), 'yyyy-MM-dd');
 
       // Get all deals this month with products
-      const { data: deals } = await supabase
+      const { fecha: deals } = await supabase
         .from('deals')
         .select('product_id, deal_value')
         .eq('status', 'won')
@@ -222,7 +222,7 @@ export function useProductSalesDistribution() {
       const productIds = [...productMap.keys()];
 
       // Get product names
-      const { data: products } = await supabase
+      const { fecha: products } = await supabase
         .from('products')
         .select('id, name')
         .in('id', productIds);
@@ -234,7 +234,7 @@ export function useProductSalesDistribution() {
         const stats = productMap.get(id)!;
         return {
           productId: id,
-          productName: productNameMap.get(id) || 'Produto',
+          productName: productNameMap.get(id) || 'Producto',
           totalValue: stats.totalValue,
           dealsCount: stats.dealsCount,
           percentage: totalSales > 0 ? (stats.totalValue / totalSales) * 100 : 0
@@ -259,7 +259,7 @@ export function useMonthlySalesEvolution(months = 6) {
       const endDate = format(endOfMonth(now), 'yyyy-MM-dd');
 
       // Single query instead of N queries in a loop - major performance boost
-      const { data: deals } = await supabase
+      const { fecha: deals } = await supabase
         .from('deals')
         .select('deal_value, closed_at')
         .eq('status', 'won')
@@ -274,7 +274,7 @@ export function useMonthlySalesEvolution(months = 6) {
         monthlyMap.set(monthKey, { sales: 0, deals: 0 });
       }
 
-      // Aggregate data in frontend
+      // Aggregate fecha in frontend
       deals?.forEach(d => {
         if (d.closed_at) {
           const monthKey = format(new Date(d.closed_at), 'yyyy-MM');

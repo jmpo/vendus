@@ -10,7 +10,7 @@ export function useProductAgents(productId: string) {
   return useQuery({
     queryKey: ['product-agents', productId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_agents')
         .select('*')
         .eq('product_id', productId)
@@ -18,7 +18,7 @@ export function useProductAgents(productId: string) {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as ProductAgent[];
+      return fecha as ProductAgent[];
     },
     enabled: !!productId && !!profile,
   });
@@ -34,7 +34,7 @@ export function useAllAgents() {
   return useQuery({
     queryKey: ['all-agents', profile?.organization_id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_agents')
         .select('*, product:products(id, name)')
         .eq('organization_id', profile!.organization_id!)
@@ -42,7 +42,7 @@ export function useAllAgents() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return (data || []) as unknown as AgentWithProduct[];
+      return (fecha || []) as unknown as AgentWithProduct[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -52,14 +52,14 @@ export function useProductAgent(agentId: string) {
   return useQuery({
     queryKey: ['product-agent', agentId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_agents')
         .select('*')
         .eq('id', agentId)
         .single();
 
       if (error) throw error;
-      return data as ProductAgent;
+      return fecha as ProductAgent;
     },
     enabled: !!agentId,
   });
@@ -74,7 +74,7 @@ const NON_AGENT_FIELDS_EXACT = new Set([
   'monitored_product_ids',
   'summary_kpis',
   // Campos relacionais vindos de selects com join (ex.: all-agents -> product:products)
-  // não existem na tabela product_agents e precisam ser ignorados no save.
+  // no existem na tabela product_agents e precisam ser ignorados no save.
   'product',
 ]);
 
@@ -164,17 +164,17 @@ export function useCreateAgent() {
         }
       }
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_agents')
         .insert(insertData as any)
         .select()
         .single();
 
       if (error) throw error;
-      return data as ProductAgent;
+      return fecha as ProductAgent;
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['product-agents', data.product_id] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['product-agents', fecha.product_id] });
       queryClient.invalidateQueries({ queryKey: ['all-agents'] });
       toast.success('Agente creado con éxito!');
     },
@@ -191,7 +191,7 @@ export function useUpdateAgent() {
   return useMutation({
     mutationFn: async ({ id, ...updatesRaw }: Partial<ProductAgent> & { id: string }) => {
       const updates = stripNonAgentFields(updatesRaw);
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_agents')
         .update(updates as any)
         .eq('id', id)
@@ -199,11 +199,11 @@ export function useUpdateAgent() {
         .single();
 
       if (error) throw error;
-      return data as ProductAgent;
+      return fecha as ProductAgent;
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['product-agents', data.product_id] });
-      queryClient.invalidateQueries({ queryKey: ['product-agent', data.id] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['product-agents', fecha.product_id] });
+      queryClient.invalidateQueries({ queryKey: ['product-agent', fecha.id] });
       queryClient.invalidateQueries({ queryKey: ['all-agents'] });
       toast.success('Agente actualizado con éxito!');
     },
@@ -251,7 +251,7 @@ export function useSetDefaultAgent() {
         .eq('product_id', productId);
 
       // Then set the new default
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_agents')
         .update({ is_default: true })
         .eq('id', id)
@@ -259,10 +259,10 @@ export function useSetDefaultAgent() {
         .single();
 
       if (error) throw error;
-      return data as ProductAgent;
+      return fecha as ProductAgent;
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['product-agents', data.product_id] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['product-agents', fecha.product_id] });
       toast.success('¡Agente establecido como predeterminado!');
     },
     onError: (error) => {
@@ -277,7 +277,7 @@ export function useToggleAgentStatus() {
 
   return useMutation({
     mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_agents')
         .update({ is_active: isActive })
         .eq('id', id)
@@ -285,20 +285,20 @@ export function useToggleAgentStatus() {
         .single();
 
       if (error) throw error;
-      return data as ProductAgent;
+      return fecha as ProductAgent;
     },
-    onSuccess: (data) => {
+    onSuccess: (fecha) => {
       queryClient.invalidateQueries({
         predicate: (query) =>
           query.queryKey[0] === 'all-agents' ||
           query.queryKey[0] === 'product-agents' ||
           query.queryKey[0] === 'product-agent',
       });
-      toast.success(data.is_active ? 'Agente ativado!' : 'Agente desativado!');
+      toast.success(fecha.is_active ? 'Agente ativado!' : 'Agente desativado!');
     },
     onError: (error) => {
       console.error('Error toggling agent status:', error);
-      toast.error('Error al cambiar status do agente');
+      toast.error('Error al cambiar status del agente');
     },
   });
 }

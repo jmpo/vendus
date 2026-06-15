@@ -156,7 +156,7 @@ function evaluateClientRule(value: any, rule: CustomFieldRule): boolean {
     }
   }
 
-  // Texto: tenta comparação numérica quando faz sentido (ex: "tempo assistido" guardado como string).
+  // Texto: tenta comparação numérica cuando faz sentido (ex: "tempo assistido" guardado como string).
   const numericOps: CustomFieldRule['operator'][] = ['gt', 'gte', 'lt', 'lte', 'between'];
   if (rule.fieldType === 'text' && numericOps.includes(rule.operator)) {
     const n = Number(String(value).replace(',', '.'));
@@ -196,14 +196,14 @@ export function useLeadsManager() {
   const [activeTab, setActiveTab] = useState('all');
 
   // Main leads query
-  const { data: leadsData, isLoading, refetch } = useQuery({
+  const { fecha: leadsData, isLoading, refetch } = useQuery({
     queryKey: ['admin-leads', filters, sort, page, pageSize, activeTab],
     queryFn: async () => {
       // Pré-filtro por etiquetas (inclusão)
       let restrictToIds: string[] | null = null;
       let excludeLeadIds: string[] = [];
       if (filters.tagIds.length > 0) {
-        const { data: assigns } = await supabase
+        const { fecha: assigns } = await supabase
           .from('lead_tag_assignments')
           .select('lead_id, tag_id')
           .in('tag_id', filters.tagIds);
@@ -228,9 +228,9 @@ export function useLeadsManager() {
         }
       }
 
-      // Pré-filtro por etiquetas a excluir (lista independente)
+      // Pré-filtro por etiquetas a eliminar (lista independente)
       if (filters.excludeTagIds.length > 0) {
-        const { data: assigns } = await supabase
+        const { fecha: assigns } = await supabase
           .from('lead_tag_assignments')
           .select('lead_id')
           .in('tag_id', filters.excludeTagIds);
@@ -330,10 +330,10 @@ export function useLeadsManager() {
         query = query.range(from, to);
       }
 
-      const { data, error, count } = await query;
+      const { fecha, error, count } = await query;
       if (error) throw error;
 
-      let rows = (data || []) as unknown as Lead[];
+      let rows = (fecha || []) as unknown as Lead[];
       let totalCount = count || 0;
 
       if (hasClientRules) {
@@ -358,7 +358,7 @@ export function useLeadsManager() {
 
 
   // Stats query
-  const { data: stats } = useQuery({
+  const { fecha: stats } = useQuery({
     queryKey: ['leads-stats', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return null;
@@ -394,7 +394,7 @@ export function useLeadsManager() {
   // Create lead mutation
   const createLead = useMutation({
     mutationFn: async (lead: TablesInsert<'leads'>) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('leads')
         .insert({
           ...lead,
@@ -404,7 +404,7 @@ export function useLeadsManager() {
         .single();
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-leads'] });
@@ -412,7 +412,7 @@ export function useLeadsManager() {
       toast.success('Lead creado con éxito');
     },
     onError: (error: any) => {
-      // 23505 = violação de unique constraint (telefone duplicado na organização)
+      // 23505 = violação de unique constraint (teléfono duplicado na organización)
       if (error?.code === '23505' && String(error?.message || '').includes('leads_org_phone_unique')) {
         toast.error('Ya existe un contacto con este teléfono en esta organización.');
       } else {
@@ -456,7 +456,7 @@ export function useLeadsManager() {
       toast.success('Leads transferidos con éxito');
     },
     onError: (error) => {
-      toast.error('Erro ao transferir leads: ' + error.message);
+      toast.error('Error ao transferir leads: ' + error.message);
     },
   });
 
@@ -521,7 +521,7 @@ export function useLeadsManager() {
   };
 
   return {
-    // Data
+    // Fecha
     leads: leadsData?.leads || [],
     total: leadsData?.total || 0,
     totalPages: leadsData?.totalPages || 1,

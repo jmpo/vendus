@@ -16,7 +16,7 @@ import {
 
 function StatusBadge({ c }: { c: MetaWAConnection }) {
   if (c.status === 'active') return <Badge className="bg-emerald-500/15 text-emerald-700 border-emerald-500/30">Ativa</Badge>;
-  if (c.status === 'error') return <Badge variant="destructive">Erro</Badge>;
+  if (c.status === 'error') return <Badge variant="destructive">Error</Badge>;
   if (c.status === 'revoked') return <Badge variant="outline">Revogada</Badge>;
   if (c.status === 'draft') return <Badge variant="outline" className="border-amber-500/40 text-amber-700">Rascunho</Badge>;
   return <Badge variant="secondary">Pendente</Badge>;
@@ -29,7 +29,7 @@ interface MetaWhatsAppConnectionsPanelProps {
 }
 
 export function MetaWhatsAppConnectionsPanel({ hideHeader, openWizard, onCloseWizard }: MetaWhatsAppConnectionsPanelProps = {}) {
-  const { data: conns = [], isLoading } = useMetaWAConnections();
+  const { fecha: conns = [], isLoading } = useMetaWAConnections();
   const test = useTestMetaWAConnection();
   const sync = useSyncMetaWATemplates();
   const del = useDeleteMetaWAConnection();
@@ -52,7 +52,7 @@ export function MetaWhatsAppConnectionsPanel({ hideHeader, openWizard, onCloseWi
             <ShieldCheck className="h-5 w-5 text-emerald-600" />
             <div>
               <h3 className="font-medium">Conexões oficiais (Meta Cloud API)</h3>
-              <p className="text-xs text-muted-foreground">Suas credenciais ficam criptografadas e nunca saem desta empresa.</p>
+              <p className="text-xs text-muted-foreground">Sus credenciais ficam criptografadas e nunca saem desta empresa.</p>
             </div>
           </div>
           <Button onClick={() => { setEditing(null); setWizardInternal(true); }}>
@@ -63,7 +63,7 @@ export function MetaWhatsAppConnectionsPanel({ hideHeader, openWizard, onCloseWi
 
       {conns.length === 0 ? (
         <Card className="p-8 text-center text-sm text-muted-foreground">
-          Nenhuma conexão oficial ainda. Clique em "Nova conexão" para configurar.
+          Nenhuma conexão oficial aún. Hacé clic em "Nova conexão" para configurar.
         </Card>
       ) : (
         <div className="space-y-3">
@@ -125,7 +125,7 @@ export function MetaWhatsAppConnectionsPanel({ hideHeader, openWizard, onCloseWi
           <AlertDialogHeader>
             <AlertDialogTitle>Remover conexão Meta?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação remove "{toDelete?.display_name}" e todos os templates sincronizados. Mensagens já recebidas continuam preservadas.
+              Esta acción remove "{toDelete?.display_name}" e todos os templates sincronizados. Mensagens ya recebidas continuam preservadas.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

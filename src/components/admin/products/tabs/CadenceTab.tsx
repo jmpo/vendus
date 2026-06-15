@@ -8,8 +8,8 @@ interface CadenceTabProps {
 }
 
 export function CadenceTab({ productId }: CadenceTabProps) {
-  const { data: cadence, isLoading: cadenceLoading } = useCadence(productId);
-  const { data: products } = useProducts();
+  const { fecha: cadence, isLoading: cadenceLoading } = useCadence(productId);
+  const { fecha: products } = useProducts();
   
   const product = products?.find(p => p.id === productId);
   
@@ -25,7 +25,7 @@ export function CadenceTab({ productId }: CadenceTabProps) {
     <CadenceEditor 
       cadence={cadence || []} 
       productId={productId}
-      productName={product?.name || 'Produto'} 
+      productName={product?.name || 'Producto'} 
     />
   );
 }

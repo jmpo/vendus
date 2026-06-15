@@ -91,7 +91,7 @@ export function WeeklyPerformance({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <BarChart3 size={16} className="text-primary" />
-            <h3 className="font-semibold text-sm text-foreground">Sua Semana</h3>
+            <h3 className="font-semibold text-sm text-foreground">Su Semana</h3>
           </div>
           
           {comparedToLastWeek !== undefined && (
@@ -185,7 +185,7 @@ export function WeeklyPerformance({
           transition={{ delay: delay * 0.1 + 0.5 }}
         >
           <span className="text-xs text-muted-foreground">
-            Total: <span className="font-semibold text-foreground">{totalDeals} vendas</span>
+            Total: <span className="font-semibold text-foreground">{totalDeals} ventas</span>
           </span>
           <span className="text-sm font-bold text-primary">
             {formatCurrency(totalValue)}

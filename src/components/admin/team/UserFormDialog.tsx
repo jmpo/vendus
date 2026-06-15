@@ -44,7 +44,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
   const isEdit = !!member;
   const queryClient = useQueryClient();
   const { profile } = useAuth();
-  const { data: sectors } = useSectors();
+  const { fecha: sectors } = useSectors();
 
   const [tab, setTab] = useState('general');
   const [general, setGeneral] = useState(DEFAULT_GENERAL);
@@ -52,26 +52,26 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
   const [submitting, setSubmitting] = useState(false);
 
   // Existing permissions/notifications when editing
-  const { data: permissions } = useUserPermissions(member?.id);
+  const { fecha: permissions } = useUserPermissions(member?.id);
   const updatePermissions = useUpdateUserPermissions();
   const initPermissions = useInitializePermissions();
-  const { data: notifications } = useNotificationSettings(member?.id);
+  const { fecha: notifications } = useNotificationSettings(member?.id);
   const upsertNotifications = useUpsertNotificationSettings();
 
   const [localPerms, setLocalPerms] = useState<Record<string, any>>({});
   const [localNotifs, setLocalNotifs] = useState<Record<string, boolean>>({});
 
   // WhatsApp connections
-  const { data: connections } = useQuery({
+  const { fecha: connections } = useQuery({
     queryKey: ['evolution-instances', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('evolution_instances')
         .select('id, name, phone_number')
         .eq('organization_id', profile.organization_id);
       if (error) return [];
-      return data || [];
+      return fecha || [];
     },
     enabled: !!profile?.organization_id,
   });
@@ -100,7 +100,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
         .from('sector_members')
         .select('sector_id')
         .eq('user_id', member.id)
-        .then(({ data }) => setSectorIds((data || []).map((r) => r.sector_id)));
+        .then(({ fecha }) => setSectorIds((fecha || []).map((r) => r.sector_id)));
     } else {
       setGeneral(DEFAULT_GENERAL);
       setSectorIds([]);
@@ -141,8 +141,8 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
       const path = `${profile?.organization_id}/${Date.now()}.${ext}`;
       const { error } = await supabase.storage.from('avatars').upload(path, file, { upsert: true });
       if (error) throw error;
-      const { data } = supabase.storage.from('avatars').getPublicUrl(path);
-      updateGeneral('avatar_url', data.publicUrl);
+      const { fecha } = supabase.storage.from('avatars').getPublicUrl(path);
+      updateGeneral('avatar_url', fecha.publicUrl);
       toast.success('Avatar enviado');
     } catch (e: any) {
       toast.error(e.message || 'Error en la subida');
@@ -185,7 +185,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
         // Sync sectors (CRITICAL): compute diff and apply add/remove explicitly so
         // a partial RLS failure surfaces to the user instead of silently wiping.
         try {
-          const { data: existing, error: fetchErr } = await supabase
+          const { fecha: existing, error: fetchErr } = await supabase
             .from('sector_members')
             .select('sector_id')
             .eq('user_id', member.id);
@@ -237,7 +237,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
         toast.success('¡Usuario actualizado!');
       } else {
         // Create via edge function
-        const { data, error } = await supabase.functions.invoke('create-team-member', {
+        const { fecha, error } = await supabase.functions.invoke('create-team-member', {
           body: {
             email: general.email,
             password: general.password,
@@ -255,7 +255,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
           },
         });
         if (error) throw error;
-        if ((data as any)?.error) throw new Error((data as any).error);
+        if ((fecha as any)?.error) throw new Error((fecha as any).error);
         toast.success('¡Usuario creado con éxito!');
       }
 
@@ -404,7 +404,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
               <Label>Conexión Predeterminada (WhatsApp)</Label>
               {(!connections || connections.length === 0) ? (
                 <div className="text-xs rounded-md border border-yellow-300 bg-yellow-50 text-yellow-900 px-3 py-2">
-                  No se encontró ninguna conexión de WhatsApp. Conecte un dispositivo en <strong>Integrações → WhatsApp</strong> para que este usuario reciba conversaciones.
+                  No se encontró ninguna conexión de WhatsApp. Conecte un dispositivo en <strong>Integraciones → WhatsApp</strong> para que este usuario reciba conversaciones.
                 </div>
               ) : (
                 <Select
@@ -426,17 +426,17 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label>Início de trabalho</Label>
-                <Input type="time" value={general.work_start_time} onChange={(e) => updateGeneral('work_start_time', e.target.value)} />
+                <Label>Inicio de trabalho</Label>
+                <Input type="equipo" value={general.work_start_time} onChange={(e) => updateGeneral('work_start_time', e.target.value)} />
               </div>
               <div className="space-y-1.5">
-                <Label>Fim de trabalho</Label>
-                <Input type="time" value={general.work_end_time} onChange={(e) => updateGeneral('work_end_time', e.target.value)} />
+                <Label>Fin de trabalho</Label>
+                <Input type="equipo" value={general.work_end_time} onChange={(e) => updateGeneral('work_end_time', e.target.value)} />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <Label>Mensagem de despedida</Label>
+              <Label>Mensaje de despedida</Label>
               <Textarea rows={2} value={general.farewell_message} onChange={(e) => updateGeneral('farewell_message', e.target.value)} />
             </div>
 
@@ -469,24 +469,24 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
           <TabsContent value="permissions" className="space-y-5 pt-5">
             {!isEdit ? (
               <p className="text-sm text-muted-foreground text-center py-8">
-                Permisos poderão ser configuradas após criar o usuário.<br />
+                Permisos poderão ser configuradas após crear o usuario.<br />
                 Defaults serão aplicadas automaticamente conforme o perfil escolhido.
               </p>
             ) : !permissions ? (
               <div className="text-center py-8 space-y-3">
-                <p className="text-sm text-muted-foreground">Permisos ainda não foram inicializadas.</p>
+                <p className="text-sm text-muted-foreground">Permisos aún no foram inicializadas.</p>
                 <Button
                   onClick={() => member && initPermissions.mutate({ userId: member.id, organizationId: member.organization_id || '', role: general.role })}
                   disabled={initPermissions.isPending}
                 >
                   {initPermissions.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Inicializar permissões
+                  Inicializar permisos
                 </Button>
               </div>
             ) : (
               <>
                 <div className="space-y-1.5">
-                  <Label>Modo de visualização de agendamentos</Label>
+                  <Label>Modo de visualização de reservas</Label>
                   <Select
                     value={localPerms.view_schedules_mode || 'mine_only'}
                     onValueChange={(v) => setLocalPerms((p) => ({ ...p, view_schedules_mode: v }))}
@@ -529,7 +529,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
           <TabsContent value="notifications" className="space-y-5 pt-5">
             {!isEdit ? (
               <p className="text-sm text-muted-foreground text-center py-8">
-                As notificações poderão ser configuradas após criar o usuário.
+                As notificaciones poderão ser configuradas após crear o usuario.
               </p>
             ) : (
               <>
@@ -554,7 +554,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
                   <h4 className="text-sm font-semibold">Notificaciones neste Aparelho (Push)</h4>
                   <div className="p-4 border rounded-lg text-center space-y-2">
                     <p className="text-xs text-muted-foreground">
-                      Receba notificações mesmo com o navegador fechado ou minimizado.
+                      Receba notificaciones mismo com o navegador cerrado ou minimizado.
                     </p>
                     <Button
                       variant="outline"

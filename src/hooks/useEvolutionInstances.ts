@@ -37,15 +37,15 @@ export function usePlatformEvolutionConfig() {
   return useQuery({
     queryKey: ['platform-evolution-config'],
     queryFn: async (): Promise<PlatformEvolutionConfig> => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('platform_settings')
         .select('evolution_go_url, evolution_go_global_api_key')
         .limit(1)
         .maybeSingle();
       if (error) throw error;
       return {
-        evolution_go_url: (data as any)?.evolution_go_url ?? null,
-        evolution_go_global_api_key: (data as any)?.evolution_go_global_api_key ?? null,
+        evolution_go_url: (fecha as any)?.evolution_go_url ?? null,
+        evolution_go_global_api_key: (fecha as any)?.evolution_go_global_api_key ?? null,
       };
     },
   });
@@ -55,7 +55,7 @@ export function useUpdatePlatformEvolutionConfig() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (cfg: PlatformEvolutionConfig) => {
-      const { data: existing } = await supabase
+      const { fecha: existing } = await supabase
         .from('platform_settings')
         .select('id')
         .limit(1)
@@ -82,30 +82,30 @@ export function useUpdatePlatformEvolutionConfig() {
 export function useTestEvolutionConnection() {
   return useMutation({
     mutationFn: async (vars: { url: string; globalApiKey: string }) => {
-      const { data, error } = await supabase.functions.invoke('evolution-proxy', {
+      const { fecha, error } = await supabase.functions.invoke('evolution-proxy', {
         body: { action: 'test_connection', url: vars.url, globalApiKey: vars.globalApiKey },
       });
       if (error) throw error;
-      return data;
+      return fecha;
     },
   });
 }
 
 /* ─────────────── INSTANCES ─────────────── */
 
-// Org-scoped (admin da empresa)
+// Org-scoped (admin de la empresa)
 export function useEvolutionInstances() {
   const { profile } = useAuth();
   return useQuery({
     queryKey: ['evolution-instances', profile?.organization_id],
     queryFn: async (): Promise<EvolutionInstance[]> => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('evolution_instances')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
         .order('created_at', { ascending: true });
       if (error) throw error;
-      return (data || []) as EvolutionInstance[];
+      return (fecha || []) as EvolutionInstance[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -116,22 +116,22 @@ export function useAllEvolutionInstancesAdmin() {
   return useQuery({
     queryKey: ['evolution-instances-all'],
     queryFn: async (): Promise<EvolutionInstanceWithOrg[]> => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('evolution_instances')
         .select('*, organization:organizations(id, name)')
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return (data || []) as EvolutionInstanceWithOrg[];
+      return (fecha || []) as EvolutionInstanceWithOrg[];
     },
   });
 }
 
 function useProxyAction() {
   return async (body: Record<string, any>) => {
-    const { data, error } = await supabase.functions.invoke('evolution-proxy', { body });
+    const { fecha, error } = await supabase.functions.invoke('evolution-proxy', { body });
     if (error) throw error;
-    if (data?.error) throw new Error(data.error);
-    return data;
+    if (fecha?.error) throw new Error(fecha.error);
+    return fecha;
   };
 }
 
@@ -150,7 +150,7 @@ export function useCreateEvolutionInstance() {
   });
 }
 
-// Self-service: cliente cria a própria instância (limite controlado pelo plano).
+// Self-service: cliente cria a própria instância (limite controlado pelo plan).
 export function useCreateEvolutionInstanceSelf() {
   const qc = useQueryClient();
   const proxy = useProxyAction();
@@ -183,19 +183,19 @@ export function useSubscribeEvolutionWebhook() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const { data, error } = await supabase.functions.invoke('evolution-proxy', {
+      const { fecha, error } = await supabase.functions.invoke('evolution-proxy', {
         body: { action: 'subscribe_webhook', id },
       });
       if (error) throw error;
-      if (data && data.ok === false) throw new Error(data.error || 'Falha ao configurar webhook');
-      return data;
+      if (fecha && fecha.ok === false) throw new Error(fecha.error || 'Falha ao configurar webhook');
+      return fecha;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
       toast.success('Webhook configurado con éxito');
     },
-    onError: (e: any) => toast.error('Error: ' + (e?.message || 'erro desconhecido')),
+    onError: (e: any) => toast.error('Error: ' + (e?.message || 'error desconhecido')),
   });
 }
 
@@ -213,7 +213,7 @@ export function useDeleteEvolutionInstance() {
   });
 }
 
-// Self-service: org admin/manager pode excluir a própria conexión
+// Self-service: org admin/manager puede eliminar a própria conexión
 export function useDeleteEvolutionInstanceSelf() {
   const qc = useQueryClient();
   const proxy = useProxyAction();
@@ -224,7 +224,7 @@ export function useDeleteEvolutionInstanceSelf() {
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
       toast.success('Conexión eliminada');
     },
-    onError: (e: any) => toast.error('Erro ao excluir: ' + e.message),
+    onError: (e: any) => toast.error('Error ao eliminar: ' + e.message),
   });
 }
 
@@ -266,7 +266,7 @@ export function useDisconnectEvolutionInstance() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      toast.success('Sessão pausada. Reconecte quando quiser — o número fica guardado.');
+      toast.success('Sessão pausada. Reconecte cuando quiser — o número fica guardado.');
     },
     onError: (e: any) => toast.error('Error al pausar sesión: ' + e.message),
   });
@@ -306,13 +306,13 @@ export function useSyncEvolutionInstances() {
   const proxy = useProxyAction();
   return useMutation({
     mutationFn: (organization_id?: string) => proxy({ action: 'sync_instances', organization_id }),
-    onSuccess: (data: any) => {
+    onSuccess: (fecha: any) => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      const imported = data?.imported ?? 0;
-      const updated = data?.updated ?? 0;
-      const total = data?.total ?? 0;
-      const whFailed = data?.webhooks?.failed ?? 0;
+      const imported = fecha?.imported ?? 0;
+      const updated = fecha?.updated ?? 0;
+      const total = fecha?.total ?? 0;
+      const whFailed = fecha?.webhooks?.failed ?? 0;
       if (total === 0) {
         toast.info('Ninguna instancia encontrada en el servidor.');
       } else {

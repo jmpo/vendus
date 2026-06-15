@@ -13,16 +13,16 @@ export function TemplatePreviewDialog({ template, open, onClose }: TemplatePrevi
   const renderPreview = () => {
     let html = template.html_content;
     
-    // Replace variables with sample data
+    // Replace variables with sample fecha
     const sampleData: Record<string, string> = {
       userName: 'João Silva',
       role: 'Vendedor',
       squadName: ' no Squad Alpha',
       inviteLink: '#',
-      organizationName: 'Sua Empresa',
+      organizationName: 'Su Empresa',
       invitedByName: 'Maria Santos',
       title: 'Comunicado Importante',
-      message: 'Este é o conteúdo da mensagem de exemplo.',
+      message: 'Este é o conteúdo da mensaje de exemplo.',
       senderName: 'Administrador'
     };
 

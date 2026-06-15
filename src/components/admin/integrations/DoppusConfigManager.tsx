@@ -25,9 +25,9 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 const DOPPUS_EVENTS: Array<{ key: string; label: string; tag: string }> = [
-  { key: 'compra_aprovada', label: 'Compra aprovada', tag: 'Cliente' },
-  { key: 'pix_gerado', label: 'PIX gerado', tag: 'PIX Gerado' },
-  { key: 'boleto_gerado', label: 'Boleto gerado', tag: 'Boleto Gerado' },
+  { key: 'compra_aprovada', label: 'Compra aprobada', tag: 'Cliente' },
+  { key: 'pix_gerado', label: 'PIX gerado', tag: 'PIX Generado' },
+  { key: 'boleto_gerado', label: 'Boleto gerado', tag: 'Boleto Generado' },
   { key: 'checkout_abandonado', label: 'Checkout abandonado', tag: 'Checkout Abandonado' },
   { key: 'reembolso', label: 'Reembolso', tag: 'Reembolso' },
   { key: 'chargeback', label: 'Chargeback', tag: 'Reembolso' },
@@ -58,20 +58,20 @@ export function DoppusConfigManager() {
   const orgId = profile?.organization_id ?? null;
   const supaUrl = import.meta.env.VITE_SUPABASE_URL as string;
   const qc = useQueryClient();
-  const { data: products = [] } = useProducts();
+  const { fecha: products = [] } = useProducts();
 
-  const { data: settingsRow, isLoading } = useQuery({
+  const { fecha: settingsRow, isLoading } = useQuery({
     queryKey: ['doppus-settings', orgId],
     enabled: !!orgId,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('integration_settings')
         .select('settings, is_configured, last_verified_at')
         .eq('organization_id', orgId!)
         .eq('integration_type', 'doppus')
         .maybeSingle();
       if (error) throw error;
-      return data;
+      return fecha;
     },
   });
 
@@ -83,7 +83,7 @@ export function DoppusConfigManager() {
 
   const saveSettings = useMutation({
     mutationFn: async (next: Partial<DoppusSettings>) => {
-      if (!orgId) throw new Error('Organização não identificada');
+      if (!orgId) throw new Error('Organización no identificada');
       const merged = { ...settings, ...next } as DoppusSettings;
       const { error } = await supabase
         .from('integration_settings')
@@ -102,7 +102,7 @@ export function DoppusConfigManager() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['doppus-settings', orgId] });
     },
-    onError: (e: any) => toast.error(e.message ?? 'Erro ao salvar'),
+    onError: (e: any) => toast.error(e.message ?? 'Error ao guardar'),
   });
 
   const upsertProduct = (next: DoppusProduct) => {
@@ -130,16 +130,16 @@ export function DoppusConfigManager() {
             Doppus
             {isConnected ? (
               <Badge variant="outline" className="text-green-600 border-green-600">
-                <CheckCircle2 className="h-3 w-3 mr-1" /> {dpProducts.length} produto(s)
+                <CheckCircle2 className="h-3 w-3 mr-1" /> {dpProducts.length} producto(s)
               </Badge>
             ) : (
               <Badge variant="outline" className="text-amber-600 border-amber-600">
-                <AlertCircle className="h-3 w-3 mr-1" /> Sem produtos
+                <AlertCircle className="h-3 w-3 mr-1" /> Sem productos
               </Badge>
             )}
           </h3>
           <p className="text-sm text-muted-foreground">
-            Cadastre cada produto da Doppus, vincule a um produto interno e dispare o pós-venda automaticamente.
+            Cadastre cada producto da Doppus, vincule a um producto interno e dispare o pós-venta automaticamente.
           </p>
         </div>
         <a href="https://doppus.com" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground">
@@ -170,7 +170,7 @@ export function DoppusConfigManager() {
                 <li>Selecciona todos los eventos disparadores y guarda.</li>
               </ol>
               <p className="text-xs text-muted-foreground pt-1">
-                A URL é única para todos os produtos. Identificamos o produto pelo <code>items[0].code</code> e validamos o token recebido no header <code>doppus-token</code>.
+                A URL é única para todos os productos. Identificamos o producto pelo <code>items[0].code</code> e validamos o token recibido no header <code>doppus-token</code>.
               </p>
             </AlertDescription>
           </Alert>
@@ -229,7 +229,7 @@ export function DoppusConfigManager() {
           <div>
             <Label htmlFor="doppus-api-token">API Token (opcional)</Label>
             <p className="text-xs text-muted-foreground mb-1">
-              Usado para sincronizar pedidos via API (futuro). Não é necessário para receber webhooks.
+              Usado para sincronizar pedidos via API (futuro). No é necessário para receber webhooks.
             </p>
             <Input
               id="doppus-api-token"
@@ -255,8 +255,8 @@ export function DoppusConfigManager() {
 // ---------- Sub-components ----------
 
 function buildWebhook(supaUrl: string, _orgId: string, _token?: string) {
-  // URL única e estável. A Doppus envia o produto no payload (items[0].code) e
-  // o token no header `doppus-token`; o backend resolve a organização sozinho.
+  // URL única e estável. A Doppus envia o producto no payload (items[0].code) e
+  // o token no header `doppus-token`; o backend resolve a organización sozinho.
   return `${supaUrl}/functions/v1/doppus-webhook`;
 }
 
@@ -295,7 +295,7 @@ function ProductCard({
       <CardContent className="pt-4 space-y-3">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <Label>Nome</Label>
+            <Label>Nombre</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="ex.: Assinatura Premium" />
           </div>
           <div>
@@ -319,7 +319,7 @@ function ProductCard({
             </Button>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            A Doppus envia este token em cada postback (header) — usamos para identificar o produto.
+            A Doppus envia este token em cada postback (header) — usamos para identificar o producto.
           </p>
         </div>
 
@@ -393,7 +393,7 @@ function NewProductForm({
   if (!open) {
     return (
       <Button variant="outline" className="w-full" onClick={() => setOpen(true)}>
-        <Plus className="h-4 w-4 mr-2" /> Adicionar produto
+        <Plus className="h-4 w-4 mr-2" /> Adicionar producto
       </Button>
     );
   }
@@ -406,7 +406,7 @@ function NewProductForm({
       <CardContent className="space-y-3">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <Label>Nome</Label>
+            <Label>Nombre</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="ex.: Doppus" />
           </div>
           <div>
@@ -424,7 +424,7 @@ function NewProductForm({
             placeholder="Pega el token generado en Doppus"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Vá em Doppus → Postbacks → copie o Token de Segurança do produto e cole aqui.
+            Vá em Doppus → Postbacks → copie o Token de Segurança do producto e cole aqui.
           </p>
         </div>
 
@@ -441,7 +441,7 @@ function NewProductForm({
         </div>
 
         <div className="rounded-md bg-muted/50 p-3 text-xs space-y-1">
-          <p className="font-medium">URL do Webhook (após salvar):</p>
+          <p className="font-medium">URL do Webhook (após guardar):</p>
           <code className="break-all">{buildWebhook(supaUrl, orgId, token)}</code>
         </div>
 
@@ -455,7 +455,7 @@ function NewProductForm({
                 id: crypto.randomUUID(),
                 name, doppus_product_id: doppusId, token, internal_product_id: internalId,
               });
-              toast.success('Produto cadastrado');
+              toast.success('Producto cadastrado');
               setOpen(false); reset();
             }}
           >
@@ -471,7 +471,7 @@ function NewProductForm({
 // ---------- Webhook Logs Panel ----------
 
 const EVENT_LABEL: Record<string, string> = {
-  compra_aprovada: 'Compra aprovada',
+  compra_aprovada: 'Compra aprobada',
   pix_gerado: 'PIX gerado',
   boleto_gerado: 'Boleto gerado',
   checkout_abandonado: 'Checkout abandonado',
@@ -479,14 +479,14 @@ const EVENT_LABEL: Record<string, string> = {
   chargeback: 'Chargeback',
   assinatura_cancelada: 'Assinatura cancelada',
   invalid_token: 'Token inválido (rejeitado)',
-  unmapped: 'Evento não mapeado',
-  mismatch: 'Token x Produto não conferem',
+  unmapped: 'Evento no mapeado',
+  mismatch: 'Token x Producto no conferem',
 };
 
 function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: DoppusProduct[] }) {
   const [filterInternalId, setFilterInternalId] = useState<string>('all');
   const internalFilter = filterInternalId === 'all' ? null : filterInternalId;
-  const { data: logs = [], isLoading, refetch, isFetching } = useDoppusWebhookLogs(orgId, internalFilter);
+  const { fecha: logs = [], isLoading, refetch, isFetching } = useDoppusWebhookLogs(orgId, internalFilter);
   const [selected, setSelected] = useState<DoppusWebhookLog | null>(null);
 
   return (
@@ -494,7 +494,7 @@ function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: Do
       <Alert>
         <Webhook className="h-4 w-4" />
         <AlertDescription className="text-sm">
-          Histórico das últimas 50 chamadas recebidas da Doppus para esta organização. Atualiza
+          Histórico das últimas 50 chamadas recebidas da Doppus para esta organización. Atualiza
           automaticamente a cada 15s.
         </AlertDescription>
       </Alert>
@@ -502,10 +502,10 @@ function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: Do
       <div className="flex items-center gap-2">
         <Select value={filterInternalId} onValueChange={setFilterInternalId}>
           <SelectTrigger className="w-64">
-            <SelectValue placeholder="Filtrar por produto" />
+            <SelectValue placeholder="Filtrar por producto" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os produtos</SelectItem>
+            <SelectItem value="all">Todos os productos</SelectItem>
             {dpProducts.map((p) => (
               <SelectItem key={p.id} value={p.internal_product_id}>
                 {p.name}
@@ -528,8 +528,8 @@ function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: Do
             </div>
           ) : logs.length === 0 ? (
             <div className="py-12 text-center text-sm text-muted-foreground">
-              Nenhum webhook recebido ainda.<br />
-              Configure a URL do produto na Doppus e dispare um teste.
+              Nenhum webhook recibido aún.<br />
+              Configure a URL do producto na Doppus e dispare um teste.
             </div>
           ) : (
             <div className="divide-y">
@@ -565,7 +565,7 @@ function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: Do
                         <div className="text-xs text-muted-foreground mt-1 ml-6">
                           {format(new Date(log.created_at), "dd/MM/yyyy 'às' HH:mm:ss", { locale: ptBR })}
                           {' · '}
-                          {actions.length} ação(ões)
+                          {actions.length} acción(ões)
                         </div>
                       </div>
                     </div>
@@ -626,7 +626,7 @@ function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: Do
                 {selected.event_data?.__raw && (
                   <div>
                     <p className="text-xs font-semibold text-muted-foreground uppercase mb-1">
-                      Payload bruto recebido
+                      Payload bruto recibido
                     </p>
                     <pre className="text-xs bg-muted/50 rounded p-3 overflow-x-auto">
                       {JSON.stringify(selected.event_data.__raw, null, 2)}

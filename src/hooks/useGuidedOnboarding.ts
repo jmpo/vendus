@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 /**
  * Controla a exibição do onboarding guiado pós-cadastro para admins.
  * Persiste o estado em profiles.guided_onboarding_completed_at / skipped_at
- * para não depender de localStorage (sobrevive a troca de device).
+ * para no depender de localStorage (sobrevive a troca de device).
  */
 export function useGuidedOnboarding() {
   const { user, isAdmin } = useAuth();
@@ -19,14 +19,14 @@ export function useGuidedOnboarding() {
         setChecked(true);
         return;
       }
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from('profiles')
         .select('guided_onboarding_completed_at, guided_onboarding_skipped_at')
         .eq('id', user.id)
         .maybeSingle();
       if (!active) return;
-      const completed = (data as any)?.guided_onboarding_completed_at;
-      const skipped = (data as any)?.guided_onboarding_skipped_at;
+      const completed = (fecha as any)?.guided_onboarding_completed_at;
+      const skipped = (fecha as any)?.guided_onboarding_skipped_at;
       setShouldShow(!completed && !skipped);
       setChecked(true);
     }

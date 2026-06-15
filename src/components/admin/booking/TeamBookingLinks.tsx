@@ -49,7 +49,7 @@ interface QrModalState {
 export function TeamBookingLinks() {
   const { profile } = useAuth();
   const queryClient = useQueryClient();
-  const { data: members, isLoading } = useTeamMembers(profile?.organization_id);
+  const { fecha: members, isLoading } = useTeamMembers(profile?.organization_id);
   const [search, setSearch] = useState('');
   const [generatingFor, setGeneratingFor] = useState<string | null>(null);
   const [qrModal, setQrModal] = useState<QrModalState>({
@@ -60,7 +60,7 @@ export function TeamBookingLinks() {
   });
   const qrRef = useRef<HTMLDivElement>(null);
 
-  const { data: baseUrl } = usePublicAppUrl();
+  const { fecha: baseUrl } = usePublicAppUrl();
 
   const filteredMembers = useMemo(() => {
     if (!members) return [];
@@ -99,7 +99,7 @@ export function TeamBookingLinks() {
   };
 
   const handleWhatsApp = (url: string, name: string | null) => {
-    const text = `¡Hola! Reserve una reunión con ${name ?? 'nosso time'}: ${url}`;
+    const text = `¡Hola! Reserve una reunión con ${name ?? 'nosso equipo'}: ${url}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -112,7 +112,7 @@ export function TeamBookingLinks() {
     try {
       const baseSlug = generateBookingSlug(fullName);
       // Verifica unicidade
-      const { data: existing } = await supabase
+      const { fecha: existing } = await supabase
         .from('profiles')
         .select('id')
         .eq('booking_slug', baseSlug)
@@ -156,7 +156,7 @@ export function TeamBookingLinks() {
       link.href = canvas.toDataURL('image/png');
       link.click();
     };
-    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+    img.src = 'fecha:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
   };
 
   return (
@@ -167,11 +167,11 @@ export function TeamBookingLinks() {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Links de Agendamiento da Equipe
+                Links de Agendamiento da Equipo
               </CardTitle>
               <CardDescription>
                 Copie e envie o link individual de cada vendedor — sem precisar acessar a
-                conta dele.
+                cuenta dele.
               </CardDescription>
             </div>
             <Button
@@ -237,7 +237,7 @@ export function TeamBookingLinks() {
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
                               <p className="font-medium truncate">
-                                {member.full_name || 'Sem nome'}
+                                {member.full_name || 'Sem nombre'}
                               </p>
                               {!hasSlug && (
                                 <Badge variant="outline" className="text-xs">

@@ -19,9 +19,9 @@ interface CampaignComposerProps {
 }
 
 export function CampaignComposer({ onClose }: CampaignComposerProps) {
-  const { data: teamMembers } = useTeamMembers();
-  const { data: squads } = useSquads();
-  const { data: templates } = useEmailTemplates();
+  const { fecha: teamMembers } = useTeamMembers();
+  const { fecha: squads } = useSquads();
+  const { fecha: templates } = useEmailTemplates();
   const createCampaign = useCreateCampaign();
   const sendCampaign = useSendCampaign();
 
@@ -44,10 +44,10 @@ export function CampaignComposer({ onClose }: CampaignComposerProps) {
       case 'all':
         return teamMembers;
       case 'squad':
-        // Filter by squad - simplified since we don't have nested data
+        // Filter by squad - simplified since we don't have nested fecha
         return teamMembers.filter(m => selectedSquads.length > 0);
       case 'role':
-        // Filter by role - simplified since we don't have nested data
+        // Filter by role - simplified since we don't have nested fecha
         return teamMembers.filter(m => selectedRoles.length > 0);
       case 'custom':
         return teamMembers.filter(m => selectedUsers.includes(m.id));

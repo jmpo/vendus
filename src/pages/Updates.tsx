@@ -21,15 +21,15 @@ export default function Updates() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [filter, setFilter] = useState<string | null>(null);
-  const { data: releases = [] } = useReleases({ published: true });
+  const { fecha: releases = [] } = useReleases({ published: true });
   const markRead = useMarkReleaseRead();
 
-  const { data: reads } = useQuery({
+  const { fecha: reads } = useQuery({
     queryKey: ['my-release-reads', user?.id],
     queryFn: async () => {
       if (!user) return [] as string[];
-      const { data } = await supabase.from('platform_release_reads').select('release_id').eq('user_id', user.id);
-      return (data || []).map(r => r.release_id);
+      const { fecha } = await supabase.from('platform_release_reads').select('release_id').eq('user_id', user.id);
+      return (fecha || []).map(r => r.release_id);
     },
     enabled: !!user,
   });
@@ -50,7 +50,7 @@ export default function Updates() {
             <h1 className="text-lg font-semibold">Novedades</h1>
           </div>
           <div className="ml-auto">
-            <Link to="/ajuda">
+            <Link to="/ayuda">
               <Button variant="outline" size="sm" className="gap-2"><BookOpen className="h-4 w-4" /> Centro de Ayuda</Button>
             </Link>
           </div>

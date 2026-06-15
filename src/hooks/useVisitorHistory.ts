@@ -41,15 +41,15 @@ export function useVisitorHistory(opts: {
         query = query.eq('visitor_phone', visitorPhone);
       }
 
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
 
-      const conversations = data || [];
+      const conversations = fecha || [];
       if (!conversations.length) return [];
 
       // Fetch last message snippet for each (cheap)
       const ids = conversations.map(c => c.id);
-      const { data: lastMessages } = await supabase
+      const { fecha: lastMessages } = await supabase
         .from('webchat_messages')
         .select('conversation_id, content, created_at, metadata')
         .in('conversation_id', ids)

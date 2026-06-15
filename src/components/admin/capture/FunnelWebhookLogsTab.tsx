@@ -14,7 +14,7 @@ interface FunnelWebhookLogsTabProps {
 }
 
 export function FunnelWebhookLogsTab({ funnelId }: FunnelWebhookLogsTabProps) {
-  const { data: logs, isLoading, refetch, isFetching } = useFunnelWebhookLogs(funnelId);
+  const { fecha: logs, isLoading, refetch, isFetching } = useFunnelWebhookLogs(funnelId);
   const [filter, setFilter] = useState<'all' | 'success' | 'error'>('all');
 
   const filtered = (logs || []).filter((l) => {
@@ -60,7 +60,7 @@ export function FunnelWebhookLogsTab({ funnelId }: FunnelWebhookLogsTabProps) {
             size="sm"
             onClick={() => setFilter('error')}
           >
-            Erro
+            Error
           </Button>
           <Button variant="ghost" size="icon" onClick={() => refetch()} disabled={isFetching}>
             <RefreshCw className={`h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />

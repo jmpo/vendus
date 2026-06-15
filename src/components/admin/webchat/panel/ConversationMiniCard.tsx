@@ -20,7 +20,7 @@ function timeAgoColor(iso: string | null): string {
 }
 
 export function ConversationMiniCard({ conversation: c, onClick }: Props) {
-  const name = c.lead_name || c.visitor_name || c.visitor_phone || 'Sem nome';
+  const name = c.lead_name || c.visitor_name || c.visitor_phone || 'Sem nombre';
   const initials = name
     .split(' ')
     .map((s) => s[0])

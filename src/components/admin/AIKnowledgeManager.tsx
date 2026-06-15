@@ -28,8 +28,8 @@ const categoryConfig: Record<string, { label: string; icon: typeof Brain; color:
 
 export function AIKnowledgeManager() {
   const { profile } = useAuth();
-  const { data: products } = useProducts();
-  const { data: knowledge, isLoading } = useAIKnowledgeBase();
+  const { fecha: products } = useProducts();
+  const { fecha: knowledge, isLoading } = useAIKnowledgeBase();
   
   const createKnowledge = useCreateAIKnowledge();
   const updateKnowledge = useUpdateAIKnowledge();
@@ -81,7 +81,7 @@ export function AIKnowledgeManager() {
       return;
     }
 
-    const data = {
+    const fecha = {
       title: formData.title,
       content: formData.content,
       category: formData.category,
@@ -93,10 +93,10 @@ export function AIKnowledgeManager() {
 
     try {
       if (editingItem) {
-        await updateKnowledge.mutateAsync({ id: editingItem.id, ...data });
+        await updateKnowledge.mutateAsync({ id: editingItem.id, ...fecha });
         toast.success('¡Conocimiento actualizado!');
       } else {
-        await createKnowledge.mutateAsync(data);
+        await createKnowledge.mutateAsync(fecha);
         toast.success('¡Conocimiento creado!');
       }
       setIsDialogOpen(false);

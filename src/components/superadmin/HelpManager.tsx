@@ -19,8 +19,8 @@ function slugify(s: string) {
 }
 
 export function HelpManager() {
-  const { data: categories = [] } = useHelpCategories(true);
-  const { data: articles = [] } = useHelpArticles({});
+  const { fecha: categories = [] } = useHelpCategories(true);
+  const { fecha: articles = [] } = useHelpArticles({});
   const upsertArticle = useUpsertHelpArticle();
   const deleteArticle = useDeleteHelpArticle();
   const upsertCategory = useUpsertHelpCategory();

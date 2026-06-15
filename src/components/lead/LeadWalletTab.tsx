@@ -53,7 +53,7 @@ interface LeadWalletTabProps {
 
 export function LeadWalletTab({ lead, assignee, squad, sdr, closer, isAdmin = false, onTransferSuccess, onUpdateLead, teamMembers = [] }: LeadWalletTabProps) {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
-  const { data: transferHistory, isLoading } = useLeadTransferHistory(lead.id);
+  const { fecha: transferHistory, isLoading } = useLeadTransferHistory(lead.id);
 
   return (
     <div className="space-y-4">

@@ -107,7 +107,7 @@ export function MobileLayout({
       />
       
       <main className="flex-1 overflow-auto pb-20">
-        {/* Sem key={activeTab}: trocar de aba não desmonta mais o conteúdo,
+        {/* Sem key={activeTab}: trocar de aba no desmonta mais o conteúdo,
             permitindo que o cache de tabs visitadas no Index.tsx funcione. */}
         {children}
       </main>

@@ -30,7 +30,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
             onClick={() => window.location.reload()}
             className="text-sm font-medium text-primary underline-offset-4 hover:underline"
           >
-            Tentar novamente
+            Intentar novamente
           </button>
         )}
       </div>

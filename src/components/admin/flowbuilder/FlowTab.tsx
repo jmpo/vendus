@@ -13,7 +13,7 @@ interface FlowTabProps {
 
 export function FlowTab({ productId }: FlowTabProps) {
   const [selectedFlowId, setSelectedFlowId] = useState<string | null>(null);
-  const { data: selectedFlow, isLoading } = useChatFlow(selectedFlowId || undefined);
+  const { fecha: selectedFlow, isLoading } = useChatFlow(selectedFlowId || undefined);
 
   if (selectedFlowId) {
     if (isLoading) {
@@ -32,7 +32,7 @@ export function FlowTab({ productId }: FlowTabProps) {
             Voltar para lista
           </Button>
           <div className="text-center text-muted-foreground py-8">
-            Fluxo não encontrado
+            Flujo no encontrado
           </div>
         </div>
       );

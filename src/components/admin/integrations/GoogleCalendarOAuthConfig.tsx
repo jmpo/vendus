@@ -33,10 +33,10 @@ export function GoogleCalendarOAuthConfig() {
   const [isSaving, setIsSaving] = useState(false);
 
   // Get current configuration
-  const { data: config, isLoading } = useQuery({
+  const { fecha: config, isLoading } = useQuery({
     queryKey: ['google-calendar-oauth', profile?.organization_id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('integration_settings')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
@@ -44,7 +44,7 @@ export function GoogleCalendarOAuthConfig() {
         .maybeSingle();
 
       if (error && error.code !== 'PGRST116') throw error;
-      return data;
+      return fecha;
     },
     enabled: !!profile?.organization_id,
   });
@@ -54,28 +54,28 @@ export function GoogleCalendarOAuthConfig() {
 
   const handleSave = async () => {
     if (!clientId && !isConfigured) {
-      toast.error('Client ID é obrigatório');
+      toast.error('Client ID é obligatorio');
       return;
     }
 
     if (!clientSecret && !isConfigured) {
-      toast.error('Client Secret é obrigatório para primeira configuração');
+      toast.error('Client Secret é obligatorio para primeira configuración');
       return;
     }
 
-    // Validações de formato — evita o erro recorrente de colar o Client ID no campo Secret
+    // Validações de formato — evita o error recorrente de colar o Client ID no campo Secret
     if (clientSecret) {
       const trimmed = clientSecret.trim();
       if (clientId && trimmed === clientId.trim()) {
-        toast.error('Client Secret não pode ser igual ao Client ID. Cole o secret correto (começa com "GOCSPX-").');
+        toast.error('Client Secret no puede ser igual ao Client ID. Cole o secret correto (começa com "GOCSPX-").');
         return;
       }
       if (trimmed.endsWith('.apps.googleusercontent.com')) {
-        toast.error('Você colou um Client ID no campo Client Secret. O secret correto começa com "GOCSPX-".');
+        toast.error('Usted colou um Client ID no campo Client Secret. O secret correto começa com "GOCSPX-".');
         return;
       }
       if (!trimmed.startsWith('GOCSPX-')) {
-        toast.error('Client Secret inválido. Ele deve começar com "GOCSPX-" (copie do Google Cloud Console).');
+        toast.error('Client Secret inválido. Ele debe comenzar com "GOCSPX-" (copie do Google Cloud Console).');
         return;
       }
     }
@@ -84,7 +84,7 @@ export function GoogleCalendarOAuthConfig() {
     try {
       const newSettings: Record<string, string> = {};
       
-      // Use new values if provided, otherwise keep existing
+      // Usa new values if provided, otherwise keep existing
       if (clientId) {
         newSettings.clientId = clientId;
       } else if (settings?.clientId) {
@@ -131,13 +131,13 @@ export function GoogleCalendarOAuthConfig() {
 
       queryClient.invalidateQueries({ queryKey: ['google-calendar-oauth'] });
       queryClient.invalidateQueries({ queryKey: ['google-calendar-oauth-config'] });
-      toast.success('Configuração salva com sucesso');
+      toast.success('Configuración salva com éxito');
       
       // Clear form
       setClientId('');
       setClientSecret('');
     } catch (error) {
-      toast.error('Erro ao salvar: ' + (error as Error).message);
+      toast.error('Error ao guardar: ' + (error as Error).message);
     } finally {
       setIsSaving(false);
     }
@@ -172,12 +172,12 @@ export function GoogleCalendarOAuthConfig() {
                   ) : (
                     <Badge variant="outline" className="text-amber-600 border-amber-600">
                       <AlertCircle className="h-3 w-3 mr-1" />
-                      Não configurado
+                      No configurado
                     </Badge>
                   )}
                 </CardTitle>
                 <CardDescription>
-                  Permite que usuários conectem seus calendários do Google
+                  Permite que usuarios conectem sus calendários do Google
                 </CardDescription>
               </div>
             </div>
@@ -234,10 +234,10 @@ export function GoogleCalendarOAuthConfig() {
                     Google Cloud Console
                   </a>
                 </li>
-                <li>Crie um novo projeto ou selecione um existente</li>
+                <li>Crea um novo projeto ou selecione um existente</li>
                 <li>Vá em "APIs e Serviços" → "Credenciais"</li>
-                <li>Clique em "Criar credenciais" → "ID do cliente OAuth"</li>
-                <li>Selecione "Aplicativo da Web"</li>
+                <li>Hacé clic em "Criar credenciais" → "ID del cliente OAuth"</li>
+                <li>Seleccioná "Aplicativo da Web"</li>
                 <li>
                   Em "URIs de redirecionamento autorizados", adicione:
                   <code className="block mt-1 p-2 bg-muted rounded text-xs break-all">
@@ -315,7 +315,7 @@ export function GoogleCalendarOAuthConfig() {
             {isSaving ? (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
             ) : null}
-            {isConfigured ? 'Atualizar Configuração' : 'Salvar Configuração'}
+            {isConfigured ? 'Atualizar Configuración' : 'Salvar Configuración'}
           </Button>
         </CardContent>
       </Card>

@@ -49,7 +49,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
   const [discoveredLinks, setDiscoveredLinks] = useState<DiscoveredLink[]>([]);
   const [selectedPreview, setSelectedPreview] = useState<DiscoveredLink | null>(null);
   
-  const { data: websites, isLoading } = useKnowledgeSourcesByType(productId, 'website');
+  const { fecha: websites, isLoading } = useKnowledgeSourcesByType(productId, 'website');
   const createSource = useCreateKnowledgeSource();
   const deleteSource = useDeleteKnowledgeSource();
 
@@ -73,11 +73,11 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
     try {
       const result = await firecrawlApi.scrape(formatUrl(url));
       
-      if (!result.success || !result.data) {
+      if (!result.success || !result.fecha) {
         throw new Error(result.error || 'Fallo al extraer contenido');
       }
 
-      setPreview(result.data);
+      setPreview(result.fecha);
       toast({ title: '¡Contenido extraído con éxito!' });
     } catch (error) {
       console.error('Error scraping:', error);
@@ -153,9 +153,9 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
       try {
         const result = await firecrawlApi.scrape(link.url);
         
-        if (result.success && result.data) {
-          const markdown = result.data.markdown || '';
-          const title = result.data.metadata?.title || new URL(link.url).pathname;
+        if (result.success && result.fecha) {
+          const markdown = result.fecha.markdown || '';
+          const title = result.fecha.metadata?.title || new URL(link.url).pathname;
           
           setDiscoveredLinks(prev => 
             prev.map(l => l.url === link.url ? { 
@@ -172,7 +172,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
             product_id: productId,
             source_type: 'website',
             title,
-            description: result.data.metadata?.description || '',
+            description: result.fecha.metadata?.description || '',
             source_url: link.url,
             extracted_content: markdown,
             processing_status: 'completed',
@@ -520,7 +520,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                               {link.status === 'error' && (
                                 <Badge variant="destructive" className="text-xs">
                                   <AlertCircle className="h-3 w-3 mr-1" />
-                                  Erro
+                                  Error
                                 </Badge>
                               )}
                             </div>

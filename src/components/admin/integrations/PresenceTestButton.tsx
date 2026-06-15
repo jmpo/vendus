@@ -29,7 +29,7 @@ export function PresenceTestButton({ instanceId, instanceName }: Props) {
     }
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('presence-test', {
+      const { fecha, error } = await supabase.functions.invoke('presence-test', {
         body: {
           instance_id: instanceId,
           phone: digits,
@@ -38,7 +38,7 @@ export function PresenceTestButton({ instanceId, instanceName }: Props) {
         },
       });
       if (error) throw error;
-      if ((data as any)?.error) throw new Error((data as any).error);
+      if ((fecha as any)?.error) throw new Error((fecha as any).error);
       toast.success(
         isAudio
           ? `Disparado "gravando áudio..." por ${duration}s. Confira o celular.`
@@ -69,8 +69,8 @@ export function PresenceTestButton({ instanceId, instanceName }: Props) {
           <DialogHeader>
             <DialogTitle>Testar presença · {instanceName}</DialogTitle>
             <DialogDescription>
-              Dispara o status no WhatsApp do número informado, sem enviar mensagem alguma. Você
-              deve ver "digitando..." (ou "gravando áudio...") aparecer no celular dentro de
+              Dispara o status no WhatsApp do número informado, sem enviar mensaje alguna. Usted
+              debe ver "digitando..." (ou "gravando áudio...") aparecer no celular dentro de
               poucos segundos.
             </DialogDescription>
           </DialogHeader>
@@ -106,7 +106,7 @@ export function PresenceTestButton({ instanceId, instanceName }: Props) {
             </div>
 
             <div className="space-y-2">
-              <Label>Duração (segundos)</Label>
+              <Label>Duración (segundos)</Label>
               <Input
                 type="number"
                 min={2}
@@ -123,7 +123,7 @@ export function PresenceTestButton({ instanceId, instanceName }: Props) {
             </Button>
             <Button onClick={run} disabled={loading}>
               {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Disparar agora
+              Disparar ahora
             </Button>
           </DialogFooter>
         </DialogContent>

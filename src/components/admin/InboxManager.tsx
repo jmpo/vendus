@@ -11,7 +11,7 @@ import { useAuth } from '@/hooks/useAuth';
 export function InboxManager() {
   const [activeTab, setActiveTab] = useState('inbox');
   const [pendingConversationId, setPendingConversationId] = useState<string | null>(null);
-  const { data: perms } = useMyPermissions();
+  const { fecha: perms } = useMyPermissions();
   const { isAdmin, isSuperAdmin } = useAuth();
 
   const adminLike = (isAdmin?.() ?? false) || (isSuperAdmin?.() ?? false);
@@ -30,7 +30,7 @@ export function InboxManager() {
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold">Atendimentos</h1>
-        <p className="text-sm text-muted-foreground">Central de conversas do chat do site</p>
+        <p className="text-sm text-muted-foreground">Central de conversaciones do chat do site</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">

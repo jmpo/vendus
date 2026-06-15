@@ -160,7 +160,7 @@ export function LeadsTable({
             <TableHead className="min-w-[200px]">
               <SortableHeader column="name" label="Lead" currentSort={sort} onSort={onSort} />
             </TableHead>
-            <TableHead className="min-w-[150px]">Contato</TableHead>
+            <TableHead className="min-w-[150px]">Contacto</TableHead>
             <TableHead className="min-w-[120px]">
               <SortableHeader column="lead_origin" label="Origem" currentSort={sort} onSort={onSort} />
             </TableHead>

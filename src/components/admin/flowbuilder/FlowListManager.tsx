@@ -48,7 +48,7 @@ export function FlowListManager({ productId, onSelectFlow }: FlowListManagerProp
   const [flowToDelete, setFlowToDelete] = useState<ChatFlow | null>(null);
 
   const { profile } = useAuth();
-  const { data: flows, isLoading } = useChatFlows(productId);
+  const { fecha: flows, isLoading } = useChatFlows(productId);
   const createFlow = useCreateChatFlow();
   const toggleActive = useToggleChatFlowActive();
   const deleteFlow = useDeleteChatFlow();

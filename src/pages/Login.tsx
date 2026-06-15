@@ -107,12 +107,12 @@ export default function Login() {
           : undefined
       }
     >
-      {/* Overlay quando imagem ocupa a tela toda, garante legibilidade do form */}
+      {/* Overlay cuando imagen ocupa a tela toda, garante legibilidade do form */}
       {isFullscreen && loginBgImageUrl && (
         <div className="absolute inset-0 bg-background/70 backdrop-blur-sm pointer-events-none" />
       )}
 
-      {/* No mobile, mostra a imagem como fundo + overlay para legibilidade do form */}
+      {/* No mobile, mostra a imagen como fundo + overlay para legibilidade do form */}
       {!isFullscreen && loginBgImageUrl && (
         <>
           <div
@@ -257,7 +257,7 @@ export default function Login() {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="seu@email.com"
+                      placeholder="su@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="pl-10 h-12 bg-card border-border"

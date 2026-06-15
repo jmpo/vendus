@@ -36,13 +36,13 @@ export function useInstagramConnections() {
     queryKey: ['instagram-connections', orgId],
     queryFn: async () => {
       if (!orgId) return [];
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('instagram_connections' as any)
         .select('*')
         .eq('organization_id', orgId)
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return (data ?? []) as unknown as InstagramConnection[];
+      return (fecha ?? []) as unknown as InstagramConnection[];
     },
     enabled: !!orgId,
   });
@@ -52,13 +52,13 @@ export function useDraftInstagramConnection() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (payload: { organization_id: string; display_name: string; connection_id?: string }) => {
-      const { data, error } = await supabase.functions.invoke('instagram-draft', { body: payload });
+      const { fecha, error } = await supabase.functions.invoke('instagram-draft', { body: payload });
       if (error) throw error;
-      if ((data as any)?.error) throw new Error((data as any).error);
-      return data as DraftInstagramResponse;
+      if ((fecha as any)?.error) throw new Error((fecha as any).error);
+      return fecha as DraftInstagramResponse;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['instagram-connections'] }),
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao criar rascunho'),
+    onError: (e: any) => toast.error(e?.message ?? 'Falha ao crear rascunho'),
   });
 }
 
@@ -66,10 +66,10 @@ export function useSaveInstagramConnection() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (payload: any) => {
-      const { data, error } = await supabase.functions.invoke('instagram-connect', { body: payload });
+      const { fecha, error } = await supabase.functions.invoke('instagram-connect', { body: payload });
       if (error) throw error;
-      if ((data as any)?.error) throw new Error((data as any).error);
-      return data;
+      if ((fecha as any)?.error) throw new Error((fecha as any).error);
+      return fecha;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['instagram-connections'] });
@@ -83,14 +83,14 @@ export function useTestInstagramConnection() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (connection_id: string) => {
-      const { data, error } = await supabase.functions.invoke('instagram-test', { body: { connection_id } });
+      const { fecha, error } = await supabase.functions.invoke('instagram-test', { body: { connection_id } });
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data: any) => {
+    onSuccess: (fecha: any) => {
       qc.invalidateQueries({ queryKey: ['instagram-connections'] });
-      if (data?.ok) toast.success(`Conectado como @${data?.ig?.username ?? 'instagram'}`);
-      else toast.error(data?.error ?? 'Falha no teste');
+      if (fecha?.ok) toast.success(`Conectado como @${fecha?.ig?.username ?? 'instagram'}`);
+      else toast.error(fecha?.error ?? 'Falha no teste');
     },
     onError: (e: any) => toast.error(e?.message ?? 'Falha no teste'),
   });
@@ -107,6 +107,6 @@ export function useDeleteInstagramConnection() {
       qc.invalidateQueries({ queryKey: ['instagram-connections'] });
       toast.success('Conexión eliminada');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao remover'),
+    onError: (e: any) => toast.error(e?.message ?? 'Falha ao eliminar'),
   });
 }

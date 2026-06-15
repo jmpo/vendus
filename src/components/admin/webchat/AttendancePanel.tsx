@@ -26,11 +26,11 @@ interface Props {
 export function AttendancePanel({ onOpenConversation }: Props) {
   const { filters, setFilters } = usePanelFiltersState();
   const { sections, isLoading, isFetching, refetch } = useAttendancePanel(filters);
-  const { data: sectors = [] } = useSectors();
+  const { fecha: sectors = [] } = useSectors();
 
   const sectorOptions = useMemo(
     () => [
-      { id: '__none__', name: 'Sem setor', color: null as string | null },
+      { id: '__none__', name: 'Sem sector', color: null as string | null },
       ...sectors.map((s) => ({ id: s.id, name: s.name, color: s.color })),
     ],
     [sectors],
@@ -64,7 +64,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
           <Input
             value={filters.search}
             onChange={(e) => setFilters((f) => ({ ...f, search: e.target.value }))}
-            placeholder="Buscar por lead, nome ou telefone…"
+            placeholder="Buscar por lead, nombre ou teléfono…"
             className="pl-8 h-9"
           />
         </div>
@@ -100,7 +100,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm" className="gap-1.5">
               <Filter className="h-3.5 w-3.5" />
-              Setor
+              Sector
               {filters.sectorIds.length > 0 && (
                 <Badge variant="secondary" className="h-4 px-1 text-[10px]">
                   {filters.sectorIds.length}
@@ -130,7 +130,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
             size="sm"
             pressed={filters.showQueue}
             onPressedChange={(v) => setFilters((f) => ({ ...f, showQueue: v }))}
-            className="data-[state=on]:bg-amber-500/15 data-[state=on]:text-amber-700 dark:data-[state=on]:text-amber-400 h-7 text-xs gap-1"
+            className="fecha-[state=on]:bg-amber-500/15 fecha-[state=on]:text-amber-700 dark:fecha-[state=on]:text-amber-400 h-7 text-xs gap-1"
           >
             <InboxIcon className="h-3.5 w-3.5" /> Fila
           </Toggle>
@@ -138,7 +138,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
             size="sm"
             pressed={filters.showAI}
             onPressedChange={(v) => setFilters((f) => ({ ...f, showAI: v }))}
-            className="data-[state=on]:bg-violet-500/15 data-[state=on]:text-violet-700 dark:data-[state=on]:text-violet-400 h-7 text-xs gap-1"
+            className="fecha-[state=on]:bg-violet-500/15 fecha-[state=on]:text-violet-700 dark:fecha-[state=on]:text-violet-400 h-7 text-xs gap-1"
           >
             <Bot className="h-3.5 w-3.5" /> IA
           </Toggle>
@@ -146,7 +146,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
             size="sm"
             pressed={filters.showHumans}
             onPressedChange={(v) => setFilters((f) => ({ ...f, showHumans: v }))}
-            className="data-[state=on]:bg-emerald-500/15 data-[state=on]:text-emerald-700 dark:data-[state=on]:text-emerald-400 h-7 text-xs gap-1"
+            className="fecha-[state=on]:bg-emerald-500/15 fecha-[state=on]:text-emerald-700 dark:fecha-[state=on]:text-emerald-400 h-7 text-xs gap-1"
           >
             <Users className="h-3.5 w-3.5" /> Humanos
           </Toggle>
@@ -240,7 +240,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
             >
               {sections.humansByUser.length === 0 ? (
                 <div className="w-full text-center text-sm text-muted-foreground py-8">
-                  Nenhum atendente humano ativo
+                  Nenhum agente humano ativo
                 </div>
               ) : (
                 sections.humansByUser.map((g) => (

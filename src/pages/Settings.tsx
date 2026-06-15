@@ -63,12 +63,12 @@ export default function Settings() {
     e.preventDefault();
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      toast.error('As senhas não coincidem');
+      toast.error('As senhas no coincidem');
       return;
     }
 
     if (passwordForm.newPassword.length < 6) {
-      toast.error('A senha deve ter pelo menos 6 caracteres');
+      toast.error('A contraseña debe ter pelo menos 6 caracteres');
       return;
     }
 
@@ -84,7 +84,7 @@ export default function Settings() {
     try {
       await connectGoogle();
     } catch (error) {
-      toast.error('Erro ao conectar com Google Calendar');
+      toast.error('Error ao conectar com Google Calendar');
     }
   };
 
@@ -93,7 +93,7 @@ export default function Settings() {
       await disconnectGoogle();
       toast.success('Google Calendar desconectado');
     } catch (error) {
-      toast.error('Erro ao desconectar');
+      toast.error('Error ao desconectar');
     }
   };
 
@@ -107,7 +107,7 @@ export default function Settings() {
           </Button>
           <div>
             <h1 className="text-xl font-semibold text-foreground">Configurações</h1>
-            <p className="text-sm text-muted-foreground">Gerencie sua conta e preferências</p>
+            <p className="text-sm text-muted-foreground">Gerencie su cuenta e preferências</p>
           </div>
         </div>
       </header>
@@ -117,7 +117,7 @@ export default function Settings() {
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="account" className="gap-2">
               <Lock size={16} className="hidden sm:block" />
-              Conta
+              Cuenta
             </TabsTrigger>
             <TabsTrigger value="security" className="gap-2">
               <Shield size={16} className="hidden sm:block" />
@@ -125,7 +125,7 @@ export default function Settings() {
             </TabsTrigger>
             <TabsTrigger value="integrations" className="gap-2">
               <Link2 size={16} className="hidden sm:block" />
-              Integrações
+              Integraciones
             </TabsTrigger>
             <TabsTrigger value="notifications" className="gap-2">
               <Bell size={16} className="hidden sm:block" />
@@ -139,23 +139,23 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Lock size={20} />
-                  Alterar Senha
+                  Alterar Contraseña
                 </CardTitle>
                 <CardDescription>
-                  Atualize sua senha de acesso à plataforma
+                  Atualize su contraseña de acesso à plataforma
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handlePasswordSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="currentPassword">Senha Atual</Label>
+                    <Label htmlFor="currentPassword">Contraseña Atual</Label>
                     <div className="relative">
                       <Input
                         id="currentPassword"
                         type={showPasswords.current ? 'text' : 'password'}
                         value={passwordForm.currentPassword}
                         onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
-                        placeholder="Digite sua senha atual"
+                        placeholder="Escribí su contraseña atual"
                       />
                       <button
                         type="button"
@@ -168,14 +168,14 @@ export default function Settings() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="newPassword">Nova Senha</Label>
+                    <Label htmlFor="newPassword">Nova Contraseña</Label>
                     <div className="relative">
                       <Input
                         id="newPassword"
                         type={showPasswords.new ? 'text' : 'password'}
                         value={passwordForm.newPassword}
                         onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
-                        placeholder="Digite a nova senha"
+                        placeholder="Escribí a nova contraseña"
                       />
                       <button
                         type="button"
@@ -188,14 +188,14 @@ export default function Settings() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirmar Nova Senha</Label>
+                    <Label htmlFor="confirmPassword">Confirmar Nova Contraseña</Label>
                     <div className="relative">
                       <Input
                         id="confirmPassword"
                         type={showPasswords.confirm ? 'text' : 'password'}
                         value={passwordForm.confirmPassword}
                         onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                        placeholder="Confirme a nova senha"
+                        placeholder="Confirme a nova contraseña"
                       />
                       <button
                         type="button"
@@ -215,7 +215,7 @@ export default function Settings() {
                           Atualizando...
                         </>
                       ) : (
-                        'Atualizar Senha'
+                        'Atualizar Contraseña'
                       )}
                     </Button>
                   </div>
@@ -233,7 +233,7 @@ export default function Settings() {
                   Autenticação de Dois Fatores (2FA)
                 </CardTitle>
                 <CardDescription>
-                  Adicione uma camada extra de segurança à sua conta
+                  Adicione uma camada extra de segurança à su cuenta
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -245,19 +245,19 @@ export default function Settings() {
                     <div>
                       <p className="font-medium">Status do 2FA</p>
                       <p className="text-sm text-muted-foreground">
-                        Proteja sua conta com autenticação em dois fatores
+                        Proteja su cuenta com autenticação em dois fatores
                       </p>
                     </div>
                   </div>
                   <Badge variant="outline" className="gap-1">
                     <XCircle size={12} className="text-yellow-500" />
-                    Não configurado
+                    No configurado
                   </Badge>
                 </div>
 
                 <div className="p-4 rounded-lg border border-dashed">
                   <p className="text-sm text-muted-foreground text-center">
-                    A configuração de 2FA via aplicativo autenticador estará disponível em breve.
+                    A configuración de 2FA via aplicativo autenticador estará disponível em breve.
                   </p>
                 </div>
               </CardContent>
@@ -267,7 +267,7 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle>Sessões Ativas</CardTitle>
                 <CardDescription>
-                  Dispositivos conectados à sua conta
+                  Dispositivos conectados à su cuenta
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -288,7 +288,7 @@ export default function Settings() {
                     </div>
                   </div>
                   <Badge className="bg-green-500/20 text-green-500 border-0">
-                    Ativo agora
+                    Ativo ahora
                   </Badge>
                 </div>
               </CardContent>
@@ -304,7 +304,7 @@ export default function Settings() {
                   Google Calendar
                 </CardTitle>
                 <CardDescription>
-                  Sincronize seus eventos e compromissos com o Google Calendar
+                  Sincronize sus eventos e compromissos com o Google Calendar
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -321,7 +321,7 @@ export default function Settings() {
                     <div>
                       <p className="font-medium">Google Calendar</p>
                       <p className="text-sm text-muted-foreground">
-                        {isGoogleConnected ? 'Conectado e sincronizando' : 'Não conectado'}
+                        {isGoogleConnected ? 'Conectado e sincronizando' : 'No conectado'}
                       </p>
                     </div>
                   </div>
@@ -362,16 +362,16 @@ export default function Settings() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Mais Integrações</CardTitle>
+                <CardTitle>Mais Integraciones</CardTitle>
                 <CardDescription>
-                  Conecte outras ferramentas à sua conta
+                  Conecte outras ferramentas à su cuenta
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="p-6 rounded-lg border border-dashed text-center">
                   <Link2 className="h-8 w-8 mx-auto text-muted-foreground/50 mb-2" />
                   <p className="text-sm text-muted-foreground">
-                    Novas integrações estarão disponíveis em breve
+                    Novas integraciones estarão disponíveis em breve
                   </p>
                 </div>
               </CardContent>
@@ -384,10 +384,10 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Bell size={20} />
-                  Preferências de Notificação
+                  Preferências de Notificación
                 </CardTitle>
                 <CardDescription>
-                  Escolha como deseja receber notificações
+                  Elegí como desea receber notificaciones
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -395,7 +395,7 @@ export default function Settings() {
                   <div>
                     <p className="font-medium">Notificações por Email</p>
                     <p className="text-sm text-muted-foreground">
-                      Receba atualizações importantes por email
+                      Receba actualizaciones importantes por email
                     </p>
                   </div>
                   <Switch 
@@ -410,7 +410,7 @@ export default function Settings() {
                   <div>
                     <p className="font-medium">Notificações Push</p>
                     <p className="text-sm text-muted-foreground">
-                      Receba notificações no navegador
+                      Receba notificaciones no navegador
                     </p>
                   </div>
                   <Switch 
@@ -423,9 +423,9 @@ export default function Settings() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">Sons de Notificação</p>
+                    <p className="font-medium">Sons de Notificación</p>
                     <p className="text-sm text-muted-foreground">
-                      Reproduzir som ao receber notificações
+                      Reproduzir som ao receber notificaciones
                     </p>
                   </div>
                   <Switch 
@@ -438,9 +438,9 @@ export default function Settings() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">Resumo Diário</p>
+                    <p className="font-medium">Resumen Diário</p>
                     <p className="text-sm text-muted-foreground">
-                      Receba um resumo das atividades do dia
+                      Receba um resumen das atividades do día
                     </p>
                   </div>
                   <Switch 

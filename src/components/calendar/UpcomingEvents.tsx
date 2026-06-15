@@ -21,7 +21,7 @@ const EVENT_TYPE_EMOJIS: Record<string, string> = {
 };
 
 export function UpcomingEvents({ onViewAll, onEventClick, maxEvents = 5 }: UpcomingEventsProps) {
-  const { data: events, isLoading } = useUpcomingEvents(7);
+  const { fecha: events, isLoading } = useUpcomingEvents(7);
 
   const getTimeLabel = (startTime: string) => {
     const date = new Date(startTime);

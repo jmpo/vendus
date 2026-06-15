@@ -35,7 +35,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
   const { profile } = useAuth();
   const orgId = profile?.organization_id;
 
-  const { data, isLoading } = useQuery({
+  const { fecha, isLoading } = useQuery({
     queryKey: ['orchestrator-routing-matrix', orgId],
     queryFn: async (): Promise<{ products: ProductRow[]; agents: AgentRow[] }> => {
       if (!orgId) return { products: [], agents: [] };
@@ -54,19 +54,19 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
           .order('name'),
       ]);
       // Aceita qualquer status exceto archived/deleted/inactive (e null = ok)
-      const products = (productsRes.data || []).filter(
+      const products = (productsRes.fecha || []).filter(
         (p: ProductRow) => !p.status || !EXCLUDED_PRODUCT_STATUSES.has(p.status)
       );
       return {
         products,
-        agents: (agentsRes.data || []) as AgentRow[],
+        agents: (agentsRes.fecha || []) as AgentRow[],
       };
     },
     enabled: !!orgId,
   });
 
-  const products = data?.products || [];
-  const agents = data?.agents || [];
+  const products = fecha?.products || [];
+  const agents = fecha?.agents || [];
 
   // Todos os agentes ativos da org, exceto o próprio e outros orquestradores
   const routableAgents = useMemo(
@@ -82,7 +82,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
     [routableAgents]
   );
 
-  // Agentes vinculados a produtos, agrupados por produto
+  // Agentes vinculados a productos, agrupados por producto
   const agentsByProduct = useMemo(() => {
     const grouped = new Map<string, AgentRow[]>();
     routableAgents
@@ -92,7 +92,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
         list.push(a);
         grouped.set(a.product_id!, list);
       });
-    // Ordenar por nome do produto, considerando só produtos visíveis
+    // Ordenar por nombre do producto, considerando só productos visíveis
     return products
       .map((p) => ({ product: p, agents: grouped.get(p.id) || [] }))
       .filter((g) => g.agents.length > 0);
@@ -180,8 +180,8 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
           <div className="text-sm text-muted-foreground">
             <p className="font-medium text-foreground">Matriz de Enrutamiento</p>
             <p>
-              Selecione quais produtos e agentes este Orquestrador pode rotear. Itens
-              desmarcados serão ignorados na hora de transferir a conversa.
+              Seleccioná quais productos e agentes este Orquestrador puede rotear. Itens
+              desmarcados serão ignorados na hora de transferir a conversación.
             </p>
           </div>
         </div>
@@ -224,7 +224,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
             <p className="text-xs text-muted-foreground text-center py-4">Carregando…</p>
           ) : products.length === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-4">
-              Ninguno produto cadastrado. Crie produtos primeiro para o Orquestrador ter para onde rotear.
+              Ninguno producto cadastrado. Crea productos primeiro para o Orquestrador ter para dónde rotear.
             </p>
           ) : (
             <div className="space-y-2">
@@ -321,7 +321,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
             <p className="text-xs text-muted-foreground text-center py-4">Carregando…</p>
           ) : globalAgents.length === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-4">
-              Sem agentes globais (Soporte / Financeiro / Administrativo). Crie um para o Orquestrador rotear suporte/financeiro.
+              Sem agentes globais (Soporte / Financeiro / Administrativo). Crea um para o Orquestrador rotear suporte/financeiro.
             </p>
           ) : (
             <div className="space-y-2">
@@ -389,7 +389,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
             <p className="text-xs text-muted-foreground text-center py-4">Carregando…</p>
           ) : agentsByProduct.length === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-4">
-              Ninguno agente vinculado a produtos. Crie SDRs / Closers nos produtos para o Orquestrador rotear.
+              Ninguno agente vinculado a productos. Crea SDRs / Closers nos productos para o Orquestrador rotear.
             </p>
           ) : (
             <div className="space-y-4">

@@ -56,7 +56,7 @@ export function NewConnectionDialog({ open, onClose, onSelect }: Props) {
         <DialogHeader>
           <DialogTitle>Nueva conexión</DialogTitle>
           <DialogDescription>
-            Escolha qual tipo de canal você quer conectar.
+            Elegí qual tipo de canal usted quiere conectar.
           </DialogDescription>
         </DialogHeader>
 

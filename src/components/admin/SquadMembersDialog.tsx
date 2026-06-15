@@ -21,8 +21,8 @@ interface SquadMembersDialogProps {
 
 export function SquadMembersDialog({ squad, open, onOpenChange }: SquadMembersDialogProps) {
   const [selectedUserId, setSelectedUserId] = useState<string>('');
-  const { data: members, isLoading } = useSquadMembers(squad?.id);
-  const { data: teamMembers } = useTeamMembers();
+  const { fecha: members, isLoading } = useSquadMembers(squad?.id);
+  const { fecha: teamMembers } = useTeamMembers();
   const addMember = useAddSquadMember();
   const removeMember = useRemoveSquadMember();
   const updateRole = useUpdateSquadMemberRole();
@@ -136,7 +136,7 @@ export function SquadMembersDialog({ squad, open, onOpenChange }: SquadMembersDi
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-foreground truncate">
-                      {member.profile?.full_name || 'Usuário'}
+                      {member.profile?.full_name || 'Usuario'}
                     </p>
                     <p className="text-xs text-muted-foreground truncate">
                       {member.profile?.email}

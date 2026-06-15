@@ -25,13 +25,13 @@ export function usePlatformAIKeys() {
   return useQuery({
     queryKey: ['platform-ai-keys'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('platform_ai_keys' as any)
         .select('id, provider, label, api_key_masked, model_default, priority, weight, is_active, last_used_at, usage_count, last_error, last_verified_at, created_at, updated_at')
         .order('provider', { ascending: true })
         .order('priority', { ascending: true });
       if (error) throw error;
-      return (data ?? []) as unknown as PlatformAIKey[];
+      return (fecha ?? []) as unknown as PlatformAIKey[];
     },
   });
 }
@@ -51,10 +51,10 @@ export function useSavePlatformAIKey() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: SavePlatformKeyInput) => {
-      const { data, error } = await supabase.functions.invoke('save-platform-ai-key', { body: input });
+      const { fecha, error } = await supabase.functions.invoke('save-platform-ai-key', { body: input });
       if (error) throw error;
-      if ((data as any)?.error) throw new Error((data as any).error);
-      return data;
+      if ((fecha as any)?.error) throw new Error((fecha as any).error);
+      return fecha;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['platform-ai-keys'] });
@@ -68,10 +68,10 @@ export function usePlatformAIKeyAction() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: { id: string; action: 'delete' | 'toggle' | 'test'; is_active?: boolean }) => {
-      const { data, error } = await supabase.functions.invoke('save-platform-ai-key', { body: input });
+      const { fecha, error } = await supabase.functions.invoke('save-platform-ai-key', { body: input });
       if (error) throw error;
-      if ((data as any)?.error) throw new Error((data as any).error);
-      return data;
+      if ((fecha as any)?.error) throw new Error((fecha as any).error);
+      return fecha;
     },
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: ['platform-ai-keys'] });

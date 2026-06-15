@@ -22,10 +22,10 @@ function findBestStartBlock(blocks: FunnelBlock[], currentStartId: string | null
   const targetedIds = new Set(
     blocks.flatMap(b => [
       b.next_block_id,
-      b.data.true_next_block_id,
-      b.data.false_next_block_id,
-      ...(b.data.options?.map(o => o.next_block_id) || []),
-      ...(b.data.ai_outputs?.map(o => o.next_block_id) || []),
+      b.fecha.true_next_block_id,
+      b.fecha.false_next_block_id,
+      ...(b.fecha.options?.map(o => o.next_block_id) || []),
+      ...(b.fecha.ai_outputs?.map(o => o.next_block_id) || []),
     ].filter(Boolean))
   );
   const orphans = blocks.filter(b => !targetedIds.has(b.id));
@@ -33,15 +33,15 @@ function findBestStartBlock(blocks: FunnelBlock[], currentStartId: string | null
   return pool[0]?.id || null;
 }
 
-/** Reconecta a sequência seguindo `ordered`. */
+/** Reconecta a secuencia seguindo `ordered`. */
 function relinkSequence(ordered: FunnelBlock[], all: FunnelBlock[]): FunnelBlock[] {
   const orderedIds = new Set(ordered.map(b => b.id));
   const patched = all.map(b => {
     const idx = ordered.findIndex(o => o.id === b.id);
     if (idx === -1) return b; // bloco fora da cadeia principal — preserva
     const next = ordered[idx + 1];
-    // Só sobrescreve next_block_id se NÃO há ramificações de opção definidas
-    const hasBranching = (b.data.options || []).some(o => o.next_block_id);
+    // Só sobrescreve next_block_id se NÃO há ramificações de opción definidas
+    const hasBranching = (b.fecha.options || []).some(o => o.next_block_id);
     if (hasBranching) return b;
     return { ...b, next_block_id: next?.id || null };
   });
@@ -62,7 +62,7 @@ export function QuizFlowTab({ funnel }: Props) {
   const saveFlowBlocks = useSaveFlowBlocks();
   const selectedBlock = blocks.find(b => b.id === selectedBlockId);
 
-  // Auto-switch para inspector quando o usuário clica em um bloco
+  // Auto-switch para inspector cuando o usuario clica em um bloco
   useEffect(() => {
     if (!selectedBlockId) return;
     setRightPanelMode('inspector');
@@ -90,11 +90,11 @@ export function QuizFlowTab({ funnel }: Props) {
   /** Cria um novo bloco a partir de um item da paleta visual. */
   const createFromPalette = useCallback((item: QuizPaletteItem): FunnelBlock => {
     const base = createDefaultBlock(item.blockType as FunnelBlockType, { x: 0, y: 0 });
-    base.data = applyPresetToBlockData(item.preset, base.data) as any;
+    base.fecha = applyPresetToBlockData(item.preset, base.fecha) as any;
     return base;
   }, []);
 
-  /** Insere bloco em uma posição (sequência visual). */
+  /** Insere bloco em uma posição (secuencia visual). */
   const insertAt = useCallback((newBlock: FunnelBlock, index: number) => {
     setBlocks(prev => {
       // Pegamos a ordem visual atual
@@ -131,8 +131,8 @@ export function QuizFlowTab({ funnel }: Props) {
   }, [createFromPalette, insertAt]);
 
   const handleInsertAt = useCallback((index: number) => {
-    // Inserção rápida via "+": cria uma pergunta de texto curto
-    const nb = createFromPalette({ blockType: 'input', preset: 'text', label: 'Texto curto', icon: () => null as any } as any);
+    // Inserção rápida via "+": cria uma pregunta de texto corto
+    const nb = createFromPalette({ blockType: 'input', preset: 'text', label: 'Texto corto', icon: () => null as any } as any);
     insertAt(nb, index);
   }, [createFromPalette, insertAt]);
 
@@ -182,7 +182,7 @@ export function QuizFlowTab({ funnel }: Props) {
     const block = blocks.find(b => b.id === blockId);
     if (!block) return;
     const nb = createDefaultBlock(block.type, { x: 0, y: 0 });
-    nb.data = { ...block.data };
+    nb.fecha = { ...block.fecha };
     setBlocks(prev => [...prev, nb]);
     setSelectedBlockId(nb.id);
     setIsDirty(true);
@@ -231,7 +231,7 @@ export function QuizFlowTab({ funnel }: Props) {
         <MousePointerClick className="h-5 w-5 text-muted-foreground" />
       </div>
       <p className="text-sm text-muted-foreground">
-        Selecione um bloco no fluxo para editar suas propriedades
+        Seleccioná um bloco no flujo para editar sus propriedades
       </p>
       <p className="text-xs text-muted-foreground">
         ou clique em <span className="font-medium text-foreground">Ver preview</span> acima
@@ -293,7 +293,7 @@ export function QuizFlowTab({ funnel }: Props) {
               <Blocks className="h-4 w-4" /> Blocos
             </TabsTrigger>
             <TabsTrigger value="canvas" className="gap-1 text-xs">
-              <Workflow className="h-4 w-4" /> Fluxo
+              <Workflow className="h-4 w-4" /> Flujo
             </TabsTrigger>
             <TabsTrigger value="inspector" className="gap-1 text-xs">
               <SlidersHorizontal className="h-4 w-4" /> Editar

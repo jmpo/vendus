@@ -20,7 +20,7 @@ interface Props {
   onAddBlock: (type: FunnelBlockType, position?: { x: number; y: number }) => void;
 }
 
-// Whitelist do Quiz — perguntas + scoring + captura final. SEM IA conversacional e SEM agendamento.
+// Whitelist do Quiz — preguntas + scoring + captura final. SEM IA conversacional e SEM reserva.
 const QUIZ_BLOCKS: FunnelBlockType[] = [
   'message', 'buttons', 'video', 'image', 'delay',
   'input', 'quick_form',
@@ -130,7 +130,7 @@ export const QuizBlockPalette = memo(function QuizBlockPalette({ onAddBlock }: P
 
       <div className="px-3 py-2 border-t bg-muted/30 shrink-0">
         <p className="text-[10px] text-muted-foreground text-center">
-          Use "Botões" para perguntas e "Pontuar" para classificar
+          Usa "Botões" para preguntas e "Pontuar" para classificar
         </p>
       </div>
     </div>

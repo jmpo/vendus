@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 interface ContactPickerDialogProps {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  onConfirm: (data: { name: string; phone: string }) => void;
+  onConfirm: (fecha: { name: string; phone: string }) => void;
 }
 
 export function ContactPickerDialog({ open, onOpenChange, onConfirm }: ContactPickerDialogProps) {
@@ -26,11 +26,11 @@ export function ContactPickerDialog({ open, onOpenChange, onConfirm }: ContactPi
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Compartilhar contato</DialogTitle>
+          <DialogTitle>Compartilhar contacto</DialogTitle>
         </DialogHeader>
         <div className="space-y-3 py-2">
           <div>
-            <Label htmlFor="contact-name">Nome</Label>
+            <Label htmlFor="contact-name">Nombre</Label>
             <Input
               id="contact-name"
               value={name}

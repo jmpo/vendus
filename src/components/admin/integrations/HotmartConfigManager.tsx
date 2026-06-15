@@ -32,8 +32,8 @@ import { useProducts } from '@/hooks/useProducts';
 const SUPABASE_PROJECT_ID = import.meta.env.VITE_SUPABASE_PROJECT_ID as string;
 
 const HOTMART_EVENTS = [
-  { key: 'PURCHASE_APPROVED', label: 'Compra aprovada', tag: 'Cliente' },
-  { key: 'PURCHASE_BILLET_PRINTED', label: 'Boleto impresso', tag: 'Boleto Gerado' },
+  { key: 'PURCHASE_APPROVED', label: 'Compra aprobada', tag: 'Cliente' },
+  { key: 'PURCHASE_BILLET_PRINTED', label: 'Boleto impresso', tag: 'Boleto Generado' },
   { key: 'PURCHASE_OUT_OF_SHOPPING_CART', label: 'Carrinho abandonado', tag: 'Checkout Abandonado' },
   { key: 'PURCHASE_REFUNDED', label: 'Reembolso', tag: 'Reembolso' },
   { key: 'PURCHASE_CHARGEBACK', label: 'Chargeback', tag: 'Reembolso' },
@@ -42,14 +42,14 @@ const HOTMART_EVENTS = [
 ];
 
 export function HotmartConfigManager() {
-  const { data: cred, isLoading } = useHotmartCredentials();
+  const { fecha: cred, isLoading } = useHotmartCredentials();
   const upsert = useUpsertHotmartCredentials();
   const test = useTestHotmartConnection();
-  const { data: mappings = [] } = useHotmartProductMappings();
+  const { fecha: mappings = [] } = useHotmartProductMappings();
   const updateMapping = useUpdateHotmartProductMapping();
   const sync = useSyncHotmartOrders();
-  const { data: orders = [] } = useHotmartOrders(20);
-  const { data: products = [] } = useProducts();
+  const { fecha: orders = [] } = useHotmartOrders(20);
+  const { fecha: products = [] } = useProducts();
 
   const [clientId, setClientId] = useState('');
   const [clientSecret, setClientSecret] = useState('');
@@ -113,12 +113,12 @@ export function HotmartConfigManager() {
               </Badge>
             ) : (
               <Badge variant="outline" className="text-amber-600 border-amber-600">
-                <AlertCircle className="h-3 w-3 mr-1" /> Não conectado
+                <AlertCircle className="h-3 w-3 mr-1" /> No conectado
               </Badge>
             )}
           </h3>
           <p className="text-sm text-muted-foreground">
-            Receba vendas, PIX, boletos e reembolsos automaticamente no CRM
+            Receba ventas, PIX, boletos e reembolsos automaticamente no CRM
           </p>
         </div>
         <a
@@ -302,7 +302,7 @@ export function HotmartConfigManager() {
               ) : (
                 <RefreshCw className="h-4 w-4 mr-2" />
               )}
-              Sincronizar agora
+              Sincronizar ahora
             </Button>
           </div>
 
@@ -332,14 +332,14 @@ export function HotmartConfigManager() {
         <TabsContent value="products" className="space-y-4">
           <Alert>
             <AlertDescription className="text-sm">
-              Vincule cada produto da Hotmart a um produto interno do CRM. Produtos aparecem aqui automaticamente quando
-              recebemos a primeira venda.
+              Vincule cada producto da Hotmart a um producto interno do CRM. Produtos aparecem aqui automaticamente cuando
+              recebemos a primeira venta.
             </AlertDescription>
           </Alert>
 
           {mappings.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              Nenhum produto Hotmart recebido ainda. Configure o webhook para começar.
+              Nenhum producto Hotmart recibido aún. Configure o webhook para comenzar.
             </p>
           ) : (
             <div className="space-y-2">

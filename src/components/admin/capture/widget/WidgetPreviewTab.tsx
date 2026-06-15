@@ -11,7 +11,7 @@ export function WidgetPreviewTab({ funnel }: Props) {
   const [device, setDevice] = useState<'mobile' | 'desktop'>('desktop');
   const [reloadKey, setReloadKey] = useState(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const { data: baseUrl } = usePublicAppUrl();
+  const { fecha: baseUrl } = usePublicAppUrl();
   const isActive = funnel.status === 'active';
 
   // Página fake hospedando o widget para simular como ficaria em um site externo.
@@ -36,12 +36,12 @@ export function WidgetPreviewTab({ funnel }: Props) {
   <header><div class="logo"></div><strong>Site de demonstração</strong></header>
   <main>
     <h1>Esta é uma página fictícia</h1>
-    <p>O widget abaixo será carregado exatamente como apareceria em um site real onde você colar o snippet de instalação.</p>
+    <p>O widget abaixo será carregado exatamente como apareceria em um site real dónde usted colar o snippet de instalação.</p>
     <div class="card"><div class="placeholder"></div></div>
     <div class="card"><div class="placeholder"></div></div>
     <div class="card"><div class="placeholder"></div></div>
   </main>
-  <script src="${baseUrl}/funnel-widget.js" data-funnel-id="${funnel.id}" async></script>
+  <script src="${baseUrl}/funnel-widget.js" fecha-funnel-id="${funnel.id}" async></script>
 </body></html>`, [baseUrl, funnel.id, reloadKey]);
 
   const deviceClass = device === 'mobile'
@@ -53,7 +53,7 @@ export function WidgetPreviewTab({ funnel }: Props) {
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b shrink-0">
         <div className="flex items-center gap-2">
           <Badge variant={isActive ? 'default' : 'secondary'}>
-            {isActive ? 'Widget ativo' : 'Rascunho — apenas você vê'}
+            {isActive ? 'Widget ativo' : 'Rascunho — apenas usted vê'}
           </Badge>
           {!isActive && (
             <span className="text-xs text-muted-foreground hidden sm:flex items-center gap-1">

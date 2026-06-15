@@ -14,7 +14,7 @@ const OPTIONS = [
     id: 'scratch' as const,
     icon: Pencil,
     title: 'Criar do Zero',
-    description: 'Comece com um quiz em branco e monte perguntas, lógica, resultados e ações manualmente.',
+    description: 'Comece com um quiz em branco e monte preguntas, lógica, resultados e acciones manualmente.',
     gradient: 'from-slate-500/10 to-slate-500/5',
     iconBg: 'bg-slate-500/10 text-slate-700 dark:text-slate-300',
   },
@@ -22,7 +22,7 @@ const OPTIONS = [
     id: 'ai' as const,
     icon: Sparkles,
     title: 'Criar com IA',
-    description: 'Descreva o contexto e a IA cria perguntas, opções, lógica, pontuação, resultados e ações.',
+    description: 'Descreva o contexto e a IA cria preguntas, opciones, lógica, pontuação, resultados e acciones.',
     gradient: 'from-primary/15 to-primary/5',
     iconBg: 'bg-primary/15 text-primary',
     badge: 'IA',
@@ -31,7 +31,7 @@ const OPTIONS = [
     id: 'template' as const,
     icon: LayoutTemplate,
     title: 'Usar Template',
-    description: 'Escolha um modelo pronto de quiz e personalize para sua operação.',
+    description: 'Elegí um modelo pronto de quiz e personalize para su operação.',
     gradient: 'from-emerald-500/10 to-emerald-500/5',
     iconBg: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
   },
@@ -42,8 +42,8 @@ export function QuizCreationLauncher({ open, onOpenChange, onPick }: Props) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Como você deseja criar seu quiz?</DialogTitle>
-          <DialogDescription>Escolha o ponto de partida ideal para o seu objetivo.</DialogDescription>
+          <DialogTitle className="text-2xl">Como usted desea crear su quiz?</DialogTitle>
+          <DialogDescription>Elegí o ponto de partida ideal para o su objetivo.</DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">

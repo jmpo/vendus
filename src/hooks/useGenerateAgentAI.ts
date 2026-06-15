@@ -38,7 +38,7 @@ export function useGenerateAgentAI() {
     setGeneratedAgent(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('generate-agent-ai', {
+      const { fecha, error } = await supabase.functions.invoke('generate-agent-ai', {
         body: {
           product_id: productId,
           agent_type: agentType,
@@ -49,10 +49,10 @@ export function useGenerateAgentAI() {
 
       if (error) throw error;
 
-      if (data?.agent) {
-        setGeneratedAgent(data.agent);
+      if (fecha?.agent) {
+        setGeneratedAgent(fecha.agent);
         toast.success('Agente generado con éxito!');
-        return data.agent;
+        return fecha.agent;
       }
 
       throw new Error('Failed to generate agent');
@@ -72,7 +72,7 @@ export function useGenerateAgentAI() {
     currentValue: string | string[]
   ): Promise<OptimizeResult | null> => {
     try {
-      const { data, error } = await supabase.functions.invoke('generate-agent-ai', {
+      const { fecha, error } = await supabase.functions.invoke('generate-agent-ai', {
         body: {
           product_id: productId,
           agent_type: agentType,
@@ -83,8 +83,8 @@ export function useGenerateAgentAI() {
 
       if (error) throw error;
 
-      if (data?.optimized) {
-        return data as OptimizeResult;
+      if (fecha?.optimized) {
+        return fecha as OptimizeResult;
       }
 
       throw new Error('Failed to optimize field');

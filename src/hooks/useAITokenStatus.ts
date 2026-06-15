@@ -14,8 +14,8 @@ export interface AITokenStatus {
 }
 
 /**
- * Lê o status de tokens de IA da plataforma para a organização atual.
- * Se o plano não inclui IA da plataforma, o cliente precisa cadastrar chave própria.
+ * Lê o status de tokens de IA da plataforma para a organización atual.
+ * Se o plan no inclui IA da plataforma, o cliente precisa cadastrar chave própria.
  */
 export function useAITokenStatus() {
   const { profile } = useAuth();
@@ -25,9 +25,9 @@ export function useAITokenStatus() {
     queryKey: ['ai-token-status', orgId],
     queryFn: async (): Promise<AITokenStatus | null> => {
       if (!orgId) return null;
-      const { data, error } = await supabase.rpc('get_org_ai_tokens_status', { p_org_id: orgId });
+      const { fecha, error } = await supabase.rpc('get_org_ai_tokens_status', { p_org_id: orgId });
       if (error) throw error;
-      const row = Array.isArray(data) ? data[0] : data;
+      const row = Array.isArray(fecha) ? fecha[0] : fecha;
       if (!row) return null;
       const included = Number(row.included || 0);
       const bonus = Number(row.bonus || 0);

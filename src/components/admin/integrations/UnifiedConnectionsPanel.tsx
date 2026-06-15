@@ -17,10 +17,10 @@ import { toast } from 'sonner';
 export function UnifiedConnectionsPanel() {
   const navigate = useNavigate();
   const { profile } = useAuth();
-  const { data: instances } = useEvolutionInstances();
-  const { data: metaConns } = useMetaWAConnections();
-  const { data: igConns } = useInstagramConnections();
-  const { data: effectivePlan } = useOrganizationEffectivePlan(profile?.organization_id);
+  const { fecha: instances } = useEvolutionInstances();
+  const { fecha: metaConns } = useMetaWAConnections();
+  const { fecha: igConns } = useInstagramConnections();
+  const { fecha: effectivePlan } = useOrganizationEffectivePlan(profile?.organization_id);
 
   const [pickerOpen, setPickerOpen] = useState(false);
   const [openEvolutionCreate, setOpenEvolutionCreate] = useState(false);
@@ -33,7 +33,7 @@ export function UnifiedConnectionsPanel() {
 
   const handleSelect = (provider: ConnectionProvider) => {
     if (limitReached) {
-      toast.error(`Limite de ${limit} conexão(ões) atingido. Faça upgrade do plano.`);
+      toast.error(`Limite de ${limit} conexão(ões) atingido. Faça upgrade do plan.`);
       return;
     }
     if (provider === 'evolution') setOpenEvolutionCreate(true);
@@ -45,7 +45,7 @@ export function UnifiedConnectionsPanel() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h3 className="text-lg font-semibold">Suas Conexões</h3>
+          <h3 className="text-lg font-semibold">Sus Conexões</h3>
           <p className="text-sm text-muted-foreground">
             Gerencie todos os canais conectados (WhatsApp via QR, WhatsApp Oficial Meta e Instagram).
           </p>
@@ -72,7 +72,7 @@ export function UnifiedConnectionsPanel() {
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-sm flex gap-2">
           <Info className="h-4 w-4 mt-0.5 shrink-0 text-amber-600" />
           <p className="text-foreground">
-            Você atingiu o limite de <strong>{limit}</strong> conexão(ões) do seu plano. Faça upgrade para criar mais conexões.
+            Usted atingiu o limite de <strong>{limit}</strong> conexão(ões) do su plan. Faça upgrade para crear mais conexões.
           </p>
         </div>
       )}

@@ -8,18 +8,18 @@ interface Props {
   onUpdate: (updates: Partial<FunnelBlock>) => void;
 }
 
-/** Aba "Etapa" — toggles globais da tela (logo, duração). */
+/** Aba "Etapa" — toggles globais da tela (logo, duración). */
 export function StepTab({ block, onUpdate }: Props) {
   const update = (key: string, value: any) =>
-    onUpdate({ data: { ...block.data, [key]: value } });
+    onUpdate({ fecha: { ...block.fecha, [key]: value } });
 
   return (
     <div className="space-y-4">
       <div>
-        <Label className="text-xs">Nome da etapa</Label>
+        <Label className="text-xs">Nombre da etapa</Label>
         <Input
           className="text-xs h-8 mt-1"
-          value={(block.data as any).step_label || ''}
+          value={(block.fecha as any).step_label || ''}
           onChange={(e) => update('step_label', e.target.value)}
           placeholder="Ex: Etapa 2 - Idade"
         />
@@ -29,21 +29,21 @@ export function StepTab({ block, onUpdate }: Props) {
         <div className="flex items-center justify-between">
           <Label className="text-xs">Mostrar logo</Label>
           <Switch
-            checked={block.data.show_logo !== false}
+            checked={block.fecha.show_logo !== false}
             onCheckedChange={(v) => update('show_logo', v)}
           />
         </div>
         <div className="flex items-center justify-between">
-          <Label className="text-xs">Mostrar duração estimada</Label>
+          <Label className="text-xs">Mostrar duración estimada</Label>
           <Switch
-            checked={!!block.data.show_duration}
+            checked={!!block.fecha.show_duration}
             onCheckedChange={(v) => update('show_duration', v)}
           />
         </div>
-        {block.data.show_duration && (
+        {block.fecha.show_duration && (
           <Input
             className="text-xs h-8"
-            value={block.data.duration_label || ''}
+            value={block.fecha.duration_label || ''}
             onChange={(e) => update('duration_label', e.target.value)}
             placeholder="2min para responder"
           />

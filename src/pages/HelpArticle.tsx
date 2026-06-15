@@ -15,7 +15,7 @@ export default function HelpArticle() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { data: article, isLoading } = useHelpArticle(slug);
+  const { fecha: article, isLoading } = useHelpArticle(slug);
   const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
 
   if (isLoading) {
@@ -25,7 +25,7 @@ export default function HelpArticle() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-3">
         <p className="text-muted-foreground">Artículo no encontrado.</p>
-        <Link to="/ajuda"><Button variant="outline">Volver al Centro de Ayuda</Button></Link>
+        <Link to="/ayuda"><Button variant="outline">Volver al Centro de Ayuda</Button></Link>
       </div>
     );
   }
@@ -52,8 +52,8 @@ export default function HelpArticle() {
     <div className="min-h-screen bg-background">
       <header className="border-b bg-background/80 backdrop-blur sticky top-0 z-30">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/ajuda')}><ArrowLeft className="h-4 w-4" /></Button>
-          <Link to="/ajuda" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
+          <Button variant="ghost" size="icon" onClick={() => navigate('/ayuda')}><ArrowLeft className="h-4 w-4" /></Button>
+          <Link to="/ayuda" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
             <BookOpen className="h-4 w-4" /> Centro de Ayuda
           </Link>
           <div className="ml-auto">
@@ -86,7 +86,7 @@ export default function HelpArticle() {
             <CardContent className="p-4 flex items-center gap-3">
               <Sparkles className="h-5 w-5 text-primary" />
               <div className="flex-1 text-sm">Este artículo describe una novedad de la plataforma.</div>
-              <Link to="/novidades"><Button size="sm" variant="outline">Ver actualizaciones</Button></Link>
+              <Link to="/novedades"><Button size="sm" variant="outline">Ver actualizaciones</Button></Link>
             </CardContent>
           </Card>
         )}

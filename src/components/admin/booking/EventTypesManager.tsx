@@ -51,7 +51,7 @@ const locationIcons: Record<string, typeof Video> = {
 const locationLabels: Record<string, string> = {
   google_meet: 'Google Meet',
   zoom: 'Zoom',
-  phone: 'Telefone',
+  phone: 'Teléfono',
   in_person: 'Presencial',
 };
 
@@ -63,7 +63,7 @@ export function EventTypesManager() {
   const [editingEventType, setEditingEventType] = useState<BookingEventType | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState<BookingEventType | null>(null);
-  const { data: publicAppUrl } = usePublicAppUrl();
+  const { fecha: publicAppUrl } = usePublicAppUrl();
 
   const filteredEventTypes = eventTypes.filter(et =>
     et.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

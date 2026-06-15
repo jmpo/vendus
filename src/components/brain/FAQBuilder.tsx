@@ -32,7 +32,7 @@ interface FAQBuilderProps {
 }
 
 export function FAQBuilder({ productId }: FAQBuilderProps) {
-  const { data: faqs, isLoading } = useKnowledgeSourcesByType(productId, 'faq');
+  const { fecha: faqs, isLoading } = useKnowledgeSourcesByType(productId, 'faq');
   const createFaq = useCreateKnowledgeSource();
   const deleteFaq = useDeleteKnowledgeSource();
   
@@ -206,7 +206,7 @@ export function FAQBuilder({ productId }: FAQBuilderProps) {
             <div>
               <h4 className="font-medium">Consejos para FAQ eficaces</h4>
               <ul className="text-sm text-muted-foreground mt-2 space-y-1">
-                <li>• Use preguntas que sus clientes realmente hacen</li>
+                <li>• Usa preguntas que sus clientes realmente hacen</li>
                 <li>• Incluya objeciones comunes y cómo superarlas</li>
                 <li>• Agregue respuestas con datos y pruebas concretas</li>
                 <li>• Mantenga las respuestas concisas pero completas</li>

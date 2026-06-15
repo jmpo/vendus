@@ -16,7 +16,7 @@ export function ContextLibrary({ orgId }: { orgId: string | null }) {
 
   const save = async () => {
     if (!orgId || !editing?.name?.trim() || !editing.instructions?.trim()) {
-      toast.error('Nome e instruções são obrigatórios');
+      toast.error('Nombre e instruções son obligatorios');
       return;
     }
     const payload = {
@@ -32,7 +32,7 @@ export function ContextLibrary({ orgId }: { orgId: string | null }) {
       ? await supabase.from('campaign_contexts').update(payload).eq('id', editing.id)
       : await supabase.from('campaign_contexts').insert(payload);
     if (error) { toast.error(error.message); return; }
-    toast.success('Contexto salvo');
+    toast.success('Contexto guardado');
     setEditing(null);
     refresh();
   };
@@ -49,7 +49,7 @@ export function ContextLibrary({ orgId }: { orgId: string | null }) {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <p className="text-sm text-muted-foreground">
-          Briefings estratégicos reutilizáveis. O agente IA recebe o contexto antes de criar a primeira mensagem.
+          Briefings estratégicos reutilizáveis. O agente IA recebe o contexto antes de crear a primeira mensaje.
         </p>
         <Button onClick={() => setEditing({})}>
           <Plus className="h-4 w-4 mr-2" />Novo Contexto
@@ -62,7 +62,7 @@ export function ContextLibrary({ orgId }: { orgId: string | null }) {
         <Card>
           <CardContent className="p-10 flex flex-col items-center text-center gap-3">
             <BookOpen className="h-8 w-8 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">Nenhum contexto na biblioteca ainda.</p>
+            <p className="text-sm text-muted-foreground">Nenhum contexto na biblioteca aún.</p>
           </CardContent>
         </Card>
       ) : (
@@ -103,11 +103,11 @@ export function ContextLibrary({ orgId }: { orgId: string | null }) {
           {editing && (
             <div className="space-y-3">
               <div>
-                <Label>Nome</Label>
+                <Label>Nombre</Label>
                 <Input value={editing.name ?? ''} onChange={(e) => setEditing({ ...editing, name: e.target.value })} placeholder="Ex: Participou da Live" />
               </div>
               <div>
-                <Label>Descrição</Label>
+                <Label>Descripción</Label>
                 <Input value={editing.description ?? ''} onChange={(e) => setEditing({ ...editing, description: e.target.value })} placeholder="Para qual público este contexto serve" />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -122,15 +122,15 @@ export function ContextLibrary({ orgId }: { orgId: string | null }) {
               </div>
               <div>
                 <Label>CTA principal</Label>
-                <Input value={editing.cta ?? ''} onChange={(e) => setEditing({ ...editing, cta: e.target.value })} placeholder="Ex: Agendar conversa" />
+                <Input value={editing.cta ?? ''} onChange={(e) => setEditing({ ...editing, cta: e.target.value })} placeholder="Ex: Agendar conversación" />
               </div>
               <div>
-                <Label>Instruções para o agente *</Label>
+                <Label>Instruções para el agente *</Label>
                 <Textarea
                   rows={6}
                   value={editing.instructions ?? ''}
                   onChange={(e) => setEditing({ ...editing, instructions: e.target.value })}
-                  placeholder="Este lead participou da aula ao vivo do Vendus.&#10;Demonstrou interesse em código-fonte liberado.&#10;Ainda não comprou.&#10;Descubra qual foi sua principal objeção.&#10;Não envie proposta imediatamente."
+                  placeholder="Este lead participou da aula ao vivo do Vendus.&#10;Demonstrou interesse em código-fonte liberado.&#10;Ainda no comprou.&#10;Descubrí qual fue su principal objeção.&#10;No envie propuesta imediatamente."
                 />
               </div>
             </div>

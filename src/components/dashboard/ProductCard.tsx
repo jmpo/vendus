@@ -67,8 +67,8 @@ export function ProductCard({ product, onSelect }: ProductCardProps) {
           </div>
           <div className="text-center p-3 rounded-lg bg-secondary/50">
             <Calendar size={18} className="mx-auto mb-1 text-muted-foreground" />
-            <p className="text-xs text-muted-foreground">Cadência</p>
-            <p className="text-sm font-medium text-foreground">7 dias</p>
+            <p className="text-xs text-muted-foreground">Cadencia</p>
+            <p className="text-sm font-medium text-foreground">7 días</p>
           </div>
           <div className="text-center p-3 rounded-lg bg-secondary/50">
             <TrendingUp size={18} className="mx-auto mb-1 text-muted-foreground" />
@@ -99,7 +99,7 @@ export function ProductCard({ product, onSelect }: ProductCardProps) {
           className="w-full group/btn"
           onClick={() => onSelect(product)}
         >
-          Abrir Produto
+          Abrir Producto
           <ArrowRight size={16} className="ml-2 group-hover/btn:translate-x-1 transition-transform" />
         </Button>
       </div>

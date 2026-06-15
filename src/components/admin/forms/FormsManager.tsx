@@ -48,14 +48,14 @@ export function FormsManager() {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [createMethod, setCreateMethod] = useState<'manual' | 'template' | 'ai'>('manual');
   
-  const { data: forms, isLoading } = useForms();
-  const { data: products } = useProducts();
-  const { data: templates } = useFormTemplates();
+  const { fecha: forms, isLoading } = useForms();
+  const { fecha: products } = useProducts();
+  const { fecha: templates } = useFormTemplates();
   const createForm = useCreateForm();
   const deleteForm = useDeleteForm();
   const duplicateForm = useDuplicateForm();
   const toggleStatus = useToggleFormStatus();
-  const { data: publicAppUrl } = usePublicAppUrl();
+  const { fecha: publicAppUrl } = usePublicAppUrl();
   
   // Filter forms
   const filteredForms = forms?.filter(form => {
@@ -234,7 +234,7 @@ export function FormsManager() {
                   <div className="flex-1 min-w-0">
                     <CardTitle className="text-base truncate">{form.name}</CardTitle>
                     <CardDescription className="truncate">
-                      {form.products?.name || 'Produto'}
+                      {form.products?.name || 'Producto'}
                     </CardDescription>
                   </div>
                   <div className="flex items-center gap-2">
@@ -345,7 +345,7 @@ export function FormsManager() {
           <div className="space-y-4 py-4">
             {/* Product Selection */}
             <div className="space-y-2">
-              <Label>Produto *</Label>
+              <Label>Producto *</Label>
               <Select value={newFormProductId} onValueChange={setNewFormProductId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecciona el producto" />
@@ -405,7 +405,7 @@ export function FormsManager() {
             {/* Template Selection */}
             {createMethod === 'template' && (
               <div className="space-y-2">
-                <Label>Escolha um template</Label>
+                <Label>Elegí um template</Label>
                 <div className="grid grid-cols-1 gap-2 max-h-[200px] overflow-y-auto">
                   {templates?.map(template => (
                     <button
@@ -436,17 +436,17 @@ export function FormsManager() {
             
             {/* Form Details */}
             <div className="space-y-2">
-              <Label htmlFor="form-name">Nome do formulário *</Label>
+              <Label htmlFor="form-name">Nombre do formulário *</Label>
               <Input
                 id="form-name"
                 value={newFormName}
                 onChange={(e) => setNewFormName(e.target.value)}
-                placeholder="Ex: Qualificação de Leads"
+                placeholder="Ex: Calificación de Leads"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="form-description">Descrição (opcional)</Label>
+              <Label htmlFor="form-description">Descripción (opcional)</Label>
               <Textarea
                 id="form-description"
                 value={newFormDescription}

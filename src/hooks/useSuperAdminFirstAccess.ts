@@ -6,7 +6,7 @@ const DEFAULT_EMAILS = ['superadmin@vendus.com.br', 'admin@vendus.com.br'];
 
 /**
  * Detecta se o super admin atual está usando credenciais padrão de instalação
- * (email padrão OU senha ainda não trocada). Usado para forçar o modal de
+ * (email padrão OU contraseña aún no trocada). Usado para forçar o modal de
  * primeiro acesso após o seed inicial em um remix.
  */
 export function useSuperAdminFirstAccess() {
@@ -27,27 +27,27 @@ export function useSuperAdminFirstAccess() {
       ]);
       if (settingsRes.error) throw settingsRes.error;
       return {
-        settings: settingsRes.data as { default_password_changed?: boolean; remix_setup_completed?: boolean } | null,
+        settings: settingsRes.fecha as { default_password_changed?: boolean; remix_setup_completed?: boolean } | null,
         orgCount: orgsRes.count ?? 0,
       };
     },
   });
 
   const usingDefaultEmail = !!user?.email && DEFAULT_EMAILS.includes(user.email.toLowerCase());
-  const settings = query.data?.settings ?? null;
-  // Se a query terminou e não há registro em platform_settings, força o wizard
-  // (cenário de remix novo onde a tabela ainda está vazia).
+  const settings = query.fecha?.settings ?? null;
+  // Se a query terminou e no há registro em platform_settings, força o wizard
+  // (cenário de remix novo dónde a tabela aún está vazia).
   const noSettingsRow = !query.isLoading && !query.isError && settings == null;
   const passwordNotChanged =
     noSettingsRow || settings?.default_password_changed === false;
   const setupNotCompleted =
     noSettingsRow || settings?.remix_setup_completed === false;
-  // Gatilho extra: sem nenhuma organização cadastrada, a plataforma ainda
-  // não foi configurada — força o wizard mesmo que platform_settings esteja "completo".
+  // Gatilho extra: sem ninguna organización cadastrada, a plataforma aún
+  // no fue configurada — força o wizard mismo que platform_settings esteja "completo".
   const noOrganizations =
-    !query.isLoading && !query.isError && (query.data?.orgCount ?? 0) === 0;
+    !query.isLoading && !query.isError && (query.fecha?.orgCount ?? 0) === 0;
 
-  // Wizard abre enquanto a configuración inicial (senha + obrigatórios) não estiver concluída.
+  // Wizard abre enquanto a configuración inicial (contraseña + obligatorios) no estiver concluída.
   const shouldForceSetup =
     !!user?.id &&
     isSuperAdmin() &&

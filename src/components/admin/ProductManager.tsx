@@ -31,7 +31,7 @@ const statusOptions = [
 
 export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
   const { profile } = useAuth();
-  const { data: products, isLoading } = useProducts();
+  const { fecha: products, isLoading } = useProducts();
   const updateProduct = useUpdateProduct();
   const deleteProduct = useDeleteProduct();
   const { isOptimizing, optimize } = useOptimizeField();

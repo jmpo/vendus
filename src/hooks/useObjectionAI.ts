@@ -65,7 +65,7 @@ export function useHandleObjection() {
 
           if (line.endsWith('\r')) line = line.slice(0, -1);
           if (line.startsWith(':') || line.trim() === '') continue;
-          if (!line.startsWith('data: ')) continue;
+          if (!line.startsWith('fecha: ')) continue;
 
           const jsonStr = line.slice(6).trim();
           if (jsonStr === '[DONE]') break;
@@ -118,8 +118,8 @@ export function useGenerateObjections() {
         throw new Error(error.error || 'Failed to generate objections');
       }
 
-      const data = await resp.json();
-      return data.objections;
+      const fecha = await resp.json();
+      return fecha.objections;
     },
   });
 }
@@ -137,7 +137,7 @@ export function useSaveGeneratedObjections() {
       objections: GeneratedObjection[];
     }) => {
       // Get user's organization
-      const { data: profile } = await supabase
+      const { fecha: profile } = await supabase
         .from('profiles')
         .select('organization_id')
         .eq('id', user?.id)
@@ -187,7 +187,7 @@ export function useSaveSingleObjection() {
         follow_up_question: string;
       };
     }) => {
-      const { data: profile } = await supabase
+      const { fecha: profile } = await supabase
         .from('profiles')
         .select('organization_id')
         .eq('id', user?.id)

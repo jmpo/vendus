@@ -23,7 +23,7 @@ export function useCreateCadenceDay() {
 
   return useMutation({
     mutationFn: async (input: CreateCadenceDayInput) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('cadence_templates')
         .insert([{
           product_id: input.productId,
@@ -36,7 +36,7 @@ export function useCreateCadenceDay() {
         .single();
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['cadence', variables.productId] });
@@ -44,7 +44,7 @@ export function useCreateCadenceDay() {
     },
     onError: (error) => {
       console.error('Error creating cadence day:', error);
-      toast.error('Error al crear dia');
+      toast.error('Error al crear día');
     },
   });
 }
@@ -59,7 +59,7 @@ export function useUpdateCadenceDay() {
       if (updates.trigger !== undefined) updateData.trigger = updates.trigger;
       if (updates.blocks !== undefined) updateData.blocks = JSON.parse(JSON.stringify(updates.blocks));
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('cadence_templates')
         .update(updateData)
         .eq('id', id)
@@ -67,7 +67,7 @@ export function useUpdateCadenceDay() {
         .single();
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cadence'] });
@@ -75,7 +75,7 @@ export function useUpdateCadenceDay() {
     },
     onError: (error) => {
       console.error('Error updating cadence day:', error);
-      toast.error('Error al actualizar dia');
+      toast.error('Error al actualizar día');
     },
   });
 }
@@ -99,7 +99,7 @@ export function useDeleteCadenceDay() {
     },
     onError: (error) => {
       console.error('Error deleting cadence day:', error);
-      toast.error('Error al eliminar dia');
+      toast.error('Error al eliminar día');
     },
   });
 }
@@ -116,11 +116,11 @@ export function useUploadCadenceMedia() {
 
       if (uploadError) throw uploadError;
 
-      const { data } = supabase.storage
+      const { fecha } = supabase.storage
         .from('cadence-media')
         .getPublicUrl(fileName);
 
-      return data.publicUrl;
+      return fecha.publicUrl;
     },
     onError: (error) => {
       console.error('Error uploading media:', error);

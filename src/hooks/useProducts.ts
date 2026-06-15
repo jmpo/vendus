@@ -8,13 +8,13 @@ export function useProducts() {
   return useQuery({
     queryKey: ['products'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return (data ?? []) as Product[];
+      return (fecha ?? []) as Product[];
     },
     staleTime: 30000,
     gcTime: 60000,
@@ -28,14 +28,14 @@ export function useProduct(id: string) {
   return useQuery({
     queryKey: ['product', id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('products')
         .select('*')
         .eq('id', id)
         .single();
 
       if (error) throw error;
-      return data as Product;
+      return fecha as Product;
     },
     enabled: !!id
   });
@@ -45,7 +45,7 @@ export function useAssignedProducts(userId: string) {
   return useQuery({
     queryKey: ['assigned-products', userId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('user_product_assignments')
         .select(`
           product_id,
@@ -55,7 +55,7 @@ export function useAssignedProducts(userId: string) {
         .eq('user_id', userId);
 
       if (error) throw error;
-      return data ?? [];
+      return fecha ?? [];
     },
     enabled: !!userId,
     retry: 1,
@@ -68,14 +68,14 @@ export function useCreateProduct() {
   
   return useMutation({
     mutationFn: async (product: TablesInsert<'products'>) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('products')
         .insert(product)
         .select()
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -88,7 +88,7 @@ export function useUpdateProduct() {
   
   return useMutation({
     mutationFn: async ({ id, ...updates }: TablesUpdate<'products'> & { id: string }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('products')
         .update(updates)
         .eq('id', id)
@@ -96,11 +96,11 @@ export function useUpdateProduct() {
         .single();
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data) => {
+    onSuccess: (fecha) => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
-      queryClient.invalidateQueries({ queryKey: ['product', data.id] });
+      queryClient.invalidateQueries({ queryKey: ['product', fecha.id] });
     }
   });
 }
@@ -110,7 +110,7 @@ export function useDeleteProduct() {
   
   return useMutation({
     mutationFn: async (id: string) => {
-      // Use safe delete function that handles FK constraints by nullifying references first
+      // Usa safe delete function that handles FK constraints by nullifying references first
       const { error } = await supabase.rpc('delete_product_safe', { p_product_id: id });
       
       if (error) throw error;

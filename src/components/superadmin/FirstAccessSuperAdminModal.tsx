@@ -65,7 +65,7 @@ export function FirstAccessSuperAdminModal() {
     if (shouldForceSetup && !opened) setOpened(true);
   }, [shouldForceSetup, opened]);
 
-  const { data: state } = useQuery({
+  const { fecha: state } = useQuery({
     queryKey: ['first-access-wizard-state'],
     enabled: opened,
     queryFn: async () => {
@@ -81,13 +81,13 @@ export function FirstAccessSuperAdminModal() {
         supabase.from('organizations').select('id', { count: 'exact', head: true }),
       ]);
       return {
-        passwordChanged: !!(settings.data as any)?.default_password_changed,
+        passwordChanged: !!(settings.fecha as any)?.default_password_changed,
         nameSet: !!profile?.full_name && profile.full_name !== 'Super Admin',
         hasPlan: (plans.count ?? 0) > 0,
-        hasEvolution: !!(settings.data as any)?.evolution_go_url,
-        hasEmail: !!(settings.data as any)?.support_email,
+        hasEvolution: !!(settings.fecha as any)?.evolution_go_url,
+        hasEmail: !!(settings.fecha as any)?.support_email,
         hasOrg: (orgs.count ?? 0) > 0,
-        completed: !!(settings.data as any)?.remix_setup_completed,
+        completed: !!(settings.fecha as any)?.remix_setup_completed,
       };
     },
   });
@@ -104,7 +104,7 @@ export function FirstAccessSuperAdminModal() {
   };
 
   const finish = async () => {
-    const { data: existing } = await supabase
+    const { fecha: existing } = await supabase
       .from('platform_settings')
       .select('id')
       .maybeSingle();
@@ -208,7 +208,7 @@ function StepPassword({ onDone, alreadyDone, refetchAccess }: { onDone: () => vo
   const [pwd2, setPwd2] = useState('');
   const [loading, setLoading] = useState(false);
 
-  if (alreadyDone) return <AlreadyDone label="Contraseña já alterada" onContinue={onDone} />;
+  if (alreadyDone) return <AlreadyDone label="Contraseña ya alterada" onContinue={onDone} />;
 
   const save = async () => {
     if (!PASSWORD_RULE.test(pwd)) {
@@ -225,7 +225,7 @@ function StepPassword({ onDone, alreadyDone, refetchAccess }: { onDone: () => vo
     try { await supabase.rpc('mark_super_admin_password_changed' as any); } catch {}
     await refetchAccess();
     setLoading(false);
-    toast.success('Contraseña atualizada!');
+    toast.success('Contraseña actualizada!');
     onDone();
   };
 
@@ -256,7 +256,7 @@ function StepName({ userId, initial, onDone, alreadyDone }: { userId: string; in
   const [name, setName] = useState(initial);
   const [loading, setLoading] = useState(false);
 
-  if (alreadyDone) return <AlreadyDone label="Nombre já configurado" onContinue={onDone} />;
+  if (alreadyDone) return <AlreadyDone label="Nombre ya configurado" onContinue={onDone} />;
 
   const save = async () => {
     if (!name.trim()) return toast.error('Ingrese su nombre completo.');
@@ -264,7 +264,7 @@ function StepName({ userId, initial, onDone, alreadyDone }: { userId: string; in
     const { error } = await supabase.from('profiles').update({ full_name: name.trim() }).eq('id', userId);
     setLoading(false);
     if (error) return toast.error('Error al guardar el nombre', { description: error.message });
-    toast.success('Nombre salvo!');
+    toast.success('Nombre guardado!');
     onDone();
   };
 
@@ -276,7 +276,7 @@ function StepName({ userId, initial, onDone, alreadyDone }: { userId: string; in
       </Alert>
       <div className="space-y-2">
         <Label>Nombre completo</Label>
-        <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome completo" />
+        <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Su nombre completo" />
       </div>
       <Button className="w-full" onClick={save} disabled={loading}>
         {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ArrowRight className="h-4 w-4 mr-2" />}
@@ -287,7 +287,7 @@ function StepName({ userId, initial, onDone, alreadyDone }: { userId: string; in
 }
 
 function StepPlan({ onDone, alreadyDone }: { onDone: () => void; alreadyDone?: boolean }) {
-  if (alreadyDone) return <AlreadyDone label="Plan comercial já cadastrado" onContinue={onDone} />;
+  if (alreadyDone) return <AlreadyDone label="Plan comercial ya cadastrado" onContinue={onDone} />;
 
   return (
     <div className="space-y-3">
@@ -308,7 +308,7 @@ function StepPlan({ onDone, alreadyDone }: { onDone: () => void; alreadyDone?: b
 }
 
 function StepEvolution({ onDone, alreadyDone }: { onDone: () => void; alreadyDone?: boolean }) {
-  const { data: config, isLoading: cfgLoading } = usePlatformEvolutionConfig();
+  const { fecha: config, isLoading: cfgLoading } = usePlatformEvolutionConfig();
   const updateCfg = useUpdatePlatformEvolutionConfig();
   const testMut = useTestEvolutionConnection();
 
@@ -333,8 +333,8 @@ function StepEvolution({ onDone, alreadyDone }: { onDone: () => void; alreadyDon
     testMut.mutate(
       { url: cleanUrl, globalApiKey },
       {
-        onSuccess: (data: any) =>
-          setTestResult({ ok: !!data?.ok, msg: data?.message || 'OK' }),
+        onSuccess: (fecha: any) =>
+          setTestResult({ ok: !!fecha?.ok, msg: fecha?.message || 'OK' }),
         onError: (e: any) => setTestResult({ ok: false, msg: e.message }),
       }
     );

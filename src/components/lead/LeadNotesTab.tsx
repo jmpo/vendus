@@ -47,9 +47,9 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
   const [taskAssignee, setTaskAssignee] = useState('');
 
   const { user, isAdmin: userIsAdmin } = useAuth();
-  const { data: notes, isLoading: notesLoading } = useLeadNotes(lead.id);
+  const { fecha: notes, isLoading: notesLoading } = useLeadNotes(lead.id);
   const createNote = useCreateLeadNote();
-  const { data: leadTasks, isLoading: tasksLoading } = useLeadTasks(lead.id);
+  const { fecha: leadTasks, isLoading: tasksLoading } = useLeadTasks(lead.id);
   const createTask = useCreateTask();
   const completeTask = useCompleteTask();
   const uncompleteTask = useUncompleteTask();

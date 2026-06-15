@@ -18,7 +18,7 @@ export function useOptimizeField() {
     productContext?: Record<string, any>
   ): Promise<OptimizeResult | null> => {
     if (!value.trim()) {
-      toast.error('Digite algo antes de otimizar');
+      toast.error('Escribí algo antes de otimizar');
       return null;
     }
 
@@ -26,7 +26,7 @@ export function useOptimizeField() {
     setResult(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('optimize-product-field', {
+      const { fecha, error } = await supabase.functions.invoke('optimize-product-field', {
         body: {
           field,
           value,
@@ -38,8 +38,8 @@ export function useOptimizeField() {
 
       const optimizeResult: OptimizeResult = {
         original: value,
-        optimized: data.optimized,
-        improvements: data.improvements || [],
+        optimized: fecha.optimized,
+        improvements: fecha.improvements || [],
       };
 
       setResult(optimizeResult);

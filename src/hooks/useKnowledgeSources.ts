@@ -20,9 +20,9 @@ export function useKnowledgeSources(productId?: string) {
         query = query.eq('product_id', productId);
       }
 
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
-      return data as KnowledgeSource[];
+      return fecha as KnowledgeSource[];
     },
     enabled: !!productId,
   });
@@ -32,7 +32,7 @@ export function useKnowledgeSourcesByType(productId: string, sourceType: string)
   return useQuery({
     queryKey: ['knowledge-sources', productId, sourceType],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_knowledge_sources')
         .select('*')
         .eq('product_id', productId)
@@ -40,7 +40,7 @@ export function useKnowledgeSourcesByType(productId: string, sourceType: string)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as KnowledgeSource[];
+      return fecha as KnowledgeSource[];
     },
     enabled: !!productId && !!sourceType,
   });
@@ -50,7 +50,7 @@ export function useKnowledgeSourceStats(productId: string) {
   return useQuery({
     queryKey: ['knowledge-sources-stats', productId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_knowledge_sources')
         .select('source_type, processing_status')
         .eq('product_id', productId)
@@ -63,15 +63,15 @@ export function useKnowledgeSourceStats(productId: string) {
         website: 0,
         youtube: 0,
         faq: 0,
-        data: 0,
+        fecha: 0,
         training: 0,
-        total: data?.length || 0,
-        completed: data?.filter(s => s.processing_status === 'completed').length || 0,
-        processing: data?.filter(s => s.processing_status === 'processing').length || 0,
-        failed: data?.filter(s => s.processing_status === 'failed').length || 0,
+        total: fecha?.length || 0,
+        completed: fecha?.filter(s => s.processing_status === 'completed').length || 0,
+        processing: fecha?.filter(s => s.processing_status === 'processing').length || 0,
+        failed: fecha?.filter(s => s.processing_status === 'failed').length || 0,
       };
 
-      data?.forEach(source => {
+      fecha?.forEach(source => {
         const type = source.source_type as keyof typeof stats;
         if (type in stats && typeof stats[type] === 'number') {
           (stats[type] as number)++;
@@ -92,7 +92,7 @@ export function useCreateKnowledgeSource() {
     mutationFn: async (source: Omit<KnowledgeSourceInsert, 'organization_id' | 'created_by'>) => {
       if (!profile?.organization_id) throw new Error('Organization not found');
 
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_knowledge_sources')
         .insert({
           ...source,
@@ -103,11 +103,11 @@ export function useCreateKnowledgeSource() {
         .single();
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['knowledge-sources', data.product_id] });
-      queryClient.invalidateQueries({ queryKey: ['knowledge-sources-stats', data.product_id] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['knowledge-sources', fecha.product_id] });
+      queryClient.invalidateQueries({ queryKey: ['knowledge-sources-stats', fecha.product_id] });
     },
   });
 }
@@ -117,7 +117,7 @@ export function useUpdateKnowledgeSource() {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: KnowledgeSourceUpdate & { id: string }) => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_knowledge_sources')
         .update(updates)
         .eq('id', id)
@@ -125,11 +125,11 @@ export function useUpdateKnowledgeSource() {
         .single();
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['knowledge-sources', data.product_id] });
-      queryClient.invalidateQueries({ queryKey: ['knowledge-sources-stats', data.product_id] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['knowledge-sources', fecha.product_id] });
+      queryClient.invalidateQueries({ queryKey: ['knowledge-sources-stats', fecha.product_id] });
     },
   });
 }
@@ -147,9 +147,9 @@ export function useDeleteKnowledgeSource() {
       if (error) throw error;
       return { productId };
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['knowledge-sources', data.productId] });
-      queryClient.invalidateQueries({ queryKey: ['knowledge-sources-stats', data.productId] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['knowledge-sources', fecha.productId] });
+      queryClient.invalidateQueries({ queryKey: ['knowledge-sources-stats', fecha.productId] });
     },
   });
 }
@@ -182,12 +182,12 @@ export function useUploadKnowledgeDocument() {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
+      const { fecha: { publicUrl } } = supabase.storage
         .from('product-documents')
         .getPublicUrl(fileName);
 
       // Create knowledge source record
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('product_knowledge_sources')
         .insert({
           product_id: productId,
@@ -205,11 +205,11 @@ export function useUploadKnowledgeDocument() {
         .single();
 
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['knowledge-sources', data.product_id] });
-      queryClient.invalidateQueries({ queryKey: ['knowledge-sources-stats', data.product_id] });
+    onSuccess: (fecha) => {
+      queryClient.invalidateQueries({ queryKey: ['knowledge-sources', fecha.product_id] });
+      queryClient.invalidateQueries({ queryKey: ['knowledge-sources-stats', fecha.product_id] });
     },
   });
 }

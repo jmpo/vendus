@@ -21,9 +21,9 @@ export function useAIInsights(userId?: string, productId?: string) {
         query = query.eq('product_id', productId);
       }
       
-      const { data, error } = await query;
+      const { fecha, error } = await query;
       if (error) throw error;
-      return data as AIInsight[];
+      return fecha as AIInsight[];
     },
     enabled: !!userId
   });
@@ -60,12 +60,12 @@ export function useGenerateInsights() {
       productId?: string; 
       organizationId: string;
     }) => {
-      const { data, error } = await supabase.functions.invoke('generate-insights', {
+      const { fecha, error } = await supabase.functions.invoke('generate-insights', {
         body: { userId, productId, organizationId }
       });
       
       if (error) throw error;
-      return data;
+      return fecha;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ai-insights'] });

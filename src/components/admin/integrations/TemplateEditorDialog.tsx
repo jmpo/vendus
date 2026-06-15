@@ -161,7 +161,7 @@ export function TemplateEditorDialog({ template, open, onClose }: TemplateEditor
                   className="flex-1"
                 />
                 <Input
-                  placeholder="Descrição"
+                  placeholder="Descripción"
                   value={newVariable.description}
                   onChange={(e) => setNewVariable(prev => ({ ...prev, description: e.target.value }))}
                   className="flex-1"
@@ -237,8 +237,8 @@ const defaultHtmlTemplate = `<!DOCTYPE html>
       <h1>Título</h1>
     </div>
     <div class="content">
-      <p>Olá,</p>
-      <p>Seu conteúdo aqui...</p>
+      <p>Hola,</p>
+      <p>Su conteúdo aqui...</p>
     </div>
     <div class="footer">
       <p>Su Empresa</p>

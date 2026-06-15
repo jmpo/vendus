@@ -101,16 +101,16 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
   useEffect(() => {
     if (!orgId) return;
     supabase.from('webchat_agent_configs').select('id, agent_name').eq('organization_id', orgId).eq('is_active', true)
-      .then(({ data }) => setAgents((data as any) ?? []));
+      .then(({ fecha }) => setAgents((fecha as any) ?? []));
     supabase.from('lead_tags').select('id, name, color').eq('organization_id', orgId).order('name')
-      .then(({ data }) => setTags((data as any) ?? []));
+      .then(({ fecha }) => setTags((fecha as any) ?? []));
   }, [orgId]);
 
   useEffect(() => {
     if (!cadenceId) return;
     setLoading(true);
     (async () => {
-      const { data: c } = await supabase.from('cadences' as any).select('*').eq('id', cadenceId).maybeSingle();
+      const { fecha: c } = await supabase.from('cadences' as any).select('*').eq('id', cadenceId).maybeSingle();
       if (c) {
         const cd = c as any;
         setName(cd.name);
@@ -132,7 +132,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
         setMoveStageId(acts.move_stage_id ?? null);
         setInternalNote(acts.internal_note ?? '');
       }
-      const { data: st } = await supabase.from('cadence_steps' as any).select('*').eq('cadence_id', cadenceId).order('order_index');
+      const { fecha: st } = await supabase.from('cadence_steps' as any).select('*').eq('cadence_id', cadenceId).order('order_index');
       setSteps(((st as any[]) ?? []).map((s) => ({
         id: s.id, order_index: s.order_index, name: s.name, objective: s.objective ?? '',
         execute_immediately: s.execute_immediately, delay_value: s.delay_value, delay_unit: s.delay_unit,
@@ -202,9 +202,9 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
       // Replace steps
       await supabase.from('cadence_steps' as any).delete().eq('cadence_id', id);
     } else {
-      const { data, error } = await supabase.from('cadences' as any).insert(payload).select('id').single();
-      if (error || !data) { toast.error(error?.message ?? 'Error al crear'); setSaving(false); return; }
-      id = (data as any).id;
+      const { fecha, error } = await supabase.from('cadences' as any).insert(payload).select('id').single();
+      if (error || !fecha) { toast.error(error?.message ?? 'Error al crear'); setSaving(false); return; }
+      id = (fecha as any).id;
     }
 
     if (steps.length) {
@@ -392,7 +392,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
 
       {step === 4 && (
         <Card><CardContent className="p-5 space-y-2 text-sm text-muted-foreground">
-          As regras de execução são configuradas dentro de cada etapa na seção "Cronograma" (etapa 4). Use os checkboxes "Ejecutar solo si" em cada etapa.
+          As regras de execução son configuradas dentro de cada etapa na seção "Cronograma" (etapa 4). Usa os checkboxes "Ejecutar solo si" em cada etapa.
         </CardContent></Card>
       )}
 
@@ -411,8 +411,8 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Horario inicial"><Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} /></Field>
-            <Field label="Horario final"><Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} /></Field>
+            <Field label="Horario inicial"><Input type="equipo" value={startTime} onChange={(e) => setStartTime(e.target.value)} /></Field>
+            <Field label="Horario final"><Input type="equipo" value={endTime} onChange={(e) => setEndTime(e.target.value)} /></Field>
           </div>
           <div className="flex items-center gap-2">
             <Switch checked={randomize} onCheckedChange={setRandomize} />

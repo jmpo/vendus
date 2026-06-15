@@ -126,10 +126,10 @@ export function StageCard({ stage, leadCount, onEdit, onDelete, isDragging }: St
                       Atenção: {leadCount} lead{leadCount !== 1 ? 's' : ''} está{leadCount !== 1 ? 'ão' : ''} nesta etapa.
                     </span>
                     <br />
-                    Ao excluir, esses leads ficarão sem etapa definida no pipeline.
+                    Ao eliminar, esses leads ficarão sem etapa definida no pipeline.
                   </>
                 ) : (
-                  'Esta ação não pode ser desfeita.'
+                  'Esta acción no puede ser desfeita.'
                 )}
               </AlertDialogDescription>
             </AlertDialogHeader>

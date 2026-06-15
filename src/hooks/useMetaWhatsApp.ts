@@ -45,13 +45,13 @@ export function useMetaWAConnections() {
     queryKey: ['meta-wa-connections', orgId],
     queryFn: async () => {
       if (!orgId) return [];
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('whatsapp_meta_connections' as any)
         .select('*')
         .eq('organization_id', orgId)
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return (data ?? []) as unknown as MetaWAConnection[];
+      return (fecha ?? []) as unknown as MetaWAConnection[];
     },
     enabled: !!orgId,
   });
@@ -62,13 +62,13 @@ export function useMetaWATemplates(connectionId: string | null) {
     queryKey: ['meta-wa-templates', connectionId],
     queryFn: async () => {
       if (!connectionId) return [];
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('whatsapp_meta_templates' as any)
         .select('*')
         .eq('connection_id', connectionId)
         .order('name');
       if (error) throw error;
-      return (data ?? []) as unknown as MetaWATemplate[];
+      return (fecha ?? []) as unknown as MetaWATemplate[];
     },
     enabled: !!connectionId,
   });
@@ -78,10 +78,10 @@ export function useSaveMetaWAConnection() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (payload: any) => {
-      const { data, error } = await supabase.functions.invoke('meta-whatsapp-connect', { body: payload });
+      const { fecha, error } = await supabase.functions.invoke('meta-whatsapp-connect', { body: payload });
       if (error) throw error;
-      if ((data as any)?.error) throw new Error((data as any).error);
-      return data;
+      if ((fecha as any)?.error) throw new Error((fecha as any).error);
+      return fecha;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['meta-wa-connections'] });
@@ -95,10 +95,10 @@ export function useDraftMetaWAConnection() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (payload: { organization_id: string; display_name: string; connection_id?: string }) => {
-      const { data, error } = await supabase.functions.invoke('meta-whatsapp-draft', { body: payload });
+      const { fecha, error } = await supabase.functions.invoke('meta-whatsapp-draft', { body: payload });
       if (error) throw error;
-      if ((data as any)?.error) throw new Error((data as any).error);
-      return data as {
+      if ((fecha as any)?.error) throw new Error((fecha as any).error);
+      return fecha as {
         connection_id: string;
         verify_token: string;
         webhook_url: string;
@@ -117,15 +117,15 @@ export function useTestMetaWAConnection() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (connection_id: string) => {
-      const { data, error } = await supabase.functions.invoke('meta-whatsapp-test', { body: { connection_id } });
+      const { fecha, error } = await supabase.functions.invoke('meta-whatsapp-test', { body: { connection_id } });
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data: any) => {
+    onSuccess: (fecha: any) => {
       qc.invalidateQueries({ queryKey: ['meta-wa-connections'] });
       qc.invalidateQueries({ queryKey: ['meta-wa-templates'] });
-      if (data?.ok) toast.success('Conexión validada');
-      else toast.error(data?.error ?? 'Falha no teste');
+      if (fecha?.ok) toast.success('Conexión validada');
+      else toast.error(fecha?.error ?? 'Falha no teste');
     },
     onError: (e: any) => toast.error(e?.message ?? 'Falha no teste'),
   });
@@ -135,13 +135,13 @@ export function useSyncMetaWATemplates() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (connection_id: string) => {
-      const { data, error } = await supabase.functions.invoke('meta-whatsapp-templates-sync', { body: { connection_id } });
+      const { fecha, error } = await supabase.functions.invoke('meta-whatsapp-templates-sync', { body: { connection_id } });
       if (error) throw error;
-      return data;
+      return fecha;
     },
-    onSuccess: (data: any) => {
+    onSuccess: (fecha: any) => {
       qc.invalidateQueries({ queryKey: ['meta-wa-templates'] });
-      toast.success(`${data?.count ?? 0} templates sincronizados`);
+      toast.success(`${fecha?.count ?? 0} templates sincronizados`);
     },
     onError: (e: any) => toast.error(e?.message ?? 'Falha ao sincronizar'),
   });
@@ -151,16 +151,16 @@ export function useSubmitMetaWATemplate() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (payload: { connection_id: string; name: string; language: string; category: string; components: any[] }) => {
-      const { data, error } = await supabase.functions.invoke('meta-whatsapp-template-submit', { body: payload });
+      const { fecha, error } = await supabase.functions.invoke('meta-whatsapp-template-submit', { body: payload });
       if (error) throw error;
-      if ((data as any)?.error) throw new Error((data as any).error);
-      return data;
+      if ((fecha as any)?.error) throw new Error((fecha as any).error);
+      return fecha;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['meta-wa-templates'] });
       toast.success('Plantilla enviada para aprobación');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao enviar template'),
+    onError: (e: any) => toast.error(e?.message ?? 'Falha al enviar template'),
   });
 }
 
@@ -175,6 +175,6 @@ export function useDeleteMetaWAConnection() {
       qc.invalidateQueries({ queryKey: ['meta-wa-connections'] });
       toast.success('Conexión eliminada');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao remover'),
+    onError: (e: any) => toast.error(e?.message ?? 'Falha ao eliminar'),
   });
 }

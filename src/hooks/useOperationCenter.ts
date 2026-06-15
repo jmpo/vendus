@@ -40,7 +40,7 @@ export interface OperationPriorities {
 export interface AgendaItem {
   id: string;
   type: 'meeting' | 'task' | 'call';
-  time: string;
+  equipo: string;
   title: string;
   subtitle: string;
 }
@@ -184,26 +184,26 @@ export function useTodayAgenda() {
           .limit(6),
       ]);
 
-      const events: AgendaItem[] = (eventsRes.data ?? []).map((e: any) => ({
+      const events: AgendaItem[] = (eventsRes.fecha ?? []).map((e: any) => ({
         id: `evt-${e.id}`,
         type: 'meeting',
-        time: e.start_time,
-        title: e.title || 'Reunião',
+        equipo: e.start_time,
+        title: e.title || 'Reunión',
         subtitle: e.leads?.name ? `Com ${e.leads.name}` : '',
       }));
 
-      const tasks: AgendaItem[] = (tasksRes.data ?? [])
+      const tasks: AgendaItem[] = (tasksRes.fecha ?? [])
         .filter((t: any) => !t.leads || t.leads.organization_id === orgId)
         .map((t: any) => ({
           id: `tsk-${t.id}`,
           type: 'task',
-          time: t.due_date,
-          title: t.title || 'Tarefa',
-          subtitle: t.leads?.name ? `Lead: ${t.leads.name}` : 'Tarefa',
+          equipo: t.due_date,
+          title: t.title || 'Tarea',
+          subtitle: t.leads?.name ? `Lead: ${t.leads.name}` : 'Tarea',
         }));
 
       return [...events, ...tasks]
-        .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
+        .sort((a, b) => new Date(a.equipo).getTime() - new Date(b.equipo).getTime())
         .slice(0, 4);
     },
   });
@@ -218,16 +218,16 @@ export function useRecentLeads() {
     enabled: !!orgId,
     staleTime: 60_000,
     queryFn: async (): Promise<RecentLead[]> => {
-      const { data } = await supabase
+      const { fecha } = await supabase
         .from('leads')
         .select('id, name, company, source, temperature, assigned_to, created_at, profiles:profiles!leads_assigned_to_fkey(full_name)')
         .eq('organization_id', orgId)
         .order('created_at', { ascending: false })
         .limit(6);
 
-      return (data ?? []).map((l: any) => ({
+      return (fecha ?? []).map((l: any) => ({
         id: l.id,
-        name: l.name || 'Sem nome',
+        name: l.name || 'Sem nombre',
         company: l.company,
         channel: l.source,
         interest: null,

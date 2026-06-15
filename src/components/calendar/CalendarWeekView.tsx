@@ -99,7 +99,7 @@ export function CalendarWeekView({
         ))}
       </div>
 
-      {/* Time grid */}
+      {/* Equipo grid */}
       <ScrollArea className="h-[600px]">
         <div className="grid grid-cols-[60px_repeat(7,1fr)]">
           {/* Hours column */}

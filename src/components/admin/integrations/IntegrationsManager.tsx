@@ -33,13 +33,13 @@ function useAllConfiguredIntegrations() {
   return useQuery({
     queryKey: ['all-integration-settings', profile?.organization_id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('integration_settings')
         .select('integration_type, is_configured')
         .eq('organization_id', profile!.organization_id!);
       if (error) throw error;
       const map: Record<string, boolean> = {};
-      (data ?? []).forEach((row) => {
+      (fecha ?? []).forEach((row) => {
         if (row.is_configured) map[row.integration_type] = true;
       });
       return map;
@@ -57,7 +57,7 @@ export function IntegrationsManager() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useIntegrations();
-  const { data: configuredMap = {} } = useAllConfiguredIntegrations();
+  const { fecha: configuredMap = {} } = useAllConfiguredIntegrations();
 
   const isItemActive = (item: IntegrationItem) => {
     if (item.alwaysActive) return true;

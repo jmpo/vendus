@@ -14,13 +14,13 @@ interface SnippetCardProps {
 export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
   const [copied, setCopied] = useState(false);
 
-  const { data: currentDomain } = usePublicAppUrl();
+  const { fecha: currentDomain } = usePublicAppUrl();
 
   const snippet = `<!-- WebChat Widget -->
 <script 
   src="${currentDomain}/webchat-widget.js" 
-  data-widget-id="${widgetId}"
-  data-product-id="${productId}"
+  fecha-widget-id="${widgetId}"
+  fecha-product-id="${productId}"
   async>
 </script>`;
 
@@ -31,7 +31,7 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
       toast.success('Código copiado para a área de transferência!');
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      toast.error('Erro ao copiar código');
+      toast.error('Error ao copiar código');
     }
   };
 
@@ -47,7 +47,7 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
                 Código de Instalação
               </CardTitle>
               <CardDescription>
-                Copie e cole este código antes do fechamento da tag &lt;/body&gt; no seu site
+                Copie e cole este código antes do cierre da tag &lt;/body&gt; no su site
               </CardDescription>
             </div>
             <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
@@ -104,15 +104,15 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
           <ol className="list-decimal list-inside space-y-3 text-sm">
             <li className="text-muted-foreground">
               <span className="text-foreground font-medium">Copie o código acima</span>
-              <p className="ml-5 mt-1">Clique no botão "Copiar" para copiar o snippet</p>
+              <p className="ml-5 mt-1">Hacé clic no botão "Copiar" para copiar o snippet</p>
             </li>
             <li className="text-muted-foreground">
-              <span className="text-foreground font-medium">Abra o HTML do seu site</span>
-              <p className="ml-5 mt-1">Localize o arquivo HTML principal ou o template do seu site</p>
+              <span className="text-foreground font-medium">Abra o HTML do su site</span>
+              <p className="ml-5 mt-1">Localize o archivo HTML principal ou o template do su site</p>
             </li>
             <li className="text-muted-foreground">
               <span className="text-foreground font-medium">Cole antes do &lt;/body&gt;</span>
-              <p className="ml-5 mt-1">Insira o código logo antes da tag de fechamento do body</p>
+              <p className="ml-5 mt-1">Insira o código logo antes da tag de cierre do body</p>
             </li>
             <li className="text-muted-foreground">
               <span className="text-foreground font-medium">Salve e publique</span>
@@ -129,7 +129,7 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
             <CardTitle className="text-sm">WordPress</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            <p>Use um plugin como "Insert Headers and Footers" ou adicione diretamente no arquivo footer.php do seu tema.</p>
+            <p>Usa um plugin como "Insert Headers and Footers" ou adicione diretamente no archivo footer.php do su tema.</p>
           </CardContent>
         </Card>
 
@@ -138,7 +138,7 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
             <CardTitle className="text-sm">Shopify</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            <p>Vá em Online Store → Themes → Edit Code e adicione no arquivo theme.liquid antes do &lt;/body&gt;.</p>
+            <p>Vá em Online Store → Themes → Edit Code e adicione no archivo theme.liquid antes do &lt;/body&gt;.</p>
           </CardContent>
         </Card>
 
@@ -147,7 +147,7 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
             <CardTitle className="text-sm">Wix</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            <p>Use o recurso "Custom Code" nas configurações do site para adicionar o snippet.</p>
+            <p>Usa o recurso "Custom Code" nas configuraciones do site para adicionar o snippet.</p>
           </CardContent>
         </Card>
 
@@ -156,7 +156,7 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
             <CardTitle className="text-sm">HTML/Landing Pages</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            <p>Cole o código diretamente no HTML antes do fechamento da tag &lt;/body&gt;.</p>
+            <p>Cole o código diretamente no HTML antes do cierre da tag &lt;/body&gt;.</p>
           </CardContent>
         </Card>
       </div>
@@ -169,8 +169,8 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
               <ExternalLink className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <p className="font-medium text-sm">Precisa de ajuda?</p>
-              <p className="text-xs text-muted-foreground">Consulte nossa documentação ou entre em contato</p>
+              <p className="font-medium text-sm">Precisa de ayuda?</p>
+              <p className="text-xs text-muted-foreground">Consulte nossa documentação ou entre em contacto</p>
             </div>
           </div>
           <Button variant="outline" size="sm">

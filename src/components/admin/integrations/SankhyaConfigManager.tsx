@@ -20,9 +20,9 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export function SankhyaConfigManager() {
-  const { data: configData, isLoading } = useSankhyaConfig();
-  const { data: syncLogs } = useSankhyaSyncLogs();
-  const { data: lastSync } = useLastSyncByType();
+  const { fecha: configData, isLoading } = useSankhyaConfig();
+  const { fecha: syncLogs } = useSankhyaSyncLogs();
+  const { fecha: lastSync } = useLastSyncByType();
   const updateConfig = useUpdateSankhyaConfig();
   const testConnection = useTestSankhyaConnection();
   const syncMutation = useSankhyaSync();
@@ -34,7 +34,7 @@ export function SankhyaConfigManager() {
   const [autoSync, setAutoSync] = useState(false);
   const [syncInterval, setSyncInterval] = useState<'1h' | '6h' | '12h' | '24h'>('24h');
 
-  // Initialize form when data loads
+  // Initialize form when fecha loads
   useState(() => {
     if (configData?.config) {
       setClientId(configData.config.client_id || '');
@@ -96,7 +96,7 @@ export function SankhyaConfigManager() {
       case 'completed':
         return <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20"><CheckCircle2 className="h-3 w-3 mr-1" /> Concluído</Badge>;
       case 'failed':
-        return <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20"><XCircle className="h-3 w-3 mr-1" /> Erro</Badge>;
+        return <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20"><XCircle className="h-3 w-3 mr-1" /> Error</Badge>;
       case 'running':
         return <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20"><Loader2 className="h-3 w-3 mr-1 animate-spin" /> Em andamento</Badge>;
       default:
@@ -123,7 +123,7 @@ export function SankhyaConfigManager() {
                 )}
               </CardTitle>
               <CardDescription>
-                Integração com o ERP Sankhya para sincronização de clientes, produtos e pedidos
+                Integración com o ERP Sankhya para sincronização de clientes, productos e pedidos
               </CardDescription>
             </div>
             <Button variant="outline" size="sm" asChild>
@@ -141,7 +141,7 @@ export function SankhyaConfigManager() {
         <CardHeader>
           <CardTitle className="text-lg">Credenciais de API</CardTitle>
           <CardDescription>
-            Configure as credenciais da sua aplicação Sankhya. Obtenha na Área do Desenvolvedor.
+            Configure as credenciais da su aplicación Sankhya. Obtenha na Área do Desenvolvedor.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -152,7 +152,7 @@ export function SankhyaConfigManager() {
                 <Input
                   id="client-id"
                   type={showSecrets ? 'text' : 'password'}
-                  placeholder="Seu Client ID"
+                  placeholder="Su Client ID"
                   value={clientId}
                   onChange={(e) => setClientId(e.target.value)}
                 />
@@ -164,7 +164,7 @@ export function SankhyaConfigManager() {
               <Input
                 id="client-secret"
                 type={showSecrets ? 'text' : 'password'}
-                placeholder="Seu Client Secret"
+                placeholder="Su Client Secret"
                 value={clientSecret}
                 onChange={(e) => setClientSecret(e.target.value)}
               />
@@ -349,7 +349,7 @@ export function SankhyaConfigManager() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Data/Hora</TableHead>
+                  <TableHead>Fecha/Hora</TableHead>
                   <TableHead>Tipo</TableHead>
                   <TableHead>Entidade</TableHead>
                   <TableHead className="text-center">Registros</TableHead>
@@ -385,7 +385,7 @@ export function SankhyaConfigManager() {
             </Table>
           ) : (
             <div className="text-center py-8 text-muted-foreground">
-              Nenhuma sincronização realizada ainda
+              Nenhuma sincronização realizada aún
             </div>
           )}
         </CardContent>

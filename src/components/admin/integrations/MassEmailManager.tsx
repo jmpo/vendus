@@ -10,7 +10,7 @@ import { CampaignComposer } from './CampaignComposer';
 import { CampaignDetailsDialog } from './CampaignDetailsDialog';
 
 export function MassEmailManager() {
-  const { data: campaigns, isLoading } = useMassEmailCampaigns();
+  const { fecha: campaigns, isLoading } = useMassEmailCampaigns();
   const [isComposing, setIsComposing] = useState(false);
   const [viewingCampaign, setViewingCampaign] = useState<MassEmailCampaign | null>(null);
 
@@ -68,7 +68,7 @@ export function MassEmailManager() {
             <table className="w-full">
               <thead className="bg-muted/50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium">Data</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium">Fecha</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Asunto</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Destinatarios</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Status</th>

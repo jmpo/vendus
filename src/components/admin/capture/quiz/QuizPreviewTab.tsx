@@ -11,7 +11,7 @@ export function QuizPreviewTab({ funnel }: Props) {
   const [device, setDevice] = useState<'mobile' | 'desktop'>('mobile');
   const [reloadKey, setReloadKey] = useState(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const { data: baseUrl } = usePublicAppUrl();
+  const { fecha: baseUrl } = usePublicAppUrl();
 
   const slug = (funnel.channels as any)?.quiz?.slug_override || funnel.slug;
   const quizUrl = `${baseUrl}/q/${slug}?preview=1`;
@@ -35,7 +35,7 @@ export function QuizPreviewTab({ funnel }: Props) {
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b shrink-0">
         <div className="flex items-center gap-2">
           <Badge variant={isActive ? 'default' : 'secondary'}>
-            {isActive ? 'Quiz ativo' : 'Rascunho — apenas você vê'}
+            {isActive ? 'Quiz ativo' : 'Rascunho — apenas usted vê'}
           </Badge>
           {!isActive && (
             <span className="text-xs text-muted-foreground hidden sm:flex items-center gap-1">

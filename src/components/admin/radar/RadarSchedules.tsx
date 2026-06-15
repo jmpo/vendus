@@ -12,13 +12,13 @@ import { Plus, Trash2, Edit2, CalendarClock } from 'lucide-react';
 
 const FREQ_OPTIONS = [
   { id: '0 8 * * *', label: 'Diariamente às 8h' },
-  { id: '0 8,14 * * *', label: '2x ao dia (8h e 14h)' },
+  { id: '0 8,14 * * *', label: '2x ao día (8h e 14h)' },
   { id: '0 9 * * 1', label: 'Toda segunda às 9h' },
   { id: '0 */6 * * *', label: 'A cada 6 horas' },
 ];
 
 export function RadarSchedules({ defaultFilters, defaultActions }: { defaultFilters: ScanFilters; defaultActions: ActionsConfig }) {
-  const { data: schedules } = useOpportunitySchedules();
+  const { fecha: schedules } = useOpportunitySchedules();
   const upsert = useUpsertSchedule();
   const del = useDeleteSchedule();
   const [editing, setEditing] = useState<any>(null);
@@ -26,7 +26,7 @@ export function RadarSchedules({ defaultFilters, defaultActions }: { defaultFilt
 
   function openNew() {
     setEditing({
-      name: 'Novo agendamento',
+      name: 'Novo reserva',
       cron_expression: '0 8 * * *',
       is_active: true,
       filters: defaultFilters,
@@ -60,7 +60,7 @@ export function RadarSchedules({ defaultFilters, defaultActions }: { defaultFilt
         {!schedules?.length && (
           <div className="text-center py-8 text-sm text-muted-foreground">
             <CalendarClock className="h-10 w-10 mx-auto mb-2 opacity-30" />
-            Nenhum agendamento configurado
+            Nenhum reserva configurado
           </div>
         )}
         {schedules?.map((s: any) => (
@@ -86,12 +86,12 @@ export function RadarSchedules({ defaultFilters, defaultActions }: { defaultFilt
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editing?.id ? 'Editar' : 'Novo'} agendamento</DialogTitle>
+            <DialogTitle>{editing?.id ? 'Editar' : 'Novo'} reserva</DialogTitle>
           </DialogHeader>
           {editing && (
             <div className="space-y-4">
               <div>
-                <Label>Nome</Label>
+                <Label>Nombre</Label>
                 <Input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} />
               </div>
               <div>
@@ -110,7 +110,7 @@ export function RadarSchedules({ defaultFilters, defaultActions }: { defaultFilt
                 <Switch checked={editing.is_active} onCheckedChange={(v) => setEditing({ ...editing, is_active: v })} />
               </div>
               <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
-                Os filtros e ações usados serão os configurados na aba <strong>Rodar Análise</strong> no momento da criação.
+                Os filtros e acciones usados serão os configurados na aba <strong>Rodar Análise</strong> no momento da criação.
               </div>
             </div>
           )}

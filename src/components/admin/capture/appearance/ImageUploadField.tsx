@@ -25,7 +25,7 @@ export function ImageUploadField({ value, onChange, label, helper, folder = 'gen
   const handleFile = async (file: File) => {
     if (!file) return;
     if (file.size > MAX) { toast.error('Máx. 5MB'); return; }
-    if (!profile?.organization_id) { toast.error('Sem organização'); return; }
+    if (!profile?.organization_id) { toast.error('Sem organización'); return; }
 
     setUploading(true);
     try {
@@ -33,9 +33,9 @@ export function ImageUploadField({ value, onChange, label, helper, folder = 'gen
       const path = `${profile.organization_id}/${folder}/${Date.now()}.${ext}`;
       const { error } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: true, cacheControl: '3600' });
       if (error) throw error;
-      const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
-      onChange(data.publicUrl);
-      toast.success('Imagem enviada');
+      const { fecha } = supabase.storage.from(BUCKET).getPublicUrl(path);
+      onChange(fecha.publicUrl);
+      toast.success('Imagen enviada');
     } catch (e: any) {
       toast.error(e.message || 'Falha no upload');
     } finally {

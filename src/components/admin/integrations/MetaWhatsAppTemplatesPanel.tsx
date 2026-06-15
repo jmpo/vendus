@@ -18,7 +18,7 @@ const statusVariant: Record<string, string> = {
 };
 
 export function MetaWhatsAppTemplatesPanel({ connection, onClose }: { connection: MetaWAConnection; onClose: () => void }) {
-  const { data: templates = [], isLoading } = useMetaWATemplates(connection.id);
+  const { fecha: templates = [], isLoading } = useMetaWATemplates(connection.id);
   const sync = useSyncMetaWATemplates();
   const submit = useSubmitMetaWATemplate();
   const [creating, setCreating] = useState(false);
@@ -42,7 +42,7 @@ export function MetaWhatsAppTemplatesPanel({ connection, onClose }: { connection
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2"><FileText className="h-5 w-5" />Templates — {connection.display_name}</DialogTitle>
           <DialogDescription>
-            Templates HSM aprovados pela Meta podem ser enviados fora da janela de 24h.
+            Templates HSM aprovados pela Meta pueden ser enviados fora da janela de 24h.
           </DialogDescription>
         </DialogHeader>
 
@@ -61,7 +61,7 @@ export function MetaWhatsAppTemplatesPanel({ connection, onClose }: { connection
           <Card className="p-4 space-y-3 border-primary/40">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Nome (somente minúsculas, números e _)</Label>
+                <Label>Nombre (somente minúsculas, números e _)</Label>
                 <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="boas_vindas" />
               </div>
               <div>
@@ -69,7 +69,7 @@ export function MetaWhatsAppTemplatesPanel({ connection, onClose }: { connection
                 <Select value={form.language} onValueChange={(v) => setForm({ ...form, language: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="pt_BR">Português (BR)</SelectItem>
+                    <SelectItem value="pt_BR">Español (BR)</SelectItem>
                     <SelectItem value="en_US">Inglês (US)</SelectItem>
                     <SelectItem value="es_ES">Espanhol</SelectItem>
                   </SelectContent>
@@ -81,7 +81,7 @@ export function MetaWhatsAppTemplatesPanel({ connection, onClose }: { connection
               <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="UTILITY">Utility (notificações operacionais)</SelectItem>
+                  <SelectItem value="UTILITY">Utility (notificaciones operacionais)</SelectItem>
                   <SelectItem value="MARKETING">Marketing (promocional)</SelectItem>
                   <SelectItem value="AUTHENTICATION">Authentication (códigos OTP)</SelectItem>
                 </SelectContent>
@@ -89,12 +89,12 @@ export function MetaWhatsAppTemplatesPanel({ connection, onClose }: { connection
             </div>
             <div>
               <Label>Corpo (use {'{{1}}'}, {'{{2}}'}... para variáveis)</Label>
-              <Textarea rows={4} value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} placeholder="Olá {{1}}, seu pedido {{2}} foi confirmado!" />
+              <Textarea rows={4} value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} placeholder="Hola {{1}}, su pedido {{2}} fue confirmado!" />
             </div>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setCreating(false)}>Cancelar</Button>
               <Button onClick={handleSubmit} disabled={submit.isPending || !form.name || !form.body}>
-                {submit.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}Enviar para aprovação
+                {submit.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}Enviar para aprobación
               </Button>
             </div>
           </Card>
@@ -104,7 +104,7 @@ export function MetaWhatsAppTemplatesPanel({ connection, onClose }: { connection
           <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin" /></div>
         ) : templates.length === 0 ? (
           <Card className="p-6 text-center text-sm text-muted-foreground">
-            Nenhum template ainda. Crie um ou clique em "Sincronizar" para baixar os já aprovados na Meta.
+            Nenhum template aún. Crea um ou clique em "Sincronizar" para descargar os ya aprovados na Meta.
           </Card>
         ) : (
           <div className="space-y-2">

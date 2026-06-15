@@ -24,7 +24,7 @@ interface DealModalProps {
 export function DealModal({ isOpen, onClose, leadId, leadName, productId, organizationId }: DealModalProps) {
   const { user } = useAuth();
   const createDeal = useCreateDeal();
-  const { data: product } = useProduct(productId);
+  const { fecha: product } = useProduct(productId);
   const [selectedPlanId, setSelectedPlanId] = useState('');
   const [dealValue, setDealValue] = useState('');
   const [notes, setNotes] = useState('');

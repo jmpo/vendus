@@ -65,7 +65,7 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
   const [reprocessing, setReprocessing] = useState(false);
 
   // Estado de provisionamento (organization + profile + role + billing)
-  const { data: prov, refetch: refetchProv } = useQuery({
+  const { fecha: prov, refetch: refetchProv } = useQuery({
     queryKey: ['cakto-order-provisioning', order?.id],
     enabled: !!order && !!order.customer_email,
     queryFn: async () => {
@@ -85,10 +85,10 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
 
       let userId: string | null = null;
       let role: string | null = null;
-      const { data: uid } = await supabase.rpc('get_auth_user_id_by_email' as any, { _email: email });
+      const { fecha: uid } = await supabase.rpc('get_auth_user_id_by_email' as any, { _email: email });
       if (typeof uid === 'string') {
         userId = uid;
-        const { data: r } = await supabase
+        const { fecha: r } = await supabase
           .from('user_roles')
           .select('role')
           .eq('user_id', uid)
@@ -98,8 +98,8 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
       }
 
       return {
-        org: orgRes.data,
-        billing: billRes.data,
+        org: orgRes.fecha,
+        billing: billRes.fecha,
         userId,
         role,
       };
@@ -113,13 +113,13 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
   const handleReprocess = async () => {
     setReprocessing(true);
     try {
-      const { data, error } = await supabase.functions.invoke('cakto-reprocess-order', {
+      const { fecha, error } = await supabase.functions.invoke('cakto-reprocess-order', {
         body: { order_id: order.id },
       });
       if (error) throw error;
-      if (!data?.ok) {
-        const skipped = data?.result?.skipped;
-        const errs = data?.result?.errors?.join(' · ');
+      if (!fecha?.ok) {
+        const skipped = fecha?.result?.skipped;
+        const errs = fecha?.result?.errors?.join(' · ');
         toast.warning(`Reprocesso com avisos${skipped ? `: ${skipped}` : ''}${errs ? ` — ${errs}` : ''}`);
       } else {
         toast.success('Pedido reprocessado');
@@ -127,7 +127,7 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
       await refetchProv();
       onReprocessed?.();
     } catch (e: any) {
-      toast.error(e.message ?? 'Erro ao reprocessar');
+      toast.error(e.message ?? 'Error ao reprocessar');
     } finally {
       setReprocessing(false);
     }
@@ -162,16 +162,16 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
 
           <TabsContent value="cliente" className="space-y-4 pt-4">
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Nome" value={order.customer_name} />
+              <Field label="Nombre" value={order.customer_name} />
               <Field label="E-mail" value={order.customer_email} mono />
-              <Field label="Telefone" value={raw?.customer?.phone ?? order.customer_phone} mono />
+              <Field label="Teléfono" value={raw?.customer?.phone ?? order.customer_phone} mono />
               <Field label="Documento" value={raw?.customer?.docNumber ? `${(raw.customer.docType ?? '').toUpperCase()} ${raw.customer.docNumber}` : null} mono />
             </div>
             {prov?.org && (
               <>
                 <Separator />
                 <div>
-                  <div className="text-xs text-muted-foreground mb-1">Organização vinculada</div>
+                  <div className="text-xs text-muted-foreground mb-1">Organización vinculada</div>
                   <div className="flex items-center justify-between gap-2">
                     <div className="text-sm font-medium">{prov.org.name}</div>
                     <Button size="sm" variant="ghost" asChild>
@@ -187,7 +187,7 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
 
           <TabsContent value="pedido" className="space-y-4 pt-4">
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Produto" value={order.product_name} />
+              <Field label="Producto" value={order.product_name} />
               <Field label="Slug da oferta" value={order.cakto_offer_slug ?? raw?.checkoutUrl?.split('/')?.pop()} mono />
               <Field label="Valor" value={fmtBRL(order.amount)} />
               <Field label="Método" value={<PaymentMethodBadge method={order.payment_method} />} />
@@ -205,8 +205,8 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
               <div className="rounded-md border p-3 space-y-1">
                 <ProvisioningRow
                   ok={!!prov?.org}
-                  label="Organização criada"
-                  detail={prov?.org ? `${prov.org.name} (${prov.org.id})` : 'Não encontrada para este e-mail'}
+                  label="Organización creada"
+                  detail={prov?.org ? `${prov.org.name} (${prov.org.id})` : 'No encontrada para este e-mail'}
                 />
                 <ProvisioningRow
                   ok={!!prov?.org?.plan_id && prov?.org?.plan_status === 'active'}
@@ -214,12 +214,12 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
                   detail={
                     prov?.org?.platform_plans
                       ? `${(prov.org.platform_plans as any).name} · status=${prov.org.plan_status} · ativado em ${fmtDate(prov.org.plan_activated_at)}`
-                      : 'Nenhum plano vinculado'
+                      : 'Nenhum plan vinculado'
                   }
                 />
                 <ProvisioningRow
                   ok={!!prov?.userId}
-                  label="Usuário admin criado"
+                  label="Usuario admin creado"
                   detail={prov?.userId ?? undefined}
                 />
                 <ProvisioningRow
@@ -228,7 +228,7 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
                 />
                 <ProvisioningRow
                   ok={!!prov?.billing}
-                  label="Cobrança registrada"
+                  label="Cobro registrada"
                   detail={prov?.billing ? `${fmtBRL(prov.billing.amount)} · ${prov.billing.status}` : undefined}
                 />
               </div>
@@ -237,7 +237,7 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
                 Reprocessar provisionamento
               </Button>
               <p className="text-xs text-muted-foreground">
-                Reprocessar é idempotente: não duplica organização, role, cobrança ou e-mail.
+                Reprocessar é idempotente: no duplica organización, role, cobro ou e-mail.
               </p>
             </TabsContent>
           )}

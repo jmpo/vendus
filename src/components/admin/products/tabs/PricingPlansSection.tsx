@@ -22,7 +22,7 @@ export interface ProductPlan {
 }
 
 const billingCycleLabels: Record<string, string> = {
-  mensal: 'mês',
+  mensal: 'mes',
   trimestral: 'trimestre',
   semestral: 'semestre',
   anual: 'ano',
@@ -108,7 +108,7 @@ export function PricingPlansSection({ plans, onChange }: PricingPlansSectionProp
                 <DollarSign className="h-4 w-4" />
                 Planos e Preços
               </CardTitle>
-              <CardDescription>Configure os planos disponíveis para este produto</CardDescription>
+              <CardDescription>Configure os planes disponíveis para este producto</CardDescription>
             </div>
             <Button size="sm" onClick={openAdd}>
               <Plus className="mr-1 h-4 w-4" />
@@ -119,7 +119,7 @@ export function PricingPlansSection({ plans, onChange }: PricingPlansSectionProp
         <CardContent>
           {plans.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-6">
-              Nenhum plano cadastrado. Adicione planos para que os vendedores selecionem ao fechar negócios.
+              Nenhum plan cadastrado. Adicione planes para que os vendedores selecionem ao fechar negocios.
             </p>
           ) : (
             <div className="grid gap-3">
@@ -149,7 +149,7 @@ export function PricingPlansSection({ plans, onChange }: PricingPlansSectionProp
                       )}
                     </p>
                     {plan.duration && (
-                      <p className="text-xs text-muted-foreground">Duração: {plan.duration}</p>
+                      <p className="text-xs text-muted-foreground">Duración: {plan.duration}</p>
                     )}
                     {plan.features.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
@@ -182,7 +182,7 @@ export function PricingPlansSection({ plans, onChange }: PricingPlansSectionProp
           <div className="grid gap-4 py-2">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label>Nome do Plano *</Label>
+                <Label>Nombre do Plano *</Label>
                 <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Ex: Pro" />
               </div>
               <div className="space-y-2">
@@ -192,7 +192,7 @@ export function PricingPlansSection({ plans, onChange }: PricingPlansSectionProp
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label>Ciclo de Cobrança</Label>
+                <Label>Ciclo de Cobro</Label>
                 <Select value={form.billing_cycle} onValueChange={(v: ProductPlan['billing_cycle']) => setForm(f => ({ ...f, billing_cycle: v }))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -203,7 +203,7 @@ export function PricingPlansSection({ plans, onChange }: PricingPlansSectionProp
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Duração / Acesso</Label>
+                <Label>Duración / Acesso</Label>
                 <Input value={form.duration} onChange={e => setForm(f => ({ ...f, duration: e.target.value }))} placeholder="Ex: 12 meses, Vitalício" />
               </div>
             </div>

@@ -15,11 +15,11 @@ interface DashboardTabProps {
 }
 
 export function DashboardTab({ productId }: DashboardTabProps) {
-  const { data: product } = useProduct(productId);
-  const { data: leads, isLoading: leadsLoading } = useLeads(productId);
-  const { data: deals, isLoading: dealsLoading } = useDeals({ productId });
-  const { data: goals } = useSalesGoals(undefined, productId);
-  const { data: commissions } = useCommissions({ productId });
+  const { fecha: product } = useProduct(productId);
+  const { fecha: leads, isLoading: leadsLoading } = useLeads(productId);
+  const { fecha: deals, isLoading: dealsLoading } = useDeals({ productId });
+  const { fecha: goals } = useSalesGoals(undefined, productId);
+  const { fecha: commissions } = useCommissions({ productId });
 
   const isLoading = leadsLoading || dealsLoading;
 
@@ -86,13 +86,13 @@ export function DashboardTab({ productId }: DashboardTabProps) {
 
   const funnelStages = Object.entries(stageGroups)
     .sort(([, a], [, b]) => a.order - b.order)
-    .map(([name, data]) => ({
+    .map(([name, fecha]) => ({
       name,
-      count: data.count,
-      color: data.color,
+      count: fecha.count,
+      color: fecha.color,
     }));
 
-  // Conversion data
+  // Conversion fecha
   const conversionData = {
     totalLeads: productLeads.length,
     wonLeads: wonDeals.length,
@@ -164,7 +164,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
       {/* Charts Row */}
       <div className="grid gap-6 lg:grid-cols-2">
         <SalesFunnelChart stages={funnelStages} isLoading={isLoading} />
-        <ConversionRateChart data={conversionData} isLoading={isLoading} />
+        <ConversionRateChart fecha={conversionData} isLoading={isLoading} />
       </div>
 
       {/* Leads at Risk & Pending Commissions */}
@@ -192,12 +192,12 @@ export function DashboardTab({ productId }: DashboardTabProps) {
                       <p className="font-medium text-foreground">{lead.name}</p>
                       <p className="text-xs text-muted-foreground">
                         {lead.last_contact_at 
-                          ? `Último contato: ${new Date(lead.last_contact_at).toLocaleDateString('es-PY')}`
+                          ? `Último contacto: ${new Date(lead.last_contact_at).toLocaleDateString('es-PY')}`
                           : 'Nunca contatado'}
                       </p>
                     </div>
                     <Badge variant="outline" className="bg-destructive/10 text-destructive">
-                      Sem ação
+                      Sem acción
                     </Badge>
                   </div>
                 ))}
@@ -224,7 +224,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
           <CardContent>
             {productCommissions.filter(c => c.status === 'pending').length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">
-                Nenhuma comissão pendente
+                Nenhuma comisión pendente
               </p>
             ) : (
               <div className="space-y-3 max-h-60 overflow-y-auto">

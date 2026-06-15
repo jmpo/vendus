@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Loader2, Package } from 'lucide-react';
 
 export function BrainManager() {
-  const { data: products, isLoading: productsLoading } = useProducts();
+  const { fecha: products, isLoading: productsLoading } = useProducts();
   const [selectedProductId, setSelectedProductId] = useState<string>('');
 
   // Auto-select first product

@@ -12,7 +12,7 @@ import { Logo } from '@/components/ui/Logo';
 export default function BookingConfirmation() {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
-  const { data: booking, isLoading, error } = useBookingByToken(token);
+  const { fecha: booking, isLoading, error } = useBookingByToken(token);
 
   if (isLoading) {
     return (

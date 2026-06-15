@@ -31,13 +31,13 @@ export interface AICredentialRow {
 }
 
 export const CAPABILITY_LABELS: Record<AICapability, { title: string; desc: string }> = {
-  agent_chat:           { title: 'Agentes de conversa',     desc: 'WhatsApp, WebChat e Inbox' },
-  sales_copilot:        { title: 'Copiloto de vendas',      desc: 'Sugestões para vendedores no painel' },
+  agent_chat:           { title: 'Agentes de conversación',     desc: 'WhatsApp, WebChat e Inbox' },
+  sales_copilot:        { title: 'Copiloto de ventas',      desc: 'Sugestões para vendedores no painel' },
   audio_transcription:  { title: 'Transcrição de áudio',    desc: 'Conversão de áudios em texto (Whisper)' },
   image_vision:         { title: 'Leitura de imagens',      desc: 'Análise de fotos e prints recebidos' },
   content_generation:   { title: 'Geração de conteúdo',     desc: 'Criação de funis, formularios, agentes, objeções' },
-  analysis_insights:    { title: 'Análise e insights',      desc: 'Avaliação de conversas, supervisão e relatórios' },
-  embeddings:           { title: 'Memória semântica',       desc: 'Embeddings para busca contextual em conversas' },
+  analysis_insights:    { title: 'Análise e insights',      desc: 'Avaliação de conversaciones, supervisão e relatórios' },
+  embeddings:           { title: 'Memória semântica',       desc: 'Embeddings para busca contextual em conversaciones' },
 };
 
 export function useAICredentials() {
@@ -45,12 +45,12 @@ export function useAICredentials() {
   return useQuery({
     queryKey: ['org-ai-credentials', profile?.organization_id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('org_ai_credentials')
         .select('provider, api_key_masked, model_default, last_verified_at, last_error')
         .eq('organization_id', profile!.organization_id!);
       if (error) throw error;
-      return (data ?? []) as AICredentialRow[];
+      return (fecha ?? []) as AICredentialRow[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -60,10 +60,10 @@ export function useSaveAICredential() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: { provider: 'openai' | 'anthropic' | 'gemini'; api_key: string; model_default?: string }) => {
-      const { data, error } = await supabase.functions.invoke('save-ai-credential', { body: input });
+      const { fecha, error } = await supabase.functions.invoke('save-ai-credential', { body: input });
       if (error) throw error;
-      if ((data as any)?.error) throw new Error((data as any).error);
-      return data;
+      if ((fecha as any)?.error) throw new Error((fecha as any).error);
+      return fecha;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['org-ai-credentials'] });
@@ -78,11 +78,11 @@ export function useDeleteAICredential() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (provider: 'openai' | 'anthropic' | 'gemini') => {
-      const { data, error } = await supabase.functions.invoke('save-ai-credential', {
+      const { fecha, error } = await supabase.functions.invoke('save-ai-credential', {
         body: { provider, action: 'delete' },
       });
       if (error) throw error;
-      if ((data as any)?.error) throw new Error((data as any).error);
+      if ((fecha as any)?.error) throw new Error((fecha as any).error);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['org-ai-credentials'] });
@@ -96,12 +96,12 @@ export function useAIRouting() {
   return useQuery({
     queryKey: ['org-ai-routing', profile?.organization_id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { fecha, error } = await supabase
         .from('org_ai_routing')
         .select('id, capability, provider, model, fallback_to_lovable')
         .eq('organization_id', profile!.organization_id!);
       if (error) throw error;
-      return (data ?? []) as AIRoutingRow[];
+      return (fecha ?? []) as AIRoutingRow[];
     },
     enabled: !!profile?.organization_id,
   });

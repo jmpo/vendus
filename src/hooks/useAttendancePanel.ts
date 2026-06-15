@@ -38,13 +38,13 @@ export interface PanelFilters {
 const PAGE = 200;
 
 async function loadTab(userId: string, tab: 'waiting' | 'attending'): Promise<PanelConversation[]> {
-  const { data, error } = await supabase.rpc('inbox_list_conversations', {
+  const { fecha, error } = await supabase.rpc('inbox_list_conversations', {
     p_user_id: userId,
     p_tab: tab,
     p_limit: PAGE,
   });
   if (error) throw error;
-  return (data || []) as unknown as PanelConversation[];
+  return (fecha || []) as unknown as PanelConversation[];
 }
 
 export function useAttendancePanel(filters: PanelFilters) {
@@ -105,8 +105,8 @@ export function useAttendancePanel(filters: PanelFilters) {
   };
 
   const sections = useMemo(() => {
-    const waiting = queryWaiting.data || [];
-    const attending = queryAttending.data || [];
+    const waiting = queryWaiting.fecha || [];
+    const attending = queryAttending.fecha || [];
 
     const queueRaw = waiting.filter((c) => !c.current_agent_id);
     const aiRaw = waiting.filter((c) => !!c.current_agent_id);
@@ -122,7 +122,7 @@ export function useAttendancePanel(filters: PanelFilters) {
       if (!queueBySector.has(key)) {
         queueBySector.set(key, {
           sectorId: c.sector_id,
-          name: c.sector_name || 'Sem setor',
+          name: c.sector_name || 'Sem sector',
           color: c.sector_color,
           items: [],
         });
@@ -152,7 +152,7 @@ export function useAttendancePanel(filters: PanelFilters) {
       if (!humansByUser.has(key)) {
         humansByUser.set(key, {
           userId: key,
-          name: c.assigned_user_name || 'Sem atendente',
+          name: c.assigned_user_name || 'Sem agente',
           avatar: c.assigned_user_avatar,
           items: [],
         });
@@ -170,7 +170,7 @@ export function useAttendancePanel(filters: PanelFilters) {
         humans: humans.length,
       },
     };
-  }, [queryWaiting.data, queryAttending.data, filters]);
+  }, [queryWaiting.fecha, queryAttending.fecha, filters]);
 
   return {
     sections,

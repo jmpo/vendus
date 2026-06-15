@@ -64,7 +64,7 @@ export function OfflineBanner() {
               <>
                 <WifiOff size={18} className="text-white" />
                 <span className="text-sm font-medium text-white flex-1">
-                  Você está offline
+                  Usted está offline
                 </span>
                 <Button
                   size="sm"
@@ -72,7 +72,7 @@ export function OfflineBanner() {
                   onClick={handleRetry}
                   className="h-7 text-xs bg-white/20 hover:bg-white/30 text-white border-0"
                 >
-                  Tentar
+                  Intentar
                 </Button>
               </>
             )}

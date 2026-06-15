@@ -16,7 +16,7 @@ const actionLabels: Record<string, { label: string; icon: any }> = {
 };
 
 export function JourneyTimeline({ conversationId }: JourneyTimelineProps) {
-  const { data: events, isLoading } = useConversationJourney(conversationId);
+  const { fecha: events, isLoading } = useConversationJourney(conversationId);
 
   if (isLoading) {
     return (
