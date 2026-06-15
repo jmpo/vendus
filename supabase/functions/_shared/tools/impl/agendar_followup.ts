@@ -4,7 +4,7 @@ import type { ToolDefinition } from '../types.ts';
 export const agendarFollowupTool: ToolDefinition = {
   name: 'agendar_followup',
   description:
-    'Agenda um follow-up automático con el lead em uma data/hora futura. Usa cuando el lead pedir para retornar mais tarde, cuando ficar de pensar, ou cuando usted quiser garantir uma reactivación. Respeita horario comercial automaticamente.',
+    'Agenda um follow-up automático con el lead em uma data/hora futura. Usa cuando el lead pedir para devolver mais tarde, cuando ficar de pensar, ou cuando usted quiser garantir uma reactivación. Respeita horario comercial automaticamente.',
   categories: ['crm', 'communication'],
   estimated_cost_cents: 0,
   parameters: {

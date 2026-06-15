@@ -333,7 +333,7 @@ function normalizePayload(payload: any): Normalized | null {
     const rawRemoteJid: string = info.Chat || info.RemoteJid || sender || "";
     const fromMe: boolean = !!(info.IsFromMe ?? info.isFromMe ?? event === "SendMessage");
 
-    // Resolver JID @lid → JID @s.whatsapp.net (teléfono real) cuando whatsmeow envia o "Alt".
+    // Resolver JID @lid → JID @s.whatsapp.net (teléfono real) cuando whatsmeow envía o "Alt".
     // Em fromMe, o destino real (teléfono) vem em RecipientAlt/RecipientPn/ChatAlt.
     // Em inbound, o sender real vem em SenderAlt/SenderPn.
     const altJidCandidates = fromMe
@@ -987,7 +987,7 @@ Deno.serve(async (req) => {
             convOut = convByLid as any;
           }
 
-          // Dedupe 2 (después localizar conv): mismo conteúdo outbound nos últimos 60s en esta conv
+          // Dedupe 2 (después localizar conv): mismo contenido outbound nos últimos 60s en esta conv
           if (convOut?.id && norm.content) {
             const since = new Date(Date.now() - 60_000).toISOString();
             const { data: recentSameContent } = await supabase
@@ -1192,7 +1192,7 @@ Deno.serve(async (req) => {
       //      sin filtrar instância — assim PRESERVAMOS o historial do contato mismo
       //      cuando o número es reconectado/migrado para otra instância.
       // NÃO fechamos conversaciones duplicadas automaticamente: o historial del agente
-      // nunca puede sumir por trás dele. Se hay duplicatas, o agente encerra
+      // nunca puede sumir por trás dele. Se hay duplicatas, o agente cierra
       // manualmente cuando quiser.
       let conversationId: string | null = null;
       let existing: { id: string } | null = null;
@@ -1523,7 +1523,7 @@ Deno.serve(async (req) => {
           console.warn("[evolution-webhook] funnel lookup error:", e?.message || String(e));
         }
 
-        // Resolve sector estándar da organización (fallback "Sem Sector")
+        // Resolve sector defecto da organización (fallback "Sem Sector")
         let defaultSectorId: string | null = null;
         try {
           const { data: defSec } = await supabase
@@ -1862,7 +1862,7 @@ Deno.serve(async (req) => {
                   processedContent = `🎙️ Áudio del cliente (transcrito): ${text}`;
                 } else {
                   processedContent = norm.media.caption
-                    ? `🖼️ Imagen (legenda: "${norm.media.caption}"): ${text}`
+                    ? `🖼️ Imagen (leyenda: "${norm.media.caption}"): ${text}`
                     : `🖼️ Imagen del cliente: ${text}`;
                 }
                 console.log(
@@ -1873,8 +1873,8 @@ Deno.serve(async (req) => {
                   processedContent = `🎙️ [Audio recibido — no pude transcribir. Peça al cliente que reenvíe o describa en texto.]`;
                 } else {
                   processedContent = norm.media.caption
-                    ? `🖼️ [Imagen recibida (legenda: "${norm.media.caption}") — no consegui analisar o conteúdo. Peça que reenvíe o describa.]`
-                    : `🖼️ [Imagen recibida — no pude analizar o conteúdo. Peça que reenvíe o describa.]`;
+                    ? `🖼️ [Imagen recibida (leyenda: "${norm.media.caption}") — no pude analizar el contenido. Pedile que reenvíe o describa.]`
+                    : `🖼️ [Imagen recibida — no pude analizar o contenido. Peça que reenvíe o describa.]`;
                 }
                 console.warn(`[evolution-webhook] media NOT processed (${norm.media.type}); using fallback placeholder`);
               }
@@ -1898,7 +1898,7 @@ Deno.serve(async (req) => {
             const fname = mediaMeta?.filename;
             if (norm.media.type === "video") {
               processedContent = norm.media.caption
-                ? `🎥 Vídeo (legenda: "${norm.media.caption}")`
+                ? `🎥 Vídeo (leyenda: "${norm.media.caption}")`
                 : `🎥 [Vídeo enviado por el cliente]`;
             } else if (norm.media.type === "document") {
               processedContent = fname
@@ -1926,7 +1926,7 @@ Deno.serve(async (req) => {
 
       // ============================================================
       // INBOUND DEDUP — Evolution Go puede reentregar o mismo webhook
-      // várias vezes (timeout do nosso handler). Camadas:
+      // várias vezes (timeout do nuestro handler). Camadas:
       //  1) processed_messages (UNIQUE instance_id+message_id) → barra retries
       //     antes de cualquier trabajo pesado. TTL de 24h.
       //  2) webchat_messages.metadata->>evolution_message_id → 2ª barreira.
@@ -2130,7 +2130,7 @@ Deno.serve(async (req) => {
       // ============================================================
       // BUFFER CURTO (humanização sin queimar tempo)
       // ============================================================
-      // Lê configuraciones de humanização da org. Janela estándar = 3s.
+      // Lê configuraciones de humanização da org. Janela defecto = 3s.
       // Teto absoluto = 8s desde a 1ª msg do burst — nunca mais que isso.
       // Loop: dorme em fatias de 1s; se chegou nova msg do visitor, deferimos
       // para la invocação de esa nova msg (que va re-medir o teto).
@@ -2289,7 +2289,7 @@ Deno.serve(async (req) => {
               currentBlock = findBlock(nextBlockId);
             } else {
               // re-prompt the same buttons block
-              chunksToSend.push(replaceVars(currentBlock.data?.content || "Por favor, elegí uma das opciones:")
+              chunksToSend.push(replaceVars(currentBlock.data?.content || "Por favor, elegí una de las opciones:")
                 + "\n\n" + opts.map((o: any, i: number) => `${i + 1}) ${o.emoji ? o.emoji + ' ' : ''}${o.label}`).join("\n"));
               nextBlockId = currentBlock.id;
               currentBlock = null; // stop loop
@@ -2631,7 +2631,7 @@ Deno.serve(async (req) => {
 
             // ============================================================
             // Agrega TODOS los mensajes del visitor desde la última respuesta
-            // do bot/agente. Garante que múltiplas mensajes consecutivas
+            // do bot/agente. Garante que múltiples mensajes consecutivas
             // virem 1 contexto único para el agente raciocinar.
             // ============================================================
             let aggregatedMessage = processedContent || norm.content;
@@ -2677,7 +2677,7 @@ Deno.serve(async (req) => {
               body: JSON.stringify({
                 conversation_id: conversationId,
                 // Send aggregated content so the agent sees the full thought
-                // (e.g. "Boa noite\nTudo bem?\nQuero ver imóveis") at once.
+                // (e.g. "Boa noite\nTodo bien?\nQuiero ver imóveis") at once.
                 message: aggregatedMessage,
                 product_id: productIdForBot,
                 visitor_name: (conv as any).visitor_name || senderName,
@@ -2767,7 +2767,7 @@ Deno.serve(async (req) => {
               for (let i = 0; i < chunks.length; i++) {
                 const text = chunks[i];
 
-                // 0) DEDUP DE RESPOSTA — no envia se uma respuesta igual saiu há poco
+                // 0) DEDUP DE RESPOSTA — no envía se uma respuesta igual saiu há poco
                 if (dedupCfg.enabled) {
                   const dup = await isDuplicateResponse(supabase, conversationId, text, dedupCfg.windowMs);
                   if (dup) {

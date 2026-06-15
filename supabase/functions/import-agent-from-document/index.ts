@@ -124,7 +124,7 @@ serve(async (req) => {
     extracted = extracted.replace(/\n{3,}/g, "\n\n").trim();
     if (!extracted || extracted.length < 30) {
       return new Response(
-        JSON.stringify({ error: "No fue posible extrair conteúdo legível do archivo." }),
+        JSON.stringify({ error: "No fue posible extrair contenido legível do archivo." }),
         { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -200,7 +200,7 @@ Crea a configuración completa del agente baseada nisso.`;
       const txt = await aiResp.text();
       console.error("AI gateway error", aiResp.status, txt);
       if (aiResp.status === 429) {
-        return new Response(JSON.stringify({ error: "Limite de uso de IA atingido. Tente novamente em algunos minutos." }), {
+        return new Response(JSON.stringify({ error: "Límite de uso de IA atingido. Probá novamente em algunos minutos." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -224,7 +224,7 @@ Crea a configuración completa del agente baseada nisso.`;
   } catch (err) {
     console.error("[import-agent-from-document] error", err);
     return new Response(
-      JSON.stringify({ error: err instanceof Error ? err.message : "Error desconhecido" }),
+      JSON.stringify({ error: err instanceof Error ? err.message : "Error desconocido" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

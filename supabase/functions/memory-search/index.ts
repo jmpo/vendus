@@ -1,5 +1,5 @@
 // Sprint 2 — Retrieval semântico
-// Recebe lead_id + query, gera embedding e retorna top-K memorias relevantes.
+// Recebe lead_id + query, gera embedding e devuelve top-K memorias relevantes.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 

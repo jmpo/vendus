@@ -114,7 +114,7 @@ async function logExecution(
 }
 
 // Verifica se a organización ultrapassou limites de segurança (ex: muchas execuções/día).
-// Retorna { allowed, reason } — chamar antes de executeTool em loops del agente.
+// Retorna { allowed, reason } — llamar antes de executeTool em loops del agente.
 export async function checkSafetyLimits(
   ctx: ToolContext,
 ): Promise<{ allowed: boolean; reason?: string }> {
@@ -143,7 +143,7 @@ export async function checkSafetyLimits(
   );
 
   if (count >= maxPerDay) {
-    return { allowed: false, reason: 'Limite diário de execuções atingido' };
+    return { allowed: false, reason: 'Límite diário de execuções atingido' };
   }
   if (totalCost >= maxCostCents) {
     return { allowed: false, reason: 'Orçamento diário de IA atingido' };

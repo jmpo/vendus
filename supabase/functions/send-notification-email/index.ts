@@ -52,7 +52,7 @@ const handler = async (req: Request): Promise<Response> => {
           platform_name: platformName,
           user_name: recipient.name || recipient.email.split("@")[0],
           title,
-          message: message || "Usted recebeu uma nova notificación do sistema.",
+          message: message || "Recibiste una notificación nueva del sistema.",
           action_block: actionBlock,
         },
       });

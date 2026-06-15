@@ -205,10 +205,10 @@ REGRAS ABSOLUTAS:
 2. Mantenha a estrutura original (títulos, subtítulos, parágrafos, listas, tabelas)
 3. NÃO resuma, NÃO altere, NÃO omita NENHUMA parte do texto
 4. NÃO adicione comentários, interpretações ou análises
-5. NÃO reorganize o conteúdo - mantenha a ordem original
+5. NÃO reorganize o contenido - mantenha a ordem original
 6. Se hay tabelas, reproduza-as em formato legível
 7. Se hay imagens con texto (OCR), extraia o texto fielmente
-8. Retorne APENAS o texto extraído, nada mais`
+8. Retorne SOLO o texto extraído, nada mais`
         },
         {
           role: 'user',

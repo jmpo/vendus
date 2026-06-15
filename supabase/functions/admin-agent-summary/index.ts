@@ -69,7 +69,7 @@ async function buildDailySummary(orgId: string): Promise<string> {
     `📅 Reuniones realizadas: *${meetings}*\n` +
     `💰 Receita fechada: *${fmt(closedRevenue)}*\n` +
     `📈 Pipeline aberto: *${fmt(pipelineTotal)}*\n\n` +
-    `Quer detalles de algún item?`;
+    `Querés detalles de algún item?`;
 }
 
 async function buildWeeklyReport(orgId: string): Promise<string> {

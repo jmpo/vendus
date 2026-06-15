@@ -121,7 +121,7 @@ async function describeImage(
     {
       type: "text",
       text:
-        "Descreva objetivamente o conteúdo de esta imagen en español, " +
+        "Descreva objetivamente o contenido de esta imagen en español, " +
         "em no máximo 3 frases. Se for um comprovante (Pix, boleto, tarjeta), " +
         "extraia valor, data, chave/destino e nombre cuando possíveis. " +
         "Se for um documento, identifique o tipo. " +
@@ -150,7 +150,7 @@ async function describeImage(
           role: "system",
           content:
             "Vos sos um analisador visual de mensajes de WhatsApp em um CRM de ventas. " +
-            "Su respuesta vira o conteúdo textual del mensaje que um agente IA va ler. " +
+            "Su respuesta vira o contenido textual del mensaje que um agente IA va ler. " +
             "Sé factual, objetivo e direto.",
         },
         { role: "user", content: userContent },

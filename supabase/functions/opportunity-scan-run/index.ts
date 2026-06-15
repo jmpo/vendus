@@ -346,15 +346,15 @@ CONTEXTO:
 
 Clasifica como:
 - "hot": demostró fuerte interés, pidió detalles/precio, dejó de responder pero estaba enganchado, O último msg del cliente sin respuesta de la empresa
-- "warm": interesse moderado, fez algunas preguntas, conversación em andamento
+- "warm": interés moderado, fez algunas preguntas, conversación em andamento
 - "cold": poco engajamento, sin sinais claros de compra
-- "lost": demonstrou desinteresse, rejeição, ou tempo demais sin atividade
+- "lost": demonstrou desinterés, rejeição, ou tempo demais sin atividade
 
 Retorne JSON estrito:
 {
   "classification": "hot|warm|cold|lost",
   "score": 0-100,
-  "reason": "explicação corta em 1-2 frases",
+  "reason": "explicación corta em 1-2 frases",
   "signals": ["sinal1", "sinal2"],
   "suggested_action": "acción concreta recomendada",
   "followup_message": "mensaje pronta de follow-up que o vendedor puede enviar (máx 2 linhas, tom profissional, en español)"

@@ -352,7 +352,7 @@ serve(async (req) => {
 
       const conversation: any = convRes.data;
       if (!conversation) {
-        // Pode ser que exista mas esteja fora do escopo do usuario. Verifica sin filtro de org.
+        // Podés ser que exista mas esteja fora do escopo do usuario. Verifica sin filtro de org.
         const probe = await supabase
           .from('webchat_conversations')
           .select('id')
@@ -1327,7 +1327,7 @@ serve(async (req) => {
               },
               body: JSON.stringify({
                 conversation_id: body.conversation_id,
-                message: '[SISTEMA] O agente humano ativou o bot. Analiza o historial de la conversación e envie umel mensaje estratégica para reconectar con el lead, considerando todo o contexto anterior.',
+                message: '[SISTEMA] El agente humano activó el bot. Analizá el historial de la conversación y enviá un mensaje estratégico para reconectar con el lead, considerando todo el contexto anterior.',
                 product_id: productId,
                 visitor_name: conv.visitor_name,
                 agent_config: {
@@ -1493,7 +1493,7 @@ serve(async (req) => {
             },
             body: JSON.stringify({
               conversation_id: body.conversation_id,
-              message: `[SISTEMA] Vos sos un agente de reactivación. Analizá el historial de abajo e envie UN mensaje corta e estratégica para retomar la conversación con ${visitorName}. Sé natural, hacé referencia al último asunto discutido e incluí una pregunta abierta para reenganchar. NO te presentes de nuevo. NO repitas información ya provista.\n\nHistorial:\n${historySummary}`,
+              message: `[SISTEMA] Vos sos un agente de reactivación. Analizá el historial de abajo y enviá UN mensaje corto y estratégico para retomar la conversación con ${visitorName}. Sé natural, hacé referencia al último asunto discutido e incluí una pregunta abierta para reenganchar. NO te presentes de nuevo. NO repitas información ya provista.\n\nHistorial:\n${historySummary}`,
               product_id: productId,
               visitor_name: visitorName,
               agent_id: agentId,
@@ -1513,7 +1513,7 @@ serve(async (req) => {
         }
       } else {
         // No history - send default reactivation message
-        reactivationMessage = `Hola ${visitorName}! Percebi que usted demonstrou interesse em nossa solución, mas no avançamos en la conversación. Usted aún tiene interesse? Posso te enviar a demonstração pra usted testar! 😊`;
+        reactivationMessage = `Hola ${visitorName}! Percebi que usted demonstrou interés em nuestra solución, mas no avançamos en la conversación. Usted aún tiene interés? Puedo te enviar a demostración para vos testar! 😊`;
       }
 
       // Save message as bot outbound (status stays the same)

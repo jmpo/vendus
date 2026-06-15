@@ -48,7 +48,7 @@ async function llmFallback(
     `Analiza o contexto e elegí UM especialista da lista. Responde solo via tool call.`;
 
   const userPrompt = `Contexto:
-- Canal: ${context.channel ?? "desconhecido"}
+- Canal: ${context.channel ?? "desconocido"}
 - Evento: ${context.event ?? "ningún"}
 - Etapa do embudo: ${context.stage_id ?? "n/a"}
 - Valor do negocio: ${context.deal_value ?? "n/a"}

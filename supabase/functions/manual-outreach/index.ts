@@ -171,9 +171,9 @@ Deno.serve(async (req) => {
 
         const modeRules = mode === 'conversational'
           ? `MODO: CONVERSA INTENCIONAL
-- Genera APENAS uma abertura corta (1–2 linhas, no máx. 25 palavras).
-- Faça UNA pregunta provocativa referenciando o evento (ex.: "Vi que usted gerou um Pix, conseguiu finalizar?").
-- NÃO entregue Pix, link, código, instruções ou dados do evento ahora — só preguntes.
+- Genera SOLO uma abertura corta (1–2 linhas, no máx. 25 palavras).
+- Faça UNA pregunta provocativa referenciando el evento (ex.: "Vi que usted gerou um Pix, conseguiu finalizar?").
+- NÃO entregue Pix, link, código, instruções ou dados del evento ahora — só preguntes.
 - Esperá la respuesta del lead antes de ofrecer cualquier detalle.`
           : `MODO: MENSAGEM DIRETA
 - Genera umel mensaje completa, mas em no máx. 2 parágrafos curtos.
@@ -192,7 +192,7 @@ ${extra_context ? `CONTEXTO ADICIONAL: ${extra_context}` : ""}
 ${eventCtxLines ? `CONTEXTO DO EVENTO:\n${eventCtxLines}` : ""}
 ${modeRules}
 REGRAS GERAIS:
-- Genera APENAS el mensaje, sin explicações ou prefixos.
+- Genera SOLO el mensaje, sin explicações ou prefixos.
 - Sé natural e humano, NÃO pareça um bot. Sem clichés ("espero que esteja bem", etc.).
 - Personalize con as información del lead.
 - WhatsApp: sin markdown, sin HTML.`;
@@ -234,7 +234,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
 
         console.log(`[ManualOutreach] (${mode}) -> ${lead?.name} (${leadPhone}): ${generatedMessage.slice(0, 80)}...`);
 
-        // Quebra em hasta 2 bolhas curtas (regra estándar WhatsApp do projeto)
+        // Quebra em hasta 2 bolhas curtas (regra defecto WhatsApp do projeto)
         const bubbles = mode === 'conversational'
           ? [generatedMessage] // ya forçamos corto no prompt
           : splitIntoBubbles(generatedMessage, { maxChunks: 2, targetCharsPerChunk: 280 });

@@ -46,7 +46,7 @@ serve(async (req: Request): Promise<Response> => {
               idempotencyKey: `test-${Date.now()}`,
               templateData: {
                 __subject: "Prueba de envio — Lovable Emails",
-                __html: `<div style="font-family:Arial,sans-serif;padding:24px"><h2>Prueba bem-sucedido</h2><p>Este es um e-mail de prueba enviado por el panel do Super Admin.</p><p style="color:#666;font-size:12px">Se usted recebeu, su infraestrutura de e-mail está operando corretamente.</p></div>`,
+                __html: `<div style="font-family:Arial,sans-serif;padding:24px"><h2>Prueba exitosa</h2><p>Este es un e-mail de prueba enviado por el panel del Super Admin.</p><p style="color:#666;font-size:12px">Si lo recibiste, tu infraestructura de e-mail está operando correctamente.</p></div>`,
               },
             }),
           });
@@ -97,7 +97,7 @@ serve(async (req: Request): Promise<Response> => {
       }
 
       default:
-        throw new Error(`Tipo de integración desconhecido: ${integrationType}`);
+        throw new Error(`Tipo de integración desconocido: ${integrationType}`);
     }
   } catch (error: unknown) {
     console.error("Error in test-integration:", error);

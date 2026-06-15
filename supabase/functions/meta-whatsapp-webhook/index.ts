@@ -175,7 +175,7 @@ Deno.serve(async (req: Request) => {
       }
 
 
-      // mensajes recebidas
+      // mensajes recibídas
       const contacts = Array.isArray(value.contacts) ? value.contacts : [];
       const messages = Array.isArray(value.messages) ? value.messages : [];
       for (const msg of messages) {
@@ -212,7 +212,7 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  // Siempre 200 — Meta reenvia se receber cualquier otro código
+  // Siempre 200 — Meta reenvía se receber cualquier otro código
   return new Response('ok', { status: 200, headers: { ...corsHeaders, 'Content-Type': 'text/plain' } });
 });
 
@@ -275,7 +275,7 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
     conversationId = created.id;
   }
 
-  // 2) extrair conteúdo
+  // 2) extrair contenido
   const { content, contentType, metadata } = await extractContent(msg, conn);
 
   // 3) inserir mensaje (idempotente por meta_message_id)

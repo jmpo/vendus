@@ -1,5 +1,5 @@
 // Doppus Postback (Webhook) — público.
-// A Doppus envia POST con header `doppus-token` e body JSON.
+// A Doppus envía POST con header `doppus-token` e body JSON.
 // Este endpoint:
 //   1. Siempre responde 2xx (Doppus exige isso para aceitar a URL).
 //   2. Identifica a empresa por el producto Doppus (items[0].code) ou por el token.
@@ -538,7 +538,7 @@ Deno.serve(async (req) => {
     return json({ ok: true, statusCode, mappedEvent, leadId, engine: engineResult });
   } catch (err) {
     console.error('[doppus-webhook] fatal', err);
-    // Mesmo em error inesperado, respondemos 200 para Doppus no desativar a URL.
+    // Mesmo em error inesperado, respondemos 200 para Doppus no desactivar a URL.
     return json({ ok: false, error: (err as Error).message });
   }
 });

@@ -58,7 +58,7 @@ ${tagLine}
 Respostas:
 ${respLines}
 
-Retorne APENAS um JSON válido con este formato exato:
+Retorne SOLO um JSON válido con este formato exato:
 {
   "diagnostico": "2-3 frases sobre o cenário atual do respondente",
   "oportunidades": ["item 1", "item 2", "item 3"],
@@ -85,7 +85,7 @@ Retorne APENAS um JSON válido con este formato exato:
       const errText = await aiResp.text();
       console.error('[quiz-ai-result] AI error:', aiResp.status, errText);
       return new Response(JSON.stringify({
-        error: aiResp.status === 429 ? 'Limite de uso da IA atingido. Tente novamente em instantes.'
+        error: aiResp.status === 429 ? 'Límite de uso da IA atingido. Probá novamente em instantes.'
           : aiResp.status === 402 ? 'Créditos de IA esgotados.'
           : 'Falha ao gerar resultado IA.',
       }), { status: aiResp.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });

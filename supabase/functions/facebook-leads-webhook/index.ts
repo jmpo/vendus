@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
           
           console.log('Processing lead:', { leadgenId, formId, adId });
           
-          // Logar recebimento
+          // Logar recibímento
           const { data: log, error: logError } = await supabase
             .from('facebook_lead_logs')
             .insert({

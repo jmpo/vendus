@@ -110,7 +110,7 @@ TIPO DE RESULTADO: ${RESULT_LABELS[result_type]}
 
 ESTRUTURA OBRIGATÓRIA (em ordem):
 1. Bloco "text" de boas-vindas corto.
-2. 3 a 6 blocos "buttons" (preguntas de múltipla elegí), cada um con 3-4 opciones, cadla opción con {id, letter (A/B/C/D), label, score (0-35), tag (opcional)}.
+2. 3 a 6 blocos "buttons" (preguntas de múltiple elegí), cada um con 3-4 opciones, cadla opción con {id, letter (A/B/C/D), label, score (0-35), tag (opcional)}.
 3. Blocos "input" para capturar:
 ${captureFields.map((f) => `   - ${f}`).join('\n') || '   - (ningún)'}
 4. Bloco "end" com:
@@ -124,7 +124,7 @@ REGRAS:
 - Cada bloco tiene campo "variable_name" único (ex: q1, q2, faturamento, urgencia).
 - NÃO inclua next_block_id (o cliente conecta linearmente).
 - NÃO inclua "id" nos blocos (o cliente gera).
-- NÃO use markdown, retorne APENAS JSON puro.
+- NÃO use markdown, retorne SOLO JSON puro.
 
 FORMATO DE RESPOSTA (JSON):
 {
@@ -153,7 +153,7 @@ Objetivo: ${objective || 'N/A'}
 CONTEXTO DETALHADO:
 ${context}
 
-Retorne APENAS o JSON.`;
+Retorne SOLO o JSON.`;
 
     const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -172,7 +172,7 @@ Retorne APENAS o JSON.`;
     if (!aiResponse.ok) {
       const text = await aiResponse.text();
       console.error('AI error', aiResponse.status, text);
-      if (aiResponse.status === 429) return new Response(JSON.stringify({ error: 'Limite excedido. Aguarde e tente novamente.' }), { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      if (aiResponse.status === 429) return new Response(JSON.stringify({ error: 'Límite excedido. Esperá e intentá de nuevo.' }), { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       if (aiResponse.status === 402) return new Response(JSON.stringify({ error: 'Créditos insuficientes. Adicione créditos ao workspace.' }), { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       return new Response(JSON.stringify({ error: 'Error ao gerar quiz con IA' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
@@ -189,7 +189,7 @@ Retorne APENAS o JSON.`;
     try { parsed = JSON.parse(cleanContent); }
     catch (e) {
       console.error('Parse fail', content);
-      return new Response(JSON.stringify({ error: 'Resposta da IA inválida. Tente novamente.' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ error: 'Resposta da IA inválida. Probá novamente.' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     if (!parsed.blocks || !Array.isArray(parsed.blocks) || parsed.blocks.length === 0) {

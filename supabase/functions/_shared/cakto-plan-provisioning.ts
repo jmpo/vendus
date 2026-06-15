@@ -19,7 +19,7 @@ export interface CaktoOrderLike {
 
 export function extractOfferSlug(raw: any, fallback?: string | null): string | null {
   if (fallback) return fallback;
-  // Cakto envia em camelCase (`checkoutUrl`); aceitar ambos.
+  // Cakto envía em camelCase (`checkoutUrl`); aceitar ambos.
   const candidates: Array<string | undefined> = [
     raw?.checkoutUrl,
     raw?.checkout_url,

@@ -1,10 +1,10 @@
 // Recebe eventos da Cakto (via cakto-webhook), decide se dispara o agente de
-// recuperação automática e envia a primeirel mensaje via WhatsApp.
+// recuperação automática e envía a primeirel mensaje via WhatsApp.
 //
 // Flujo:
 // 1) Lê config da org (cakto_recovery_config)
-// 2) Verifica se o evento está habilitado
-// 3) Aplica cooldown (no dispara o mismo evento pro mismel lead em <X min)
+// 2) Verifica se el evento está habilitado
+// 3) Aplica cooldown (no dispara o mismel evento pro mismel lead em <X min)
 // 4) Localiza/cria el lead (pelo teléfono/email da Cakto)
 // 5) Gerel mensaje inicial con a IA usando o agente configurado
 // 6) Envia via WhatsApp (BotConversa ou IsiChat)
@@ -336,12 +336,12 @@ ${
 }
 
 REGRAS DA MENSAGEM INICIAL:
-- Genera APENAS el mensaje (sem prefixos, sin comillas, sin explicações)
+- Genera SOLO el mensaje (sem prefixos, sin comillas, sin explicações)
 - Usa o nombre del cliente: ${order.customer_name || 'cliente'}
 - Mencione o que ele estava levando: ${productLabel}
 - WhatsApp: corta (máx 2 parágrafos), sin markdown, sin emoji exagerado (1 só)
 - Termine con pregunta clara
-- NUNCA pareça um robô. Soa como vendedor humano que viu o pedido e resolveu chamar.`;
+- NUNCA pareça um robô. Soa como vendedor humano que viu o pedido e resolveu llamar.`;
 
   const userPrompt = `Genera el mensaje inicial de WhatsApp para esta situación. Cliente: ${order.customer_name || 'sem nombre'}. Teléfono: ${phone}.`;
 

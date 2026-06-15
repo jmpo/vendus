@@ -1,6 +1,6 @@
 // Tipos compartilhados do registry de ferramentas dos agentes.
 // Cada ferramenta declara su schema (formato OpenAI tool calling),
-// recebe um contexto de execução e retorna um resultado padronizado.
+// recebe um contexto de execução e devuelve um resultado padronizado.
 
 export interface ToolContext {
   organizationId: string;

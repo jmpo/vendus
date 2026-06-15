@@ -215,7 +215,7 @@ async function handleEvent(sb: any, conn: any, evt: any) {
 
   await sb.from('instagram_connections').update({ last_inbound_at: new Date().toISOString() }).eq('id', conn.id);
 
-  // 2) extrair conteúdo
+  // 2) extrair contenido
   const { content, contentType, metadata } = await extractContent(msg, conn);
 
   // 3) inserir mensaje (idempotente por ig_message_id)
@@ -239,7 +239,7 @@ async function handleEvent(sb: any, conn: any, evt: any) {
     signature_valid: true,
   });
 
-  // 4) dispara webchat-bot e envia respuesta via IG
+  // 4) dispara webchat-bot e envía respuesta via IG
   try {
     const { data: botRes } = await sb.functions.invoke('webchat-bot', {
       body: {

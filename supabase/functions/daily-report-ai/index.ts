@@ -270,7 +270,7 @@ async function generateAIReport(context: SellerContext, sellerName: string): Pro
 ☀️ ¡Buen día, ${firstName}!
 
 📊 RESUMEN DEL DÍA
-${taskCount > 0 ? `• ${taskCount} tarea${taskCount > 1 ? 's' : ''} agendada${taskCount > 1 ? 's' : ''} para hoy` : '• Ninguna tarea agendada'}
+${taskCount > 0 ? `• ${taskCount} tarea${taskCount > 1 ? 's' : ''} agendada${taskCount > 1 ? 's' : ''} para hoy` : '• Ninguna tarela agendada'}
 ${overdueCount > 0 ? `• ⚠️ ${overdueCount} tarea${overdueCount > 1 ? 's' : ''} atrasada${overdueCount > 1 ? 's' : ''}` : ''}
 ${stalledCount > 0 ? `• ${stalledCount} lead${stalledCount > 1 ? 's' : ''} requiere${stalledCount > 1 ? 'n' : ''} atención` : ''}
 ${goalSummary ? `• ${goalSummary}` : ''}

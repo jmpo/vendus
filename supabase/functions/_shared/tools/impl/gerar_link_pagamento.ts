@@ -5,7 +5,7 @@ import type { ToolDefinition } from '../types.ts';
 export const gerarLinkPagamentoTool: ToolDefinition = {
   name: 'gerar_link_pagamento',
   description:
-    'Gera um link de pago (Pix/tarjeta) para el lead finalizar a compra. Usa cuando el lead confirmar a intenção de pagar AGORA. O link ya vem con o e-mail/teléfono del lead pré-preenchido cuando posible.',
+    'Gera um link de pago (Pix/tarjeta) para el lead finalizar a compra. Usa cuando el lead confirmar a intenção de pagar AHORA. O link ya vem con o e-mail/teléfono del lead pré-preenchido cuando posible.',
   categories: ['finance'],
   estimated_cost_cents: 0,
   parameters: {
@@ -17,7 +17,7 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
       },
       offer_id: {
         type: 'string',
-        description: 'UUID da oferta específica (opcional). Se omitido, usa a oferta estándar do producto.',
+        description: 'UUID da oferta específica (opcional). Se omitido, usa a oferta defecto do producto.',
       },
       payment_method: {
         type: 'string',

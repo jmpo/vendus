@@ -187,7 +187,7 @@ COMO USAR A BASE DE CONHECIMENTO
 ═══════════════════════════════════════
 
 - Para DADOS DO PRODUTO (precios, funcionalidades, prazos, specs): use SOMENTE o que está no contexto acima. Se no tiver, diga: "Sobre esse detalle específico do producto, sugiro confirmar con o gestor antes de responder al cliente."
-- Para ESTRATÉGIA DE VENDAS (como abordar, como reativar, como negociar, como contornar objeções): use su conhecimento de ventas consultivas livremente, adaptando ao contexto do producto cuando hay información disponível
+- Para ESTRATÉGIA DE VENDAS (como abordar, como reactivar, como negociar, como contornar objeções): use su conhecimento de ventas consultivas livremente, adaptando ao contexto do producto cuando hay información disponível
 - Quando existir uma FAQ ou treinamento que responda à pregunta, USE como base
 - NUNCA invente precios, custos ou dados técnicos do producto
 
@@ -274,13 +274,13 @@ O QUE NUNCA FAZER
       console.error('AI gateway error:', response.status, errorText);
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: 'Limite de requisições excedido. Tente novamente em algunos segundos.' }),
+          JSON.stringify({ error: 'Límite de requisições excedido. Probá novamente em algunos segundos.' }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
         );
       }
       if (response.status === 402) {
         const msg = cfg.provider === 'openai'
-          ? 'Su cuenta OpenAI está sin créditos ou bloqueada. Verifique em platform.openai.com/billing.'
+          ? 'Su cuenta OpenAI está sin créditos ou bloqueada. Verificá em platform.openai.com/billing.'
           : 'Créditos de IA esgotados. Adicione créditos na su cuenta Lovable.';
         return new Response(JSON.stringify({ error: msg }), {
           status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -288,7 +288,7 @@ O QUE NUNCA FAZER
       }
       if (response.status === 401 || response.status === 403) {
         return new Response(
-          JSON.stringify({ error: `Chave do provedor "${cfg.provider}" inválida ou sin permiso. Verifique em Integrações.` }),
+          JSON.stringify({ error: `Chave do provedor "${cfg.provider}" inválida ou sin permiso. Verificá em Integrações.` }),
           { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
         );
       }
@@ -304,7 +304,7 @@ O QUE NUNCA FAZER
   } catch (error) {
     console.error("Sales copilot error:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Error desconhecido" }),
+      JSON.stringify({ error: error instanceof Error ? error.message : "Error desconocido" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

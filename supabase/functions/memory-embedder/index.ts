@@ -1,5 +1,5 @@
 // Sprint 2 — Pipeline de embeddings para memoria semântica por lead
-// Recebe um conteúdo + contexto, gera embedding via Lovable AI Gateway
+// Recebe um contenido + contexto, gera embedding via Lovable AI Gateway
 // e persiste em lead_semantic_memory.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";

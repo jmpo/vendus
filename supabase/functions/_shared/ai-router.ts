@@ -203,7 +203,7 @@ export async function resolveAIConfig(
       const extra = { platform_key_id: pool.id, key_label: pool.label } as any;
       if (plan.provider === 'openai') return buildOpenAIConfig(pool.api_key, usedModel, 'gateway', extra);
       if (plan.provider === 'lovable') return buildLovableConfig(pool.api_key, usedModel, 'gateway', extra);
-      // anthropic/gemini: hoy o roteador só sabe chamar OpenAI/Lovable; usamos chave do pool via Lovable Gateway como compat
+      // anthropic/gemini: hoy o roteador só sabe llamar OpenAI/Lovable; usamos chave do pool via Lovable Gateway como compat
       return buildLovableConfig(envLovableKey || pool.api_key, usedModel, 'gateway', extra);
     }
 

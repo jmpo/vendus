@@ -77,7 +77,7 @@ CATEGORIAS:
 - price: Preço/orçamento
 - timing: "No es o momento"  
 - trust: Falta de confiança
-- thinking: "Vou pensar"
+- thinking: "Voy a pensar"
 - partner: "Preciso hablar con sócio"
 - competitor: "Ya uso otra solución"
 

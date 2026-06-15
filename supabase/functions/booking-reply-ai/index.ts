@@ -107,7 +107,7 @@ Contexto da reunión:
 - Horario atual: ${startStr} (${tz})
 - Agora: ${nowStr}
 
-Su tarea: interpretar a respuesta del lead e chamar UMA tool apropriada:
+Su tarea: interpretar a respuesta del lead e llamar UMA tool apropriada:
 - Se confirma/aceita → confirm_booking
 - Se pede otro horario específico → reschedule_booking(new_start_iso) — converta data/hora natural para ISO 8601 con offset -03:00 (Brasília). NÃO invente: se no der pra inferir data exata, prefira propose_followup.
 - Se cancela definitivamente → cancel_booking
@@ -156,7 +156,7 @@ Siempre execute UMA tool. Depois escreva uma respuesta corta e gentil para envia
   const toolCall = choice?.tool_calls?.[0];
 
   let intent = "unknown";
-  let replyText = "Recebido! 👍";
+  let replyText = "Recibído! 👍";
   let toolResult: any = {};
 
   if (toolCall) {
@@ -169,7 +169,7 @@ Siempre execute UMA tool. Depois escreva uma respuesta corta e gentil para envia
       replyText = toolResult.reply || choice?.content || replyText;
     } catch (e: any) {
       console.error("[booking-reply-ai] tool exec failed:", e?.message || e);
-      replyText = "Tive um problema para processar ahora. Pode reformular?";
+      replyText = "Tive um problema para processar ahora. ¿Podés reformular?";
     }
   } else if (choice?.content) {
     replyText = String(choice.content).trim();
@@ -221,13 +221,13 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
     if (booking.calendar_event_id) {
       await supabase.from("calendar_events").update({ status: "cancelled" }).eq("id", booking.calendar_event_id);
     }
-    return { reply: "Tudo bem, cancelei aqui. Se quiser remarcar después, es só me chamar 🙏" };
+    return { reply: "Listo, lo cancelé. Si querés reagendar después, avisame 🙏" };
   }
 
   if (intent === "reschedule_booking" && args?.new_start_iso) {
     const newStart = new Date(args.new_start_iso);
     if (isNaN(newStart.getTime())) {
-      return { reply: "Pode confirmar o día e o horario novamente, por favor?" };
+      return { reply: "¿Podés confirmar el día y el horario de nuevo, por favor?" };
     }
     const durMin = booking.booking_event_types?.duration_minutes || 30;
     const newEnd = new Date(newStart.getTime() + durMin * 60_000);
@@ -283,11 +283,11 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
         .eq("id", booking.id);
 
       const niceWhen = when.toLocaleString("es-PY", { timeZone: booking.timezone || "America/Sao_Paulo", dateStyle: "short" });
-      return { reply: `Sem problema! Vou te chamar de novo em ${niceWhen} 📞` };
+      return { reply: `Sem problema! Voy a te llamar de novo em ${niceWhen} 📞` };
     }
   }
 
-  return { reply: "Recebido! Em breve retorno." };
+  return { reply: "Recibído! Em breve retorno." };
 }
 
 function firstName(full: string): string {
