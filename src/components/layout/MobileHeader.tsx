@@ -73,7 +73,7 @@ export function MobileHeader({
               size="icon"
               className="h-9 w-9 shrink-0"
               onClick={onBack}
-              aria-label="Voltar"
+              aria-label="Volver"
             >
               <ChevronLeft size={20} />
             </Button>
@@ -84,7 +84,7 @@ export function MobileHeader({
               <DropdownMenuTrigger asChild>
                 <button
                   className="flex items-center gap-1.5 min-w-0 max-w-full text-left px-2 py-1 rounded-lg active:bg-muted/50 transition-colors"
-                  aria-label="Trocar produto"
+                  aria-label="Cambiar producto"
                 >
                   <div className="min-w-0">
                     <h1
@@ -108,7 +108,7 @@ export function MobileHeader({
                 align="start"
                 className="w-64 max-h-[60vh] overflow-y-auto"
               >
-                <DropdownMenuLabel>Trocar produto</DropdownMenuLabel>
+                <DropdownMenuLabel>Cambiar producto</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {products.map((p) => {
                   const isActive = selectedProduct?.id === p.id;
