@@ -61,7 +61,7 @@ export function PlatformAIUsageDashboard() {
   const { data: byModel = [] } = useAIUsageByModel(filters, 20);
   const { data: byKey = [] } = useAIUsageByKey(filters, 20);
 
-  // Custo total estimado (modelo a modelo)
+  // Costo total estimado (modelo a modelo)
   const totalCostUSD = useMemo(() => {
     return byModel.reduce((acc, m) => acc + estimateCostUSD(m.provider, m.model, m.prompt_tokens, m.completion_tokens), 0);
   }, [byModel]);
@@ -131,13 +131,13 @@ export function PlatformAIUsageDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <KpiCard
           title="Llamadas"
-          value={(summary?.total_calls ?? 0).toLocaleString('pt-BR')}
+          value={(summary?.total_calls ?? 0).toLocaleString( 'es' )}
           icon={<Activity className="h-5 w-5" />}
           gradient="from-violet-500 to-fuchsia-500"
         />
         <KpiCard
           title="Tokens"
-          value={(summary?.total_tokens ?? 0).toLocaleString('pt-BR')}
+          value={(summary?.total_tokens ?? 0).toLocaleString( 'es' )}
           icon={<Zap className="h-5 w-5" />}
           gradient="from-sky-500 to-cyan-500"
         />
@@ -156,7 +156,7 @@ export function PlatformAIUsageDashboard() {
         />
         <KpiCard
           title="Empresas activas"
-          value={(summary?.unique_orgs ?? 0).toLocaleString('pt-BR')}
+          value={(summary?.unique_orgs ?? 0).toLocaleString( 'es' )}
           icon={<Building2 className="h-5 w-5" />}
           gradient="from-pink-500 to-rose-500"
         />
@@ -201,7 +201,7 @@ export function PlatformAIUsageDashboard() {
                     <Cell key={d.provider} fill={PROVIDER_COLORS[d.provider] ?? '#888'} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(v: any) => Number(v).toLocaleString('pt-BR') + ' tokens'} />
+                <Tooltip formatter={(v: any) => Number(v).toLocaleString( 'es' ) + ' tokens'} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -218,7 +218,7 @@ export function PlatformAIUsageDashboard() {
               <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
               <XAxis type="number" fontSize={11} />
               <YAxis dataKey="org_name" type="category" fontSize={11} width={140} />
-              <Tooltip formatter={(v: any) => Number(v).toLocaleString('pt-BR') + ' tokens'} />
+              <Tooltip formatter={(v: any) => Number(v).toLocaleString( 'es' ) + ' tokens'} />
               <Bar dataKey="total_tokens" fill="hsl(262 83% 58%)" radius={[0, 6, 6, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -237,7 +237,7 @@ export function PlatformAIUsageDashboard() {
                     <th className="text-left py-2">Modelo</th>
                     <th className="text-right py-2">Llamadas</th>
                     <th className="text-right py-2">Tokens</th>
-                    <th className="text-right py-2">Custo</th>
+                    <th className="text-right py-2">Costo</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -252,14 +252,14 @@ export function PlatformAIUsageDashboard() {
                           </div>
                           <Badge variant="outline" className="mt-1 text-[10px]">{PROVIDER_LABELS[m.provider] ?? m.provider}</Badge>
                         </td>
-                        <td className="text-right">{m.calls.toLocaleString('pt-BR')}</td>
-                        <td className="text-right">{m.total_tokens.toLocaleString('pt-BR')}</td>
+                        <td className="text-right">{m.calls.toLocaleString( 'es' )}</td>
+                        <td className="text-right">{m.total_tokens.toLocaleString( 'es' )}</td>
                         <td className="text-right font-medium">{fmtUSD(cost)}</td>
                       </tr>
                     );
                   })}
                   {byModel.length === 0 && (
-                    <tr><td colSpan={4} className="py-6 text-center text-muted-foreground">Sem dados no período.</td></tr>
+                    <tr><td colSpan={4} className="py-6 text-center text-muted-foreground">Sin datos en el período.</td></tr>
                   )}
                 </tbody>
               </table>
@@ -268,13 +268,13 @@ export function PlatformAIUsageDashboard() {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-base">Consumo por chave do pool</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-base">Consumo por clave del pool</CardTitle></CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="text-xs text-muted-foreground border-b">
                   <tr>
-                    <th className="text-left py-2">Chave</th>
+                    <th className="text-left py-2">Clave</th>
                     <th className="text-right py-2">Llamadas</th>
                     <th className="text-right py-2">Tokens</th>
                   </tr>
@@ -289,12 +289,12 @@ export function PlatformAIUsageDashboard() {
                         </div>
                         <Badge variant="outline" className="mt-1 text-[10px]">{PROVIDER_LABELS[k.provider] ?? k.provider}</Badge>
                       </td>
-                      <td className="text-right">{k.calls.toLocaleString('pt-BR')}</td>
-                      <td className="text-right">{k.total_tokens.toLocaleString('pt-BR')}</td>
+                      <td className="text-right">{k.calls.toLocaleString( 'es' )}</td>
+                      <td className="text-right">{k.total_tokens.toLocaleString( 'es' )}</td>
                     </tr>
                   ))}
                   {byKey.length === 0 && (
-                    <tr><td colSpan={3} className="py-6 text-center text-muted-foreground">Sem dados no período.</td></tr>
+                    <tr><td colSpan={3} className="py-6 text-center text-muted-foreground">Sin datos en el período.</td></tr>
                   )}
                 </tbody>
               </table>

@@ -139,7 +139,7 @@ export function ReportsTab({ productId }: ReportsTabProps) {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">{sellerPerformance.length}</p>
-                <p className="text-sm text-muted-foreground">Vendedores Ativos</p>
+                <p className="text-sm text-muted-foreground">Vendedores Activos</p>
               </div>
             </div>
           </CardContent>
@@ -153,7 +153,7 @@ export function ReportsTab({ productId }: ReportsTabProps) {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">{avgTimeInStage}d</p>
-                <p className="text-sm text-muted-foreground">Tempo Médio/Etapa</p>
+                <p className="text-sm text-muted-foreground">Tiempo Promedio/Etapa</p>
               </div>
             </div>
           </CardContent>
@@ -172,12 +172,12 @@ export function ReportsTab({ productId }: ReportsTabProps) {
       {/* Seller Performance Table */}
       <Card className="bg-card">
         <CardHeader>
-          <CardTitle className="text-base">Performance por Vendedor</CardTitle>
+          <CardTitle className="text-base">Rendimiento por Vendedor</CardTitle>
         </CardHeader>
         <CardContent>
           {sellerPerformance.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              Nenhum dado de performance disponível
+              Ningún dato de rendimiento disponible
             </p>
           ) : (
             <Table>
@@ -186,7 +186,7 @@ export function ReportsTab({ productId }: ReportsTabProps) {
                   <TableHead>Vendedor</TableHead>
                   <TableHead className="text-center">Leads</TableHead>
                   <TableHead className="text-center">Ventas</TableHead>
-                  <TableHead className="text-center">Conversão</TableHead>
+                  <TableHead className="text-center">Conversión</TableHead>
                   <TableHead className="text-right">Valor Total</TableHead>
                 </TableRow>
               </TableHeader>

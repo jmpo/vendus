@@ -71,12 +71,12 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['training-videos', productId] });
-      toast.success('Vídeo adicionado!');
+      toast.success('¡Video añadido!');
       setVideoDialogOpen(false);
       setVideoForm({ title: '', description: '', video_url: '', thumbnail_url: '' });
     },
     onError: () => {
-      toast.error('Erro ao adicionar vídeo');
+      toast.error('Error al añadir video');
     },
   });
 
@@ -92,7 +92,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['training-videos', productId] });
-      toast.success('Vídeo removido!');
+      toast.success('¡Video eliminado!');
     },
   });
 
@@ -121,7 +121,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
           </TabsTrigger>
           <TabsTrigger value="videos" className="gap-2">
             <Video className="h-4 w-4" />
-            Vídeo Aulas
+            Video Clases
           </TabsTrigger>
         </TabsList>
 
@@ -140,7 +140,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground italic">
-                  Nenhum pitch cadastrado. Configure nas configurações do produto.
+                  Ningún pitch registrado. Configure en las configuraciones del producto.
                 </p>
               )}
             </CardContent>
@@ -150,7 +150,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
           <Card className="bg-card">
             <CardHeader>
               <CardTitle className="text-base">Pitch 30 segundos</CardTitle>
-              <CardDescription>Apresentação expandida</CardDescription>
+              <CardDescription>Presentación expandida</CardDescription>
             </CardHeader>
             <CardContent>
               {product?.pitch_30s ? (
@@ -159,7 +159,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground italic">
-                  Nenhum pitch cadastrado. Configure nas configurações do produto.
+                  Ningún pitch registrado. Configure en las configuraciones del producto.
                 </p>
               )}
             </CardContent>
@@ -169,7 +169,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
           <Card className="bg-card">
             <CardHeader>
               <CardTitle className="text-base">Pitch 2 minutos</CardTitle>
-              <CardDescription>Apresentação completa</CardDescription>
+              <CardDescription>Presentación completa</CardDescription>
             </CardHeader>
             <CardContent>
               {product?.pitch_2min ? (
@@ -178,7 +178,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground italic">
-                  Nenhum pitch cadastrado. Configure nas configurações do produto.
+                  Ningún pitch registrado. Configure en las configuraciones del producto.
                 </p>
               )}
             </CardContent>
@@ -196,7 +196,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground italic">
-                  Nenhum ICP cadastrado.
+                  Ningún ICP registrado.
                 </p>
               )}
             </CardContent>
@@ -205,7 +205,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
           {/* Differentials */}
           <Card className="bg-card">
             <CardHeader>
-              <CardTitle className="text-base">Diferenciais</CardTitle>
+              <CardTitle className="text-base">Diferenciales</CardTitle>
             </CardHeader>
             <CardContent>
               {product?.differentials && product.differentials.length > 0 ? (
@@ -219,7 +219,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
                 </ul>
               ) : (
                 <p className="text-sm text-muted-foreground italic">
-                  Nenhum diferencial cadastrado.
+                  Ningún diferencial registrado.
                 </p>
               )}
             </CardContent>
@@ -231,7 +231,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
           <div className="flex justify-end">
             <Button onClick={() => setVideoDialogOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              Adicionar Vídeo
+              Añadir Video
             </Button>
           </div>
 
@@ -288,7 +288,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Remover vídeo?</AlertDialogTitle>
+                              <AlertDialogTitle>¿Eliminar video?</AlertDialogTitle>
                               <AlertDialogDescription>
                                 Esta ação irá remover o vídeo "{video.title}" do playbook.
                               </AlertDialogDescription>
@@ -299,7 +299,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
                                 onClick={() => deleteVideo.mutate(video.id)}
                                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                               >
-                                Remover
+                                Eliminar
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
@@ -313,7 +313,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
                         className="inline-flex items-center gap-1 text-xs text-primary hover:underline mt-2"
                       >
                         <ExternalLink className="h-3 w-3" />
-                        Abrir vídeo
+                        Abrir video
                       </a>
                     </div>
                   </CardContent>
@@ -324,13 +324,13 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
             <Card className="bg-card">
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <Video className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                <h3 className="text-lg font-medium text-foreground mb-1">Nenhum vídeo</h3>
+                <h3 className="text-lg font-medium text-foreground mb-1">Ningún video</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Adicione vídeo aulas para treinar sua equipe
+                  Añada video clases para entrenar a su equipo
                 </p>
                 <Button onClick={() => setVideoDialogOpen(true)}>
                   <Plus className="mr-2 h-4 w-4" />
-                  Adicionar Vídeo
+                  Añadir Video
                 </Button>
               </CardContent>
             </Card>
@@ -342,7 +342,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
       <Dialog open={videoDialogOpen} onOpenChange={setVideoDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Adicionar Vídeo Aula</DialogTitle>
+            <DialogTitle>Añadir Video Aula</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
@@ -355,7 +355,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="videoUrl">URL do Vídeo *</Label>
+              <Label htmlFor="videoUrl">URL del Video *</Label>
               <Input
                 id="videoUrl"
                 value={videoForm.video_url}
@@ -364,7 +364,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="videoThumbnail">URL da Thumbnail (opcional)</Label>
+              <Label htmlFor="videoThumbnail">URL de la Miniatura (opcional)</Label>
               <Input
                 id="videoThumbnail"
                 value={videoForm.thumbnail_url}
@@ -373,7 +373,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="videoDescription">Descrição (opcional)</Label>
+              <Label htmlFor="videoDescription">Descripción (opcional)</Label>
               <Textarea
                 id="videoDescription"
                 value={videoForm.description}
@@ -390,7 +390,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
               {createVideo.isPending && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Adicionar
+              Añadir
             </Button>
           </DialogFooter>
         </DialogContent>

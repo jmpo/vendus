@@ -63,7 +63,7 @@ export function PlatformSettings() {
     meta_description: '',
     og_image_url: '',
     twitter_handle: '',
-    default_language: 'pt-BR',
+    default_language:  'es' ,
   });
 
   useEffect(() => {
@@ -101,7 +101,7 @@ export function PlatformSettings() {
         meta_description: s.meta_description || '',
         og_image_url: s.og_image_url || '',
         twitter_handle: s.twitter_handle || '',
-        default_language: s.default_language || 'pt-BR',
+        default_language: s.default_language ||  'es' ,
       });
     }
   }, [settings]);
@@ -134,20 +134,20 @@ export function PlatformSettings() {
     <div className="space-y-6">
       <div className="flex items-center justify-between sticky top-0 z-10 bg-background/80 backdrop-blur-md py-2 -mx-2 px-2 rounded-lg">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Identidade Visual</h1>
-          <p className="text-muted-foreground">Personalize toda a aparência da plataforma</p>
+          <h1 className="text-2xl font-bold text-foreground">Identidad Visual</h1>
+          <p className="text-muted-foreground">Personalice toda la apariencia de la plataforma</p>
         </div>
         <Button onClick={handleSave} disabled={updateSettings.isPending} size="lg">
           <Save className="h-4 w-4 mr-2" />
-          {updateSettings.isPending ? 'Salvando...' : 'Salvar Configurações'}
+          {updateSettings.isPending ? 'Guardando...' : 'Guardar Configuraciones'}
         </Button>
       </div>
 
       <Tabs defaultValue="brand" className="space-y-6">
         <TabsList className="grid grid-cols-3 lg:grid-cols-6 h-auto">
           <TabsTrigger value="brand" className="gap-1.5"><ImageIcon className="h-4 w-4" />Marca</TabsTrigger>
-          <TabsTrigger value="colors" className="gap-1.5"><Palette className="h-4 w-4" />Cores</TabsTrigger>
-          <TabsTrigger value="typography" className="gap-1.5"><Type className="h-4 w-4" />Tipografia</TabsTrigger>
+          <TabsTrigger value="colors" className="gap-1.5"><Palette className="h-4 w-4" />Colores</TabsTrigger>
+          <TabsTrigger value="typography" className="gap-1.5"><Type className="h-4 w-4" />Tipografía</TabsTrigger>
           <TabsTrigger value="login" className="gap-1.5"><Layout className="h-4 w-4" />Login</TabsTrigger>
           <TabsTrigger value="widgets" className="gap-1.5"><Sparkles className="h-4 w-4" />Widgets</TabsTrigger>
           <TabsTrigger value="seo" className="gap-1.5"><Globe className="h-4 w-4" />SEO</TabsTrigger>
@@ -159,7 +159,7 @@ export function PlatformSettings() {
             <Card>
               <CardHeader>
                 <CardTitle>Logos</CardTitle>
-                <CardDescription>Logos usados em toda a plataforma</CardDescription>
+                <CardDescription>Logos usados en toda la plataforma</CardDescription>
               </CardHeader>
               <CardContent className="space-y-8">
                 <PlatformLogoUpload
@@ -168,7 +168,7 @@ export function PlatformSettings() {
                   onRemove={() => update({ logo_url: '' })}
                   type="logo"
                   label="Logo Principal (Light)"
-                  description="Usado em fundos claros. PNG, JPG, SVG ou WEBP. Máx 2MB."
+                  description="Usado en fondos claros. PNG, JPG, SVG o WEBP. Máx 2MB."
                   previewBg="light"
                   aspectRatio="wide"
                 />
@@ -178,7 +178,7 @@ export function PlatformSettings() {
                   onRemove={() => update({ logo_dark_url: '' })}
                   type="logo_dark"
                   label="Logo Dark Mode"
-                  description="Usado em fundos escuros."
+                  description="Usado en fondos oscuros."
                   previewBg="dark"
                   aspectRatio="wide"
                 />
@@ -187,8 +187,8 @@ export function PlatformSettings() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Favicon / Ícone do App</CardTitle>
-                <CardDescription>Favicon do navegador e ícone do PWA</CardDescription>
+                <CardTitle>Favicon / Icono de la App</CardTitle>
+                <CardDescription>Favicon del navegador e icono de la PWA</CardDescription>
               </CardHeader>
               <CardContent>
                 <PlatformLogoUpload
@@ -196,7 +196,7 @@ export function PlatformSettings() {
                   onUpload={(url) => update({ favicon_url: url })}
                   onRemove={() => update({ favicon_url: '' })}
                   type="favicon"
-                  label="Ícone da Aplicação"
+                  label="Icono de la Aplicación"
                   description="Recomendado: 512x512px, PNG."
                   previewBg="light"
                   aspectRatio="square"
@@ -206,11 +206,11 @@ export function PlatformSettings() {
 
             <Card className="lg:col-span-2">
               <CardHeader>
-                <CardTitle>Informações Gerais</CardTitle>
+                <CardTitle>Información General</CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Nome da Plataforma</Label>
+                  <Label>Nombre de la Plataforma</Label>
                   <Input
                     value={formData.platform_name}
                     onChange={(e) => update({ platform_name: e.target.value })}
@@ -218,7 +218,7 @@ export function PlatformSettings() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>E-mail de Soporte</Label>
+                  <Label>Correo electrónico de Soporte</Label>
                   <Input
                     type="email"
                     value={formData.support_email}
@@ -227,22 +227,22 @@ export function PlatformSettings() {
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label>URL pública do app</Label>
+                  <Label>URL pública de la app</Label>
                   <Input
                     value={formData.public_app_url}
                     onChange={(e) => update({ public_app_url: e.target.value })}
                     placeholder="https://app.vendus.com.br"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Usada para gerar links públicos de canais, convites, widgets e agendamentos.
+                    Usada para generar enlaces públicos de canales, invitaciones, widgets y citas.
                   </p>
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label>Texto do Rodapé</Label>
+                  <Label>Texto del Pie de página</Label>
                   <Textarea
                     value={formData.footer_text}
                     onChange={(e) => update({ footer_text: e.target.value })}
-                    placeholder="© 2026 Sua Empresa. Todos os direitos reservados."
+                    placeholder="© 2026 Su Empresa. Todos los derechos reservados."
                     rows={2}
                   />
                 </div>
@@ -251,11 +251,11 @@ export function PlatformSettings() {
 
             <Card className="lg:col-span-2">
               <CardHeader>
-                <CardTitle>Links Legais</CardTitle>
+                <CardTitle>Enlaces Legales</CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Termos de Uso</Label>
+                  <Label>Términos de Uso</Label>
                   <div className="flex gap-2">
                     <Input
                       value={formData.terms_url}
@@ -272,7 +272,7 @@ export function PlatformSettings() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Política de Privacidade</Label>
+                  <Label>Política de Privacidad</Label>
                   <div className="flex gap-2">
                     <Input
                       value={formData.privacy_url}
@@ -298,25 +298,25 @@ export function PlatformSettings() {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             <Card className="lg:col-span-3">
               <CardHeader>
-                <CardTitle>Paleta da Plataforma</CardTitle>
+                <CardTitle>Paleta de la Plataforma</CardTitle>
                 <CardDescription>
-                  A cor primária alimenta automaticamente a sidebar, botões, anel de foco, e-mails e gradientes.
+                  El color primario alimenta automáticamente la barra lateral, botones, anillo de enfoque, correos electrónicos y gradientes.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <ColorPickerField
-                    label="Cor Primária"
+                    label="Color Primario"
                     value={formData.primary_color}
                     onChange={(v) => update({ primary_color: v })}
                     description="Cor principal — botões, links, ícones ativos"
                     defaultValue="#84CC16"
                   />
                   <ColorPickerField
-                    label="Cor de Destaque"
+                    label="Color de Acento"
                     value={formData.accent_color}
                     onChange={(v) => update({ accent_color: v })}
-                    description="Realces e badges (pode ser igual à primária)"
+                    description="Realces y etiquetas (puede ser igual a la primaria)"
                     defaultValue="#84CC16"
                   />
                 </div>
@@ -331,7 +331,7 @@ export function PlatformSettings() {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <Label>Raio de Borda Padrão</Label>
+                    <Label>Radio de Borde Predeterminado</Label>
                     <span className="text-sm font-mono text-muted-foreground">
                       {formData.border_radius}px
                     </span>
@@ -344,12 +344,12 @@ export function PlatformSettings() {
                     onValueChange={(v) => update({ border_radius: v[0] })}
                   />
                   <p className="text-xs text-muted-foreground">
-                    0 = quadrado, 12 = padrão, 24 = bem arredondado
+                    0 = cuadrado, 12 = predeterminado, 24 = bien redondeado
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Tema Padrão para Novos Usuários</Label>
+                  <Label>Tema Predeterminado para Nuevos Usuarios</Label>
                   <Select
                     value={formData.default_theme}
                     onValueChange={(v) => update({ default_theme: v })}
@@ -359,7 +359,7 @@ export function PlatformSettings() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="light">Claro</SelectItem>
-                      <SelectItem value="dark">Escuro</SelectItem>
+                      <SelectItem value="dark">Oscuro</SelectItem>
                       <SelectItem value="auto">Automático (sistema)</SelectItem>
                     </SelectContent>
                   </Select>
@@ -387,12 +387,12 @@ export function PlatformSettings() {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             <Card className="lg:col-span-3">
               <CardHeader>
-                <CardTitle>Fontes</CardTitle>
-                <CardDescription>A fonte é carregada do Google Fonts e aplicada globalmente.</CardDescription>
+                <CardTitle>Fuentes</CardTitle>
+                <CardDescription>La fuente se carga de Google Fonts y se aplica globalmente.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Família da Fonte</Label>
+                  <Label>Familia de la Fuente</Label>
                   <Select
                     value={formData.font_family}
                     onValueChange={(v) => update({ font_family: v })}
@@ -597,7 +597,7 @@ export function PlatformSettings() {
               </div>
 
               <ColorPickerField
-                label="Cor de Destaque dos Widgets"
+                label="Color de Acento dos Widgets"
                 value={formData.widget_accent_color || formData.primary_color}
                 onChange={(v) => update({ widget_accent_color: v })}
                 description="Pode diferir da cor da plataforma interna. Útil quando os widgets ficam em sites de terceiros."

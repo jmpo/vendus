@@ -34,7 +34,7 @@ import {
   Plus, Check,
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { TagPackageGeneratorDialog } from '@/components/admin/tags/TagPackageGeneratorDialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
@@ -88,7 +88,7 @@ export function PostSaleTab({ productId }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold">Eventos Pós-venda</h2>
+        <h2 className="text-lg font-semibold">Eventos Post-venta</h2>
         <p className="text-sm text-muted-foreground">
           O webhook do gateway (Hotmart, Cakto, Doppus, Kiwify) já está conectado. Aqui você define <strong>o que acontece</strong> quando cada evento chega.
         </p>
@@ -99,11 +99,11 @@ export function PostSaleTab({ productId }: Props) {
           <div className="flex items-center gap-3 min-w-0">
             <Sparkles className="h-5 w-5 text-primary shrink-0" />
             <div className="min-w-0">
-              <p className="text-sm font-medium">Pacote de etiquetas deste produto</p>
-              <p className="text-xs text-muted-foreground">Gera PIX, Boleto, Aguardando Pago, Cliente, Reembolso etc. já com automações.</p>
+              <p className="text-sm font-medium">Paquete de etiquetas de este producto</p>
+              <p className="text-xs text-muted-foreground">Genera PIX, Boleto, Esperando Pago, Cliente, Reembolso etc. ya con automatizaciones.</p>
             </div>
           </div>
-          <Button variant="outline" size="sm" onClick={() => setPackageOpen(true)}>Gerar pacote</Button>
+          <Button variant="outline" size="sm" onClick={() => setPackageOpen(true)}>Generar paquete</Button>
         </CardContent>
       </Card>
 
@@ -231,13 +231,13 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
             <div className="flex items-center gap-2 flex-wrap">
               <CardTitle className="text-base">{event.label}</CardTitle>
               {isConfigured ? (
-                <Badge variant={isActive ? 'default' : 'secondary'}>{isActive ? 'Ativo' : 'Pausado'}</Badge>
+                <Badge variant={isActive ? 'default' : 'secondary'}>{isActive ? 'Activo' : 'Pausado'}</Badge>
               ) : (
-                <Badge variant="outline">Não configurado</Badge>
+                <Badge variant="outline">No configurado</Badge>
               )}
               {!!(existing as any)?.add_tag_ids?.length && <Badge variant="outline" className="gap-1"><Tag className="h-3 w-3" />+{(existing as any).add_tag_ids.length}</Badge>}
-              {(existing as any)?.send_mode === 'flow' && <Badge variant="outline" className="gap-1"><Workflow className="h-3 w-3" />Fluxo</Badge>}
-              {(existing as any)?.send_mode === 'message' && <Badge variant="outline" className="gap-1"><MessageSquare className="h-3 w-3" />Mensagem</Badge>}
+              {(existing as any)?.send_mode === 'flow' && <Badge variant="outline" className="gap-1"><Workflow className="h-3 w-3" />Flujo</Badge>}
+              {(existing as any)?.send_mode === 'message' && <Badge variant="outline" className="gap-1"><MessageSquare className="h-3 w-3" />Mensaje</Badge>}
               {existing?.target_stage_id && <Badge variant="outline" className="gap-1"><ArrowRightCircle className="h-3 w-3" />Etapa</Badge>}
               {existing?.agent_id && <Badge variant="outline" className="gap-1"><Bot className="h-3 w-3" />IA</Badge>}
               {!!(existing as any)?.delay_minutes && (
@@ -255,13 +255,13 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
       {open && (
         <CardContent className="space-y-5 border-t pt-4">
           <div className="flex items-center justify-between">
-            <Label>Automação ativa</Label>
+            <Label>Automatización activa</Label>
             <Switch checked={isActive} onCheckedChange={setIsActive} />
           </div>
 
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <Label>Atraso antes de disparar</Label>
+              <Label>Retraso antes de disparar</Label>
               <p className="text-xs text-muted-foreground mt-1">
                 0 = imediato. Vale para mensagem, agente IA e e-mail. Etiquetas, etapa e encaminhamento são imediatos.
               </p>
@@ -297,22 +297,22 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
               <Select value={sendMode} onValueChange={(v: any) => setSendMode(v)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Não enviar nada</SelectItem>
-                  <SelectItem value="flow">Fluxo pronto</SelectItem>
-                  <SelectItem value="message">Mensagem na hora</SelectItem>
+                  <SelectItem value="none">No enviar nada</SelectItem>
+                  <SelectItem value="flow">Flujo pronto</SelectItem>
+                  <SelectItem value="message">Mensaje na hora</SelectItem>
                 </SelectContent>
               </Select>
 
               {sendMode === 'flow' && (
                 flows.length === 0 ? (
                   <p className="text-xs text-muted-foreground">
-                    Nenhum fluxo criado para este produto. Crie um na aba <strong>Fluxos</strong> primeiro.
+                    Nenhum fluxo criado para este produto. Crie um na aba <strong>Flujos</strong> primeiro.
                   </p>
                 ) : (
                   <Select value={flowId ?? ''} onValueChange={(v) => setFlowId(v || null)}>
-                    <SelectTrigger><SelectValue placeholder="Selecionar fluxo" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="Seleccionar flujo" /></SelectTrigger>
                     <SelectContent>
-                      {flows.map(f => <SelectItem key={f.id} value={f.id}>{f.name}{!f.is_active ? ' (inativo)' : ''}</SelectItem>)}
+                      {flows.map(f => <SelectItem key={f.id} value={f.id}>{f.name}{!f.is_active ? ' (inactivo)' : ''}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 )
@@ -329,14 +329,14 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
                   </Select>
                   {messageChannel === 'whatsapp' && (
                     <div>
-                      <Label className="text-xs text-muted-foreground">Número WhatsApp para disparo</Label>
+                      <Label className="text-xs text-muted-foreground">Número WhatsApp para envío</Label>
                       <Select
                         value={evolutionInstanceId ?? NONE}
                         onValueChange={(v) => setEvolutionInstanceId(v === NONE ? null : v)}
                       >
-                        <SelectTrigger><SelectValue placeholder="Instância padrão da organização" /></SelectTrigger>
+                        <SelectTrigger><SelectValue placeholder="Instancia predeterminada de la organización" /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value={NONE}>Instância padrão (automático)</SelectItem>
+                          <SelectItem value={NONE}>Instancia predeterminada (automático)</SelectItem>
                           {(evolutionInstances || []).map((inst) => (
                             <SelectItem key={inst.id} value={inst.id}>
                               {inst.name}{inst.phone_number ? ` · ${inst.phone_number}` : ''}
@@ -475,7 +475,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
                           onChange={() => setAgentOutreachMode('direct')}
                         />
                         <div className="text-xs">
-                          <div className="font-medium text-foreground">Mensagem direta</div>
+                          <div className="font-medium text-foreground">Mensaje direta</div>
                           <div className="text-muted-foreground">Envia tudo de uma vez (Pix, link, instruções) em até 2 bolhas curtas.</div>
                         </div>
                       </label>
@@ -667,7 +667,7 @@ function RecentLogs({ productId }: { productId: string }) {
                     <div className="min-w-0">
                       <div className="font-medium">{log.event_type}</div>
                       <div className="text-xs text-muted-foreground">
-                        {log.source || 'webhook'} · {executed.length} ação(ões) · {format(new Date(log.created_at), "dd/MM 'às' HH:mm", { locale: ptBR })}
+                        {log.source || 'webhook'} · {executed.length} ação(ões) · {format(new Date(log.created_at), "dd/MM 'às' HH:mm", { locale: es })}
                       </div>
                     </div>
                   </div>

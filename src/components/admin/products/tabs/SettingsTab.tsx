@@ -18,8 +18,8 @@ interface SettingsTabProps {
 }
 
 const statusOptions = [
-  { value: 'draft', label: 'Rascunho' },
-  { value: 'review', label: 'Em Revisão' },
+  { value: 'draft', label: 'Borrador' },
+  { value: 'review', label: 'En Revisión' },
   { value: 'published', label: 'Publicado' },
 ];
 
@@ -72,12 +72,12 @@ export function SettingsTab({ productId }: SettingsTabProps) {
 
   const handleSave = async () => {
     if (!isFormReady) {
-      toast.error('Aguarde os dados carregarem');
+      toast.error('Espere a que se carguen los datos');
       return;
     }
     
     if (!formData.name.trim()) {
-      toast.error('Nome do produto é obrigatório');
+      toast.error('El nombre del producto es obligatorio');
       return;
     }
     
@@ -100,9 +100,9 @@ export function SettingsTab({ productId }: SettingsTabProps) {
         icp: formData.icp || null,
         differentials: formData.differentials.split('\n').filter(d => d.trim()),
       });
-      toast.success('Produto atualizado!');
+      toast.success('¡Producto actualizado!');
     } catch (error) {
-      toast.error('Erro ao salvar produto');
+      toast.error('Error al guardar producto');
     }
   };
 
@@ -113,7 +113,7 @@ export function SettingsTab({ productId }: SettingsTabProps) {
     const result = await optimize(field, value, formData);
     if (result?.optimized) {
       setFormData(prev => ({ ...prev, [field]: result.optimized }));
-      toast.success('Campo otimizado com IA!');
+      toast.success('¡Campo optimizado con IA!');
     }
   };
 
@@ -142,7 +142,7 @@ export function SettingsTab({ productId }: SettingsTabProps) {
           ) : (
             <Save className="mr-2 h-4 w-4" />
           )}
-          Salvar Alterações
+          Guardar Cambios
         </Button>
       </div>
 
@@ -151,14 +151,14 @@ export function SettingsTab({ productId }: SettingsTabProps) {
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
             <FileText className="h-4 w-4" />
-            Informações Básicas
+            Información Básica
           </CardTitle>
-          <CardDescription>Dados principais do produto</CardDescription>
+          <CardDescription>Datos principales del producto</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome do Produto *</Label>
+              <Label htmlFor="name">Nombre del Producto *</Label>
               <Input
                 id="name"
                 value={formData.name}
@@ -198,19 +198,19 @@ export function SettingsTab({ productId }: SettingsTabProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="short_description">Descrição Curta</Label>
+              <Label htmlFor="short_description">Descripción Corta</Label>
               <Input
                 id="short_description"
                 value={formData.short_description}
                 onChange={(e) => setFormData({ ...formData, short_description: e.target.value })}
-                placeholder="Uma linha sobre o produto"
+                placeholder="Una línea sobre el producto"
               />
             </div>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="description">Descrição Completa</Label>
+              <Label htmlFor="description">Descripción Completa</Label>
               <AIOptimizeButton
                 onOptimize={() => handleOptimizeField('description')}
                 isOptimizing={isOptimizing}
@@ -232,9 +232,9 @@ export function SettingsTab({ productId }: SettingsTabProps) {
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
             <ImageIcon className="h-4 w-4" />
-            Imagens
+            Imágenes
           </CardTitle>
-          <CardDescription>Arraste as imagens ou clique para fazer upload</CardDescription>
+          <CardDescription>Arrastre las imágenes o haga clic para subir</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-6 sm:grid-cols-3">
@@ -244,7 +244,7 @@ export function SettingsTab({ productId }: SettingsTabProps) {
               bucket="product-documents"
               folder={`products/${productId}/logo`}
               label="Logo"
-              description="Formato quadrado recomendado"
+              description="Formato cuadrado recomendado"
               aspectRatio="square"
               maxSizeMB={2}
             />
@@ -254,7 +254,7 @@ export function SettingsTab({ productId }: SettingsTabProps) {
               bucket="product-documents"
               folder={`products/${productId}/banner`}
               label="Banner"
-              description="Proporção 16:9 recomendada"
+              description="Proporción 16:9 recomendada"
               aspectRatio="banner"
               maxSizeMB={5}
             />
@@ -264,7 +264,7 @@ export function SettingsTab({ productId }: SettingsTabProps) {
               bucket="product-documents"
               folder={`products/${productId}/image`}
               label="Imagem do Produto"
-              description="Imagem principal para exibição"
+              description="Imagen principal para visualización"
               aspectRatio="square"
               maxSizeMB={5}
             />
@@ -277,9 +277,9 @@ export function SettingsTab({ productId }: SettingsTabProps) {
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
             <Link className="h-4 w-4" />
-            Links Externos
+            Enlaces Externos
           </CardTitle>
-          <CardDescription>Site, demo, checkout e outros links</CardDescription>
+          <CardDescription>Sitio, demo, checkout y otros enlaces</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
@@ -308,7 +308,7 @@ export function SettingsTab({ productId }: SettingsTabProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label>Documentação</Label>
+              <Label>Documentación</Label>
               <Input
                 value={formData.external_links.docs || ''}
                 onChange={(e) => updateExternalLink('docs', e.target.value)}
@@ -332,7 +332,7 @@ export function SettingsTab({ productId }: SettingsTabProps) {
             <Sparkles className="h-4 w-4" />
             Pitches
           </CardTitle>
-          <CardDescription>Apresentações do produto em diferentes durações</CardDescription>
+          <CardDescription>Presentaciones del producto en diferentes duraciones</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -349,7 +349,7 @@ export function SettingsTab({ productId }: SettingsTabProps) {
               value={formData.pitch_15s}
               onChange={(e) => setFormData({ ...formData, pitch_15s: e.target.value })}
               rows={2}
-              placeholder="Elevator pitch curto..."
+              placeholder="Elevator pitch corto..."
             />
           </div>
 
@@ -409,12 +409,12 @@ export function SettingsTab({ productId }: SettingsTabProps) {
               value={formData.icp}
               onChange={(e) => setFormData({ ...formData, icp: e.target.value })}
               rows={3}
-              placeholder="Descreva o cliente ideal..."
+              placeholder="Describa al cliente ideal..."
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="differentials">Diferenciais (um por linha)</Label>
+            <Label htmlFor="differentials">Diferenciales (uno por línea)</Label>
             <Textarea
               id="differentials"
               value={formData.differentials}
