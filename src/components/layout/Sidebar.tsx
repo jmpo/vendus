@@ -141,13 +141,13 @@ export function Sidebar({
               <div className="px-3 py-8 text-center">
                 <Package className="h-8 w-8 mx-auto text-muted-foreground/50 mb-3" />
                 <p className="text-sm text-muted-foreground">
-                  Nenhum produto atribuído
+                  Ningún producto asignado
                 </p>
               </div>
             ) : (
               <>
                 <p className="px-3 mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Meus Produtos
+                  Mis Productos
                 </p>
                 <div className="space-y-1">
                   {assignedProducts.map((product) => (
