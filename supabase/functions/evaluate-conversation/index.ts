@@ -26,7 +26,7 @@ async function judgeConversation(
   organizationId?: string | null,
 ): Promise<any | null> {
   const systemPrompt =
-    `Usted é um avaliador especialista de conversaciones de ventas. ` +
+    `Vos sos um avaliador especialista de conversaciones de ventas. ` +
     `Analiza la conversación e pontue de 0 a 100 cada dimensão. ` +
     `Sé crítico e objetivo. Responda APENAS via tool call.`;
 

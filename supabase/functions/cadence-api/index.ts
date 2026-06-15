@@ -3,12 +3,12 @@
 //
 // Endpoints (path relativo a /cadence-api):
 //   GET    /cadences                          -> lista cadências da org
-//   GET    /cadences/:id                      -> detalhe + steps
+//   GET    /cadences/:id                      -> detalle + steps
 //   GET    /cadences/:id/stats                -> totais + breakdown por step
 //   POST   /cadences/:id/enroll               -> { lead_ids?, source?, source_ref? } proxy p/ cadence-enroll
 //   POST   /enrollments/:id/stop              -> { reason? } proxy p/ cadence-stop
 //   GET    /enrollments?cadence_id=&lead_id=&status=  -> lista enrollments
-//   GET    /enrollments/:id                   -> detalhe + runs recentes
+//   GET    /enrollments/:id                   -> detalle + runs recentes
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 

@@ -70,7 +70,7 @@ function shouldRunNow(cron: string, lastRunAt: string | null, now: Date): boolea
     const nowMin = now.getUTCMinutes();
     const nowHour = now.getUTCHours();
 
-    // Compatível com listas tipo "8,14"
+    // Compatível con listas tipo "8,14"
     const matchHour = hour === '*' || hour.split(',').map(Number).includes(nowHour);
     const matchMin = min === '*' || Math.abs(nowMin - Number(min)) <= 5;
     if (!matchHour || !matchMin) return false;

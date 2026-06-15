@@ -46,7 +46,7 @@ interface ProvisionResult {
 }
 
 /**
- * Resolve um plano pelo cakto_offer_slug (preferencial) ou cakto_product_id (fallback).
+ * Resolve um plano por el cakto_offer_slug (preferencial) ou cakto_product_id (fallback).
  */
 async function resolvePlatformPlan(
   admin: SupabaseClient,
@@ -74,7 +74,7 @@ async function resolvePlatformPlan(
 
 /**
  * Provisiona o plano da plataforma para o e-mail do comprador.
- * - Cria/encontra a organization pelo cakto_customer_email.
+ * - Cria/encontra a organization por el cakto_customer_email.
  * - Grava plan_id, plan_status='active', plan_activated_at, cakto_subscription_id.
  * - Insere billing_history idempotente via metadata.cakto_id.
  */
@@ -188,7 +188,7 @@ interface EnsureAdminArgs {
 }
 
 /**
- * Garante usuario admin para a organização e dispara e-mail de boas-vindas idempotente.
+ * Garante usuario admin para a organización e dispara e-mail de boas-vindas idempotente.
  */
 export async function ensureAdminUser(
   admin: SupabaseClient,
@@ -198,7 +198,7 @@ export async function ensureAdminUser(
   const email = args.email.trim().toLowerCase();
   if (!email) return { ok: false, errors: ['missing email'] };
 
-  // 1) Tenta achar usuario existente
+  // 1) Tenta encontrar usuario existente
   let userId: string | null = null;
   const { data: foundId, error: rpcErr } = await admin.rpc('get_auth_user_id_by_email', {
     _email: email,

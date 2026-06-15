@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
     const companyName = String(body?.companyName ?? "").trim();
     const phone = String(body?.phone ?? "").trim();
 
-    if (!fullName) return json(400, { ok: false, error: "Nombre é obligatorio" });
+    if (!fullName) return json(400, { ok: false, error: "Nombre es obligatorio" });
     if (!email || !/^\S+@\S+\.\S+$/.test(email))
       return json(400, { ok: false, error: "Email inválido" });
     if (!password || password.length < 8)
@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
         { onConflict: "id" },
       );
 
-    // Organização opcional
+    // Organización opcional
     let organizationId: string | null = null;
     if (companyName) {
       const { data: org, error: orgErr } = await admin

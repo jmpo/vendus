@@ -1,7 +1,7 @@
-// Helper compartilhado para resolver a chave de IA de uma organização.
-// Cada organização puede ter chaves próprias da OpenAI / Anthropic / Gemini
+// Helper compartilhado para resolver a chave de IA de uma organización.
+// Cada organización puede ter chaves próprias da OpenAI / Anthropic / Gemini
 // salvas em `org_ai_credentials` (modelo white-label).
-// O roteador `org_ai_routing` decide qual provedor usar para cada capacidade.
+// O roteador `org_ai_routing` decide cuál provedor usar para cada capacidade.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
@@ -85,7 +85,7 @@ export async function resolveAIProvider(
     };
   }
 
-  // Sem chave da org -> tenta secret global (compatibilidade com OPENAI_API_KEY antiga).
+  // Sem chave da org -> tenta secret global (compatibilidade con OPENAI_API_KEY antiga).
   const envName = `${wanted.provider.toUpperCase()}_API_KEY`;
   const envKey = Deno.env.get(envName);
   if (envKey) {
@@ -101,7 +101,7 @@ export async function resolveAIProvider(
     }
   }
 
-  throw new Error(`Provedor ${wanted.provider} no tiene chave configurada para la organização ${organizationId}`);
+  throw new Error(`Provedor ${wanted.provider} no tiene chave configurada para la organización ${organizationId}`);
 }
 
 export async function logRouterFailure(

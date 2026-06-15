@@ -41,7 +41,7 @@ export function phoneVariantsBR(input: unknown): string[] {
     variants.add(canonical);                       // 5527998385883
     variants.add(canonical.substring(2));          // 27998385883 (sem DDI)
 
-    // Legacy sem o "9" extra de celular
+    // Legacy sin o "9" extra de celular
     if (canonical.length === 13) {
       const ddd = canonical.substring(2, 4);
       const rest = canonical.substring(5); // pula o "9"

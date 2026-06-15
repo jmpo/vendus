@@ -372,9 +372,9 @@ Deno.serve(async (req) => {
       }
     };
 
-    // === WhatsApp delivery via Evolution (provider único, sem fallback) ===
+    // === WhatsApp delivery via Evolution (provider único, sin fallback) ===
     if (channel === "whatsapp" && phone && conv.evolution_instance_id && imageList.length > 0) {
-      // 1. Foto principal com caption completa
+      // 1. Foto principal con caption completa
       const okMain = await sendViaEvolution("image", imageList[0], caption);
       if (okMain) {
         delivered = true;

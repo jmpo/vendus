@@ -1,6 +1,6 @@
 // Edge Function: presence-test
 // Dispara presence ("digitando..." ou "gravando áudio...") por X segundos
-// SEM enviar ninguna mensaje. Usado pelo Admin para validar se o WhatsApp
+// SEM enviar ninguna mensaje. Usado por el Admin para validar se o WhatsApp
 // do número testado mostra o status real.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";

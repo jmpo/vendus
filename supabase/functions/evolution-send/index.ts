@@ -190,7 +190,7 @@ Deno.serve(async (req) => {
         break;
       }
       case "audio": {
-        // Servidor Evolution Go no tiene rota /send/audio — usamos /send/media com type=audio.
+        // Servidor Evolution Go no tiene rota /send/audio — usamos /send/media con type=audio.
         const audioUrl = payload.audio || payload.url;
         const isDataUrl = typeof audioUrl === "string" && audioUrl.startsWith("data:");
         const audioPayload: Record<string, any> = {

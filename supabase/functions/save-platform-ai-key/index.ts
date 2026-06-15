@@ -119,7 +119,7 @@ Deno.serve(async (req) => {
       return json({ error: "invalid provider" }, 400);
     }
 
-    // Edição sem nova chave
+    // Edição sin nova chave
     if (id && (!api_key || api_key.trim().length < 8)) {
       const patch: any = {};
       if (label !== undefined) patch.label = label;

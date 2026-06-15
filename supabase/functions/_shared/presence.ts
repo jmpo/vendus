@@ -70,7 +70,7 @@ export async function sendPresence(
 }
 
 /**
- * Inicia "digitando..." (ou "gravando áudio..." se isAudio) com heartbeat.
+ * Inicia "digitando..." (ou "gravando áudio..." se isAudio) con heartbeat.
  * Retorna handle.stop() que dispara "paused" e cancela o heartbeat.
  *
  * Uso:

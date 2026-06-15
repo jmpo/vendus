@@ -32,7 +32,7 @@ const TOOLS = [
         properties: {
           new_start_iso: {
             type: "string",
-            description: "Novo horario em ISO 8601 com timezone (ex: 2026-06-13T16:00:00-03:00).",
+            description: "Novo horario em ISO 8601 con timezone (ex: 2026-06-13T16:00:00-03:00).",
           },
         },
         required: ["new_start_iso"],
@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
   const startStr = new Date(booking.start_time).toLocaleString("pt-BR", { timeZone: tz });
   const nowStr = new Date().toLocaleString("pt-BR", { timeZone: tz });
 
-  const systemPrompt = `Usted é um assistente de reserva profissional, consultivo e direto (estilo SPIN). Máximo 2 linhas por mensaje.
+  const systemPrompt = `Vos sos um assistente de reserva profissional, consultivo e direto (estilo SPIN). Máximo 2 linhas por mensaje.
 
 Contexto da reunión:
 - Lead: ${booking.guest_name}
@@ -109,11 +109,11 @@ Contexto da reunión:
 
 Su tarea: interpretar a respuesta del lead e chamar UMA tool apropriada:
 - Se confirma/aceita → confirm_booking
-- Se pede otro horario específico → reschedule_booking(new_start_iso) — converta data/hora natural para ISO 8601 com offset -03:00 (Brasília). NÃO invente: se no der pra inferir data exata, prefira propose_followup.
+- Se pede otro horario específico → reschedule_booking(new_start_iso) — converta data/hora natural para ISO 8601 con offset -03:00 (Brasília). NÃO invente: se no der pra inferir data exata, prefira propose_followup.
 - Se cancela definitivamente → cancel_booking
-- Se diz "no posso ahora, me chama después/semana que vem/mes que vem" → propose_followup(when_iso) com data aproximada
+- Se diz "no posso ahora, me chama después/semana que vem/mes que vem" → propose_followup(when_iso) con data aproximada
 
-Sempre execute UMA tool. Depois escreva uma respuesta corta e gentil para enviar al lead via WhatsApp (máx 2 linhas, 1 emoji).`;
+Siempre execute UMA tool. Depois escreva uma respuesta corta e gentil para enviar al lead via WhatsApp (máx 2 linhas, 1 emoji).`;
 
   let aiCfg;
   try {
@@ -221,7 +221,7 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
     if (booking.calendar_event_id) {
       await supabase.from("calendar_events").update({ status: "cancelled" }).eq("id", booking.calendar_event_id);
     }
-    return { reply: "Tudo bem, cancelei aqui. Se quiser remarcar después, é só me chamar 🙏" };
+    return { reply: "Tudo bem, cancelei aqui. Se quiser remarcar después, es só me chamar 🙏" };
   }
 
   if (intent === "reschedule_booking" && args?.new_start_iso) {

@@ -245,7 +245,7 @@ async function generateAIReport(context: SellerContext, sellerName: string): Pro
   // Add stalled leads
   context.stalledLeads.slice(0, 2).forEach(lead => {
     const daysSince = Math.floor((Date.now() - new Date(lead.last_contact_at).getTime()) / (1000 * 60 * 60 * 24));
-    priorities.push(`Retomar contato com ${lead.name} (${daysSince} días sem contato)`);
+    priorities.push(`Retomar contato con ${lead.name} (${daysSince} días sin contato)`);
   });
   
   // Add today's important tasks
@@ -330,7 +330,7 @@ async function sendReportEmail(email: string, name: string, report: { summary: s
           </div>
         </div>
         <div class="footer">
-          <p>Enviado automaticamente pelo su assistente de ventas</p>
+          <p>Enviado automaticamente por el su assistente de ventas</p>
         </div>
       </body>
       </html>

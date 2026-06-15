@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
       return json({ error: 'Falha ao autenticar na Hotmart', details: tokenData }, 400);
     }
 
-    // 2) Busca histórico
+    // 2) Busca historial
     const startDate = Date.now() - days * 24 * 60 * 60 * 1000;
     const apiUrl = `https://developers.hotmart.com/payments/api/v1/sales/history?start_date=${startDate}&max_results=100`;
 

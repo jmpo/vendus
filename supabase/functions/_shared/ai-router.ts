@@ -91,7 +91,7 @@ export async function resolveAIConfig(
 ): Promise<ResolvedAIConfig> {
   const envLovableKey = Deno.env.get('LOVABLE_API_KEY') || '';
 
-  /** Lê um plano efetivo da organização (provider/strategy/allow). */
+  /** Lê um plano efetivo da organización (provider/strategy/allow). */
   async function readPlan(): Promise<{ allow: boolean; provider: string; strategy: string }> {
     if (!organizationId) return { allow: true, provider: 'lovable', strategy: 'random' };
     try {
@@ -161,7 +161,7 @@ export async function resolveAIConfig(
   if (!organizationId) return envLovableConfig;
 
   try {
-    // 1) Roteamento configurado pela empresa (chave própria) tiene prioridade
+    // 1) Roteamento configurado por la empresa (chave própria) tiene prioridade
     const { data: routing } = await supabase
       .from('org_ai_routing')
       .select('provider, model, fallback_to_lovable')
@@ -183,7 +183,7 @@ export async function resolveAIConfig(
       if (apiKey && orgProvider === 'openai') {
         return buildOpenAIConfig(apiKey, routedModel, 'external_key');
       }
-      // sem chave própria → cai pro pool / plano abaixo
+      // sin chave própria → cai pro pool / plano abaixo
     }
 
     // 2) Plano de la empresa decide se usa pool da plataforma
@@ -212,7 +212,7 @@ export async function resolveAIConfig(
       return { ...envLovableConfig, model: preferredModel || routedModel || DEFAULT_MODEL };
     }
     const err: any = new Error(
-      `Pool da plataforma sem chaves ativas para "${plan.provider}". Peça ao Super Admin para registrar uma chave em Super Admin → IA da Plataforma.`,
+      `Pool da plataforma sin chaves ativas para "${plan.provider}". Peça ao Super Admin para registrar uma chave em Super Admin → IA da Plataforma.`,
     );
     err.code = 'AI_POOL_EMPTY';
     throw err;
@@ -225,8 +225,8 @@ export async function resolveAIConfig(
 
 
 /**
- * Registra consumo de tokens da plataforma após chamada Lovable AI.
- * Para chave própria del cliente, apenas grava log informativo (no consome cota).
+ * Registra consumo de tokens da plataforma después chamada Lovable AI.
+ * Para chave própria del cliente, solo grava log informativo (no consome cota).
  */
 export async function recordAIUsage(
   supabase: any,
@@ -263,8 +263,8 @@ export async function recordAIUsage(
 }
 
 /**
- * Atalho para chamadas diretas ao Lovable Gateway (raw fetch).
- * Equivale a recordAIUsage com cfg sintético source='gateway'.
+ * Atajo para chamadas diretas ao Lovable Gateway (raw fetch).
+ * Equivale a recordAIUsage con cfg sintético source='gateway'.
  */
 export async function recordLovableUsage(
   supabase: any,
@@ -310,7 +310,7 @@ export async function resolveEmbeddingsConfig(
       apiKey: fallbackKey,
     };
   }
-  throw new Error('Embeddings requerem uma chave OpenAI configurada na organização ou na plataforma.');
+  throw new Error('Embeddings requerem uma chave OpenAI configurada na organización ou na plataforma.');
 }
 
 /**

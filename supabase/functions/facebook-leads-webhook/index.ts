@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
   );
   
-  // GET = Verificação do webhook pelo Facebook
+  // GET = Verificação do webhook por el Facebook
   if (req.method === 'GET') {
     const mode = url.searchParams.get('hub.mode');
     const token = url.searchParams.get('hub.verify_token');
@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
       for (const entry of body.entry || []) {
         const pageId = entry.id;
         
-        // Buscar integración pela page_id
+        // Buscar integración por la page_id
         const { data: integration, error: integrationError } = await supabase
           .from('facebook_lead_integrations')
           .select('*, products(*)')

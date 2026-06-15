@@ -1,5 +1,5 @@
 // Aplica post_response_actions cuando um lead em uma campaña ativa responde.
-// Chamado de forma fire-and-forget pelo evolution-webhook ao gravar visitor message.
+// Chamado de forma fire-and-forget por el evolution-webhook ao gravar visitor message.
 // POST { conversation_id, lead_id?, organization_id }
 
 import { createServiceClient } from "../_shared/campaign-audience.ts";
@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
       .update({ status: "responded", responded_at: new Date().toISOString() })
       .eq("id", target.id);
 
-    // 2) Parar restantes desse lead en esta campaña (se stop=true, default)
+    // 2) Parar restantes de ese lead en esta campaña (se stop=true, default)
     if (actions.stop !== false) {
       await supabase
         .from("campaign_targets")

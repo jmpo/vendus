@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (!callerProfile?.organization_id) {
-      return new Response(JSON.stringify({ error: 'Sem organização' }), {
+      return new Response(JSON.stringify({ error: 'Sem organización' }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });

@@ -116,7 +116,7 @@ export async function runPostSaleActions(
         await supabase.from('lead_notes').insert({
           lead_id: ctx.leadId,
           organization_id: ctx.organizationId,
-          content: `${n} disparo(s) pós-venta pendente(s) cancelado(s) após evento "${ctx.eventType}".`,
+          content: `${n} disparo(s) pós-venta pendente(s) cancelado(s) después evento "${ctx.eventType}".`,
           note_type: 'system',
         });
       }
@@ -263,7 +263,7 @@ export async function runPostSaleActions(
     }
   } else if (!isDelayed && action.send_mode === 'flow' && action.flow_id) {
     // Flow execution: por ora solo registramos o disparo no metadata del lead
-    // (motor de execução de chat_flows é acionado em otro contexto).
+    // (motor de execução de chat_flows es acionado em otro contexto).
     try {
       await supabase.from('lead_notes').insert({
         lead_id: lead.id,

@@ -45,7 +45,7 @@ Deno.serve(async (req: Request) => {
       return new Response('bad request', { status: 400 });
     }
     const sb = supa();
-    // Resolve por path id (preferido) ou pelo próprio token (retrocompat).
+    // Resolve por path id (preferido) ou por el próprio token (retrocompat).
     let connRow: { id: string; webhook_verify_token: string } | null = null;
     if (pathConnectionId) {
       const { data } = await sb
@@ -212,7 +212,7 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  // Sempre 200 — Meta reenvia se receber qualquer otro código
+  // Siempre 200 — Meta reenvia se receber cualquier otro código
   return new Response('ok', { status: 200, headers: { ...corsHeaders, 'Content-Type': 'text/plain' } });
 });
 
@@ -246,7 +246,7 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
       })
       .eq('id', conversationId);
   } else {
-    // achar widget ativo da org (compat com webchat schema)
+    // encontrar widget ativo da org (compat con webchat schema)
     const { data: widget } = await sb
       .from('webchat_widgets')
       .select('id')

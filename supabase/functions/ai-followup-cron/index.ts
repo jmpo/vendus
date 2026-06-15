@@ -227,21 +227,21 @@ Deno.serve(async (req) => {
         const isLastAttempt = attemptNumber >= maxFollowups;
 
         // Build follow-up prompt
-        const systemPrompt = `Usted é ${agent.name}, um agente de ${agent.agent_type}.
+        const systemPrompt = `Vos sos ${agent.name}, um agente de ${agent.agent_type}.
 TOM DE VOZ: ${agent.tone_style || 'Consultivo'}
 ESTILO: ${agent.message_style || 'Curta e objetiva'}
 OBJETIVO: ${item.objective || agent.primary_objective}
 ${item.extra_context ? `CONTEXTO: ${item.extra_context}` : ''}
 
 REGRAS:
-- Genera APENAS a mensaje, sem explicações
+- Genera APENAS a mensaje, sin explicações
 - Sé natural e humano
 - Mensaje para WhatsApp (corta, direta)
 - DIFERENTE das mensajes anteriores
 ${stepInstruction ? `- INSTRUÇÃO ESPECÍFICA PARA ESTE FOLLOW-UP: ${stepInstruction}` : ''}
-${isLastAttempt ? '- Esta é a ÚLTIMA tentativa. Crea urgência sutil sem ser agressivo.' : ''}`;
+${isLastAttempt ? '- Esta es a ÚLTIMA tentativa. Crea urgência sutil sin ser agressivo.' : ''}`;
 
-        const userPrompt = `Usted ya envió ${item.followups_sent + 1} mensajes para este lead sem respuesta.
+        const userPrompt = `Usted ya envió ${item.followups_sent + 1} mensajes para este lead sin respuesta.
 
 Histórico:
 ${previousMessages.join('\n')}

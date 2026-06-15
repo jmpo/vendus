@@ -115,7 +115,7 @@ serve(async (req: Request): Promise<Response> => {
       .single();
 
     if (!leadMapping) {
-      throw new Error("Lead no sincronizado com Sankhya. Sincronize primeiro.");
+      throw new Error("Lead no sincronizado con Sankhya. Sincronize primeiro.");
     }
 
     // Get Sankhya product ID if provided
@@ -152,7 +152,7 @@ serve(async (req: Request): Promise<Response> => {
               DTNEG: { $: new Date().toISOString().split('T')[0] },
               CODTIPOPER: { $: "1100" }, // Tipo de operação - ajustar conforme configuración del cliente
               CODTIPVENDA: { $: "0" },
-              CODEMP: { $: "1" }, // Empresa padrão - ajustar conforme configuración
+              CODEMP: { $: "1" }, // Empresa estándar - ajustar conforme configuración
             },
             itens: {
               NUNOTA: { $: "" },

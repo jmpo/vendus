@@ -1,7 +1,7 @@
 // supabase/functions/_shared/platform-email-send.ts
 // Helper para enviar emails da plataforma usando Lovable Emails (transactional queue).
 // Carrega o template do banco (`platform_email_templates`), substitui variáveis {{var}}
-// e enfileira via send-transactional-email com o template "platform-generic".
+// e enfileira via send-transactional-email con o template "platform-generic".
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 

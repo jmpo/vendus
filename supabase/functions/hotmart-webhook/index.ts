@@ -1,4 +1,4 @@
-// Hotmart Postback (Webhook) — público, valida hottok por organização
+// Hotmart Postback (Webhook) — público, valida hottok por organización
 // Mapeia eventos da Hotmart para nossa engine de tag automations
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
@@ -23,7 +23,7 @@ const EVENT_MAP: Record<string, string> = {
   PURCHASE_REFUNDED: 'reembolso',
   PURCHASE_CHARGEBACK: 'reembolso',
   PURCHASE_PROTEST: 'reembolso',
-  // Hotmart usa BILLET para boleto e PIX é detectado pelo payment_type
+  // Hotmart usa BILLET para boleto e PIX es detectado por el payment_type
 };
 
 const STATUS_MAP: Record<string, string> = {

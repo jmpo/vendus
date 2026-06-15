@@ -20,9 +20,9 @@ interface SearchBody {
 }
 
 /**
- * Expande filtros de preço quando o usuario menciona um valor exato.
+ * Expande filtros de preço cuando o usuario menciona um valor exato.
  * Ex: cliente diz "13.5 milhões" → busca entre 11.5M e 15.5M (±15%).
- * Isso evita zero resultados quando o catálogo tiene item próximo mas no exato.
+ * Isso evita zero resultados cuando o catálogo tiene item próximo mas no exato.
  */
 function expandPriceRange(
   filters: SearchBody["filters"]
@@ -117,7 +117,7 @@ Deno.serve(async (req) => {
       };
     });
 
-    // Detecta se o resultado é fallback de alternativas (para el agente comunicar honestamente)
+    // Detecta se o resultado es fallback de alternativas (para el agente comunicar hoen estamente)
     const isAlternativeMatch =
       items.length > 0 && items[0].match_strategy === "alternatives";
     const isFuzzyMatch =
@@ -132,9 +132,9 @@ Deno.serve(async (req) => {
         is_fuzzy_match: isFuzzyMatch,
         // Mensaje que o agente puede usar literalmente cuando no achou exato
         agent_hint: isAlternativeMatch
-          ? "No encontrei exatamente o que el cliente pediu, mas tengo essas opciones similares. Apresente como alternativas, sem dizer 'no tengo'."
+          ? "No encontrei exatamente o que el cliente pediu, mas tengo essas opciones similares. Apresente como alternativas, sin dizer 'no tengo'."
           : isFuzzyMatch
-          ? "Encontrei estas opciones aproximadas (puede ter sido error de digitação del cliente). Confirme se é o que ele queria."
+          ? "Encontrei estas opciones aproximadas (puede ter sido error de digitação del cliente). Confirme se es o que ele queria."
           : null,
       }),
       {

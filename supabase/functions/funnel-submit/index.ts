@@ -190,7 +190,7 @@ Deno.serve(async (req) => {
       .insert({
         organization_id: funnel.organization_id,
         product_id: funnel.product_id,
-        name: leadData.name || leadData.email || 'Lead sem nombre',
+        name: leadData.name || leadData.email || 'Lead sin nombre',
         email: leadData.email || null,
         phone: leadData.phone || null,
         company: leadData.company || null,
@@ -339,13 +339,13 @@ Deno.serve(async (req) => {
         });
       }
 
-      // 7.4 Notificar dono del lead
+      // 7.4 Notificar dueño del lead
       if (postActions.notify_owner && (assigned_to || squad_id)) {
         await supabase.from('admin_notifications').insert({
           organization_id: funnel.organization_id,
           user_id: assigned_to,
           type: 'lead_quiz_completed',
-          title: `Novel lead pelo quiz: ${lead.name}`,
+          title: `Novel lead por el quiz: ${lead.name}`,
           message: `Score: ${totalScore} (${computedTemperature}). Embudo: ${funnel.name}.`,
           metadata: { lead_id: lead.id, funnel_id: funnel.id, score: totalScore },
         }).select().maybeSingle();

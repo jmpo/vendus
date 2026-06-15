@@ -1,4 +1,4 @@
-// Sprint 2 — Pipeline de embeddings para memória semântica por lead
+// Sprint 2 — Pipeline de embeddings para memoria semântica por lead
 // Recebe um conteúdo + contexto, gera embedding via Lovable AI Gateway
 // e persiste em lead_semantic_memory.
 
@@ -26,7 +26,7 @@ async function generateEmbedding(text: string): Promise<number[]> {
   const apiKey = Deno.env.get("LOVABLE_API_KEY");
   if (!apiKey) throw new Error("LOVABLE_API_KEY missing");
 
-  // Lovable AI Gateway suporta endpoint de embeddings compatível com OpenAI
+  // Lovable AI Gateway suporta endpoint de embeddings compatível con OpenAI
   const resp = await fetch(
     "https://ai.gateway.lovable.dev/v1/embeddings",
     {

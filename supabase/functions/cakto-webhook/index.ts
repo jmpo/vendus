@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
       try {
         const tagEventType = mapCaktoToTagEvent(event, row.status, row.payment_method);
         if (tagEventType) {
-          // Resolve/cria lead pelo email/teléfono del cliente
+          // Resolve/cria lead por el email/teléfono del cliente
           const leadId = await resolveOrCreateLead(admin, row);
           if (leadId) {
             // Adiciona tags configuradas para esse evento+producto
@@ -149,7 +149,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Para escopo platform: tenta vincular pedido a uma organização pelo email del cliente
+    // Para escopo platform: tenta vincular pedido a uma organización por el email del cliente
     if (scopeParam === 'platform' && row.customer_email) {
       const { data: org } = await admin
         .from('organizations')
@@ -215,8 +215,8 @@ function mapCaktoToTagEvent(
 }
 
 /**
- * Resolve um lead pelo email/teléfono do customer Cakto. Cria se no existir.
- * Retorna null se no houver dados suficientes.
+ * Resolve um lead por el email/teléfono do customer Cakto. Cria se no existir.
+ * Retorna null se no hay dados suficientes.
  */
 async function resolveOrCreateLead(admin: any, row: any): Promise<string | null> {
   const orgId = row.organization_id;
@@ -224,7 +224,7 @@ async function resolveOrCreateLead(admin: any, row: any): Promise<string | null>
   const phone = row.customer_phone?.replace(/\D/g, '') || null;
   if (!orgId || (!email && !phone)) return null;
 
-  // Tenta achar lead existente por email primeiro, después teléfono
+  // Tenta encontrar lead existente por email primeiro, después teléfono
   let lead: { id: string } | null = null;
   if (email) {
     const { data } = await admin

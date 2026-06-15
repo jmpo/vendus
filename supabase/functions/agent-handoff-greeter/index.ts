@@ -68,7 +68,7 @@ async function generateSummary(
           {
             role: "system",
             content:
-              "Resuma em UMA frase corta (máx 15 palavras) o assunto principal de la conversación abaixo. Responde solo o tema, sem rodeios. Ex: 'sobre o plano premium', 'sobre agendar uma reunión'.",
+              "Resuma em UMA frase corta (máx 15 palavras) o assunto principal de la conversación abaixo. Responde solo o tema, sin rodeios. Ex: 'sobre o plano premium', 'sobre agendar uma reunión'.",
           },
           { role: "user", content: history },
         ],
@@ -163,11 +163,11 @@ serve(async (req) => {
       });
     }
 
-    // Usa template configurado, ou um padrão amigável se vazio.
-    // Garante que o novo agente SEMPRE se apresenta após handoff,
-    // evitando que a primeira fala dele seja uma respuesta robótica.
+    // Usa template configurado, ou um estándar amigável se vazio.
+    // Garantiza que el nuevo agente SIEMPRE se presenta después del handoff,
+    // evitando que a primeira fala de él seja uma respuesta robótica.
     const DEFAULT_TEMPLATE =
-      "Oi {{nombre}}, aqui é a {{agent_name}} do time. Vou continuar daqui — me cuenta um poco mais do que usted está pensando? 😊";
+      "Oi {{nombre}}, aquí es a {{agent_name}} do time. Vou continuar de aquí — me cuenta um poco mais do que vos sostá pensando? 😊";
     const template = (agent.handoff_incoming_message || "").trim() || DEFAULT_TEMPLATE;
 
     const delaySec =

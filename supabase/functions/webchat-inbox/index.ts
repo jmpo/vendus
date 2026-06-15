@@ -160,7 +160,7 @@ serve(async (req) => {
         );
       }
 
-      // Reagrupa em formato compatível com o frontend (objetos aninhados).
+      // Reagrupa em formato compatível con o frontend (objetos aninhados).
       const conversations = (rows || []).map((r: any) => ({
         id: r.id,
         organization_id: r.organization_id,
@@ -325,7 +325,7 @@ serve(async (req) => {
         .from('webchat_conversations')
         .select('*')
         .eq('id', conversationId);
-      // Super admin puede acessar conversaciones de qualquer organização
+      // Super admin puede acceder conversaciones de cualquier organización
       if (orgId) convQuery.eq('organization_id', orgId);
 
       const [convRes, msgsRes] = await Promise.all([
@@ -338,7 +338,7 @@ serve(async (req) => {
           .limit(200)
       ]);
 
-      // Error real de banco != "no encontrado". Loga e devolve 500 com causa clara.
+      // Error real de banco != "no encontrado". Loga e devolve 500 con causa clara.
       if (convRes.error) {
         console.error('[webchat-inbox] conversation query error:', conversationId, convRes.error);
         return new Response(
@@ -352,7 +352,7 @@ serve(async (req) => {
 
       const conversation: any = convRes.data;
       if (!conversation) {
-        // Pode ser que exista mas esteja fora do escopo do usuario. Verifica sem filtro de org.
+        // Pode ser que exista mas esteja fora do escopo do usuario. Verifica sin filtro de org.
         const probe = await supabase
           .from('webchat_conversations')
           .select('id')
@@ -401,7 +401,7 @@ serve(async (req) => {
         }
       }
 
-      // 2) Hidrata joins de forma defensiva (qualquer falla vira null em vez de derrubar la conversación)
+      // 2) Hidrata joins de forma defensiva (cualquier fala queda null en vez de tirar la conversación)
       const [widgetRes, assignedRes, agentRes, leadRes, sectorRes, productOverrideRes] = await Promise.all([
         conversation.widget_id
           ? supabase.from('webchat_widgets').select('id, name, primary_color, product_id, products(id, name)').eq('id', conversation.widget_id).maybeSingle()
@@ -636,7 +636,7 @@ serve(async (req) => {
             if (hasMedia) {
               const m = body.media;
               // TODOS os tipos de mídia (audio, image, video, document, sticker) usam /send/media.
-              // O servidor Evolution Go no expõe /send/audio — áudio precisa ir como media com type=audio.
+              // O servidor Evolution Go no expõe /send/audio — áudio precisa ir como media con type=audio.
               evoBody = {
                 organization_id: orgId,
                 instance_id: evoInstanceId,
@@ -681,7 +681,7 @@ serve(async (req) => {
               console.log('[webchat-inbox] Sent via Evolution Go:', JSON.stringify(sendData).slice(0, 200));
             }
           } else {
-            // Sem instância Evolution conectada — marca falla visível
+            // Sem instância Evolution conectada — marca fala visível
             console.error('[webchat-inbox] No connected Evolution instance for org', orgId);
             const baseMeta = (insertData.metadata as Record<string, unknown>) || {};
             await supabase
@@ -690,7 +690,7 @@ serve(async (req) => {
                 metadata: {
                   ...baseMeta,
                   delivery_status: 'failed',
-                  error: 'Nenhuma instância WhatsApp conectada. Conecte uma instância em Configurações → WhatsApp.',
+                  error: 'Ningunoa instância WhatsApp conectada. Conecte uma instância em Configurações → WhatsApp.',
                   failed_at: new Date().toISOString(),
                 },
               })
@@ -742,7 +742,7 @@ serve(async (req) => {
 
       // Broadcast message to all listeners on this conversation channel.
       // Inclui `client_temp_id` (se enviado) para el frontend conseguir substituir
-      // a bolha otimista pela mensaje real, evitando duplicação visual.
+      // a bolha otimista por la mensaje real, evitando duplicação visual.
       const broadcastPayload = body.client_temp_id
         ? { ...message, client_temp_id: body.client_temp_id }
         : message;
@@ -865,7 +865,7 @@ serve(async (req) => {
       }
       if (!finalSectorId) {
         return new Response(
-          JSON.stringify({ error: 'Nenhum sector configurado para esta organização. Crea um sector antes de aceitar conversaciones.' }),
+          JSON.stringify({ error: 'Ninguno sector configurado para esta organización. Crea um sector antes de aceitar conversaciones.' }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
@@ -990,7 +990,7 @@ serve(async (req) => {
         conversation_id: body.conversation_id,
         direction: 'outbound',
         sender_type: 'bot',
-        content: `📋 Conversación reaberta por ${profile?.full_name || 'agente'}`,
+        content: `📋 Conversación reabierta por ${profile?.full_name || 'agente'}`,
       });
 
       return new Response(
@@ -1153,7 +1153,7 @@ serve(async (req) => {
           .eq('id', body.conversation_id);
       }
 
-      // Broadcast: notifica clientes que o detalhe de la conversación mudou
+      // Broadcast: notifica clientes que o detalle de la conversación mudou
       try {
         const ch = supabase.channel(`conversation:${body.conversation_id}`);
         await ch.send({ type: 'broadcast', event: 'conversation_updated', payload: { lead_id: leadId } });
@@ -1167,7 +1167,7 @@ serve(async (req) => {
       );
     }
 
-    // ACTION: Set conversation product (override manual pelo agente)
+    // ACTION: Set conversation product (override manual por el agente)
     if (action === 'set-product' && req.method === 'POST') {
       const body = bodyJson || await req.json();
       const conversationId = body.conversation_id;
@@ -1327,7 +1327,7 @@ serve(async (req) => {
               },
               body: JSON.stringify({
                 conversation_id: body.conversation_id,
-                message: '[SISTEMA] O agente humano ativou o bot. Analiza o histórico de la conversación e envie uma mensaje estratégica para reconectar com el lead, considerando todo o contexto anterior.',
+                message: '[SISTEMA] O agente humano ativou o bot. Analiza o historial de la conversación e envie uma mensaje estratégica para reconectar con el lead, considerando todo o contexto anterior.',
                 product_id: productId,
                 visitor_name: conv.visitor_name,
                 agent_config: {
@@ -1493,7 +1493,7 @@ serve(async (req) => {
             },
             body: JSON.stringify({
               conversation_id: body.conversation_id,
-              message: `[SISTEMA] Usted é um agente de reativação. Analiza o histórico abaixo e envie UMA mensaje corta e estratégica para retomar la conversación com ${visitorName}. Sé natural, faça referência ao último assunto discutido e inclua uma pregunta aberta para reengajar. NÃO se apresente novamente. NÃO repita información ya fornecidas.\n\nHistórico:\n${historySummary}`,
+              message: `[SISTEMA] Vos sos um agente de reativação. Analiza o historial abaixo e envie UMA mensaje corta e estratégica para retomar la conversación con ${visitorName}. Sé natural, faça referência ao último assunto discutido e inclua uma pregunta abierta para reengajar. NÃO se apresente novamente. NÃO repita información ya fornecidas.\n\nHistórico:\n${historySummary}`,
               product_id: productId,
               visitor_name: visitorName,
               agent_id: agentId,
@@ -1513,7 +1513,7 @@ serve(async (req) => {
         }
       } else {
         // No history - send default reactivation message
-        reactivationMessage = `Hola ${visitorName}! Percebi que usted demonstrou interesse em nossa solução, mas no avançamos en la conversación. Usted aún tiene interesse? Posso te enviar a demonstração pra usted testar! 😊`;
+        reactivationMessage = `Hola ${visitorName}! Percebi que usted demonstrou interesse em nossa solución, mas no avançamos en la conversación. Usted aún tiene interesse? Posso te enviar a demonstração pra usted testar! 😊`;
       }
 
       // Save message as bot outbound (status stays the same)
@@ -1739,7 +1739,7 @@ serve(async (req) => {
         try {
           let phone = delConv.visitor_phone.replace(/\D/g, '');
           if (!phone.startsWith('55')) phone = '55' + phone;
-          const deleteNotification = '⚠️ Uma mensaje anterior fue removida pelo agente.';
+          const deleteNotification = '⚠️ Uma mensaje anterior fue removida por el agente.';
           await supabase.functions.invoke('evolution-send', {
             body: {
               organization_id: orgId,

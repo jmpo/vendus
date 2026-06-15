@@ -1,4 +1,4 @@
-// Salva (ou atualiza) a chave de API de um provedor de IA da organização.
+// Salva (ou atualiza) a chave de API de um provedor de IA da organización.
 // Faz uma verificação real chamando o provedor antes de gravar.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
@@ -44,7 +44,7 @@ async function verifyKey(provider: string, apiKey: string): Promise<{ ok: boolea
       });
       if (!r.ok && r.status !== 200) {
         const txt = await r.text();
-        // 400 com error de modelo ya indica que a auth funcionou
+        // 400 con error de modelo ya indica que a auth funcionou
         if (txt.includes("model") || r.status === 400) return { ok: true };
         return { ok: false, error: `Anthropic respondeu ${r.status}: ${txt.slice(0, 200)}` };
       }
@@ -135,7 +135,7 @@ Deno.serve(async (req) => {
       );
     if (upErr) return json({ error: upErr.message }, 500);
 
-    // Reflete no integration_settings (compatibilidade com UI antiga)
+    // Reflete no integration_settings (compatibilidade con UI antiga)
     await adminClient.from("integration_settings").upsert(
       {
         organization_id: orgId,

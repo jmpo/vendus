@@ -1,11 +1,11 @@
-// Gera um link de pago para el lead. Inicialmente integra com Cakto (suportado pela plataforma);
-// no futuro puede rotear para Asaas/Stripe baseado na configuración da organização.
+// Gera um link de pago para el lead. Inicialmente integra con Cakto (suportado por la plataforma);
+// no futuro puede rutear para Asaas/Stripe baseado na configuración da organización.
 import type { ToolDefinition } from '../types.ts';
 
 export const gerarLinkPagamentoTool: ToolDefinition = {
   name: 'gerar_link_pagamento',
   description:
-    'Gera um link de pago (Pix/tarjeta) para el lead finalizar a compra. Usa cuando el lead confirmar a intenção de pagar AGORA. O link ya vem com o e-mail/teléfono del lead pré-preenchido cuando posible.',
+    'Gera um link de pago (Pix/tarjeta) para el lead finalizar a compra. Usa cuando el lead confirmar a intenção de pagar AGORA. O link ya vem con o e-mail/teléfono del lead pré-preenchido cuando posible.',
   categories: ['finance'],
   estimated_cost_cents: 0,
   parameters: {
@@ -17,7 +17,7 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
       },
       offer_id: {
         type: 'string',
-        description: 'UUID da oferta específica (opcional). Se omitido, usa a oferta padrão do producto.',
+        description: 'UUID da oferta específica (opcional). Se omitido, usa a oferta estándar do producto.',
       },
       payment_method: {
         type: 'string',
@@ -33,7 +33,7 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
       return { success: false, error: 'leadId obligatorio' };
     }
 
-    // 1) Carrega o producto e busca a oferta com link público da Cakto.
+    // 1) Carrega o producto e busca a oferta con link público da Cakto.
     const { data: product } = await ctx.supabase
       .from('products')
       .select('id, name')
@@ -56,7 +56,7 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
       return {
         success: false,
         error:
-          'Producto no tiene link de checkout configurado. Configure uma oferta com checkout_url (ex: link Cakto) na seção Produtos.',
+          'Producto no tiene link de checkout configurado. Configure uma oferta con checkout_url (ex: link Cakto) na seção Produtos.',
       };
     }
 

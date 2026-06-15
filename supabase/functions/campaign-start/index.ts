@@ -73,7 +73,7 @@ Deno.serve(async (req) => {
       (campaign.exclusion_filters ?? {}) as CampaignFilters,
     );
 
-    // Resolve instâncias disponíveis
+    // Resolve instâncias disponibles
     let instances: any[] = [];
     if (campaign.instance_strategy === "manual" && Array.isArray(campaign.instance_distribution) && campaign.instance_distribution.length) {
       const ids = (campaign.instance_distribution as any[]).map((i: any) => i.instance_id).filter(Boolean);
@@ -98,12 +98,12 @@ Deno.serve(async (req) => {
 
     if (!instances.length) {
       return new Response(
-        JSON.stringify({ error: "Nenhum número WhatsApp conectado para envio" }),
+        JSON.stringify({ error: "Ninguno número WhatsApp conectado para envio" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
-    // Resolve contextos disponíveis
+    // Resolve contextos disponibles
     const contextEntries: Array<{ text: string; id?: string; weight: number }> = [];
     const declared = Array.isArray(campaign.contexts) ? (campaign.contexts as any[]) : [];
     for (const c of declared) {
