@@ -187,7 +187,7 @@ export function LeadCadencesTab({ leadId, organizationId }: LeadCadencesTabProps
             <CadencePicker value={picked} onChange={setPicked} />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAddOpen(false)}>Cancelar/Button>
+            <Button variant="outline" onClick={() => setAddOpen(false)}>Cancelar</Button>
             <Button onClick={handleAdd} disabled={!picked || busy}>
               {busy && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}Inscrever
             </Button>

@@ -10,7 +10,7 @@ interface Props {
 
 const formatTime = (iso: string) => {
   try {
-    return new Date(iso).toLocaleTimeString('pt-BR', {
+    return new Date(iso).toLocaleTimeString('es', {
       hour: '2-digit',
       minute: '2-digit',
     });
@@ -25,12 +25,12 @@ export function TodayAgendaCard({ items, onNavigate }: Props) {
   return (
     <Card className="border-border h-full">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">Agenda e Tarefas de Hoje</CardTitle>
+        <CardTitle className="text-base font-semibold">Agenda y Tareas de Hoy</CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
         {list.length === 0 ? (
           <div className="py-10 text-center text-sm text-muted-foreground">
-            Nenhuma tarefa ou reunião para hoje.
+            Ninguna tarea o reunión para hoy.
           </div>
         ) : (
           list.map((item) => {
@@ -42,7 +42,7 @@ export function TodayAgendaCard({ items, onNavigate }: Props) {
                 ? 'bg-blue-50 text-blue-500'
                 : 'bg-emerald-50 text-emerald-600';
             const actionLabel =
-              item.type === 'task' ? 'Ver tarefa' : item.type === 'call' ? 'Ligar' : 'Entrar';
+              item.type === 'task' ? 'Ver tarea' : item.type === 'call' ? 'Llamar' : 'Entrar';
 
             return (
               <div

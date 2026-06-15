@@ -367,7 +367,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
                 </div>
                 <div>
                   <p className="text-xl font-bold text-foreground">{completedToday}/{totalToday}</p>
-                  <p className="text-xs text-muted-foreground">Hoy/p>
+                  <p className="text-xs text-muted-foreground">Hoy</p>
                 </div>
               </div>
             </div>
@@ -403,7 +403,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
           {/* Filter Tabs */}
           <Tabs value={filter} onValueChange={(v) => setFilter(v as any)}>
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="today">Hoy/TabsTrigger>
+              <TabsTrigger value="today">Hoy</TabsTrigger>
               <TabsTrigger value="all">Todas</TabsTrigger>
               <TabsTrigger value="overdue" className={overdueCount > 0 ? "text-destructive" : ""}>
                 Atrasadas {overdueCount > 0 && `(${overdueCount})`}

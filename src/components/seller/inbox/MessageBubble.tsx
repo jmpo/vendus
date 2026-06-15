@@ -196,9 +196,6 @@ export function MessageBubble({
                   <Forward className="h-4 w-4 mr-2" />
                   Reenviar
                 </DropdownMenuItem>
-                  <Forward className="h-4 w-4 mr-2" />
-                  Reenviar
-                </DropdownMenuItem>
               )}
               {onStar && (
                 <DropdownMenuItem onClick={() => onStar(id)}>
