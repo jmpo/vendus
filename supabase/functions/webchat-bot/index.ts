@@ -1823,7 +1823,7 @@ serve(async (req) => {
           const lines = Object.entries(pending)
             .map(([k, v]) => `- ${k}: ${typeof v === 'string' ? v : JSON.stringify(v)}`)
             .join('\n');
-          systemPrompt += `\n\n💳 DADOS PENDENTES DESTE LEAD (use APENAS quando o cliente pedir, demonstrar duda sobre o pago, ou quando ficar natural oferecer):\n${lines}\n\nObjetivo da abordagem: ${meta.pending_payment_objective || 'ajudar o lead a concluir o pago'}.\nNão despeje todos os dados de uma vez. Resolva por conversación: pergunte, entenda, e só ofereça Pix/link/instrução quando ele sinalizar que precisa.`;
+          systemPrompt += `\n\n💳 DATOS PENDIENTES DE ESTE LEAD (úsalos SOLO cuando el cliente lo pida, muestre dudas sobre el pago, o cuando sea natural ofrecerlos):\n${lines}\n\nObjetivo del abordaje: ${meta.pending_payment_objective || 'ayudar al lead a concretar el pago'}.\nNo entregues todos los datos de una sola vez. Resolvelo por conversación: preguntá, entendé, y recién ofrecé link/instrucción cuando él indique que lo necesita.`;
         }
       } catch { /* non-fatal */ }
 
