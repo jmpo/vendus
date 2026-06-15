@@ -113,15 +113,15 @@ export function useAssumeNextLead() {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       queryClient.invalidateQueries({ queryKey: ['squad-queue'] });
       queryClient.invalidateQueries({ queryKey: ['user-status'] });
-      toast.success('🎯 Lead assumido com sucesso!', {
-        description: 'O lead foi adicionado ao seu pipeline.',
+      toast.success('🎯 Lead assumido con éxito!', {
+        description: 'El lead fue añadido a tu pipeline.',
       });
     },
     onError: (error: Error) => {
       if (error.message === 'NO_LEADS') {
-        toast.info('Nenhum lead pendente na fila do squad.');
+        toast.info('No hay leads pendientes en la cola del squad.');
       } else {
-        toast.error('Erro ao assumir lead');
+        toast.error('Error al asumir lead');
         console.error(error);
       }
     },
@@ -163,12 +163,12 @@ export function useAssumeSpecificLead() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       queryClient.invalidateQueries({ queryKey: ['squad-queue'] });
-      toast.success('🎯 Lead assumido!', {
-        description: 'O lead foi adicionado ao seu pipeline.',
+      toast.success('🎯 ¡Lead asumido!', {
+        description: 'El lead fue añadido a tu pipeline.',
       });
     },
     onError: () => {
-      toast.error('Erro ao assumir lead. Tente novamente.');
+      toast.error('Error al asumir lead. Intentá de nuevo.');
     },
   });
 }

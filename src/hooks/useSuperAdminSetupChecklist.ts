@@ -33,7 +33,7 @@ export function useSuperAdminSetupChecklist() {
         {
           id: 'password',
           label: 'Trocar senha padrão',
-          description: 'Substitua a senha de instalação por uma senha forte.',
+          description: 'Sustituí la contraseña de instalación por una contraseña fuerte.',
           done: !!s?.default_password_changed,
           required: true,
           navigateTo: 'dashboard',
@@ -65,7 +65,7 @@ export function useSuperAdminSetupChecklist() {
         {
           id: 'organization',
           label: 'Criar primeira empresa',
-          description: 'Cadastre a primeira organização cliente.',
+          description: 'Registrá la primera organización cliente.',
           done: (orgsRes.count ?? 0) > 0,
           required: true,
           navigateTo: 'organizations',
@@ -93,11 +93,11 @@ export function useSuperAdminSetupChecklist() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success('Configuração inicial concluída!');
+      toast.success('Configuración inicial concluída!');
       qc.invalidateQueries({ queryKey: ['super-admin-setup-checklist'] });
     },
     onError: (e: Error) =>
-      toast.error('Erro ao concluir configuração', { description: e.message }),
+      toast.error('Error al concluir configuração', { description: e.message }),
   });
 
   return {

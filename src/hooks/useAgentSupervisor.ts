@@ -63,7 +63,7 @@ export function useUpsertSpecialist() {
   return useMutation({
     mutationFn: async (input: Partial<AgentSpecialist> & { id?: string }) => {
       const orgId = profile?.organization_id;
-      if (!orgId) throw new Error('sem organização');
+      if (!orgId) throw new Error('sin organización');
       const payload = { ...input, organization_id: orgId };
       const { data, error } = await (supabase as any)
         .from('agent_specialists')
@@ -75,9 +75,9 @@ export function useUpsertSpecialist() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['agent-specialists'] });
-      toast.success('Especialista salvo');
+      toast.success('Especialista guardado');
     },
-    onError: (e: any) => toast.error(e.message ?? 'Falha ao salvar'),
+    onError: (e: any) => toast.error(e.message ?? 'Error al guardar'),
   });
 }
 
@@ -94,7 +94,7 @@ export function useDeleteSpecialist() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['agent-specialists'] });
       qc.invalidateQueries({ queryKey: ['agent-routing-rules'] });
-      toast.success('Especialista removido');
+      toast.success('Especialista eliminado');
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -125,7 +125,7 @@ export function useUpsertRoutingRule() {
   return useMutation({
     mutationFn: async (input: Partial<AgentRoutingRule> & { id?: string }) => {
       const orgId = profile?.organization_id;
-      if (!orgId) throw new Error('sem organização');
+      if (!orgId) throw new Error('sin organización');
       const payload = { ...input, organization_id: orgId };
       const { data, error } = await (supabase as any)
         .from('agent_routing_rules')
@@ -137,7 +137,7 @@ export function useUpsertRoutingRule() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['agent-routing-rules'] });
-      toast.success('Regra salva');
+      toast.success('Regra guardada');
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -155,7 +155,7 @@ export function useDeleteRoutingRule() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['agent-routing-rules'] });
-      toast.success('Regra removida');
+      toast.success('Regra eliminada');
     },
     onError: (e: any) => toast.error(e.message),
   });

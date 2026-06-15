@@ -65,7 +65,7 @@ export function useCreateWebhook() {
       // Get current user
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        throw new Error('Usuário não autenticado');
+        throw new Error('Usuario no autenticado');
       }
 
       // Get current user's organization
@@ -76,7 +76,7 @@ export function useCreateWebhook() {
         .single();
 
       if (!profile?.organization_id) {
-        throw new Error('Organização não encontrada');
+        throw new Error('Organización no encontrada');
       }
 
       // Generate slug from name
@@ -108,10 +108,10 @@ export function useCreateWebhook() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['webhooks'] });
-      toast.success('Webhook criado com sucesso!');
+      toast.success('Webhook creado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error(`Erro ao criar webhook: ${error.message}`);
+      toast.error(`Error al crear webhook: ${error.message}`);
     }
   });
 }
@@ -144,7 +144,7 @@ export function useUpdateWebhook() {
       queryClient.invalidateQueries({ queryKey: ['webhook', variables.id] });
     },
     onError: (error: Error) => {
-      toast.error(`Erro ao atualizar webhook: ${error.message}`);
+      toast.error(`Error al actualizar webhook: ${error.message}`);
     }
   });
 }
@@ -164,10 +164,10 @@ export function useDeleteWebhook() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['webhooks'] });
-      toast.success('Webhook excluído com sucesso!');
+      toast.success('Webhook eliminado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error(`Erro ao excluir webhook: ${error.message}`);
+      toast.error(`Error al eliminar webhook: ${error.message}`);
     }
   });
 }

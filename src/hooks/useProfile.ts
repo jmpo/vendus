@@ -15,7 +15,7 @@ export function useUpdateProfile() {
 
   return useMutation({
     mutationFn: async (data: UpdateProfileData) => {
-      if (!user?.id) throw new Error('Usuário não autenticado');
+      if (!user?.id) throw new Error('Usuario no autenticado');
 
       const { error } = await supabase
         .from('profiles')
@@ -27,10 +27,10 @@ export function useUpdateProfile() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
-      toast.success('Perfil atualizado com sucesso!');
+      toast.success('Perfil actualizado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao atualizar perfil', { description: error.message });
+      toast.error('Error al actualizar perfil', { description: error.message });
     }
   });
 }
@@ -41,7 +41,7 @@ export function useUploadAvatar() {
 
   return useMutation({
     mutationFn: async (file: File) => {
-      if (!user?.id) throw new Error('Usuário não autenticado');
+      if (!user?.id) throw new Error('Usuario no autenticado');
 
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/avatar.${fileExt}`;
@@ -67,7 +67,7 @@ export function useUploadAvatar() {
       return avatarUrl;
     },
     onError: (error: Error) => {
-      toast.error('Erro ao fazer upload da foto', { description: error.message });
+      toast.error('Error al subir el archivo da foto', { description: error.message });
     }
   });
 }
@@ -77,7 +77,7 @@ export function useUpdatePassword() {
     mutationFn: async ({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }) => {
       // First verify current password by trying to sign in
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user?.email) throw new Error('Usuário não autenticado');
+      if (!user?.email) throw new Error('Usuario no autenticado');
 
       // Update password
       const { error } = await supabase.auth.updateUser({ password: newPassword });
@@ -86,10 +86,10 @@ export function useUpdatePassword() {
       return true;
     },
     onSuccess: () => {
-      toast.success('Senha atualizada com sucesso!');
+      toast.success('Senha actualizada con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao atualizar senha', { description: error.message });
+      toast.error('Error al actualizar senha', { description: error.message });
     }
   });
 }
@@ -102,12 +102,12 @@ export function useUpdateEmail() {
       return true;
     },
     onSuccess: () => {
-      toast.success('Email de confirmação enviado!', { 
-        description: 'Verifique sua caixa de entrada para confirmar a alteração.' 
+      toast.success('¡Correo de confirmación enviado!', { 
+        description: 'Revisá tu casilla de entrada para confirmar el cambio.' 
       });
     },
     onError: (error: Error) => {
-      toast.error('Erro ao atualizar email', { description: error.message });
+      toast.error('Error al actualizar email', { description: error.message });
     }
   });
 }

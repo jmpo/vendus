@@ -81,7 +81,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     subtitle: 'Liste os pontos que destacam seu produto da concorrência.',
     field: 'differentials',
     type: 'list',
-    placeholder: 'Ex: Integração nativa com WhatsApp',
+    placeholder: 'Ex: Integración nativa com WhatsApp',
   },
   {
     id: 'status',
@@ -163,7 +163,7 @@ export function useProductOnboarding() {
       return data.optimized;
     } catch (error) {
       console.error('Error optimizing field:', error);
-      toast.error('Erro ao otimizar com IA');
+      toast.error('Error al optimizar con IA');
       return null;
     } finally {
       setIsOptimizing(false);
@@ -172,7 +172,7 @@ export function useProductOnboarding() {
 
   const completeOnboarding = useCallback(async () => {
     if (!profile?.organization_id) {
-      toast.error('Organização não encontrada');
+      toast.error('Organización no encontrada');
       return null;
     }
 
@@ -207,11 +207,11 @@ export function useProductOnboarding() {
         }
       }
 
-      toast.success('Produto criado com sucesso!');
+      toast.success('Produto creado con éxito!');
       return product;
     } catch (error) {
       console.error('Error creating product:', error);
-      toast.error('Erro ao criar produto');
+      toast.error('Error al crear produto');
       return null;
     }
   }, [formData, profile, createProduct]);

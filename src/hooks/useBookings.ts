@@ -119,11 +119,11 @@ export function useBookings(filter?: BookingsFilter) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
       queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
-      toast.success('Agendamento cancelado!');
+      toast.success('¡Reserva cancelada!');
     },
     onError: (error: Error) => {
       console.error('Error cancelling booking:', error);
-      toast.error('Erro ao cancelar agendamento');
+      toast.error('Error al cancelar agendamento');
     },
   });
 
@@ -141,11 +141,11 @@ export function useBookings(filter?: BookingsFilter) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
-      toast.success('Agendamento concluído!');
+      toast.success('¡Reserva completada!');
     },
     onError: (error: Error) => {
       console.error('Error marking booking completed:', error);
-      toast.error('Erro ao concluir agendamento');
+      toast.error('Error al concluir agendamento');
     },
   });
 

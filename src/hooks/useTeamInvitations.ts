@@ -91,7 +91,7 @@ async function sendInviteEmail(params: {
     });
     
     if (response.error) {
-      console.error('Erro ao enviar email:', response.error);
+      console.error('Error al enviar email:', response.error);
     }
     
     return response;
@@ -110,7 +110,7 @@ export function useCreateInvitation() {
       role: 'admin' | 'manager' | 'seller';
       squadId?: string | null;
     }) => {
-      if (!profile?.organization_id) throw new Error('Organização não encontrada');
+      if (!profile?.organization_id) throw new Error('Organización no encontrada');
       
       // Check if invitation already exists
       const { data: existing } = await supabase
@@ -122,7 +122,7 @@ export function useCreateInvitation() {
         .single();
       
       if (existing) {
-        throw new Error('Já existe um convite pendente para este email');
+        throw new Error('Ya existe una invitación pendente para este email');
       }
       
       // Get squad name if squadId is provided

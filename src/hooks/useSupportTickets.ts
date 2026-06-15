@@ -141,7 +141,7 @@ export function useCreateTicket() {
   const { profile, user } = useAuth();
   return useMutation({
     mutationFn: async (input: { subject: string; category?: string; priority?: SupportPriority; firstMessage: string }) => {
-      if (!profile?.organization_id || !user) throw new Error('Sem usuário');
+      if (!profile?.organization_id || !user) throw new Error('Sin usuario');
       const { data: ticket, error } = await supabase
         .from('support_tickets')
         .insert({
@@ -177,7 +177,7 @@ export function useSendTicketMessage() {
   const { user, isSuperAdmin } = useAuth();
   return useMutation({
     mutationFn: async ({ ticketId, content }: { ticketId: string; content: string }) => {
-      if (!user) throw new Error('Sem usuário');
+      if (!user) throw new Error('Sin usuario');
       const role: 'admin' | 'super_admin' = isSuperAdmin() ? 'super_admin' : 'admin';
       const { error } = await supabase.from('support_messages').insert({
         ticket_id: ticketId,
@@ -191,7 +191,7 @@ export function useSendTicketMessage() {
       qc.invalidateQueries({ queryKey: ['support-messages', vars.ticketId] });
       qc.invalidateQueries({ queryKey: ['support-tickets'] });
     },
-    onError: (e: any) => toast({ title: 'Erro ao enviar', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error al enviar', description: e.message, variant: 'destructive' }),
   });
 }
 

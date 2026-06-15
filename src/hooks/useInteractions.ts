@@ -88,7 +88,7 @@ export function useLeadTimeline(leadId: string) {
     ...(stageHistory?.map(h => ({
       id: h.id,
       type: 'stage_change' as const,
-      stageName: h.pipeline_stages?.name || 'Stage removido',
+      stageName: h.pipeline_stages?.name || 'Stage eliminado',
       stageColor: h.pipeline_stages?.color || '#6B7280',
       timestamp: h.entered_at,
       daysInStage: h.days_in_stage,

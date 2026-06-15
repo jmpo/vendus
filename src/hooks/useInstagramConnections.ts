@@ -73,7 +73,7 @@ export function useSaveInstagramConnection() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['instagram-connections'] });
-      toast.success('Conexão Instagram ativa');
+      toast.success('Conexión Instagram ativa');
     },
     onError: (e: any) => toast.error(e?.message ?? 'Falha ao ativar'),
   });
@@ -105,7 +105,7 @@ export function useDeleteInstagramConnection() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['instagram-connections'] });
-      toast.success('Conexão removida');
+      toast.success('Conexión eliminada');
     },
     onError: (e: any) => toast.error(e?.message ?? 'Falha ao remover'),
   });

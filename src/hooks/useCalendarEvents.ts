@@ -154,7 +154,7 @@ export function useCreateEvent() {
   return useMutation({
     mutationFn: async (data: CreateEventData) => {
       if (!user?.id || !profile?.organization_id) {
-        throw new Error('Usuário não autenticado');
+        throw new Error('Usuario no autenticado');
       }
 
       const { data: event, error } = await supabase
@@ -191,13 +191,13 @@ export function useCreateEvent() {
       queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
       queryClient.invalidateQueries({ queryKey: ['upcoming-events'] });
       toast({
-        title: 'Evento criado',
-        description: 'O evento foi adicionado à agenda.',
+        title: 'Evento creado',
+        description: 'El evento fue añadido a la agenda.',
       });
     },
     onError: (error) => {
       toast({
-        title: 'Erro ao criar evento',
+        title: 'Error al crear evento',
         description: error.message,
         variant: 'destructive',
       });
@@ -243,13 +243,13 @@ export function useUpdateEvent() {
       queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
       queryClient.invalidateQueries({ queryKey: ['upcoming-events'] });
       toast({
-        title: 'Evento atualizado',
-        description: 'As alterações foram salvas.',
+        title: 'Evento actualizado',
+        description: 'As alterações foram guardadas.',
       });
     },
     onError: (error) => {
       toast({
-        title: 'Erro ao atualizar evento',
+        title: 'Error al actualizar evento',
         description: error.message,
         variant: 'destructive',
       });
@@ -274,13 +274,13 @@ export function useDeleteEvent() {
       queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
       queryClient.invalidateQueries({ queryKey: ['upcoming-events'] });
       toast({
-        title: 'Evento excluído',
-        description: 'O evento foi removido da agenda.',
+        title: 'Evento eliminado',
+        description: 'O evento foi eliminado da agenda.',
       });
     },
     onError: (error) => {
       toast({
-        title: 'Erro ao excluir evento',
+        title: 'Error al eliminar evento',
         description: error.message,
         variant: 'destructive',
       });

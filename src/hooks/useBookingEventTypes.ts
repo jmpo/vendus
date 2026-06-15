@@ -126,11 +126,11 @@ export function useBookingEventTypes() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['booking-event-types'] });
-      toast.success('Tipo de evento criado com sucesso!');
+      toast.success('Tipo de evento creado con éxito!');
     },
     onError: (error: Error) => {
       console.error('Error creating event type:', error);
-      toast.error('Erro ao criar tipo de evento');
+      toast.error('Error al crear tipo de evento');
     },
   });
 
@@ -153,11 +153,11 @@ export function useBookingEventTypes() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['booking-event-types'] });
-      toast.success('Tipo de evento atualizado!');
+      toast.success('Tipo de evento actualizado!');
     },
     onError: (error: Error) => {
       console.error('Error updating event type:', error);
-      toast.error('Erro ao atualizar tipo de evento');
+      toast.error('Error al actualizar tipo de evento');
     },
   });
 
@@ -172,11 +172,11 @@ export function useBookingEventTypes() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['booking-event-types'] });
-      toast.success('Tipo de evento excluído!');
+      toast.success('Tipo de evento eliminado!');
     },
     onError: (error: Error) => {
       console.error('Error deleting event type:', error);
-      toast.error('Erro ao excluir tipo de evento');
+      toast.error('Error al eliminar tipo de evento');
     },
   });
 
@@ -198,7 +198,7 @@ export function useBookingEventTypes() {
     },
     onError: (error: Error) => {
       console.error('Error toggling event type:', error);
-      toast.error('Erro ao alterar status do evento');
+      toast.error('Error al cambiar status do evento');
     },
   });
 

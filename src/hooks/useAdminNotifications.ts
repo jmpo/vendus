@@ -124,7 +124,7 @@ export function useCreateAdminNotification() {
   return useMutation({
     mutationFn: async (data: CreateNotificationData) => {
       if (!profile?.organization_id || !user?.id) {
-        throw new Error('Usuário não autenticado');
+        throw new Error('Usuario no autenticado');
       }
       
       // 1. Resolve recipients based on scope
@@ -135,7 +135,7 @@ export function useCreateAdminNotification() {
       );
       
       if (recipients.length === 0) {
-        throw new Error('Nenhum destinatário encontrado para o escopo selecionado');
+        throw new Error('Ningún destinatario encontrado para el ámbito seleccionado');
       }
       
       // 2. Create admin notification record
@@ -210,10 +210,10 @@ export function useCreateAdminNotification() {
     },
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['admin-notifications'] });
-      toast.success(`Notificação enviada para ${result.recipientsCount} destinatário(s)`);
+      toast.success(`Notificación enviada para ${result.recipientsCount} destinatario(s)`);
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Erro ao enviar notificação');
+      toast.error(error.message || 'Error al enviar notificação');
     },
   });
 }

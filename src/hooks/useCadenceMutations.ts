@@ -40,11 +40,11 @@ export function useCreateCadenceDay() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['cadence', variables.productId] });
-      toast.success('Dia criado com sucesso!');
+      toast.success('Dia creado con éxito!');
     },
     onError: (error) => {
       console.error('Error creating cadence day:', error);
-      toast.error('Erro ao criar dia');
+      toast.error('Error al crear dia');
     },
   });
 }
@@ -71,11 +71,11 @@ export function useUpdateCadenceDay() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cadence'] });
-      toast.success('Dia atualizado!');
+      toast.success('Dia actualizado!');
     },
     onError: (error) => {
       console.error('Error updating cadence day:', error);
-      toast.error('Erro ao atualizar dia');
+      toast.error('Error al actualizar dia');
     },
   });
 }
@@ -95,11 +95,11 @@ export function useDeleteCadenceDay() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['cadence', variables.productId] });
-      toast.success('Dia removido!');
+      toast.success('Dia eliminado!');
     },
     onError: (error) => {
       console.error('Error deleting cadence day:', error);
-      toast.error('Erro ao remover dia');
+      toast.error('Error al eliminar dia');
     },
   });
 }
@@ -124,7 +124,7 @@ export function useUploadCadenceMedia() {
     },
     onError: (error) => {
       console.error('Error uploading media:', error);
-      toast.error('Erro ao fazer upload');
+      toast.error('Error al subir el archivo');
     },
   });
 }

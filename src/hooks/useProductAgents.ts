@@ -176,11 +176,11 @@ export function useCreateAgent() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['product-agents', data.product_id] });
       queryClient.invalidateQueries({ queryKey: ['all-agents'] });
-      toast.success('Agente criado com sucesso!');
+      toast.success('Agente creado con éxito!');
     },
     onError: (error) => {
       console.error('Error creating agent:', error);
-      toast.error('Erro ao criar agente');
+      toast.error('Error al crear agente');
     },
   });
 }
@@ -205,11 +205,11 @@ export function useUpdateAgent() {
       queryClient.invalidateQueries({ queryKey: ['product-agents', data.product_id] });
       queryClient.invalidateQueries({ queryKey: ['product-agent', data.id] });
       queryClient.invalidateQueries({ queryKey: ['all-agents'] });
-      toast.success('Agente atualizado com sucesso!');
+      toast.success('Agente actualizado con éxito!');
     },
     onError: (error) => {
       console.error('Error updating agent:', error);
-      toast.error('Erro ao atualizar agente');
+      toast.error('Error al actualizar agente');
     },
   });
 }
@@ -230,11 +230,11 @@ export function useDeleteAgent() {
     onSuccess: ({ productId }) => {
       queryClient.invalidateQueries({ queryKey: ['product-agents', productId] });
       queryClient.invalidateQueries({ queryKey: ['all-agents'] });
-      toast.success('Agente excluído com sucesso!');
+      toast.success('Agente eliminado con éxito!');
     },
     onError: (error) => {
       console.error('Error deleting agent:', error);
-      toast.error('Erro ao excluir agente');
+      toast.error('Error al eliminar agente');
     },
   });
 }
@@ -263,11 +263,11 @@ export function useSetDefaultAgent() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['product-agents', data.product_id] });
-      toast.success('Agente definido como padrão!');
+      toast.success('¡Agente establecido como predeterminado!');
     },
     onError: (error) => {
       console.error('Error setting default agent:', error);
-      toast.error('Erro ao definir agente padrão');
+      toast.error('Error al definir agente predeterminado');
     },
   });
 }
@@ -298,7 +298,7 @@ export function useToggleAgentStatus() {
     },
     onError: (error) => {
       console.error('Error toggling agent status:', error);
-      toast.error('Erro ao alterar status do agente');
+      toast.error('Error al cambiar status do agente');
     },
   });
 }

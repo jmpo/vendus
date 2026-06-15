@@ -83,11 +83,11 @@ export function useCreateAutoNotificationSettings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auto-notification-settings'] });
-      toast.success('Configurações salvas com sucesso!');
+      toast.success('Ajustes guardadas con éxito!');
     },
     onError: (error) => {
       console.error('Error creating settings:', error);
-      toast.error('Erro ao salvar configurações');
+      toast.error('Error al guardar configurações');
     },
   });
 }
@@ -112,11 +112,11 @@ export function useUpdateAutoNotificationSettings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auto-notification-settings'] });
-      toast.success('Configurações atualizadas com sucesso!');
+      toast.success('Ajustes actualizadas con éxito!');
     },
     onError: (error) => {
       console.error('Error updating settings:', error);
-      toast.error('Erro ao atualizar configurações');
+      toast.error('Error al actualizar configurações');
     },
   });
 }

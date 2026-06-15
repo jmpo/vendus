@@ -135,7 +135,7 @@ export function useGenerateCadenceTasks() {
         
         const result = await createTask.mutateAsync({
           title: `Dia ${task.cadenceDay}: ${task.cadenceTitle || 'Follow-up'} - ${task.leadName}`,
-          description: `Executar ação do dia ${task.cadenceDay} da cadência para ${task.leadName}`,
+          description: `Ejecutar acción del día ${task.cadenceDay} de la cadencia para ${task.leadName}`,
           type: 'cadence',
           priority: task.cadenceDay <= 2 ? 'high' : 'medium',
           lead_id: task.leadId,

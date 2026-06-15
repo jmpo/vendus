@@ -106,10 +106,10 @@ export function useUpdateSankhyaConfig() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sankhya-config'] });
-      toast.success('Configurações do Sankhya salvas');
+      toast.success('Ajustes do Sankhya guardadas');
     },
     onError: (error) => {
-      toast.error('Erro ao salvar configurações: ' + error.message);
+      toast.error('Error al guardar configurações: ' + error.message);
     }
   });
 }
@@ -150,10 +150,10 @@ export function useTestSankhyaConnection() {
       return data;
     },
     onSuccess: () => {
-      toast.success('Conexão com Sankhya estabelecida com sucesso!');
+      toast.success('Conexión com Sankhya estabelecida con éxito!');
     },
     onError: (error) => {
-      toast.error('Erro ao conectar: ' + error.message);
+      toast.error('Error al conectar: ' + error.message);
     }
   });
 }
@@ -178,10 +178,10 @@ export function useSankhyaSync() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['sankhya-sync-logs'] });
       const entity = variables.entityType === 'clients' ? 'clientes' : 'produtos';
-      toast.success(`Sincronização de ${entity} iniciada`);
+      toast.success(`Sincronización de ${entity} iniciada`);
     },
     onError: (error) => {
-      toast.error('Erro na sincronização: ' + error.message);
+      toast.error('Error en la sincronización: ' + error.message);
     }
   });
 }

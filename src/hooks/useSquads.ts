@@ -175,10 +175,10 @@ export function useCreateSquad() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['squads'] });
-      toast.success('Squad criado com sucesso!');
+      toast.success('Squad creado con éxito!');
     },
     onError: (error) => {
-      toast.error('Erro ao criar squad');
+      toast.error('Error al crear squad');
       console.error(error);
     }
   });
@@ -202,10 +202,10 @@ export function useUpdateSquad() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['squads'] });
       queryClient.invalidateQueries({ queryKey: ['squad', variables.id] });
-      toast.success('Squad atualizado!');
+      toast.success('Squad actualizado!');
     },
     onError: (error) => {
-      toast.error('Erro ao atualizar squad');
+      toast.error('Error al actualizar squad');
       console.error(error);
     }
   });
@@ -225,10 +225,10 @@ export function useDeleteSquad() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['squads'] });
-      toast.success('Squad removido!');
+      toast.success('Squad eliminado!');
     },
     onError: (error) => {
-      toast.error('Erro ao remover squad');
+      toast.error('Error al eliminar squad');
       console.error(error);
     }
   });
@@ -255,13 +255,13 @@ export function useAddSquadMember() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['squad-members', variables.squadId] });
       queryClient.invalidateQueries({ queryKey: ['squads'] });
-      toast.success('Membro adicionado ao squad!');
+      toast.success('¡Miembro añadido al squad!');
     },
     onError: (error: any) => {
       if (error.code === '23505') {
-        toast.error('Este membro já está no squad');
+        toast.error('Este miembro ya está en el squad');
       } else {
-        toast.error('Erro ao adicionar membro');
+        toast.error('Error al añadir membro');
       }
       console.error(error);
     }
@@ -283,10 +283,10 @@ export function useRemoveSquadMember() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['squad-members', variables.squadId] });
       queryClient.invalidateQueries({ queryKey: ['squads'] });
-      toast.success('Membro removido do squad!');
+      toast.success('Membro eliminado do squad!');
     },
     onError: (error) => {
-      toast.error('Erro ao remover membro');
+      toast.error('Error al eliminar membro');
       console.error(error);
     }
   });
@@ -306,10 +306,10 @@ export function useUpdateSquadMemberRole() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['squad-members', variables.squadId] });
-      toast.success('Função atualizada!');
+      toast.success('Rol actualizada!');
     },
     onError: (error) => {
-      toast.error('Erro ao atualizar função');
+      toast.error('Error al actualizar função');
       console.error(error);
     }
   });
@@ -334,7 +334,7 @@ export function useUploadSquadIcon() {
       return data.publicUrl;
     },
     onError: (error) => {
-      toast.error('Erro ao fazer upload da imagem');
+      toast.error('Error al subir el archivo da imagem');
       console.error(error);
     }
   });

@@ -15,12 +15,12 @@ export interface NotificationSettings {
 }
 
 export const NOTIFICATION_LABELS: Record<keyof Omit<NotificationSettings, 'user_id' | 'organization_id' | 'push_enabled'>, string> = {
-  notify_new_tickets: 'Notificações de novos tickets',
-  notify_status_change: 'Notificações de alteração de status',
-  notify_new_messages: 'Notificações de novas mensagens',
-  notify_groups: 'Notificações de grupos',
-  notify_unassigned_sector_tickets: 'Notificações de tickets sem setor',
-  notify_appointments: 'Notificações de agendamentos',
+  notify_new_tickets: 'Notificaciones de novos tickets',
+  notify_status_change: 'Notificaciones de alteração de status',
+  notify_new_messages: 'Notificaciones de novas mensagens',
+  notify_groups: 'Notificaciones de grupos',
+  notify_unassigned_sector_tickets: 'Notificaciones de tickets sem setor',
+  notify_appointments: 'Notificaciones de agendamentos',
 };
 
 export function useNotificationSettings(userId: string | undefined) {

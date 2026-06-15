@@ -40,7 +40,7 @@ export function useUpsertOrchestratorConfig() {
 
   return useMutation({
     mutationFn: async (patch: Partial<OrchestratorConfig>) => {
-      if (!profile?.organization_id) throw new Error('Sem organização');
+      if (!profile?.organization_id) throw new Error('Sin organización');
       const payload = {
         organization_id: profile.organization_id,
         is_enabled: patch.is_enabled ?? false,
@@ -59,11 +59,11 @@ export function useUpsertOrchestratorConfig() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orchestrator-config'] });
-      toast.success('Configuração salva');
+      toast.success('Configuración guardada');
     },
     onError: (err: any) => {
       console.error(err);
-      toast.error('Erro ao salvar configuração');
+      toast.error('Error al guardar configuração');
     },
   });
 }

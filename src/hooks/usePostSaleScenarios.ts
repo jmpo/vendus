@@ -70,7 +70,7 @@ export function useSavePostSaleScenario() {
 
   return useMutation({
     mutationFn: async (input: PostSaleScenarioInput & { id?: string }) => {
-      if (!orgId) throw new Error('Sem organização');
+      if (!orgId) throw new Error('Sin organización');
       const payload: any = {
         organization_id: orgId,
         name: input.name,

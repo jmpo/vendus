@@ -46,7 +46,7 @@ export function useChatFlows(productId?: string) {
   });
 }
 
-// Buscar um fluxo específico
+// Buscar um flujo específico
 export function useChatFlow(flowId?: string) {
   return useQuery({
     queryKey: ['chat-flow', flowId],
@@ -66,7 +66,7 @@ export function useChatFlow(flowId?: string) {
   });
 }
 
-// Buscar fluxo ativo de um produto
+// Buscar flujo ativo de um produto
 export function useActiveChatFlow(productId?: string) {
   return useQuery({
     queryKey: ['chat-flow-active', productId],
@@ -120,10 +120,10 @@ export function useCreateChatFlow() {
     },
     onSuccess: (_, params) => {
       queryClient.invalidateQueries({ queryKey: ['chat-flows', params.productId] });
-      toast.success('Fluxo criado com sucesso!');
+      toast.success('Flujo creado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao criar fluxo: ' + error.message);
+      toast.error('Error al crear fluxo: ' + error.message);
     },
   });
 }
@@ -168,7 +168,7 @@ export function useUpdateChatFlow() {
       queryClient.invalidateQueries({ queryKey: ['chat-flow-active', data.product_id] });
     },
     onError: (error: Error) => {
-      toast.error('Erro ao atualizar fluxo: ' + error.message);
+      toast.error('Error al actualizar fluxo: ' + error.message);
     },
   });
 }
@@ -202,10 +202,10 @@ export function useSaveChatFlowBlocks() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['chat-flows', data.product_id] });
       queryClient.invalidateQueries({ queryKey: ['chat-flow', data.id] });
-      toast.success('Fluxo salvo!');
+      toast.success('Flujo guardado!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao salvar fluxo: ' + error.message);
+      toast.error('Error al guardar fluxo: ' + error.message);
     },
   });
 }
@@ -242,10 +242,10 @@ export function useToggleChatFlowActive() {
       queryClient.invalidateQueries({ queryKey: ['chat-flows', data.product_id] });
       queryClient.invalidateQueries({ queryKey: ['chat-flow', data.id] });
       queryClient.invalidateQueries({ queryKey: ['chat-flow-active', data.product_id] });
-      toast.success(data.is_active ? 'Fluxo ativado!' : 'Fluxo desativado!');
+      toast.success(data.is_active ? 'Flujo ativado!' : 'Flujo desativado!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao alterar status: ' + error.message);
+      toast.error('Error al cambiar status: ' + error.message);
     },
   });
 }
@@ -267,10 +267,10 @@ export function useDeleteChatFlow() {
     onSuccess: (params) => {
       queryClient.invalidateQueries({ queryKey: ['chat-flows', params.productId] });
       queryClient.invalidateQueries({ queryKey: ['chat-flow-active', params.productId] });
-      toast.success('Fluxo excluído!');
+      toast.success('Flujo eliminado!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao excluir fluxo: ' + error.message);
+      toast.error('Error al eliminar fluxo: ' + error.message);
     },
   });
 }
@@ -281,7 +281,7 @@ export function useDuplicateChatFlow() {
   
   return useMutation({
     mutationFn: async (flowId: string) => {
-      // Buscar fluxo original
+      // Buscar flujo original
       const { data: original, error: fetchError } = await supabase
         .from('chat_flows')
         .select('*')
@@ -313,10 +313,10 @@ export function useDuplicateChatFlow() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['chat-flows', data.product_id] });
-      toast.success('Fluxo duplicado!');
+      toast.success('Flujo duplicado!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao duplicar fluxo: ' + error.message);
+      toast.error('Error al duplicar fluxo: ' + error.message);
     },
   });
 }

@@ -68,9 +68,9 @@ export function useSaveAICredential() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['org-ai-credentials'] });
       qc.invalidateQueries({ queryKey: ['integration-settings'] });
-      toast.success('Chave verificada e salva');
+      toast.success('Chave verificada e guardada');
     },
-    onError: (e: Error) => toast.error(`Falha ao salvar: ${e.message}`),
+    onError: (e: Error) => toast.error(`Error al guardar: ${e.message}`),
   });
 }
 
@@ -86,7 +86,7 @@ export function useDeleteAICredential() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['org-ai-credentials'] });
-      toast.success('Chave removida');
+      toast.success('Chave eliminada');
     },
   });
 }
@@ -129,6 +129,6 @@ export function useSaveAIRouting() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['org-ai-routing'] });
     },
-    onError: (e: Error) => toast.error(`Falha ao salvar roteamento: ${e.message}`),
+    onError: (e: Error) => toast.error(`Error al guardar roteamento: ${e.message}`),
   });
 }

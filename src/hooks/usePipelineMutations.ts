@@ -14,12 +14,12 @@ export interface PipelineStage {
 }
 
 export const DEFAULT_PIPELINE_STAGES = [
-  { name: 'Novo Lead', color: '#3b82f6', order_index: 1, is_won: false, is_lost: false, description: 'Primeiro contato com o cliente potencial' },
+  { name: 'Novo Lead', color: '#3b82f6', order_index: 1, is_won: false, is_lost: false, description: 'Primer contacto con el cliente potencial' },
   { name: 'Primeiro Contato', color: '#8b5cf6', order_index: 2, is_won: false, is_lost: false, description: 'Estabelecendo primeiro contato' },
   { name: 'Qualificação', color: '#f59e0b', order_index: 3, is_won: false, is_lost: false, description: 'Avaliando necessidades e fit' },
-  { name: 'Proposta Enviada', color: '#ec4899', order_index: 4, is_won: false, is_lost: false, description: 'Proposta comercial enviada' },
-  { name: 'Negociação', color: '#14b8a6', order_index: 5, is_won: false, is_lost: false, description: 'Negociando termos e condições' },
-  { name: 'Fechado (Ganho)', color: '#22c55e', order_index: 6, is_won: true, is_lost: false, description: 'Negócio fechado com sucesso' },
+  { name: 'Proposta Enviada', color: '#ec4899', order_index: 4, is_won: false, is_lost: false, description: 'Propuesta comercial enviada' },
+  { name: 'Negociação', color: '#14b8a6', order_index: 5, is_won: false, is_lost: false, description: 'Negociando términos y condiciones' },
+  { name: 'Fechado (Ganho)', color: '#22c55e', order_index: 6, is_won: true, is_lost: false, description: 'Negocio fechado con éxito' },
   { name: 'Perdido', color: '#ef4444', order_index: 7, is_won: false, is_lost: true, description: 'Oportunidade perdida' },
 ];
 
@@ -86,11 +86,11 @@ export function useUpdatePipelineStage() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['pipeline-stages', data.product_id] });
-      toast.success('Etapa atualizada!');
+      toast.success('Etapa actualizada!');
     },
     onError: (error) => {
       console.error('Error updating pipeline stage:', error);
-      toast.error('Erro ao atualizar etapa');
+      toast.error('Error al actualizar etapa');
     },
   });
 }
@@ -111,11 +111,11 @@ export function useCreatePipelineStage() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['pipeline-stages', data.product_id] });
-      toast.success('Etapa criada!');
+      toast.success('Etapa creada!');
     },
     onError: (error) => {
       console.error('Error creating pipeline stage:', error);
-      toast.error('Erro ao criar etapa');
+      toast.error('Error al crear etapa');
     },
   });
 }
@@ -135,11 +135,11 @@ export function useDeletePipelineStage() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['pipeline-stages', variables.productId] });
-      toast.success('Etapa removida!');
+      toast.success('Etapa eliminada!');
     },
     onError: (error) => {
       console.error('Error deleting pipeline stage:', error);
-      toast.error('Erro ao remover etapa');
+      toast.error('Error al eliminar etapa');
     },
   });
 }

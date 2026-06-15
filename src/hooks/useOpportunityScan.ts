@@ -179,11 +179,11 @@ export function useRunOpportunityScan() {
     },
     onSuccess: (data, variables) => {
       if (!variables.preview_only) {
-        toast.success('Análise iniciada — acompanhe o progresso em tempo real');
+        toast.success('Análisis iniciado — seguí el progreso en tiempo real');
         qc.invalidateQueries({ queryKey: ['opportunity-scans'] });
       }
     },
-    onError: (e: any) => toast.error('Erro: ' + e.message),
+    onError: (e: any) => toast.error('Error: ' + e.message),
   });
 }
 
@@ -223,10 +223,10 @@ export function useUpsertSchedule() {
       }
     },
     onSuccess: () => {
-      toast.success('Agendamento salvo');
+      toast.success('Agendamento guardado');
       qc.invalidateQueries({ queryKey: ['opportunity-schedules'] });
     },
-    onError: (e: any) => toast.error('Erro: ' + e.message),
+    onError: (e: any) => toast.error('Error: ' + e.message),
   });
 }
 
@@ -238,7 +238,7 @@ export function useDeleteSchedule() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success('Agendamento removido');
+      toast.success('Agendamento eliminado');
       qc.invalidateQueries({ queryKey: ['opportunity-schedules'] });
     },
   });

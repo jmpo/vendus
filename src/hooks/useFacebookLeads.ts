@@ -139,11 +139,11 @@ export function useCreateFacebookIntegration() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['facebook-lead-integrations'] });
-      toast.success('Integração criada com sucesso!');
+      toast.success('Integración creada con éxito!');
     },
     onError: (error) => {
       console.error('Error creating integration:', error);
-      toast.error('Erro ao criar integração');
+      toast.error('Error al crear integração');
     }
   });
 }
@@ -165,11 +165,11 @@ export function useUpdateFacebookIntegration() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['facebook-lead-integrations'] });
-      toast.success('Integração atualizada');
+      toast.success('Integración actualizada');
     },
     onError: (error) => {
       console.error('Error updating integration:', error);
-      toast.error('Erro ao atualizar integração');
+      toast.error('Error al actualizar integração');
     }
   });
 }
@@ -188,11 +188,11 @@ export function useDeleteFacebookIntegration() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['facebook-lead-integrations'] });
-      toast.success('Integração removida');
+      toast.success('Integración eliminada');
     },
     onError: (error) => {
       console.error('Error deleting integration:', error);
-      toast.error('Erro ao remover integração');
+      toast.error('Error al eliminar integração');
     }
   });
 }

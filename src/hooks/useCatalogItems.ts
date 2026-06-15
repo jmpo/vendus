@@ -65,7 +65,7 @@ export function useCatalogItemMutations(productId?: string | null) {
       invalidate();
       toast({ title: 'Item adicionado ao catálogo' });
     },
-    onError: (e: any) => toast({ title: 'Erro ao salvar', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Erro ao guardadar', description: e.message, variant: 'destructive' }),
   });
 
   const update = useMutation({
@@ -81,7 +81,7 @@ export function useCatalogItemMutations(productId?: string | null) {
     },
     onSuccess: () => {
       invalidate();
-      toast({ title: 'Item atualizado' });
+      toast({ title: 'Item actualizado' });
     },
     onError: (e: any) => toast({ title: 'Erro ao atualizar', description: e.message, variant: 'destructive' }),
   });
@@ -93,9 +93,9 @@ export function useCatalogItemMutations(productId?: string | null) {
     },
     onSuccess: () => {
       invalidate();
-      toast({ title: 'Item removido' });
+      toast({ title: 'Item eliminado' });
     },
-    onError: (e: any) => toast({ title: 'Erro ao remover', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error al eliminar', description: e.message, variant: 'destructive' }),
   });
 
   return { create, update, remove };
@@ -117,11 +117,11 @@ export function useCatalogSync() {
     },
     onSuccess: (data: any) => {
       toast({
-        title: 'Sincronização concluída',
-        description: `${data.items_created || 0} novos · ${data.items_updated || 0} atualizados · ${data.items_failed || 0} falhas`,
+        title: 'Sincronización completada',
+        description: `${data.items_created || 0} novos · ${data.items_updated || 0} actualizados · ${data.items_failed || 0} falhas`,
       });
     },
-    onError: (e: any) => toast({ title: 'Falha na sincronização', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error en la sincronización', description: e.message, variant: 'destructive' }),
   });
 }
 
@@ -133,8 +133,8 @@ export function useCatalogImport() {
       return data;
     },
     onSuccess: (data: any) => {
-      toast({ title: 'Importação concluída', description: `${data.inserted || 0} itens importados` });
+      toast({ title: 'Importación completada', description: `${data.inserted || 0} itens importados` });
     },
-    onError: (e: any) => toast({ title: 'Falha na importação', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error en la importación', description: e.message, variant: 'destructive' }),
   });
 }

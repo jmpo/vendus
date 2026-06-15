@@ -46,7 +46,7 @@ export function useUpdateCompanySettings() {
   const { profile } = useAuth();
   return useMutation({
     mutationFn: async (input: Partial<CompanySettings>) => {
-      if (!profile?.organization_id) throw new Error('Sem organização');
+      if (!profile?.organization_id) throw new Error('Sin organización');
       const { data, error } = await supabase
         .from('organizations')
         .update({
@@ -65,7 +65,7 @@ export function useUpdateCompanySettings() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['company-settings'] });
-      toast({ title: 'Dados da empresa salvos' });
+      toast({ title: 'Dados da empresa guardados' });
     },
     onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
   });

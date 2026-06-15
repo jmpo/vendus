@@ -73,9 +73,9 @@ export function useUpdatePlatformEvolutionConfig() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['platform-evolution-config'] });
-      toast.success('Configuração do servidor salva');
+      toast.success('Configuración do servidor guardada');
     },
-    onError: (e: any) => toast.error('Erro: ' + e.message),
+    onError: (e: any) => toast.error('Error: ' + e.message),
   });
 }
 
@@ -144,9 +144,9 @@ export function useCreateEvolutionInstance() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
-      toast.success('Instância criada com sucesso');
+      toast.success('Instância creada con éxito');
     },
-    onError: (e: any) => toast.error('Erro ao criar instância: ' + e.message),
+    onError: (e: any) => toast.error('Error al crear instância: ' + e.message),
   });
 }
 
@@ -160,9 +160,9 @@ export function useCreateEvolutionInstanceSelf() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      toast.success('Conexão criada! Escaneie o QR Code para ativar.');
+      toast.success('Conexión creada! Escaneie o QR Code para ativar.');
     },
-    onError: (e: any) => toast.error(e.message || 'Erro ao criar conexão'),
+    onError: (e: any) => toast.error(e.message || 'Error al crear conexión'),
   });
 }
 
@@ -175,7 +175,7 @@ export function useConnectEvolutionInstance() {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
     },
-    onError: (e: any) => toast.error('Erro ao conectar: ' + e.message),
+    onError: (e: any) => toast.error('Error al conectar: ' + e.message),
   });
 }
 
@@ -193,9 +193,9 @@ export function useSubscribeEvolutionWebhook() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      toast.success('Webhook configurado com sucesso');
+      toast.success('Webhook configurado con éxito');
     },
-    onError: (e: any) => toast.error('Erro: ' + (e?.message || 'erro desconhecido')),
+    onError: (e: any) => toast.error('Error: ' + (e?.message || 'erro desconhecido')),
   });
 }
 
@@ -207,13 +207,13 @@ export function useDeleteEvolutionInstance() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      toast.success('Instância removida');
+      toast.success('Instância eliminada');
     },
-    onError: (e: any) => toast.error('Erro: ' + e.message),
+    onError: (e: any) => toast.error('Error: ' + e.message),
   });
 }
 
-// Self-service: org admin/manager pode excluir a própria conexão
+// Self-service: org admin/manager pode excluir a própria conexión
 export function useDeleteEvolutionInstanceSelf() {
   const qc = useQueryClient();
   const proxy = useProxyAction();
@@ -222,13 +222,13 @@ export function useDeleteEvolutionInstanceSelf() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      toast.success('Conexão excluída');
+      toast.success('Conexión eliminada');
     },
     onError: (e: any) => toast.error('Erro ao excluir: ' + e.message),
   });
 }
 
-// Self-service: renomeia (display name) a própria conexão
+// Self-service: renomeia (display name) a própria conexión
 export function useRenameEvolutionInstanceSelf() {
   const qc = useQueryClient();
   const proxy = useProxyAction();
@@ -238,9 +238,9 @@ export function useRenameEvolutionInstanceSelf() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      toast.success('Conexão renomeada');
+      toast.success('Conexión renomeada');
     },
-    onError: (e: any) => toast.error('Erro ao renomear: ' + e.message),
+    onError: (e: any) => toast.error('Error al renombrar: ' + e.message),
   });
 }
 
@@ -252,9 +252,9 @@ export function useSetDefaultEvolutionInstance() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      toast.success('Instância padrão definida');
+      toast.success('Instancia predeterminada establecida');
     },
-    onError: (e: any) => toast.error('Erro: ' + e.message),
+    onError: (e: any) => toast.error('Error: ' + e.message),
   });
 }
 
@@ -266,9 +266,9 @@ export function useDisconnectEvolutionInstance() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      toast.success('Sessão pausada. Reconecte quando quiser — o número fica salvo.');
+      toast.success('Sessão pausada. Reconecte quando quiser — o número fica guardado.');
     },
-    onError: (e: any) => toast.error('Erro ao pausar sessão: ' + e.message),
+    onError: (e: any) => toast.error('Error al pausar sesión: ' + e.message),
   });
 }
 
@@ -280,9 +280,9 @@ export function useLogoutEvolutionInstance() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      toast.success('WhatsApp desvinculado. Escaneie um novo QR para conectar outro número.');
+      toast.success('WhatsApp desvinculado. Escaneá un nuevo QR para conectar otro número.');
     },
-    onError: (e: any) => toast.error('Erro ao desvincular: ' + e.message),
+    onError: (e: any) => toast.error('Error al desvincular: ' + e.message),
   });
 }
 
@@ -295,9 +295,9 @@ export function useAssignEvolutionInstance() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      toast.success('Instância atrelada à empresa');
+      toast.success('Instancia vinculada a la empresa');
     },
-    onError: (e: any) => toast.error('Erro ao atrelar: ' + e.message),
+    onError: (e: any) => toast.error('Error al vincular: ' + e.message),
   });
 }
 
@@ -314,9 +314,9 @@ export function useSyncEvolutionInstances() {
       const total = data?.total ?? 0;
       const whFailed = data?.webhooks?.failed ?? 0;
       if (total === 0) {
-        toast.info('Nenhuma instância encontrada no servidor.');
+        toast.info('Ninguna instancia encontrada en el servidor.');
       } else {
-        const base = `Sincronização: ${imported} importada(s), ${updated} atualizada(s)`;
+        const base = `Sincronização: ${imported} importada(s), ${updated} actualizada(s)`;
         if (whFailed > 0) {
           toast.warning(`${base}. ${whFailed} webhook(s) falharam.`);
         } else {
@@ -324,6 +324,6 @@ export function useSyncEvolutionInstances() {
         }
       }
     },
-    onError: (e: any) => toast.error('Erro ao sincronizar: ' + e.message),
+    onError: (e: any) => toast.error('Error al sincronizar: ' + e.message),
   });
 }
