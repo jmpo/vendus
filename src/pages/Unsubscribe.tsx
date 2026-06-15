@@ -36,19 +36,19 @@ export default function Unsubscribe() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="max-w-md w-full">
-        <CardHeader><CardTitle>Cancelar inscrição</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Cancelar suscripción</CardTitle></CardHeader>
         <CardContent className="space-y-4">
-          {state === "loading" && <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="animate-spin h-4 w-4" /> Validando link...</div>}
+          {state === "loading" && <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="animate-spin h-4 w-4" /> Validando enlace...</div>}
           {state === "ready" && (
             <>
-              <p>Confirma o cancelamento de inscrição? Você não receberá mais emails desta plataforma.</p>
-              <Button onClick={confirm} disabled={submitting} className="w-full">{submitting ? "Processando..." : "Confirmar cancelamento"}</Button>
+              <p>¿Confirmás la cancelación de la suscripción? No vas a recibir más correos de esta plataforma.</p>
+              <Button onClick={confirm} disabled={submitting} className="w-full">{submitting ? "Procesando..." : "Confirmar cancelación"}</Button>
             </>
           )}
-          {state === "done" && <div className="flex items-center gap-2 text-success"><CheckCircle2 className="h-5 w-5" /> Inscrição cancelada com sucesso.</div>}
-          {state === "already" && <div className="flex items-center gap-2 text-muted-foreground"><CheckCircle2 className="h-5 w-5" /> Você já havia cancelado a inscrição.</div>}
-          {state === "invalid" && <div className="flex items-center gap-2 text-destructive"><XCircle className="h-5 w-5" /> Link inválido ou expirado.</div>}
-          {state === "error" && <div className="flex items-center gap-2 text-destructive"><XCircle className="h-5 w-5" /> Erro ao processar. Tente novamente.</div>}
+          {state === "done" && <div className="flex items-center gap-2 text-success"><CheckCircle2 className="h-5 w-5" /> Suscripción cancelada con éxito.</div>}
+          {state === "already" && <div className="flex items-center gap-2 text-muted-foreground"><CheckCircle2 className="h-5 w-5" /> Ya habías cancelado la suscripción.</div>}
+          {state === "invalid" && <div className="flex items-center gap-2 text-destructive"><XCircle className="h-5 w-5" /> Enlace inválido o expirado.</div>}
+          {state === "error" && <div className="flex items-center gap-2 text-destructive"><XCircle className="h-5 w-5" /> Error al procesar. Intentá de nuevo.</div>}
         </CardContent>
       </Card>
     </div>

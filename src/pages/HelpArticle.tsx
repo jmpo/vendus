@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 
 export default function HelpArticle() {
   const { slug } = useParams<{ slug: string }>();
@@ -19,13 +19,13 @@ export default function HelpArticle() {
   const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
 
   if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Carregando artigo...</div>;
+    return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Cargando artículo...</div>;
   }
   if (!article) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-3">
-        <p className="text-muted-foreground">Artigo não encontrado.</p>
-        <Link to="/ajuda"><Button variant="outline">Voltar à Central de Ajuda</Button></Link>
+        <p className="text-muted-foreground">Artículo no encontrado.</p>
+        <Link to="/ajuda"><Button variant="outline">Volver al Centro de Ayuda</Button></Link>
       </div>
     );
   }
@@ -36,15 +36,15 @@ export default function HelpArticle() {
     const { error } = await supabase.from('help_article_feedback').upsert({
       article_id: article.id, user_id: user.id, is_helpful: helpful,
     }, { onConflict: 'article_id,user_id' });
-    if (error) { toast.error('Erro ao enviar feedback'); return; }
-    toast.success('Obrigado pelo feedback!');
+    if (error) { toast.error('Error al enviar el feedback'); return; }
+    toast.success('¡Gracias por tu feedback!');
   };
 
   const share = async () => {
     const url = window.location.href;
     try {
       if (navigator.share) await navigator.share({ title: article.title, url });
-      else { await navigator.clipboard.writeText(url); toast.success('Link copiado'); }
+      else { await navigator.clipboard.writeText(url); toast.success('Enlace copiado'); }
     } catch {}
   };
 
@@ -54,10 +54,10 @@ export default function HelpArticle() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => navigate('/ajuda')}><ArrowLeft className="h-4 w-4" /></Button>
           <Link to="/ajuda" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
-            <BookOpen className="h-4 w-4" /> Central de Ajuda
+            <BookOpen className="h-4 w-4" /> Centro de Ayuda
           </Link>
           <div className="ml-auto">
-            <Button variant="ghost" size="sm" onClick={share} className="gap-2"><Share2 className="h-4 w-4" /> Compartilhar</Button>
+            <Button variant="ghost" size="sm" onClick={share} className="gap-2"><Share2 className="h-4 w-4" /> Compartir</Button>
           </div>
         </div>
       </header>
@@ -72,7 +72,7 @@ export default function HelpArticle() {
           {article.published_at && (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Calendar className="h-3 w-3" />
-              Publicado em {format(new Date(article.published_at), "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
+              Publicado el {format(new Date(article.published_at), "d 'de' MMMM 'de' yyyy", { locale: es })}
             </div>
           )}
         </div>
@@ -85,25 +85,25 @@ export default function HelpArticle() {
           <Card className="bg-primary/5 border-primary/20">
             <CardContent className="p-4 flex items-center gap-3">
               <Sparkles className="h-5 w-5 text-primary" />
-              <div className="flex-1 text-sm">Este artigo descreve uma novidade da plataforma.</div>
-              <Link to="/novidades"><Button size="sm" variant="outline">Ver atualizações</Button></Link>
+              <div className="flex-1 text-sm">Este artículo describe una novedad de la plataforma.</div>
+              <Link to="/novidades"><Button size="sm" variant="outline">Ver actualizaciones</Button></Link>
             </CardContent>
           </Card>
         )}
 
         <div
           className="prose prose-sm sm:prose dark:prose-invert max-w-none prose-img:rounded-lg prose-a:text-primary"
-          dangerouslySetInnerHTML={{ __html: article.content_html || '<p><em>Conteúdo em breve.</em></p>' }}
+          dangerouslySetInnerHTML={{ __html: article.content_html || '<p><em>Contenido próximamente.</em></p>' }}
         />
 
         <div className="border-t pt-6 space-y-3">
-          <p className="text-sm font-medium">Esse artigo foi útil?</p>
+          <p className="text-sm font-medium">¿Te resultó útil este artículo?</p>
           <div className="flex gap-2">
             <Button variant={feedback === 'up' ? 'default' : 'outline'} size="sm" onClick={() => handleFeedback(true)} className="gap-2">
-              <ThumbsUp className="h-4 w-4" /> Sim
+              <ThumbsUp className="h-4 w-4" /> Sí
             </Button>
             <Button variant={feedback === 'down' ? 'default' : 'outline'} size="sm" onClick={() => handleFeedback(false)} className="gap-2">
-              <ThumbsDown className="h-4 w-4" /> Não
+              <ThumbsDown className="h-4 w-4" /> No
             </Button>
           </div>
         </div>
