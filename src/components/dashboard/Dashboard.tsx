@@ -6,7 +6,7 @@ import { useTodaysTasks } from '@/hooks/useTasks';
 import { useTaskStats } from '@/hooks/useTaskAutomation';
 import { useAuth } from '@/hooks/useAuth';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { UpcomingEvents } from '@/components/calendar/UpcomingEvents';
 import { useNavigate } from 'react-router-dom';
