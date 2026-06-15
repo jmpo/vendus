@@ -32,7 +32,7 @@ const ROLE_LABEL: Record<string, string> = {
 };
 
 const fmt = (v: number) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
+  new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG' }).format(v || 0);
 
 export function ProductCaktoPerformance({ productId, organizationId }: Props) {
   const [data, setData] = useState<ProductPerf | null>(null);

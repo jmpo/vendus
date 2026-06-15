@@ -86,11 +86,11 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
   const formatCurrency = (value: string) => {
     const numericValue = value.replace(/[^\d]/g, '');
     const number = parseInt(numericValue) / 100;
-    return number.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return number.toLocaleString('es-PY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   const formatPlanLabel = (plan: ProductPlan) => {
-    const price = plan.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const price = plan.price.toLocaleString('es-PY', { style: 'currency', currency: 'PYG' });
     const cycle = plan.billing_cycle !== 'unico' ? `/${plan.billing_cycle === 'mensal' ? 'mês' : plan.billing_cycle === 'anual' ? 'ano' : plan.billing_cycle}` : '';
     return `${plan.name} - ${price}${cycle}`;
   };

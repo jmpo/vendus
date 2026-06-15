@@ -294,7 +294,7 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
                       <DollarSign className="h-3.5 w-3.5" />
                     </div>
                     <p className="text-lg font-semibold text-foreground">
-                      {new Intl.NumberFormat('pt-BR', { 
+                      {new Intl.NumberFormat('es-PY', { 
                         notation: 'compact',
                         compactDisplay: 'short'
                       }).format(stats.mrr)}

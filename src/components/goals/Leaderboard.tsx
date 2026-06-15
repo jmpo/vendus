@@ -21,9 +21,9 @@ export function Leaderboard({ productId, period, maxHeight = "400px" }: Leaderbo
   const { data: leaderboard, isLoading } = useLeaderboard(productId, period);
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat('es-PY', {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'PYG',
       minimumFractionDigits: 0
     }).format(value);
   };

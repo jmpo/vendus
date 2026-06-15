@@ -63,7 +63,7 @@ interface LeadSummaryTabProps {
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('es-ES', {
     style: 'currency',
-    currency: 'BRL',
+    currency: 'PYG',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(value);
@@ -191,7 +191,7 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
                 </SelectTrigger>
                 <SelectContent>
                   {activePlans.map(plan => {
-                    const price = plan.price.toLocaleString('es-ES', { style: 'currency', currency: 'BRL' });
+                    const price = plan.price.toLocaleString('es-ES', { style: 'currency', currency: 'PYG' });
                     const cycle = plan.billing_cycle !== 'unico' ? `/${plan.billing_cycle === 'mensal' ? 'mes' : plan.billing_cycle}` : '';
                     return (
                       <SelectItem key={plan.id} value={plan.id}>

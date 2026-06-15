@@ -71,7 +71,7 @@ export function PricingPlansSection({ plans, onChange }: PricingPlansSectionProp
     setEditingPlan(plan);
     setForm({ ...plan });
     setFeaturesText(plan.features.join('\n'));
-    setPriceText(plan.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+    setPriceText(plan.price.toLocaleString('es-PY', { minimumFractionDigits: 2 }));
     setDialogOpen(true);
   };
 
@@ -96,7 +96,7 @@ export function PricingPlansSection({ plans, onChange }: PricingPlansSectionProp
   };
 
   const formatCurrency = (value: number) =>
-    value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    value.toLocaleString('es-PY', { style: 'currency', currency: 'PYG' });
 
   return (
     <>

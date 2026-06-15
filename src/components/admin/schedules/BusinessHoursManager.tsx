@@ -216,7 +216,7 @@ export function BusinessHoursManager() {
             <div className="space-y-2">
               {holidays.map((h) => (
                 <div key={h.id} className="flex items-center gap-3 p-2 rounded-lg border border-border">
-                  <Badge variant="outline">{new Date(h.date + 'T00:00:00').toLocaleDateString('pt-BR')}</Badge>
+                  <Badge variant="outline">{new Date(h.date + 'T00:00:00').toLocaleDateString('es-PY')}</Badge>
                   <span className="flex-1 text-sm">{h.description ?? '—'}</span>
                   <Button variant="ghost" size="icon" className="text-destructive" onClick={() => delHoliday.mutate(h.id)}>
                     <Trash2 className="h-4 w-4" />

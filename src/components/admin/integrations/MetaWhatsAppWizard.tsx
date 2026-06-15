@@ -377,7 +377,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                     <AlertTitle>Webhook validado pela Meta</AlertTitle>
                     <AlertDescription className="text-sm">
                       Recebemos o handshake em{' '}
-                      {new Date(webhookSubscribedAt).toLocaleString('pt-BR')}.
+                      {new Date(webhookSubscribedAt).toLocaleString('es-PY')}.
                     </AlertDescription>
                   </Alert>
                 ) : (

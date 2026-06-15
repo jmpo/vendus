@@ -128,7 +128,7 @@ export function MobileLeadsList({ productId, productName, organizationId }: Mobi
                     
                     {lead.last_contact_at && (
                       <span className="text-[10px] text-muted-foreground">
-                        Contato: {new Date(lead.last_contact_at).toLocaleDateString('pt-BR')}
+                        Contato: {new Date(lead.last_contact_at).toLocaleDateString('es-PY')}
                       </span>
                     )}
                   </div>

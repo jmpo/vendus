@@ -133,7 +133,7 @@ export function RadarLeadDetailSheet({ item, open, onOpenChange, onOpenConversat
                 <Info label="Temperatura" value={lead?.temperature || snap.temperature} />
                 <Info
                   label="Valor"
-                  value={lead?.deal_value ? `R$ ${Number(lead.deal_value).toLocaleString('pt-BR')}` : snap.deal_value}
+                  value={lead?.deal_value ? `₲ ${Number(lead.deal_value).toLocaleString('es-PY')}` : snap.deal_value}
                 />
                 <Info label="Última msg" value={snap.last_message_at ? formatDistanceToNow(new Date(snap.last_message_at), { addSuffix: true, locale: ptBR }) : null} />
                 <Info label="Mensagens" value={snap.message_count} />

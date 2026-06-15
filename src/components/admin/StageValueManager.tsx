@@ -169,7 +169,7 @@ export function StageValueManager() {
                       </TableCell>
                       <TableCell>
                         <Badge variant="secondary" className="font-mono">
-                          R$ {weightedValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          ₲ {weightedValue.toLocaleString('es-PY', { minimumFractionDigits: 2 })}
                         </Badge>
                       </TableCell>
                     </TableRow>
@@ -184,9 +184,9 @@ export function StageValueManager() {
                   Total del Pipeline (1 lead por etapa)
                 </span>
                 <span className="text-lg font-bold">
-                  R$ {Object.values(localValues).reduce((sum, v) => 
+                  ₲ {Object.values(localValues).reduce((sum, v) => 
                     sum + calculateWeightedValue(v.expected_value, v.probability_percent), 0
-                  ).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  ).toLocaleString('es-PY', { minimumFractionDigits: 2 })}
                 </span>
               </div>
             </div>

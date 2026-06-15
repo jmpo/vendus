@@ -86,7 +86,7 @@ export function LeadsKPICards({ stats, isLoading }: LeadsKPICardsProps) {
                     <div className="h-8 w-16 bg-muted animate-pulse rounded" />
                   ) : (
                     <p className="text-2xl md:text-3xl font-bold text-foreground">
-                      {value.toLocaleString('pt-BR')}
+                      {value.toLocaleString('es-PY')}
                     </p>
                   )}
                 </div>

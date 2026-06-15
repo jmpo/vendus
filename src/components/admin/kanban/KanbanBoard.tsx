@@ -45,14 +45,14 @@ export function KanbanBoard() {
 
   const formatCurrency = (value: number) => {
     if (value >= 1000000) {
-      return `R$ ${(value / 1000000).toFixed(2)}M`;
+      return `₲ ${(value / 1000000).toFixed(2)}M`;
     }
     if (value >= 1000) {
-      return `R$ ${(value / 1000).toFixed(0)}k`;
+      return `₲ ${(value / 1000).toFixed(0)}k`;
     }
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat('es-PY', {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'PYG',
       minimumFractionDigits: 0,
     }).format(value);
   };
@@ -144,7 +144,7 @@ export function KanbanBoard() {
             Ticket Promedio
           </div>
           <div className="text-2xl font-bold">
-            {totalLeads > 0 ? formatCurrency(totalPipelineValue / totalLeads) : 'R$ 0'}
+            {totalLeads > 0 ? formatCurrency(totalPipelineValue / totalLeads) : '₲ 0'}
           </div>
         </div>
       </div>

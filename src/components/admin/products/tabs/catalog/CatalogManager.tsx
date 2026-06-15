@@ -86,7 +86,7 @@ export function CatalogManager({ productId }: CatalogManagerProps) {
                           <h4 className="font-medium text-sm truncate">{item.title}</h4>
                           {item.price != null && (
                             <p className="text-sm font-semibold text-primary mt-0.5">
-                              {item.currency} {Number(item.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                              {item.currency} {Number(item.price).toLocaleString('es-PY', { minimumFractionDigits: 2 })}
                             </p>
                           )}
                           <div className="flex flex-wrap gap-1 mt-1">

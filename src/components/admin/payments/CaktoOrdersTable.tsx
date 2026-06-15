@@ -81,7 +81,7 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
   };
 
   const fmtBRL = (v: number | null) =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(v ?? 0));
+    new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG' }).format(Number(v ?? 0));
 
   return (
     <Card>

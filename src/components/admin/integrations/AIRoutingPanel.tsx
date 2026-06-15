@@ -89,8 +89,8 @@ export function AIRoutingPanel() {
                   <span className="font-semibold text-sm">IA da Plataforma — Tokens do mês</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Seu plano inclui {tokenStatus.included.toLocaleString('pt-BR')} tokens
-                  {tokenStatus.bonus > 0 && ` + ${tokenStatus.bonus.toLocaleString('pt-BR')} bônus`}.
+                  Seu plano inclui {tokenStatus.included.toLocaleString('es-PY')} tokens
+                  {tokenStatus.bonus > 0 && ` + ${tokenStatus.bonus.toLocaleString('es-PY')} bônus`}.
                 </p>
               </div>
               <Badge variant={tokenStatus.percent_used >= 90 ? 'destructive' : 'secondary'}>
@@ -99,8 +99,8 @@ export function AIRoutingPanel() {
             </div>
             <Progress value={tokenStatus.percent_used} className="h-2" />
             <p className="text-[11px] text-muted-foreground mt-2">
-              {tokenStatus.used.toLocaleString('pt-BR')} usados de {tokenStatus.total.toLocaleString('pt-BR')} •{' '}
-              {tokenStatus.remaining.toLocaleString('pt-BR')} restantes
+              {tokenStatus.used.toLocaleString('es-PY')} usados de {tokenStatus.total.toLocaleString('es-PY')} •{' '}
+              {tokenStatus.remaining.toLocaleString('es-PY')} restantes
             </p>
           </CardContent>
         </Card>

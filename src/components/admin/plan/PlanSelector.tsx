@@ -51,9 +51,9 @@ const FEATURE_ORDER = Object.keys(FEATURE_LABELS) as (keyof typeof FEATURE_LABEL
 type BillingCycle = 'monthly' | 'yearly';
 
 function formatPrice(value: number) {
-  return new Intl.NumberFormat('pt-BR', {
+  return new Intl.NumberFormat('es-PY', {
     style: 'currency',
-    currency: 'BRL',
+    currency: 'PYG',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(value || 0);
@@ -62,7 +62,7 @@ function formatPrice(value: number) {
 function formatNumber(value: number | null | undefined) {
   if (value === null || value === undefined) return '—';
   if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1).replace('.0', '')}M`;
-  if (value >= 1000) return new Intl.NumberFormat('pt-BR').format(value);
+  if (value >= 1000) return new Intl.NumberFormat('es-PY').format(value);
   return String(value);
 }
 

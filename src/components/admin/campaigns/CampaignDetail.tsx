@@ -107,7 +107,7 @@ export function CampaignDetail({
                 <Badge variant="outline" className="text-xs w-20 justify-center">{targetStatusLabel[t.status] ?? t.status}</Badge>
                 <span className="text-xs text-muted-foreground font-mono truncate flex-1">{t.lead_id}</span>
                 <span className="text-xs text-muted-foreground">
-                  {t.sent_at ? new Date(t.sent_at).toLocaleString('pt-BR') : new Date(t.scheduled_for).toLocaleString('pt-BR')}
+                  {t.sent_at ? new Date(t.sent_at).toLocaleString('es-PY') : new Date(t.scheduled_for).toLocaleString('es-PY')}
                 </span>
               </div>
             ))}

@@ -20,9 +20,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 
 const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('pt-BR', {
+  return new Intl.NumberFormat('es-PY', {
     style: 'currency',
-    currency: 'BRL',
+    currency: 'PYG',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   }).format(value);

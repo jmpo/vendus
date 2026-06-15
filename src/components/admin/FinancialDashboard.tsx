@@ -142,7 +142,7 @@ export function FinancialDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              R$ {(dealsSummary?.monthlyWon || 0).toLocaleString('pt-BR')}
+              ₲ {(dealsSummary?.monthlyWon || 0).toLocaleString('es-PY')}
             </div>
             <p className="text-xs text-muted-foreground">
               {dealsSummary?.monthlyDealsCount || 0} negocios cerrados
@@ -157,7 +157,7 @@ export function FinancialDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">
-              R$ {(commissionsSummary?.pending || 0).toLocaleString('pt-BR')}
+              ₲ {(commissionsSummary?.pending || 0).toLocaleString('es-PY')}
             </div>
             <p className="text-xs text-muted-foreground">
               Esperando aprobación
@@ -172,7 +172,7 @@ export function FinancialDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
-              R$ {(commissionsSummary?.approved || 0).toLocaleString('pt-BR')}
+              ₲ {(commissionsSummary?.approved || 0).toLocaleString('es-PY')}
             </div>
             <p className="text-xs text-muted-foreground">
               A pagar
@@ -187,7 +187,7 @@ export function FinancialDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              R$ {(commissionsSummary?.paid || 0).toLocaleString('pt-BR')}
+              ₲ {(commissionsSummary?.paid || 0).toLocaleString('es-PY')}
             </div>
             <p className="text-xs text-muted-foreground">
               Total pagado
@@ -271,10 +271,10 @@ export function FinancialDashboard() {
                         <TableCell>{commission.products?.name || 'N/A'}</TableCell>
                         <TableCell>{commission.deals?.leads?.name || 'N/A'}</TableCell>
                         <TableCell>
-                          R$ {(commission.deals?.deal_value || 0).toLocaleString('pt-BR')}
+                          ₲ {(commission.deals?.deal_value || 0).toLocaleString('es-PY')}
                         </TableCell>
                         <TableCell className="font-medium text-green-600">
-                          R$ {Number(commission.amount).toLocaleString('pt-BR')}
+                          ₲ {Number(commission.amount).toLocaleString('es-PY')}
                         </TableCell>
                         <TableCell>
                           {format(new Date(commission.earned_at), 'dd/MM/yyyy', { locale: es })}
@@ -350,7 +350,7 @@ export function FinancialDashboard() {
                         </TableCell>
                         <TableCell>{commission.products?.name || 'N/A'}</TableCell>
                         <TableCell className="font-medium text-blue-600">
-                          R$ {Number(commission.amount).toLocaleString('pt-BR')}
+                          ₲ {Number(commission.amount).toLocaleString('es-PY')}
                         </TableCell>
                         <TableCell>
                           {commission.approved_at 
@@ -401,7 +401,7 @@ export function FinancialDashboard() {
                         <TableCell>{deal.profiles?.full_name || 'N/A'}</TableCell>
                         <TableCell>{deal.products?.name || 'N/A'}</TableCell>
                         <TableCell className="font-medium">
-                          R$ {Number(deal.deal_value).toLocaleString('pt-BR')}
+                          ₲ {Number(deal.deal_value).toLocaleString('es-PY')}
                         </TableCell>
                         <TableCell>
                           <Badge variant={deal.status === 'won' ? 'default' : 'secondary'}>
