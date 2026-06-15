@@ -2307,7 +2307,7 @@ FLUXO OBRIGATÓRIO:
 ${leadDataPrompt}
 
 🛑 ANTI-REPETIÇÃO (ABSOLUTO):
-- Si ya preguntaste o email en esta conversación Y el cliente respondió con algo que parece email (contiene @), o email FUE RECOLECTADO. NO preguntes de nuevo. Andá directo al próximo paso.
+- Si ya preguntaste el email en esta conversación Y el cliente respondió con algo que parece email (contiene @), el email FUE RECOLECTADO. NO preguntes de nuevo. Andá directo al próximo paso.
 - Se usted JÁ chamou check_available_slots e ofreceu horários, NUNCA repita "deixa eu ver la agenda" / "vou consultar la agenda" / "aguarda um instante que vou verificar". O cliente ya tiene os horários. Se ele confirmou um → llamá schedule_meeting AHORA. Se quiere otro → check_available_slots de novo, mas SEM avisar "vou ver".
 - Se vos sostá prestes a escrever uma frase que JÁ está no historial recente do assistente (mismo verbo + mismo objeto), REESCREVA con palavras diferentes ou pule a etapa.`;
 
