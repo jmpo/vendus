@@ -85,7 +85,7 @@ export function BotConversaConfig() {
       }
 
       queryClient.invalidateQueries({ queryKey: ['integration-settings'] });
-      toast.success('Configuração do BotConversa salva!');
+      toast.success('¡Configuración de BotConversa guardada!');
     } catch (e: any) {
       toast.error('Erro ao salvar: ' + e.message);
     } finally {
@@ -111,7 +111,7 @@ export function BotConversaConfig() {
                 <Bot className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <CardTitle className="text-lg">WhatsApp via BotConversa</CardTitle>
+                <CardTitle className="text-lg">WhatsApp vía BotConversa</CardTitle>
                 <CardDescription>
                   Use a API do BotConversa para enviar mensagens WhatsApp
                 </CardDescription>
@@ -126,7 +126,7 @@ export function BotConversaConfig() {
           {/* Provider Toggle */}
           <div className="flex items-center justify-between rounded-lg border p-4">
             <div>
-              <Label className="text-base font-medium">Usar BotConversa como provedor principal</Label>
+              <Label className="text-base font-medium">Usar BotConversa como proveedor principal</Label>
               <p className="text-sm text-muted-foreground">
                 Quando ativo, todas as mensagens WhatsApp serão enviadas via BotConversa em vez do IsiChat
               </p>
@@ -136,7 +136,7 @@ export function BotConversaConfig() {
 
           {/* API Key */}
           <div className="space-y-2">
-            <Label>API-KEY do BotConversa</Label>
+            <Label>API-KEY de BotConversa</Label>
             <p className="text-xs text-muted-foreground">
               Encontre sua API-KEY no painel do BotConversa em Configurações → Integrações → API
             </p>
@@ -145,7 +145,7 @@ export function BotConversaConfig() {
                 type={showKey ? 'text' : 'password'}
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Cole sua API-KEY aqui"
+                placeholder="Pega tu API-KEY aquí"
                 className="pr-10"
               />
               <button
@@ -160,18 +160,18 @@ export function BotConversaConfig() {
 
           {/* Setup Instructions */}
           <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
-            <h4 className="font-medium text-sm">Como configurar</h4>
+            <h4 className="font-medium text-sm">Cómo configurar</h4>
             <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
-              <li>No BotConversa, vá em <strong>Configurações → Integrações → API</strong></li>
-              <li>Copie sua <strong>API-KEY</strong> e cole no campo acima</li>
-              <li>Ative o toggle <strong>"Usar BotConversa como provedor principal"</strong></li>
-              <li>Clique em <strong>Salvar</strong></li>
+              <li>En BotConversa, ve a <strong>Configuraciones → Integraciones → API</strong></li>
+              <li>Copia tu <strong>API-KEY</strong> y pégala en el campo de arriba</li>
+              <li>Ative o toggle <strong>"Usar BotConversa como proveedor principal"</strong></li>
+              <li>Haz clic en <strong>Guardar</strong></li>
             </ol>
           </div>
 
           {/* Info */}
           <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-2">
-            <h4 className="font-medium text-sm">ℹ️ Como funciona</h4>
+            <h4 className="font-medium text-sm">ℹ️ Cómo funciona</h4>
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>• Mensagens do Inbox, outreach e follow-ups são enviadas via API do BotConversa</li>
               <li>• O sistema busca o contato pelo telefone e envia a mensagem automaticamente</li>
