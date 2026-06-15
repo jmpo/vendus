@@ -65,7 +65,7 @@ export function SupportTickets({ scope = 'admin' }: Props) {
           ) : !tickets || tickets.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <MessageSquare className="h-10 w-10 mx-auto mb-3 opacity-40" />
-              <p>{isSuper ? 'Nenhum ticket aberto.' : 'Você ainda não abriu nenhum ticket.'}</p>
+              <p>{isSuper ? 'Nenhum ticket aberto.' : 'Usted aún no abriu ningún ticket.'}</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -93,7 +93,7 @@ export function SupportTickets({ scope = 'admin' }: Props) {
                       </div>
                       <p className="text-xs text-muted-foreground">
                         {isSuper && t.organization?.name && <span className="font-medium text-foreground">{t.organization.name} · </span>}
-                        Última mensagem {formatDistanceToNow(new Date(t.last_message_at), { addSuffix: true, locale: es })}
+                        Última mensaje {formatDistanceToNow(new Date(t.last_message_at), { addSuffix: true, locale: es })}
                         {t.last_message_by_role === 'super_admin' && ' · soporte'}
                         {t.last_message_by_role === 'admin' && ' · usted'}
                       </p>

@@ -47,7 +47,7 @@ export function QuizTemplateLibrary({ open, onOpenChange, onCreated }: Props) {
   };
 
   const handleUse = async () => {
-    if (!selected || !productId) { toast.error('Selecione um produto'); return; }
+    if (!selected || !productId) { toast.error('Seleccioná um producto'); return; }
     try {
       const cloned = cloneFlowBlocks(selected.flow_blocks);
       const created = await createFunnel.mutateAsync({
@@ -58,12 +58,12 @@ export function QuizTemplateLibrary({ open, onOpenChange, onCreated }: Props) {
         flow_blocks: cloned,
         start_block_id: cloned[0]?.id,
       });
-      toast.success('Quiz criado a partir do template!');
+      toast.success('Quiz creado a partir do template!');
       onOpenChange(false);
       setSelected(null);
       onCreated(created.id);
     } catch (e: any) {
-      toast.error('Erro: ' + e.message);
+      toast.error('Error: ' + e.message);
     }
   };
 
@@ -72,7 +72,7 @@ export function QuizTemplateLibrary({ open, onOpenChange, onCreated }: Props) {
       <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle>Biblioteca de Templates de Quiz</DialogTitle>
-          <DialogDescription>Escolha um modelo pronto e personalize.</DialogDescription>
+          <DialogDescription>Elegí um modelo pronto e personalize.</DialogDescription>
         </DialogHeader>
 
         {/* Filtros */}
@@ -135,14 +135,14 @@ export function QuizTemplateLibrary({ open, onOpenChange, onCreated }: Props) {
               <>
                 <DialogHeader>
                   <DialogTitle>Usar template "{selected.name}"</DialogTitle>
-                  <DialogDescription>Personalize o nome e o produto antes de criar.</DialogDescription>
+                  <DialogDescription>Personalize o nombre e o producto antes de crear.</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-3 py-3">
-                  <div className="space-y-1.5"><Label>Nome do quiz</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
+                  <div className="space-y-1.5"><Label>Nombre do quiz</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
                   <div className="space-y-1.5">
-                    <Label>Produto</Label>
+                    <Label>Producto</Label>
                     <Select value={productId} onValueChange={setProductId}>
-                      <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="Seleccioná" /></SelectTrigger>
                       <SelectContent>
                         {(products || []).map((p: any) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
                       </SelectContent>

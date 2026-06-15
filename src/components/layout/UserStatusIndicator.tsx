@@ -17,7 +17,7 @@ const STATUS_CONFIG: Record<UserStatusType, { label: string; description: string
   },
   away: {
     label: 'Ausente',
-    description: 'Não recebe novos leads',
+    description: 'No recebe novos leads',
     color: 'text-yellow-500',
   },
   offline: {

@@ -47,7 +47,7 @@ const DURATION_OPTIONS = [
 const LOCATION_OPTIONS = [
   { value: 'google_meet', label: 'Google Meet' },
   { value: 'zoom', label: 'Zoom' },
-  { value: 'phone', label: 'Telefone' },
+  { value: 'phone', label: 'Teléfono' },
   { value: 'in_person', label: 'Presencial' },
 ];
 
@@ -63,10 +63,10 @@ const COLOR_OPTIONS = [
 ];
 
 const QUESTION_TYPES = [
-  { value: 'text', label: 'Texto curto' },
-  { value: 'textarea', label: 'Texto longo' },
+  { value: 'text', label: 'Texto corto' },
+  { value: 'textarea', label: 'Texto largo' },
   { value: 'email', label: 'E-mail' },
-  { value: 'phone', label: 'Telefone' },
+  { value: 'phone', label: 'Teléfono' },
   { value: 'select', label: 'Seleção' },
 ];
 
@@ -224,7 +224,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
             <div className="space-y-2">
               <Label htmlFor="slug">URL del Evento</Label>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">/agendar/você/</span>
+                <span className="text-sm text-muted-foreground">/agendar/usted/</span>
                 <Input
                   id="slug"
                   value={formData.slug}
@@ -364,7 +364,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
                 <div className="flex-1">
                   <span className="font-medium">Conversacional (Chat Interactivo)</span>
                   <p className="text-sm text-muted-foreground mt-0.5">
-                    Interfaz moderna estilo TypeBot com perguntas uma a uma em formato de chat.
+                    Interfaz moderna estilo TypeBot com preguntas uma a uma em formato de chat.
                   </p>
                 </div>
               </label>
@@ -432,7 +432,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
                   id="confirmation_message"
                   value={formData.confirmation_message}
                   onChange={(e) => setFormData(prev => ({ ...prev, confirmation_message: e.target.value }))}
-                  placeholder="Mensagem exibida após o agendamento..."
+                  placeholder="Mensaje exibida após o reserva..."
                   rows={2}
                 />
               </div>
@@ -505,7 +505,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
             <div>
               <Label className="text-base">Publicar Evento</Label>
               <p className="text-sm text-muted-foreground">
-                Tornar este evento disponível para agendamentos
+                Tornar este evento disponível para reservas
               </p>
             </div>
             <Switch

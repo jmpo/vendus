@@ -55,7 +55,7 @@ export function ReportsTab({ productId }: ReportsTabProps) {
     };
   }).filter(m => m.leads > 0 || m.deals > 0) || [];
 
-  // Calculate average time in each stage (simplified)
+  // Calculate average equipo in each stage (simplified)
   const avgTimeInStage = 3.5; // Mock data - would need lead_stage_history
 
   const formatCurrency = (value: number) => {

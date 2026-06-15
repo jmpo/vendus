@@ -36,7 +36,7 @@ export const criarDealTool: ToolDefinition = {
     }
 
     // Busca o vendedor responsável pelo lead (se houver)
-    const { fecha: lead } = await ctx.supabase
+    const { data: lead } = await ctx.supabase
       .from('leads')
       .select('assigned_to, organization_id')
       .eq('id', ctx.leadId)
@@ -56,7 +56,7 @@ export const criarDealTool: ToolDefinition = {
       };
     }
 
-    const { fecha: deal, error } = await ctx.supabase
+    const { data: deal, error } = await ctx.supabase
       .from('deals')
       .insert({
         lead_id: ctx.leadId,
@@ -75,7 +75,7 @@ export const criarDealTool: ToolDefinition = {
 
     return {
       success: true,
-      fecha: { deal_id: deal.id, deal_value: deal.deal_value },
+      data: { deal_id: deal.id, deal_value: deal.deal_value },
       user_message: `Oportunidade registrada no valor de R$ ${Number(deal.deal_value).toFixed(2)}.`,
     };
   },

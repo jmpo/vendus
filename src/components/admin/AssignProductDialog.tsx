@@ -115,11 +115,11 @@ export function AssignProductDialog({
       }
       
       await Promise.all(promises);
-      toast.success('Atribuições atualizadas com sucesso!');
+      toast.success('Atribuições atualizadas com éxito!');
       onOpenChange(false);
     } catch (error: any) {
       console.error('Error updating assignments:', error);
-      toast.error('Erro ao atualizar atribuições');
+      toast.error('Error ao actualizar atribuições');
     } finally {
       setSaving(false);
     }
@@ -153,7 +153,7 @@ export function AssignProductDialog({
             {/* Products List */}
             <div className="space-y-2">
               <p className="text-sm font-medium text-muted-foreground">
-                Selecione os produtos ({selectedCount} selecionado{selectedCount !== 1 ? 's' : ''}):
+                Seleccioná os productos ({selectedCount} selecionado{selectedCount !== 1 ? 's' : ''}):
               </p>
               
               {productsLoading ? (
@@ -163,7 +163,7 @@ export function AssignProductDialog({
               ) : products?.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Package className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p>Nenhum produto cadastrado</p>
+                  <p>Nenhum producto cadastrado</p>
                 </div>
               ) : (
                 <ScrollArea className="h-[280px] pr-4">
@@ -212,7 +212,7 @@ export function AssignProductDialog({
                                     onChange={(e) => updateGoal(product.id, parseInt(e.target.value) || 0)}
                                     className="h-8 w-24"
                                   />
-                                  <span className="text-xs text-muted-foreground">vendas/mês</span>
+                                  <span className="text-xs text-muted-foreground">ventas/mes</span>
                                 </div>
                               )}
                             </div>

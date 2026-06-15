@@ -53,7 +53,7 @@ export function EmailSettings() {
     try {
       await updateSettings.mutateAsync({ ...automation, ...patch });
       await createAuditLog.mutateAsync({
-        action: 'Automação de e-mail atualizada',
+        action: 'Automatización de e-mail actualizada',
         entity_type: 'platform_email_settings',
       });
       toast.success('Automatización guardada');
@@ -129,7 +129,7 @@ export function EmailSettings() {
                 <div className="space-y-1">
                   <p className="font-medium text-sm">Sistema activo</p>
                   <p className="text-sm text-muted-foreground">
-                    Todos os e-mails da plataforma são enviados via Lovable Emails através do domínio configurado.
+                    Todos os e-mails da plataforma son enviados via Lovable Emails através do domínio configurado.
                     Inclui DKIM, SPF, fila com retry automático e descadastro one-click.
                   </p>
                 </div>
@@ -150,7 +150,7 @@ export function EmailSettings() {
                 <div className="flex gap-2">
                   <Input
                     type="email"
-                    placeholder="seu@email.com"
+                    placeholder="su@email.com"
                     value={testEmail}
                     onChange={(e) => setTestEmail(e.target.value)}
                   />
@@ -259,7 +259,7 @@ export function EmailSettings() {
                 <div className="flex items-center gap-3">
                   <Mail className="h-5 w-5 text-primary" />
                   <div>
-                    <p className="font-medium">Cobro no dia do vencimento</p>
+                    <p className="font-medium">Cobro no día do vencimento</p>
                     <p className="text-sm text-muted-foreground">Enviar correo el día D</p>
                   </div>
                 </div>

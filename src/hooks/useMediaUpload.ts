@@ -14,7 +14,7 @@ export interface UploadResult {
 export interface UseMediaUploadReturn {
   upload: (file: File, opts?: { kind?: MediaKind; durationMs?: number }) => Promise<UploadResult>;
   isUploading: boolean;
-  progress: number; // 0..100 (best effort — Supabase não dá progresso real, então oscila entre 0/50/100)
+  progress: number; // 0..100 (best effort — Supabase no dá progresso real, então oscila entre 0/50/100)
   error: string | null;
   reset: () => void;
 }
@@ -84,9 +84,9 @@ export function useMediaUpload(): UseMediaUploadReturn {
 
   const upload = useCallback<UseMediaUploadReturn['upload']>(async (file, opts) => {
     setError(null);
-    if (!file) throw new Error('Arquivo inválido');
+    if (!file) throw new Error('Archivo inválido');
     if (file.size > MAX_BYTES) {
-      const msg = `Arquivo muito grande (máx ${Math.round(MAX_BYTES / 1024 / 1024)}MB).`;
+      const msg = `Archivo mucho grande (máx ${Math.round(MAX_BYTES / 1024 / 1024)}MB).`;
       setError(msg);
       throw new Error(msg);
     }
@@ -96,7 +96,7 @@ export function useMediaUpload(): UseMediaUploadReturn {
       setError(msg);
       throw new Error(msg);
     }
-    // organization_id pode estar ausente para super_admins — usa "_" como fallback no path
+    // organization_id puede estar ausente para super_admins — usa "_" como fallback no path
     const orgId = profile?.organization_id || '_';
 
     setIsUploading(true);

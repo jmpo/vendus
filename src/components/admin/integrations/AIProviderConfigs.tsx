@@ -64,7 +64,7 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
       <CardHeader>
         <CardTitle className="text-lg">{meta.name}</CardTitle>
         <CardDescription>
-          Use su propia cuenta para que la plataforma use este proveedor.
+          Usa su propia cuenta para que la plataforma use este proveedor.
           Por defecto, todo usa <strong>Lovable AI</strong>.
         </CardDescription>
       </CardHeader>

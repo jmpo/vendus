@@ -58,7 +58,7 @@ export function useLeadsByOrigin(productId?: string) {
 
       // Group by origin
       const grouped = data.reduce((acc, lead) => {
-        const origin = lead.lead_origin || 'Não informado';
+        const origin = lead.lead_origin || 'No informado';
         acc[origin] = (acc[origin] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
@@ -85,7 +85,7 @@ export function useLeadsByCampaign(productId?: string) {
 
       // Group by campaign
       const grouped = data.reduce((acc, lead) => {
-        const campaign = lead.utm_campaign || 'Sem campanha';
+        const campaign = lead.utm_campaign || 'Sem campaña';
         acc[campaign] = (acc[campaign] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
@@ -103,7 +103,7 @@ export const LEAD_ORIGINS = [
   { value: 'cold_call', label: 'Cold Call' },
   { value: 'redes_sociais', label: 'Redes Sociais' },
   { value: 'parceiro', label: 'Parceiro' },
-  { value: 'outro', label: 'Outro' }
+  { value: 'otro', label: 'Outro' }
 ];
 
 export const LEAD_CHANNELS = [

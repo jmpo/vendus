@@ -160,7 +160,7 @@ export function useGoogleCalendarConnection() {
       toast.success('Ajustes actualizadas');
     },
     onError: (error) => {
-      toast.error('Erro ao atualizar: ' + error.message);
+      toast.error('Error ao actualizar: ' + error.message);
     },
   });
 

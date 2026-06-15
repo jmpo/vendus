@@ -152,7 +152,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
         <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
           {hasChanges && (
             <Badge variant="secondary" className="animate-pulse hidden sm:inline-flex">
-              Não salvo
+              No guardado
             </Badge>
           )}
           <Button
@@ -193,7 +193,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
                 disabled={!selectedBlock}
               >
                 <Settings2 className="h-4 w-4 mr-2" />
-                {selectedBlock ? 'Editar' : 'Selecione'}
+                {selectedBlock ? 'Editar' : 'Seleccioná'}
               </Button>
             </>
           )}

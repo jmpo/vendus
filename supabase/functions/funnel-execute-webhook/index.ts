@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
     }
 
     // Carrega embudo
-    const { fecha: funnel, error: funnelError } = await supabase
+    const { data: funnel, error: funnelError } = await supabase
       .from('capture_funnels')
       .select('id, name, slug, organization_id, flow_blocks')
       .eq('id', input.funnel_id)
@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const cfg: WebhookConfig = block.fecha?.webhook_config || {};
+    const cfg: WebhookConfig = block.data?.webhook_config || {};
     if (!cfg.url) {
       return new Response(JSON.stringify({ error: 'Webhook URL not configured' }), {
         status: 400,

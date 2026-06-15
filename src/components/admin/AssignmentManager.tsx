@@ -35,7 +35,7 @@ export function AssignmentManager() {
 
   const handleAssign = async () => {
     if (!selectedUserId || !selectedProductId) {
-      toast.error('Selecione vendedor e produto');
+      toast.error('Seleccioná vendedor e producto');
       return;
     }
 
@@ -56,7 +56,7 @@ export function AssignmentManager() {
       if (error?.code === '23505') {
         toast.error('Este vendedor ya está asignado a este producto');
       } else {
-        toast.error('Erro ao atribuir produto');
+        toast.error('Error ao atribuir producto');
       }
     }
   };
@@ -66,7 +66,7 @@ export function AssignmentManager() {
       await unassignProduct.mutateAsync(assignmentId);
       toast.success('¡Asignación eliminada!');
     } catch (error) {
-      toast.error('Erro ao remover atribuição');
+      toast.error('Error ao eliminar atribuição');
     }
   };
 
@@ -75,7 +75,7 @@ export function AssignmentManager() {
       await updateAssignment.mutateAsync({ id: assignmentId, monthlyGoal: newGoal });
       toast.success('¡Meta actualizada!');
     } catch (error) {
-      toast.error('Erro ao atualizar meta');
+      toast.error('Error ao actualizar meta');
     }
   };
 
@@ -176,7 +176,7 @@ export function AssignmentManager() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Produto</label>
+                <label className="text-sm font-medium">Producto</label>
                 <Select value={selectedProductId} onValueChange={setSelectedProductId}>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccione un producto" />
@@ -251,7 +251,7 @@ export function AssignmentManager() {
                         </Avatar>
                         <div>
                           <p className="font-medium text-sm">
-                            {assignment.profiles?.full_name || 'Usuário'}
+                            {assignment.profiles?.full_name || 'Usuario'}
                           </p>
                           <p className="text-xs text-muted-foreground">
                             {assignment.profiles?.email}
@@ -268,7 +268,7 @@ export function AssignmentManager() {
                             onChange={(e) => handleUpdateGoal(assignment.id, parseFloat(e.target.value) || 0)}
                             className="w-20 h-8 text-center"
                           />
-                          <span className="text-xs text-muted-foreground">/mês</span>
+                          <span className="text-xs text-muted-foreground">/mes</span>
                         </div>
                         
                         <AlertDialog>

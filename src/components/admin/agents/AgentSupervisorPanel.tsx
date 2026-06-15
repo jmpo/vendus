@@ -35,8 +35,8 @@ import {
 import { Bot, Plus, Trash2, GitBranch, Users, Zap } from 'lucide-react';
 
 const ROLE_OPTIONS = [
-  { value: 'sdr', label: 'SDR (Qualificação)' },
-  { value: 'closer', label: 'Closer (Fechamento)' },
+  { value: 'sdr', label: 'SDR (Calificación)' },
+  { value: 'closer', label: 'Closer (Cierre)' },
   { value: 'support', label: 'Soporte' },
   { value: 'retention', label: 'Retenção' },
   { value: 'recovery', label: 'Recuperação' },
@@ -75,7 +75,7 @@ export function AgentSupervisorPanel() {
               <div>
                 <CardTitle>Supervisor multiagente</CardTitle>
                 <CardDescription>
-                  Roteamento inteligente: defina especialistas e regras. Quando nenhuma regra bate,
+                  Roteamento inteligente: defina especialistas e regras. Quando ninguna regra bate,
                   o supervisor IA decide automaticamente.
                 </CardDescription>
               </div>
@@ -111,7 +111,7 @@ export function AgentSupervisorPanel() {
           {spLoading && <p className="text-sm text-muted-foreground">Cargando...</p>}
           {!spLoading && specialists.length === 0 && (
             <p className="text-sm text-muted-foreground">
-              Ningún especialista registrado. Vincule seus agentes a um papel pra ativar o roteamento.
+              Ningún especialista registrado. Vincule sus agentes a um papel pra ativar o roteamento.
             </p>
           )}
           {specialists.map((sp) => {
@@ -283,7 +283,7 @@ export function AgentSupervisorPanel() {
                   onValueChange={(v) => setEditingSpecialist({ ...editingSpecialist, agent_id: v })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione um agente" />
+                    <SelectValue placeholder="Seleccioná um agente" />
                   </SelectTrigger>
                   <SelectContent>
                     {allAgents.map((a) => (
@@ -301,7 +301,7 @@ export function AgentSupervisorPanel() {
                   onChange={(e) =>
                     setEditingSpecialist({ ...editingSpecialist, description: e.target.value })
                   }
-                  placeholder="Ex: especialista em qualificação BANT pra leads novos"
+                  placeholder="Ex: especialista em calificación BANT pra leads novos"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -362,7 +362,7 @@ export function AgentSupervisorPanel() {
           {editingRule && (
             <div className="space-y-4">
               <div>
-                <Label>Nome</Label>
+                <Label>Nombre</Label>
                 <Input
                   value={editingRule.name ?? ''}
                   onChange={(e) => setEditingRule({ ...editingRule, name: e.target.value })}

@@ -78,7 +78,7 @@ export function QuizBlockInspector({
     const letter = String.fromCharCode(65 + opts.length);
     update('options', [...opts, {
       id: generateBlockId(),
-      label: `Opção ${opts.length + 1}`,
+      label: `Opción ${opts.length + 1}`,
       letter,
     }]);
   };
@@ -107,7 +107,7 @@ export function QuizBlockInspector({
   type Tier = { id: string; label: string; min: number; max: number; color?: string; message?: string };
   type Metric = { id: string; label: string; value: number; display?: string; color?: string };
   const tiers: Tier[] = ((block.data as any).result_tiers as Tier[]) || [
-    { id: 't1', label: 'Iniciante', min: 0, max: 20, color: '#f97316', message: 'Há muito espaço para crescer.' },
+    { id: 't1', label: 'Iniciante', min: 0, max: 20, color: '#f97316', message: 'Há mucho espaço para crescer.' },
     { id: 't2', label: 'Intermediário', min: 21, max: 50, color: '#3b82f6', message: 'Bom caminho — vamos acelerar.' },
     { id: 't3', label: 'Avançado', min: 51, max: 100, color: '#10b981', message: 'Excelente! Pronto para o próximo nível.' },
   ];
@@ -140,13 +140,13 @@ export function QuizBlockInspector({
           {!isCondition && !isScore && !isTag && (
             <>
               <div>
-                <Label className="text-xs">Pergunta / Mensagem</Label>
+                <Label className="text-xs">Pergunta / Mensaje</Label>
                 <Textarea
                   rows={2}
                   className="text-sm"
                   value={block.data.content || ''}
                   onChange={(e) => update('content', e.target.value)}
-                  placeholder="Texto exibido para o lead..."
+                  placeholder="Texto exibido para el lead..."
                 />
               </div>
 
@@ -188,7 +188,7 @@ export function QuizBlockInspector({
                   className="text-xs h-8"
                   value={block.data.subtitle || ''}
                   onChange={(e) => update('subtitle', e.target.value)}
-                  placeholder="Ex: Selecione a opção que mais combina"
+                  placeholder="Ex: Seleccioná a opción que mais combina"
                 />
               </div>
 
@@ -223,7 +223,7 @@ export function QuizBlockInspector({
                   />
                 </div>
                 <div className="flex items-center justify-between">
-                  <Label className="text-xs">Mostrar duração estimada</Label>
+                  <Label className="text-xs">Mostrar duración estimada</Label>
                   <Switch
                     checked={!!block.data.show_duration}
                     onCheckedChange={(v) => update('show_duration', v)}
@@ -241,7 +241,7 @@ export function QuizBlockInspector({
 
               <div>
                 <Label className="text-xs flex items-center gap-1">
-                  <ImageIcon className="h-3 w-3" /> Imagem (opcional)
+                  <ImageIcon className="h-3 w-3" /> Imagen (opcional)
                 </Label>
                 <Input
                   className="text-xs h-8"
@@ -259,7 +259,7 @@ export function QuizBlockInspector({
               <div className="flex items-center justify-between">
                 <Label className="text-xs font-semibold">Opções</Label>
                 <Button size="sm" variant="ghost" onClick={addOption} className="h-7 text-xs">
-                  <Plus className="h-3 w-3 mr-1" /> Opção
+                  <Plus className="h-3 w-3 mr-1" /> Opción
                 </Button>
               </div>
 
@@ -274,7 +274,7 @@ export function QuizBlockInspector({
                         className="text-xs h-7 flex-1"
                         value={opt.label}
                         onChange={(e) => updateOption(opt.id, { label: e.target.value })}
-                        placeholder={`Opção ${idx + 1}`}
+                        placeholder={`Opción ${idx + 1}`}
                       />
                       <Button size="icon" variant="ghost" className="h-6 w-6"
                         onClick={() => moveOption(opt.id, -1)} disabled={idx === 0}>
@@ -344,7 +344,7 @@ export function QuizBlockInspector({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="sequential" className="text-xs">
-                            Próximo na sequência
+                            Próximo na secuencia
                           </SelectItem>
                           {others.map(b => (
                             <SelectItem key={b.id} value={b.id} className="text-xs">
@@ -359,7 +359,7 @@ export function QuizBlockInspector({
 
                 {!hasOptions && (
                   <p className="text-xs text-muted-foreground text-center py-3">
-                    Adicione opções para o lead escolher
+                    Adicione opciones para el lead escolher
                   </p>
                 )}
               </div>
@@ -462,7 +462,7 @@ export function QuizBlockInspector({
                 >
                   <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="sequential" className="text-xs">Próximo na sequência</SelectItem>
+                    <SelectItem value="sequential" className="text-xs">Próximo na secuencia</SelectItem>
                     {others.map(b => (
                       <SelectItem key={b.id} value={b.id} className="text-xs">
                         #{numberOf(b.id)} — {shortLabel(b)}
@@ -482,7 +482,7 @@ export function QuizBlockInspector({
                 >
                   <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="sequential" className="text-xs">Próximo na sequência</SelectItem>
+                    <SelectItem value="sequential" className="text-xs">Próximo na secuencia</SelectItem>
                     {others.map(b => (
                       <SelectItem key={b.id} value={b.id} className="text-xs">
                         #{numberOf(b.id)} — {shortLabel(b)}
@@ -504,7 +504,7 @@ export function QuizBlockInspector({
                 >
                   <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="sequential" className="text-xs">Próximo na sequência</SelectItem>
+                    <SelectItem value="sequential" className="text-xs">Próximo na secuencia</SelectItem>
                     {others.map(b => (
                       <SelectItem key={b.id} value={b.id} className="text-xs">
                         #{numberOf(b.id)} — {shortLabel(b)}
@@ -513,7 +513,7 @@ export function QuizBlockInspector({
                   </SelectContent>
                 </Select>
                 <p className="text-[10px] text-muted-foreground mt-1">
-                  Por padrão segue a ordem visual. Escolha um destino para criar ramificação.
+                  Por padrão segue a ordem visual. Elegí um destino para crear ramificação.
                 </p>
               </div>
 
@@ -522,7 +522,7 @@ export function QuizBlockInspector({
                   'rounded-lg border bg-muted/30 p-2.5 space-y-1.5',
                 )}>
                   <p className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
-                    Ramificações por opção
+                    Ramificações por opción
                   </p>
                   {(block.data.options || []).map((opt, idx) => {
                     const target = opt.next_block_id;
@@ -535,13 +535,13 @@ export function QuizBlockInspector({
                           {opt.label}
                         </span>
                         <Badge variant={target ? 'default' : 'outline'} className="text-[10px] h-5">
-                          {target ? `→ #${numberOf(target)}` : 'sequência'}
+                          {target ? `→ #${numberOf(target)}` : 'secuencia'}
                         </Badge>
                       </div>
                     );
                   })}
                   <p className="text-[10px] text-muted-foreground pt-1">
-                    Edite o destino de cada opção na aba <strong>Conteúdo</strong>.
+                    Edite o destino de cada opción na aba <strong>Conteúdo</strong>.
                   </p>
                 </div>
               )}
@@ -553,12 +553,12 @@ export function QuizBlockInspector({
         {isEnd && (
           <TabsContent value="result" className="space-y-4 pt-3">
             <div>
-              <Label className="text-xs">Mensagem do resultado</Label>
+              <Label className="text-xs">Mensaje do resultado</Label>
               <Input
                 className="text-xs h-8"
                 value={block.data.success_message || ''}
                 onChange={(e) => update('success_message', e.target.value)}
-                placeholder="Seu resultado:"
+                placeholder="Su resultado:"
               />
             </div>
 
@@ -582,11 +582,11 @@ export function QuizBlockInspector({
                   className="text-xs"
                   value={(block.data as any).result_ai_prompt || ''}
                   onChange={(e) => updateAny('result_ai_prompt', e.target.value)}
-                  placeholder="Prompt personalizado (opcional). Ex: Você é um consultor de marketing digital. Gere um diagnóstico..."
+                  placeholder="Prompt personalizado (opcional). Ex: Usted é um consultor de marketing digital. Genera um diagnóstico..."
                 />
               )}
               <p className="text-[10px] text-muted-foreground">
-                Gera diagnóstico, oportunidades, próximos passos e oferta com base nas respostas e score.
+                Gera diagnóstico, oportunidades, próximos passos e oferta com base nas respuestas e score.
               </p>
             </div>
 
@@ -639,7 +639,7 @@ export function QuizBlockInspector({
                     className="text-xs h-7"
                     value={t.message || ''}
                     onChange={(e) => setTiers(tiers.map(x => x.id === t.id ? { ...x, message: e.target.value } : x))}
-                    placeholder="Mensagem desta faixa"
+                    placeholder="Mensaje desta faixa"
                   />
                 </div>
               ))}

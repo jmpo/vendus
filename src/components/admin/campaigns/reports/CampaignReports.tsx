@@ -115,7 +115,7 @@ export function CampaignReports({ campaigns }: { campaigns: Campaign[] }) {
         <KPI label="Finalizadas" value={completed} />
         <KPI label="Mensagens enviadas" value={summary.sent} />
         <KPI label="Respostas recebidas" value={summary.responded} accent />
-        <KPI label="Taxa de resposta" value={pct(summary.responded, summary.sent)} accent />
+        <KPI label="Taxa de respuesta" value={pct(summary.responded, summary.sent)} accent />
       </div>
 
       {loading ? (
@@ -124,7 +124,7 @@ export function CampaignReports({ campaigns }: { campaigns: Campaign[] }) {
         <Card>
           <CardContent className="p-10 flex flex-col items-center gap-3 text-muted-foreground text-sm">
             <BarChart3 className="h-8 w-8" />
-            Nenhum dado ainda. Dispare uma campanha para popular os relatórios.
+            Nenhum dado aún. Dispare uma campaña para popular os relatórios.
           </CardContent>
         </Card>
       ) : (

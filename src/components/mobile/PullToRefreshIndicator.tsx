@@ -53,8 +53,8 @@ export function PullToRefreshIndicator({
           {isRefreshing 
             ? 'Atualizando...' 
             : canRefresh 
-              ? 'Solte para atualizar' 
-              : 'Puxe para atualizar'
+              ? 'Solte para actualizar' 
+              : 'Puxe para actualizar'
           }
         </span>
       </motion.div>

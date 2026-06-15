@@ -64,7 +64,7 @@ export function AgentSwitchEditor({ productId, agentId, onAgentChange }: AgentSw
         <p className="text-xs text-muted-foreground">
           No se encontraron agentes activos para este producto.
           <br />
-          Crie agentes na aba "Agentes" do produto.
+          Crea agentes na aba "Agentes" do producto.
         </p>
       </div>
     );
@@ -125,8 +125,8 @@ export function AgentSwitchEditor({ productId, agentId, onAgentChange }: AgentSw
       )}
       
       <p className="text-xs text-muted-foreground">
-        A conversa será transferida para este agente, que usará o Cérebro do Produto 
-        mas seguirá suas próprias regras de comportamento.
+        A conversación será transferida para este agente, que usará o Cérebro do Producto 
+        mas seguirá sus próprias regras de comportamento.
       </p>
     </div>
   );

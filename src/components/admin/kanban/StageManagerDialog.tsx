@@ -149,7 +149,7 @@ export function StageManagerDialog({
       onRefresh?.();
     } catch (error) {
       console.error('Error saving order:', error);
-      toast.error('Erro ao salvar ordem');
+      toast.error('Error ao guardar ordem');
     } finally {
       setIsSavingOrder(false);
     }
@@ -167,7 +167,7 @@ export function StageManagerDialog({
           is_won: data.is_won,
           is_lost: data.is_lost,
         });
-        toast.success('Etapa atualizada!');
+        toast.success('Etapa actualizada!');
       } else {
         // Create new
         await createStage.mutateAsync({
@@ -179,7 +179,7 @@ export function StageManagerDialog({
           is_won: data.is_won || false,
           is_lost: data.is_lost || false,
         });
-        toast.success('Etapa criada!');
+        toast.success('Etapa creada!');
       }
 
       setEditingStage(null);
@@ -187,7 +187,7 @@ export function StageManagerDialog({
       onRefresh?.();
     } catch (error) {
       console.error('Error saving stage:', error);
-      toast.error('Erro ao salvar etapa');
+      toast.error('Error ao guardar etapa');
     }
   };
 
@@ -204,7 +204,7 @@ export function StageManagerDialog({
   const handleSaveFromRef = async () => {
     if (!formRef.current) return;
     if (!formRef.current.isValid()) {
-      toast.error('Preencha o nome da etapa');
+      toast.error('Preencha o nombre da etapa');
       return;
     }
     const data = formRef.current.getData();
@@ -228,7 +228,7 @@ export function StageManagerDialog({
             )}
           </DialogTitle>
           <DialogDescription className="text-sm">
-            Configure as etapas do seu funil de vendas
+            Configure as etapas do su embudo de ventas
           </DialogDescription>
         </DialogHeader>
 
@@ -299,7 +299,7 @@ export function StageManagerDialog({
             {localStages.length === 0 && !isAddingNew && (
               <div className="text-center py-8 text-muted-foreground">
                 <p>Nenhuma etapa configurada.</p>
-                <p className="text-sm">Clique em "Nueva Etapa" para começar.</p>
+                <p className="text-sm">Hacé clic em "Nueva Etapa" para comenzar.</p>
               </div>
             )}
           </div>

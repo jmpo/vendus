@@ -53,10 +53,10 @@ export function PlansManager() {
     }
     try {
       await deletePlan.mutateAsync(deleting.id);
-      toast.success('Plano excluído');
+      toast.success('Plano eliminado');
       setDeleting(null);
     } catch (err: any) {
-      toast.error(err.message || 'Erro ao excluir plano');
+      toast.error(err.message || 'Error ao eliminar plan');
     }
   };
 
@@ -183,7 +183,7 @@ export function PlansManager() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Eliminar plan?</AlertDialogTitle>
             <AlertDialogDescription>
-              O plano "{deleting?.name}" será eliminado. Esta acción no se puede deshacer.
+              O plan "{deleting?.name}" será eliminado. Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

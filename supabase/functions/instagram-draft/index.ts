@@ -36,7 +36,7 @@ Deno.serve(async (req: Request) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
 
-  const { fecha: userData, error: userErr } = await sbUser.auth.getUser();
+  const { data: userData, error: userErr } = await sbUser.auth.getUser();
   if (userErr || !userData?.user) return json({ error: 'Unauthorized' }, 401);
   const userId = userData.user.id;
 
@@ -47,7 +47,7 @@ Deno.serve(async (req: Request) => {
     return json({ error: 'missing fields: organization_id, display_name' }, 400);
   }
 
-  const { fecha: belongs, error: belongsErr } = await sbAdmin.rpc('user_belongs_to_organization', {
+  const { data: belongs, error: belongsErr } = await sbAdmin.rpc('user_belongs_to_organization', {
     _user_id: userId,
     _org_id: organization_id,
   });
@@ -58,7 +58,7 @@ Deno.serve(async (req: Request) => {
 
   // Retomar rascunho existente.
   if (connection_id) {
-    const { fecha: existing } = await sbAdmin
+    const { data: existing } = await sbAdmin
       .from('instagram_connections')
       .select('id, webhook_verify_token, status, webhook_subscribed_at')
       .eq('id', connection_id)
@@ -76,7 +76,7 @@ Deno.serve(async (req: Request) => {
   }
 
   const verifyToken = generateVerifyToken();
-  const { fecha: row, error } = await sbAdmin
+  const { data: row, error } = await sbAdmin
     .from('instagram_connections')
     .insert({
       organization_id,

@@ -26,7 +26,7 @@ export function WebChatReportsTab() {
   const waitingConversations = conversations.filter(c => c.status === 'waiting_human').length;
   const closedConversations = conversations.filter(c => c.status === 'closed').length;
 
-  // Calculate average first response time (for conversations that have first_response_at)
+  // Calculate average first response equipo (for conversations that have first_response_at)
   const conversationsWithResponse = conversations.filter(c => c.first_response_at && c.created_at);
   const avgResponseTime = conversationsWithResponse.length > 0
     ? conversationsWithResponse.reduce((sum, c) => {
@@ -63,7 +63,7 @@ export function WebChatReportsTab() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Aguardando Atendimento</CardTitle>
+            <CardTitle className="text-sm font-medium">Aguardando Atención</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -84,7 +84,7 @@ export function WebChatReportsTab() {
               {avgResponseTime > 0 ? `${avgResponseTime.toFixed(1)}min` : '--'}
             </div>
             <p className="text-xs text-muted-foreground">
-              primeira resposta humana
+              primeira respuesta humana
             </p>
           </CardContent>
         </Card>
@@ -97,7 +97,7 @@ export function WebChatReportsTab() {
           <CardContent>
             <div className="text-2xl font-bold">{botResolutionRate}%</div>
             <p className="text-xs text-muted-foreground">
-              das conversas fechadas
+              das conversaciones fechadas
             </p>
           </CardContent>
         </Card>
@@ -108,9 +108,9 @@ export function WebChatReportsTab() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BarChart3 className="h-5 w-5" />
-            Distribuição por Status
+            Distribución por Status
           </CardTitle>
-          <CardDescription>Visão geral do estado das conversas</CardDescription>
+          <CardDescription>Visão geral do estado das conversaciones</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -152,7 +152,7 @@ export function WebChatReportsTab() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span>Em Atendimento</span>
+                <span>Em Atención</span>
                 <span className="font-medium">
                   {conversations.filter(c => c.status === 'human_active').length}
                 </span>
@@ -199,11 +199,11 @@ export function WebChatReportsTab() {
         </CardHeader>
         <CardContent>
           <ul className="text-sm text-muted-foreground space-y-2">
-            <li>• Conversas por hora/dia da semana</li>
-            <li>• Performance por atendente</li>
+            <li>• Conversas por hora/día da semana</li>
+            <li>• Performance por agente</li>
             <li>• Leads gerados via chat</li>
-            <li>• Taxa de conversão chat → venda</li>
-            <li>• Análise de sentimento das conversas</li>
+            <li>• Taxa de conversão chat → venta</li>
+            <li>• Análise de sentimento das conversaciones</li>
           </ul>
         </CardContent>
       </Card>

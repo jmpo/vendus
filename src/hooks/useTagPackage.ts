@@ -9,15 +9,15 @@ interface GeneratePackageParams {
 }
 
 /**
- * Cria um "pacote" pré-configurado de etiquetas + automações para um produto:
- *   - PIX Gerado · {Produto}            (transitória, eliminada ao comprar)
- *   - Boleto Gerado · {Produto}         (transitória)
- *   - Aguardando Pagamento · {Produto}  (transitória, dispara em PIX e Boleto)
- *   - Checkout Abandonado · {Produto}   (transitória)
- *   - Cliente · {Produto}               (PERMANENTE — histórico)
- *   - Reembolso · {Produto}             (PERMANENTE — histórico)
+ * Cria um "pacote" pré-configurado de etiquetas + automatizaciones para um producto:
+ *   - PIX Generado · {Producto}            (transitória, eliminada ao comprar)
+ *   - Boleto Generado · {Producto}         (transitória)
+ *   - Aguardando Pago · {Producto}  (transitória, dispara em PIX e Boleto)
+ *   - Checkout Abandonado · {Producto}   (transitória)
+ *   - Cliente · {Producto}               (PERMANENTE — histórico)
+ *   - Reembolso · {Producto}             (PERMANENTE — histórico)
  *
- * Idempotente: rodar duas vezes para o mesmo produto não duplica nada.
+ * Idempotente: rodar duas vezes para o mismo producto no duplica nada.
  */
 export function useGenerateTagPackage() {
   const qc = useQueryClient();

@@ -34,7 +34,7 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
     }
 
     // 1) Carrega o producto e busca a oferta com link público da Cakto.
-    const { fecha: product } = await ctx.supabase
+    const { data: product } = await ctx.supabase
       .from('products')
       .select('id, name')
       .eq('id', input.product_id)
@@ -49,7 +49,7 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
 
     if (input.offer_id) offerQuery = offerQuery.eq('id', input.offer_id);
 
-    const { fecha: offers } = await offerQuery.limit(1);
+    const { data: offers } = await offerQuery.limit(1);
     const offer = offers?.[0];
 
     if (!offer?.checkout_url) {
@@ -61,7 +61,7 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
     }
 
     // 2) Carrega dados del lead para pré-preencher o checkout.
-    const { fecha: lead } = await ctx.supabase
+    const { data: lead } = await ctx.supabase
       .from('leads')
       .select('name, email, phone')
       .eq('id', ctx.leadId)
@@ -83,7 +83,7 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
 
     return {
       success: true,
-      fecha: {
+      data: {
         checkout_url: checkoutUrl,
         offer_id: offer.id,
         offer_name: offer.name,

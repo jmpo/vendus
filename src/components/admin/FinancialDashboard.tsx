@@ -133,7 +133,7 @@ export function FinancialDashboard() {
         </div>
       </div>
 
-      {/* Cards de Resumo */}
+      {/* Cards de Resumen */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -251,8 +251,8 @@ export function FinancialDashboard() {
                       <TableHead>Producto</TableHead>
                       <TableHead>Lead</TableHead>
                       <TableHead>Valor de la Venta</TableHead>
-                      <TableHead>Comissão</TableHead>
-                      <TableHead>Data</TableHead>
+                      <TableHead>Comisión</TableHead>
+                      <TableHead>Fecha</TableHead>
                       <TableHead className="text-right">Acciones</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -331,7 +331,7 @@ export function FinancialDashboard() {
                       </TableHead>
                       <TableHead>Vendedor</TableHead>
                       <TableHead>Producto</TableHead>
-                      <TableHead>Comissão</TableHead>
+                      <TableHead>Comisión</TableHead>
                       <TableHead>Aprobada em</TableHead>
                       <TableHead className="text-right">Acciones</TableHead>
                     </TableRow>
@@ -391,7 +391,7 @@ export function FinancialDashboard() {
                       <TableHead>Producto</TableHead>
                       <TableHead>Valor</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Data</TableHead>
+                      <TableHead>Fecha</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>

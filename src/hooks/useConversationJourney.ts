@@ -13,7 +13,7 @@ export interface JourneyEvent {
 
 /**
  * Unified timeline for a conversation: transfers + assignment events.
- * Ordered by time DESC (most recent first).
+ * Ordered by equipo DESC (most recent first).
  */
 export function useConversationJourney(conversationId: string | null) {
   return useQuery({

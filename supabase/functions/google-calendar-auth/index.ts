@@ -32,7 +32,7 @@ serve(async (req) => {
     console.log(`Starting Google Calendar OAuth for user ${userId}`);
 
     // Get OAuth credentials from integration_settings
-    const { fecha: oauthConfig, error: configError } = await supabase
+    const { data: oauthConfig, error: configError } = await supabase
       .from("integration_settings")
       .select("settings")
       .eq("organization_id", organizationId)

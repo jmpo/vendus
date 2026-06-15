@@ -48,7 +48,7 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     );
 
-    const { fecha: funnel, error: funnelErr } = await supabase
+    const { data: funnel, error: funnelErr } = await supabase
       .from('capture_funnels')
       .select('id, organization_id, product_id, name')
       .eq('id', body.funnel_id)
@@ -61,7 +61,7 @@ serve(async (req) => {
     }
 
     // Reaproveita conversación recente do mismo visitor (mismo embudo) se ainda aberta.
-    const { fecha: existing } = await supabase
+    const { data: existing } = await supabase
       .from('webchat_conversations')
       .select('id, lead_id, status')
       .eq('organization_id', funnel.organization_id)
@@ -80,7 +80,7 @@ serve(async (req) => {
     if (body.override_handoff_triggers?.length) flowVariables['__override_handoff_triggers'] = JSON.stringify(body.override_handoff_triggers);
 
     if (!conversation) {
-      const { fecha: created, error: insErr } = await supabase
+      const { data: created, error: insErr } = await supabase
         .from('webchat_conversations')
         .insert({
           organization_id: funnel.organization_id,
@@ -136,7 +136,7 @@ serve(async (req) => {
             orFilters.push(`phone.eq.${body.visitor_phone}`);
             orFilters.push(`phone_normalized.eq.${body.visitor_phone}`);
           }
-          const { fecha: existingLead } = await supabase
+          const { data: existingLead } = await supabase
             .from('leads')
             .select('id')
             .eq('organization_id', funnel.organization_id)
@@ -147,7 +147,7 @@ serve(async (req) => {
         }
         if (!leadId) {
           const visitorShort = String(body.visitor_id || '').slice(-6) || 'novo';
-          const { fecha: newLead } = await supabase
+          const { data: newLead } = await supabase
             .from('leads')
             .insert({
               organization_id: funnel.organization_id,

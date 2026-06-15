@@ -83,7 +83,7 @@ const DEFAULT_AGENT: Partial<ProductAgent> = {
   end_conversation_triggers: [],
   tone_style: 'friendly',
   message_style: 'balanced',
-  // ai_model removido — modelo agora vem de org_ai_routing (Integrações > Enrutamiento de IA)
+  // ai_model eliminado — modelo ahora vem de org_ai_routing (Integraciones > Enrutamiento de IA)
   always_end_with_question: true,
   additional_prompt: '',
   required_phrases: [],
@@ -166,15 +166,15 @@ export function AgentEditor({
       setActiveTab('identity');
       return;
     }
-    // Para tipos globais (admin/support/financial), permite gerar SEM produto
-    // Para SDR/Closer/CS/custom, exige produto
+    // Para tipos globais (admin/support/financial), permite gerar SEM producto
+    // Para SDR/Closer/CS/custom, exige producto
     if (!formData.product_id && !isGlobalType(formData.agent_type)) {
       toast.error('Seleccione un producto antes de generar con IA');
       setActiveTab('identity');
       return;
     }
 
-    // Passa null quando é global — edge function vai carregar contexto org-wide
+    // Passa null cuando é global — edge function vai cargar contexto org-wide
     const result = await generateAgent(
       formData.product_id || null,
       formData.agent_type,
@@ -215,7 +215,7 @@ export function AgentEditor({
       setActiveTab('identity');
       return;
     }
-    // Sempre abre o dialog para o usuário poder somar contexto externo ao conhecimento interno
+    // Sempre abre o dialog para o usuario poder somar contexto externo ao conhecimento interno
     setContextDialogOpen(true);
   };
 
@@ -226,10 +226,10 @@ export function AgentEditor({
     setCustomContext('');
   };
 
-  // Lista o que está faltando para criar (usado no header e na validação do clique)
+  // Lista o que está faltando para crear (usado no header e na validação do clique)
   const missingFields: string[] = [];
-  if (!formData.name?.trim()) missingFields.push('nome');
-  if (!isGlobalType(formData.agent_type) && !formData.product_id) missingFields.push('produto');
+  if (!formData.name?.trim()) missingFields.push('nombre');
+  if (!isGlobalType(formData.agent_type) && !formData.product_id) missingFields.push('producto');
 
   const handleOptimizeField = async (field: keyof ProductAgent) => {
     const currentValue = formData[field];
@@ -303,7 +303,7 @@ export function AgentEditor({
 
   const handleSave = () => {
     if (!formData.name?.trim()) {
-      toast.error('Dê um nome ao agente');
+      toast.error('Dê um nombre al agente');
       setActiveTab('identity');
       setTimeout(() => {
         const el = document.getElementById('name') as HTMLInputElement | null;
@@ -323,7 +323,7 @@ export function AgentEditor({
       primary_objective:
         formData.primary_objective?.trim() ||
         (isGlobalType(formData.agent_type)
-          ? `Atender e direcionar conversas em escopo ${AGENT_TYPE_LABELS[formData.agent_type as AgentType]}.`
+          ? `Atender e direcionar conversaciones em escopo ${AGENT_TYPE_LABELS[formData.agent_type as AgentType]}.`
           : 'Atender o lead conforme o objetivo definido.'),
     };
     onSave(payload);
@@ -502,7 +502,7 @@ export function AgentEditor({
                 <div className="space-y-2">
                   <Label>Tipo de Agente</Label>
                   <p className="text-xs text-muted-foreground">
-                    Selecione o tipo e clique em "Generar con IA" para criar automaticamente
+                    Seleccioná o tipo e clique em "Generar con IA" para crear automaticamente
                   </p>
                   <div className="grid grid-cols-3 gap-2">
                     {(Object.keys(AGENT_TEMPLATES) as AgentType[]).map((type) => {
@@ -526,13 +526,13 @@ export function AgentEditor({
                   </div>
                 </div>
 
-                {/* Vínculo: Global vs Produto */}
+                {/* Vínculo: Global vs Producto */}
                 <div className="space-y-2">
                   <Label>Vínculo</Label>
                   <p className="text-xs text-muted-foreground">
                     {isGlobalType(formData.agent_type)
-                      ? 'Tipos administrativos sempre são globais (atendem toda a organização).'
-                      : 'Escolha se este agente atende toda a organização ou apenas um produto.'}
+                      ? 'Tipos administrativos siempre son globais (atendem toda a organización).'
+                      : 'Elegí se este agente atende toda a organización ou apenas um producto.'}
                   </p>
                   <div className="grid grid-cols-2 gap-2">
                     <button
@@ -548,7 +548,7 @@ export function AgentEditor({
                       <Globe className="h-4 w-4 text-primary shrink-0" />
                       <div>
                         <div className="text-sm font-medium">Global</div>
-                        <div className="text-xs text-muted-foreground">Sem produto</div>
+                        <div className="text-xs text-muted-foreground">Sem producto</div>
                       </div>
                     </button>
                     <button
@@ -566,7 +566,7 @@ export function AgentEditor({
                       <Package className="h-4 w-4 text-primary shrink-0" />
                       <div>
                         <div className="text-sm font-medium">Específico</div>
-                        <div className="text-xs text-muted-foreground">De um produto</div>
+                        <div className="text-xs text-muted-foreground">De um producto</div>
                       </div>
                     </button>
                   </div>
@@ -582,12 +582,12 @@ export function AgentEditor({
                             !formData.product_id && 'border-destructive ring-1 ring-destructive/40'
                           )}
                         >
-                          <SelectValue placeholder="Selecione um produto" />
+                          <SelectValue placeholder="Seleccioná um producto" />
                         </SelectTrigger>
                         <SelectContent>
                           {products?.length === 0 && (
                             <div className="px-2 py-3 text-xs text-muted-foreground">
-                              Nenhum produto cadastrado. Crie um produto primeiro.
+                              Nenhum producto cadastrado. Crea um producto primeiro.
                             </div>
                           )}
                           {products?.map((p) => (
@@ -602,7 +602,7 @@ export function AgentEditor({
                       </Select>
                       {!formData.product_id && (
                         <p className="text-xs text-destructive flex items-center gap-1">
-                          ↑ Selecione qual produto este agente vai atender
+                          ↑ Seleccioná qual producto este agente vai atender
                         </p>
                       )}
                     </div>
@@ -610,22 +610,22 @@ export function AgentEditor({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="name">Nome do Agente</Label>
+                  <Label htmlFor="name">Nombre do Agente</Label>
                   <Input
                     id="name"
                     value={formData.name || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="Ex: SDR Qualificador"
+                    placeholder="Ex: SDR Calificador"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Descrição (opcional)</Label>
+                  <Label htmlFor="description">Descripción (opcional)</Label>
                   <Textarea
                     id="description"
                     value={formData.description || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder="Breve descrição do agente..."
+                    placeholder="Breve descripción del agente..."
                     rows={2}
                   />
                 </div>
@@ -660,7 +660,7 @@ export function AgentEditor({
                     id="objective"
                     value={formData.primary_objective || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, primary_objective: e.target.value }))}
-                    placeholder="Ex: Qualificar leads e encaminhar para o closer quando houver interesse real"
+                    placeholder="Ex: Calificar leads e encaminhar para o closer cuando houver interesse real"
                     rows={3}
                   />
                 </div>
@@ -673,7 +673,7 @@ export function AgentEditor({
                         Prompt Complementar (opcional)
                       </Label>
                       <p className="text-xs text-muted-foreground">
-                        Instruções adicionais além do Cérebro do Produto
+                        Instruções adicionais além do Cérebro do Producto
                       </p>
                     </div>
                     <div className="flex items-center gap-1">
@@ -696,7 +696,7 @@ export function AgentEditor({
                               <SelectItem value="admin_executive">Ejecutivo direto</SelectItem>
                               <SelectItem value="admin_strategic">Consultor estratégico</SelectItem>
                               <SelectItem value="admin_auditor">Auditor crítico</SelectItem>
-                              <SelectItem value="admin_coach">Coach da equipe</SelectItem>
+                              <SelectItem value="admin_coach">Coach da equipo</SelectItem>
                             </>
                           ) : (
                             <>
@@ -730,7 +730,7 @@ export function AgentEditor({
                     id="additional_prompt"
                     value={formData.additional_prompt || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, additional_prompt: e.target.value }))}
-                    placeholder="Instruções específicas para este agente... Use {{product_name}}, {{organization_name}} e outras variáveis."
+                    placeholder="Instruções específicas para este agente... Usa {{product_name}}, {{organization_name}} e outras variáveis."
                     rows={6}
                   />
                   <p className="text-xs text-muted-foreground">
@@ -747,19 +747,19 @@ export function AgentEditor({
                 />
 
                 <ArrayField
-                  label="O que pode fazer"
+                  label="O que puede hacer"
                   items={formData.can_do || []}
                   onAdd={(v) => handleArrayAdd('can_do', v)}
                   onRemove={(i) => handleArrayRemove('can_do', i)}
-                  placeholder="Ex: Fazer perguntas de qualificação"
+                  placeholder="Ex: Fazer preguntas de calificación"
                 />
 
                 <ArrayField
-                  label="O que NÃO pode fazer"
+                  label="O que NÃO puede hacer"
                   items={formData.cannot_do || []}
                   onAdd={(v) => handleArrayAdd('cannot_do', v)}
                   onRemove={(i) => handleArrayRemove('cannot_do', i)}
-                  placeholder="Ex: Falar de preço fechado"
+                  placeholder="Ex: Falar de preço cerrado"
                 />
 
                 <ArrayField
@@ -771,11 +771,11 @@ export function AgentEditor({
                 />
 
                 <ArrayField
-                  label="Quando encerrar conversa"
+                  label="Quando cerrar conversación"
                   items={formData.end_conversation_triggers || []}
                   onAdd={(v) => handleArrayAdd('end_conversation_triggers', v)}
                   onRemove={(i) => handleArrayRemove('end_conversation_triggers', i)}
-                  placeholder="Ex: Lead confirma que não tem interesse"
+                  placeholder="Ex: Lead confirma que no tiene interesse"
                 />
 
                 {/* === Transferência entre agentes === */}
@@ -785,85 +785,85 @@ export function AgentEditor({
                     <div className="flex-1">
                       <h4 className="text-sm font-semibold">Transferência entre agentes</h4>
                       <p className="text-xs text-muted-foreground">
-                        Mensagens enviadas automaticamente quando este agente transfere
-                        a conversa, ou quando ele assume uma conversa de outro agente.
+                        Mensagens enviadas automaticamente cuando este agente transfere
+                        a conversación, ou cuando ele assume uma conversación de otro agente.
                       </p>
                     </div>
                   </div>
 
-                  {/* Escopo de transferência — depende se o agente está vinculado a um produto ou é global */}
+                  {/* Escopo de transferência — depende se o agente está vinculado a um producto ou é global */}
                   {formData.product_id ? (
                     <div className="rounded-md border border-amber-500/50 bg-amber-500/10 p-3 text-xs text-amber-700 dark:text-amber-400 flex items-start gap-2">
                       <span className="text-base leading-none mt-0.5">🔒</span>
                       <div>
-                        <strong>Agente vinculado a um produto.</strong> Este agente só
-                        poderá transferir conversas para outros agentes do <strong>mesmo produto</strong>{' '}
+                        <strong>Agente vinculado a um producto.</strong> Este agente só
+                        poderá transferir conversaciones para outros agentes do <strong>mismo producto</strong>{' '}
                         ou para agentes <strong>globais</strong> (Admin / Orquestrador). Tentativas de
-                        transferência cruzada entre produtos são bloqueadas pelo sistema.
+                        transferência cruzada entre productos son bloqueadas pelo sistema.
                       </div>
                     </div>
                   ) : (
                     <div className="rounded-md border border-emerald-500/50 bg-emerald-500/10 p-3 text-xs text-emerald-700 dark:text-emerald-400 flex items-start gap-2">
                       <span className="text-base leading-none mt-0.5">🌐</span>
                       <div>
-                        <strong>Agente global.</strong> Este agente pode rotear conversas
-                        para qualquer agente da organização (entre produtos diferentes).
+                        <strong>Agente global.</strong> Este agente puede rotear conversaciones
+                        para qualquer agente da organización (entre productos diferentes).
                       </div>
                     </div>
                   )}
 
-                  {/* Aviso quando ambos os campos de handoff estão vazios — sem isso, a transferência sai muda */}
+                  {/* Aviso cuando ambos os campos de handoff estão vazios — sem isso, a transferência sai muda */}
                   {!formData.handoff_outgoing_message?.trim() &&
                     !formData.handoff_incoming_message?.trim() && (
                       <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-xs text-destructive flex items-start gap-2">
                         <span className="text-base leading-none mt-0.5">⚠️</span>
                         <div>
-                          <strong>Nenhuma mensagem de transferência configurada.</strong>{' '}
+                          <strong>Nenhuma mensaje de transferência configurada.</strong>{' '}
                           Sem despedida e sem apresentação, a troca de agente acontece em silêncio
-                          e o lead pode ficar perdido. Preencha pelo menos um dos campos abaixo.
+                          e o lead puede ficar perdido. Preencha pelo menos um dos campos abaixo.
                         </div>
                       </div>
                     )}
 
                   <div className="space-y-2">
                     <Label className="text-xs">
-                      Mensagem ao transferir <span className="text-muted-foreground">(despedida)</span>
+                      Mensaje ao transferir <span className="text-muted-foreground">(despedida)</span>
                     </Label>
                     <Textarea
                       value={formData.handoff_outgoing_message ?? ''}
                       onChange={(e) =>
                         setFormData((prev) => ({ ...prev, handoff_outgoing_message: e.target.value }))
                       }
-                      placeholder="Ex: Perfeito {{nome}}! Vou te transferir para a {{proximo_agente}}, que vai dar continuidade no seu atendimento. Um momento…"
+                      placeholder="Ex: Perfeito {{nombre}}! Vou te transferir para a {{proximo_agente}}, que vai dar continuidade no su atención. Um momento…"
                       rows={3}
                       className="text-sm"
                     />
                     <p className="text-xs text-muted-foreground">
-                      Variáveis: <code>{'{{nome}}'}</code>, <code>{'{{produto}}'}</code>,{' '}
+                      Variáveis: <code>{'{{nombre}}'}</code>, <code>{'{{producto}}'}</code>,{' '}
                       <code>{'{{proximo_agente}}'}</code>
                     </p>
                   </div>
 
                   <div className="space-y-2">
                     <Label className="text-xs">
-                      Mensagem ao assumir <span className="text-muted-foreground">(apresentação automática)</span>
+                      Mensaje ao assumir <span className="text-muted-foreground">(apresentação automática)</span>
                     </Label>
                     <Textarea
                       value={formData.handoff_incoming_message ?? ''}
                       onChange={(e) =>
                         setFormData((prev) => ({ ...prev, handoff_incoming_message: e.target.value }))
                       }
-                      placeholder="Ex: Olá {{nome}}, aqui é a Ana, responsável pelo comercial do {{produto}}. Vi que você estava falando com a {{agente_anterior}} sobre {{resumo}}. Podemos seguir por aqui?"
+                      placeholder="Ex: Hola {{nombre}}, aqui é a Ana, responsável pelo comercial do {{producto}}. Vi que usted estava falando com a {{agente_anterior}} sobre {{resumen}}. Podemos seguir por aqui?"
                       rows={4}
                       className="text-sm"
                     />
                     <p className="text-xs text-muted-foreground">
-                      Variáveis: <code>{'{{nome}}'}</code>, <code>{'{{produto}}'}</code>,{' '}
-                      <code>{'{{agente_anterior}}'}</code>, <code>{'{{resumo}}'}</code>
+                      Variáveis: <code>{'{{nombre}}'}</code>, <code>{'{{producto}}'}</code>,{' '}
+                      <code>{'{{agente_anterior}}'}</code>, <code>{'{{resumen}}'}</code>
                     </p>
                     <p className="text-xs text-muted-foreground italic">
-                      Esta mensagem é disparada automaticamente após o atraso configurado,
-                      mesmo que o lead não responda.
+                      Esta mensaje é disparada automaticamente após o atraso configurado,
+                      mismo que o lead no responda.
                     </p>
                   </div>
 
@@ -889,7 +889,7 @@ export function AgentEditor({
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-xs">Atraso entre mensagens (segundos)</Label>
+                      <Label className="text-xs">Atraso entre mensajes (segundos)</Label>
                       <Input
                         type="number"
                         min={0}
@@ -904,16 +904,16 @@ export function AgentEditor({
                         className="text-sm"
                       />
                       <p className="text-xs text-muted-foreground">
-                        Pausa natural entre mensagens consecutivas deste agente.
+                        Pausa natural entre mensajes consecutivas deste agente.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between pt-1">
                     <div>
-                      <Label className="text-xs">Incluir resumo da conversa anterior</Label>
+                      <Label className="text-xs">Incluir resumen da conversación anterior</Label>
                       <p className="text-xs text-muted-foreground">
-                        Gera um resumo curto e disponibiliza como <code>{'{{resumo}}'}</code>.
+                        Gera um resumen corto e disponibiliza como <code>{'{{resumen}}'}</code>.
                       </p>
                     </div>
                     <Switch
@@ -968,17 +968,17 @@ export function AgentEditor({
 
                 <div className="rounded-md border border-dashed bg-muted/30 p-3">
                   <p className="text-xs text-muted-foreground">
-                    💡 O <strong>modelo de IA</strong> usado pelos agentes de conversa é definido em{' '}
-                    <strong>Configurações → Integrações → Enrutamiento de IA</strong> (capacidade
-                    "Agentes de conversa") e vale para toda a organização.
+                    💡 O <strong>modelo de IA</strong> usado pelos agentes de conversación é definido em{' '}
+                    <strong>Configurações → Integraciones → Enrutamiento de IA</strong> (capacidade
+                    "Agentes de conversación") e vale para toda a organización.
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between py-2">
                   <div>
-                    <Label>Sempre terminar com pergunta?</Label>
+                    <Label>Sempre terminar com pregunta?</Label>
                     <p className="text-xs text-muted-foreground">
-                      Estimula o lead a continuar a conversa
+                      Estimula o lead a continuar a conversación
                     </p>
                   </div>
                   <Switch
@@ -1000,7 +1000,7 @@ export function AgentEditor({
                   items={formData.prohibited_phrases || []}
                   onAdd={(v) => handleArrayAdd('prohibited_phrases', v)}
                   onRemove={(i) => handleArrayRemove('prohibited_phrases', i)}
-                  placeholder="Ex: Infelizmente não podemos..."
+                  placeholder="Ex: Infelizmente no podemos..."
                 />
               </TabsContent>
 
@@ -1031,7 +1031,7 @@ export function AgentEditor({
               {/* Tab: Channels */}
               <TabsContent value="channels" className="mt-0 space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  Defina onde este agente estará disponível para atuar
+                  Defina dónde este agente estará disponível para atuar
                 </p>
 
                 {/* Conexão WhatsApp dedicada */}
@@ -1041,8 +1041,8 @@ export function AgentEditor({
                     <Label className="text-sm font-medium">Conexão WhatsApp dedicada</Label>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Se selecionada, este agente <strong>só responderá</strong> mensagens recebidas neste número de WhatsApp.
-                    Útil para isolar atendimento por número (ex.: Ana atende no número X, Sofia no número Y).
+                    Se selecionada, este agente <strong>só responderá</strong> mensajes recebidas neste número de WhatsApp.
+                    Útil para isolar atención por número (ex.: Ana atende no número X, Sofia no número Y).
                   </p>
                   <Select
                     value={formData.evolution_instance_id || '__any__'}
@@ -1101,7 +1101,7 @@ export function AgentEditor({
                       if (inst && !connected) {
                         return (
                           <p className="text-xs text-destructive">
-                            ⚠️ Esta conexão está desconectada. Reconecte para o agente operar.
+                            ⚠️ Esta conexão está desconectada. Reconecte para el agente operar.
                           </p>
                         );
                       }
@@ -1171,7 +1171,7 @@ export function AgentEditor({
                   <div className="text-center py-8 text-muted-foreground">
                     <GraduationCap className="h-12 w-12 mx-auto mb-3 opacity-50" />
                     <p className="font-medium">Salve o agente primeiro</p>
-                    <p className="text-sm">O treinamento estará disponível após criar o agente</p>
+                    <p className="text-sm">O treinamento estará disponível após crear o agente</p>
                   </div>
                 )}
               </TabsContent>
@@ -1189,7 +1189,7 @@ export function AgentEditor({
                   <div className="text-center py-8 text-muted-foreground">
                     <MessageCircle className="h-12 w-12 mx-auto mb-3 opacity-50" />
                     <p className="font-medium">Salve o agente primeiro</p>
-                    <p className="text-sm">O teste estará disponível após criar o agente</p>
+                    <p className="text-sm">O teste estará disponível após crear o agente</p>
                   </div>
                 )}
               </TabsContent>
@@ -1231,7 +1231,7 @@ export function AgentEditor({
         </div>
       </DialogContent>
 
-      {/* Dialog: contexto do agente personalizado */}
+      {/* Dialog: contexto del agente personalizado */}
       <Dialog open={contextDialogOpen} onOpenChange={(o) => { setContextDialogOpen(o); if (!o) setCustomContext(''); }}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
@@ -1242,12 +1242,12 @@ export function AgentEditor({
           </DialogHeader>
           <div className="space-y-3 py-2">
             <p className="text-sm text-muted-foreground">
-              Descreva detalhes específicos desse agente (público-alvo, restrições, tom, gatilhos especiais). A IA vai combinar isso com o conhecimento do produto e da empresa. Deixe em branco para gerar apenas com o contexto interno.
+              Descreva detalhes específicos desse agente (público-alvo, restrições, tom, gatilhos especiais). A IA vai combinar isso com o conhecimento do producto e de la empresa. Deixe em branco para gerar apenas com o contexto interno.
             </p>
             <Textarea
               value={customContext}
               onChange={(e) => setCustomContext(e.target.value)}
-              placeholder="Ex: foque em leads frios vindos do Instagram, evite falar de preço por mensagem, seja mais consultivo..."
+              placeholder="Ex: foque em leads frios vindos do Instagram, evite falar de preço por mensaje, seja mais consultivo..."
               rows={8}
               autoFocus
             />

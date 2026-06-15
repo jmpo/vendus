@@ -96,7 +96,7 @@ export function useUpsertBusinessHours() {
       qc.invalidateQueries({ queryKey: ['business-hours'] });
       toast({ title: 'Horários guardados' });
     },
-    onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
 }
 
@@ -154,7 +154,7 @@ export function isWithinBusinessHoursLocal(
   now: Date = new Date()
 ): boolean {
   if (!bh) return true;
-  // Build local time string in tz
+  // Build local equipo string in tz
   try {
     const fmt = new Intl.DateTimeFormat('en-US', {
       timeZone: bh.timezone,
@@ -177,8 +177,8 @@ export function isWithinBusinessHoursLocal(
     if (holidays.some((h) => h.date === isoDate)) return false;
     const blocks = bh.schedule?.[day] ?? [];
     if (blocks.length === 0) return false;
-    const time = `${get('hour')}:${get('minute')}`;
-    return blocks.some((b) => time >= b.start && time < b.end);
+    const equipo = `${get('hour')}:${get('minute')}`;
+    return blocks.some((b) => equipo >= b.start && equipo < b.end);
   } catch {
     return true;
   }

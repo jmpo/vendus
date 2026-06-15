@@ -100,7 +100,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
     });
   };
 
-  // Quando seleciona um plano, pré-popula limites
+  // Quando seleciona um plan, pré-popula limites
   const handleSelectPlan = (planId: string) => {
     const plan = activePlans?.find((p) => p.id === planId);
     setNewOrg((prev) => ({
@@ -114,7 +114,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
 
   const handleCreateOrg = async () => {
     if (!newOrg.name.trim() || !newOrg.email.trim()) {
-      toast.error('Preencha nome e e-mail da empresa');
+      toast.error('Preencha nombre e e-mail de la empresa');
       return;
     }
 
@@ -165,17 +165,17 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
       }
 
       await createAuditLog.mutateAsync({
-        action: `Nova empresa criada: ${newOrg.name}`,
+        action: `Nova empresa creada: ${newOrg.name}`,
         entity_type: 'organization',
         entity_id: org.id,
       });
 
-      toast.success('Empresa criada com sucesso!');
+      toast.success('Empresa creada com éxito!');
       setIsCreating(false);
       resetForm();
     } catch (error) {
       console.error('Error creating organization:', error);
-      toast.error('Erro ao criar empresa');
+      toast.error('Error ao crear empresa');
     }
   };
 
@@ -209,12 +209,12 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
       
       toast.success(
         suspendingOrg.status === 'active' 
-          ? 'Empresa suspensa com sucesso' 
-          : 'Empresa reativada com sucesso'
+          ? 'Empresa suspensa com éxito' 
+          : 'Empresa reativada com éxito'
       );
       setSuspendingOrg(null);
     } catch (error) {
-      toast.error('Erro ao atualizar status da empresa');
+      toast.error('Error ao actualizar status de la empresa');
     }
   };
 
@@ -238,7 +238,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
         plan_id: newPlanId,
       });
 
-      // Sincroniza subscription quando o plano muda
+      // Sincroniza subscription cuando o plan muda
       if (newPlanId !== previousPlanId) {
         const { supabase } = await import('@/integrations/supabase/client');
         const { data: existingSub } = await supabase
@@ -280,16 +280,16 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
       }
 
       await createAuditLog.mutateAsync({
-        action: `Empresa ${editingOrg.name} atualizada`,
+        action: `Empresa ${editingOrg.name} actualizada`,
         entity_type: 'organization',
         entity_id: editingOrg.id,
       });
       
-      toast.success('Empresa atualizada com sucesso');
+      toast.success('Empresa actualizada com éxito');
       setEditingOrg(null);
     } catch (error) {
       console.error('Error updating org:', error);
-      toast.error('Erro ao atualizar empresa');
+      toast.error('Error ao actualizar empresa');
     }
   };
 
@@ -307,7 +307,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
   };
 
   const getPlanBadge = (org: any) => {
-    // Fonte da verdade: plan_id da organização
+    // Fonte da verdade: plan_id da organización
     if (org?.plan_id) {
       const plan = activePlans?.find((p) => p.id === org.plan_id);
       const name = plan?.name || org.subscriptions?.[0]?.plan_type || 'Plan';
@@ -493,14 +493,14 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
           <DialogHeader>
             <DialogTitle>Editar Empresa</DialogTitle>
             <DialogDescription>
-              Atualize as informações da empresa
+              Atualize as información de la empresa
             </DialogDescription>
           </DialogHeader>
           
           {editingOrg && (
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label>Nome</Label>
+                <Label>Nombre</Label>
                 <Input
                   value={editingOrg.name || ''}
                   onChange={(e) => setEditingOrg({ ...editingOrg, name: e.target.value })}
@@ -522,7 +522,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                 />
               </div>
               <div className="space-y-2">
-                <Label>Telefone</Label>
+                <Label>Teléfono</Label>
                 <Input
                   value={editingOrg.phone || ''}
                   onChange={(e) => setEditingOrg({ ...editingOrg, phone: e.target.value })}
@@ -538,14 +538,14 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                     setEditingOrg({
                       ...editingOrg,
                       plan_id: planId,
-                      // Pré-popula limites do plano apenas se não houver override manual
+                      // Pré-popula limites do plan apenas se no houver override manual
                       max_users: plan?.max_users ?? editingOrg.max_users,
                       max_products: plan?.max_products ?? editingOrg.max_products,
                     });
                   }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione um plano" />
+                    <SelectValue placeholder="Seleccioná um plan" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">Sin plan (personalizado)</SelectItem>
@@ -557,7 +557,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  Selecionar um plano atualiza automaticamente os limites padrão. Você pode sobrescrever abaixo.
+                  Selecionar um plan atualiza automaticamente os limites padrão. Usted puede sobrescrever abaixo.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -579,10 +579,10 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Máx. Conexões WhatsApp (override do plano)</Label>
+                <Label>Máx. Conexões WhatsApp (override do plan)</Label>
                 <Input
                   type="number"
-                  placeholder="Vazio = usar limite do plano"
+                  placeholder="Vazio = usar limite do plan"
                   value={editingOrg.max_connections ?? ''}
                   onChange={(e) => setEditingOrg({
                     ...editingOrg,
@@ -619,7 +619,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
           <DialogHeader>
             <DialogTitle>Nueva Empresa</DialogTitle>
             <DialogDescription>
-              Cadastre uma nova organização na plataforma
+              Cadastre uma nova organización na plataforma
             </DialogDescription>
           </DialogHeader>
           <OrganizationCreateForm
@@ -643,7 +643,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
             </AlertDialogTitle>
             <AlertDialogDescription>
               {suspendingOrg?.status === 'active'
-                ? `Ao suspender "${suspendingOrg?.name}", todos os usuarios da empresa perderão acesso até a reativação. Deseja continuar?`
+                ? `Ao suspender "${suspendingOrg?.name}", todos os usuarios de la empresa perderão acesso até a reativação. Deseja continuar?`
                 : `Reactivar "${suspendingOrg?.name}" devolverá o acesso aos usuarios. Deseja continuar?`}
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -667,10 +667,10 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
             <AlertDialogDescription asChild>
               <div className="space-y-3">
                 <p className="text-destructive font-medium">
-                  Esta ação é irreversível. Todos os dados da empresa (usuarios, leads, conversas, productos, integrações) serão removidos.
+                  Esta acción é irreversível. Todos os dados de la empresa (usuarios, leads, conversaciones, productos, integraciones) serão removidos.
                 </p>
                 <p>
-                  Para confirmar, digite o nome exato da empresa: <strong>{deletingOrg?.name}</strong>
+                  Para confirmar, digite o nombre exato de la empresa: <strong>{deletingOrg?.name}</strong>
                 </p>
                 <Input
                   autoFocus
@@ -695,7 +695,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                   setDeletingOrg(null);
                   setDeleteConfirmName('');
                 } catch (err: any) {
-                  toast.error(err?.message || 'Erro ao excluir empresa');
+                  toast.error(err?.message || 'Error ao eliminar empresa');
                 }
               }}
             >

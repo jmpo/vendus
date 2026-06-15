@@ -96,7 +96,7 @@ async function sendInviteEmail(params: {
     
     return response;
   } catch (error) {
-    console.error('Erro ao chamar edge function:', error);
+    console.error('Error ao chamar edge function:', error);
   }
 }
 

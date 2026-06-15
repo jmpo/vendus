@@ -35,7 +35,7 @@ serve(async (req: Request): Promise<Response> => {
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_ANON_KEY")!
     );
-    const { fecha: claims, error: claimsErr } = await authClient.auth.getClaims(jwt);
+    const { data: claims, error: claimsErr } = await authClient.auth.getClaims(jwt);
     if (claimsErr || !claims?.claims?.sub) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -50,7 +50,7 @@ serve(async (req: Request): Promise<Response> => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { fecha: roleRows } = await supabase
+    const { data: roleRows } = await supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", callerId);
@@ -64,7 +64,7 @@ serve(async (req: Request): Promise<Response> => {
       });
     }
 
-    const { fecha: campaign, error: campaignError } = await supabase
+    const { data: campaign, error: campaignError } = await supabase
       .from("mass_email_campaigns")
       .select("*")
       .eq("id", campaignId)
@@ -74,7 +74,7 @@ serve(async (req: Request): Promise<Response> => {
       throw new Error("Campaign not found");
     }
 
-    const { fecha: recipients } = await supabase
+    const { data: recipients } = await supabase
       .from("mass_email_recipients")
       .select("*")
       .eq("campaign_id", campaignId)

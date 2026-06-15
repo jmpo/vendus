@@ -281,7 +281,7 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
                     <div className="mt-4 space-y-3">
                       <img 
                         src={block.mediaUrl} 
-                        alt="Imagem do bloco" 
+                        alt="Imagen do bloco" 
                         className="max-h-48 rounded-lg object-contain border border-border"
                       />
                       <div className="flex gap-2 flex-wrap">
@@ -296,10 +296,10 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          onClick={() => handleDownload(block.mediaUrl!, 'imagem.png')}
+                          onClick={() => handleDownload(block.mediaUrl!, 'imagen.png')}
                         >
                           <Download className="h-4 w-4 mr-2" />
-                          Baixar
+                          Descargar
                         </Button>
                       </div>
                     </div>
@@ -387,7 +387,7 @@ export function CadenceView({ cadence, productName }: CadenceViewProps) {
                         onClick={() => handleDownload(block.mediaUrl!, 'material')}
                       >
                         <Download className="h-4 w-4 mr-2" />
-                        Baixar
+                        Descargar
                       </Button>
                     </div>
                   )}

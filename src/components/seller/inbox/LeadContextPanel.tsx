@@ -76,9 +76,9 @@ interface LeadContextPanelProps {
   stages?: PipelineStage[];
   /** Agente IA atualmente vinculado (current_agent_id) */
   currentAgent?: { id: string; name: string; avatar_url: string | null } | null;
-  /** Sector responsable pela conversa */
+  /** Sector responsable pela conversación */
   currentSectorId?: string | null;
-  /** Conexión de origem (ex.: nome da instância WhatsApp) — somente leitura */
+  /** Conexión de origem (ex.: nombre da instância WhatsApp) — somente leitura */
   connectionLabel?: string | null;
   onViewLead?: () => void;
   onMoveStage?: (stageId: string) => void;
@@ -201,7 +201,7 @@ export function LeadContextPanel({
                 )}
               </div>
 
-              {/* Tags do lead (chips inline) */}
+              {/* Tags del lead (chips inline) */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <Label className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
@@ -473,7 +473,7 @@ export function LeadContextPanel({
                     <div className="flex items-center gap-2 p-2.5 bg-muted/50 rounded-lg">
                       <DollarSign className="h-4 w-4 text-muted-foreground" />
                       <div>
-                        <p className="text-[10px] text-muted-foreground">Valor do negócio</p>
+                        <p className="text-[10px] text-muted-foreground">Valor do negocio</p>
                         <p className="text-sm font-semibold">
                           {new Intl.NumberFormat('es-PY', {
                             style: 'currency', currency: 'PYG',
@@ -488,7 +488,7 @@ export function LeadContextPanel({
                   <div className="p-3 bg-muted/30 rounded-lg text-center">
                     <User className="h-7 w-7 mx-auto mb-2 text-muted-foreground/50" />
                     <p className="text-xs text-muted-foreground">
-                      Cargando dados do lead…
+                      Cargando dados del lead…
                     </p>
                   </div>
                 </div>
@@ -547,7 +547,7 @@ export function LeadContextPanel({
                       ? formatDistanceToNow(new Date(lead.last_contact_at), { locale: ptBR })
                       : '-'}
                   </p>
-                  <p className="text-[10px] text-muted-foreground">Último contato</p>
+                  <p className="text-[10px] text-muted-foreground">Último contacto</p>
                 </div>
               </div>
 
@@ -578,7 +578,7 @@ export function LeadContextPanel({
                 {onCreateTask && (
                   <Button variant="outline" size="sm" onClick={onCreateTask} className="w-full justify-start">
                     <Calendar className="h-3.5 w-3.5 mr-2" />
-                    Agendar Tarefa
+                    Agendar Tarea
                   </Button>
                 )}
                 {displayPhone && (
@@ -661,7 +661,7 @@ export function LeadContextPanel({
                         onValueChange={(tagId) => assignTag.mutate({ leadId: lead.id, tagId })}
                       >
                         <SelectTrigger className="h-8 text-xs">
-                          <SelectValue placeholder="Escolher etiqueta..." />
+                          <SelectValue placeholder="Elegir etiqueta..." />
                         </SelectTrigger>
                         <SelectContent>
                           {orgTags

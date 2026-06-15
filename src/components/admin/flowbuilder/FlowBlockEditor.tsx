@@ -37,7 +37,7 @@ export function FlowBlockEditor({
   if (!localBlock) {
     return (
       <div className="w-80 bg-card border-l p-4 flex items-center justify-center text-muted-foreground">
-        Selecione um bloco para editar
+        Seleccioná um bloco para editar
       </div>
     );
   }
@@ -103,7 +103,7 @@ export function FlowBlockEditor({
         <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
           <div>
             <Label className="text-sm font-medium">Bloco inicial</Label>
-            <p className="text-xs text-muted-foreground">Este bloco inicia o fluxo</p>
+            <p className="text-xs text-muted-foreground">Este bloco inicia o flujo</p>
           </div>
           <Switch 
             checked={isStartBlock}
@@ -115,15 +115,15 @@ export function FlowBlockEditor({
         {localBlock.type === 'message' && (
           <>
             <div className="space-y-2">
-              <Label>Mensagem</Label>
+              <Label>Mensaje</Label>
               <Textarea
                 value={localBlock.data.content || ''}
                 onChange={(e) => handleChange({ content: e.target.value })}
-                placeholder="Digite a mensagem..."
+                placeholder="Escribí a mensaje..."
                 rows={4}
               />
               <p className="text-xs text-muted-foreground">
-                Use {"{{nome}}"} para variáveis
+                Usa {"{{nombre}}"} para variáveis
               </p>
             </div>
             <div className="space-y-2">
@@ -161,7 +161,7 @@ export function FlowBlockEditor({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Nome da Variável</Label>
+              <Label>Nombre da Variável</Label>
               <Input
                 value={localBlock.data.variable_name || ''}
                 onChange={(e) => handleChange({ variable_name: e.target.value.toLowerCase().replace(/\s/g, '_') })}
@@ -176,7 +176,7 @@ export function FlowBlockEditor({
               <Input
                 value={localBlock.data.placeholder || ''}
                 onChange={(e) => handleChange({ placeholder: e.target.value })}
-                placeholder="Digite aqui..."
+                placeholder="Escribí aqui..."
               />
             </div>
             <div className="space-y-2">
@@ -192,7 +192,7 @@ export function FlowBlockEditor({
                   <SelectItem value="none">Nenhuma</SelectItem>
                   <SelectItem value="required">Obrigatório</SelectItem>
                   <SelectItem value="email">E-mail válido</SelectItem>
-                  <SelectItem value="phone">Telefone válido</SelectItem>
+                  <SelectItem value="phone">Teléfono válido</SelectItem>
                   <SelectItem value="cpf">CPF válido</SelectItem>
                 </SelectContent>
               </Select>
@@ -204,11 +204,11 @@ export function FlowBlockEditor({
         {localBlock.type === 'buttons' && (
           <>
             <div className="space-y-2">
-              <Label>Mensagem (opcional)</Label>
+              <Label>Mensaje (opcional)</Label>
               <Textarea
                 value={localBlock.data.content || ''}
                 onChange={(e) => handleChange({ content: e.target.value })}
-                placeholder="Escolha uma opção:"
+                placeholder="Elegí uma opción:"
                 rows={2}
               />
             </div>
@@ -237,7 +237,7 @@ export function FlowBlockEditor({
                           <span className="text-lg">{btn.emoji || '👉'}</span>
                           <span className="flex-1 font-medium truncate">{btn.label || 'Novo botão'}</span>
                           <span className="text-xs text-muted-foreground px-2 py-0.5 bg-background rounded">
-                            {BUTTON_ACTION_TYPES.find(t => t.type === btn.action_type)?.label || 'Fluxo'}
+                            {BUTTON_ACTION_TYPES.find(t => t.type === btn.action_type)?.label || 'Flujo'}
                           </span>
                           <Button
                             variant="ghost"
@@ -280,9 +280,9 @@ export function FlowBlockEditor({
                             </div>
                           </div>
                           
-                          {/* Tipo de Ação */}
+                          {/* Tipo de Acción */}
                           <div>
-                            <Label className="text-xs">Tipo de Ação</Label>
+                            <Label className="text-xs">Tipo de Acción</Label>
                             <Select
                               value={btn.action_type || 'next_block'}
                               onValueChange={(value: ButtonActionType) => updateButton(idx, { action_type: value })}
@@ -300,7 +300,7 @@ export function FlowBlockEditor({
                             </Select>
                           </div>
                           
-                          {/* Campos condicionais baseados no tipo de ação */}
+                          {/* Campos condicionais baseados no tipo de acción */}
                           {btn.action_type === 'next_block' && (
                             <div>
                               <Label className="text-xs">Próximo Bloco</Label>
@@ -309,10 +309,10 @@ export function FlowBlockEditor({
                                 onValueChange={(value) => updateButton(idx, { next_block_id: value === 'none' ? null : value })}
                               >
                                 <SelectTrigger className="mt-1 text-xs">
-                                  <SelectValue placeholder="Selecione..." />
+                                  <SelectValue placeholder="Seleccioná..." />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="none">Nenhum (fim do fluxo)</SelectItem>
+                                  <SelectItem value="none">Nenhum (fin do flujo)</SelectItem>
                                   {otherBlocks.map((b) => (
                                     <SelectItem key={b.id} value={b.id}>
                                       {BLOCK_TYPES.find(t => t.type === b.type)?.label}: {b.id.substring(0, 8)}
@@ -358,11 +358,11 @@ export function FlowBlockEditor({
                                 <p className="text-xs text-muted-foreground mt-1">Formato: código do país + DDD + número</p>
                               </div>
                               <div>
-                                <Label className="text-xs">Mensagem Pré-definida</Label>
+                                <Label className="text-xs">Mensaje Pré-definida</Label>
                                 <Textarea
                                   value={btn.whatsapp_message || ''}
                                   onChange={(e) => updateButton(idx, { whatsapp_message: e.target.value })}
-                                  placeholder="Olá! Vim pelo chat do site..."
+                                  placeholder="Hola! Vim pelo chat do site..."
                                   rows={2}
                                   className="mt-1"
                                 />
@@ -376,7 +376,7 @@ export function FlowBlockEditor({
                               <Textarea
                                 value={btn.ai_context || ''}
                                 onChange={(e) => updateButton(idx, { ai_context: e.target.value })}
-                                placeholder="Foque em apresentar o plano Premium..."
+                                placeholder="Foque em apresentar o plan Premium..."
                                 rows={2}
                                 className="mt-1"
                               />
@@ -386,7 +386,7 @@ export function FlowBlockEditor({
                           
                           {btn.action_type === 'handoff' && (
                             <div className="p-2 bg-red-50 dark:bg-red-950/20 rounded text-xs text-red-700 dark:text-red-300">
-                              O visitante será transferido para a fila de atendimento humano.
+                              O visitante será transferido para a fila de atención humano.
                             </div>
                           )}
                         </div>
@@ -404,7 +404,7 @@ export function FlowBlockEditor({
           <>
             <div className="p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg">
               <p className="text-sm text-orange-700 dark:text-orange-300">
-                🤖 A partir deste ponto, Sofia assume a conversa usando toda a base de conhecimento e os dados coletados no fluxo.
+                🤖 A partir deste ponto, Sofia assume a conversación usando toda a base de conhecimento e os dados coletados no flujo.
               </p>
             </div>
             <div className="space-y-2">
@@ -412,7 +412,7 @@ export function FlowBlockEditor({
               <Textarea
                 value={localBlock.data.ai_context_prompt || ''}
                 onChange={(e) => handleChange({ ai_context_prompt: e.target.value })}
-                placeholder="Ex: Foque em apresentar o plano Premium..."
+                placeholder="Ex: Foque em apresentar o plan Premium..."
                 rows={3}
               />
             </div>
@@ -433,7 +433,7 @@ export function FlowBlockEditor({
         {localBlock.type === 'handoff' && (
           <>
             <div className="space-y-2">
-              <Label>Mensagem de Transferência</Label>
+              <Label>Mensaje de Transferência</Label>
               <Textarea
                 value={localBlock.data.handoff_message || ''}
                 onChange={(e) => handleChange({ handoff_message: e.target.value })}
@@ -453,7 +453,7 @@ export function FlowBlockEditor({
                 <SelectContent>
                   <SelectItem value="queue">Fila geral</SelectItem>
                   <SelectItem value="squad">Squad específico</SelectItem>
-                  <SelectItem value="specific_user">Usuário específico</SelectItem>
+                  <SelectItem value="specific_user">Usuario específico</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -464,7 +464,7 @@ export function FlowBlockEditor({
         {localBlock.type === 'tag' && (
           <>
             <div className="space-y-2">
-              <Label>Nome da Tag</Label>
+              <Label>Nombre da Tag</Label>
               <Input
                 value={localBlock.data.tag_name || ''}
                 onChange={(e) => handleChange({ tag_name: e.target.value })}
@@ -498,7 +498,7 @@ export function FlowBlockEditor({
               <Input
                 value={localBlock.data.video_title || ''}
                 onChange={(e) => handleChange({ video_title: e.target.value })}
-                placeholder="Conheça nosso produto"
+                placeholder="Conocé nosso producto"
               />
             </div>
           </>
@@ -527,10 +527,10 @@ export function FlowBlockEditor({
               onValueChange={(value) => handleNextBlockChange(value === 'none' ? null : value)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecione..." />
+                <SelectValue placeholder="Seleccioná..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">Nenhum (fim do fluxo)</SelectItem>
+                <SelectItem value="none">Nenhum (fin do flujo)</SelectItem>
                 {otherBlocks.map((b) => (
                   <SelectItem key={b.id} value={b.id}>
                     {BLOCK_TYPES.find(t => t.type === b.type)?.label}: {b.id.substring(0, 8)}

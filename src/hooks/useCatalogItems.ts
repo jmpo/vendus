@@ -65,7 +65,7 @@ export function useCatalogItemMutations(productId?: string | null) {
       invalidate();
       toast({ title: 'Item adicionado ao catálogo' });
     },
-    onError: (e: any) => toast({ title: 'Erro ao guardadar', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error ao guardadar', description: e.message, variant: 'destructive' }),
   });
 
   const update = useMutation({
@@ -83,7 +83,7 @@ export function useCatalogItemMutations(productId?: string | null) {
       invalidate();
       toast({ title: 'Item actualizado' });
     },
-    onError: (e: any) => toast({ title: 'Erro ao atualizar', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error ao actualizar', description: e.message, variant: 'destructive' }),
   });
 
   const remove = useMutation({

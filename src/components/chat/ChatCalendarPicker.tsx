@@ -103,7 +103,7 @@ export function ChatCalendarPicker({
           >
             <div className="flex items-center gap-2 text-sm font-medium">
               <CalendarIcon className="h-4 w-4" />
-              <span>Seleccione la fecha y la hora</span>
+              <span>Seleccione la data y la hora</span>
             </div>
             <div className="flex items-center gap-1 text-xs opacity-80 mt-1">
               <Globe className="h-3 w-3" />
@@ -158,7 +158,7 @@ export function ChatCalendarPicker({
                       Sem horários disponíveis nesta data
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Seleccione otra fecha
+                      Seleccione otra data
                     </p>
                   </div>
                 ) : (

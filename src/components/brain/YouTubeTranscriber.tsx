@@ -88,7 +88,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
     } catch (error) {
       console.error('Error saving video:', error);
       toast({
-        title: 'Erro ao salvar',
+        title: 'Error ao guardar',
         description: 'Tente novamente',
         variant: 'destructive',
       });
@@ -100,7 +100,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
       await deleteSource.mutateAsync({ id, productId });
       toast({ title: 'Video eliminado' });
     } catch (error) {
-      toast({ title: 'Erro ao remover', variant: 'destructive' });
+      toast({ title: 'Error ao eliminar', variant: 'destructive' });
     }
   };
 
@@ -120,7 +120,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
       setEditingId(null);
       setEditContent('');
     } catch (error) {
-      toast({ title: 'Erro ao salvar', variant: 'destructive' });
+      toast({ title: 'Error ao guardar', variant: 'destructive' });
     }
   };
 

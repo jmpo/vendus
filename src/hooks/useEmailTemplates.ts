@@ -21,7 +21,7 @@ const DEFAULT_TEMPLATES = [
   {
     slug: 'team_invite',
     name: 'Convite de Membro',
-    subject: 'Você foi convidado como {{role}}!',
+    subject: 'Usted fue convidado como {{role}}!',
     html_content: `<!DOCTYPE html>
 <html>
 <head>
@@ -38,16 +38,16 @@ const DEFAULT_TEMPLATES = [
 <body>
   <div class="container">
     <div class="header">
-      <h1>Você foi convidado!</h1>
+      <h1>Usted fue convidado!</h1>
     </div>
     <div class="content">
-      <p>Olá,</p>
-      <p>Você foi convidado por <strong>{{invitedByName}}</strong> para se juntar à equipe como <strong>{{role}}</strong>{{squadName}}.</p>
-      <p>Clique no botão abaixo para aceitar o convite:</p>
+      <p>Hola,</p>
+      <p>Usted fue convidado por <strong>{{invitedByName}}</strong> para se juntar à equipo como <strong>{{role}}</strong>{{squadName}}.</p>
+      <p>Hacé clic no botão abaixo para aceitar o convite:</p>
       <p style="text-align: center;">
         <a href="{{inviteLink}}" class="button">Aceitar Convite</a>
       </p>
-      <p>Este convite expira em 7 dias.</p>
+      <p>Este convite expira em 7 días.</p>
     </div>
     <div class="footer">
       <p>{{organizationName}}</p>
@@ -56,9 +56,9 @@ const DEFAULT_TEMPLATES = [
 </body>
 </html>`,
     variables: [
-      { name: 'invitedByName', description: 'Nome de quem enviou o convite' },
+      { name: 'invitedByName', description: 'Nombre de quem envió o convite' },
       { name: 'role', description: 'Papel do convidado (Vendedor, Gestor, Admin)' },
-      { name: 'squadName', description: 'Nome do squad (se aplicável)' },
+      { name: 'squadName', description: 'Nombre do squad (se aplicável)' },
       { name: 'inviteLink', description: 'Link para aceitar o convite' },
       { name: 'organizationName', description: 'Nombre de la organización' }
     ],
@@ -67,7 +67,7 @@ const DEFAULT_TEMPLATES = [
   {
     slug: 'welcome',
     name: 'Boas-vindas',
-    subject: 'Bem-vindo(a) ao time!',
+    subject: 'Bienvenido(a) ao equipo!',
     html_content: `<!DOCTYPE html>
 <html>
 <head>
@@ -83,11 +83,11 @@ const DEFAULT_TEMPLATES = [
 <body>
   <div class="container">
     <div class="header">
-      <h1>🎉 Bem-vindo(a)!</h1>
+      <h1>🎉 Bienvenido(a)!</h1>
     </div>
     <div class="content">
-      <p>Olá <strong>{{userName}}</strong>,</p>
-      <p>É um prazer ter você no time! Sua conta foi creada con éxito na <strong>{{organizationName}}</strong>.</p>
+      <p>Hola <strong>{{userName}}</strong>,</p>
+      <p>É um prazer ter usted no equipo! Su cuenta fue creada con éxito na <strong>{{organizationName}}</strong>.</p>
       <p>Acesse a plataforma e comece a vender!</p>
     </div>
     <div class="footer">
@@ -124,7 +124,7 @@ const DEFAULT_TEMPLATES = [
       <h1>📢 {{title}}</h1>
     </div>
     <div class="content">
-      <p>Olá <strong>{{userName}}</strong>,</p>
+      <p>Hola <strong>{{userName}}</strong>,</p>
       <div>{{message}}</div>
       <p style="margin-top: 20px; color: #666; font-size: 14px;">— {{senderName}}</p>
     </div>
@@ -136,9 +136,9 @@ const DEFAULT_TEMPLATES = [
 </html>`,
     variables: [
       { name: 'title', description: 'Título del comunicado' },
-      { name: 'userName', description: 'Nome do destinatário' },
+      { name: 'userName', description: 'Nombre do destinatário' },
       { name: 'message', description: 'Contenido del mensaje' },
-      { name: 'senderName', description: 'Nome do remetente' },
+      { name: 'senderName', description: 'Nombre do remetente' },
       { name: 'organizationName', description: 'Nombre de la organización' }
     ],
     is_system: true

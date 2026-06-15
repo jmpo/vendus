@@ -55,9 +55,9 @@ serve(async (req) => {
       if (auth) {
         const u = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY") ?? Deno.env.get("SUPABASE_PUBLISHABLE_KEY")!,
           { global: { headers: { Authorization: auth } }, auth: { persistSession: false } });
-        const { fecha: ud } = await u.auth.getUser();
+        const { data: ud } = await u.auth.getUser();
         if (ud?.user) {
-          const { fecha: prof } = await supabase.from("profiles").select("organization_id").eq("id", ud.user.id).maybeSingle();
+          const { data: prof } = await supabase.from("profiles").select("organization_id").eq("id", ud.user.id).maybeSingle();
           organizationId = prof?.organization_id ?? null;
         }
       }
@@ -113,9 +113,9 @@ Contexto do producto:
       });
     }
 
-    const fecha = await response.json();
-    await recordAIUsage(supabase, organizationId, config, 'content_generation', fecha?.usage, 'optimize-product-field');
-    const toolCall = fecha.choices?.[0]?.message?.tool_calls?.[0];
+    const data = await response.json();
+    await recordAIUsage(supabase, organizationId, config, 'content_generation', data?.usage, 'optimize-product-field');
+    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
     
     if (toolCall?.function?.arguments) {
       const result = JSON.parse(toolCall.function.arguments);
@@ -126,7 +126,7 @@ Contexto do producto:
     }
 
     // Fallback to content if no tool call
-    const content = fecha.choices?.[0]?.message?.content || value;
+    const content = data.choices?.[0]?.message?.content || value;
     return new Response(
       JSON.stringify({ optimized: content, improvements: [] }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }

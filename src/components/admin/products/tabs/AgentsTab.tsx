@@ -163,8 +163,8 @@ export function AgentsTab({ productId }: AgentsTabProps) {
             </div>
             <CardTitle className="text-lg mb-2">Ningún agente configurado</CardTitle>
             <CardDescription className="text-center max-w-sm mb-4">
-              Crie agentes especializados para atender seus leads de forma automatizada.
-              Cada agente usa o Cérebro do Produto com comportamentos específicos.
+              Crea agentes especializados para atender sus leads de forma automatizada.
+              Cada agente usa o Cérebro do Producto com comportamentos específicos.
             </CardDescription>
             <Button onClick={handleCreate}>
               <Plus className="h-4 w-4 mr-2" />
@@ -185,16 +185,16 @@ export function AgentsTab({ productId }: AgentsTabProps) {
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground space-y-2">
             <p>
-              • Todos os agentes usam o mesmo <strong>Cérebro do Produto</strong> como base de conhecimento
+              • Todos os agentes usam o mismo <strong>Cérebro do Producto</strong> como base de conhecimento
             </p>
             <p>
-              • Cada agente tem seu próprio <strong>papel, tom de voz e regras</strong>
+              • Cada agente tiene su próprio <strong>papel, tom de voz e regras</strong>
             </p>
             <p>
-              • O agente <strong>Padrão</strong> é usado automaticamente quando nenhum outro é especificado
+              • O agente <strong>Padrão</strong> é usado automaticamente cuando ningún otro é especificado
             </p>
             <p>
-              • Use o bloco <strong>"Trocar Agente"</strong> nos fluxos para alternar entre agentes
+              • Usa o bloco <strong>"Trocar Agente"</strong> nos fluxos para alternar entre agentes
             </p>
           </CardContent>
         </Card>
@@ -227,8 +227,8 @@ export function AgentsTab({ productId }: AgentsTabProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Eliminar agente?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. O agente "{deletingAgent?.name}" será 
-              removido permanentemente.
+              Esta acción no puede ser desfeita. O agente "{deletingAgent?.name}" será 
+              eliminado permanentemente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

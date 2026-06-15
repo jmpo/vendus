@@ -14,8 +14,8 @@ export interface AITokenStatus {
 }
 
 /**
- * Lê o status de tokens de IA da plataforma para a organização atual.
- * Se o plano não inclui IA da plataforma, o cliente precisa cadastrar chave própria.
+ * Lê o status de tokens de IA da plataforma para a organización atual.
+ * Se o plan no inclui IA da plataforma, o cliente precisa cadastrar chave própria.
  */
 export function useAITokenStatus() {
   const { profile } = useAuth();

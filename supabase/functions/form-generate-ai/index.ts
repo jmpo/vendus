@@ -47,7 +47,7 @@ serve(async (req) => {
     console.log('Generating form for product:', product_id, 'objective:', objective, 'with brain:', use_brain, 'with objections:', use_objections);
 
     // Fetch product details
-    const { fecha: product, error: productError } = await supabase
+    const { data: product, error: productError } = await supabase
       .from('products')
       .select('*')
       .eq('id', product_id)
@@ -83,7 +83,7 @@ Garantia: ${product.guarantee || 'N/A'}
     // Fetch knowledge sources for context (if use_brain is true)
     let knowledgeContext = '';
     if (use_brain) {
-      const { fecha: knowledgeSources } = await supabase
+      const { data: knowledgeSources } = await supabase
         .from('product_knowledge_sources')
         .select('title, source_type, extracted_content, question, answer')
         .eq('product_id', product_id)
@@ -101,7 +101,7 @@ Garantia: ${product.guarantee || 'N/A'}
       }
 
       // Fetch agent training materials
-      const { fecha: trainingMaterials } = await supabase
+      const { data: trainingMaterials } = await supabase
         .from('agent_training_materials')
         .select('content')
         .eq('product_id', product_id)
@@ -116,7 +116,7 @@ Garantia: ${product.guarantee || 'N/A'}
     // Fetch objections (if use_objections is true)
     let objectionsContext = '';
     if (use_objections) {
-      const { fecha: objections } = await supabase
+      const { data: objections } = await supabase
         .from('objections')
         .select('category, what_they_say, what_they_mean, suggested_response')
         .eq('product_id', product_id)

@@ -46,7 +46,7 @@ export interface BookingReminder {
   updated_at: string;
 }
 
-export const DEFAULT_CONFIRMATION_WHATSAPP = `Olá, {{nome_lead}}! 👋
+export const DEFAULT_CONFIRMATION_WHATSAPP = `Hola, {{nome_lead}}! 👋
 
 Passando para confirmar a *{{nome_evento}}* da *{{empresa}}*.
 
@@ -54,21 +54,21 @@ Passando para confirmar a *{{nome_evento}}* da *{{empresa}}*.
 ⏰ {{hora}}
 📍 {{modalidade}}
 
-Posso confirmar essa agenda? Responda:
+Posso confirmar essa agenda? Respondé:
 1️⃣ Confirmar
 2️⃣ Reagendar
 3️⃣ Cancelar`;
 
-export const DEFAULT_RECOVERY = `Olá, {{nome_lead}}!
-Ainda não recebemos sua confirmação para a reunião com {{nome_vendedor}}.
+export const DEFAULT_RECOVERY = `Hola, {{nome_lead}}!
+Ainda no recebemos su confirmação para a reunión com {{nome_vendedor}}.
 
-Você conseguirá participar?
+Usted conseguirá participar?
 
-1️⃣ Sim
+1️⃣ Sí
 2️⃣ Reagendar
 3️⃣ Cancelar`;
 
-export const DEFAULT_INTERNAL = `✅ {{nome_lead}} confirmou a reunião.
+export const DEFAULT_INTERNAL = `✅ {{nome_lead}} confirmou a reunión.
 
 🗓 {{data}} às {{hora}}
 📞 {{telefone_lead}}
@@ -82,7 +82,7 @@ export function buildDefaultSettings(orgId: string, eventTypeId: string): Partia
     send_whatsapp: false,
     whatsapp_instance_id: null,
     confirmation_message_whatsapp: DEFAULT_CONFIRMATION_WHATSAPP,
-    confirmation_subject_email: 'Sua reunião foi confirmada',
+    confirmation_subject_email: 'Su reunión fue confirmada',
     confirmation_html_email: null,
     notify_seller_on_new: true,
     notify_seller_on_confirm: true,
@@ -152,7 +152,7 @@ export function useBookingNotifications(eventTypeId: string | null | undefined) 
       queryClient.invalidateQueries({ queryKey: ['booking-notification-settings', eventTypeId] });
       toast.success('Notificaciones guardadas');
     },
-    onError: (e: any) => toast.error(e.message || 'Erro ao guardadar'),
+    onError: (e: any) => toast.error(e.message || 'Error ao guardadar'),
   });
 
   const createReminder = useMutation({
@@ -164,8 +164,8 @@ export function useBookingNotifications(eventTypeId: string | null | undefined) 
         offset_value: input.offset_value ?? 1,
         offset_unit: (input.offset_unit ?? 'hours') as OffsetUnit,
         channel: (input.channel ?? 'whatsapp') as ReminderChannel,
-        message_template: input.message_template ?? `Olá, {{nome_lead}}! Lembrete: sua reunião com {{nome_vendedor}} é em breve.\n\n🗓 {{data}}\n⏰ {{hora}}\n{{link_reuniao}}`,
-        email_subject: input.email_subject ?? 'Lembrete da sua reunião',
+        message_template: input.message_template ?? `Hola, {{nome_lead}}! Lembrete: su reunión com {{nome_vendedor}} é em breve.\n\n🗓 {{data}}\n⏰ {{hora}}\n{{link_reuniao}}`,
+        email_subject: input.email_subject ?? 'Lembrete da su reunión',
         is_active: input.is_active ?? true,
         order_index: input.order_index ?? (reminders.data?.length ?? 0),
       };
@@ -213,15 +213,15 @@ export function useBookingNotifications(eventTypeId: string | null | undefined) 
 }
 
 export const TEMPLATE_VARIABLES = [
-  { key: '{{nome_lead}}', label: 'Nome do lead' },
+  { key: '{{nome_lead}}', label: 'Nombre del lead' },
   { key: '{{nome_vendedor}}', label: 'Vendedor' },
   { key: '{{email_lead}}', label: 'Email' },
-  { key: '{{telefone_lead}}', label: 'Telefone' },
-  { key: '{{data}}', label: 'Data' },
+  { key: '{{telefone_lead}}', label: 'Teléfono' },
+  { key: '{{data}}', label: 'Fecha' },
   { key: '{{hora}}', label: 'Hora' },
   { key: '{{modalidade}}', label: 'Modalidade' },
   { key: '{{nome_evento}}', label: 'Evento' },
-  { key: '{{link_reuniao}}', label: 'Link reunião' },
+  { key: '{{link_reuniao}}', label: 'Link reunión' },
   { key: '{{empresa}}', label: 'Empresa' },
 ] as const;
 

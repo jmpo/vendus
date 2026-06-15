@@ -41,8 +41,8 @@ const SENDER_DOMAIN = "notify.vendus.com.br"
 const ROOT_DOMAIN = "vendus.com.br"
 const FROM_DOMAIN = "vendus.com.br" // Domain shown in From address (may be root or sender subdomain)
 
-// Sample fecha for preview mode ONLY (not used in actual email sending).
-// URLs are baked in at scaffold time from the project's real fecha.
+// Sample data for preview mode ONLY (not used in actual email sending).
+// URLs are baked in at scaffold time from the project's real data.
 // The sample email uses a fixed placeholder (RFC 6761 .test TLD) so the Go backend
 // can always find-and-replace it with the actual recipient when sending test emails,
 // even if the project's domain has changed since the template was scaffolded.
@@ -204,10 +204,10 @@ async function handleWebhook(req: Request): Promise<Response> {
     )
   }
 
-  // The email action type is in payload.fecha.action_type (e.g., "signup", "recovery")
+  // The email action type is in payload.data.action_type (e.g., "signup", "recovery")
   // payload.type is the hook event type ("auth")
-  const emailType = payload.fecha.action_type
-  console.log('Received auth event', { emailType, email: payload.fecha.email, run_id })
+  const emailType = payload.data.action_type
+  console.log('Received auth event', { emailType, email: payload.data.email, run_id })
 
   const EmailTemplate = EMAIL_TEMPLATES[emailType]
   if (!EmailTemplate) {
@@ -218,16 +218,16 @@ async function handleWebhook(req: Request): Promise<Response> {
     )
   }
 
-  // Build template props from payload.fecha (HookData structure)
+  // Build template props from payload.data (HookData structure)
   const templateProps = {
     siteName: SITE_NAME,
     siteUrl: `https://${ROOT_DOMAIN}`,
-    recipient: payload.fecha.email,
-    confirmationUrl: payload.fecha.url,
-    token: payload.fecha.token,
-    email: payload.fecha.email,
-    oldEmail: payload.fecha.old_email,
-    newEmail: payload.fecha.new_email,
+    recipient: payload.data.email,
+    confirmationUrl: payload.data.url,
+    token: payload.data.token,
+    email: payload.data.email,
+    oldEmail: payload.data.old_email,
+    newEmail: payload.data.new_email,
   }
 
   // Render React Email to HTML and plain text
@@ -248,7 +248,7 @@ async function handleWebhook(req: Request): Promise<Response> {
   await supabase.from('email_send_log').insert({
     message_id: messageId,
     template_name: emailType,
-    recipient_email: payload.fecha.email,
+    recipient_email: payload.data.email,
     status: 'pending',
   })
 
@@ -257,7 +257,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     payload: {
       run_id,
       message_id: messageId,
-      to: payload.fecha.email,
+      to: payload.data.email,
       from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
       sender_domain: SENDER_DOMAIN,
       subject: EMAIL_SUBJECTS[emailType] || 'Notification',
@@ -274,7 +274,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     await supabase.from('email_send_log').insert({
       message_id: messageId,
       template_name: emailType,
-      recipient_email: payload.fecha.email,
+      recipient_email: payload.data.email,
       status: 'failed',
       error_message: 'Failed to enqueue email',
     })
@@ -284,7 +284,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     })
   }
 
-  console.log('Auth email enqueued', { emailType, email: payload.fecha.email, run_id })
+  console.log('Auth email enqueued', { emailType, email: payload.data.email, run_id })
 
   return new Response(
     JSON.stringify({ success: true, queued: true }),

@@ -87,7 +87,7 @@ export function useCreateAutoNotificationSettings() {
     },
     onError: (error) => {
       console.error('Error creating settings:', error);
-      toast.error('Error al guardar configurações');
+      toast.error('Error al guardar configuraciones');
     },
   });
 }
@@ -116,7 +116,7 @@ export function useUpdateAutoNotificationSettings() {
     },
     onError: (error) => {
       console.error('Error updating settings:', error);
-      toast.error('Error al actualizar configurações');
+      toast.error('Error al actualizar configuraciones');
     },
   });
 }

@@ -67,7 +67,7 @@ export function FlowBlockPalette({ onDragStart }: FlowBlockPaletteProps) {
       <div className="mt-auto pt-4 border-t">
         <div className="text-xs text-muted-foreground space-y-1">
           <p>💡 <strong>Dica:</strong></p>
-          <p>Comece com uma mensagem de boas-vindas, capture dados importantes e finalize com "IA Assume".</p>
+          <p>Comece com uma mensaje de boas-vindas, capture dados importantes e finalize com "IA Assume".</p>
         </div>
       </div>
     </div>

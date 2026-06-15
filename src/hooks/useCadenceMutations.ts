@@ -44,7 +44,7 @@ export function useCreateCadenceDay() {
     },
     onError: (error) => {
       console.error('Error creating cadence day:', error);
-      toast.error('Error al crear dia');
+      toast.error('Error al crear día');
     },
   });
 }
@@ -75,7 +75,7 @@ export function useUpdateCadenceDay() {
     },
     onError: (error) => {
       console.error('Error updating cadence day:', error);
-      toast.error('Error al actualizar dia');
+      toast.error('Error al actualizar día');
     },
   });
 }
@@ -99,7 +99,7 @@ export function useDeleteCadenceDay() {
     },
     onError: (error) => {
       console.error('Error deleting cadence day:', error);
-      toast.error('Error al eliminar dia');
+      toast.error('Error al eliminar día');
     },
   });
 }

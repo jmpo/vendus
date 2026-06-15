@@ -88,7 +88,7 @@ export function useTriggerEvaluation() {
       qc.invalidateQueries({ queryKey: ['quality-evaluations'] });
       toast.success(
         data?.evaluated != null
-          ? `${data.evaluated} conversas avaliadas`
+          ? `${data.evaluated} conversaciones avaliadas`
           : 'Avaliação disparada',
       );
     },

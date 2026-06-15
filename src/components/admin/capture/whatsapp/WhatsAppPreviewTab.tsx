@@ -14,7 +14,7 @@ interface PreviewMsg {
 }
 
 /**
- * Renderiza um preview estático do fluxo como se fosse o WhatsApp.
+ * Renderiza um preview estático do flujo como se fosse o WhatsApp.
  * Percorre os blocos seguindo `next_block_id` a partir do start_block_id e
  * mostra cada bloco textual como bolha, parando em handoff/ai/end.
  */
@@ -43,7 +43,7 @@ function buildPreviewMessages(blocks: FunnelBlock[], startId: string | null): Pr
         break;
       case 'input':
       case 'quick_form':
-        out.push({ side: 'bot', text: data.label || data.prompt || 'Digite sua resposta...', type: 'input' });
+        out.push({ side: 'bot', text: data.label || data.prompt || 'Escribí su respuesta...', type: 'input' });
         out.push({ side: 'user', text: '_aguardando resposta_', type: 'input' });
         break;
       case 'delay':
@@ -54,18 +54,18 @@ function buildPreviewMessages(blocks: FunnelBlock[], startId: string | null): Pr
       case 'ai_qualify':
         out.push({
           side: 'bot',
-          text: '🤖 IA assume a conversa daqui — o restante depende das respostas do lead.',
+          text: '🤖 IA assume a conversación daqui — o restante depende das respuestas del lead.',
           type: 'note',
         });
         return out;
       case 'schedule':
-        out.push({ side: 'bot', text: '📅 Oferece horários disponíveis para agendamento', type: 'note' });
+        out.push({ side: 'bot', text: '📅 Oferece horários disponíveis para reserva', type: 'note' });
         break;
       case 'handoff':
-        out.push({ side: 'bot', text: '👤 Transferindo para atendente humano...', type: 'note' });
+        out.push({ side: 'bot', text: '👤 Transferindo para agente humano...', type: 'note' });
         return out;
       case 'end':
-        out.push({ side: 'bot', text: '✅ Fim do fluxo', type: 'note' });
+        out.push({ side: 'bot', text: '✅ Fin do flujo', type: 'note' });
         return out;
       default:
         out.push({ side: 'bot', text: `[${cur.type}]`, type: 'note' });
@@ -95,12 +95,12 @@ export function WhatsAppPreviewTab({ funnel }: Props) {
           {!isEnabled && (
             <span className="text-xs text-muted-foreground flex items-center gap-1">
               <AlertCircle className="h-3 w-3" />
-              Fluxo não dispara enquanto o canal estiver desabilitado
+              Flujo no dispara enquanto o canal estiver desabilitado
             </span>
           )}
         </div>
         <p className="text-xs text-muted-foreground">
-          Preview estático — gerado a partir do fluxo
+          Preview estático — gerado a partir do flujo
         </p>
       </div>
 
@@ -113,7 +113,7 @@ export function WhatsAppPreviewTab({ funnel }: Props) {
               {(funnel.products?.name || 'B').slice(0, 1).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-sm truncate">{funnel.products?.name || 'Atendimento'}</p>
+              <p className="font-semibold text-sm truncate">{funnel.products?.name || 'Atención'}</p>
               <p className="text-[11px] opacity-80">online</p>
             </div>
             <Video className="h-5 w-5 opacity-90" />
@@ -135,7 +135,7 @@ export function WhatsAppPreviewTab({ funnel }: Props) {
               <div className="flex flex-col items-center justify-center h-[400px] text-center px-6">
                 <MessageSquare className="h-10 w-10 text-muted-foreground/40 mb-3" />
                 <p className="text-sm text-muted-foreground">
-                  Adicione blocos no Fluxo para visualizar a conversa aqui.
+                  Adicione blocos no Flujo para visualizar a conversación aqui.
                 </p>
               </div>
             ) : (
@@ -189,7 +189,7 @@ export function WhatsAppPreviewTab({ funnel }: Props) {
             <Smile className="h-5 w-5 text-gray-500" />
             <Paperclip className="h-5 w-5 text-gray-500" />
             <div className="flex-1 bg-white rounded-full px-3 py-2 text-xs text-gray-400">
-              Digite uma mensagem
+              Escribí uma mensaje
             </div>
             <div className="w-9 h-9 rounded-full bg-[#075E54] flex items-center justify-center">
               <Mic className="h-4 w-4 text-white" />

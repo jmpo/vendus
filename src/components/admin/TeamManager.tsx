@@ -293,7 +293,7 @@ export function TeamManager() {
       <Dialog open={!!editingMember} onOpenChange={() => setEditingMember(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Alterar Rol do Usuário</DialogTitle>
+            <DialogTitle>Alterar Rol do Usuario</DialogTitle>
           </DialogHeader>
           
           {editingMember && (

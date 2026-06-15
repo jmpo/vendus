@@ -50,7 +50,7 @@ export function ChatBotShareTab({ funnel }: Props) {
           Compartilhar ChatBot
         </h2>
         <p className="text-muted-foreground text-sm">
-          Use o link, o QR Code ou incorpore em qualquer site.
+          Usa o link, o QR Code ou incorpore em qualquer site.
         </p>
       </div>
 
@@ -64,7 +64,7 @@ export function ChatBotShareTab({ funnel }: Props) {
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-base">Link público</CardTitle>
-          <CardDescription>Envie este link e o lead inicia o chat imediatamente.</CardDescription>
+          <CardDescription>Enviá este link e o lead inicia o chat imediatamente.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex gap-2">
@@ -85,7 +85,7 @@ export function ChatBotShareTab({ funnel }: Props) {
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-base">QR Code</CardTitle>
-          <CardDescription>Ideal para eventos, panfletos e materiais impressos.</CardDescription>
+          <CardDescription>Ideal para eventos, panfletos e materiales impressos.</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center gap-6">
           <div className="bg-white p-4 rounded-lg border">
@@ -94,10 +94,10 @@ export function ChatBotShareTab({ funnel }: Props) {
           <div className="space-y-2">
             <Button variant="outline" onClick={downloadQR} className="gap-2">
               <Download className="h-4 w-4" />
-              Baixar SVG
+              Descargar SVG
             </Button>
             <p className="text-xs text-muted-foreground max-w-xs">
-              Vetor de alta resolução, pode ser escalado para qualquer tamanho sem perda.
+              Vetor de alta resolução, puede ser escalado para qualquer tamanho sem perda.
             </p>
           </div>
         </CardContent>
@@ -108,7 +108,7 @@ export function ChatBotShareTab({ funnel }: Props) {
         <CardHeader className="pb-4">
           <CardTitle className="text-base flex items-center gap-2">
             <Code className="h-4 w-4" />
-            Incorporar no seu site
+            Incorporar no su site
           </CardTitle>
           <CardDescription>Cole este iframe em qualquer página HTML.</CardDescription>
         </CardHeader>

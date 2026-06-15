@@ -134,7 +134,7 @@ export function SquadDistributionConfig({ squadId, organizationId }: SquadDistri
           <div>
             <Label>Redistribuir automáticamente</Label>
             <p className="text-xs text-muted-foreground">
-              Atribuir leads pendientes quando alguém ficar online
+              Atribuir leads pendientes cuando alguém ficar online
             </p>
           </div>
           <Switch
@@ -143,7 +143,7 @@ export function SquadDistributionConfig({ squadId, organizationId }: SquadDistri
           />
         </div>
 
-        {/* Max accept time */}
+        {/* Max accept equipo */}
         <div className="space-y-2">
           <Label>Tiempo máximo para aceptar (min)</Label>
           <Input

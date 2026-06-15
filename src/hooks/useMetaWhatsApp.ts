@@ -160,7 +160,7 @@ export function useSubmitMetaWATemplate() {
       qc.invalidateQueries({ queryKey: ['meta-wa-templates'] });
       toast.success('Plantilla enviada para aprobación');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao enviar template'),
+    onError: (e: any) => toast.error(e?.message ?? 'Falha al enviar template'),
   });
 }
 
@@ -175,6 +175,6 @@ export function useDeleteMetaWAConnection() {
       qc.invalidateQueries({ queryKey: ['meta-wa-connections'] });
       toast.success('Conexión eliminada');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao remover'),
+    onError: (e: any) => toast.error(e?.message ?? 'Falha ao eliminar'),
   });
 }

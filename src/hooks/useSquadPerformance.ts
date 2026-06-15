@@ -109,7 +109,7 @@ export function useSquadPerformance(squadId?: string) {
 
         return {
           userId,
-          userName: profile?.full_name || 'Usuário',
+          userName: profile?.full_name || 'Usuario',
           userAvatar: profile?.avatar_url,
           role: roleMap.get(userId) || 'member',
           dealsCount: memberDeals.length,

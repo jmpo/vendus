@@ -78,12 +78,12 @@ export function ScheduleMessageDialog({
               id="msg-content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Digite a mensaje a ser enviada..."
+              placeholder="Escribí a mensaje a ser enviada..."
               rows={4}
             />
           </div>
           <div>
-            <Label htmlFor="msg-schedule">Data e Hora</Label>
+            <Label htmlFor="msg-schedule">Fecha e Hora</Label>
             <Input
               id="msg-schedule"
               type="datetime-local"

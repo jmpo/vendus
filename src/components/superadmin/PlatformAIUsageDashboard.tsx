@@ -99,7 +99,7 @@ export function PlatformAIUsageDashboard() {
       <div>
         <h2 className="text-2xl font-bold">Consumo de IA</h2>
         <p className="text-sm text-muted-foreground">
-          Siga los tokens, llamadas y costo estimado de todas las integraciones de IA de la plataforma.
+          Sigue los tokens, llamadas y costo estimado de todas las integraciones de IA de la plataforma.
         </p>
       </div>
 

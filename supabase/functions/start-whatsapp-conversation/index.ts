@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
     }
 
     const token = authHeader.replace("Bearer ", "");
-    const { fecha: { user }, error: authError } = await supabase.auth.getUser(token);
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
     }
 
     // Get org
-    const { fecha: profile } = await supabase
+    const { data: profile } = await supabase
       .from("profiles")
       .select("organization_id")
       .eq("id", user.id)
@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
 
     // Procura QUALQUER conversación do mismo teléfono normalizado (inclusive fechada).
     // Reabrir conversación existente em vez de crear nova → nunca duplica histórico.
-    const { fecha: existing } = await supabase
+    const { data: existing } = await supabase
       .from("webchat_conversations")
       .select("id, status")
       .eq("organization_id", profile.organization_id)
@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
         });
         try {
           // Roteamento: se conversación tiene meta_connection_id, usa Meta Cloud; senão Evolution
-          const { fecha: convFull } = await supabase
+          const { data: convFull } = await supabase
             .from("webchat_conversations")
             .select("meta_connection_id")
             .eq("id", existing[0].id)
@@ -131,7 +131,7 @@ Deno.serve(async (req) => {
     }
 
     // Find a widget for this org to attach the conversation
-    const { fecha: widget } = await supabase
+    const { data: widget } = await supabase
       .from("webchat_widgets")
       .select("id")
       .eq("organization_id", profile.organization_id)
@@ -158,7 +158,7 @@ Deno.serve(async (req) => {
       conversationData.lead_id = lead_id;
     }
 
-    let { fecha: newConv, error: insertError } = await supabase
+    let { data: newConv, error: insertError } = await supabase
       .from("webchat_conversations")
       .insert(conversationData)
       .select("id")
@@ -166,7 +166,7 @@ Deno.serve(async (req) => {
 
     if (insertError && (insertError as any).code === "23505") {
       // Race com webhook/automação — recupera a conversación que ganhou o INSERT
-      const { fecha: race } = await supabase
+      const { data: race } = await supabase
         .from("webchat_conversations")
         .select("id")
         .eq("organization_id", profile.organization_id)

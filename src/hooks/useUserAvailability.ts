@@ -108,7 +108,7 @@ export function useUserAvailability(userId?: string) {
       toast.success('¡Horario agregado!');
     },
     onError: (error: Error) => {
-      console.error('Error adding time slot:', error);
+      console.error('Error adding equipo slot:', error);
       toast.error('Error al agregar horario');
     },
   });
@@ -127,7 +127,7 @@ export function useUserAvailability(userId?: string) {
       toast.success('¡Horario eliminado!');
     },
     onError: (error: Error) => {
-      console.error('Error removing time slot:', error);
+      console.error('Error removing equipo slot:', error);
       toast.error('Error al eliminar horario');
     },
   });
@@ -153,7 +153,7 @@ export function useUserAvailability(userId?: string) {
       toast.success('¡Horario actualizado!');
     },
     onError: (error: Error) => {
-      console.error('Error updating time slot:', error);
+      console.error('Error updating equipo slot:', error);
       toast.error('Error al actualizar horario');
     },
   });
@@ -206,7 +206,7 @@ export function useUserAvailability(userId?: string) {
     },
   });
 
-  // Agrupar slots por dia da semana
+  // Agrupar slots por día da semana
   const availabilityByDay = (availability || []).reduce((acc, slot) => {
     if (!acc[slot.day_of_week]) {
       acc[slot.day_of_week] = [];
@@ -228,7 +228,7 @@ export function useUserAvailability(userId?: string) {
   };
 }
 
-// Copiar slots de um dia para outro
+// Copiar slots de um día para otro
 export function copyDaySlots(
   fromDay: number,
   toDay: number,

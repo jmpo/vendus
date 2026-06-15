@@ -41,7 +41,7 @@ export function KanbanFilters({
         <PopoverTrigger asChild>
           <Button variant="outline" className="min-w-[140px] justify-start text-left font-normal">
             <Calendar className="mr-2 h-4 w-4" />
-            {filters.dateFrom ? format(filters.dateFrom, 'dd/MM/yyyy') : 'Data início'}
+            {filters.dateFrom ? format(filters.dateFrom, 'dd/MM/yyyy') : 'Fecha inicio'}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
@@ -60,7 +60,7 @@ export function KanbanFilters({
         <PopoverTrigger asChild>
           <Button variant="outline" className="min-w-[140px] justify-start text-left font-normal">
             <Calendar className="mr-2 h-4 w-4" />
-            {filters.dateTo ? format(filters.dateTo, 'dd/MM/yyyy') : 'Data fim'}
+            {filters.dateTo ? format(filters.dateTo, 'dd/MM/yyyy') : 'Fecha fin'}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
@@ -92,9 +92,9 @@ export function KanbanFilters({
           <SelectValue placeholder="Ordenar por" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="created_at">Data Criação</SelectItem>
+          <SelectItem value="created_at">Fecha Criação</SelectItem>
           <SelectItem value="deal_value">Valor</SelectItem>
-          <SelectItem value="last_contact_at">Último Contato</SelectItem>
+          <SelectItem value="last_contact_at">Último Contacto</SelectItem>
         </SelectContent>
       </Select>
 

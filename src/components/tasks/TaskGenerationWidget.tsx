@@ -68,7 +68,7 @@ export function TaskGenerationWidget({ productId, productName }: TaskGenerationW
             leadId: lead.id,
             leadName: lead.name,
             productId: lead.product_id!,
-            productName: (lead.products as any)?.name || productName || 'Produto',
+            productName: (lead.products as any)?.name || productName || 'Producto',
             cadenceDay,
             cadenceTitle: cadenceInfo?.title || 'Follow-up',
             userId: user.id
@@ -77,13 +77,13 @@ export function TaskGenerationWidget({ productId, productName }: TaskGenerationW
       
       await generateTasks.mutateAsync(tasksToCreate);
       
-      toast.success(`${tasksToCreate.length} tarefa${tasksToCreate.length > 1 ? 's' : ''} criada${tasksToCreate.length > 1 ? 's' : ''}!`, {
+      toast.success(`${tasksToCreate.length} tarea${tasksToCreate.length > 1 ? 's' : ''} creada${tasksToCreate.length > 1 ? 's' : ''}!`, {
         icon: <CheckCircle2 className="h-5 w-5 text-success" />
       });
       
       setSelectedLeads(new Set());
     } catch (error) {
-      toast.error('Erro ao criar tarefas');
+      toast.error('Error ao crear tareas');
     } finally {
       setIsGenerating(false);
     }
@@ -107,7 +107,7 @@ export function TaskGenerationWidget({ productId, productName }: TaskGenerationW
             <CheckCircle2 className="h-6 w-6 text-success" />
           </div>
           <p className="text-sm text-muted-foreground text-center">
-            Todos os leads já possuem tarefas ativas!
+            Todos os leads ya possuem tareas ativas!
           </p>
         </CardContent>
       </Card>
@@ -125,7 +125,7 @@ export function TaskGenerationWidget({ productId, productName }: TaskGenerationW
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {leadsNeedingTasks.length} lead{leadsNeedingTasks.length > 1 ? 's' : ''} sem tarefas pendentes
+            {leadsNeedingTasks.length} lead{leadsNeedingTasks.length > 1 ? 's' : ''} sem tareas pendentes
           </p>
           <div className="flex gap-2">
             <Button variant="ghost" size="sm" onClick={selectAll}>
@@ -188,7 +188,7 @@ export function TaskGenerationWidget({ productId, productName }: TaskGenerationW
           ) : (
             <>
               <Zap className="h-4 w-4 mr-2" />
-              Gerar {selectedLeads.size} tarefa{selectedLeads.size !== 1 ? 's' : ''}
+              Gerar {selectedLeads.size} tarea{selectedLeads.size !== 1 ? 's' : ''}
             </>
           )}
         </Button>

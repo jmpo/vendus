@@ -64,10 +64,10 @@ export function SendCadenceDialog({
         next_followup_at: new Date().toISOString(),
       }]);
 
-      toast({ title: `Cadência iniciada no día ${selectedDay?.day || 1}` });
+      toast({ title: `Cadencia iniciada no día ${selectedDay?.day || 1}` });
       onOpenChange(false);
     } catch {
-      toast({ title: 'Error al iniciar cadência', variant: 'destructive' });
+      toast({ title: 'Error al iniciar cadencia', variant: 'destructive' });
     } finally {
       setIsSending(false);
     }
@@ -84,7 +84,7 @@ export function SendCadenceDialog({
         </DialogHeader>
 
         {!leadId && (
-          <p className="text-sm text-destructive">Vincule um lead antes de enviar a cadência.</p>
+          <p className="text-sm text-destructive">Vincule um lead antes de enviar a cadencia.</p>
         )}
 
         <ScrollArea className="max-h-80">
@@ -94,7 +94,7 @@ export function SendCadenceDialog({
             </div>
           ) : !cadenceDays?.length ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              Ninguna cadência configurada para este producto.
+              Ninguna cadencia configurada para este producto.
             </p>
           ) : (
             <div className="space-y-2">

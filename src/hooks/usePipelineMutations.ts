@@ -15,11 +15,11 @@ export interface PipelineStage {
 
 export const DEFAULT_PIPELINE_STAGES = [
   { name: 'Novo Lead', color: '#3b82f6', order_index: 1, is_won: false, is_lost: false, description: 'Primer contacto con el cliente potencial' },
-  { name: 'Primeiro Contato', color: '#8b5cf6', order_index: 2, is_won: false, is_lost: false, description: 'Estabelecendo primeiro contato' },
-  { name: 'Qualificação', color: '#f59e0b', order_index: 3, is_won: false, is_lost: false, description: 'Avaliando necessidades e fit' },
-  { name: 'Proposta Enviada', color: '#ec4899', order_index: 4, is_won: false, is_lost: false, description: 'Propuesta comercial enviada' },
-  { name: 'Negociação', color: '#14b8a6', order_index: 5, is_won: false, is_lost: false, description: 'Negociando términos y condiciones' },
-  { name: 'Fechado (Ganho)', color: '#22c55e', order_index: 6, is_won: true, is_lost: false, description: 'Negocio fechado con éxito' },
+  { name: 'Primeiro Contacto', color: '#8b5cf6', order_index: 2, is_won: false, is_lost: false, description: 'Estabelecendo primeiro contacto' },
+  { name: 'Calificación', color: '#f59e0b', order_index: 3, is_won: false, is_lost: false, description: 'Avaliando necesidades e fit' },
+  { name: 'Propuesta Enviada', color: '#ec4899', order_index: 4, is_won: false, is_lost: false, description: 'Propuesta comercial enviada' },
+  { name: 'Negociación', color: '#14b8a6', order_index: 5, is_won: false, is_lost: false, description: 'Negociando términos y condiciones' },
+  { name: 'Cerrado (Ganado)', color: '#22c55e', order_index: 6, is_won: true, is_lost: false, description: 'Negocio cerrado con éxito' },
   { name: 'Perdido', color: '#ef4444', order_index: 7, is_won: false, is_lost: true, description: 'Oportunidade perdida' },
 ];
 

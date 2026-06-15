@@ -35,19 +35,19 @@ interface QuickActionBarProps {
   onSendFlow?: () => void;
   onSendCadence?: () => void;
   onAnalyze?: () => void;
-  /** Cria um evento de calendário (atalho rápido). */
+  /** Cria um evento de calendario (atalho rápido). */
   onCreateEvent?: () => void;
-  /** Cria uma oportunidade de venta. Visível só com lead vinculado. */
+  /** Cria uma oportunidad de venta. Visível só com lead vinculado. */
   onCreateDeal?: () => void;
-  /** Abre os "Dados do Contato" / detalhe do lead. */
+  /** Abre os "Dados do Contacto" / detalhe del lead. */
   onViewLead?: () => void;
-  /** Move o lead para outro estágio do embudo — opcional. */
+  /** Move o lead para otro estágio do embudo — opcional. */
   onMoveStageQuick?: (stageId: string) => void;
   pipelineStages?: { id: string; name: string; color: string | null }[];
   currentStageId?: string | null;
   /** Abre seletor de producto do catálogo para enviar como mensaje rica. */
   onPickCatalog?: () => void;
-  /** Abre dialog de gerar/enviar link de pagamento. */
+  /** Abre dialog de gerar/enviar link de pago. */
   onSendPaymentLink?: () => void;
 }
 
@@ -120,7 +120,7 @@ export function QuickActionBar({
               Cobrar
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Gerar e enviar link de pagamento</TooltipContent>
+          <TooltipContent>Gerar e enviar link de pago</TooltipContent>
         </Tooltip>
       )}
 
@@ -137,7 +137,7 @@ export function QuickActionBar({
               Novo Evento
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Crear evento na agenda já vinculado a este lead</TooltipContent>
+          <TooltipContent>Crear evento na agenda ya vinculado a este lead</TooltipContent>
         </Tooltip>
       )}
 
@@ -149,7 +149,7 @@ export function QuickActionBar({
               Follow-up
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Agendar tarefa de follow-up</TooltipContent>
+          <TooltipContent>Agendar tarea de follow-up</TooltipContent>
         </Tooltip>
       )}
 
@@ -166,7 +166,7 @@ export function QuickActionBar({
               Oportunidade
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Registrar uma nova oportunidade (deal)</TooltipContent>
+          <TooltipContent>Registrar uma nova oportunidad (deal)</TooltipContent>
         </Tooltip>
       )}
 
@@ -226,7 +226,7 @@ export function QuickActionBar({
               Ver Lead
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Abrir os dados completos do lead</TooltipContent>
+          <TooltipContent>Abrir os dados completos del lead</TooltipContent>
         </Tooltip>
       )}
 
@@ -247,10 +247,10 @@ export function QuickActionBar({
           <TooltipTrigger asChild>
             <Button variant="ghost" size="sm" className="h-7 text-xs gap-1.5 shrink-0" onClick={onSendCadence}>
               <CalendarDays className="h-3.5 w-3.5" />
-              Cadência
+              Cadencia
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Iniciar cadência para o lead</TooltipContent>
+          <TooltipContent>Iniciar cadencia para el lead</TooltipContent>
         </Tooltip>
       )}
 
@@ -262,7 +262,7 @@ export function QuickActionBar({
               Analisar
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Analisar conversa com IA</TooltipContent>
+          <TooltipContent>Analisar conversación com IA</TooltipContent>
         </Tooltip>
       )}
     </div>

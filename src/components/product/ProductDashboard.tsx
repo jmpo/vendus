@@ -87,7 +87,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
 
   return (
     <div className="space-y-6">
-      {/* Header do Produto */}
+      {/* Header do Producto */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">{product.name}</h1>
@@ -123,7 +123,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
         })}
       </div>
 
-      {/* Performance Cakto por produto */}
+      {/* Performance Cakto por producto */}
       {orgId && <ProductCaktoPerformance productId={product.id} organizationId={orgId} />}
 
 

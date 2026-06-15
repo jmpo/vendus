@@ -46,10 +46,10 @@ export function ChangeSquadDialog({ member, open, onOpenChange }: ChangeSquadDia
         });
       }
       
-      toast.success('Squad atualizado!');
+      toast.success('Squad actualizado!');
       onOpenChange(false);
     } catch (error) {
-      toast.error('Erro ao atualizar squad');
+      toast.error('Error ao actualizar squad');
     } finally {
       setIsLoading(false);
     }
@@ -68,10 +68,10 @@ export function ChangeSquadDialog({ member, open, onOpenChange }: ChangeSquadDia
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
-            Gerenciar Squad
+            Gestionar Squad
           </DialogTitle>
           <DialogDescription>
-            Altere o squad deste membro da equipe
+            Altere o squad deste membro da equipo
           </DialogDescription>
         </DialogHeader>
         
@@ -115,7 +115,7 @@ export function ChangeSquadDialog({ member, open, onOpenChange }: ChangeSquadDia
               <p className="text-sm font-medium">Novo Squad</p>
               <Select value={selectedSquadId} onValueChange={setSelectedSquadId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione um squad" />
+                  <SelectValue placeholder="Seleccioná um squad" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">

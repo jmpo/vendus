@@ -25,7 +25,7 @@ interface SankhyaConfig {
 async function getAuthToken(organizationId: string, supabaseUrl: string, supabaseKey: string): Promise<{ token: string; xToken: string; appKey: string }> {
   const supabaseClient = createClient(supabaseUrl, supabaseKey);
   
-  const { fecha: settings, error } = await supabaseClient
+  const { data: settings, error } = await supabaseClient
     .from("integration_settings")
     .select("settings")
     .eq("organization_id", organizationId)
@@ -87,7 +87,7 @@ serve(async (req: Request): Promise<Response> => {
     }
 
     // Check if Sankhya integration is configured
-    const { fecha: integrationSettings } = await supabase
+    const { data: integrationSettings } = await supabase
       .from("integration_settings")
       .select("is_configured")
       .eq("organization_id", organization_id)
@@ -106,7 +106,7 @@ serve(async (req: Request): Promise<Response> => {
     }
 
     // Get Sankhya partner ID for the lead
-    const { fecha: leadMapping } = await supabase
+    const { data: leadMapping } = await supabase
       .from("sankhya_mappings")
       .select("sankhya_id")
       .eq("organization_id", organization_id)
@@ -121,7 +121,7 @@ serve(async (req: Request): Promise<Response> => {
     // Get Sankhya product ID if provided
     let sankhyaProductId: string | null = null;
     if (product_id) {
-      const { fecha: productMapping } = await supabase
+      const { data: productMapping } = await supabase
         .from("sankhya_mappings")
         .select("sankhya_id")
         .eq("organization_id", organization_id)
@@ -174,13 +174,13 @@ serve(async (req: Request): Promise<Response> => {
       throw new Error(`Error ao crear pedido: ${response.status}`);
     }
 
-    const fecha = await response.json();
+    const data = await response.json();
     
-    if (fecha.status === "0") {
-      throw new Error(fecha.statusMessage || "Error ao crear pedido no Sankhya");
+    if (data.status === "0") {
+      throw new Error(data.statusMessage || "Error ao crear pedido no Sankhya");
     }
 
-    const nunota = fecha.responseBody?.pk?.NUNOTA?.$;
+    const nunota = data.responseBody?.pk?.NUNOTA?.$;
 
     // Save mapping for the deal
     await supabase

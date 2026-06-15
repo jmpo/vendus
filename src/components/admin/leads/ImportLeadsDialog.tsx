@@ -21,9 +21,9 @@ interface Props {
 
 const FIELD_OPTIONS = [
   { value: '__skip', label: '— ignorar —' },
-  { value: 'name', label: 'Nome' },
+  { value: 'name', label: 'Nombre' },
   { value: 'email', label: 'E-mail' },
-  { value: 'phone', label: 'Telefone' },
+  { value: 'phone', label: 'Teléfono' },
   { value: 'company', label: 'Empresa' },
   { value: 'position', label: 'Cargo' },
   { value: 'lead_origin', label: 'Origem' },
@@ -35,9 +35,9 @@ const FIELD_OPTIONS = [
 
 function guessField(header: string): string {
   const h = header.toLowerCase().trim();
-  if (/(^|\b)(nome|name)\b/.test(h)) return 'name';
+  if (/(^|\b)(nombre|name)\b/.test(h)) return 'name';
   if (/e-?mail/.test(h)) return 'email';
-  if (/(telefone|phone|whatsapp|celular)/.test(h)) return 'phone';
+  if (/(teléfono|phone|whatsapp|celular)/.test(h)) return 'phone';
   if (/(empresa|company)/.test(h)) return 'company';
   if (/(cargo|position|funcao)/.test(h)) return 'position';
   if (/origem/.test(h)) return 'lead_origin';
@@ -80,7 +80,7 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
   };
 
   const downloadTemplate = () => {
-    const csv = 'nome,email,telefone,empresa,cargo,origem,canal,temperatura,valor,notas\nJoão Silva,joao@email.com,11999999999,Acme,Diretor,site,whatsapp,warm,1500,Lead vindo do form';
+    const csv = 'nombre,email,teléfono,empresa,cargo,origem,canal,temperatura,valor,notas\nJoão Silva,joao@email.com,11999999999,Acme,Diretor,site,whatsapp,warm,1500,Lead vindo do form';
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -149,7 +149,7 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
         {step === 'upload' && (
           <div className="space-y-4 py-4">
             <Button variant="outline" onClick={downloadTemplate} className="gap-2">
-              <Download className="h-4 w-4" /> Baixar modelo CSV
+              <Download className="h-4 w-4" /> Descargar modelo CSV
             </Button>
             <Label className="block">
               <input
@@ -161,7 +161,7 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
               />
               <Button asChild className="w-full gap-2 cursor-pointer" variant="default">
                 <span onClick={() => document.getElementById('csv-upload')?.click()}>
-                  <Upload className="h-4 w-4" /> Selecionar arquivo CSV
+                  <Upload className="h-4 w-4" /> Selecionar archivo CSV
                 </span>
               </Button>
             </Label>
@@ -190,11 +190,11 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
             </div>
             <div className="grid grid-cols-2 gap-3 pt-2 border-t">
               <div>
-                <Label className="text-xs">Produto padrão (opcional)</Label>
+                <Label className="text-xs">Producto padrão (opcional)</Label>
                 <Select value={productId} onValueChange={setProductId}>
-                  <SelectTrigger><SelectValue placeholder="Sem produto" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Sem producto" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__none">Sem produto</SelectItem>
+                    <SelectItem value="__none">Sem producto</SelectItem>
                     {products.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
@@ -227,7 +227,7 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
             <p className="font-medium">Importação concluída</p>
             <div className="text-sm text-muted-foreground space-y-1">
               <p>✓ {result.created} criados</p>
-              {result.duplicated > 0 && <p>⊘ {result.duplicated} duplicados (telefone já existe)</p>}
+              {result.duplicated > 0 && <p>⊘ {result.duplicated} duplicados (teléfono ya existe)</p>}
               {result.errors > 0 && <p className="text-destructive flex items-center justify-center gap-1"><AlertTriangle className="h-4 w-4" /> {result.errors} erros</p>}
             </div>
           </div>

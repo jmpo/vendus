@@ -123,7 +123,7 @@ export function BrainTab({ productId }: BrainTabProps) {
         <CardContent className="p-4">
           <p className="text-sm text-muted-foreground">
             Adicione conhecimento através de diferentes fontes. Quanto mais dados, mais inteligente 
-            a IA ficará para ajudar com objeções, cadências e respostas contextualizadas.
+            a IA ficará para ajudar com objeções, cadencias e respuestas contextualizadas.
           </p>
         </CardContent>
       </Card>

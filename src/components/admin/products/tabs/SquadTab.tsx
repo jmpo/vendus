@@ -102,7 +102,7 @@ export function SquadTab({ productId }: SquadTabProps) {
       toast.success('Meta salva!');
       setGoalDialogOpen(false);
     } catch (error) {
-      toast.error('Erro ao salvar meta');
+      toast.error('Error ao guardar meta');
     }
   };
 
@@ -182,7 +182,7 @@ export function SquadTab({ productId }: SquadTabProps) {
         <CardContent>
           {availableMembers.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              Nenhum vendedor cadastrado na equipe
+              Nenhum vendedor cadastrado na equipo
             </p>
           ) : (
             <div className="space-y-3">

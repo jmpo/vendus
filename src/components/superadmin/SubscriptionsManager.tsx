@@ -106,7 +106,7 @@ export function SubscriptionsManager() {
       });
       toast.success('Suscripción suspendida');
     } catch (error) {
-      toast.error('Erro ao suspender assinatura');
+      toast.error('Error ao suspender assinatura');
     }
   };
 
@@ -120,7 +120,7 @@ export function SubscriptionsManager() {
       });
       toast.success('Suscripción marcada como pagada');
     } catch (error) {
-      toast.error('Erro ao atualizar assinatura');
+      toast.error('Error ao actualizar assinatura');
     }
   };
 
@@ -150,7 +150,7 @@ export function SubscriptionsManager() {
       ) : (
         <Card>
           <CardContent className="py-6 text-sm text-muted-foreground text-center">
-            Nenhum plano cadastrado. Crie planos em <span className="font-medium text-foreground">Planes</span> para visualizar a distribuição.
+            Nenhum plan cadastrado. Crea planes em <span className="font-medium text-foreground">Planes</span> para visualizar a distribución.
           </CardContent>
         </Card>
       )}
@@ -182,7 +182,7 @@ export function SubscriptionsManager() {
                     <div>
                       <p className="font-medium">{sub.organizations?.name}</p>
                       <p className="text-sm text-muted-foreground">
-                        {formatCurrency(sub.price_monthly || 0)} - Vencido hace {daysOverdue} dias
+                        {formatCurrency(sub.price_monthly || 0)} - Vencido hace {daysOverdue} días
                       </p>
                     </div>
                     <div className="flex gap-2">

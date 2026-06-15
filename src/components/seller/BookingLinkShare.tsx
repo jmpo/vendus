@@ -214,7 +214,7 @@ export function BookingLinkShare({ userId }: BookingLinkShareProps) {
                       value={newSlug}
                       onChange={(e) => setNewSlug(e.target.value)}
                       className="border-0 bg-transparent focus-visible:ring-0 px-0"
-                      placeholder="tu-nome"
+                      placeholder="tu-nombre"
                     />
                   </div>
                 </div>

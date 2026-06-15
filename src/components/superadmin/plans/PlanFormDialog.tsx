@@ -217,7 +217,7 @@ export function PlanFormBody({
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Descrição</Label>
+            <Label>Descripción</Label>
             <Textarea
               rows={3}
               value={form.description || ''}
@@ -261,7 +261,7 @@ export function PlanFormBody({
                   placeholder="https://pay.cakto.com.br/..."
                 />
                 <p className="text-xs text-muted-foreground">
-                  Abre quando o cliente seleciona o plano no ciclo <strong>mensal</strong>.
+                  Abre cuando o cliente seleciona o plan no ciclo <strong>mensal</strong>.
                 </p>
               </div>
               <div className="space-y-2">
@@ -273,7 +273,7 @@ export function PlanFormBody({
                   placeholder="https://pay.cakto.com.br/..."
                 />
                 <p className="text-xs text-muted-foreground">
-                  Abre quando o cliente seleciona o plano no ciclo <strong>anual</strong>.
+                  Abre cuando o cliente seleciona o plan no ciclo <strong>anual</strong>.
                 </p>
               </div>
             </div>
@@ -313,7 +313,7 @@ export function PlanFormBody({
               <div>
                 <h4 className="font-semibold text-sm">IA de la Plataforma</h4>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Quando <strong>ligado</strong>, as empresas deste plano consomem dos seus tokens Lovable até o limite mensal.
+                  Quando <strong>ligado</strong>, as empresas deste plan consomem dos sus tokens Lovable até o limite mensal.
                   Quando <strong>desligado</strong>, cada cliente precisa cadastrar a própria clave (OpenAI/Anthropic/Gemini) em Integraciones.
                 </p>
               </div>

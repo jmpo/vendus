@@ -119,7 +119,7 @@ export function QuickRepliesManager() {
             Respuestas Rápidas
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Crea atajos para que el equipo envíe mensajes listos en el chat. Use <code className="px-1 bg-muted rounded text-xs">{'{{nome}}'}</code> e <code className="px-1 bg-muted rounded text-xs">{'{{produto}}'}</code> como variáveis.
+            Crea atajos para que el equipo envíe mensajes listos en el chat. Usa <code className="px-1 bg-muted rounded text-xs">{'{{nombre}}'}</code> e <code className="px-1 bg-muted rounded text-xs">{'{{producto}}'}</code> como variáveis.
           </p>
         </div>
         <Button onClick={() => setCreating(true)}>
@@ -284,12 +284,12 @@ function ReplyFormDialog({ open, onClose, initial, onSave, isSaving }: FormProps
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="¡Hola {{nombre}}! {{produto}} es la solución..."
+              placeholder="¡Hola {{nombre}}! {{producto}} es la solución..."
               rows={6}
               maxLength={2000}
             />
             <p className="text-xs text-muted-foreground">
-              Use <code className="px-1 bg-muted rounded">{'{{nome}}'}</code> e <code className="px-1 bg-muted rounded">{'{{produto}}'}</code> como variáveis dinâmicas.
+              Usa <code className="px-1 bg-muted rounded">{'{{nombre}}'}</code> e <code className="px-1 bg-muted rounded">{'{{producto}}'}</code> como variáveis dinâmicas.
             </p>
           </div>
         </div>

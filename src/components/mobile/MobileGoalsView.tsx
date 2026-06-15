@@ -99,7 +99,7 @@ export function MobileGoalsView({ userId, productId }: MobileGoalsViewProps) {
             {currentGoal?.achieved_deals || 8}
           </span>
           <p className="text-xs text-muted-foreground">
-            de {currentGoal?.target_deals || 15} mês
+            de {currentGoal?.target_deals || 15} mes
           </p>
         </Card>
       </div>

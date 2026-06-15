@@ -38,10 +38,10 @@ export function AppearanceLivePreview({ channel, appearance, device }: Props) {
 type ChatMsg = { id: string; side: 'bot' | 'user'; text: string };
 
 const DEMO_REPLIES = [
-  'Perfeito! Pode me contar um pouco mais sobre o que você procura?',
-  'Anotado. Quer que eu já te mostre os próximos passos?',
-  'Ótimo! Posso te enviar agora mesmo um link com mais detalhes.',
-  'Entendi 👍 Você prefere falar por aqui ou agendar uma call?',
+  'Perfeito! Pode me contar um poco mais sobre o que usted procura?',
+  'Anotado. Quer que eu ya te mostre os próximos passos?',
+  'Ótimo! Posso te enviar ahora mismo um link com mais detalhes.',
+  'Entendi 👍 Usted prefere falar por aqui ou agendar uma call?',
 ];
 
 function ChatPreview({ a }: { a: ChannelAppearance }) {
@@ -343,7 +343,7 @@ function QuizPreview({ a }: { a: ChannelAppearance }) {
             letterSpacing: '-0.01em',
           }}
         >
-          Qual é o seu maior <span style={{ color: a.primary_color }}>desafio</span> hoje?
+          Qual é o su maior <span style={{ color: a.primary_color }}>desafío</span> hoy?
         </h2>
         <p className="text-sm mb-6" style={{ color: mutedText }}>
           Selecciona la opción que más se acerca a tu realidad.

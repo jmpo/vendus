@@ -32,7 +32,7 @@ const statusConfig: Record<FunnelStatus, { label: string; variant: 'default' | '
 function validateChatBot(blocks: FunnelBlock[]): string[] {
   const warnings: string[] = [];
   if (!blocks || blocks.length === 0) {
-    warnings.push('Fluxo vazio — adicione blocos para publicar.');
+    warnings.push('Flujo vazio — adicione blocos para publicar.');
     return warnings;
   }
   const ids = new Set(blocks.map(b => b.id));
@@ -63,7 +63,7 @@ export function ChatBotBuilder({ funnelId, onBack }: Props) {
   const handlePublish = async () => {
     if (!funnel) return;
     if (warnings.length > 0) {
-      toast.error('Resolva os avisos do fluxo antes de publicar');
+      toast.error('Resolva os avisos do flujo antes de publicar');
       setActiveTab('flow');
       return;
     }
@@ -91,7 +91,7 @@ export function ChatBotBuilder({ funnelId, onBack }: Props) {
   if (!funnel) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">ChatBot não encontrado</p>
+        <p className="text-muted-foreground">ChatBot no encontrado</p>
         <Button variant="outline" onClick={onBack} className="mt-4">Voltar</Button>
       </div>
     );
@@ -143,7 +143,7 @@ export function ChatBotBuilder({ funnelId, onBack }: Props) {
             <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
             <div className="flex-1">
               <p className="text-sm font-medium text-amber-900 dark:text-amber-200 mb-1">
-                Avisos do fluxo
+                Avisos do flujo
               </p>
               <ul className="text-xs text-amber-800 dark:text-amber-300 space-y-0.5 list-disc list-inside">
                 {warnings.slice(0, 4).map((w, i) => <li key={i}>{w}</li>)}
@@ -157,7 +157,7 @@ export function ChatBotBuilder({ funnelId, onBack }: Props) {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col mt-4">
         <TabsList className="grid w-full max-w-2xl grid-cols-6">
-          <TabsTrigger value="flow" className="gap-2"><Workflow className="h-4 w-4" /><span className="hidden sm:inline">Fluxo</span></TabsTrigger>
+          <TabsTrigger value="flow" className="gap-2"><Workflow className="h-4 w-4" /><span className="hidden sm:inline">Flujo</span></TabsTrigger>
           <TabsTrigger value="preview" className="gap-2"><Eye className="h-4 w-4" /><span className="hidden sm:inline">Preview</span></TabsTrigger>
           <TabsTrigger value="appearance" className="gap-2"><Palette className="h-4 w-4" /><span className="hidden sm:inline">Aparência</span></TabsTrigger>
           <TabsTrigger value="share" className="gap-2"><Share2 className="h-4 w-4" /><span className="hidden sm:inline">Compartilhar</span></TabsTrigger>

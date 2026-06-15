@@ -21,7 +21,7 @@ export function useAcceptConversation() {
       return data;
     },
     onMutate: async (vars) => {
-      // Update otimista: marca a conversa como aceita pelo usuário e bumpa para o topo
+      // Update otimista: marca a conversación como aceita pelo usuario e bumpa para o topo
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         return {
@@ -101,7 +101,7 @@ export function useAcceptConversation() {
     },
     onSettled: (_data, _err, vars) => {
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
-      // refetchType: 'active' força a query aberta a refazer mesmo dentro do staleTime
+      // refetchType: 'active' força a query aberta a refazer mismo dentro do staleTime
       queryClient.invalidateQueries({
         queryKey: ['webchat-conversation', vars.conversation_id],
         refetchType: 'active',

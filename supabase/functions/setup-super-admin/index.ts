@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
     );
 
     // Trava de segurança: só permite se NÃO existe ningún super_admin
-    const { fecha: existing, error: checkErr } = await admin
+    const { data: existing, error: checkErr } = await admin
       .from("user_roles")
       .select("user_id")
       .eq("role", "super_admin")
@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
     }
 
     // Cria o usuario (auto-confirmado)
-    const { fecha: created, error: createErr } = await admin.auth.admin.createUser({
+    const { data: created, error: createErr } = await admin.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
     // Organização opcional
     let organizationId: string | null = null;
     if (companyName) {
-      const { fecha: org, error: orgErr } = await admin
+      const { data: org, error: orgErr } = await admin
         .from("organizations")
         .insert({
           name: companyName,
@@ -102,7 +102,7 @@ Deno.serve(async (req) => {
       .upsert({ user_id: userId, role: "admin" }, { onConflict: "user_id,role" });
 
     // Marca lock permanente em platform_settings
-    const { fecha: settings } = await admin
+    const { data: settings } = await admin
       .from("platform_settings")
       .select("id")
       .maybeSingle();

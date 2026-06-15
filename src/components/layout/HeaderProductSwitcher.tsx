@@ -36,7 +36,7 @@ export function HeaderProductSwitcher({
           <div className="flex items-center gap-2 min-w-0">
             <Package className="h-4 w-4 text-primary shrink-0" />
             <span className="font-medium truncate">
-              {selectedProduct?.name || 'Selecionar produto'}
+              {selectedProduct?.name || 'Selecionar producto'}
             </span>
           </div>
           <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -44,7 +44,7 @@ export function HeaderProductSwitcher({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[260px]">
         <DropdownMenuLabel className="text-xs text-muted-foreground">
-          Meus produtos ({products.length})
+          Meus productos ({products.length})
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {products.map((product) => {

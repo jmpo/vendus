@@ -125,7 +125,7 @@ export default function PublicBooking() {
   const handleConversationalSubmit = async (data: BookingFormData) => {
     if (!eventType || !selectedDate) return;
 
-    // Horário fixo de Brasília (-03:00, sem horário de verão) — slots vêm em hora local BRT
+    // Horario fixo de Brasília (-03:00, sem horario de verão) — slots vêm em hora local BRT
     const startTime = `${format(selectedDate, 'yyyy-MM-dd')}T${data.selectedSlot.start}:00-03:00`;
     
     // Collect additional info
@@ -169,7 +169,7 @@ export default function PublicBooking() {
     e.preventDefault();
     if (!eventType || !selectedDate || !selectedSlot) return;
 
-    // Horário fixo de Brasília (-03:00, sem horário de verão) — slots vêm em hora local BRT
+    // Horario fixo de Brasília (-03:00, sem horario de verão) — slots vêm em hora local BRT
     const startTime = `${format(selectedDate, 'yyyy-MM-dd')}T${selectedSlot.start}:00-03:00`;
     
     // Collect additional info from custom questions
@@ -367,7 +367,7 @@ export default function PublicBooking() {
 
                 {/* Calendar & Slots */}
                 <div className="flex-1 p-6">
-                  <h3 className="font-medium mb-4">Elija una fecha y hora</h3>
+                  <h3 className="font-medium mb-4">Elija una data y hora</h3>
                   
                   <div className="flex flex-col gap-4 sm:gap-6">
                     <div>
@@ -399,7 +399,7 @@ export default function PublicBooking() {
                           </div>
                         ) : slots?.length === 0 ? (
                           <p className="text-sm text-muted-foreground py-4">
-                            No hay horarios disponibles en esta fecha. Elija otra fecha.
+                            No hay horarios disponibles en esta data. Elija otra data.
                           </p>
                         ) : (
                           <div className="grid grid-cols-2 sm:grid-cols-1 gap-2 max-h-80 overflow-y-auto pr-2">
@@ -476,16 +476,16 @@ export default function PublicBooking() {
 
                 {/* Form */}
                 <div className="flex-1 p-6">
-                  <h3 className="font-medium mb-4">Preencha seus dados</h3>
+                  <h3 className="font-medium mb-4">Preencha sus dados</h3>
                   
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Nome *</Label>
+                      <Label htmlFor="name">Nombre *</Label>
                       <Input
                         id="name"
                         value={formData.name}
                         onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="Seu nome completo"
+                        placeholder="Su nombre completo"
                         required
                       />
                     </div>
@@ -503,7 +503,7 @@ export default function PublicBooking() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="phone">Telefone</Label>
+                      <Label htmlFor="phone">Teléfono</Label>
                       <Input
                         id="phone"
                         type="tel"
@@ -513,15 +513,15 @@ export default function PublicBooking() {
                       />
                     </div>
 
-                    {/* Custom Questions — filtra as que duplicam Nome / E-mail / Telefone padrão */}
+                    {/* Custom Questions — filtra as que duplicam Nombre / E-mail / Teléfono padrão */}
                     {eventType.questions?.filter((question) => {
                       const label = (question.label || '').toLowerCase().trim();
                       const type = (question.type || '').toLowerCase();
-                      // Remove perguntas que são equivalentes aos campos fixos
+                      // Remove preguntas que son equivalentes aos campos fixos
                       if (type === 'email' || type === 'phone' || type === 'tel') return false;
                       if (/\bnome\b/.test(label)) return false;
                       if (/\b(e-?mail|email)\b/.test(label)) return false;
-                      if (/\b(telefone|celular|whats?app|phone)\b/.test(label)) return false;
+                      if (/\b(teléfono|celular|whats?app|phone)\b/.test(label)) return false;
                       return true;
                     }).map((question) => (
                       <div key={question.id} className="space-y-2">
@@ -550,7 +550,7 @@ export default function PublicBooking() {
                     ))}
 
                     <p className="text-xs text-muted-foreground">
-                      Ao prosseguir, você confirma que leu e aceita nossos Termos de Uso.
+                      Ao prosseguir, usted confirma que leu e aceita nossos Termos de Uso.
                     </p>
 
                     <Button 

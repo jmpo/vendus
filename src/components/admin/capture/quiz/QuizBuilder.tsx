@@ -31,17 +31,17 @@ const statusConfig: Record<FunnelStatus, { label: string; variant: 'default' | '
 function validateQuiz(blocks: FunnelBlock[]): string[] {
   const warnings: string[] = [];
   if (!blocks || blocks.length === 0) {
-    warnings.push('Quiz vazio — adicione pelo menos uma pergunta.');
+    warnings.push('Quiz vazio — adicione pelo menos uma pregunta.');
     return warnings;
   }
   const ids = new Set(blocks.map(b => b.id));
   const hasButtons = blocks.some(b => b.type === 'buttons');
   if (!hasButtons) {
-    warnings.push('Quiz sem perguntas de múltipla escolha — adicione um bloco "Botões".');
+    warnings.push('Quiz sem preguntas de múltipla escolha — adicione um bloco "Botões".');
   }
   const hasCapture = blocks.some(b => b.type === 'input' || b.type === 'quick_form' || b.type === 'create_lead');
   if (!hasCapture) {
-    warnings.push('Nenhum bloco de captura de lead — o resultado não será salvo.');
+    warnings.push('Nenhum bloco de captura de lead — o resultado no será guardado.');
   }
   blocks.forEach(b => {
     const next = (b.data as any)?.next_block_id;
@@ -51,7 +51,7 @@ function validateQuiz(blocks: FunnelBlock[]): string[] {
     if (b.type === 'buttons') {
       const opts = (b.data as any)?.options || [];
       if (opts.length === 0) {
-        warnings.push(`Pergunta "${(b.data as any)?.label || b.id.slice(0, 6)}" sem opções.`);
+        warnings.push(`Pergunta "${(b.data as any)?.label || b.id.slice(0, 6)}" sem opciones.`);
       }
     }
   });
@@ -94,7 +94,7 @@ export function QuizBuilder({ funnelId, onBack }: Props) {
   if (!funnel) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Quiz não encontrado</p>
+        <p className="text-muted-foreground">Quiz no encontrado</p>
         <Button variant="outline" onClick={onBack} className="mt-4">Voltar</Button>
       </div>
     );
@@ -121,7 +121,7 @@ export function QuizBuilder({ funnelId, onBack }: Props) {
             </Tooltip>
 
             <TabsList className="h-9 grid grid-cols-5 max-w-2xl">
-              <TabsTrigger value="flow" className="gap-1.5 h-7 px-2"><Workflow className="h-3.5 w-3.5" /><span className="hidden md:inline text-xs">Fluxo</span></TabsTrigger>
+              <TabsTrigger value="flow" className="gap-1.5 h-7 px-2"><Workflow className="h-3.5 w-3.5" /><span className="hidden md:inline text-xs">Flujo</span></TabsTrigger>
               <TabsTrigger value="appearance" className="gap-1.5 h-7 px-2"><Palette className="h-3.5 w-3.5" /><span className="hidden md:inline text-xs">Aparência</span></TabsTrigger>
               <TabsTrigger value="integrations" className="gap-1.5 h-7 px-2"><Sparkles className="h-3.5 w-3.5" /><span className="hidden md:inline text-xs">CRM/IA</span></TabsTrigger>
               <TabsTrigger value="share" className="gap-1.5 h-7 px-2"><Share2 className="h-3.5 w-3.5" /><span className="hidden md:inline text-xs">Compartilhar</span></TabsTrigger>

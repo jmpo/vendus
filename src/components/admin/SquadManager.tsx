@@ -198,7 +198,7 @@ export function SquadManager() {
               <Label htmlFor="name">Nombre del Squad</Label>
               <Input
                 id="name"
-                placeholder="Ex: Time Alpha"
+                placeholder="Ex: Equipo Alpha"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />

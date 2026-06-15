@@ -15,7 +15,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Fetch pending messages that are due
-    const { fecha: pendingMessages, error: fetchError } = await supabase
+    const { data: pendingMessages, error: fetchError } = await supabase
       .from("scheduled_messages")
       .select("*")
       .eq("status", "pending")

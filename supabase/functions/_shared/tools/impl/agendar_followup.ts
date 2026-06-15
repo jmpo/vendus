@@ -4,7 +4,7 @@ import type { ToolDefinition } from '../types.ts';
 export const agendarFollowupTool: ToolDefinition = {
   name: 'agendar_followup',
   description:
-    'Agenda um follow-up automático com o lead em uma fecha/hora futura. Usa quando o lead pedir para retornar mais tarde, quando ficar de pensar, ou quando usted quiser garantir uma reativação. Respeita horario comercial automaticamente.',
+    'Agenda um follow-up automático com o lead em uma data/hora futura. Usa quando o lead pedir para retornar mais tarde, quando ficar de pensar, ou quando usted quiser garantir uma reativação. Respeita horario comercial automaticamente.',
   categories: ['crm', 'communication'],
   estimated_cost_cents: 0,
   parameters: {
@@ -34,7 +34,7 @@ export const agendarFollowupTool: ToolDefinition = {
     const nextAt = new Date(Date.now() + hours * 60 * 60 * 1000);
 
     // Carrega dados del lead para snapshot.
-    const { fecha: lead } = await ctx.supabase
+    const { data: lead } = await ctx.supabase
       .from('leads')
       .select('name, email, phone, product_id')
       .eq('id', ctx.leadId)
@@ -42,7 +42,7 @@ export const agendarFollowupTool: ToolDefinition = {
 
     if (!lead) return { success: false, error: 'Lead no encontrado' };
 
-    const { fecha: queued, error } = await ctx.supabase
+    const { data: queued, error } = await ctx.supabase
       .from('ai_outreach_queue')
       .insert({
         organization_id: ctx.organizationId,
@@ -71,7 +71,7 @@ export const agendarFollowupTool: ToolDefinition = {
 
     return {
       success: true,
-      fecha: { queue_id: queued.id, scheduled_for: nextAt.toISOString() },
+      data: { queue_id: queued.id, scheduled_for: nextAt.toISOString() },
       user_message: `Follow-up agendado para ${nextAt.toLocaleString('pt-BR')}.`,
     };
   },

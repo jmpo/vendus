@@ -198,7 +198,7 @@ export function LeadsKanban({ productId, productName, organizationId, onWhatsApp
       {/* Squad Queue Banner */}
       <SquadQueueBanner productId={productId} />
 
-      {/* Header: busca + ação */}
+      {/* Header: busca + acción */}
       <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
         <div className="relative flex-1 max-w-xl">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

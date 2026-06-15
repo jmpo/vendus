@@ -96,10 +96,10 @@ export function AvailabilityManager() {
         }
       }
       
-      toast.success(`Horários copiados para ${toDays.length} dia${toDays.length !== 1 ? 's' : ''}`);
+      toast.success(`Horários copiados para ${toDays.length} día${toDays.length !== 1 ? 's' : ''}`);
       setCopyDialogOpen(false);
     } catch (error) {
-      toast.error('Erro ao copiar horários');
+      toast.error('Error ao copiar horários');
     } finally {
       setIsCopying(false);
     }
@@ -114,10 +114,10 @@ export function AvailabilityManager() {
           end_time: slot.end_time,
         });
       }
-      toast.success(`${slots.length} horário${slots.length !== 1 ? 's' : ''} adicionado${slots.length !== 1 ? 's' : ''}`);
+      toast.success(`${slots.length} horario${slots.length !== 1 ? 's' : ''} adicionado${slots.length !== 1 ? 's' : ''}`);
       setAddSlotDialogOpen(false);
     } catch (error) {
-      toast.error('Erro ao adicionar horários');
+      toast.error('Error ao adicionar horários');
     }
   };
 
@@ -205,12 +205,12 @@ export function AvailabilityManager() {
         <div>
           <h2 className="text-2xl font-bold">Disponibilidade</h2>
           <p className="text-muted-foreground">
-            Configure quando você está disponível para reuniões
+            Configure cuando usted está disponível para reuniões
           </p>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 rounded-lg px-3 py-2">
           <Clock className="h-4 w-4" />
-          <span>{configuredDays} dia{configuredDays !== 1 ? 's' : ''} configurado{configuredDays !== 1 ? 's' : ''}</span>
+          <span>{configuredDays} día{configuredDays !== 1 ? 's' : ''} configurado{configuredDays !== 1 ? 's' : ''}</span>
         </div>
       </div>
 
@@ -222,7 +222,7 @@ export function AvailabilityManager() {
             <CardHeader>
               <CardTitle className="text-lg">Horarios Semanales</CardTitle>
               <CardDescription>
-                Defina su disponibilidad estándar para cada dia da semana
+                Defina su disponibilidad estándar para cada día da semana
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -434,7 +434,7 @@ export function AvailabilityManager() {
         isLoading={isCopying}
       />
 
-      {/* Add Time Slot Dialog */}
+      {/* Add Equipo Slot Dialog */}
       <AddTimeSlotDialog
         open={addSlotDialogOpen}
         onOpenChange={setAddSlotDialogOpen}
@@ -451,7 +451,7 @@ export function AvailabilityManager() {
               {selectedDate && format(selectedDate, "dd 'de' MMMM 'de' yyyy", { locale: es })}
             </DialogTitle>
             <DialogDescription>
-              Configure la disponibilidad para esta fecha específica
+              Configure la disponibilidad para esta data específica
             </DialogDescription>
           </DialogHeader>
           
@@ -463,7 +463,7 @@ export function AvailabilityManager() {
                 className="flex-1"
                 onClick={() => setOverrideForm(prev => ({ ...prev, is_available: false }))}
               >
-                Bloquear dia
+                Bloquear día
               </Button>
               <Button
                 type="button"

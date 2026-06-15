@@ -15,7 +15,7 @@ const SAMPLE = {
   data: '13/05/2026',
   hora: '16:00',
   modalidade: 'online',
-  nome_evento: 'Reunião comercial',
+  nome_evento: 'Reunión comercial',
   link_reuniao: 'https://meet.google.com/abc-defg-hij',
   empresa: 'Vendus',
 };
@@ -26,7 +26,7 @@ export function MessagePreview({ template, whatsappNumber }: Props) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-medium">Preview da mensagem</h4>
+        <h4 className="text-sm font-medium">Preview da mensaje</h4>
         <Badge className="bg-emerald-500/15 text-emerald-500 border-emerald-500/30">
           <MessageCircle className="h-3 w-3 mr-1" />
           WhatsApp
@@ -45,7 +45,7 @@ export function MessagePreview({ template, whatsappNumber }: Props) {
         <div className="relative bg-[#005c4b]/20 border border-emerald-900/30 rounded-lg rounded-tl-none px-3 py-2 text-sm whitespace-pre-wrap text-foreground/90 font-medium leading-relaxed">
           {rendered || (
             <span className="text-muted-foreground italic">
-              A mensagem aparecerá aqui...
+              A mensaje aparecerá aqui...
             </span>
           )}
           <div className="text-[10px] text-muted-foreground/70 text-right mt-1">11:15</div>
@@ -54,8 +54,8 @@ export function MessagePreview({ template, whatsappNumber }: Props) {
 
       {whatsappNumber && (
         <div className="rounded-md bg-primary/5 border border-primary/20 px-3 py-2 text-xs text-muted-foreground">
-          A mensagem será enviada via WhatsApp para o número{' '}
-          <span className="text-foreground font-medium">{whatsappNumber}</span> do lead.
+          A mensaje será enviada via WhatsApp para o número{' '}
+          <span className="text-foreground font-medium">{whatsappNumber}</span> del lead.
         </div>
       )}
     </div>

@@ -67,7 +67,7 @@ serve(async (req) => {
     let knowledgeContext = '';
     let billingOrgId: string | null = null;
     if (product_id) {
-      const { fecha: product } = await supabase.from('products').select('*').eq('id', product_id).maybeSingle();
+      const { data: product } = await supabase.from('products').select('*').eq('id', product_id).maybeSingle();
       if (product) {
         billingOrgId = product.organization_id ?? null;
         productContext = `
@@ -78,7 +78,7 @@ Diferenciais: ${product.differentials || 'N/A'}
 Problemas que resolve: ${product.problems_solved || 'N/A'}
 `;
         if (use_brain) {
-          const { fecha: ks } = await supabase
+          const { data: ks } = await supabase
             .from('product_knowledge_sources')
             .select('title, source_type, extracted_content, question, answer')
             .eq('product_id', product_id)
@@ -131,11 +131,11 @@ FORMATO DE RESPOSTA (JSON):
   "suggested_name": "Nombre do quiz",
   "suggested_description": "Descripción corta do objetivo",
   "blocks": [
-    { "type": "text", "fecha": { "content": "Boas-vindas..." } },
-    { "type": "buttons", "fecha": { "label": "Pergunta?", "variable_name": "q1",
+    { "type": "text", "data": { "content": "Boas-vindas..." } },
+    { "type": "buttons", "data": { "label": "Pergunta?", "variable_name": "q1",
       "options": [{"id":"1","letter":"A","label":"Opción","score":10,"tag":"opt-tag"}] } },
-    { "type": "input", "fecha": { "label":"Su nombre", "variable_name":"nombre", "input_type":"text", "required":true } },
-    { "type": "end", "fecha": {
+    { "type": "input", "data": { "label":"Su nombre", "variable_name":"nombre", "input_type":"text", "required":true } },
+    { "type": "end", "data": {
         "content": "Resultado!",
         "result_tiers": [
           {"id":"t1","label":"Iniciante","min":0,"max":40,"color":"#f97316","message":"..."},

@@ -506,12 +506,12 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
                   <CheckCircle2 size={32} className="text-primary" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {filter === 'today' ? 'Ninguna tarea para hoy!' : 'Ningunoa tarefa encontrada'}
+                  {filter === 'today' ? 'Ninguna tarea para hoy!' : 'Ningunoa tarea encontrada'}
                 </h3>
                 <p className="text-muted-foreground text-center max-w-md">
                   {filter === 'today' 
                     ? 'Aproveite para revisar tus leads o explorar o playbook.'
-                    : 'Tus tarefas aparecerão aqui conforme tú avançar com os leads.'}
+                    : 'Tus tareas aparecerão aqui conforme tú avançar com os leads.'}
                 </p>
               </div>
             )}

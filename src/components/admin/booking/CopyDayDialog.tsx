@@ -63,7 +63,7 @@ export function CopyDayDialog({
         <DialogHeader>
           <DialogTitle>Copiar horários de {DAY_NAMES[fromDay]}</DialogTitle>
           <DialogDescription>
-            Selecione os dias para onde deseja copiar os horários
+            Seleccioná os días para dónde desea copiar os horários
           </DialogDescription>
         </DialogHeader>
 
@@ -72,7 +72,7 @@ export function CopyDayDialog({
           <div className="bg-muted/50 rounded-lg p-3 space-y-1">
             <p className="text-sm font-medium">Horários a copiar:</p>
             {fromSlots.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Nenhum horário configurado</p>
+              <p className="text-sm text-muted-foreground">Nenhum horario configurado</p>
             ) : (
               fromSlots.map((slot, i) => (
                 <p key={i} className="text-sm text-muted-foreground">
@@ -143,7 +143,7 @@ export function CopyDayDialog({
             onClick={handleCopy} 
             disabled={selectedDays.length === 0 || fromSlots.length === 0 || isLoading}
           >
-            {isLoading ? 'Copiando...' : `Copiar para ${selectedDays.length} dia${selectedDays.length !== 1 ? 's' : ''}`}
+            {isLoading ? 'Copiando...' : `Copiar para ${selectedDays.length} día${selectedDays.length !== 1 ? 's' : ''}`}
           </Button>
         </DialogFooter>
       </DialogContent>

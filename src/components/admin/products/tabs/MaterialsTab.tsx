@@ -82,7 +82,7 @@ const typeIcons: Record<string, any> = {
 
 const typeLabels: Record<string, string> = {
   pdf: 'PDF',
-  image: 'Imagem',
+  image: 'Imagen',
   video: 'Vídeo',
   link: 'Link',
   banner: 'Banner/Apresentação',
@@ -92,7 +92,7 @@ const tagOptions = [
   { value: 'proof', label: 'Prova Social' },
   { value: 'presentation', label: 'Apresentação' },
   { value: 'objection', label: 'Objeção' },
-  { value: 'closing', label: 'Fechamento' },
+  { value: 'closing', label: 'Cierre' },
 ];
 
 export function MaterialsTab({ productId }: MaterialsTabProps) {
@@ -118,9 +118,9 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
     if (file) {
       // Comprime imagens automaticamente
       if (file.type.startsWith('image/')) {
-        toast.info('Comprimindo imagem...');
+        toast.info('Comprimindo imagen...');
         file = await compressImage(file, 2);
-        toast.success('Imagem comprimida!');
+        toast.success('Imagen comprimida!');
       }
       
       setSelectedFile(file);
@@ -148,7 +148,7 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
     return 'pdf';
   };
 
-  // Auto-switch para link quando tipo for vídeo
+  // Auto-switch para link cuando tipo for vídeo
   useEffect(() => {
     if (newMaterial.type === 'video') {
       setUploadMode('link');
@@ -157,12 +157,12 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
 
   const handleUpload = async () => {
     if (!profile?.organization_id) {
-      toast.error('Organização não encontrada');
+      toast.error('Organización no encontrada');
       return;
     }
 
     if (uploadMode === 'file' && !selectedFile) {
-      toast.error('Selecione um arquivo');
+      toast.error('Seleccioná um archivo');
       return;
     }
 
@@ -178,7 +178,7 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
     }
 
     if (!newMaterial.name.trim()) {
-      toast.error('Informe o nome do material');
+      toast.error('Informe o nombre do material');
       return;
     }
 
@@ -215,25 +215,25 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
         status: 'active',
       });
 
-      toast.success('Material adicionado com sucesso!');
+      toast.success('Material adicionado com éxito!');
       resetForm();
       setIsDialogOpen(false);
     } catch (error: any) {
-      console.error('Erro ao fazer upload:', error);
-      toast.error(error.message || 'Erro ao adicionar material');
+      console.error('Error ao hacer upload:', error);
+      toast.error(error.message || 'Error ao adicionar material');
     } finally {
       setIsUploading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir este material?')) return;
+    if (!confirm('Tem certeza que desea eliminar este material?')) return;
 
     try {
       await deleteMaterial.mutateAsync(id);
-      toast.success('Material excluído');
+      toast.success('Material eliminado');
     } catch (error) {
-      toast.error('Erro ao excluir material');
+      toast.error('Error ao eliminar material');
     }
   };
 
@@ -282,10 +282,10 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-foreground">
-            {productMaterials.length} materiais
+            {productMaterials.length} materiales
           </h2>
           <p className="text-sm text-muted-foreground">
-            Biblioteca de materiais de apoio para vendas
+            Biblioteca de materiales de apoio para ventas
           </p>
         </div>
 
@@ -364,8 +364,8 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
                       <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
                       <p className="text-sm text-muted-foreground">
                         {isDragActive
-                          ? 'Solte o arquivo aqui...'
-                          : 'Arraste um arquivo ou clique para selecionar'}
+                          ? 'Solte o archivo aqui...'
+                          : 'Arraste um archivo ou clique para selecionar'}
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
                         PDF (máx. 10MB), Imagens (comprimidas automaticamente)
@@ -390,7 +390,7 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
                   />
                   {newMaterial.type === 'video' && (
                     <p className="text-xs text-muted-foreground">
-                      Apenas links do YouTube ou Vimeo são aceitos
+                      Apenas links do YouTube ou Vimeo son aceitos
                     </p>
                   )}
                 </div>
@@ -398,7 +398,7 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
 
               {/* Material Name */}
               <div className="space-y-2">
-                <Label>Nome do Material *</Label>
+                <Label>Nombre do Material *</Label>
                 <Input
                   placeholder="Ex: Apresentação Institucional"
                   value={newMaterial.name}
@@ -428,7 +428,7 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
 
               {/* Objective */}
               <div className="space-y-2">
-                <Label>Objetivo / Descrição</Label>
+                <Label>Objetivo / Descripción</Label>
                 <Textarea
                   placeholder="Descreva o objetivo ou momento ideal para usar este material..."
                   value={newMaterial.objective}
@@ -483,7 +483,7 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
             <FileText className="h-12 w-12 text-muted-foreground/50 mb-4" />
             <h3 className="text-lg font-medium text-foreground mb-1">Nenhum material</h3>
             <p className="text-sm text-muted-foreground mb-4 text-center">
-              Adicione materiais de apoio como PDFs, apresentações, cases e propostas
+              Adicione materiales de apoio como PDFs, apresentações, cases e propostas
             </p>
             <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />

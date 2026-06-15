@@ -9,8 +9,8 @@ interface FormBlockMediaProps {
 }
 
 /**
- * Renderer único para blocos de mídia (imagem, vídeo upload/embed, carrossel, divisor).
- * Não captura resposta — apenas apresenta o conteúdo no fluxo.
+ * Renderer único para blocos de mídia (imagen, vídeo upload/embed, carrossel, divisor).
+ * No captura respuesta — apenas apresenta o conteúdo no flujo.
  */
 export function FormBlockMedia({ block, className }: FormBlockMediaProps) {
   const s = (block.block_settings || {}) as Record<string, any>;
@@ -25,7 +25,7 @@ export function FormBlockMedia({ block, className }: FormBlockMediaProps) {
 
   if (block.block_type === 'image') {
     const url = s.url as string;
-    const alt = (s.alt as string) || block.label || 'Imagem';
+    const alt = (s.alt as string) || block.label || 'Imagen';
     const link = s.link as string | undefined;
     if (!url) {
       return (
@@ -33,7 +33,7 @@ export function FormBlockMedia({ block, className }: FormBlockMediaProps) {
           <div className="flex items-center justify-center h-48 rounded-xl border-2 border-dashed bg-muted/30 text-muted-foreground">
             <div className="text-center">
               <ImageIcon className="h-8 w-8 mx-auto mb-2 opacity-60" />
-              <p className="text-sm">Configure a URL da imagem no editor</p>
+              <p className="text-sm">Configure a URL da imagen no editor</p>
             </div>
           </div>
         </div>
@@ -88,7 +88,7 @@ export function FormBlockMedia({ block, className }: FormBlockMediaProps) {
     const orientation = (s.orientation as 'horizontal' | 'vertical') || 'horizontal';
     const isVertical = orientation === 'vertical';
     const ctaEnabled = !!s.cta_enabled;
-    const ctaLabel = (s.cta_label as string) || 'Saiba mais';
+    const ctaLabel = (s.cta_label as string) || 'Sabé mais';
     const ctaUrl = (s.cta_url as string) || '';
     const ctaTarget = (s.cta_target as '_blank' | '_self') || '_blank';
     const cta = ctaEnabled && ctaUrl ? (
@@ -111,7 +111,7 @@ export function FormBlockMedia({ block, className }: FormBlockMediaProps) {
           <div className="flex items-center justify-center h-48 rounded-xl border-2 border-dashed bg-muted/30 text-muted-foreground">
             <p className="text-sm text-center">
               Cole a URL do YouTube, Vimeo ou Loom no editor.<br />
-              {url && <span className="text-xs text-destructive">URL não reconhecida.</span>}
+              {url && <span className="text-xs text-destructive">URL no reconhecida.</span>}
             </p>
           </div>
         </div>
@@ -179,7 +179,7 @@ function Carousel({ images, label, className }: { images: string[]; label?: stri
   return (
     <div className={cn('w-full max-w-2xl mx-auto px-6', className)}>
       <div className="relative rounded-xl overflow-hidden bg-muted">
-        <img src={images[idx]} alt={`${label || 'Imagem'} ${idx + 1}`} className="w-full h-auto max-h-[60vh] object-contain" />
+        <img src={images[idx]} alt={`${label || 'Imagen'} ${idx + 1}`} className="w-full h-auto max-h-[60vh] object-contain" />
         {images.length > 1 && (
           <>
             <button

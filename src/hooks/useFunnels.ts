@@ -34,7 +34,7 @@ function parseFunnel(raw: any): Funnel {
     widget_config: (raw.widget_config as FunnelWidgetConfig) || {
       position: 'bottom-right',
       primary_color: '#3B82F6',
-      greeting: 'Olá! Como posso ajudar?',
+      greeting: 'Hola! Como posso ajudar?',
       avatar_url: null,
       allowed_domains: [],
     },
@@ -88,7 +88,7 @@ export interface UseFunnelsOptions {
   channelType?: FunnelChannelType;
 }
 
-// Aceita string (productId legado) OU objeto de opções para retrocompat
+// Aceita string (productId legado) OU objeto de opciones para retrocompat
 export function useFunnels(arg?: string | UseFunnelsOptions) {
   const { profile } = useAuth();
 
@@ -210,12 +210,12 @@ export function useCreateFunnel() {
     mutationFn: async (input: CreateFunnelInput) => {
       if (!profile?.organization_id) throw new Error('Organización no encontrada');
 
-      // Gerar slug único se não fornecido
+      // Gerar slug único se no fornecido
       const baseSlug = input.slug || generateSlug(input.name);
       let slug = baseSlug;
       let counter = 1;
 
-      // Verificar se slug já existe
+      // Verificar se slug ya existe
       while (true) {
         const { data: existing } = await supabase
           .from('capture_funnels')
@@ -388,7 +388,7 @@ export function useDuplicateFunnel() {
         .eq('id', funnelId)
         .single();
 
-      if (fetchError || !original) throw fetchError || new Error('Embudo não encontrado');
+      if (fetchError || !original) throw fetchError || new Error('Embudo no encontrado');
 
       // Gerar novo slug
       const baseSlug = `${original.slug}-copia`;

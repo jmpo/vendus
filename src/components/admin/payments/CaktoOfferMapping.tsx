@@ -57,7 +57,7 @@ export function CaktoOfferMapping() {
         .order('position', { ascending: true }),
       supabase.from('products').select('id, name').eq('organization_id', orgId!).order('name'),
     ]);
-    if (offersRes.error) toast({ title: 'Erro', description: offersRes.error.message, variant: 'destructive' });
+    if (offersRes.error) toast({ title: 'Error', description: offersRes.error.message, variant: 'destructive' });
     setOffers((offersRes.data as Offer[]) || []);
     setProducts((productsRes.data as Product[]) || []);
     setLoading(false);
@@ -67,10 +67,10 @@ export function CaktoOfferMapping() {
     setSavingId(id);
     const { error } = await supabase.from('product_offers').update(patch).eq('id', id);
     if (error) {
-      toast({ title: 'Erro ao salvar', description: error.message, variant: 'destructive' });
+      toast({ title: 'Error ao guardar', description: error.message, variant: 'destructive' });
     } else {
       setOffers((prev) => prev.map((o) => (o.id === id ? { ...o, ...patch } : o)));
-      // Se vinculou produto, propaga para os pedidos já recebidos
+      // Se vinculou producto, propaga para os pedidos ya recebidos
       if ('product_id' in patch) {
         await supabase
           .from('cakto_orders')
@@ -99,8 +99,8 @@ export function CaktoOfferMapping() {
           <Link2 className="h-5 w-5" /> Mapear ofertas Cakto → Produtos
         </h3>
         <p className="text-sm text-muted-foreground">
-          Vincule cada oferta da Cakto (front-end, order bump, upsell...) ao produto do CRM. Isso ativa as
-          métricas por produto na tela inicial e a atribuição da equipe.
+          Vincule cada oferta da Cakto (front-end, order bump, upsell...) ao producto do CRM. Isso ativa as
+          métricas por producto na tela inicial e a atribuição da equipo.
         </p>
       </div>
 
@@ -109,7 +109,7 @@ export function CaktoOfferMapping() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <AlertCircle className="h-4 w-4 text-amber-500" />
-              Ofertas sem produto ({unmapped.length})
+              Ofertas sem producto ({unmapped.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -130,7 +130,7 @@ export function CaktoOfferMapping() {
         <CardContent>
           {mapped.length === 0 ? (
             <p className="text-sm text-muted-foreground py-6 text-center">
-              Nenhuma oferta vinculada ainda.
+              Nenhuma oferta vinculada aún.
             </p>
           ) : (
             <OfferTable
@@ -161,7 +161,7 @@ function OfferTable({
     <div className="space-y-2">
       <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground px-2">
         <div className="col-span-4">Oferta</div>
-        <div className="col-span-3">Produto CRM</div>
+        <div className="col-span-3">Producto CRM</div>
         <div className="col-span-2">Papel</div>
         <div className="col-span-2">Preço</div>
         <div className="col-span-1 text-right">Status</div>
@@ -189,7 +189,7 @@ function OfferTable({
               onValueChange={(v) => onUpdate(o.id, { product_id: v === '__none' ? null : v })}
             >
               <SelectTrigger className="h-9">
-                <SelectValue placeholder="Selecionar produto" />
+                <SelectValue placeholder="Selecionar producto" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="__none">— Nenhum —</SelectItem>

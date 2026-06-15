@@ -99,7 +99,7 @@ export async function runPostSaleActions(
   // Evita situación onde o lead pagou mas a régua de "Pix pendente" ainda dispara.
   if (CLOSING_EVENTS.has(ctx.eventType)) {
     try {
-      const { fecha: cancelled, error: cancelErr } = await supabase
+      const { data: cancelled, error: cancelErr } = await supabase
         .from('post_sale_scheduled_runs')
         .update({
           status: 'cancelled',
@@ -147,7 +147,7 @@ export async function runPostSaleActions(
     .eq('event_type', ctx.eventType)
     .eq('is_active', true);
 
-  const { fecha: actions } = ctx.productId
+  const { data: actions } = ctx.productId
     ? await query.eq('product_id', ctx.productId)
     : await query;
 
@@ -158,7 +158,7 @@ export async function runPostSaleActions(
   const action = actions[0];
 
   // 3) Load lead minimal info
-  const { fecha: lead } = await supabase
+  const { data: lead } = await supabase
     .from('leads')
     .select('id, name, email, phone, organization_id, product_id, current_stage_id, deal_value, metadata')
     .eq('id', ctx.leadId)
@@ -233,7 +233,7 @@ export async function runPostSaleActions(
       const message = replaceVars(action.inline_message, vars);
       if (action.message_channel === 'whatsapp' && lead.phone) {
         const phone = normalizePhone(lead.phone);
-        const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+        const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
           body: {
             type: 'text',
             to: phone,
@@ -315,7 +315,7 @@ export async function runPostSaleActions(
   // 5) Send email via template
   if (!isDelayed && action.email_template_id && lead.email) {
     try {
-      const { fecha: tpl } = await supabase
+      const { data: tpl } = await supabase
         .from('email_templates')
         .select('subject, html_content, text_content, name')
         .eq('id', action.email_template_id)
@@ -372,7 +372,7 @@ export async function runPostSaleActions(
       // Se a action tiene instance_id específico, valida ela; senão, basta existir alguna `connected` na org.
       let instanceOk = false;
       if (action.evolution_instance_id) {
-        const { fecha: inst } = await supabase
+        const { data: inst } = await supabase
           .from('evolution_instances')
           .select('status')
           .eq('id', action.evolution_instance_id)
@@ -380,7 +380,7 @@ export async function runPostSaleActions(
           .maybeSingle();
         instanceOk = inst?.status === 'connected';
       } else {
-        const { fecha: anyInst } = await supabase
+        const { data: anyInst } = await supabase
           .from('evolution_instances')
           .select('id')
           .eq('organization_id', ctx.organizationId)
@@ -416,7 +416,7 @@ export async function runPostSaleActions(
           console.error('[post-sale-engine] admin_notifications insert failed', notifErr);
         }
       } else {
-        const { fecha: outreachData, error: outreachErr } = await supabase.functions.invoke(
+        const { data: outreachData, error: outreachErr } = await supabase.functions.invoke(
           'manual-outreach',
           {
             body: {

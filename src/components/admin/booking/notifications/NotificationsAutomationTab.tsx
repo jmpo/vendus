@@ -65,9 +65,9 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h2 className="text-xl font-semibold">Notificações & Automação</h2>
+          <h2 className="text-xl font-semibold">Notificações & Automatización</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Configure confirmações, lembretes e automações deste tipo de evento.
+            Configure confirmações, lembretes e automatizaciones deste tipo de evento.
           </p>
         </div>
 
@@ -101,7 +101,7 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
                 disabled={!draft.send_whatsapp}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione uma instância">
+                  <SelectValue placeholder="Seleccioná uma instância">
                     {selectedInstance ? (
                       <div className="flex items-center gap-2">
                         <MessageCircle className="h-4 w-4 text-emerald-500" />
@@ -128,7 +128,7 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                As mensagens serão enviadas por esta instância.
+                As mensajes serão enviadas por esta instância.
               </p>
             </div>
           </div>
@@ -137,9 +137,9 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
         {/* 3. Confirmation message template */}
         <div className="space-y-3">
           <div>
-            <Label className="text-sm font-semibold">3. Template de mensagem de confirmação</Label>
+            <Label className="text-sm font-semibold">3. Template de mensaje de confirmação</Label>
             <p className="text-xs text-muted-foreground mt-1">
-              Esta mensagem será enviada assim que o agendamento for criado.
+              Esta mensaje será enviada assim que o reserva for creado.
             </p>
           </div>
           <MessageTemplateEditor
@@ -149,7 +149,7 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
             rows={9}
           />
           <p className="text-xs text-muted-foreground">
-            Dica: use as variáveis para personalizar a mensagem automaticamente.
+            Dica: use as variáveis para personalizar a mensaje automaticamente.
           </p>
         </div>
 
@@ -168,7 +168,7 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
             ) : (
               <Save className="h-4 w-4 mr-2" />
             )}
-            Salvar notificações
+            Salvar notificaciones
           </Button>
         </div>
       </div>
@@ -183,7 +183,7 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
         {/* 6. Recovery */}
         <div className="rounded-xl border border-border/60 bg-card p-4 space-y-3">
           <div className="flex items-center justify-between">
-            <Label className="text-sm font-semibold">6. Recuperação de não confirmados</Label>
+            <Label className="text-sm font-semibold">6. Recuperação de no confirmados</Label>
             <Switch
               checked={!!draft.recovery_enabled}
               onCheckedChange={(v) => update('recovery_enabled', v)}
@@ -192,7 +192,7 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
           {draft.recovery_enabled && (
             <div className="space-y-3">
               <p className="text-xs text-muted-foreground">
-                Disparar mensagem caso o lead não confirme até
+                Disparar mensaje caso o lead no confirme até
               </p>
               <div className="grid grid-cols-[80px_1fr] gap-2">
                 <Input
@@ -212,11 +212,11 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
                   <SelectContent>
                     <SelectItem value="minutes">minutos</SelectItem>
                     <SelectItem value="hours">horas</SelectItem>
-                    <SelectItem value="days">dias</SelectItem>
+                    <SelectItem value="days">días</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-              <p className="text-xs text-muted-foreground">antes da reunião.</p>
+              <p className="text-xs text-muted-foreground">antes da reunión.</p>
               <Button
                 type="button"
                 variant="outline"
@@ -225,7 +225,7 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
                 onClick={() => setRecoveryEditOpen(true)}
               >
                 <Pencil className="h-3.5 w-3.5 mr-2" />
-                Editar mensagem de recuperação
+                Editar mensaje de recuperação
               </Button>
             </div>
           )}
@@ -235,33 +235,33 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
         <div className="rounded-xl border border-border/60 bg-card p-4 space-y-3">
           <Label className="text-sm font-semibold">7. Notificações internas</Label>
           <p className="text-xs text-muted-foreground">
-            Escolha quando e como o vendedor será notificado.
+            Elegí cuando e como o vendedor será notificado.
           </p>
           <div className="space-y-2">
             <InternalChk
               checked={!!draft.notify_seller_on_new}
               onChange={(v) => update('notify_seller_on_new', v)}
-              label="Notificar vendedor quando alguém agendar"
+              label="Notificar vendedor cuando alguém agendar"
             />
             <InternalChk
               checked={!!draft.notify_seller_on_confirm}
               onChange={(v) => update('notify_seller_on_confirm', v)}
-              label="Notificar vendedor quando lead confirmar"
+              label="Notificar vendedor cuando lead confirmar"
             />
             <InternalChk
               checked={!!draft.notify_seller_on_reschedule}
               onChange={(v) => update('notify_seller_on_reschedule', v)}
-              label="Notificar vendedor quando solicitar reagendamento"
+              label="Notificar vendedor cuando solicitar reagendamento"
             />
             <InternalChk
               checked={!!draft.notify_seller_on_cancel}
               onChange={(v) => update('notify_seller_on_cancel', v)}
-              label="Notificar vendedor quando cancelar"
+              label="Notificar vendedor cuando cancelar"
             />
           </div>
 
           <div className="space-y-2 pt-2 border-t border-border/40">
-            <Label className="text-xs text-muted-foreground">Canal de notificação</Label>
+            <Label className="text-xs text-muted-foreground">Canal de notificación</Label>
             <Select
               value={draft.internal_channel ?? 'both'}
               onValueChange={(v) => update('internal_channel', v as InternalChannel)}
@@ -279,7 +279,7 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
 
           <div className="space-y-2 pt-1">
             <div className="flex items-center justify-between">
-              <Label className="text-xs text-muted-foreground">Mensagem para o vendedor</Label>
+              <Label className="text-xs text-muted-foreground">Mensaje para o vendedor</Label>
             </div>
             <MessageTemplateEditor
               value={draft.internal_message_template || ''}
@@ -296,7 +296,7 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
       <Dialog open={recoveryEditOpen} onOpenChange={setRecoveryEditOpen}>
         <DialogContent className="max-w-xl">
           <DialogHeader>
-            <DialogTitle>Mensagem de recuperação</DialogTitle>
+            <DialogTitle>Mensaje de recuperação</DialogTitle>
           </DialogHeader>
           <MessageTemplateEditor
             value={draft.recovery_message || ''}

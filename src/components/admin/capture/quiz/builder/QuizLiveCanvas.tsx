@@ -130,7 +130,7 @@ export function QuizLiveCanvas({
       </div>
       <button
         type="button"
-        title="Reiniciar do início"
+        title="Reiniciar do inicio"
         onClick={() => {
           if (ordered[0]) onSelectBlock(ordered[0].id);
         }}
@@ -211,7 +211,7 @@ export function QuizLiveCanvas({
               )}
               {currentBlock.data.show_duration && (
                 <p className="mb-5 text-xs font-medium" style={{ color: mutedText }}>
-                  ⏳ {currentBlock.data.duration_label || 'Duração de 2min para responder'}
+                  ⏳ {currentBlock.data.duration_label || 'Duración de 2min para responder'}
                 </p>
               )}
             </EditableArea>
@@ -257,7 +257,7 @@ export function QuizLiveCanvas({
               ))}
               {(currentBlock.data.options || []).length === 0 && (
                 <div className="text-xs text-center py-6 rounded-lg border border-dashed" style={{ color: mutedText, borderColor: subtleBorder }}>
-                  Adicione opções no painel direito →
+                  Adicione opciones no painel direito →
                 </div>
               )}
             </div>
@@ -275,7 +275,7 @@ export function QuizLiveCanvas({
                   borderRadius: a.border_radius,
                 }}
               >
-                {currentBlock.data.placeholder || 'Sua resposta...'}
+                {currentBlock.data.placeholder || 'Su respuesta...'}
               </div>
             </div>
           )}
@@ -294,7 +294,7 @@ export function QuizLiveCanvas({
                   style={{ background: a.primary_color }}
                 />
                 <h2 className="text-2xl font-bold mb-2" style={{ letterSpacing: '-0.01em' }}>
-                  {currentBlock.data.content || 'Obrigado!'}
+                  {currentBlock.data.content || 'Gracias!'}
                 </h2>
                 {currentBlock.data.success_message && (
                   <p className="text-sm" style={{ color: mutedText }}>{currentBlock.data.success_message}</p>

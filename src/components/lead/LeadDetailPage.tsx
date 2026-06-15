@@ -75,7 +75,7 @@ export function LeadDetailPage({ leadId, onBack, isAdminView = false, onWhatsApp
     );
   }
 
-  // Use related data from the query if available, fallback to placeholder
+  // Usa related data from the query if available, fallback to placeholder
   const formattedLead = {
     ...lead,
     assignee: (lead as any).assignee || (lead.assigned_to ? {

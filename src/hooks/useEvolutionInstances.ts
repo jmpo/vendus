@@ -93,7 +93,7 @@ export function useTestEvolutionConnection() {
 
 /* ─────────────── INSTANCES ─────────────── */
 
-// Org-scoped (admin da empresa)
+// Org-scoped (admin de la empresa)
 export function useEvolutionInstances() {
   const { profile } = useAuth();
   return useQuery({
@@ -150,7 +150,7 @@ export function useCreateEvolutionInstance() {
   });
 }
 
-// Self-service: cliente cria a própria instância (limite controlado pelo plano).
+// Self-service: cliente cria a própria instância (limite controlado pelo plan).
 export function useCreateEvolutionInstanceSelf() {
   const qc = useQueryClient();
   const proxy = useProxyAction();
@@ -195,7 +195,7 @@ export function useSubscribeEvolutionWebhook() {
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
       toast.success('Webhook configurado con éxito');
     },
-    onError: (e: any) => toast.error('Error: ' + (e?.message || 'erro desconhecido')),
+    onError: (e: any) => toast.error('Error: ' + (e?.message || 'error desconhecido')),
   });
 }
 
@@ -213,7 +213,7 @@ export function useDeleteEvolutionInstance() {
   });
 }
 
-// Self-service: org admin/manager pode excluir a própria conexión
+// Self-service: org admin/manager puede eliminar a própria conexión
 export function useDeleteEvolutionInstanceSelf() {
   const qc = useQueryClient();
   const proxy = useProxyAction();
@@ -224,7 +224,7 @@ export function useDeleteEvolutionInstanceSelf() {
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
       toast.success('Conexión eliminada');
     },
-    onError: (e: any) => toast.error('Erro ao excluir: ' + e.message),
+    onError: (e: any) => toast.error('Error ao eliminar: ' + e.message),
   });
 }
 
@@ -266,7 +266,7 @@ export function useDisconnectEvolutionInstance() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      toast.success('Sessão pausada. Reconecte quando quiser — o número fica guardado.');
+      toast.success('Sessão pausada. Reconecte cuando quiser — o número fica guardado.');
     },
     onError: (e: any) => toast.error('Error al pausar sesión: ' + e.message),
   });

@@ -55,7 +55,7 @@ function ConnectDialog({ instance, onClose }: { instance: EvolutionInstance; onC
       onSuccess: (data: any) => {
         if (data?.already_connected) {
           setStatus('connected');
-          toast.success('Já conectado!');
+          toast.success('Ya conectado!');
           setTimeout(onClose, 1200);
           return;
         }
@@ -83,7 +83,7 @@ function ConnectDialog({ instance, onClose }: { instance: EvolutionInstance; onC
         if (data.status !== status) {
           setStatus(data.status);
           if (data.status === 'connected') {
-            toast.success('WhatsApp conectado com sucesso!');
+            toast.success('WhatsApp conectado com éxito!');
             setTimeout(onClose, 1500);
           }
         }
@@ -134,15 +134,15 @@ function ConnectDialog({ instance, onClose }: { instance: EvolutionInstance; onC
                 {elapsed < 10 ? 'Gerando QR Code…' : 'Ainda aguardando o servidor gerar o QR…'}
               </p>
               <p className="text-xs text-muted-foreground">
-                Isso pode levar até 45 segundos. Mantenha esta janela aberta.
+                Isso puede levar até 45 segundos. Mantenha esta janela aberta.
               </p>
             </div>
           ) : (
             <div className="text-center space-y-3">
               <QrCode className="h-12 w-12 mx-auto text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Não foi possível gerar o QR Code.</p>
+              <p className="text-sm text-muted-foreground">No fue possível gerar o QR Code.</p>
               <Button size="sm" variant="outline" onClick={triggerConnect} disabled={connectMut.isPending}>
-                {connectMut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Tentar novamente'}
+                {connectMut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Intentar novamente'}
               </Button>
             </div>
           )}
@@ -176,16 +176,16 @@ function CreateInstanceDialog({ open, onClose }: { open: boolean; onClose: () =>
           <DialogHeader>
             <DialogTitle>Nova conexão de WhatsApp</DialogTitle>
             <DialogDescription>
-              Dê um nome simples para identificar essa conexão (ex: <code>vendas</code>, <code>atendimento</code>).
+              Dê um nombre simple para identificar essa conexão (ex: <code>ventas</code>, <code>atención</code>).
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-2 py-4">
-            <Label htmlFor="instance-name">Nome da conexão</Label>
+            <Label htmlFor="instance-name">Nombre da conexão</Label>
             <Input
               id="instance-name"
               autoFocus
-              placeholder="ex: vendas-01"
+              placeholder="ex: ventas-01"
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={createMut.isPending}
@@ -195,7 +195,7 @@ function CreateInstanceDialog({ open, onClose }: { open: boolean; onClose: () =>
             </p>
             {name && !valid && (
               <p className="text-xs text-destructive">
-                Nome inválido. Use apenas letras minúsculas, números e hífens (3 a 40 caracteres).
+                Nombre inválido. Usa apenas letras minúsculas, números e hífens (3 a 40 caracteres).
               </p>
             )}
           </div>
@@ -235,11 +235,11 @@ function RenameDialog({ instance, onClose }: { instance: EvolutionInstance; onCl
           <DialogHeader>
             <DialogTitle>Renomear conexão</DialogTitle>
             <DialogDescription>
-              Atualize o nome de exibição desta conexão. O identificador interno permanece o mesmo.
+              Atualize o nombre de exibição desta conexão. O identificador interno permanece o mismo.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2 py-4">
-            <Label htmlFor="rename-instance">Nome de exibição</Label>
+            <Label htmlFor="rename-instance">Nombre de exibição</Label>
             <Input
               id="rename-instance"
               autoFocus
@@ -269,7 +269,7 @@ interface EvolutionInstancesPanelProps {
   hideHeader?: boolean;
   /** Quando hideHeader=true, controla a abertura do dialog de criação externamente. */
   openCreate?: boolean;
-  /** Callback para fechar o dialog de criação quando controlado externamente. */
+  /** Callback para fechar o dialog de criação cuando controlado externamente. */
   onCloseCreate?: () => void;
 }
 
@@ -307,9 +307,9 @@ export function EvolutionInstancesPanel({ hideHeader, openCreate, onCloseCreate 
       {!hideHeader && (
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <h3 className="text-lg font-semibold">Suas Instâncias de WhatsApp</h3>
+            <h3 className="text-lg font-semibold">Sus Instâncias de WhatsApp</h3>
             <p className="text-sm text-muted-foreground">
-              Conecte seus números de WhatsApp escaneando o QR Code com o aparelho.
+              Conecte sus números de WhatsApp escaneando o QR Code com o aparelho.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -335,7 +335,7 @@ export function EvolutionInstancesPanel({ hideHeader, openCreate, onCloseCreate 
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-sm flex gap-2">
           <Info className="h-4 w-4 mt-0.5 shrink-0 text-amber-600" />
           <p className="text-foreground">
-            Você atingiu o limite de <strong>{limit}</strong> conexão(ões) do seu plano. Faça upgrade para criar mais conexões de WhatsApp.
+            Usted atingiu o limite de <strong>{limit}</strong> conexão(ões) do su plan. Faça upgrade para crear mais conexões de WhatsApp.
           </p>
         </div>
       )}
@@ -348,9 +348,9 @@ export function EvolutionInstancesPanel({ hideHeader, openCreate, onCloseCreate 
         <Card>
           <CardContent className="py-12 text-center">
             <Smartphone className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-            <p className="text-muted-foreground">Nenhuma conexão criada ainda.</p>
+            <p className="text-muted-foreground">Nenhuma conexão creada aún.</p>
             <p className="text-sm text-muted-foreground mt-1 max-w-md mx-auto">
-              Clique em <strong>Nova conexão</strong> para criar sua primeira instância de WhatsApp.
+              Hacé clic em <strong>Nova conexão</strong> para crear su primeira instância de WhatsApp.
             </p>
           </CardContent>
         </Card>
@@ -376,7 +376,7 @@ export function EvolutionInstancesPanel({ hideHeader, openCreate, onCloseCreate 
                         <StatusBadge status={inst.status} />
                       </div>
                       <p className="text-sm text-muted-foreground truncate">
-                        {inst.phone_number ? `+${inst.phone_number}` : 'Não conectado ainda'}
+                        {inst.phone_number ? `+${inst.phone_number}` : 'No conectado aún'}
                       </p>
                     </div>
                   </div>
@@ -426,7 +426,7 @@ export function EvolutionInstancesPanel({ hideHeader, openCreate, onCloseCreate 
                       variant="ghost"
                       size="sm"
                       onClick={() => setRenaming(inst)}
-                      title="Editar nome"
+                      title="Editar nombre"
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -487,8 +487,8 @@ export function EvolutionInstancesPanel({ hideHeader, openCreate, onCloseCreate 
             <AlertDialogDescription>
               O número{' '}
               <strong>{unlinking?.phone_number ? `+${unlinking.phone_number}` : 'atual'}</strong>{' '}
-              será removido desta instância e desaparecerá da lista de "Aparelhos conectados" no celular.
-              Para reconectar (este ou outro número) será necessário escanear um novo QR Code.
+              será eliminado desta instância e desaparecerá da lista de "Aparelhos conectados" no celular.
+              Para reconectar (este ou otro número) será necessário escanear um novo QR Code.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -515,7 +515,7 @@ export function EvolutionInstancesPanel({ hideHeader, openCreate, onCloseCreate 
             <AlertDialogTitle>Excluir esta conexão?</AlertDialogTitle>
             <AlertDialogDescription>
               A conexão <strong>{deleting ? displayName(deleting) : ''}</strong> será removida
-              permanentemente, junto com a instância no servidor Evolution Go. Esta ação não pode ser desfeita.
+              permanentemente, junto com a instância no servidor Evolution Go. Esta acción no puede ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

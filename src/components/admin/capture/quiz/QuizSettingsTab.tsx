@@ -55,7 +55,7 @@ export function QuizSettingsTab({ funnel }: Props) {
             Configuraciones del Quiz
           </h2>
           <p className="text-muted-foreground text-sm">
-            Identidade, distribuição e qualificação inicial dos leads do quiz.
+            Identidade, distribución e calificación inicial dos leads do quiz.
           </p>
         </div>
         <Button onClick={handleSave} disabled={updateFunnel.isPending} className="gap-2">
@@ -67,33 +67,33 @@ export function QuizSettingsTab({ funnel }: Props) {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Identidade</CardTitle>
-          <CardDescription>Produto, nome e URL pública.</CardDescription>
+          <CardDescription>Producto, nombre e URL pública.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label>Produto vinculado</Label>
+            <Label>Producto vinculado</Label>
             <Select
               value={formData.product_id}
               onValueChange={(v) => setFormData(p => ({ ...p, product_id: v }))}
             >
-              <SelectTrigger><SelectValue placeholder="Selecione um produto" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Seleccioná um producto" /></SelectTrigger>
               <SelectContent>
                 {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
               </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground">Leads gerados serão vinculados a este produto.</p>
+            <p className="text-xs text-muted-foreground">Leads gerados serão vinculados a este producto.</p>
           </div>
 
           {formData.product_id !== funnel.product_id && (
             <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-600 text-sm">
               <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-              <p>Trocar o produto reatribui novos leads ao novo cérebro/funil.</p>
+              <p>Trocar o producto reatribui novos leads ao novo cérebro/embudo.</p>
             </div>
           )}
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Nome</Label>
+              <Label>Nombre</Label>
               <Input value={formData.name} onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))} />
             </div>
             <div className="space-y-2">
@@ -103,7 +103,7 @@ export function QuizSettingsTab({ funnel }: Props) {
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Descrição interna</Label>
+            <Label>Descripción interna</Label>
             <Textarea
               value={formData.description}
               onChange={(e) => setFormData(p => ({ ...p, description: e.target.value }))}
@@ -117,9 +117,9 @@ export function QuizSettingsTab({ funnel }: Props) {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
-            <CardTitle className="text-base">Distribuição de leads do quiz</CardTitle>
+            <CardTitle className="text-base">Distribución de leads do quiz</CardTitle>
           </div>
-          <CardDescription>Para quem vai o lead quando o Quiz capturar.</CardDescription>
+          <CardDescription>Para quem vai o lead cuando o Quiz capturar.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -135,7 +135,7 @@ export function QuizSettingsTab({ funnel }: Props) {
                 <SelectItem value="manual">Manual</SelectItem>
                 <SelectItem value="round_robin">Round Robin</SelectItem>
                 <SelectItem value="squad">Squad</SelectItem>
-                <SelectItem value="user">Usuário específico</SelectItem>
+                <SelectItem value="user">Usuario específico</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -144,7 +144,7 @@ export function QuizSettingsTab({ funnel }: Props) {
             <div className="space-y-2">
               <Label>Squad</Label>
               <Select value={formData.assigned_squad_id} onValueChange={(v) => setFormData(p => ({ ...p, assigned_squad_id: v }))}>
-                <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Seleccioná" /></SelectTrigger>
                 <SelectContent>
                   {squads?.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
                 </SelectContent>
@@ -154,9 +154,9 @@ export function QuizSettingsTab({ funnel }: Props) {
 
           {formData.distribution_rule === 'user' && (
             <div className="space-y-2">
-              <Label>Usuário</Label>
+              <Label>Usuario</Label>
               <Select value={formData.assigned_user_id} onValueChange={(v) => setFormData(p => ({ ...p, assigned_user_id: v }))}>
-                <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Seleccioná" /></SelectTrigger>
                 <SelectContent>
                   {teamMembers?.map(m => <SelectItem key={m.id} value={m.id}>{m.full_name}</SelectItem>)}
                 </SelectContent>
@@ -170,7 +170,7 @@ export function QuizSettingsTab({ funnel }: Props) {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Target className="h-5 w-5 text-primary" />
-            <CardTitle className="text-base">Qualificação inicial</CardTitle>
+            <CardTitle className="text-base">Calificación inicial</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -191,7 +191,7 @@ export function QuizSettingsTab({ funnel }: Props) {
               <Input
                 value={formData.default_tags}
                 onChange={(e) => setFormData(p => ({ ...p, default_tags: e.target.value }))}
-                placeholder="quiz, qualificado"
+                placeholder="quiz, calificado"
               />
               <p className="text-[10px] text-muted-foreground">
                 Aplicadas automaticamente em todo lead deste Quiz.

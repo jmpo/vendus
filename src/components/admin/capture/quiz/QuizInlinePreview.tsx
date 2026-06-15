@@ -6,12 +6,12 @@ import type { Funnel } from '@/types/funnel';
 
 interface Props {
   funnel: Funnel;
-  /** Timestamp do último auto-save: força reload do iframe quando muda. */
+  /** Timestamp do último auto-save: força reload do iframe cuando muda. */
   refreshKey?: number;
 }
 
 /**
- * Preview inline do Quiz exibido no painel direito da aba Fluxo,
+ * Preview inline do Quiz exibido no painel direito da aba Flujo,
  * em moldura mobile/desktop, refletindo a aparência salva.
  */
 export function QuizInlinePreview({ funnel, refreshKey = 0 }: Props) {
@@ -20,8 +20,8 @@ export function QuizInlinePreview({ funnel, refreshKey = 0 }: Props) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // Usa o origin atual (editor/preview/published) para garantir que o iframe
-  // rode no mesmo build em que o usuário está editando — evita 404 quando o
-  // quiz ainda não foi publicado no domínio de produção.
+  // rode no mismo build em que o usuario está editando — evita 404 cuando o
+  // quiz aún no fue publicado no domínio de produção.
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
   const slug = (funnel.channels as any)?.quiz?.slug_override || funnel.slug;
   const quizUrl = slug ? `${baseUrl}/q/${slug}?preview=1` : '';
@@ -124,7 +124,7 @@ export function QuizInlinePreview({ funnel, refreshKey = 0 }: Props) {
       )}
 
       <p className="text-[11px] text-muted-foreground text-center">
-        O preview reflete a aparência salva. Edições no fluxo aparecem após o auto-save.
+        O preview reflete a aparência salva. Edições no flujo aparecem após o auto-save.
       </p>
     </div>
   );

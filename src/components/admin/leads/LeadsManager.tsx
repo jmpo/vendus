@@ -179,7 +179,7 @@ export function LeadsManager() {
       downloadCsv(`leads-${format(new Date(), 'yyyy-MM-dd-HHmm')}.csv`, csv);
       toast.success(`${leads.length} leads exportados`);
     } catch (e: any) {
-      toast.error('Erro ao exportar: ' + (e.message || ''));
+      toast.error('Error ao exportar: ' + (e.message || ''));
     } finally {
       setExporting(false);
     }
@@ -254,7 +254,7 @@ export function LeadsManager() {
             Central de Leads
           </h1>
           <p className="text-muted-foreground mt-1">
-            Gerencie todos os leads da sua operação
+            Gerencie todos os leads da su operação
           </p>
         </div>
 
@@ -372,8 +372,8 @@ export function LeadsManager() {
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir leads</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir {leadsToDelete.length} lead
-              {leadsToDelete.length > 1 ? 's' : ''}? Esta ação não pode ser desfeita.
+              Tem certeza que desea eliminar {leadsToDelete.length} lead
+              {leadsToDelete.length > 1 ? 's' : ''}? Esta acción no puede ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

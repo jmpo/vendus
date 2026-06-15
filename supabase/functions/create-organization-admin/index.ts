@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const {
-      fecha: { user: caller },
+      data: { user: caller },
     } = await userClient.auth.getUser();
     if (!caller) {
       return new Response(JSON.stringify({ error: "Sessão inválida" }), {
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     });
 
     // Verifica se o caller é super_admin
-    const { fecha: isSuper } = await admin.rpc("is_super_admin", {
+    const { data: isSuper } = await admin.rpc("is_super_admin", {
       _user_id: caller.id,
     });
     if (!isSuper) {
@@ -77,19 +77,19 @@ Deno.serve(async (req) => {
     let existingUserId: string | null = null;
     let page = 1;
     while (page <= 20 && !existingUserId) {
-      const { fecha, error } = await admin.auth.admin.listUsers({
+      const { data, error } = await admin.auth.admin.listUsers({
         page,
         perPage: 200,
       });
       if (error) throw error;
-      const found = fecha.users.find(
+      const found = data.users.find(
         (u) => (u.email || "").toLowerCase() === email
       );
       if (found) {
         existingUserId = found.id;
         break;
       }
-      if (fecha.users.length < 200) break;
+      if (data.users.length < 200) break;
       page++;
     }
 
@@ -101,9 +101,9 @@ Deno.serve(async (req) => {
       const redirectTo =
         req.headers.get("origin") || `${SUPABASE_URL.replace(".supabase.co", ".lovable.app")}`;
 
-      const { fecha: invite, error: inviteError } =
+      const { data: invite, error: inviteError } =
         await admin.auth.admin.inviteUserByEmail(email, {
-          fecha: { full_name },
+          data: { full_name },
           redirectTo: `${redirectTo}/login`,
         });
 
@@ -111,7 +111,7 @@ Deno.serve(async (req) => {
         // Fallback: cria usuario direto (sem email) com contraseña aleatória
         const randomPwd =
           crypto.randomUUID().replace(/-/g, "") + "Aa1!";
-        const { fecha: created, error: createError } =
+        const { data: created, error: createError } =
           await admin.auth.admin.createUser({
             email,
             password: randomPwd,
@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
       }
     } else {
       // Usuario já existe — verifica se já pertence a otra org
-      const { fecha: existingProfile } = await admin
+      const { data: existingProfile } = await admin
         .from("profiles")
         .select("organization_id")
         .eq("id", userId)
@@ -185,7 +185,7 @@ Deno.serve(async (req) => {
 
     // Cria (ou reaproveita) team_invitation com role admin para gerar link copiável
     let invite_token: string | null = null;
-    const { fecha: existingInvite } = await admin
+    const { data: existingInvite } = await admin
       .from("team_invitations")
       .select("token")
       .eq("organization_id", organization_id)
@@ -197,7 +197,7 @@ Deno.serve(async (req) => {
     if (existingInvite?.token) {
       invite_token = existingInvite.token;
     } else {
-      const { fecha: newInvite, error: inviteInsertErr } = await admin
+      const { data: newInvite, error: inviteInsertErr } = await admin
         .from("team_invitations")
         .insert({
           email,

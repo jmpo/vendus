@@ -98,7 +98,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
 
   const handleAddVideo = () => {
     if (!videoForm.title.trim() || !videoForm.video_url.trim()) {
-      toast.error('Título e URL do vídeo são obrigatórios');
+      toast.error('Título e URL do vídeo son obligatorios');
       return;
     }
     createVideo.mutate(videoForm);
@@ -290,7 +290,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
                             <AlertDialogHeader>
                               <AlertDialogTitle>¿Eliminar video?</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Esta ação irá remover o vídeo "{video.title}" do playbook.
+                                Esta acción irá eliminar o vídeo "{video.title}" do playbook.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -351,7 +351,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
                 id="videoTitle"
                 value={videoForm.title}
                 onChange={(e) => setVideoForm({ ...videoForm, title: e.target.value })}
-                placeholder="Ex: Introdução ao Produto"
+                placeholder="Ex: Introdução ao Producto"
               />
             </div>
             <div className="space-y-2">

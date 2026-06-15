@@ -80,8 +80,8 @@ export function MobileTaskList({ userId, productId }: MobileTaskListProps) {
     return (
       <div className="text-center py-12 px-4">
         <CheckCircle2 size={48} className="mx-auto text-muted-foreground/30 mb-3" />
-        <p className="text-muted-foreground">Nenhuma tarefa pendente</p>
-        <p className="text-sm text-muted-foreground/70">Suas tarefas aparecerão aqui</p>
+        <p className="text-muted-foreground">Nenhuma tarea pendente</p>
+        <p className="text-sm text-muted-foreground/70">Sus tareas aparecerão aqui</p>
       </div>
     );
   }

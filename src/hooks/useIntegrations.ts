@@ -202,7 +202,7 @@ export function useUpdateEmailConfig() {
       toast.success('Ajustes de email guardadas');
     },
     onError: (error) => {
-      toast.error('Error al guardar configurações: ' + error.message);
+      toast.error('Error al guardar configuraciones: ' + error.message);
     }
   });
 }

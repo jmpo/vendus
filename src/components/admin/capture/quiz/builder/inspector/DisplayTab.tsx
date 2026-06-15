@@ -103,7 +103,7 @@ export function DisplayTab({ block, blocks, onUpdate }: Props) {
 
         {rules.length === 0 && (
           <p className="text-[11px] text-muted-foreground py-3 text-center border border-dashed rounded-md">
-            Sem regras — o bloco sempre aparece.
+            Sem regras — o bloco siempre aparece.
           </p>
         )}
 

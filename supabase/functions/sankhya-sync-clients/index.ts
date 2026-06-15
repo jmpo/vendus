@@ -21,7 +21,7 @@ interface SankhyaConfig {
 async function getAuthToken(organizationId: string, supabaseUrl: string, supabaseKey: string): Promise<{ token: string; xToken: string }> {
   const supabaseClient = createClient(supabaseUrl, supabaseKey);
   
-  const { fecha: settings, error } = await supabaseClient
+  const { data: settings, error } = await supabaseClient
     .from("integration_settings")
     .select("settings")
     .eq("organization_id", organizationId)
@@ -85,7 +85,7 @@ serve(async (req: Request): Promise<Response> => {
     }
 
     // Create sync log
-    const { fecha: logData, error: logError } = await supabase
+    const { data: logData, error: logError } = await supabase
       .from("sankhya_sync_logs")
       .insert({
         organization_id,
@@ -140,13 +140,13 @@ serve(async (req: Request): Promise<Response> => {
       throw new Error(`Error al buscar parceiros: ${response.status}`);
     }
 
-    const fecha = await response.json();
+    const data = await response.json();
     
-    if (fecha.status === "0") {
-      throw new Error(fecha.statusMessage || "Error al buscar dados do Sankhya");
+    if (data.status === "0") {
+      throw new Error(data.statusMessage || "Error al buscar dados do Sankhya");
     }
 
-    const partners = fecha.responseBody?.entities?.entity || [];
+    const partners = data.responseBody?.entities?.entity || [];
     const partnerList = Array.isArray(partners) ? partners : [partners];
 
     let successCount = 0;
@@ -162,7 +162,7 @@ serve(async (req: Request): Promise<Response> => {
         if (!codParc || !name) continue;
 
         // Check if mapping exists
-        const { fecha: existingMapping } = await supabase
+        const { data: existingMapping } = await supabase
           .from("sankhya_mappings")
           .select("local_id")
           .eq("organization_id", organization_id)
@@ -193,7 +193,7 @@ serve(async (req: Request): Promise<Response> => {
             .eq("sankhya_id", codParc);
         } else {
           // Create new lead
-          const { fecha: newLead, error: leadError } = await supabase
+          const { data: newLead, error: leadError } = await supabase
             .from("leads")
             .insert({
               organization_id,

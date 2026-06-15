@@ -96,10 +96,10 @@ export function useCreateCampaign() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mass-email-campaigns'] });
-      toast.success('Campanha creada');
+      toast.success('Campaña creada');
     },
     onError: (error) => {
-      toast.error('Error al crear campanha: ' + error.message);
+      toast.error('Error al crear campaña: ' + error.message);
     }
   });
 }
@@ -118,10 +118,10 @@ export function useUpdateCampaign() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mass-email-campaigns'] });
-      toast.success('Campanha actualizada');
+      toast.success('Campaña actualizada');
     },
     onError: (error) => {
-      toast.error('Error al actualizar campanha: ' + error.message);
+      toast.error('Error al actualizar campaña: ' + error.message);
     }
   });
 }
@@ -140,10 +140,10 @@ export function useDeleteCampaign() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mass-email-campaigns'] });
-      toast.success('Campanha eliminada');
+      toast.success('Campaña eliminada');
     },
     onError: (error) => {
-      toast.error('Error al eliminar campanha: ' + error.message);
+      toast.error('Error al eliminar campaña: ' + error.message);
     }
   });
 }
@@ -194,7 +194,7 @@ export function useSendCampaign() {
       toast.success('Campaña enviada');
     },
     onError: (error) => {
-      toast.error('Error al enviar campanha: ' + error.message);
+      toast.error('Error al enviar campaña: ' + error.message);
     }
   });
 }

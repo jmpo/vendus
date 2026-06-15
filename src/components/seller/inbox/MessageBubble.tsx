@@ -266,7 +266,7 @@ export function MessageBubble({
           </p>
         )}
 
-        {/* Sender name (oculto quando for a própria mensaje do agente — reduz ruído visual) */}
+        {/* Sender name (oculto cuando for a própria mensaje del agente — reduz ruído visual) */}
         {!isVisitor && isFirstInGroup && !isDeleted && !isOwnMessage && (
           <p className="text-[10px] opacity-70 mb-1 font-medium">
             {formatSenderLabel({
@@ -338,7 +338,7 @@ export function MessageBubble({
           </>
         )}
 
-        {/* Time and status */}
+        {/* Equipo and status */}
         {!isEditing && (
           <div
             className={cn(

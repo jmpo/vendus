@@ -44,7 +44,7 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
     return (
       <div className="flex flex-col items-center gap-2 py-8">
         <Loader2 className="h-5 w-5 animate-spin text-primary" />
-        <p className="text-xs text-muted-foreground">A IA está analisando esta conversa…</p>
+        <p className="text-xs text-muted-foreground">A IA está analisando esta conversación…</p>
       </div>
     );
   }
@@ -53,11 +53,11 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
     return (
       <div className="text-center py-6 space-y-3">
         <p className="text-xs text-muted-foreground">
-          No foi possível gerar o resumo ahora.
+          No fue possível gerar o resumen ahora.
         </p>
         <Button size="sm" variant="outline" onClick={() => refetch()}>
           <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
-          Tentar de novo
+          Intentar de novo
         </Button>
       </div>
     );
@@ -142,7 +142,7 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
       {data.suggestions?.length > 0 && (
         <Section
           icon={<Lightbulb className="h-3.5 w-3.5 text-blue-500" />}
-          title="Próximas ações sugeridas"
+          title="Próximas acciones sugeridas"
           items={data.suggestions}
         />
       )}

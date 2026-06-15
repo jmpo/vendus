@@ -19,10 +19,10 @@ export function TemplatePreviewDialog({ template, open, onClose }: TemplatePrevi
       role: 'Vendedor',
       squadName: ' no Squad Alpha',
       inviteLink: '#',
-      organizationName: 'Sua Empresa',
+      organizationName: 'Su Empresa',
       invitedByName: 'Maria Santos',
       title: 'Comunicado Importante',
-      message: 'Este é o conteúdo da mensagem de exemplo.',
+      message: 'Este é o conteúdo da mensaje de exemplo.',
       senderName: 'Administrador'
     };
 

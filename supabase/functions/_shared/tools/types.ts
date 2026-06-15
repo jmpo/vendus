@@ -15,7 +15,7 @@ export interface ToolContext {
 
 export interface ToolResult {
   success: boolean;
-  fecha?: any;
+  data?: any;
   error?: string;
   // Mensaje corta que o agente puede usar para confirmar a acción al lead.
   user_message?: string;

@@ -30,8 +30,8 @@ export function CaptureReportsSection() {
         <CardContent className="space-y-2 text-sm text-muted-foreground">
           <p>• Funis ativos por canal e taxa de conversão de cada um.</p>
           <p>• Sessões iniciadas, finalizadas e abandonadas (com tabela <code className="px-1 rounded bg-muted">funnel_sessions</code>).</p>
-          <p>• Top blocos com maior taxa de drop-off para você otimizar.</p>
-          <p>• Filtro por canal, período e produto.</p>
+          <p>• Top blocos com maior taxa de drop-off para usted otimizar.</p>
+          <p>• Filtro por canal, período e producto.</p>
         </CardContent>
       </Card>
     </div>

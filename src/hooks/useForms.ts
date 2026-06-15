@@ -327,7 +327,7 @@ export function useSaveFormBlocks() {
       blocks: FormBlock[];
     }) => {
       if (params.blocks.length === 0) {
-        throw new Error('No es posible guardadar um formulario sem blocos. Adicione pelo menos uma tela ou pergunta.');
+        throw new Error('No es posible guardadar um formulario sem blocos. Adicione pelo menos uma tela ou pregunta.');
       }
       
       const blocksToUpsert = params.blocks.map((block, index) => ({

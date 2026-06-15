@@ -175,7 +175,7 @@ export function useTopSellers(limit = 5) {
         const stats = sellerMap.get(id)!;
         return {
           id,
-          name: profile?.full_name || 'Usuário',
+          name: profile?.full_name || 'Usuario',
           avatar: profile?.avatar_url,
           totalValue: stats.totalValue,
           dealsCount: stats.dealsCount
@@ -234,7 +234,7 @@ export function useProductSalesDistribution() {
         const stats = productMap.get(id)!;
         return {
           productId: id,
-          productName: productNameMap.get(id) || 'Produto',
+          productName: productNameMap.get(id) || 'Producto',
           totalValue: stats.totalValue,
           dealsCount: stats.dealsCount,
           percentage: totalSales > 0 ? (stats.totalValue / totalSales) * 100 : 0

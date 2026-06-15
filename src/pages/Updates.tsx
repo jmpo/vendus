@@ -50,7 +50,7 @@ export default function Updates() {
             <h1 className="text-lg font-semibold">Novedades</h1>
           </div>
           <div className="ml-auto">
-            <Link to="/ajuda">
+            <Link to="/ayuda">
               <Button variant="outline" size="sm" className="gap-2"><BookOpen className="h-4 w-4" /> Centro de Ayuda</Button>
             </Link>
           </div>

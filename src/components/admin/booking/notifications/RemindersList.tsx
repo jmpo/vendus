@@ -23,7 +23,7 @@ const UNITS: { value: OffsetUnit; label: string }[] = [
   { value: 'minutos' as any, label: 'minutos' },
   { value: 'minutes', label: 'minutos' },
   { value: 'hours', label: 'horas' },
-  { value: 'days', label: 'dias' },
+  { value: 'days', label: 'días' },
 ];
 
 const CHANNEL_ICON = {
@@ -53,7 +53,7 @@ export function RemindersList({ eventTypeId }: Props) {
         <div>
           <Label className="text-base">Lembretes Automáticos</Label>
           <p className="text-xs text-muted-foreground">
-            Crie lembretes que serão enviados antes da reunião.
+            Crea lembretes que serão enviados antes da reunión.
           </p>
         </div>
         <Button
@@ -76,7 +76,7 @@ export function RemindersList({ eventTypeId }: Props) {
           <div className="grid grid-cols-[110px_1fr_minmax(0,1.5fr)_80px] gap-3 px-4 py-2 text-xs font-medium text-muted-foreground bg-muted/30 border-b border-border/60">
             <div>Envia antes</div>
             <div>Canal</div>
-            <div>Mensagem</div>
+            <div>Mensaje</div>
             <div className="text-right">Ações</div>
           </div>
 
@@ -132,7 +132,7 @@ function ReminderRow({
             <SelectContent>
               <SelectItem value="minutes">minutos</SelectItem>
               <SelectItem value="hours">horas</SelectItem>
-              <SelectItem value="days">dias</SelectItem>
+              <SelectItem value="days">días</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -182,7 +182,7 @@ function ReminderRow({
             value={reminder.message_template || ''}
             onChange={(v) => onUpdate({ message_template: v })}
             rows={5}
-            placeholder="Mensagem do lembrete..."
+            placeholder="Mensaje do lembrete..."
           />
         </div>
       )}

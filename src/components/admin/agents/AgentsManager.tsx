@@ -131,7 +131,7 @@ export function AgentsManager() {
         globals.push(a);
       } else {
         const key = a.product_id;
-        const productInfo = a.product || products?.find((p) => p.id === key) || { id: key, name: 'Produto' };
+        const productInfo = a.product || products?.find((p) => p.id === key) || { id: key, name: 'Producto' };
         if (!byProduct.has(key)) {
           byProduct.set(key, { product: productInfo as { id: string; name: string }, agents: [] });
         }
@@ -379,7 +379,7 @@ export function AgentsManager() {
           <div className="flex items-center gap-2">
             <Globe className="h-4 w-4 text-primary" />
             <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Globales (sem produto)
+              Globales (sem producto)
             </h2>
             <span className="text-xs text-muted-foreground">· {grouped.globals.length}</span>
           </div>
@@ -399,7 +399,7 @@ export function AgentsManager() {
         </section>
       )}
 
-      {/* Lista — Por produto */}
+      {/* Lista — Por producto */}
       {!isLoading && viewMode === 'list' &&
         grouped.byProduct.map(({ product, agents: list }) => (
           <section key={product.id} className="space-y-3">
@@ -457,7 +457,7 @@ export function AgentsManager() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Eliminar agente?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. El agente "{deletingAgent?.name}" será eliminado permanentemente.
+              Esta acción no puede ser desfeita. El agente "{deletingAgent?.name}" será eliminado permanentemente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

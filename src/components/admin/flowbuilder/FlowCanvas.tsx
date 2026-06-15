@@ -204,7 +204,7 @@ export function FlowCanvas({
       {/* Connection mode indicator */}
       {connectingFromId && (
         <div className="absolute top-4 left-4 z-10 bg-primary text-primary-foreground px-3 py-1.5 rounded-lg text-sm">
-          Clique no bloco destino para conectar
+          Hacé clic no bloco destino para conectar
         </div>
       )}
 
@@ -253,7 +253,7 @@ export function FlowCanvas({
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="text-center text-muted-foreground">
               <p className="text-lg font-medium mb-2">Canvas vazio</p>
-              <p className="text-sm">Arraste blocos da paleta para começar</p>
+              <p className="text-sm">Arraste blocos da paleta para comenzar</p>
             </div>
           </div>
         )}

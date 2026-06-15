@@ -33,7 +33,7 @@ export function CampaignDetailsDialog({ campaign, open, onClose }: CampaignDetai
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle>Detalhes da Campanha</DialogTitle>
+          <DialogTitle>Detalhes da Campaña</DialogTitle>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto space-y-6">
@@ -43,7 +43,7 @@ export function CampaignDetailsDialog({ campaign, open, onClose }: CampaignDetai
               <p className="font-medium">{campaign.subject}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Data</p>
+              <p className="text-sm text-muted-foreground">Fecha</p>
               <p className="font-medium">
                 {format(new Date(campaign.created_at), "dd 'de' MMMM 'às' HH:mm", { locale: ptBR })}
               </p>

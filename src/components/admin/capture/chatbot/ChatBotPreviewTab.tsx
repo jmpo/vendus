@@ -37,7 +37,7 @@ export function ChatBotPreviewTab({ funnel }: Props) {
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b shrink-0">
         <div className="flex items-center gap-2">
           <Badge variant={isActive ? 'default' : 'secondary'}>
-            {isActive ? 'ChatBot ativo' : 'Rascunho — apenas você vê'}
+            {isActive ? 'ChatBot ativo' : 'Rascunho — apenas usted vê'}
           </Badge>
           {!isActive && (
             <span className="text-xs text-muted-foreground hidden sm:flex items-center gap-1">
@@ -69,7 +69,7 @@ export function ChatBotPreviewTab({ funnel }: Props) {
 
           <Button variant="outline" size="sm" onClick={handleReload} className="gap-1.5">
             <RotateCcw className="h-3.5 w-3.5" />
-            Reiniciar conversa
+            Reiniciar conversación
           </Button>
 
           <Button variant="outline" size="sm" asChild className="gap-1.5">

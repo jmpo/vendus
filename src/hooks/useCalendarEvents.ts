@@ -275,7 +275,7 @@ export function useDeleteEvent() {
       queryClient.invalidateQueries({ queryKey: ['upcoming-events'] });
       toast({
         title: 'Evento eliminado',
-        description: 'O evento foi eliminado da agenda.',
+        description: 'O evento fue eliminado da agenda.',
       });
     },
     onError: (error) => {

@@ -29,7 +29,7 @@ const SAMPLE_DATA: Record<string, string> = {
   inviter_name: 'Maria Souza',
   role: 'Vendedor',
   reset_link: 'https://app.exemplo.com/reset?token=xyz',
-  message: 'Sua mensagem personalizada aqui.',
+  message: 'Su mensaje personalizada aqui.',
   subject: 'Asunto do e-mail',
 };
 
@@ -125,7 +125,7 @@ export function PlatformTemplateEditor({ template, open, onOpenChange }: Props) 
               <Input
                 value={form.subject}
                 onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                placeholder="Use {{variable}} para datos dinámicos"
+                placeholder="Usa {{variable}} para datos dinámicos"
               />
             </div>
 

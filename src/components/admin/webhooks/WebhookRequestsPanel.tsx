@@ -107,7 +107,7 @@ export function WebhookRequestsPanel({ webhookId, samples }: WebhookRequestsPane
           </div>
         </div>
         <p className="text-sm text-muted-foreground">
-          Campos disponíveis para mapeamento nas ações
+          Campos disponíveis para mapeamento nas acciones
         </p>
       </CardHeader>
       <CardContent>
@@ -115,10 +115,10 @@ export function WebhookRequestsPanel({ webhookId, samples }: WebhookRequestsPane
           <div className="text-center py-8 border-2 border-dashed rounded-lg">
             <FileJson className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
             <p className="text-sm text-muted-foreground mb-2">
-              Nenhuma requisição recebida ainda
+              Nenhuma requisição recibida aún
             </p>
             <p className="text-xs text-muted-foreground">
-              Envie uma requisição de teste para o webhook e os campos aparecerão aqui
+              Enviá uma requisição de teste para o webhook e os campos aparecerão aqui
             </p>
           </div>
         ) : (
@@ -154,7 +154,7 @@ export function WebhookRequestsPanel({ webhookId, samples }: WebhookRequestsPane
               <div className="p-3 border-b bg-muted/50 flex items-center gap-2">
                 <Info className="h-4 w-4 text-muted-foreground" />
                 <span className="text-xs text-muted-foreground">
-                  Clique em um campo para copiar o caminho
+                  Hacé clic em um campo para copiar o caminho
                 </span>
               </div>
               <ScrollArea className="h-[400px]">

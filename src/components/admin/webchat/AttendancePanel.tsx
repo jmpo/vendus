@@ -30,7 +30,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
 
   const sectorOptions = useMemo(
     () => [
-      { id: '__none__', name: 'Sem setor', color: null as string | null },
+      { id: '__none__', name: 'Sem sector', color: null as string | null },
       ...sectors.map((s) => ({ id: s.id, name: s.name, color: s.color })),
     ],
     [sectors],
@@ -64,7 +64,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
           <Input
             value={filters.search}
             onChange={(e) => setFilters((f) => ({ ...f, search: e.target.value }))}
-            placeholder="Buscar por lead, nome ou telefone…"
+            placeholder="Buscar por lead, nombre ou teléfono…"
             className="pl-8 h-9"
           />
         </div>
@@ -100,7 +100,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm" className="gap-1.5">
               <Filter className="h-3.5 w-3.5" />
-              Setor
+              Sector
               {filters.sectorIds.length > 0 && (
                 <Badge variant="secondary" className="h-4 px-1 text-[10px]">
                   {filters.sectorIds.length}
@@ -240,7 +240,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
             >
               {sections.humansByUser.length === 0 ? (
                 <div className="w-full text-center text-sm text-muted-foreground py-8">
-                  Nenhum atendente humano ativo
+                  Nenhum agente humano ativo
                 </div>
               ) : (
                 sections.humansByUser.map((g) => (

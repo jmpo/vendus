@@ -62,10 +62,10 @@ export function CaktoPlanMapping() {
         } as any)
         .eq('id', planId);
       if (error) throw error;
-      toast.success('Plano atualizado');
+      toast.success('Plano actualizado');
       qc.invalidateQueries({ queryKey: ['platform-plans-cakto'] });
     } catch (err: any) {
-      toast.error(err.message ?? 'Erro');
+      toast.error(err.message ?? 'Error');
     } finally {
       setSavingId(null);
     }

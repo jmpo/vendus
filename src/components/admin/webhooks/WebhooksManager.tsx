@@ -82,7 +82,7 @@ export function WebhooksManager() {
 
   const handleCreate = async () => {
     if (!newWebhook.name.trim()) {
-      toast.error('Nome é obrigatório');
+      toast.error('Nombre é obligatorio');
       return;
     }
     

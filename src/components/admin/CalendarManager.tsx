@@ -49,7 +49,7 @@ import {
 type ViewMode = 'month' | 'week' | 'day' | 'list';
 
 /**
- * Visão de calendário (mês/semana/dia/lista) + Google Calendar.
+ * Visão de calendario (mes/semana/día/lista) + Google Calendar.
  * Extraída em sub-componente para que CalendarManager seja só a casca de abas.
  */
 function AgendaCalendarView() {
@@ -351,9 +351,9 @@ function AgendaCalendarView() {
 
 /**
  * Casca do módulo Agenda no Admin: agrupa em uma única tela
- *  - Agenda (calendário visual)
+ *  - Agenda (calendario visual)
  *  - Reuniones (bookings recebidos)
- *  - Tipos de Evento (pré-configuração do admin)
+ *  - Tipos de Evento (pré-configuración do admin)
  *  - Disponibilidad (horários)
  *  - Enlaces del Equipo (centralização para o admin enviar links de cada vendedor)
  */

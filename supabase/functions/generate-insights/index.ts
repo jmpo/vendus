@@ -32,7 +32,7 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch pipeline fecha
+    // Fetch pipeline data
     let leadsQuery = supabase
       .from("leads")
       .select(`
@@ -49,7 +49,7 @@ serve(async (req) => {
       leadsQuery = leadsQuery.eq("assigned_to", userId);
     }
 
-    const { fecha: leads, error: leadsError } = await leadsQuery;
+    const { data: leads, error: leadsError } = await leadsQuery;
     if (leadsError) throw leadsError;
 
     // Fetch overdue tasks
@@ -62,7 +62,7 @@ serve(async (req) => {
       tasksQuery = tasksQuery.eq("user_id", userId);
     }
 
-    const { fecha: overdueTasks } = await tasksQuery;
+    const { data: overdueTasks } = await tasksQuery;
 
     // Fetch recent deals for conversion analysis
     let dealsQuery = supabase
@@ -75,9 +75,9 @@ serve(async (req) => {
       dealsQuery = dealsQuery.eq("product_id", productId);
     }
 
-    const { fecha: deals } = await dealsQuery;
+    const { data: deals } = await dealsQuery;
 
-    // Analyze fecha
+    // Analyze data
     const now = new Date();
     const analysis: PipelineAnalysis = {
       totalLeads: leads?.length || 0,
@@ -128,10 +128,10 @@ serve(async (req) => {
         if (lead.temperature === "cold") analysis.coldLeadsCount++;
       }
 
-      analysis.leadsByStage = Object.entries(stageGroups).map(([stage, fecha]) => ({
+      analysis.leadsByStage = Object.entries(stageGroups).map(([stage, data]) => ({
         stage,
-        count: fecha.count,
-        value: fecha.value,
+        count: data.count,
+        value: data.value,
       }));
 
       analysis.avgDaysInPipeline = Math.round(totalDays / leads.length);

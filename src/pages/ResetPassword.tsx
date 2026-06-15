@@ -24,7 +24,7 @@ export default function ResetPassword() {
       }
     });
 
-    // Fallback: se já há sessão (link clicado e processado), libera o form
+    // Fallback: se ya há sessão (link clicado e processado), libera o form
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) setReady(true);
     });
@@ -35,11 +35,11 @@ export default function ResetPassword() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password.length < 10) {
-      toast.error('A senha deve ter pelo menos 10 caracteres');
+      toast.error('A contraseña debe ter pelo menos 10 caracteres');
       return;
     }
     if (password !== confirm) {
-      toast.error('As senhas não conferem');
+      toast.error('As senhas no conferem');
       return;
     }
     setLoading(true);
@@ -49,7 +49,7 @@ export default function ResetPassword() {
       toast.error(translateAuthError(error.message));
       return;
     }
-    toast.success('Senha atualizada! Redirecionando...');
+    toast.success('Contraseña actualizada! Redirecionando...');
     navigate('/', { replace: true });
   };
 
@@ -61,10 +61,10 @@ export default function ResetPassword() {
         </div>
 
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-foreground">Redefinir senha</h2>
+          <h2 className="text-2xl font-bold text-foreground">Redefinir contraseña</h2>
           <p className="text-muted-foreground mt-2">
             {ready
-              ? 'Escolha uma nova senha forte para sua conta'
+              ? 'Elegí uma nova contraseña forte para su cuenta'
               : 'Validando link de recuperação...'}
           </p>
         </div>
@@ -72,7 +72,7 @@ export default function ResetPassword() {
         {ready && (
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="password">Nova senha</Label>
+              <Label htmlFor="password">Nova contraseña</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
@@ -92,7 +92,7 @@ export default function ResetPassword() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirm">Confirmar senha</Label>
+              <Label htmlFor="confirm">Confirmar contraseña</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
@@ -113,7 +113,7 @@ export default function ResetPassword() {
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  Salvar nova senha
+                  Salvar nova contraseña
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </>
               )}

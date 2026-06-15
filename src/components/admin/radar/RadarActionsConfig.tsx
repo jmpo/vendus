@@ -29,7 +29,7 @@ export function RadarActionsConfig({ value, onChange }: Props) {
     <Card>
       <CardHeader>
         <CardTitle className="text-base">Ações automáticas</CardTitle>
-        <CardDescription className="text-xs">O que fazer quando o radar classificar cada lead</CardDescription>
+        <CardDescription className="text-xs">O que hacer cuando o radar classificar cada lead</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {CLASSES.map(({ key, label, emoji, color }) => {
@@ -39,7 +39,7 @@ export function RadarActionsConfig({ value, onChange }: Props) {
               <div className={`text-sm font-medium ${color}`}>{emoji} {label}</div>
 
               <div className="flex items-center justify-between text-sm">
-                <Label className="cursor-pointer flex-1">Criar tarefa para o dono</Label>
+                <Label className="cursor-pointer flex-1">Criar tarea para o dono</Label>
                 <Switch
                   checked={!!cfg.create_task?.enabled}
                   onCheckedChange={(v) => update(key, { create_task: { enabled: v, due_in_hours: cfg.create_task?.due_in_hours ?? 24 } })}
@@ -59,7 +59,7 @@ export function RadarActionsConfig({ value, onChange }: Props) {
               )}
 
               <div className="flex items-center justify-between text-sm">
-                <Label className="cursor-pointer flex-1">Notificar dono do lead</Label>
+                <Label className="cursor-pointer flex-1">Notificar dono del lead</Label>
                 <Switch checked={!!cfg.notify_owner} onCheckedChange={(v) => update(key, { notify_owner: v })} />
               </div>
 

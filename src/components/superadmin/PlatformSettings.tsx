@@ -115,9 +115,9 @@ export function PlatformSettings() {
         action: 'Configurações da plataforma atualizadas',
         entity_type: 'platform_settings',
       });
-      toast.success('Configurações salvas com sucesso');
+      toast.success('Configurações salvas com éxito');
     } catch (error: any) {
-      toast.error('Erro ao salvar: ' + (error?.message || 'desconhecido'));
+      toast.error('Error ao guardar: ' + (error?.message || 'desconhecido'));
     }
   };
 
@@ -477,9 +477,9 @@ export function PlatformSettings() {
                   <Input
                     value={formData.login_headline}
                     onChange={(e) => update({ login_headline: e.target.value })}
-                    placeholder="Transforme leads em rotina de vendas"
+                    placeholder="Transforme leads em rotina de ventas"
                   />
-                  <p className="text-xs text-muted-foreground">Use \n para quebra de linha</p>
+                  <p className="text-xs text-muted-foreground">Usa \n para quebra de linha</p>
                 </div>
                 <div className="space-y-2">
                   <Label>Subtítulo</Label>
@@ -520,9 +520,9 @@ export function PlatformSettings() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Imagem de Fundo</CardTitle>
+                <CardTitle>Imagen de Fundo</CardTitle>
                 <CardDescription>
-                  Substitui o gradiente da lateral do login por uma imagem.
+                  Substitui o gradiente da lateral do login por uma imagen.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -531,13 +531,13 @@ export function PlatformSettings() {
                   onUpload={(url) => update({ login_bg_image_url: url })}
                   onRemove={() => update({ login_bg_image_url: '' })}
                   type="login_bg"
-                  label="Imagem de Fundo do Login"
+                  label="Imagen de Fundo do Login"
                   description="Recomendado: 1920x1080px, JPG. Deixe vazio para usar o gradiente."
                   aspectRatio="wide"
                 />
 
                 <div className="space-y-2">
-                  <Label>Posicionamento da Imagem</Label>
+                  <Label>Posicionamento da Imagen</Label>
                   <Select
                     value={formData.login_bg_layout}
                     onValueChange={(v) => update({ login_bg_layout: v })}
@@ -553,7 +553,7 @@ export function PlatformSettings() {
                     </SelectContent>
                   </Select>
                   <p className="text-xs text-muted-foreground">
-                    Define onde a imagem aparece na tela de login.
+                    Define dónde a imagen aparece na tela de login.
                   </p>
                 </div>
               </CardContent>
@@ -600,7 +600,7 @@ export function PlatformSettings() {
                 label="Color de Acento dos Widgets"
                 value={formData.widget_accent_color || formData.primary_color}
                 onChange={(v) => update({ widget_accent_color: v })}
-                description="Pode diferir da cor da plataforma interna. Útil quando os widgets ficam em sites de terceiros."
+                description="Pode diferir da cor da plataforma interna. Útil cuando os widgets ficam em sites de terceiros."
                 defaultValue={formData.primary_color}
               />
             </CardContent>
@@ -623,18 +623,18 @@ export function PlatformSettings() {
                   <Input
                     value={formData.browser_title}
                     onChange={(e) => update({ browser_title: e.target.value })}
-                    placeholder="Vendus — Plataforma de vendas"
+                    placeholder="Vendus — Plataforma de ventas"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Se vazio, usa o nome da plataforma
+                    Se vazio, usa o nombre da plataforma
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label>Meta Descrição</Label>
+                  <Label>Meta Descripción</Label>
                   <Textarea
                     value={formData.meta_description}
                     onChange={(e) => update({ meta_description: e.target.value })}
-                    placeholder="Plataforma completa para gestão de vendas e leads"
+                    placeholder="Plataforma completa para gestión de ventas e leads"
                     rows={3}
                     maxLength={160}
                   />
@@ -660,7 +660,7 @@ export function PlatformSettings() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="es-PY">Português (Brasil)</SelectItem>
+                      <SelectItem value="es-PY">Español (Brasil)</SelectItem>
                       <SelectItem value="en">English</SelectItem>
                       <SelectItem value="es">Español</SelectItem>
                     </SelectContent>
@@ -673,7 +673,7 @@ export function PlatformSettings() {
               <CardHeader>
                 <CardTitle>OG Image</CardTitle>
                 <CardDescription>
-                  Imagem mostrada quando o link é compartilhado no WhatsApp, LinkedIn, etc.
+                  Imagen mostrada cuando o link é compartilhado no WhatsApp, LinkedIn, etc.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -682,7 +682,7 @@ export function PlatformSettings() {
                   onUpload={(url) => update({ og_image_url: url })}
                   onRemove={() => update({ og_image_url: '' })}
                   type="logo"
-                  label="Imagem de Compartilhamento"
+                  label="Imagen de Compartilhamento"
                   description="Recomendado: 1200x630px, JPG/PNG. Se vazio, usa o logo principal."
                   aspectRatio="wide"
                 />

@@ -198,7 +198,7 @@ export function EvolutionManager() {
             <TabsContent value="manager" className="mt-4 space-y-3">
               <div className="rounded-lg border bg-muted/30 p-3 text-sm flex items-start justify-between gap-3">
                 <p className="text-muted-foreground">
-                  Gestor nativo do Evolution Go para gestão técnica avançada.
+                  Gestor nativo do Evolution Go para gestión técnica avançada.
                 </p>
                 <Button variant="outline" size="sm" asChild>
                   <a href={`${cleanUrl}/manager`} target="_blank" rel="noopener noreferrer">
@@ -287,7 +287,7 @@ function InstancesTable() {
             variant="outline"
             onClick={() => syncMut.mutate(undefined)}
             disabled={syncMut.isPending}
-            title="Importa instâncias do servidor Evolution Go. Novas chegam sem empresa atrelada — atribua manualmente depois."
+            title="Importa instâncias do servidor Evolution Go. Novas chegam sem empresa atrelada — atribua manualmente después."
           >
             {syncMut.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
             Sincronizar desde el Servidor
@@ -307,7 +307,7 @@ function InstancesTable() {
                 <div className="space-y-2">
                   <Label>Nombre de la instancia</Label>
                   <Input
-                    placeholder="ex: empresa-x-vendas"
+                    placeholder="ex: empresa-x-ventas"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                   />
@@ -358,7 +358,7 @@ function InstancesTable() {
             <Smartphone className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
             <p className="text-muted-foreground">No se encontraron instancias.</p>
             <p className="text-sm text-muted-foreground mt-1">
-              Clique em <strong>Nueva Instancia</strong> para criar uma.
+              Hacé clic em <strong>Nueva Instancia</strong> para crear uma.
             </p>
           </CardContent>
         </Card>
@@ -504,8 +504,8 @@ function InstancesTable() {
             <AlertDialogDescription>
               O número{' '}
               <strong>{unlinking?.phone_number ? `+${unlinking.phone_number}` : 'atual'}</strong>{' '}
-              será removido desta instância e desaparecerá da lista de "Aparelhos conectados" no celular.
-              Para reconectar (este ou outro número) será necessário escanear um novo QR Code.
+              será eliminado desta instância e desaparecerá da lista de "Aparelhos conectados" no celular.
+              Para reconectar (este ou otro número) será necessário escanear um novo QR Code.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -553,7 +553,7 @@ function AssignDialog({
         <DialogHeader>
           <DialogTitle>Editar instância</DialogTitle>
           <DialogDescription>
-            Atribua <strong>{instance.name}</strong> a uma empresa. A empresa passará a ver e gerenciar essa instância no painel dela.
+            Atribua <strong>{instance.name}</strong> a uma empresa. A empresa passará a ver e gestionar essa instância no painel dela.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">

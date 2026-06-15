@@ -110,7 +110,7 @@ export function MessageBubbleWithButtons({
     if (button.type === 'url') {
       window.open(button.action, '_blank');
     } else if (button.type === 'whatsapp') {
-      const message = encodeURIComponent('Olá! Vim do chat do site.');
+      const message = encodeURIComponent('Hola! Vim do chat do site.');
       window.open(`https://wa.me/${button.action}?text=${message}`, '_blank');
     } else if (button.type === 'calendar') {
       window.open(button.action, '_blank');
@@ -173,7 +173,7 @@ export function MessageBubbleWithButtons({
           {/* Message text */}
           <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{content}</p>
 
-          {/* Time and status */}
+          {/* Equipo and status */}
           <div
             className={cn(
               "flex items-center gap-1 mt-1",

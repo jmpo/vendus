@@ -156,7 +156,7 @@ function evaluateClientRule(value: any, rule: CustomFieldRule): boolean {
     }
   }
 
-  // Texto: tenta comparação numérica quando faz sentido (ex: "tempo assistido" guardado como string).
+  // Texto: tenta comparação numérica cuando faz sentido (ex: "tempo assistido" guardado como string).
   const numericOps: CustomFieldRule['operator'][] = ['gt', 'gte', 'lt', 'lte', 'between'];
   if (rule.fieldType === 'text' && numericOps.includes(rule.operator)) {
     const n = Number(String(value).replace(',', '.'));
@@ -228,7 +228,7 @@ export function useLeadsManager() {
         }
       }
 
-      // Pré-filtro por etiquetas a excluir (lista independente)
+      // Pré-filtro por etiquetas a eliminar (lista independente)
       if (filters.excludeTagIds.length > 0) {
         const { data: assigns } = await supabase
           .from('lead_tag_assignments')
@@ -412,7 +412,7 @@ export function useLeadsManager() {
       toast.success('Lead creado con éxito');
     },
     onError: (error: any) => {
-      // 23505 = violação de unique constraint (telefone duplicado na organização)
+      // 23505 = violação de unique constraint (teléfono duplicado na organización)
       if (error?.code === '23505' && String(error?.message || '').includes('leads_org_phone_unique')) {
         toast.error('Ya existe un contacto con este teléfono en esta organización.');
       } else {
@@ -456,7 +456,7 @@ export function useLeadsManager() {
       toast.success('Leads transferidos con éxito');
     },
     onError: (error) => {
-      toast.error('Erro ao transferir leads: ' + error.message);
+      toast.error('Error ao transferir leads: ' + error.message);
     },
   });
 
@@ -521,7 +521,7 @@ export function useLeadsManager() {
   };
 
   return {
-    // Data
+    // Fecha
     leads: leadsData?.leads || [],
     total: leadsData?.total || 0,
     totalPages: leadsData?.totalPages || 1,

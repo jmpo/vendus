@@ -30,7 +30,7 @@ export function InboxManager() {
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold">Atendimentos</h1>
-        <p className="text-sm text-muted-foreground">Central de conversas do chat do site</p>
+        <p className="text-sm text-muted-foreground">Central de conversaciones do chat do site</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">

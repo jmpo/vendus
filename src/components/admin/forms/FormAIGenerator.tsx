@@ -26,10 +26,10 @@ type Objective = 'qualification' | 'diagnostic' | 'capture' | 'presale' | 'feedb
 type Tone = 'formal' | 'informal' | 'technical';
 
 const objectives: { value: Objective; label: string; description: string; icon: React.ElementType }[] = [
-  { value: 'qualification', label: 'Qualificação', description: 'Identificar fit e maturidade', icon: UserCheck },
-  { value: 'diagnostic', label: 'Diagnóstico', description: 'Mapear dores e necessidades', icon: Target },
-  { value: 'capture', label: 'Captação Rápida', description: 'Contato básico e ágil', icon: MessageSquare },
-  { value: 'presale', label: 'Pré-venda', description: 'Preparar para reunião', icon: Calendar },
+  { value: 'qualification', label: 'Calificación', description: 'Identificar fit e maturidade', icon: UserCheck },
+  { value: 'diagnostic', label: 'Diagnóstico', description: 'Mapear dores e necesidades', icon: Target },
+  { value: 'capture', label: 'Captación Rápida', description: 'Contacto básico e ágil', icon: MessageSquare },
+  { value: 'presale', label: 'Pré-venta', description: 'Preparar para reunión', icon: Calendar },
   { value: 'feedback', label: 'Feedback', description: 'Coletar opiniões', icon: ThumbsUp },
 ];
 
@@ -93,16 +93,16 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
       if (error) throw error;
 
       if (data.success && data.blocks) {
-        toast.success('Formulário gerado com sucesso!');
+        toast.success('Formulário gerado com éxito!');
         // IMPORTANT: Wait for callback to complete (saves to DB) before closing
         await onGenerated(data.blocks, data.suggested_name);
         // Dialog is closed by FormsManager after successful creation
       } else {
-        throw new Error(data.error || 'Erro ao gerar formulário');
+        throw new Error(data.error || 'Error ao gerar formulário');
       }
     } catch (error: any) {
       console.error('Error generating form:', error);
-      toast.error(error.message || 'Erro ao gerar formulário com IA');
+      toast.error(error.message || 'Error ao gerar formulário com IA');
     } finally {
       setIsGenerating(false);
     }
@@ -148,7 +148,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
             Gerar Formulário com IA
           </DialogTitle>
           <DialogDescription>
-            A IA vai criar perguntas otimizadas baseadas no produto <strong>{productName}</strong>
+            A IA vai crear preguntas otimizadas baseadas no producto <strong>{productName}</strong>
           </DialogDescription>
         </DialogHeader>
 
@@ -205,16 +205,16 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
               className="space-y-4 py-4"
             >
               <div className="space-y-3">
-                <Label className="text-base font-medium">Descreva o contexto da sua campanha</Label>
+                <Label className="text-base font-medium">Descreva o contexto da su campaña</Label>
                 <Textarea
-                  placeholder="Ex: Quero qualificar leads da campanha de Black Friday focando em igrejas que ainda não tem app próprio e estão cansadas de pagar mensalidades altas..."
+                  placeholder="Ex: Quero calificar leads da campaña de Black Friday focando em igrejas que aún no tiene app próprio e estão cansadas de pagar mensalidades altas..."
                   value={userContext}
                   onChange={(e) => setUserContext(e.target.value)}
                   className="min-h-[140px] resize-none"
                 />
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
                   <HelpCircle className="h-3 w-3" />
-                  Quanto mais detalhes você fornecer, mais personalizadas serão as perguntas
+                  Quanto mais detalhes usted fornecer, mais personalizadas serão as preguntas
                 </p>
               </div>
             </motion.div>
@@ -240,7 +240,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
                   <div>
                     <p className="font-medium text-foreground">Cliente Ideal (ICP)</p>
                     <p className="text-muted-foreground line-clamp-2">
-                      {product?.icp || 'Não definido'}
+                      {product?.icp || 'No definido'}
                     </p>
                   </div>
                   
@@ -248,7 +248,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
                   <div>
                     <p className="font-medium text-foreground">Diferenciais</p>
                     <p className="text-muted-foreground">
-                      {product?.differentials ? 'Cadastrados' : 'Não definidos'}
+                      {product?.differentials ? 'Cadastrados' : 'No definidos'}
                     </p>
                   </div>
 
@@ -324,12 +324,12 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
                         htmlFor="useObjections" 
                         className={`cursor-pointer font-medium ${!objections?.length ? 'text-muted-foreground' : ''}`}
                       >
-                        Criar perguntas baseadas nas objeções
+                        Criar preguntas baseadas nas objeções
                       </Label>
                       <p className="text-xs text-muted-foreground">
                         {objections?.length 
-                          ? 'Qualificar leads identificando objeções antecipadamente' 
-                          : 'Nenhuma objeção cadastrada ainda'}
+                          ? 'Calificar leads identificando objeções antecipadamente' 
+                          : 'Nenhuma objeção cadastrada aún'}
                       </p>
                     </div>
                   </div>
@@ -370,7 +370,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <Label className="text-base font-medium">Número de perguntas</Label>
+                  <Label className="text-base font-medium">Número de preguntas</Label>
                   <span className="text-lg font-bold text-primary">{numQuestions}</span>
                 </div>
                 <Slider

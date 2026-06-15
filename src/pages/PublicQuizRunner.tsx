@@ -19,7 +19,7 @@ import { evaluateDisplay } from '@/lib/quizDisplayRules';
 
 /**
  * Renderer público do Quiz no padrão inlead (form-style, 1 tela por bloco).
- * Não usa header de bot, avatar, balões — UI 100% focada na pergunta.
+ * No usa header de bot, avatar, balões — UI 100% focada na pregunta.
  */
 export default function PublicQuizRunner() {
   const { slug } = useParams<{ slug: string }>();
@@ -42,7 +42,7 @@ export default function PublicQuizRunner() {
     responsesRef.current = responses;
   }, [responses]);
 
-  // ───── Ordenação dos blocos (mesma lógica do PublicChat) ─────
+  // ───── Ordenação dos blocos (misma lógica do PublicChat) ─────
   const orderedBlocks = useMemo<FunnelBlock[]>(() => {
     if (!funnel?.flow_blocks?.length) return [];
     const blocks = funnel.flow_blocks;
@@ -140,7 +140,7 @@ export default function PublicQuizRunner() {
         i++; continue;
       }
       if (b.type === 'delay') { i++; continue; }
-      // Regra de exibição (device + condicionais sobre respostas)
+      // Regra de exibição (device + condicionais sobre respuestas)
       if (!evaluateDisplay(b.data.block_display, { responses: responsesRef.current, isMobile })) {
         i++; continue;
       }
@@ -262,7 +262,7 @@ export default function PublicQuizRunner() {
     goNext();
   };
 
-  // ───── Tela final automática quando bloco "end" é atingido ─────
+  // ───── Tela final automática cuando bloco "end" é atingido ─────
   useEffect(() => {
     if (currentBlock?.type === 'end' && !submitted) submitLead();
     // redirect_url opcional
@@ -274,7 +274,7 @@ export default function PublicQuizRunner() {
     }
   }, [currentBlock?.id]);
 
-  // ───── Loading / erro ─────
+  // ───── Loading / error ─────
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -356,7 +356,7 @@ export default function PublicQuizRunner() {
                   <Check className="h-7 w-7" style={{ color: primaryFg }} />
                 </div>
                 <h2 className="text-2xl font-bold mb-2" style={{ letterSpacing: '-0.01em' }}>
-                  Obrigado!
+                  Gracias!
                 </h2>
                 <p className="text-sm" style={{ color: mutedText }}>
                   Tus respuestas se registraron con éxito.
@@ -371,7 +371,7 @@ export default function PublicQuizRunner() {
                 transition={{ duration: 0.28, ease: 'easeOut' }}
                 className="flex flex-col"
               >
-                {/* Título + subtítulo + badge duração */}
+                {/* Título + subtítulo + badge duración */}
                 {currentBlock.type !== 'end' && (
                   <>
                     <h1
@@ -393,13 +393,13 @@ export default function PublicQuizRunner() {
                     )}
                     {currentBlock.data.show_duration && (
                       <p className="mb-5 text-xs font-medium" style={{ color: mutedText }}>
-                        ⏳ {currentBlock.data.duration_label || 'Duração de 2min para responder'}
+                        ⏳ {currentBlock.data.duration_label || 'Duración de 2min para responder'}
                       </p>
                     )}
                   </>
                 )}
 
-                {/* Imagem opcional */}
+                {/* Imagen opcional */}
                 {currentBlock.data.image_url && currentBlock.type !== 'end' && (
                   <img
                     src={currentBlock.data.image_url}
@@ -457,7 +457,7 @@ export default function PublicQuizRunner() {
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleSubmitInput()}
-                      placeholder={currentBlock.data.placeholder || 'Sua resposta...'}
+                      placeholder={currentBlock.data.placeholder || 'Su respuesta...'}
                       className="w-full px-4 py-4 outline-none text-base"
                       style={{
                         background: subtleBg,
@@ -495,7 +495,7 @@ export default function PublicQuizRunner() {
                             <Check className="h-7 w-7" style={{ color: primaryFg }} />
                           </div>
                           <h2 className="text-2xl font-bold mb-2" style={{ letterSpacing: '-0.01em' }}>
-                            {currentBlock.data.content || 'Obrigado!'}
+                            {currentBlock.data.content || 'Gracias!'}
                           </h2>
                           {currentBlock.data.success_message && (
                             <p className="text-sm" style={{ color: mutedText }}>
@@ -543,7 +543,7 @@ export default function PublicQuizRunner() {
 
       {isPreview && (
         <div className="text-center py-2 text-[10px] uppercase tracking-wider" style={{ color: mutedText }}>
-          Modo preview — respostas não serão salvas
+          Modo preview — respuestas no serão salvas
         </div>
       )}
 

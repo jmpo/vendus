@@ -99,7 +99,7 @@ export function TeamBookingLinks() {
   };
 
   const handleWhatsApp = (url: string, name: string | null) => {
-    const text = `¡Hola! Reserve una reunión con ${name ?? 'nosso time'}: ${url}`;
+    const text = `¡Hola! Reserve una reunión con ${name ?? 'nosso equipo'}: ${url}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -167,11 +167,11 @@ export function TeamBookingLinks() {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Links de Agendamiento da Equipe
+                Links de Agendamiento da Equipo
               </CardTitle>
               <CardDescription>
                 Copie e envie o link individual de cada vendedor — sem precisar acessar a
-                conta dele.
+                cuenta dele.
               </CardDescription>
             </div>
             <Button
@@ -237,7 +237,7 @@ export function TeamBookingLinks() {
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
                               <p className="font-medium truncate">
-                                {member.full_name || 'Sem nome'}
+                                {member.full_name || 'Sem nombre'}
                               </p>
                               {!hasSlug && (
                                 <Badge variant="outline" className="text-xs">

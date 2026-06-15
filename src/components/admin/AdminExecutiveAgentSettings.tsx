@@ -126,7 +126,7 @@ export function AdminExecutiveAgentSettings() {
       if (error) throw error;
       toast.success('¡Mensaje de prueba enviado! Revise su WhatsApp.');
     } catch (e: any) {
-      toast.error('Fallo al enviar la prueba: ' + (e?.message ?? 'erro'));
+      toast.error('Fallo al enviar la prueba: ' + (e?.message ?? 'error'));
     } finally {
       setTesting(false);
     }
@@ -154,7 +154,7 @@ export function AdminExecutiveAgentSettings() {
           </h3>
           <p className="text-sm text-muted-foreground max-w-2xl">
             Assistente IA exclusivo do administrador. Envia resumos diários e alertas em tempo real
-            via WhatsApp, e responde perguntas sobre pipeline, equipe, financeiro e tarefas.
+            via WhatsApp, e responde preguntas sobre pipeline, equipo, financeiro e tareas.
           </p>
         </div>
         <div className="flex gap-2">
@@ -419,7 +419,7 @@ export function AdminExecutiveAgentSettings() {
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <Label className="text-sm font-medium">Meta atingida</Label>
-                      <p className="text-xs text-muted-foreground">Notificar quando vendedor bater a meta do período</p>
+                      <p className="text-xs text-muted-foreground">Notificar cuando vendedor bater a meta do período</p>
                     </div>
                     <Switch
                       checked={form.alert_goal_achieved}
@@ -438,10 +438,10 @@ export function AdminExecutiveAgentSettings() {
                 <div className="text-sm text-muted-foreground">
                   <p className="font-medium text-foreground mb-1">Como conversar com o agente?</p>
                   <p>
-                    Mande qualquer mensagem do seu WhatsApp cadastrado para o número da plataforma e o
-                    agente responderá em segundos. Exemplos: <em>"como está o pipeline hoje?"</em>,{' '}
-                    <em>"quem está online?"</em>, <em>"tem tarefa em atraso?"</em>,{' '}
-                    <em>"me manda o financeiro do mês"</em>.
+                    Mande qualquer mensaje do su WhatsApp cadastrado para o número da plataforma e o
+                    agente responderá em segundos. Exemplos: <em>"como está o pipeline hoy?"</em>,{' '}
+                    <em>"quem está online?"</em>, <em>"tiene tarea em atraso?"</em>,{' '}
+                    <em>"me manda o financeiro do mes"</em>.
                   </p>
                 </div>
               </div>

@@ -28,7 +28,7 @@ export function MobileProductSelector({ products, onSelectProduct }: MobileProdu
       <div className="space-y-2">
         <h2 className="text-lg font-semibold text-foreground">Meus Produtos</h2>
         <p className="text-sm text-muted-foreground">
-          Selecione um produto para começar
+          Seleccioná um producto para comenzar
         </p>
       </div>
 
@@ -36,7 +36,7 @@ export function MobileProductSelector({ products, onSelectProduct }: MobileProdu
       <div className="space-y-3">
         {products.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">Nenhum produto atribuído a você</p>
+            <p className="text-muted-foreground">Nenhum producto atribuído a usted</p>
           </div>
         ) : (
           products.map((product) => (

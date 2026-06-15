@@ -143,7 +143,7 @@ export function WebhookActionsPanel({
             </Button>
           </div>
           <p className="text-sm text-muted-foreground">
-            Configure as ações que serão executadas quando o webhook receber dados
+            Configure as acciones que serão executadas cuando o webhook receber dados
           </p>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -151,8 +151,8 @@ export function WebhookActionsPanel({
             <Alert variant="destructive" className="mb-4">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                <strong>Atenção:</strong> Você tem ações que dependem de um lead, mas não há uma ação 
-                "Criar Lead" habilitada. Adicione a ação "Criar Lead" como primeira ação para evitar erros.
+                <strong>Atenção:</strong> Usted tiene acciones que dependem de um lead, mas no há uma acción 
+                "Criar Lead" habilitada. Adicione a acción "Criar Lead" como primeira acción para evitar erros.
               </AlertDescription>
             </Alert>
           )}
@@ -160,11 +160,11 @@ export function WebhookActionsPanel({
             <div className="text-center py-8 border-2 border-dashed rounded-lg">
               <Zap className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
               <p className="text-sm text-muted-foreground mb-3">
-                Nenhuma ação configurada
+                Nenhuma acción configurada
               </p>
               <Button variant="outline" size="sm" onClick={() => setIsAddDialogOpen(true)}>
                 <Plus className="h-4 w-4 mr-1" />
-                Adicionar Ação
+                Adicionar Acción
               </Button>
             </div>
           ) : (
@@ -235,7 +235,7 @@ export function WebhookActionsPanel({
                         )}
                         {action.config.target_sector_id && (
                           <Badge variant="secondary" className="text-xs">
-                            Setor definido
+                            Sector definido
                           </Badge>
                         )}
                       </div>

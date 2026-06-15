@@ -48,7 +48,7 @@ export function ConversationHistoryList({
   if (!data?.length) {
     return (
       <p className="text-xs text-muted-foreground text-center py-4">
-        Ninguno atención anterior deste contato.
+        Ninguno atención anterior deste contacto.
       </p>
     );
   }

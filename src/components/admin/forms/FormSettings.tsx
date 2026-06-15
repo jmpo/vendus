@@ -51,12 +51,12 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
       <Card>
         <CardHeader>
           <CardTitle>Informações Básicas</CardTitle>
-          <CardDescription>Nome, descrição e identificação do formulário</CardDescription>
+          <CardDescription>Nombre, descripción e identificação do formulário</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Nome do Formulário</Label>
+              <Label>Nombre do Formulário</Label>
               <Input
                 value={form.name}
                 onChange={(e) => onUpdate({ name: e.target.value })}
@@ -71,11 +71,11 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Descrição</Label>
+            <Label>Descripción</Label>
             <Textarea
               value={form.description || ''}
               onChange={(e) => onUpdate({ description: e.target.value })}
-              placeholder="Descrição interna do formulário..."
+              placeholder="Descripción interna do formulário..."
             />
           </div>
         </CardContent>
@@ -86,7 +86,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
-            Distribuição de Leads
+            Distribución de Leads
           </CardTitle>
           <CardDescription>
             Defina como os leads serão distribuídos ao serem capturados
@@ -96,8 +96,8 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
           <div className="grid grid-cols-2 gap-4">
             {[
               { value: 'manual', label: 'Manual', icon: Inbox, description: 'Leads entram sem atribuição' },
-              { value: 'user', label: 'Usuário Específico', icon: User, description: 'Sempre atribuir a um vendedor' },
-              { value: 'squad', label: 'Squad', icon: Users, description: 'Distribuir para fila do time' },
+              { value: 'user', label: 'Usuario Específico', icon: User, description: 'Sempre atribuir a um vendedor' },
+              { value: 'squad', label: 'Squad', icon: Users, description: 'Distribuir para fila do equipo' },
               { value: 'round_robin', label: 'Round Robin', icon: Shuffle, description: 'Rotação automática entre vendedores' },
             ].map((rule) => {
               const Icon = rule.icon;
@@ -199,10 +199,10 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <CheckCircle className="h-5 w-5" />
-            Página de Obrigado
+            Página de Gracias
           </CardTitle>
           <CardDescription>
-            Escolha qual bloco será exibido como tela final após o envio. Por padrão usamos o bloco "Tela Final".
+            Elegí qual bloco será exibido como tela final após o envio. Por padrão usamos o bloco "Tela Final".
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -231,7 +231,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
             </SelectContent>
           </Select>
           <p className="text-xs text-muted-foreground mt-2">
-            O bloco selecionado será exibido <strong>após o envio</strong>. O botão <strong>Enviar</strong> aparecerá automaticamente na pergunta anterior — assim o lead já é gravado antes da página de obrigado.
+            O bloco selecionado será exibido <strong>após o envio</strong>. O botão <strong>Enviar</strong> aparecerá automaticamente na pregunta anterior — assim o lead ya é gravado antes da página de gracias.
           </p>
         </CardContent>
       </Card>
@@ -241,10 +241,10 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TagIcon className="h-5 w-5" />
-            Etiquetas ao enviar
+            Etiquetas al enviar
           </CardTitle>
           <CardDescription>
-            Estas etiquetas serão aplicadas automaticamente ao lead quando ele clicar em <strong>Enviar</strong>.
+            Estas etiquetas serão aplicadas automaticamente al lead cuando ele clicar em <strong>Enviar</strong>.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -273,7 +273,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
 
           <div className="border rounded-lg max-h-56 overflow-auto divide-y">
             {allTags.length === 0 ? (
-              <p className="p-3 text-sm text-muted-foreground">Nenhuma etiqueta criada ainda.</p>
+              <p className="p-3 text-sm text-muted-foreground">Nenhuma etiqueta creada aún.</p>
             ) : (
               allTags.map((t) => (
                 <label
@@ -324,19 +324,19 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <CalendarClock className="h-5 w-5" />
-            Após criar o lead
+            Após crear o lead
           </CardTitle>
           <CardDescription>
-            Inscreva automaticamente cada novo lead em uma cadência inteligente.
+            Inscreva automaticamente cada novo lead em uma cadencia inteligente.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Label>Inserir em cadência</Label>
+          <Label>Inserir em cadencia</Label>
           <div className="mt-2">
             <CadencePicker
               value={(form as any).post_cadence_id ?? null}
               onChange={(id) => onUpdate({ post_cadence_id: id } as any)}
-              placeholder="Nenhuma — não inscrever"
+              placeholder="Nenhuma — no inscrever"
             />
           </div>
         </CardContent>

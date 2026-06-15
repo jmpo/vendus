@@ -74,7 +74,7 @@ const NON_AGENT_FIELDS_EXACT = new Set([
   'monitored_product_ids',
   'summary_kpis',
   // Campos relacionais vindos de selects com join (ex.: all-agents -> product:products)
-  // não existem na tabela product_agents e precisam ser ignorados no save.
+  // no existem na tabela product_agents e precisam ser ignorados no save.
   'product',
 ]);
 
@@ -298,7 +298,7 @@ export function useToggleAgentStatus() {
     },
     onError: (error) => {
       console.error('Error toggling agent status:', error);
-      toast.error('Error al cambiar status do agente');
+      toast.error('Error al cambiar status del agente');
     },
   });
 }

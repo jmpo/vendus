@@ -20,27 +20,27 @@ export interface OnboardingStep {
 export const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     id: 'name',
-    title: 'Como se chama seu produto?',
-    subtitle: 'Esse será o nome que seus vendedores verão.',
+    title: 'Como se chama su producto?',
+    subtitle: 'Esse será o nombre que sus vendedores verão.',
     field: 'name',
     type: 'text',
-    placeholder: 'Ex: Produto Pro, CRM Enterprise...',
+    placeholder: 'Ex: Producto Pro, CRM Enterprise...',
     required: true,
   },
   {
     id: 'description',
-    title: 'Descreva seu produto em uma frase',
-    subtitle: 'Uma descrição clara e objetiva ajuda os vendedores a entenderem rapidamente.',
+    title: 'Descreva su producto em uma frase',
+    subtitle: 'Uma descripción clara e objetiva ayuda os vendedores a entenderem rápidamente.',
     field: 'description',
     type: 'textarea',
-    placeholder: 'Ex: Plataforma de automação de vendas com IA integrada...',
+    placeholder: 'Ex: Plataforma de automatización de ventas com IA integrada...',
     aiOptimizable: true,
     required: true,
   },
   {
     id: 'icp',
-    title: 'Quem é seu cliente ideal (ICP)?',
-    subtitle: 'Defina o perfil ideal de cliente para este produto.',
+    title: 'Quem é su cliente ideal (ICP)?',
+    subtitle: 'Defina o perfil ideal de cliente para este producto.',
     field: 'icp',
     type: 'textarea',
     placeholder: 'Ex: Empresas B2B de tecnologia com 50-500 funcionários...',
@@ -53,14 +53,14 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     subtitle: 'O pitch de elevador. Direto ao ponto.',
     field: 'pitch_15s',
     type: 'textarea',
-    placeholder: 'Em 15 segundos, como você apresentaria este produto?',
+    placeholder: 'Em 15 segundos, como usted apresentaria este producto?',
     aiOptimizable: true,
     required: true,
   },
   {
     id: 'pitch30s',
     title: 'Pitch de 30 segundos',
-    subtitle: 'Um pouco mais de contexto e valor.',
+    subtitle: 'Um poco mais de contexto e valor.',
     field: 'pitch_30s',
     type: 'textarea',
     placeholder: 'Expanda o pitch com mais detalhes sobre o valor entregue...',
@@ -69,24 +69,24 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     id: 'pitch2min',
     title: 'Pitch de 2 minutos',
-    subtitle: 'A apresentação completa com problema, solução e diferencial.',
+    subtitle: 'A apresentação completa com problema, solución e diferencial.',
     field: 'pitch_2min',
     type: 'textarea',
-    placeholder: 'Conte a história completa: problema → solução → resultados...',
+    placeholder: 'Conte a história completa: problema → solución → resultados...',
     aiOptimizable: true,
   },
   {
     id: 'differentials',
-    title: 'Quais são os principais diferenciais?',
-    subtitle: 'Liste os pontos que destacam seu produto da concorrência.',
+    title: 'Quais son os principais diferenciais?',
+    subtitle: 'Liste os pontos que destacam su producto da concorrência.',
     field: 'differentials',
     type: 'list',
     placeholder: 'Ex: Integración nativa com WhatsApp',
   },
   {
     id: 'status',
-    title: 'Qual o status inicial do produto?',
-    subtitle: 'Defina se já está pronto para ser usado pelos vendedores.',
+    title: 'Qual o status inicial do producto?',
+    subtitle: 'Defina se ya está pronto para ser usado pelos vendedores.',
     field: 'status',
     type: 'text',
     placeholder: 'draft',
@@ -145,7 +145,7 @@ export function useProductOnboarding() {
 
   const optimizeWithAI = useCallback(async (field: string, currentValue: string) => {
     if (!currentValue.trim()) {
-      toast.error('Digite algo antes de otimizar');
+      toast.error('Escribí algo antes de otimizar');
       return null;
     }
 
@@ -207,11 +207,11 @@ export function useProductOnboarding() {
         }
       }
 
-      toast.success('Produto creado con éxito!');
+      toast.success('Producto creado con éxito!');
       return product;
     } catch (error) {
       console.error('Error creating product:', error);
-      toast.error('Error al crear produto');
+      toast.error('Error al crear producto');
       return null;
     }
   }, [formData, profile, createProduct]);

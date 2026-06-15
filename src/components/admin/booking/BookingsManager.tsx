@@ -168,7 +168,7 @@ export function BookingsManager() {
                           <Card key={booking.id} className="hover:shadow-md transition-shadow">
                             <CardContent className="p-4">
                               <div className="flex items-start gap-4">
-                                {/* Time & Color */}
+                                {/* Equipo & Color */}
                                 <div className="text-center shrink-0">
                                   <div 
                                     className="w-1 h-12 rounded-full mb-1 mx-auto"
@@ -281,7 +281,7 @@ export function BookingsManager() {
               onClick={handleCancelBooking}
               disabled={cancelBooking.isPending}
             >
-              Cancelar Reunião
+              Cancelar Reunión
             </Button>
           </DialogFooter>
         </DialogContent>

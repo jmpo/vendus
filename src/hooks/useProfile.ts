@@ -86,10 +86,10 @@ export function useUpdatePassword() {
       return true;
     },
     onSuccess: () => {
-      toast.success('Senha actualizada con éxito!');
+      toast.success('Contraseña actualizada con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Error al actualizar senha', { description: error.message });
+      toast.error('Error al actualizar contraseña', { description: error.message });
     }
   });
 }

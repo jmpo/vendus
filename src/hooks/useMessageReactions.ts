@@ -20,8 +20,8 @@ export interface ReactionSummary {
 }
 
 /**
- * Gerencia reações de uma conversa: carrega snapshot inicial e escuta realtime.
- * Retorna um Map<message_id, ReactionSummary[]> e funções para reagir / remover.
+ * Gerencia reações de uma conversación: carrega snapshot inicial e escuta realtime.
+ * Retorna um Map<message_id, ReactionSummary[]> e funções para reagir / eliminar.
  */
 export function useMessageReactions(conversationId: string | null | undefined) {
   const { user } = useAuth();
@@ -126,11 +126,11 @@ export function useMessageReactions(conversationId: string | null | undefined) {
   const react = useCallback(
     async (messageId: string, emoji: string) => {
       if (!user?.id || !conversationId) return;
-      // Verifica reação atual minha nessa mensagem
+      // Verifica reação atual minha nessa mensaje
       const list = reactionsRef.current.get(messageId) ?? [];
       const mine = list.find((r) => r.reactor_type === 'agent' && r.user_id === user.id);
 
-      // Toggle: se clicou no mesmo emoji, remove
+      // Toggle: se clicou no mismo emoji, remove
       if (mine && mine.emoji === emoji) {
         setReactionsByMessage((prev) => {
           const next = new Map(prev);
@@ -143,7 +143,7 @@ export function useMessageReactions(conversationId: string | null | undefined) {
         return;
       }
 
-      // Se já tinha outra, remove a antiga primeiro
+      // Se ya tinha otra, remove a antiga primeiro
       if (mine) {
         await supabase.from('message_reactions').delete().eq('id', mine.id);
       }

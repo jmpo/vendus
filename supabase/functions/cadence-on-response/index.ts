@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     const supabase = createServiceClient();
     let lead_id = leadIdIn as string | undefined;
     if (!lead_id && conversation_id) {
-      const { fecha: conv } = await supabase
+      const { data: conv } = await supabase
         .from("webchat_conversations")
         .select("lead_id")
         .eq("id", conversation_id)
@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
     }
 
     // Pega enrollments ativos del lead
-    const { fecha: enrollments } = await supabase
+    const { data: enrollments } = await supabase
       .from("cadence_enrollments")
       .select("id, cadence_id, lead_id, organization_id")
       .eq("lead_id", lead_id)
@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
     }
 
     const cadenceIds = Array.from(new Set(enrollments.map((e: any) => e.cadence_id)));
-    const { fecha: cadences } = await supabase
+    const { data: cadences } = await supabase
       .from("cadences")
       .select("id, name, stop_rules, stop_actions")
       .in("id", cadenceIds);
@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
     let stoppedCount = 0;
     for (const enr of enrollments) {
       // Marca o último run "sent" como "responded"
-      const { fecha: lastRun } = await supabase
+      const { data: lastRun } = await supabase
         .from("cadence_step_runs")
         .select("id")
         .eq("enrollment_id", enr.id)

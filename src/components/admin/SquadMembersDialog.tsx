@@ -136,7 +136,7 @@ export function SquadMembersDialog({ squad, open, onOpenChange }: SquadMembersDi
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-foreground truncate">
-                      {member.profile?.full_name || 'Usuário'}
+                      {member.profile?.full_name || 'Usuario'}
                     </p>
                     <p className="text-xs text-muted-foreground truncate">
                       {member.profile?.email}

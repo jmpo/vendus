@@ -30,7 +30,7 @@ import { Loader2, User, Building, Mail, Phone, FileText } from 'lucide-react';
 import { LEAD_ORIGINS, LEAD_CHANNELS } from '@/hooks/useLeadTracking';
 
 const formSchema = z.object({
-  name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
+  name: z.string().min(2, 'Nombre debe ter pelo menos 2 caracteres'),
   email: z.string().email('Email inválido').optional().or(z.literal('')),
   phone: z.string().optional(),
   company: z.string().optional(),
@@ -107,9 +107,9 @@ export function CreateLeadDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome *</FormLabel>
+                    <FormLabel>Nombre *</FormLabel>
                     <FormControl>
-                      <Input placeholder="Nome do lead" {...field} />
+                      <Input placeholder="Nombre del lead" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -125,7 +125,7 @@ export function CreateLeadDialog({
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione" />
+                          <SelectValue placeholder="Seleccioná" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -164,7 +164,7 @@ export function CreateLeadDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center gap-1">
-                      <Phone className="h-3 w-3" /> Telefone
+                      <Phone className="h-3 w-3" /> Teléfono
                     </FormLabel>
                     <FormControl>
                       <Input placeholder="(11) 99999-9999" {...field} />
@@ -186,7 +186,7 @@ export function CreateLeadDialog({
                       <Building className="h-3 w-3" /> Empresa
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Nome da empresa" {...field} />
+                      <Input placeholder="Nombre de la empresa" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -219,7 +219,7 @@ export function CreateLeadDialog({
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione a origem" />
+                          <SelectValue placeholder="Seleccioná a origem" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -244,7 +244,7 @@ export function CreateLeadDialog({
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione o canal" />
+                          <SelectValue placeholder="Seleccioná o canal" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -268,11 +268,11 @@ export function CreateLeadDialog({
                 name="product_id"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Produto</FormLabel>
+                    <FormLabel>Producto</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione" />
+                          <SelectValue placeholder="Seleccioná" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -297,7 +297,7 @@ export function CreateLeadDialog({
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione" />
+                          <SelectValue placeholder="Seleccioná" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -322,7 +322,7 @@ export function CreateLeadDialog({
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione" />
+                          <SelectValue placeholder="Seleccioná" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>

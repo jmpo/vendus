@@ -16,17 +16,17 @@ interface EvolutionConfig {
  * This is the single source of truth — no longer per-organization.
  */
 async function getPlatformConfig(supabase: any): Promise<EvolutionConfig | null> {
-  const { fecha } = await supabase
+  const { data } = await supabase
     .from("platform_settings")
     .select("evolution_go_url, evolution_go_global_api_key")
     .limit(1)
     .maybeSingle();
 
-  if (!fecha?.evolution_go_url || !fecha?.evolution_go_global_api_key) return null;
+  if (!data?.evolution_go_url || !data?.evolution_go_global_api_key) return null;
 
   return {
-    url: String(fecha.evolution_go_url).replace(/\/$/, ""),
-    globalApiKey: String(fecha.evolution_go_global_api_key),
+    url: String(data.evolution_go_url).replace(/\/$/, ""),
+    globalApiKey: String(data.evolution_go_global_api_key),
   };
 }
 
@@ -85,7 +85,7 @@ function normalizeQrString(value: any): string | null {
   const raw = value.trim();
   if (raw.length <= 20) return null;
 
-  // Evolution Go may return "fecha:image/png;base64,...|2@raw-pairing".
+  // Evolution Go may return "data:image/png;base64,...|2@raw-pairing".
   // The QR must encode only the raw pairing string; storing the combined value
   // creates a QR that looks valid visually but WhatsApp rejects it.
   const pipeIndex = raw.indexOf("|");
@@ -107,8 +107,8 @@ function extractQr(obj: any): string | null {
   const candidates = [
     obj.qrcode, obj.qr, obj.base64, obj.code, obj.QRCode, obj.qr_code,
     obj?.qrcode?.base64, obj?.qrcode?.code,
-    obj?.fecha?.qrcode, obj?.fecha?.qr, obj?.fecha?.base64, obj?.fecha?.QRCode, obj?.fecha?.code,
-    obj?.fecha?.qrcode?.base64, obj?.fecha?.qrcode?.code,
+    obj?.data?.qrcode, obj?.data?.qr, obj?.data?.base64, obj?.data?.QRCode, obj?.data?.code,
+    obj?.data?.qrcode?.base64, obj?.data?.qrcode?.code,
     obj?.instance?.qrcode, obj?.instance?.qr,
   ];
   for (const c of candidates) {
@@ -229,7 +229,7 @@ Deno.serve(async (req) => {
       });
     }
     const token = authHeader.replace("Bearer ", "");
-    const { fecha: { user }, error: authError } = await supabase.auth.getUser(token);
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -237,14 +237,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { fecha: profile } = await supabase
+    const { data: profile } = await supabase
       .from("profiles")
       .select("organization_id")
       .eq("id", user.id)
       .single();
 
     // Check super admin role
-    const { fecha: superAdminRow } = await supabase
+    const { data: superAdminRow } = await supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", user.id)
@@ -284,7 +284,7 @@ Deno.serve(async (req) => {
 
       if (res.ok) {
         return new Response(
-          JSON.stringify({ ok: true, status: res.status, message: "Conexão estabelecida com éxito!", fecha: res.body }),
+          JSON.stringify({ ok: true, status: res.status, message: "Conexão estabelecida com éxito!", data: res.body }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -344,8 +344,8 @@ Deno.serve(async (req) => {
         );
       }
 
-      // Evolution Go responde: { fecha: { id, name, token, ... }, message: "success" }
-      const created = createRes.body?.fecha ?? createRes.body?.instance ?? createRes.body ?? {};
+      // Evolution Go responde: { data: { id, name, token, ... }, message: "success" }
+      const created = createRes.body?.data ?? createRes.body?.instance ?? createRes.body ?? {};
       const uuid = created?.id ?? created?.instanceId ?? created?.uuid ?? null;
       const instanceToken = created?.token ?? created?.hash?.apikey ?? created?.apikey ?? generatedToken;
       console.log(`[create_instance] parsed uuid=${uuid} token=${maskKey(instanceToken)}`);
@@ -362,7 +362,7 @@ Deno.serve(async (req) => {
       }
 
       // Persist in DB linked to the chosen organization
-      const { fecha: inserted, error: insErr } = await supabase
+      const { data: inserted, error: insErr } = await supabase
         .from("evolution_instances")
         .insert({
           organization_id: targetOrgId,
@@ -421,10 +421,10 @@ Deno.serve(async (req) => {
         });
       }
 
-      const { fecha: hasAdmin } = await supabase.rpc("has_role", {
+      const { data: hasAdmin } = await supabase.rpc("has_role", {
         _user_id: user.id, _role: "admin",
       });
-      const { fecha: hasManager } = await supabase.rpc("has_role", {
+      const { data: hasManager } = await supabase.rpc("has_role", {
         _user_id: user.id, _role: "manager",
       });
       if (!isSuperAdmin && !hasAdmin && !hasManager) {
@@ -444,7 +444,7 @@ Deno.serve(async (req) => {
       }
 
       // Verifica limites efetivos
-      const { fecha: limitsData, error: limitsErr } = await supabase.rpc("get_organization_effective_limits", {
+      const { data: limitsData, error: limitsErr } = await supabase.rpc("get_organization_effective_limits", {
         p_org_id: orgId,
       });
       if (limitsErr) {
@@ -470,7 +470,7 @@ Deno.serve(async (req) => {
       }
 
       // Busca slug da org para prefixar nombre (evita colisão global no Evolution Go)
-      const { fecha: orgRow } = await supabase
+      const { data: orgRow } = await supabase
         .from("organizations")
         .select("slug, name")
         .eq("id", orgId)
@@ -486,7 +486,7 @@ Deno.serve(async (req) => {
       const finalName = `${orgSlug}-${rawName}`.slice(0, 50);
 
       // Verifica se já existe localmente uma instância com esse nombre
-      const { fecha: dup } = await supabase
+      const { data: dup } = await supabase
         .from("evolution_instances")
         .select("id")
         .eq("name", finalName)
@@ -516,7 +516,7 @@ Deno.serve(async (req) => {
         }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      const created = createRes.body?.fecha ?? createRes.body?.instance ?? createRes.body ?? {};
+      const created = createRes.body?.data ?? createRes.body?.instance ?? createRes.body ?? {};
       const uuid = created?.id ?? created?.instanceId ?? created?.uuid ?? null;
       const instanceToken = created?.token ?? created?.hash?.apikey ?? created?.apikey ?? generatedToken;
 
@@ -528,7 +528,7 @@ Deno.serve(async (req) => {
         }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      const { fecha: inserted, error: insErr } = await supabase
+      const { data: inserted, error: insErr } = await supabase
         .from("evolution_instances")
         .insert({
           organization_id: orgId,
@@ -591,7 +591,7 @@ Deno.serve(async (req) => {
         });
       }
 
-      const { fecha: inst } = await supabase
+      const { data: inst } = await supabase
         .from("evolution_instances")
         .select("organization_id, metadata")
         .eq("id", id)
@@ -630,8 +630,8 @@ Deno.serve(async (req) => {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { fecha: hasAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
-      const { fecha: hasManager } = await supabase.rpc("has_role", { _user_id: user.id, _role: "manager" });
+      const { data: hasAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
+      const { data: hasManager } = await supabase.rpc("has_role", { _user_id: user.id, _role: "manager" });
       if (!isSuperAdmin && !hasAdmin && !hasManager) {
         return new Response(JSON.stringify({ error: "Apenas administradores ou gerentes podem eliminar conexões." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -639,7 +639,7 @@ Deno.serve(async (req) => {
       }
 
       const id = String(body.id || "");
-      const { fecha: inst } = await supabase
+      const { data: inst } = await supabase
         .from("evolution_instances")
         .select("organization_id, name, metadata")
         .eq("id", id)
@@ -682,7 +682,7 @@ Deno.serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { fecha: inst, error: instErr } = await supabase
+      const { data: inst, error: instErr } = await supabase
         .from("evolution_instances")
         .select("id, name, instance_id, instance_token, organization_id, metadata")
         .eq("id", id)
@@ -853,7 +853,7 @@ Deno.serve(async (req) => {
       }
       const list: any[] = Array.isArray(res.body)
         ? res.body
-        : (res.body?.fecha ?? res.body?.instances ?? []);
+        : (res.body?.data ?? res.body?.instances ?? []);
 
       const webhookUrl = `${supabaseUrl}/functions/v1/evolution-webhook`;
       let imported = 0;
@@ -877,7 +877,7 @@ Deno.serve(async (req) => {
         if (webhookRes.ok) webhooksOk++; else webhooksFailed++;
 
         // Match by name across ALL orgs (super admin scope)
-        const { fecha: existing } = await supabase
+        const { data: existing } = await supabase
           .from("evolution_instances")
           .select("id, organization_id")
           .eq("name", parsed.name)
@@ -956,7 +956,7 @@ Deno.serve(async (req) => {
         });
       }
       if (orgId) {
-        const { fecha: org } = await supabase
+        const { data: org } = await supabase
           .from("organizations")
           .select("id")
           .eq("id", orgId)
@@ -992,7 +992,7 @@ Deno.serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { fecha: inst, error: instErr } = await supabase
+      const { data: inst, error: instErr } = await supabase
         .from("evolution_instances")
         .select("id, name, instance_id, instance_token, organization_id, metadata")
         .eq("id", id)
@@ -1052,7 +1052,7 @@ Deno.serve(async (req) => {
       const id = String(body.id || "");
 
       // Try to delete on Evolution Go too (best-effort)
-      const { fecha: inst } = await supabase
+      const { data: inst } = await supabase
         .from("evolution_instances")
         .select("name, metadata")
         .eq("id", id)
@@ -1079,7 +1079,7 @@ Deno.serve(async (req) => {
     // ---- SET DEFAULT (admin/manager of the org OR super admin) ----
     if (action === "set_default") {
       const id = String(body.id || "");
-      const { fecha: inst } = await supabase
+      const { data: inst } = await supabase
         .from("evolution_instances")
         .select("organization_id")
         .eq("id", id)
@@ -1124,7 +1124,7 @@ Deno.serve(async (req) => {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { fecha: inst, error: instErr } = await supabase
+      const { data: inst, error: instErr } = await supabase
         .from("evolution_instances")
         .select("id, name, instance_id, instance_token, organization_id, metadata")
         .eq("id", id)
@@ -1189,7 +1189,7 @@ Deno.serve(async (req) => {
           status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { fecha: inst, error: instErr } = await supabase
+      const { data: inst, error: instErr } = await supabase
         .from("evolution_instances")
         .select("id, name, instance_id, instance_token, organization_id, metadata")
         .eq("id", id)
@@ -1222,7 +1222,7 @@ Deno.serve(async (req) => {
       );
       console.log(`[logout_instance] uuid=${uuid} status=${res.status} ok=${res.ok}`);
 
-      // Always clear local pairing fecha — even if Evolution complained, the user wants it unlinked
+      // Always clear local pairing data — even if Evolution complained, the user wants it unlinked
       await supabase
         .from("evolution_instances")
         .update({

@@ -66,7 +66,7 @@ export async function executeTool(
       ctx,
       name,
       input,
-      result.fecha ?? null,
+      result.data ?? null,
       result.success,
       result.error ?? null,
       duration,
@@ -118,7 +118,7 @@ async function logExecution(
 export async function checkSafetyLimits(
   ctx: ToolContext,
 ): Promise<{ allowed: boolean; reason?: string }> {
-  const { fecha: limits } = await ctx.supabase
+  const { data: limits } = await ctx.supabase
     .from('agent_safety_limits')
     .select('*')
     .eq('organization_id', ctx.organizationId)
@@ -130,7 +130,7 @@ export async function checkSafetyLimits(
   const since = new Date();
   since.setHours(0, 0, 0, 0);
 
-  const { fecha: stats } = await ctx.supabase
+  const { data: stats } = await ctx.supabase
     .from('agent_tool_executions')
     .select('estimated_cost_cents')
     .eq('organization_id', ctx.organizationId)

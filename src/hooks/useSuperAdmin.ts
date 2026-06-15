@@ -67,7 +67,7 @@ export function useUpdatePlatformSettings() {
       return null;
     },
     onSuccess: (updated) => {
-      // Limpa o cache local antigo (placeholder visual) para não voltar ao estado anterior
+      // Limpa o cache local antigo (placeholder visual) para no voltar ao estado anterior
       try {
         localStorage.removeItem('platform-branding-cache-v1');
       } catch {
@@ -75,7 +75,7 @@ export function useUpdatePlatformSettings() {
       }
 
       // Semeia imediatamente o resultado na query canônica de branding
-      // para que Logo, Login, favicon, cores etc. atualizem na mesma sessão
+      // para que Logo, Login, favicon, cores etc. atualizem na misma sessão
       // sem precisar de refresh manual.
       if (updated) {
         try {
@@ -247,7 +247,7 @@ export function useDeleteOrganization() {
         { body: { organization_id } }
       );
       if (error) throw error;
-      if (data && data.ok === false) throw new Error(data.error || 'Falha ao excluir');
+      if (data && data.ok === false) throw new Error(data.error || 'Falha ao eliminar');
       return data;
     },
     onSuccess: () => {
@@ -424,7 +424,7 @@ export function useSuperAdminStats() {
         .select('deal_value');
       const totalDealsValue = deals?.reduce((sum, d) => sum + (Number(d.deal_value) || 0), 0) || 0;
 
-      // Distribuição dinâmica baseada nos planos reais cadastrados
+      // Distribución dinâmica baseada nos planes reais cadastrados
       const [plansRes, orgsRes] = await Promise.all([
         supabase
           .from('platform_plans')
@@ -458,7 +458,7 @@ export function useSuperAdminStats() {
       if (unassignedCount > 0) {
         planDistribution.push({
           id: 'unassigned',
-          name: 'Sem plano',
+          name: 'Sem plan',
           slug: 'unassigned',
           color: '#6b7280',
           count: unassignedCount,
@@ -516,7 +516,7 @@ export function useAllUsers() {
   return useQuery({
     queryKey: ['all-users'],
     queryFn: async () => {
-      // Buscar profiles primeiro (evita erro 300 de múltiplos relacionamentos)
+      // Buscar profiles primeiro (evita error 300 de múltiplos relacionamentos)
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('*')
@@ -528,7 +528,7 @@ export function useAllUsers() {
       }
       if (!profiles || profiles.length === 0) return [];
       
-      // Buscar organizações (apenas se houver org_ids válidos)
+      // Buscar organizaciones (apenas se houver org_ids válidos)
       const orgIds = [...new Set(profiles.map(p => p.organization_id).filter(Boolean))] as string[];
       let organizations: { id: string; name: string }[] = [];
       
@@ -653,7 +653,7 @@ export function useCreateOrganizationInvitation() {
       role: 'admin' | 'manager' | 'seller';
       organizationId: string;
     }) => {
-      // Verificar se já existe convite pendente
+      // Verificar se ya existe convite pendente
       const { data: existing } = await supabase
         .from('team_invitations')
         .select('id')
@@ -680,7 +680,7 @@ export function useCreateOrganizationInvitation() {
       
       if (error) throw error;
       
-      // Buscar nome da organização para o email
+      // Buscar nombre da organización para o email
       const { data: org } = await supabase
         .from('organizations')
         .select('name')

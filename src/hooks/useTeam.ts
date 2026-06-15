@@ -218,7 +218,7 @@ export function useProductAssignments(productId?: string) {
       }
       if (!orgId) return [];
 
-      // Busca somente IDs de usuários da empresa atual.
+      // Busca somente IDs de usuarios de la empresa atual.
       const { data: orgProfiles, error: orgErr } = await supabase
         .from('profiles')
         .select('id')
@@ -259,7 +259,7 @@ export function useAssignProduct() {
       monthlyGoal?: number;
       assignedBy?: string;
     }) => {
-      // Use upsert to handle duplicates gracefully
+      // Usa upsert to handle duplicates gracefully
       const { data, error } = await supabase
         .from('user_product_assignments')
         .upsert({

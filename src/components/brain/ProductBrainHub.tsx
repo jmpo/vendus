@@ -132,7 +132,7 @@ export function ProductBrainHub({ productId, onProductChange }: ProductBrainHubP
         <CardContent className="p-6">
           <p className="text-muted-foreground">
             Adicione conhecimento através de diferentes fontes. Quanto mais dados, mais inteligente 
-            a IA ficará para ajudar seus vendedores com respostas precisas e contextualizadas.
+            a IA ficará para ajudar sus vendedores com respuestas precisas e contextualizadas.
           </p>
         </CardContent>
       </Card>

@@ -111,7 +111,7 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
     [members, formData.default_schedule_user_id]
   );
 
-  // Auto-clean: ao trocar host, remove tipos de evento que não pertencem mais ao host
+  // Auto-clean: ao trocar host, remove tipos de evento que no pertencem mais ao host
   useEffect(() => {
     if (!formData.default_schedule_user_id) return;
     const validIds = new Set(eventTypes.map((e) => e.id));
@@ -164,7 +164,7 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
               onValueChange={(v) =>
                 onChange({
                   default_schedule_user_id: v === '__none__' ? null : v,
-                  // limpa tipos quando troca host
+                  // limpa tipos cuando troca host
                   allowed_event_type_ids: [],
                 })
               }
@@ -205,7 +205,7 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
             <p className="text-xs text-muted-foreground">
               {hostMember
                 ? `Tipos cadastrados por ${hostMember.full_name || hostMember.email}.`
-                : 'Selecione um anfitrião para listar os tipos de evento dele.'}
+                : 'Seleccioná um anfitrião para listar os tipos de evento dele.'}
               {' '}Si se permite más de uno, la IA le pregunta al lead cuál desea agendar.
             </p>
 
@@ -222,17 +222,17 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
                     <p className="text-xs text-muted-foreground">
                       Sem tipo de evento configurado, o sistema cria automaticamente{' '}
                       <span className="font-medium text-foreground">"Apresentação {linkedProduct.name}"</span>{' '}
-                      (30 min, Google Meet) na primeira reunião agendada por esse agente.
-                      Você pode personalizar depois ou{' '}
-                      <Link to="/admin?tab=booking" className="text-primary underline">criar tipos específicos</Link>.
+                      (30 min, Google Meet) na primeira reunión agendada por esse agente.
+                      Usted puede personalizar después ou{' '}
+                      <Link to="/admin?tab=booking" className="text-primary underline">crear tipos específicos</Link>.
                     </p>
                   </div>
                 </div>
               ) : (
                 <div className="text-xs text-muted-foreground italic p-3 border border-dashed rounded-lg">
-                  Esse anfitrião ainda não tem tipos de evento ativos.{' '}
+                  Esse anfitrião aún no tiene tipos de evento ativos.{' '}
                   <Link to="/admin?tab=booking" className="text-primary underline">
-                    Criar agora
+                    Criar ahora
                   </Link>
                 </div>
               )

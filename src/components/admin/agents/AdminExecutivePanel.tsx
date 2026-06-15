@@ -35,7 +35,7 @@ const KPI_OPTIONS = [
   { id: 'top_sellers', label: 'Top vendedores' },
 ];
 
-// Data sources the admin agent can consult via read-only tools.
+// Fecha sources the admin agent can consult via read-only tools.
 // Each one maps to a tool in admin-agent-handle-inbound and can be turned off
 // to restrict what the agent is allowed to look at.
 const ADMIN_DATA_SOURCES = [
@@ -43,7 +43,7 @@ const ADMIN_DATA_SOURCES = [
   { id: 'get_inbox_status', label: 'Inbox y conversaciones', description: 'Conversaciones activas y sin atención' },
   { id: 'get_team_status', label: 'Equipo y estado', description: 'Vendedores en línea/fuera de línea y carga de leads' },
   { id: 'get_tasks_overview', label: 'Tareas pendientes', description: 'Tareas vencidas y en curso' },
-  { id: 'get_bookings', label: 'Reuniones e agendamentos', description: 'Eventos del calendario' },
+  { id: 'get_bookings', label: 'Reuniones e reservas', description: 'Eventos del calendario' },
   { id: 'get_financial_summary', label: 'Finanzas y comisiones', description: 'Ingresos, comisiones pendientes, pronósticos' },
   { id: 'get_goals_progress', label: 'Metas y rendimiento', description: 'Progreso individual y del equipo' },
   { id: 'get_agent_logs', label: 'Logs de los agentes IA', description: 'Errores y acciones recientes de los agentes' },
@@ -279,7 +279,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
     }
     const chosen = (instances ?? []).find((i: any) => i.id === fallbackInstanceId);
     if (chosen && chosen.status !== 'connected') {
-      toast.error(`Conexão "${chosen.name}" não está conectada (status: ${chosen.status}). Reconecte ou escolha outra.`);
+      toast.error(`Conexão "${chosen.name}" no está conectada (status: ${chosen.status}). Reconecte ou escolha otra.`);
       return;
     }
     setTesting(true);
@@ -288,15 +288,15 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
       const { error } = await supabase.functions.invoke('admin-agent-handle-inbound', {
         body: {
           organization_id: profile?.organization_id,
-          message: 'Me mande um resumo de teste com os dados de hoje.',
+          message: 'Me mande um resumen de teste com os dados de hoy.',
           phone,
           instance_id: fallbackInstanceId,
         },
       });
       if (error) throw error;
-      toast.success(`Mensagem enviada via "${chosen?.name ?? 'conexão'}" — confira seu WhatsApp.`);
+      toast.success(`Mensaje enviada via "${chosen?.name ?? 'conexão'}" — confira su WhatsApp.`);
     } catch (e: any) {
-      toast.error('Falha ao enviar teste: ' + (e?.message ?? 'erro'));
+      toast.error('Falha al enviar teste: ' + (e?.message ?? 'error'));
     } finally {
       setTesting(false);
     }
@@ -393,7 +393,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                 Productos bajo seguimiento
               </Label>
               <p className="text-xs text-muted-foreground">
-                Seleccione quais produtos o agente deve vigiar. Vazio = todos os produtos da organização.
+                Seleccione quais productos o agente debe vigiar. Vazio = todos os productos da organización.
               </p>
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {(products ?? []).length === 0 && (
@@ -427,7 +427,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
 
       {form.admin_agent_enabled && (
         <>
-          {/* Permissões de leitura — controle do que o agente pode consultar */}
+          {/* Permissões de leitura — controle do que o agente puede consultar */}
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
@@ -443,7 +443,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                     </Badge>
                   </CardTitle>
                   <CardDescription>
-                    Controle exatamente o que o Agente Admin pode olhar. Desligue uma fonte e ele não terá acesso a esses dados.
+                    Controle exatamente o que o Agente Admin puede olhar. Desligue uma fonte e ele no terá acesso a esses dados.
                   </CardDescription>
                 </div>
               </div>
@@ -451,7 +451,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
             <CardContent className="space-y-2 pt-0">
               {!adminAgent && (
                 <p className="text-xs text-muted-foreground italic">
-                  Crie um agente do tipo Administrativo para configurar as fontes.
+                  Crea um agente do tipo Administrativo para configurar as fontes.
                 </p>
               )}
               {adminAgent && ADMIN_DATA_SOURCES.map((src) => {
@@ -475,7 +475,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
             </CardContent>
           </Card>
 
-          {/* Resumo Diário */}
+          {/* Resumen Diário */}
           <Card className={cn(disabled && 'opacity-50 pointer-events-none')}>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -484,8 +484,8 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                     <Clock className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <CardTitle className="text-base">Resumo Diário</CardTitle>
-                    <CardDescription>KPIs do dia anterior, todo dia de manhã</CardDescription>
+                    <CardTitle className="text-base">Resumen Diário</CardTitle>
+                    <CardDescription>KPIs do día anterior, todo día de manhã</CardDescription>
                   </div>
                 </div>
                 <Switch
@@ -506,7 +506,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                       ))}
                     </SelectContent>
                   </Select>
-                  <Label className="text-sm text-muted-foreground">(horário de Brasília)</Label>
+                  <Label className="text-sm text-muted-foreground">(horario de Brasília)</Label>
                 </div>
 
                 <div className="pl-12 space-y-2">
@@ -599,7 +599,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                   </div>
                   <div>
                     <CardTitle className="text-base">Alertas em Tempo Real</CardTitle>
-                    <CardDescription>Notificações imediatas quando triggers disparam</CardDescription>
+                    <CardDescription>Notificações imediatas cuando triggers disparam</CardDescription>
                   </div>
                 </div>
                 <Switch
@@ -616,7 +616,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
                       <Label className="text-sm font-medium">Lead de alto valor entra no pipeline</Label>
-                      <p className="text-xs text-muted-foreground">Alertar quando deal_value ≥ valor abaixo</p>
+                      <p className="text-xs text-muted-foreground">Alertar cuando deal_value ≥ valor abaixo</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-muted-foreground">R$</span>
@@ -633,8 +633,8 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
 
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
-                      <Label className="text-sm font-medium">Conversa sem atendimento</Label>
-                      <p className="text-xs text-muted-foreground">Alertar após X minutos sem resposta</p>
+                      <Label className="text-sm font-medium">Conversación sem atención</Label>
+                      <p className="text-xs text-muted-foreground">Alertar após X minutos sem respuesta</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Input
@@ -651,8 +651,8 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
 
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
-                      <Label className="text-sm font-medium">Vendedor offline em horário comercial</Label>
-                      <p className="text-xs text-muted-foreground">Alertar após X minutos offline (8h-18h, dias úteis)</p>
+                      <Label className="text-sm font-medium">Vendedor offline em horario comercial</Label>
+                      <p className="text-xs text-muted-foreground">Alertar após X minutos offline (8h-18h, días úteis)</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Input
@@ -670,7 +670,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
                       <Label className="text-sm font-medium">Erros consecutivos em agente IA</Label>
-                      <p className="text-xs text-muted-foreground">Alertar quando um agente acumular X falhas em 30min</p>
+                      <p className="text-xs text-muted-foreground">Alertar cuando um agente acumular X falhas em 30min</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Input
@@ -688,7 +688,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <Label className="text-sm font-medium">Reuniones confirmadas/canceladas</Label>
-                      <p className="text-xs text-muted-foreground">Notificar quando o status de uma reunião muda</p>
+                      <p className="text-xs text-muted-foreground">Notificar cuando o status de uma reunión muda</p>
                     </div>
                     <Switch
                       checked={form.alert_meeting_changes}
@@ -701,7 +701,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <Label className="text-sm font-medium">Meta atingida</Label>
-                      <p className="text-xs text-muted-foreground">Notificar quando vendedor bater a meta do período</p>
+                      <p className="text-xs text-muted-foreground">Notificar cuando vendedor bater a meta do período</p>
                     </div>
                     <Switch
                       checked={form.alert_goal_achieved}
@@ -711,11 +711,11 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
 
                   <Separator />
 
-                  {/* NOVO: pico de leads em produto */}
+                  {/* NOVO: pico de leads em producto */}
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
-                      <Label className="text-sm font-medium">Pico de leads em produto específico</Label>
-                      <p className="text-xs text-muted-foreground">Alertar quando volume &gt; X% acima da média</p>
+                      <Label className="text-sm font-medium">Pico de leads em producto específico</Label>
+                      <p className="text-xs text-muted-foreground">Alertar cuando volume &gt; X% acima da média</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Switch
@@ -741,8 +741,8 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                   {/* NOVO: lead crítico parado */}
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
-                      <Label className="text-sm font-medium">Lead de produto crítico parado</Label>
-                      <p className="text-xs text-muted-foreground">Alertar quando lead vigiado fica parado por X horas</p>
+                      <Label className="text-sm font-medium">Lead de producto crítico parado</Label>
+                      <p className="text-xs text-muted-foreground">Alertar cuando lead vigiado fica parado por X horas</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Input
@@ -814,7 +814,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Você verá apenas conexões desta empresa. O agente responde sempre por essa conexão.
+              Usted verá apenas conexões desta empresa. O agente responde siempre por essa conexão.
             </p>
           </div>
         )}
@@ -822,28 +822,28 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
         <div className="flex flex-wrap items-center gap-2">
           <Button onClick={handleSave} disabled={!hasChanges || saveSettings.isPending}>
             {saveSettings.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-            Salvar configurações
+            Salvar configuraciones
           </Button>
           <Button variant="outline" onClick={handleTest} disabled={testing || !form.admin_agent_enabled}>
             {testing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Send className="h-4 w-4 mr-2" />}
-            Enviar mensagem de teste
+            Enviar mensaje de teste
           </Button>
 
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" onClick={() => refetchMessages()}>
                 <History className="h-4 w-4 mr-2" />
-                Últimas mensagens
+                Últimas mensajes
               </Button>
             </SheetTrigger>
             <SheetContent className="w-full sm:max-w-lg">
               <SheetHeader>
-                <SheetTitle>Últimas mensagens enviadas pelo Agente Admin</SheetTitle>
+                <SheetTitle>Últimas mensajes enviadas pelo Agente Admin</SheetTitle>
               </SheetHeader>
               <ScrollArea className="h-[calc(100vh-100px)] mt-4 pr-4">
                 <div className="space-y-3">
                   {(recentMessages ?? []).length === 0 && (
-                    <p className="text-sm text-muted-foreground italic">Nenhuma mensagem registrada ainda.</p>
+                    <p className="text-sm text-muted-foreground italic">Nenhuma mensaje registrada aún.</p>
                   )}
                   {(recentMessages ?? []).map((m: any) => (
                     <div

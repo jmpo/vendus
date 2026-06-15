@@ -23,7 +23,7 @@ function parseChatFlow(data: any): ChatFlow {
   };
 }
 
-// Buscar todos os flujos de um produto
+// Buscar todos os flujos de um producto
 export function useChatFlows(productId?: string) {
   return useQuery({
     queryKey: ['chat-flows', productId],
@@ -66,7 +66,7 @@ export function useChatFlow(flowId?: string) {
   });
 }
 
-// Buscar flujo ativo de um produto
+// Buscar flujo ativo de um producto
 export function useActiveChatFlow(productId?: string) {
   return useQuery({
     queryKey: ['chat-flow-active', productId],
@@ -103,7 +103,7 @@ export function useCreateChatFlow() {
         .insert({
           product_id: params.productId,
           organization_id: params.organizationId,
-          name: params.name || 'Novo Fluxo',
+          name: params.name || 'Novo Flujo',
           description: params.description || null,
           blocks: [],
           start_block_id: null,
@@ -216,7 +216,7 @@ export function useToggleChatFlowActive() {
   
   return useMutation({
     mutationFn: async (params: { flowId: string; isActive: boolean; productId: string }) => {
-      // Se ativando, desativar outros flujos do produto primeiro
+      // Se ativando, desativar outros flujos do producto primeiro
       if (params.isActive) {
         await supabase
           .from('chat_flows')

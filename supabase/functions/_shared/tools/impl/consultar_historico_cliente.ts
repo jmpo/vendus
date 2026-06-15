@@ -15,7 +15,7 @@ export const consultarHistoricoClienteTool: ToolDefinition = {
   handler: async (_input, ctx) => {
     if (!ctx.leadId) return { success: false, error: 'leadId obligatorio' };
 
-    const { fecha: lead } = await ctx.supabase
+    const { data: lead } = await ctx.supabase
       .from('leads')
       .select('id, name, email, phone, created_at, lead_origin, lead_channel')
       .eq('id', ctx.leadId)
@@ -59,10 +59,10 @@ export const consultarHistoricoClienteTool: ToolDefinition = {
         .eq('lead_id', ctx.leadId),
     ]);
 
-    const orders = ordersRes.fecha ?? [];
-    const deals = dealsRes.fecha ?? [];
+    const orders = ordersRes.data ?? [];
+    const deals = dealsRes.data ?? [];
     const interactionsCount = interactionsRes.count ?? 0;
-    const tags = (tagsRes.fecha ?? []).map((r: any) => r.lead_tags?.name).filter(Boolean);
+    const tags = (tagsRes.data ?? []).map((r: any) => r.lead_tags?.name).filter(Boolean);
 
     const paidOrders = orders.filter((o: any) => o.status === 'paid');
     const totalSpent = paidOrders.reduce((s: number, o: any) => s + Number(o.amount ?? 0), 0);
@@ -72,7 +72,7 @@ export const consultarHistoricoClienteTool: ToolDefinition = {
 
     return {
       success: true,
-      fecha: {
+      data: {
         lead: {
           name: lead.name,
           created_at: lead.created_at,

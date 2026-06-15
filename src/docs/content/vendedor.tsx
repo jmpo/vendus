@@ -370,7 +370,7 @@ export const vendedorPages: DocPage[] = [
           rows={[
             ["Score (0-100)", "Alimentado por interações, BANT e respostas em funis. Use para priorizar."],
             ["SDR", "Quem qualificou o lead. Pode ser diferente do Closer."],
-            ["Closer", "Quem fecha o negócio. Atribuição especializada para times com SDR/Closer."],
+            ["Closer", "Quem data o negócio. Atribuição especializada para times com SDR/Closer."],
             ["Tags", "Classificação livre. Tags podem disparar automações (ver Admin → Tags)."],
             ["Status do funil", "Estágio atual no pipeline (Novo, Qualificado, Proposta, etc.)."],
             ["Custom fields", "Campos personalizados configurados pelo admin."],

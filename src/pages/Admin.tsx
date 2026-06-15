@@ -145,7 +145,7 @@ export default function Admin() {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
-  // Cache de seções já visitadas — mantemos elas montadas (apenas escondidas)
+  // Cache de seções ya visitadas — mantemos elas montadas (apenas escondidas)
   // para que a 2ª visita seja instantânea.
   const visitedRef = useRef<Set<string>>(new Set([activeSection]));
   visitedRef.current.add(activeSection);
@@ -160,7 +160,7 @@ export default function Admin() {
   }, [searchParams, activeSection]);
 
   // Prefetch agressivo: assim que o app carrega, baixamos no idle todas as
-  // seções principais. O usuário sente "clicou, abriu".
+  // seções principais. O usuario sente "clicou, abriu".
   useEffect(() => {
     onIdle(() => {
       Object.values(f).forEach((factory) => prefetch(factory));
@@ -172,8 +172,8 @@ export default function Admin() {
   }
 
   const handleSectionChange = useCallback((id: string) => {
-    // Garante que o chunk começa a baixar antes da transição (caso ainda
-    // não tenha sido prefechado).
+    // Garante que o chunk começa a descargar antes da transição (caso aún
+    // no tenha sido prefechado).
     prefetchAdminSection(id);
     // Mantém ?tab=... na URL para que reload preserve a seção atual.
     const next = new URLSearchParams(searchParams);
@@ -250,7 +250,7 @@ export default function Admin() {
     }
   };
 
-  // Renderiza TODAS as seções já visitadas, escondendo as inativas.
+  // Renderiza TODAS as seções ya visitadas, escondendo as inativas.
   // Resultado: revisitar uma seção é instantâneo (componente segue montado).
   const renderContent = () => (
     <>
@@ -259,9 +259,9 @@ export default function Admin() {
         return (
           <div
             key={sectionId}
-            // `hidden` remove do fluxo visual mas mantém o componente montado.
+            // `hidden` remove do flujo visual mas mantém o componente montado.
             hidden={!isActive}
-            // Aria para acessibilidade quando a seção está oculta.
+            // Aria para acessibilidade cuando a seção está oculta.
             aria-hidden={!isActive}
             style={!isActive ? { display: 'none' } : undefined}
           >

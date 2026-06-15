@@ -334,7 +334,7 @@ export function useUploadSquadIcon() {
       return data.publicUrl;
     },
     onError: (error) => {
-      toast.error('Error al subir el archivo da imagem');
+      toast.error('Error al subir el archivo da imagen');
       console.error(error);
     }
   });

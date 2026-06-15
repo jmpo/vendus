@@ -152,7 +152,7 @@ export const AgentCard = memo(function AgentCard({
 
             {/* Active Channels */}
             <div className="flex flex-wrap gap-1">
-              {/* Aviso silencioso quando o handoff não foi configurado: a transferência sai muda */}
+              {/* Aviso silencioso cuando o handoff no fue configurado: a transferência sai muda */}
               {!agent.handoff_outgoing_message?.trim() &&
                 !agent.handoff_incoming_message?.trim() && (
                   <Badge
@@ -210,7 +210,7 @@ export const AgentCard = memo(function AgentCard({
                   Duplicar
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
-                  // Exporta o agente como JSON limpo (sem ids, datas e org).
+                  // Exporta o agente como JSON limpo (sem ids, fechas e org).
                   const STRIP = new Set([
                     'id', 'created_at', 'updated_at', 'organization_id', 'created_by',
                     'is_default',

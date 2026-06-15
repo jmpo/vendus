@@ -32,7 +32,7 @@ export function useSuperAdminSetupChecklist() {
       const items: ChecklistItem[] = [
         {
           id: 'password',
-          label: 'Trocar senha padrão',
+          label: 'Trocar contraseña padrão',
           description: 'Sustituí la contraseña de instalación por una contraseña fuerte.',
           done: !!s?.default_password_changed,
           required: true,
@@ -49,7 +49,7 @@ export function useSuperAdminSetupChecklist() {
         {
           id: 'plans',
           label: 'Planos comerciais',
-          description: 'Tenha pelo menos 1 plano ativo cadastrado.',
+          description: 'Tenha pelo menos 1 plan ativo cadastrado.',
           done: (plansRes.count ?? 0) > 0,
           required: true,
           navigateTo: 'plans',
@@ -85,7 +85,7 @@ export function useSuperAdminSetupChecklist() {
         .from('platform_settings')
         .select('id')
         .maybeSingle();
-      if (!existing?.id) throw new Error('platform_settings ainda não inicializado');
+      if (!existing?.id) throw new Error('platform_settings aún no inicializado');
       const { error } = await supabase
         .from('platform_settings')
         .update({ remix_setup_completed: true } as any)

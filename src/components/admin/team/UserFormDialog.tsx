@@ -404,7 +404,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
               <Label>Conexión Predeterminada (WhatsApp)</Label>
               {(!connections || connections.length === 0) ? (
                 <div className="text-xs rounded-md border border-yellow-300 bg-yellow-50 text-yellow-900 px-3 py-2">
-                  No se encontró ninguna conexión de WhatsApp. Conecte un dispositivo en <strong>Integrações → WhatsApp</strong> para que este usuario reciba conversaciones.
+                  No se encontró ninguna conexión de WhatsApp. Conecte un dispositivo en <strong>Integraciones → WhatsApp</strong> para que este usuario reciba conversaciones.
                 </div>
               ) : (
                 <Select
@@ -426,17 +426,17 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label>Início de trabalho</Label>
-                <Input type="time" value={general.work_start_time} onChange={(e) => updateGeneral('work_start_time', e.target.value)} />
+                <Label>Inicio de trabalho</Label>
+                <Input type="equipo" value={general.work_start_time} onChange={(e) => updateGeneral('work_start_time', e.target.value)} />
               </div>
               <div className="space-y-1.5">
-                <Label>Fim de trabalho</Label>
-                <Input type="time" value={general.work_end_time} onChange={(e) => updateGeneral('work_end_time', e.target.value)} />
+                <Label>Fin de trabalho</Label>
+                <Input type="equipo" value={general.work_end_time} onChange={(e) => updateGeneral('work_end_time', e.target.value)} />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <Label>Mensagem de despedida</Label>
+              <Label>Mensaje de despedida</Label>
               <Textarea rows={2} value={general.farewell_message} onChange={(e) => updateGeneral('farewell_message', e.target.value)} />
             </div>
 
@@ -469,24 +469,24 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
           <TabsContent value="permissions" className="space-y-5 pt-5">
             {!isEdit ? (
               <p className="text-sm text-muted-foreground text-center py-8">
-                Permisos poderão ser configuradas após criar o usuário.<br />
+                Permisos poderão ser configuradas após crear o usuario.<br />
                 Defaults serão aplicadas automaticamente conforme o perfil escolhido.
               </p>
             ) : !permissions ? (
               <div className="text-center py-8 space-y-3">
-                <p className="text-sm text-muted-foreground">Permisos ainda não foram inicializadas.</p>
+                <p className="text-sm text-muted-foreground">Permisos aún no foram inicializadas.</p>
                 <Button
                   onClick={() => member && initPermissions.mutate({ userId: member.id, organizationId: member.organization_id || '', role: general.role })}
                   disabled={initPermissions.isPending}
                 >
                   {initPermissions.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Inicializar permissões
+                  Inicializar permisos
                 </Button>
               </div>
             ) : (
               <>
                 <div className="space-y-1.5">
-                  <Label>Modo de visualização de agendamentos</Label>
+                  <Label>Modo de visualização de reservas</Label>
                   <Select
                     value={localPerms.view_schedules_mode || 'mine_only'}
                     onValueChange={(v) => setLocalPerms((p) => ({ ...p, view_schedules_mode: v }))}
@@ -529,7 +529,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
           <TabsContent value="notifications" className="space-y-5 pt-5">
             {!isEdit ? (
               <p className="text-sm text-muted-foreground text-center py-8">
-                As notificações poderão ser configuradas após criar o usuário.
+                As notificaciones poderão ser configuradas após crear o usuario.
               </p>
             ) : (
               <>
@@ -554,7 +554,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
                   <h4 className="text-sm font-semibold">Notificaciones neste Aparelho (Push)</h4>
                   <div className="p-4 border rounded-lg text-center space-y-2">
                     <p className="text-xs text-muted-foreground">
-                      Receba notificações mesmo com o navegador fechado ou minimizado.
+                      Receba notificaciones mismo com o navegador cerrado ou minimizado.
                     </p>
                     <Button
                       variant="outline"

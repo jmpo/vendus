@@ -44,7 +44,7 @@ serve(async (req) => {
     // Verifica a assinatura criptográfica do JWT via Supabase (no decodificar manualmente).
     let user: { id: string; email: string } | null = null;
     try {
-      const { fecha: claimsData, error: claimsErr } = await supabase.auth.getClaims(token);
+      const { data: claimsData, error: claimsErr } = await supabase.auth.getClaims(token);
       if (!claimsErr && claimsData?.claims?.sub) {
         user = {
           id: claimsData.claims.sub as string,
@@ -89,8 +89,8 @@ serve(async (req) => {
         fetchWithRetry(() => supabase.from('profiles').select('organization_id').eq('id', user!.id).single(), 'profiles'),
         fetchWithRetry(() => supabase.from('user_roles').select('role').eq('user_id', user!.id), 'user_roles'),
       ]);
-      profile = pRes?.fecha;
-      roles = rRes?.fecha;
+      profile = pRes?.data;
+      roles = rRes?.data;
     } catch (e) {
       console.error('[webchat-inbox] DB unavailable (upstream):', (e as Error).message);
       return new Response(
@@ -136,7 +136,7 @@ serve(async (req) => {
       const limitRaw = parseInt(url.searchParams.get('limit') || '50', 10);
       const limit = Math.max(1, Math.min(isFinite(limitRaw) ? limitRaw : 50, 200));
 
-      const { fecha: rows, error } = await supabase.rpc('inbox_list_conversations', {
+      const { data: rows, error } = await supabase.rpc('inbox_list_conversations', {
         p_user_id: user.id,
         p_tab: tab,
         p_product_ids: productIds,
@@ -224,7 +224,7 @@ serve(async (req) => {
           const chunk = missingLastMessage.slice(i, i + chunkSize);
           const fallbackResults = await Promise.all(
             chunk.map(async (conversation: any) => {
-              const { fecha, error } = await supabase
+              const { data, error } = await supabase
                 .from('webchat_messages')
                 .select('conversation_id, content, metadata, sender_type, created_at')
                 .eq('conversation_id', conversation.id)
@@ -238,7 +238,7 @@ serve(async (req) => {
                 return null;
               }
 
-              return fecha;
+              return data;
             }),
           );
 
@@ -277,7 +277,7 @@ serve(async (req) => {
       const channel = url.searchParams.get('channel');
       const search = url.searchParams.get('search');
 
-      const { fecha: countRows, error } = await supabase.rpc('inbox_count_conversations', {
+      const { data: countRows, error } = await supabase.rpc('inbox_count_conversations', {
         p_user_id: user.id,
         p_product_ids: productIds,
         p_include_no_product: includeNoProduct,
@@ -350,7 +350,7 @@ serve(async (req) => {
         console.error('[webchat-inbox] messages query error:', conversationId, msgsRes.error);
       }
 
-      const conversation: any = convRes.fecha;
+      const conversation: any = convRes.data;
       if (!conversation) {
         // Pode ser que exista mas esteja fora do escopo do usuario. Verifica sem filtro de org.
         const probe = await supabase
@@ -358,7 +358,7 @@ serve(async (req) => {
           .select('id')
           .eq('id', conversationId)
           .maybeSingle();
-        if (probe.fecha) {
+        if (probe.data) {
           return new Response(
             JSON.stringify({ error: 'Forbidden' }),
             { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -372,7 +372,7 @@ serve(async (req) => {
 
       // Sector-based gate (no-admin): misma regra usada na listagem
       if (!isSuperAdmin) {
-        const [{ fecha: userRoles }, { fecha: userPerms }, { fecha: userSectorRows }] = await Promise.all([
+        const [{ data: userRoles }, { data: userPerms }, { data: userSectorRows }] = await Promise.all([
           supabase.from('user_roles').select('role').eq('user_id', user.id),
           supabase.from('user_permissions').select('*').eq('user_id', user.id).maybeSingle(),
           supabase.from('sector_members').select('sector_id').eq('user_id', user.id),
@@ -405,39 +405,39 @@ serve(async (req) => {
       const [widgetRes, assignedRes, agentRes, leadRes, sectorRes, productOverrideRes] = await Promise.all([
         conversation.widget_id
           ? supabase.from('webchat_widgets').select('id, name, primary_color, product_id, products(id, name)').eq('id', conversation.widget_id).maybeSingle()
-          : Promise.resolve({ fecha: null, error: null }),
+          : Promise.resolve({ data: null, error: null }),
         conversation.assigned_user_id
           ? supabase.from('profiles').select('id, full_name, avatar_url').eq('id', conversation.assigned_user_id).maybeSingle()
-          : Promise.resolve({ fecha: null, error: null }),
+          : Promise.resolve({ data: null, error: null }),
         conversation.current_agent_id
           ? supabase.from('product_agents').select('id, name, avatar_url').eq('id', conversation.current_agent_id).maybeSingle()
-          : Promise.resolve({ fecha: null, error: null }),
+          : Promise.resolve({ data: null, error: null }),
         conversation.lead_id
           ? supabase.from('leads').select('id, name, email, phone, product_id, temperature').eq('id', conversation.lead_id).maybeSingle()
-          : Promise.resolve({ fecha: null, error: null }),
+          : Promise.resolve({ data: null, error: null }),
         conversation.sector_id
           ? supabase.from('sectors').select('id, name, color').eq('id', conversation.sector_id).maybeSingle()
-          : Promise.resolve({ fecha: null, error: null }),
+          : Promise.resolve({ data: null, error: null }),
         conversation.product_id
           ? supabase.from('products').select('id, name').eq('id', conversation.product_id).maybeSingle()
-          : Promise.resolve({ fecha: null, error: null }),
+          : Promise.resolve({ data: null, error: null }),
       ]);
 
-      conversation.webchat_widgets = widgetRes?.fecha || null;
-      conversation.profiles = assignedRes?.fecha || null;
-      conversation.current_agent = agentRes?.fecha || null;
-      conversation.leads = leadRes?.fecha || null;
-      conversation.sectors = sectorRes?.fecha || null;
+      conversation.webchat_widgets = widgetRes?.data || null;
+      conversation.profiles = assignedRes?.data || null;
+      conversation.current_agent = agentRes?.data || null;
+      conversation.leads = leadRes?.data || null;
+      conversation.sectors = sectorRes?.data || null;
 
       // Producto efetivo: override manual da conversación > producto del lead vinculado > producto do widget
       const effectiveProduct =
-        productOverrideRes?.fecha
-          || (leadRes?.fecha?.product_id ? { id: leadRes.fecha.product_id, name: null } : null)
-          || (widgetRes?.fecha?.products as any)
-          || (widgetRes?.fecha?.product_id ? { id: widgetRes.fecha.product_id, name: widgetRes.fecha.name } : null);
+        productOverrideRes?.data
+          || (leadRes?.data?.product_id ? { id: leadRes.data.product_id, name: null } : null)
+          || (widgetRes?.data?.products as any)
+          || (widgetRes?.data?.product_id ? { id: widgetRes.data.product_id, name: widgetRes.data.name } : null);
       conversation.product = effectiveProduct;
 
-      const messages = (msgsRes.fecha || []).reverse();
+      const messages = (msgsRes.data || []).reverse();
 
       // Reset unread count em background (no bloqueia a respuesta)
       supabase
@@ -465,7 +465,7 @@ serve(async (req) => {
       }
 
       // Check if conversation is not already assigned (optimistic locking)
-      const { fecha: conversation, error: checkError } = await supabase
+      const { data: conversation, error: checkError } = await supabase
         .from('webchat_conversations')
         .select('assigned_user_id, status')
         .eq('id', conversationId)
@@ -530,7 +530,7 @@ serve(async (req) => {
       }
 
       // Verify agent has access to conversation
-      const { fecha: conversation, error: convError } = await supabase
+      const { data: conversation, error: convError } = await supabase
         .from('webchat_conversations')
         .select('id, assigned_user_id, status, channel, visitor_phone, evolution_instance_id, instagram_connection_id, ig_sender_id')
         .eq('id', body.conversation_id)
@@ -578,7 +578,7 @@ serve(async (req) => {
         insertData.metadata = { media: body.media };
       }
 
-      const { fecha: message, error: msgError } = await supabase
+      const { data: message, error: msgError } = await supabase
         .from('webchat_messages')
         .insert(insertData)
         .select('*, profiles:sender_id(id, full_name, avatar_url)')
@@ -609,7 +609,7 @@ serve(async (req) => {
           // Auto-resolve evolution_instance_id se ainda no vinculada
           let evoInstanceId = conversation.evolution_instance_id as string | null;
           if (!evoInstanceId) {
-            const { fecha: inst } = await supabase
+            const { data: inst } = await supabase
               .from('evolution_instances')
               .select('id')
               .eq('organization_id', orgId)
@@ -660,7 +660,7 @@ serve(async (req) => {
               };
             }
 
-            const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', { body: evoBody });
+            const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', { body: evoBody });
             const sendOk = !sendErr && (sendData as any)?.ok !== false;
             if (!sendOk) {
               console.error('[webchat-inbox] evolution-send FAILED:', JSON.stringify({ sendErr, sendData }).slice(0, 500));
@@ -717,7 +717,7 @@ serve(async (req) => {
           } else {
             igBody.text = body.content;
           }
-          const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('instagram-send', { body: igBody });
+          const { data: sendData, error: sendErr } = await supabase.functions.invoke('instagram-send', { body: igBody });
           const sendOk = !sendErr && (sendData as any)?.ok !== false;
           if (!sendOk) {
             console.error('[webchat-inbox] instagram-send FAILED:', JSON.stringify({ sendErr, sendData }).slice(0, 500));
@@ -812,7 +812,7 @@ serve(async (req) => {
       }
 
       // Roles & sectors
-      const [{ fecha: convRow }, { fecha: rolesRow }, { fecha: sectorRows }] = await Promise.all([
+      const [{ data: convRow }, { data: rolesRow }, { data: sectorRows }] = await Promise.all([
         supabase
           .from('webchat_conversations')
           .select('id, organization_id, status, sector_id, assigned_user_id')
@@ -854,7 +854,7 @@ serve(async (req) => {
       // Sector validation — fallback to org's default sector if missing
       let finalSectorId = sectorId || convRow.sector_id || null;
       if (!finalSectorId) {
-        const { fecha: defaultSector } = await supabase
+        const { data: defaultSector } = await supabase
           .from('sectors')
           .select('id')
           .eq('organization_id', convRow.organization_id)
@@ -909,7 +909,7 @@ serve(async (req) => {
       });
 
       // System message
-      const [{ fecha: profile }, { fecha: sector }] = await Promise.all([
+      const [{ data: profile }, { data: sector }] = await Promise.all([
         supabase.from('profiles').select('full_name').eq('id', user.id).maybeSingle(),
         supabase.from('sectors').select('name').eq('id', finalSectorId).maybeSingle(),
       ]);
@@ -940,7 +940,7 @@ serve(async (req) => {
         );
       }
 
-      const { fecha: conv } = await supabase
+      const { data: conv } = await supabase
         .from('webchat_conversations')
         .select('assigned_user_id, status')
         .eq('id', body.conversation_id)
@@ -980,7 +980,7 @@ serve(async (req) => {
       });
 
       // Insert system message
-      const { fecha: profile } = await supabase
+      const { data: profile } = await supabase
         .from('profiles')
         .select('full_name')
         .eq('id', user.id)
@@ -1075,7 +1075,7 @@ serve(async (req) => {
       }
 
       // Get conversation details
-      const { fecha: conversation, error: convError } = await supabase
+      const { data: conversation, error: convError } = await supabase
         .from('webchat_conversations')
         .select('*')
         .eq('id', body.conversation_id)
@@ -1093,7 +1093,7 @@ serve(async (req) => {
 
       // If no lead_id provided, create new lead
       if (!leadId) {
-        const { fecha: newLead, error: leadError } = await supabase
+        const { data: newLead, error: leadError } = await supabase
           .from('leads')
           .insert({
             organization_id: orgId,
@@ -1139,7 +1139,7 @@ serve(async (req) => {
       }
 
       // Get the linked lead
-      const { fecha: lead } = await supabase
+      const { data: lead } = await supabase
         .from('leads')
         .select('*')
         .eq('id', leadId)
@@ -1181,7 +1181,7 @@ serve(async (req) => {
       }
 
       // Garante que a conversación pertence à org do usuario
-      const { fecha: conv, error: convErr } = await supabase
+      const { data: conv, error: convErr } = await supabase
         .from('webchat_conversations')
         .select('id, organization_id, lead_id')
         .eq('id', conversationId)
@@ -1202,7 +1202,7 @@ serve(async (req) => {
 
       // Se fue passado product_id, valida que pertence à org
       if (productId) {
-        const { fecha: prod } = await supabase
+        const { data: prod } = await supabase
           .from('products')
           .select('id, organization_id')
           .eq('id', productId)
@@ -1260,7 +1260,7 @@ serve(async (req) => {
       }
 
       // Get conversation with widget info
-      const { fecha: conv } = await supabase
+      const { data: conv } = await supabase
         .from('webchat_conversations')
         .select('*, webchat_widgets(product_id)')
         .eq('id', body.conversation_id)
@@ -1284,7 +1284,7 @@ serve(async (req) => {
         .eq('id', body.conversation_id);
 
       // Get user's profile name
-      const { fecha: agentProfile } = await supabase
+      const { data: agentProfile } = await supabase
         .from('profiles')
         .select('full_name')
         .eq('id', user.id)
@@ -1309,7 +1309,7 @@ serve(async (req) => {
       const productId = conv.webchat_widgets?.product_id;
       if (productId) {
         // Get agent config
-        const { fecha: agentConfig } = await supabase
+        const { data: agentConfig } = await supabase
           .from('webchat_agent_configs')
           .select('*')
           .eq('widget_id', conv.widget_id)
@@ -1423,7 +1423,7 @@ serve(async (req) => {
       }
 
       // Get conversation with widget info
-      const { fecha: conv } = await supabase
+      const { data: conv } = await supabase
         .from('webchat_conversations')
         .select('*, webchat_widgets(product_id)')
         .eq('id', body.conversation_id)
@@ -1438,7 +1438,7 @@ serve(async (req) => {
       }
 
       // Get last 20 messages for context
-      const { fecha: historyMessages } = await supabase
+      const { data: historyMessages } = await supabase
         .from('webchat_messages')
         .select('content, direction, sender_type, created_at')
         .eq('conversation_id', body.conversation_id)
@@ -1455,7 +1455,7 @@ serve(async (req) => {
         // Usa AI to generate contextual reactivation message
         // Find the best agent for this product
         let agentId: string | null = null;
-        const { fecha: defaultAgent } = await supabase
+        const { data: defaultAgent } = await supabase
           .from('product_agents')
           .select('id')
           .eq('product_id', productId)
@@ -1466,7 +1466,7 @@ serve(async (req) => {
         if (defaultAgent) {
           agentId = defaultAgent.id;
         } else {
-          const { fecha: firstAgent } = await supabase
+          const { data: firstAgent } = await supabase
             .from('product_agents')
             .select('id')
             .eq('product_id', productId)
@@ -1574,7 +1574,7 @@ serve(async (req) => {
       }
 
       // Fetch flow
-      const { fecha: flow } = await supabase
+      const { data: flow } = await supabase
         .from('chat_flows')
         .select('*')
         .eq('id', body.flow_id)
@@ -1623,7 +1623,7 @@ serve(async (req) => {
       }
 
       // Get original message
-      const { fecha: origMsg } = await supabase
+      const { data: origMsg } = await supabase
         .from('webchat_messages')
         .select('content, sender_id, sender_type, conversation_id')
         .eq('id', body.message_id)
@@ -1661,7 +1661,7 @@ serve(async (req) => {
       }
 
       // Sync edit to WhatsApp - send corrective message
-      const { fecha: editConv } = await supabase
+      const { data: editConv } = await supabase
         .from('webchat_conversations')
         .select('channel, visitor_phone, organization_id, evolution_instance_id')
         .eq('id', origMsg.conversation_id)
@@ -1702,7 +1702,7 @@ serve(async (req) => {
         );
       }
 
-      const { fecha: origMsg } = await supabase
+      const { data: origMsg } = await supabase
         .from('webchat_messages')
         .select('sender_id, sender_type, conversation_id')
         .eq('id', body.message_id)
@@ -1729,7 +1729,7 @@ serve(async (req) => {
         .eq('id', body.message_id);
 
       // Sync delete to WhatsApp - send notification
-      const { fecha: delConv } = await supabase
+      const { data: delConv } = await supabase
         .from('webchat_conversations')
         .select('channel, visitor_phone, organization_id, evolution_instance_id')
         .eq('id', origMsg.conversation_id)
@@ -1770,7 +1770,7 @@ serve(async (req) => {
         );
       }
 
-      const { fecha: msg } = await supabase
+      const { data: msg } = await supabase
         .from('webchat_messages')
         .select('is_starred')
         .eq('id', body.message_id)
@@ -1804,7 +1804,7 @@ serve(async (req) => {
         );
       }
 
-      const { fecha: origMsg } = await supabase
+      const { data: origMsg } = await supabase
         .from('webchat_messages')
         .select('content')
         .eq('id', body.message_id)
@@ -1818,7 +1818,7 @@ serve(async (req) => {
       }
 
       // Verify target conversation belongs to same org
-      const { fecha: targetConv } = await supabase
+      const { data: targetConv } = await supabase
         .from('webchat_conversations')
         .select('id, channel, visitor_phone, evolution_instance_id')
         .eq('id', body.target_conversation_id)
@@ -1833,7 +1833,7 @@ serve(async (req) => {
       }
 
       // Create forwarded message
-      const { fecha: fwdMsg } = await supabase
+      const { data: fwdMsg } = await supabase
         .from('webchat_messages')
         .insert({
           conversation_id: body.target_conversation_id,

@@ -53,9 +53,9 @@ const TEMPLATES: Record<PostSaleEvent, { name: string; instruction: string; link
     {
       name: 'Boas-vindas + acesso',
       instruction:
-        'Parabenize o cliente pela compra, entregue o link de acesso à área de membros e pergunte se ele já entrou no grupo do WhatsApp. Tom: caloroso, próximo, sem floreios.',
+        'Parabenize o cliente pela compra, entregue o link de acesso à área de membros e pergunte se ele ya entrou no grupo do WhatsApp. Tom: caloroso, próximo, sem floreios.',
       links: [
-        { label: 'Área de acesso', url: 'https://area.suaempresa.com', when_to_offer: 'sempre' },
+        { label: 'Área de acesso', url: 'https://area.suaempresa.com', when_to_offer: 'siempre' },
         { label: 'Grupo WhatsApp', url: 'https://chat.whatsapp.com/XXX', when_to_offer: 'após confirmar acesso' },
       ],
       tags: ['cliente_ativo', 'aguardando_acesso'],
@@ -63,9 +63,9 @@ const TEMPLATES: Record<PostSaleEvent, { name: string; instruction: string; link
     {
       name: 'Convite pro webinário',
       instruction:
-        'Convide o cliente pro próximo webinário gratuito. Mencione data, horário e o que ele vai aprender. Pergunte se ele consegue participar ao vivo.',
+        'Convide o cliente pro próximo webinário gratuito. Mencione data, horario e o que ele vai aprender. Pergunte se ele consegue participar ao vivo.',
       links: [
-        { label: 'Webinário', url: 'https://...', when_to_offer: 'sempre' },
+        { label: 'Webinário', url: 'https://...', when_to_offer: 'siempre' },
       ],
       tags: ['convidado_webinario'],
     },
@@ -74,7 +74,7 @@ const TEMPLATES: Record<PostSaleEvent, { name: string; instruction: string; link
     {
       name: 'Recuperar Pix abandonado',
       instruction:
-        'Cliente gerou Pix e não pagou. Pergunte se houve alguma dúvida ou problema com o pagamento. Ofereça reenviar o link/código se ele pedir. NÃO insista mais de 2x.',
+        'Cliente gerou Pix e no pagou. Pergunte se houve alguna duda ou problema com o pago. Ofereça reenviar o link/código se ele pedir. NÃO insista mais de 2x.',
       links: [],
       tags: ['checkout_abandonado_pix'],
     },
@@ -83,7 +83,7 @@ const TEMPLATES: Record<PostSaleEvent, { name: string; instruction: string; link
     {
       name: 'Resgate pós-reembolso',
       instruction:
-        'Seja empático. Pergunte o motivo do reembolso. Se for problema técnico, ofereça suporte. Se for expectativa, ofereça plano alternativo. NUNCA pareça insistente.',
+        'Sé empático. Pergunte o motivo do reembolso. Se for problema técnico, ofereça suporte. Se for expectativa, ofereça plan alternativo. NUNCA pareça insistente.',
       links: [],
       tags: ['reembolsado'],
     },
@@ -127,8 +127,8 @@ export function PostSaleScenariosEditor() {
       <CardHeader>
         <CardTitle>Cenários de Pós-Venda</CardTitle>
         <CardDescription>
-          Defina o que o agente deve fazer em cada situação. As instruções aqui são
-          injetadas automaticamente no prompt do agente quando o evento acontece.
+          Defina o que o agente debe hacer em cada situación. As instruções aqui son
+          injetadas automaticamente no prompt del agente cuando o evento acontece.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -245,7 +245,7 @@ function ScenarioRow({
           onClick={() => {
             if (confirm(`Excluir cenário "${scenario.name}"?`)) {
               del.mutate(scenario.id, {
-                onSuccess: () => toast.success('Cenário excluído'),
+                onSuccess: () => toast.success('Cenário eliminado'),
               });
             }
           }}
@@ -296,7 +296,7 @@ function ScenarioDialog({
 
   const handleSave = () => {
     if (!draft.name?.trim() || !draft.instruction?.trim() || !draft.trigger_event) {
-      toast.error('Preencha nome, evento e instrução');
+      toast.error('Preencha nombre, evento e instrução');
       return;
     }
     save.mutate(
@@ -314,7 +314,7 @@ function ScenarioDialog({
       },
       {
         onSuccess: () => {
-          toast.success(draft.id ? 'Cenário atualizado' : 'Cenário criado');
+          toast.success(draft.id ? 'Cenário actualizado' : 'Cenário creado');
           onClose();
         },
         onError: (e: any) => toast.error(e.message),
@@ -330,14 +330,14 @@ function ScenarioDialog({
             {draft.id ? 'Editar cenário' : 'Novo cenário'}
           </DialogTitle>
           <DialogDescription>
-            Defina o que o agente deve fazer quando esse evento acontecer.
+            Defina o que o agente debe hacer cuando esse evento acontecer.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label>Nome do cenário</Label>
+              <Label>Nombre do cenário</Label>
               <Input
                 value={draft.name ?? ''}
                 onChange={(e) => update('name', e.target.value)}
@@ -370,7 +370,7 @@ function ScenarioDialog({
               rows={5}
               value={draft.instruction ?? ''}
               onChange={(e) => update('instruction', e.target.value)}
-              placeholder="Ex: Parabenize o cliente, entregue o link de acesso e pergunte se ele já entrou no grupo do WhatsApp..."
+              placeholder="Ex: Parabenize o cliente, entregue o link de acesso e pergunte se ele ya entrou no grupo do WhatsApp..."
             />
             <p className="text-xs text-muted-foreground">
               Linguagem natural. O agente vai seguir isso à risca.
@@ -379,7 +379,7 @@ function ScenarioDialog({
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Links que o agente pode oferecer</Label>
+              <Label>Links que o agente puede oferecer</Label>
               <Button size="sm" variant="ghost" onClick={addLink}>
                 <Plus className="mr-1 h-3 w-3" /> Adicionar link
               </Button>

@@ -110,7 +110,7 @@ export function useDeleteProduct() {
   
   return useMutation({
     mutationFn: async (id: string) => {
-      // Use safe delete function that handles FK constraints by nullifying references first
+      // Usa safe delete function that handles FK constraints by nullifying references first
       const { error } = await supabase.rpc('delete_product_safe', { p_product_id: id });
       
       if (error) throw error;

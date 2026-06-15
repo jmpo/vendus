@@ -271,7 +271,7 @@ export function AgentHierarchyView({
           </div>
         )}
 
-        {/* Por produto */}
+        {/* Por producto */}
         {byProduct.map((grp) => (
           <div key={grp.product.id} className="flex flex-col items-center gap-4 w-full">
             {/* Section divider */}

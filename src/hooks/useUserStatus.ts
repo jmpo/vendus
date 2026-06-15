@@ -153,7 +153,7 @@ export function useUserStatus(): UserStatusData {
         const { data } = await supabase.rpc('process_pending_queue', { p_user_id: user.id });
         if (data && data.length > 0) {
           toast.success('🎯 ¡Lead pendiente asignado a vos!', {
-            description: 'Um lead da fila foi atribuído automaticamente.',
+            description: 'Um lead da fila fue atribuído automaticamente.',
           });
         }
       } catch (e) {

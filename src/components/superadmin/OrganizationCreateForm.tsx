@@ -140,12 +140,12 @@ export function OrganizationCreateForm({
       }
 
       await createAuditLog.mutateAsync({
-        action: `Nova empresa criada: ${newOrg.name}`,
+        action: `Nova empresa creada: ${newOrg.name}`,
         entity_type: 'organization',
         entity_id: org.id,
       });
 
-      // Cria o usuário admin da empresa com o e-mail informado
+      // Cria o usuario admin de la empresa com o e-mail informado
       let adminInviteToken: string | null = null;
       try {
         const { data: adminResult, error: adminError } = await supabase.functions.invoke(
@@ -159,19 +159,19 @@ export function OrganizationCreateForm({
           }
         );
         if (adminError || (adminResult && adminResult.ok === false)) {
-          const msg = adminError?.message || adminResult?.error || 'Erro ao criar admin';
-          toast.warning(`Empresa criada, mas falhou ao criar admin: ${msg}`);
+          const msg = adminError?.message || adminResult?.error || 'Error ao crear admin';
+          toast.warning(`Empresa creada, mas falló ao crear admin: ${msg}`);
         } else {
           adminInviteToken = adminResult?.invite_token ?? null;
           toast.success(
             adminResult?.invited
-              ? `Empresa criada. Convite enviado para ${newOrg.email.trim()}`
-              : `Empresa criada e admin vinculado (${newOrg.email.trim()})`
+              ? `Empresa creada. Convite enviado para ${newOrg.email.trim()}`
+              : `Empresa creada e admin vinculado (${newOrg.email.trim()})`
           );
         }
       } catch (e: any) {
         console.error('create-organization-admin error:', e);
-        toast.warning('Empresa criada, mas falhou ao criar admin automaticamente.');
+        toast.warning('Empresa creada, mas falló ao crear admin automaticamente.');
       }
 
       if (adminInviteToken) {
@@ -228,7 +228,7 @@ export function OrganizationCreateForm({
           type="email"
           value={newOrg.email}
           onChange={(e) => setNewOrg({ ...newOrg, email: e.target.value })}
-          placeholder="contato@empresa.com"
+          placeholder="contacto@empresa.com"
         />
       </div>
 
@@ -242,7 +242,7 @@ export function OrganizationCreateForm({
           />
         </div>
         <div className="space-y-2">
-          <Label>Telefone</Label>
+          <Label>Teléfono</Label>
           <Input
             value={newOrg.phone}
             onChange={(e) => setNewOrg({ ...newOrg, phone: e.target.value })}
@@ -264,7 +264,7 @@ export function OrganizationCreateForm({
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Selecione um plano" />
+            <SelectValue placeholder="Seleccioná um plan" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="none">Sin plan (personalizado)</SelectItem>

@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     }
 
     // Get agent
-    const { fecha: agent } = await supabase
+    const { data: agent } = await supabase
       .from("product_agents")
       .select("*")
       .eq("id", agent_id)
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
     // Resolve widget ativo da organização (necessário para crear conversación no inbox)
     let outreachWidgetId: string | null = null;
     {
-      const { fecha: existingWidget } = await supabase
+      const { data: existingWidget } = await supabase
         .from("webchat_widgets")
         .select("id")
         .eq("organization_id", organization_id)
@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
       if (existingWidget?.id) {
         outreachWidgetId = existingWidget.id;
       } else {
-        const { fecha: createdWidget, error: createWidgetErr } = await supabase
+        const { data: createdWidget, error: createWidgetErr } = await supabase
           .from("webchat_widgets")
           .insert({
             organization_id,
@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
     }
 
     // Get knowledge
-    const { fecha: knowledgeSources } = await supabase
+    const { data: knowledgeSources } = await supabase
       .from("ai_knowledge_base")
       .select("title, content, category")
       .eq("product_id", agent.product_id)
@@ -104,7 +104,7 @@ Deno.serve(async (req) => {
     for (const leadId of lead_ids) {
       try {
         // Get lead
-        const { fecha: lead } = await supabase
+        const { data: lead } = await supabase
           .from("leads")
           .select("name, email, phone, metadata, temperature, deal_value")
           .eq("id", leadId)
@@ -119,7 +119,7 @@ Deno.serve(async (req) => {
 
         // Dedupe: skip if there's already an active outreach for this (lead, agent)
         // OR if the same agent already messaged this lead in the last 24h.
-        const { fecha: existingOutreach } = await supabase
+        const { data: existingOutreach } = await supabase
           .from("ai_outreach_queue")
           .select("id, last_outreach_at, status")
           .eq("lead_id", leadId)
@@ -140,7 +140,7 @@ Deno.serve(async (req) => {
         }
 
         // Reuse existing conversation for this lead+phone if present
-        const { fecha: existingConv } = await supabase
+        const { data: existingConv } = await supabase
           .from("webchat_conversations")
           .select("id, status")
           .eq("lead_id", leadId)
@@ -242,7 +242,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
         let sent = false;
         for (let i = 0; i < bubbles.length; i++) {
           try {
-            const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+            const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
               body: {
                 organization_id,
                 instance_id,
@@ -283,7 +283,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
 
         let conversation = existingConv ? { id: existingConv.id } : null;
         if (!conversation) {
-          const { fecha: newConv, error: convErr } = await supabase
+          const { data: newConv, error: convErr } = await supabase
             .from("webchat_conversations")
             .insert({
               organization_id,
@@ -308,7 +308,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
           conversation = newConv;
         } else if (mode === 'conversational' && convMetadata.pending_payment_data) {
           // Mescla payload pendente em conversación já existente
-          const { fecha: convRow } = await supabase
+          const { data: convRow } = await supabase
             .from('webchat_conversations')
             .select('metadata')
             .eq('id', existingConv!.id)

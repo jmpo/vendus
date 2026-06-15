@@ -217,7 +217,7 @@ export function WidgetFlowTab({ funnel }: Props) {
                   <MousePointerClick className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Selecione um bloco para editar suas propriedades
+                  Seleccioná um bloco para editar sus propriedades
                 </p>
               </div>
             )}

@@ -90,9 +90,9 @@ export default function AcceptInvite() {
       if (authError) throw authError;
       if (!authData.user) throw new Error('No se pudo crear la cuenta. Inténtelo de nuevo.');
 
-      // Detecta email já cadastrado: Supabase retorna um user "fake" sem identities
-      // quando o email já existe (proteção contra enumeração). Nesse caso o user_id
-      // não está em auth.users e o accept_invitation falharia na FK.
+      // Detecta email ya cadastrado: Supabase retorna um user "fake" sem identities
+      // cuando o email ya existe (proteção contra enumeração). Nesse caso o user_id
+      // no está em auth.users e o accept_invitation falharia na FK.
       const identities = (authData.user as any).identities;
       if (Array.isArray(identities) && identities.length === 0) {
         toast.error('Este correo electrónico ya tiene una cuenta. Inicie sesión para aceptar la invitación.');
@@ -235,7 +235,7 @@ export default function AcceptInvite() {
               <Label htmlFor="fullName">Nombre Completo</Label>
               <Input
                 id="fullName"
-                placeholder="Seu nome"
+                placeholder="Su nombre"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
@@ -254,7 +254,7 @@ export default function AcceptInvite() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password">Contraseña</Label>
               <Input
                 id="password"
                 type="password"
@@ -270,7 +270,7 @@ export default function AcceptInvite() {
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="Repita a senha"
+                placeholder="Repita a contraseña"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required

@@ -54,7 +54,7 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
             Configurações do WhatsApp
           </h2>
           <p className="text-muted-foreground text-sm">
-            Produto, distribuição e qualificação inicial dos leads que entram pelo WhatsApp.
+            Producto, distribución e calificación inicial dos leads que entram pelo WhatsApp.
           </p>
         </div>
         <Button onClick={handleSave} disabled={updateFunnel.isPending} className="gap-2">
@@ -66,34 +66,34 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Identidade</CardTitle>
-          <CardDescription>Produto vinculado e nome interno do fluxo.</CardDescription>
+          <CardDescription>Producto vinculado e nombre interno do flujo.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label>Produto vinculado</Label>
+            <Label>Producto vinculado</Label>
             <Select
               value={formData.product_id}
               onValueChange={(v) => setFormData(p => ({ ...p, product_id: v }))}
             >
-              <SelectTrigger><SelectValue placeholder="Selecione um produto" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Seleccioná um producto" /></SelectTrigger>
               <SelectContent>
                 {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Leads gerados serão vinculados a este produto e usarão seu cérebro de IA.
+              Leads gerados serão vinculados a este producto e usarão su cérebro de IA.
             </p>
           </div>
 
           {formData.product_id !== funnel.product_id && (
             <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-600 text-sm">
               <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-              <p>Trocar o produto reatribui novos leads ao novo cérebro/funil.</p>
+              <p>Trocar o producto reatribui novos leads ao novo cérebro/embudo.</p>
             </div>
           )}
 
           <div className="space-y-2">
-            <Label>Nome interno</Label>
+            <Label>Nombre interno</Label>
             <Input
               value={formData.name}
               onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))}
@@ -101,7 +101,7 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
           </div>
 
           <div className="space-y-2">
-            <Label>Descrição interna</Label>
+            <Label>Descripción interna</Label>
             <Textarea
               value={formData.description}
               onChange={(e) => setFormData(p => ({ ...p, description: e.target.value }))}
@@ -115,9 +115,9 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-emerald-600" />
-            <CardTitle className="text-base">Distribuição de leads</CardTitle>
+            <CardTitle className="text-base">Distribución de leads</CardTitle>
           </div>
-          <CardDescription>Para quem vai o lead quando o fluxo WhatsApp capturar.</CardDescription>
+          <CardDescription>Para quem vai o lead cuando o flujo WhatsApp capturar.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -133,7 +133,7 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
                 <SelectItem value="manual">Manual</SelectItem>
                 <SelectItem value="round_robin">Round Robin</SelectItem>
                 <SelectItem value="squad">Squad</SelectItem>
-                <SelectItem value="user">Usuário específico</SelectItem>
+                <SelectItem value="user">Usuario específico</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -142,7 +142,7 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
             <div className="space-y-2">
               <Label>Squad</Label>
               <Select value={formData.assigned_squad_id} onValueChange={(v) => setFormData(p => ({ ...p, assigned_squad_id: v }))}>
-                <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Seleccioná" /></SelectTrigger>
                 <SelectContent>
                   {squads?.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
                 </SelectContent>
@@ -152,9 +152,9 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
 
           {formData.distribution_rule === 'user' && (
             <div className="space-y-2">
-              <Label>Usuário</Label>
+              <Label>Usuario</Label>
               <Select value={formData.assigned_user_id} onValueChange={(v) => setFormData(p => ({ ...p, assigned_user_id: v }))}>
-                <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Seleccioná" /></SelectTrigger>
                 <SelectContent>
                   {teamMembers?.map(m => <SelectItem key={m.id} value={m.id}>{m.full_name}</SelectItem>)}
                 </SelectContent>
@@ -168,7 +168,7 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Target className="h-5 w-5 text-emerald-600" />
-            <CardTitle className="text-base">Qualificação inicial</CardTitle>
+            <CardTitle className="text-base">Calificación inicial</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -192,7 +192,7 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
                 placeholder="whatsapp, inbound"
               />
               <p className="text-[10px] text-muted-foreground">
-                Aplicadas automaticamente em todo lead deste fluxo.
+                Aplicadas automaticamente em todo lead deste flujo.
               </p>
             </div>
           </div>

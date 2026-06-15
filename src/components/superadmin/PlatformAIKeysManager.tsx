@@ -18,10 +18,10 @@ import {
 import { MODELS_BY_PROVIDER, TAG_LABELS, getDefaultModel } from '@/config/aiModelsCatalog';
 import { cn } from '@/lib/utils';
 
-// Proveedores externos cadastráveis (Lovable não entra: é automática)
+// Proveedores externos cadastráveis (Lovable no entra: é automática)
 const EXTERNAL_PROVIDERS: { value: Exclude<PoolProvider, 'lovable'>; label: string; help: string; placeholder: string }[] = [
-  { value: 'openai',    label: 'OpenAI',         help: 'sk-... — consumo direto na sua conta OpenAI.',         placeholder: 'sk-...' },
-  { value: 'anthropic', label: 'Anthropic',      help: 'sk-ant-... — consumo direto na sua conta Anthropic.', placeholder: 'sk-ant-...' },
+  { value: 'openai',    label: 'OpenAI',         help: 'sk-... — consumo direto na su cuenta OpenAI.',         placeholder: 'sk-...' },
+  { value: 'anthropic', label: 'Anthropic',      help: 'sk-ant-... — consumo direto na su cuenta Anthropic.', placeholder: 'sk-ant-...' },
   { value: 'gemini',    label: 'Google Gemini',  help: 'AIza... — consumo direto no Google AI Studio.',        placeholder: 'AIza...' },
 ];
 
@@ -51,8 +51,8 @@ export function PlatformAIKeysManager() {
           <h2 className="text-2xl font-bold">IA de la Plataforma</h2>
           <p className="text-sm text-muted-foreground max-w-2xl mt-1">
             Registre las claves de IA que se compartirán entre las empresas con el plan "IA de la plataforma" activado.
-            Você pode cadastrar várias chaves do mesmo provedor — o roteador distribui as llamadas por estratégia
-            (aleatório ponderado ou round-robin) conforme o plano escolher.
+            Usted puede cadastrar várias chaves do mismo provedor — o roteador distribui as llamadas por estratégia
+            (aleatório ponderado ou round-robin) conforme o plan escolher.
           </p>
         </div>
         <Button onClick={() => { setEditing(null); setDialogOpen(true); }}>
@@ -73,9 +73,9 @@ export function PlatformAIKeysManager() {
             </Badge>
           </CardTitle>
           <p className="text-xs text-muted-foreground mt-1">
-            A Lovable não usa chave manual — o consumo vai direto para a sua workspace Lovable
+            A Lovable no usa chave manual — o consumo vai direto para a su workspace Lovable
             via <code className="text-[11px] bg-muted px-1 rounded">LOVABLE_API_KEY</code>.
-            Para acompanhar quanto está sendo gasto, acesse <strong>Consumo de IA</strong> no menu.
+            Para acompanhar quanto está siendo gasto, acesse <strong>Consumo de IA</strong> no menu.
           </p>
         </CardHeader>
       </Card>
@@ -276,7 +276,7 @@ function KeyDialog({
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Apodo</Label>
-            <Input value={label} onChange={(e) => setLabel(e.target.value)} placeholder={`${providerCfg.label} Conta Principal`} />
+            <Input value={label} onChange={(e) => setLabel(e.target.value)} placeholder={`${providerCfg.label} Cuenta Principal`} />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">

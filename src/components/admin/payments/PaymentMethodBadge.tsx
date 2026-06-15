@@ -3,9 +3,9 @@ import { Badge } from '@/components/ui/badge';
 const METHOD_META: Record<string, { label: string; src: string }> = {
   pix: { label: 'PIX', src: '/integrations/methods/pix.svg' },
   boleto: { label: 'Boleto', src: '/integrations/methods/boleto.svg' },
-  credit_card: { label: 'Cartão', src: '/integrations/methods/credit-card.svg' },
-  creditcard: { label: 'Cartão', src: '/integrations/methods/credit-card.svg' },
-  card: { label: 'Cartão', src: '/integrations/methods/credit-card.svg' },
+  credit_card: { label: 'Tarjeta', src: '/integrations/methods/credit-card.svg' },
+  creditcard: { label: 'Tarjeta', src: '/integrations/methods/credit-card.svg' },
+  card: { label: 'Tarjeta', src: '/integrations/methods/credit-card.svg' },
 };
 
 interface Props {

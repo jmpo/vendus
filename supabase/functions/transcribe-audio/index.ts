@@ -58,8 +58,8 @@ serve(async (req) => {
       throw new Error(`Transcription failed: ${response.status} - ${errorText}`);
     }
 
-    const fecha = await response.json();
-    const transcribedText = fecha.text?.trim() || "";
+    const data = await response.json();
+    const transcribedText = data.text?.trim() || "";
     
     console.log("Transcription result:", transcribedText.substring(0, 100));
 

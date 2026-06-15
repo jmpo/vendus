@@ -88,7 +88,7 @@ export function usePipelineFinancialSummary(productId: string, sellerId?: string
       const { data: leads, error: leadsError } = await leadsQuery;
       if (leadsError) throw leadsError;
 
-      // Calcular resumo por etapa
+      // Calcular resumen por etapa
       const stageMap = new Map<string, {
         stageId: string;
         stageName: string;

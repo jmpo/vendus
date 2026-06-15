@@ -20,15 +20,15 @@ import { CheckCircle2, Loader2 } from 'lucide-react';
 import { useSectors } from '@/hooks/useSectors';
 
 interface AcceptTicketBarProps {
-  /** Aceita o ticket. Recebe o id do setor escolhido (se houver). */
+  /** Aceita o ticket. Recebe o id do sector escolhido (se houver). */
   onAccept: (sectorId?: string) => Promise<void> | void;
   loading?: boolean;
 }
 
 /**
- * Barra de aceite exibida no rodapé quando o atendimento está aguardando humano
- * e ainda não tem agente atribuído. Se houver mais de um setor disponível,
- * pede para o agente escolher antes de assumir.
+ * Barra de aceite exibida no rodapé cuando o atención está aguardando humano
+ * e aún no tiene agente atribuído. Se houver mais de um sector disponível,
+ * pede para el agente escolher antes de assumir.
  */
 export function AcceptTicketBar({ onAccept, loading }: AcceptTicketBarProps) {
   const { data: sectors = [] } = useSectors();

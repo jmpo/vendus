@@ -20,7 +20,7 @@ export default function Setup() {
   const [companyName, setCompanyName] = useState('');
   const [phone, setPhone] = useState('');
 
-  // Se já existe Super Admin, não permite acesso à tela.
+  // Se ya existe Super Admin, no permite acesso à tela.
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -122,13 +122,13 @@ export default function Setup() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu@email.com"
+                placeholder="su@email.com"
                 autoComplete="email"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Senha *</Label>
+              <Label htmlFor="password">Contraseña *</Label>
               <Input
                 id="password"
                 type="password"

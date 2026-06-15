@@ -192,12 +192,12 @@ export function DashboardTab({ productId }: DashboardTabProps) {
                       <p className="font-medium text-foreground">{lead.name}</p>
                       <p className="text-xs text-muted-foreground">
                         {lead.last_contact_at 
-                          ? `Último contato: ${new Date(lead.last_contact_at).toLocaleDateString('es-PY')}`
+                          ? `Último contacto: ${new Date(lead.last_contact_at).toLocaleDateString('es-PY')}`
                           : 'Nunca contatado'}
                       </p>
                     </div>
                     <Badge variant="outline" className="bg-destructive/10 text-destructive">
-                      Sem ação
+                      Sem acción
                     </Badge>
                   </div>
                 ))}
@@ -224,7 +224,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
           <CardContent>
             {productCommissions.filter(c => c.status === 'pending').length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">
-                Nenhuma comissão pendente
+                Nenhuma comisión pendente
               </p>
             ) : (
               <div className="space-y-3 max-h-60 overflow-y-auto">

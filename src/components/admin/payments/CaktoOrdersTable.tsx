@@ -55,7 +55,7 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
       const r = await sync.mutateAsync();
       toast.success(`${r.synced} pedidos sincronizados`);
     } catch (e: any) {
-      toast.error(e.message ?? 'Erro');
+      toast.error(e.message ?? 'Error');
     }
   };
 
@@ -74,7 +74,7 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
         toast.success('Pedido reprocessado');
       }
     } catch (e: any) {
-      toast.error(e.message ?? 'Erro ao reprocessar');
+      toast.error(e.message ?? 'Error ao reprocessar');
     } finally {
       setReprocessingId(null);
     }
@@ -98,7 +98,7 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
         <div className="flex flex-wrap gap-2 pt-2">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar cliente, ref, produto…" className="pl-9" />
+            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar cliente, ref, producto…" className="pl-9" />
           </div>
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger className="w-[180px]"><SelectValue /></SelectTrigger>
@@ -119,10 +119,10 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Data</TableHead>
+                <TableHead>Fecha</TableHead>
                 <TableHead>Plataforma</TableHead>
                 <TableHead>Cliente</TableHead>
-                <TableHead>Produto</TableHead>
+                <TableHead>Producto</TableHead>
                 <TableHead>Método</TableHead>
                 <TableHead className="text-right">Valor</TableHead>
                 <TableHead>Status</TableHead>

@@ -122,7 +122,7 @@ export function useAttendancePanel(filters: PanelFilters) {
       if (!queueBySector.has(key)) {
         queueBySector.set(key, {
           sectorId: c.sector_id,
-          name: c.sector_name || 'Sem setor',
+          name: c.sector_name || 'Sem sector',
           color: c.sector_color,
           items: [],
         });
@@ -152,7 +152,7 @@ export function useAttendancePanel(filters: PanelFilters) {
       if (!humansByUser.has(key)) {
         humansByUser.set(key, {
           userId: key,
-          name: c.assigned_user_name || 'Sem atendente',
+          name: c.assigned_user_name || 'Sem agente',
           avatar: c.assigned_user_avatar,
           items: [],
         });

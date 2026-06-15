@@ -337,12 +337,12 @@ CREATE POLICY "Super admins manage platform cakto orders" ON public.cakto_orders
   WITH CHECK (((scope = 'platform'::text) AND is_super_admin(auth.uid())));
 CREATE POLICY "Super admins view platform cakto orders" ON public.cakto_orders AS PERMISSIVE FOR SELECT TO public
   USING (((scope = 'platform'::text) AND is_super_admin(auth.uid())));
-CREATE POLICY "Admin org pode editar config recuperação" ON public.cakto_recovery_config AS PERMISSIVE FOR ALL TO authenticated
+CREATE POLICY "Admin org puede editar config recuperação" ON public.cakto_recovery_config AS PERMISSIVE FOR ALL TO authenticated
   USING ((user_belongs_to_organization(auth.uid(), organization_id) AND (has_role(auth.uid(), 'admin'::app_role) OR is_super_admin(auth.uid()))))
   WITH CHECK ((user_belongs_to_organization(auth.uid(), organization_id) AND (has_role(auth.uid(), 'admin'::app_role) OR is_super_admin(auth.uid()))));
-CREATE POLICY "Admin org pode ver config recuperação" ON public.cakto_recovery_config AS PERMISSIVE FOR SELECT TO authenticated
+CREATE POLICY "Admin org puede ver config recuperação" ON public.cakto_recovery_config AS PERMISSIVE FOR SELECT TO authenticated
   USING ((user_belongs_to_organization(auth.uid(), organization_id) AND (has_role(auth.uid(), 'admin'::app_role) OR is_super_admin(auth.uid()))));
-CREATE POLICY "Admin org pode ver histórico recuperação" ON public.cakto_recovery_dispatches AS PERMISSIVE FOR SELECT TO authenticated
+CREATE POLICY "Admin org puede ver histórico recuperação" ON public.cakto_recovery_dispatches AS PERMISSIVE FOR SELECT TO authenticated
   USING ((user_belongs_to_organization(auth.uid(), organization_id) AND (has_role(auth.uid(), 'admin'::app_role) OR is_super_admin(auth.uid()))));
 CREATE POLICY "Service role insere disparos" ON public.cakto_recovery_dispatches AS PERMISSIVE FOR INSERT TO service_role
   WITH CHECK (true);
@@ -820,9 +820,9 @@ CREATE POLICY "Super admin manages releases" ON public.platform_releases AS PERM
   WITH CHECK (is_super_admin(auth.uid()));
 CREATE POLICY "Super admins can manage platform settings" ON public.platform_settings AS PERMISSIVE FOR ALL TO public
   USING (is_super_admin(auth.uid()));
-CREATE POLICY "Acoes pos-venda visiveis pela organizacao" ON public.post_sale_event_actions AS PERMISSIVE FOR SELECT TO public
+CREATE POLICY "Acoes pos-venta visiveis pela organizacao" ON public.post_sale_event_actions AS PERMISSIVE FOR SELECT TO public
   USING ((is_super_admin(auth.uid()) OR user_belongs_to_organization(auth.uid(), organization_id)));
-CREATE POLICY "Admins gerenciam acoes pos-venda" ON public.post_sale_event_actions AS PERMISSIVE FOR ALL TO public
+CREATE POLICY "Admins gerenciam acoes pos-venta" ON public.post_sale_event_actions AS PERMISSIVE FOR ALL TO public
   USING ((is_super_admin(auth.uid()) OR (user_belongs_to_organization(auth.uid(), organization_id) AND (has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)))))
   WITH CHECK ((is_super_admin(auth.uid()) OR (user_belongs_to_organization(auth.uid(), organization_id) AND (has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'manager'::app_role)))));
 CREATE POLICY "Logs visiveis pela organizacao" ON public.post_sale_event_logs AS PERMISSIVE FOR SELECT TO public
@@ -996,7 +996,7 @@ CREATE POLICY "Org admins can view own subscription" ON public.subscriptions AS 
   USING ((organization_id = get_user_organization(auth.uid())));
 CREATE POLICY "Super admins can manage all subscriptions" ON public.subscriptions AS PERMISSIVE FOR ALL TO public
   USING (is_super_admin(auth.uid()));
-CREATE POLICY "Mensagens podem ser criadas por envolvidos" ON public.support_messages AS PERMISSIVE FOR INSERT TO public
+CREATE POLICY "Mensagens pueden ser criadas por envolvidos" ON public.support_messages AS PERMISSIVE FOR INSERT TO public
   WITH CHECK (((author_id = auth.uid()) AND (is_super_admin(auth.uid()) OR (EXISTS ( SELECT 1
    FROM support_tickets t
   WHERE ((t.id = support_messages.ticket_id) AND user_belongs_to_organization(auth.uid(), t.organization_id)))))));
@@ -1004,7 +1004,7 @@ CREATE POLICY "Mensagens visiveis para envolvidos" ON public.support_messages AS
   USING ((is_super_admin(auth.uid()) OR (EXISTS ( SELECT 1
    FROM support_tickets t
   WHERE ((t.id = support_messages.ticket_id) AND user_belongs_to_organization(auth.uid(), t.organization_id))))));
-CREATE POLICY "Membros podem criar tickets" ON public.support_tickets AS PERMISSIVE FOR INSERT TO public
+CREATE POLICY "Membros podem crear tickets" ON public.support_tickets AS PERMISSIVE FOR INSERT TO public
   WITH CHECK ((user_belongs_to_organization(auth.uid(), organization_id) AND (created_by = auth.uid())));
 CREATE POLICY "Super admins podem deletar tickets" ON public.support_tickets AS PERMISSIVE FOR DELETE TO public
   USING (is_super_admin(auth.uid()));

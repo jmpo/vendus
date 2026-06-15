@@ -217,14 +217,14 @@ async function runTool(
         // Pipeline aberto
         let dealsQ = supabase.from("deals").select("deal_value, product_id").eq("organization_id", orgId).eq("status", "open");
         if (productFilter) dealsQ = dealsQ.in("product_id", productFilter);
-        const { fecha: openDeals } = await dealsQ;
+        const { data: openDeals } = await dealsQ;
         const pipelineOpen = (openDeals ?? []).reduce((s, d: any) => s + Number(d.deal_value ?? 0), 0);
 
         // Receita do mes
         let wonQ = supabase.from("deals").select("deal_value, product_id")
           .eq("organization_id", orgId).eq("status", "won").gte("closed_at", startMonth.toISOString());
         if (productFilter) wonQ = wonQ.in("product_id", productFilter);
-        const { fecha: wonDeals } = await wonQ;
+        const { data: wonDeals } = await wonQ;
         const revenueMonth = (wonDeals ?? []).reduce((s, d: any) => s + Number(d.deal_value ?? 0), 0);
 
         // Inbox ativo
@@ -240,7 +240,7 @@ async function runTool(
           .lte("start_time", endDay.toISOString())
           .order("start_time").limit(10);
         if (productFilter) bkQ = bkQ.in("product_id", productFilter);
-        const { fecha: todayBookings, count: bookingsCount } = await bkQ;
+        const { data: todayBookings, count: bookingsCount } = await bkQ;
 
         // Tarefas atrasadas / pendentes
         let overdueQ = supabase.from("tasks").select("id", { count: "exact", head: true })
@@ -257,11 +257,11 @@ async function runTool(
         // Comissões pendentes
         let comQ = supabase.from("commissions").select("amount, product_id").eq("organization_id", orgId).eq("status", "pending");
         if (productFilter) comQ = comQ.in("product_id", productFilter);
-        const { fecha: pendingCom } = await comQ;
+        const { data: pendingCom } = await comQ;
         const commissionsPending = (pendingCom ?? []).reduce((s, c: any) => s + Number(c.amount ?? 0), 0);
 
         // Equipo online
-        const { fecha: members } = await supabase.from("profiles").select("id").eq("organization_id", orgId);
+        const { data: members } = await supabase.from("profiles").select("id").eq("organization_id", orgId);
         const ids = (members ?? []).map((m: any) => m.id);
         let onlineCount = 0;
         if (ids.length) {
@@ -289,12 +289,12 @@ async function runTool(
       case "get_pipeline_summary": {
         let dealsQ = supabase.from("deals").select("deal_value, status, product_id").eq("organization_id", orgId).eq("status", "open");
         if (productFilter) dealsQ = dealsQ.in("product_id", productFilter);
-        const { fecha: deals } = await dealsQ;
+        const { data: deals } = await dealsQ;
         const total = (deals ?? []).reduce((s, d: any) => s + Number(d.deal_value ?? 0), 0);
-        const { fecha: stages } = await supabase.from("pipeline_stages").select("id, name, order_index").eq("organization_id", orgId).order("order_index");
+        const { data: stages } = await supabase.from("pipeline_stages").select("id, name, order_index").eq("organization_id", orgId).order("order_index");
         let leadsQ = supabase.from("leads").select("current_stage_id, deal_value, product_id").eq("organization_id", orgId).eq("status", "active");
         if (productFilter) leadsQ = leadsQ.in("product_id", productFilter);
-        const { fecha: leads } = await leadsQ;
+        const { data: leads } = await leadsQ;
         const byStage: Record<string, { name: string; count: number; value: number }> = {};
         for (const st of (stages ?? []) as any[]) byStage[st.id] = { name: st.name, count: 0, value: 0 };
         for (const l of (leads ?? []) as any[]) {
@@ -313,7 +313,7 @@ async function runTool(
         let convQ = supabase.from("webchat_conversations")
           .select("id, status, last_message_at, webchat_widgets(product_id)", { count: "exact" })
           .eq("organization_id", orgId).neq("status", "closed").limit(200);
-        const { fecha: convs, count } = await convQ;
+        const { data: convs, count } = await convQ;
         const filtered = productFilter
           ? (convs ?? []).filter((c: any) => {
               const pid = c.webchat_widgets?.product_id;
@@ -328,10 +328,10 @@ async function runTool(
         return JSON.stringify({ active: productFilter ? filtered.length : (count ?? 0), unattended });
       }
       case "get_team_status": {
-        const { fecha: members } = await supabase.from("profiles").select("id, full_name").eq("organization_id", orgId);
+        const { data: members } = await supabase.from("profiles").select("id, full_name").eq("organization_id", orgId);
         const ids = (members ?? []).map((m: any) => m.id);
         if (!ids.length) return JSON.stringify({ team: [] });
-        const { fecha: statuses } = await supabase.from("user_status").select("user_id, status, active_leads_count").in("user_id", ids);
+        const { data: statuses } = await supabase.from("user_status").select("user_id, status, active_leads_count").in("user_id", ids);
         const map = new Map((statuses ?? []).map((s: any) => [s.user_id, s]));
         const team = (members ?? []).map((m: any) => ({
           name: m.full_name,
@@ -369,8 +369,8 @@ async function runTool(
           .lte("start_time", end.toISOString())
           .order("start_time").limit(20);
         if (productFilter) q = q.in("product_id", productFilter);
-        const { fecha, count } = await q;
-        const events = (fecha ?? []).map((e: any) => ({
+        const { data, count } = await q;
+        const events = (data ?? []).map((e: any) => ({
           title: e.title,
           start: e.start_time,
           status: e.status,
@@ -381,7 +381,7 @@ async function runTool(
       case "get_financial_summary": {
         let pendingQ = supabase.from("commissions").select("amount, product_id").eq("organization_id", orgId).eq("status", "pending");
         if (productFilter) pendingQ = pendingQ.in("product_id", productFilter);
-        const { fecha: pending } = await pendingQ;
+        const { data: pending } = await pendingQ;
         const pendingTotal = (pending ?? []).reduce((s, c: any) => s + Number(c.amount ?? 0), 0);
         const startMonth = new Date(); startMonth.setDate(1); startMonth.setHours(0, 0, 0, 0);
         let closedQ = supabase.from("deals").select("deal_value, product_id")
@@ -391,14 +391,14 @@ async function runTool(
           closedQ = closedQ.in("product_id", productFilter);
           openQ = openQ.in("product_id", productFilter);
         }
-        const { fecha: closed } = await closedQ;
+        const { data: closed } = await closedQ;
         const closedTotal = (closed ?? []).reduce((s, d: any) => s + Number(d.deal_value ?? 0), 0);
-        const { fecha: open } = await openQ;
+        const { data: open } = await openQ;
         const openTotal = (open ?? []).reduce((s, d: any) => s + Number(d.deal_value ?? 0), 0);
         return JSON.stringify({ commissions_pending: pendingTotal, revenue_month: closedTotal, pipeline_open: openTotal });
       }
       case "get_goals_progress": {
-        const { fecha: goals } = await supabase.from("goals")
+        const { data: goals } = await supabase.from("goals")
           .select("id, name, target_value, achieved_value, period_end, user_id, profiles(full_name)")
           .eq("organization_id", orgId)
           .gte("period_end", new Date().toISOString())
@@ -420,9 +420,9 @@ async function runTool(
           .select("agent_id, success, action_type, product_id")
           .eq("organization_id", orgId).gte("created_at", since).limit(500);
         if (productFilter) q = q.in("product_id", productFilter);
-        const { fecha } = await q;
+        const { data } = await q;
         const byAgent: Record<string, { ok: number; fail: number }> = {};
-        for (const l of (fecha ?? []) as any[]) {
+        for (const l of (data ?? []) as any[]) {
           const k = l.agent_id ?? "unknown";
           if (!byAgent[k]) byAgent[k] = { ok: 0, fail: 0 };
           if (l.success) byAgent[k].ok++; else byAgent[k].fail++;
@@ -463,9 +463,9 @@ async function callAI(
       console.error("[admin-handle-inbound] ai error", resp.status, await resp.text());
       return "Tive um problema técnico. Tente novamente.";
     }
-    const fecha = await resp.json();
-    await recordLovableUsage(getServiceSupabase(), orgId, 'agent_chat', 'google/gemini-2.5-flash', fecha?.usage, 'admin-agent-handle-inbound');
-    const choice = fecha.choices?.[0];
+    const data = await resp.json();
+    await recordLovableUsage(getServiceSupabase(), orgId, 'agent_chat', 'google/gemini-2.5-flash', data?.usage, 'admin-agent-handle-inbound');
+    const choice = data.choices?.[0];
     const msg = choice?.message;
     if (!msg) return "No consegui processar su mensaje.";
 
@@ -492,15 +492,15 @@ async function resolveAdminName(
   adminPhone: string | null,
 ): Promise<string> {
   if (adminUserId) {
-    const { fecha } = await supabase
+    const { data } = await supabase
       .from("profiles").select("full_name").eq("id", adminUserId).maybeSingle();
-    if (fecha?.full_name) return String(fecha.full_name).split(" ")[0]; // primeiro nombre
+    if (data?.full_name) return String(data.full_name).split(" ")[0]; // primeiro nombre
   }
   if (adminPhone) {
     const tail = adminPhone.replace(/\D/g, "").slice(-10);
-    const { fecha } = await supabase
+    const { data } = await supabase
       .from("profiles").select("full_name, phone").eq("organization_id", orgId);
-    const match = (fecha ?? []).find((p: any) => {
+    const match = (data ?? []).find((p: any) => {
       const pp = String(p.phone ?? "").replace(/\D/g, "");
       return pp && pp.slice(-10) === tail;
     });
@@ -531,7 +531,7 @@ serve(async (req) => {
     });
 
     // Get config (whatsapp number + monitored products + admin user)
-    const { fecha: cfg } = await supabase.from("auto_notification_settings")
+    const { data: cfg } = await supabase.from("auto_notification_settings")
       .select("admin_whatsapp_number, monitored_product_ids, admin_user_id")
       .eq("organization_id", organization_id).maybeSingle();
     if (!cfg?.admin_whatsapp_number) {
@@ -543,16 +543,16 @@ serve(async (req) => {
     // Resolve agent (passed in or default global admin)
     let agent: any = null;
     if (agent_id) {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from("product_agents")
         .select("*")
         .eq("id", agent_id)
         .eq("organization_id", organization_id)
         .maybeSingle();
-      agent = fecha;
+      agent = data;
     }
     if (!agent) {
-      const { fecha: candidates } = await supabase
+      const { data: candidates } = await supabase
         .from("product_agents")
         .select("*")
         .eq("organization_id", organization_id)
@@ -599,20 +599,20 @@ serve(async (req) => {
         .not("full_name", "is", null)
         .limit(50),
     ]);
-    const orgName = (orgRes.fecha as any)?.name ?? "su empresa";
-    const allProducts = (prodsRes.fecha ?? []) as any[];
+    const orgName = (orgRes.data as any)?.name ?? "su empresa";
+    const allProducts = (prodsRes.data ?? []) as any[];
     const monitored = (cfg.monitored_product_ids ?? null) as string[] | null;
     const productNames = monitored && monitored.length > 0
       ? allProducts.filter((p) => monitored.includes(p.id)).map((p) => p.name)
       : allProducts.map((p) => p.name);
 
-    const availableAgents = ((agentsCatalogRes.fecha ?? []) as any[]).map((a) => ({
+    const availableAgents = ((agentsCatalogRes.data ?? []) as any[]).map((a) => ({
       name: a.name,
       agent_type: a.agent_type,
       product_name: a.products?.name ?? null,
     }));
 
-    const availableUsers = ((usersCatalogRes.fecha ?? []) as any[]).map((u) => {
+    const availableUsers = ((usersCatalogRes.data ?? []) as any[]).map((u) => {
       const roles = Array.isArray(u.user_roles) ? u.user_roles.map((r: any) => r.role).filter(Boolean) : [];
       const role = roles.includes("admin") ? "admin" : roles.includes("manager") ? "manager" : (roles[0] || "vendedor");
       return { name: u.full_name as string, role };
@@ -639,7 +639,7 @@ serve(async (req) => {
     const historyMessages: any[] = [];
     if (conversation_id) {
       try {
-        const { fecha: prev } = await supabase
+        const { data: prev } = await supabase
           .from("webchat_messages")
           .select("direction, content, created_at")
           .eq("conversation_id", conversation_id)
@@ -689,7 +689,7 @@ serve(async (req) => {
         try {
           if (parsed.kind === "agent_name" && parsed.targetName) {
             // Resolve target agent by name within the same organization
-            const { fecha: candidates } = await supabase
+            const { data: candidates } = await supabase
               .from("product_agents")
               .select("id, name, agent_type, product_id, handoff_outgoing_message, handoff_incoming_message, handoff_delay_seconds")
               .eq("organization_id", organization_id)
@@ -753,7 +753,7 @@ serve(async (req) => {
             }
           } else if (parsed.kind === "user_name" && parsed.targetName) {
             // Resolve target human teammate by full_name
-            const { fecha: profiles } = await supabase
+            const { data: profiles } = await supabase
               .from("profiles")
               .select("id, full_name")
               .eq("organization_id", organization_id)

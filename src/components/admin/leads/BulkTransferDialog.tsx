@@ -66,7 +66,7 @@ export function BulkTransferDialog({
             <Badge variant="secondary" className="mx-1">
               {selectedCount} lead{selectedCount > 1 ? 's' : ''}
             </Badge>{' '}
-            para outro vendedor ou squad
+            para otro vendedor ou squad
           </DialogDescription>
         </DialogHeader>
 
@@ -78,7 +78,7 @@ export function BulkTransferDialog({
             </Label>
             <Select value={assignedTo} onValueChange={setAssignedTo}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione um vendedor (opcional)" />
+                <SelectValue placeholder="Seleccioná um vendedor (opcional)" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="unassigned">Remover atribuição</SelectItem>
@@ -98,7 +98,7 @@ export function BulkTransferDialog({
             </Label>
             <Select value={squadId} onValueChange={setSquadId}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione um squad (opcional)" />
+                <SelectValue placeholder="Seleccioná um squad (opcional)" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="unassigned">Remover do squad</SelectItem>

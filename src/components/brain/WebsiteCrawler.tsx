@@ -520,7 +520,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                               {link.status === 'error' && (
                                 <Badge variant="destructive" className="text-xs">
                                   <AlertCircle className="h-3 w-3 mr-1" />
-                                  Erro
+                                  Error
                                 </Badge>
                               )}
                             </div>

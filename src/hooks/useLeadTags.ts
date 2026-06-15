@@ -127,7 +127,7 @@ export function useUpdateLeadTag() {
       qc.invalidateQueries({ queryKey: ['lead-tags'] });
       toast({ title: 'Etiqueta actualizada' });
     },
-    onError: (e: any) => toast({ title: 'Erro ao atualizar', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error ao actualizar', description: e.message, variant: 'destructive' }),
   });
 }
 
@@ -198,7 +198,7 @@ export interface TagAutomation {
 }
 
 export const TAG_EVENT_LABELS: Record<TagAutomation['event_type'], string> = {
-  compra_aprovada: 'Compra aprovada',
+  compra_aprovada: 'Compra aprobada',
   pix_gerado: 'PIX gerado',
   boleto_gerado: 'Boleto gerado',
   checkout_abandonado: 'Checkout abandonado',
@@ -263,7 +263,7 @@ export function useUpsertTagAutomation() {
       qc.invalidateQueries({ queryKey: ['tag-automations'] });
       toast({ title: 'Automatización guardada' });
     },
-    onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
 }
 

@@ -98,7 +98,7 @@ export function PresetGallery({ channel, onApply }: Props) {
           <AlertDialogHeader>
             <AlertDialogTitle>Aplicar tema "{pending?.name}"</AlertDialogTitle>
             <AlertDialogDescription>
-              Isso substituirá as configurações visuais atuais. Logos, avatares e imagens de fundo enviados pelo usuário serão preservados.
+              Isso substituirá as configuraciones visuais atuais. Logos, avatares e imagens de fundo enviados pelo usuario serão preservados.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 sm:gap-2">

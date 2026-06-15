@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
         });
       }
 
-      const { fecha: assignedUserId, error } = await supabase.rpc('distribute_lead', {
+      const { data: assignedUserId, error } = await supabase.rpc('distribute_lead', {
         p_lead_id: lead_id,
         p_squad_id: squad_id,
         p_organization_id: organization_id,
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
         });
       }
 
-      const { fecha, error } = await supabase.rpc('process_pending_queue', {
+      const { data, error } = await supabase.rpc('process_pending_queue', {
         p_user_id: user_id,
       });
 
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({
           success: true,
-          assigned: fecha && fecha.length > 0 ? fecha[0] : null,
+          assigned: data && data.length > 0 ? data[0] : null,
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

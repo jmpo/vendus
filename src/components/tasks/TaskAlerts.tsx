@@ -30,13 +30,13 @@ export function TaskAlerts() {
     if (overdueTasks && overdueTasks.length > 0) {
       const count = overdueTasks.length;
       toast.warning(
-        `Você tem ${count} tarefa${count > 1 ? 's' : ''} atrasada${count > 1 ? 's' : ''}!`,
+        `Usted tiene ${count} tarea${count > 1 ? 's' : ''} atrasada${count > 1 ? 's' : ''}!`,
         {
           id: 'overdue-tasks-alert',
           duration: 10000,
           icon: <AlertTriangle className="h-5 w-5 text-destructive" />,
           action: {
-            label: 'Ver tarefas',
+            label: 'Ver tareas',
             onClick: () => {
               // Could navigate to task center
               window.dispatchEvent(new CustomEvent('open-task-center'));

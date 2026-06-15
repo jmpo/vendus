@@ -106,14 +106,14 @@ function InitialLoadingScreen() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 p-6 text-center">
       <Loader2 className="h-8 w-8 animate-spin text-primary" />
       <p className="text-sm text-muted-foreground">
-        {stuck ? 'Demorando mais que o esperado…' : 'Carregando seus produtos…'}
+        {stuck ? 'Demorando mais que o esperado…' : 'Carregando sus productos…'}
       </p>
       {stuck && (
         <button
           onClick={() => window.location.reload()}
           className="text-sm font-medium text-primary underline-offset-4 hover:underline"
         >
-          Tentar novamente
+          Intentar novamente
         </button>
       )}
     </div>
@@ -172,7 +172,7 @@ const Index = () => {
   const { data: materials = [], isLoading: loadingMaterials } = useMaterials(selectedProduct?.id);
 
   // As queries usam `placeholderData: []`, o que zera `isLoading` imediatamente
-  // mesmo durante o primeiro fetch. Sem considerar `isFetching && !isFetched`,
+  // mismo durante o primeiro fetch. Sem considerar `isFetching && !isFetched`,
   // o EmptyState ("Aguardando liberação") piscava no refresh antes dos dados
   // reais chegarem. Aqui mantemos a tela de loading até o primeiro fetch concluir.
   const isLoading =
@@ -184,13 +184,13 @@ const Index = () => {
 
   const products = useMemo(() => {
     const assignedList = (assignedProducts?.map(ap => ap.products).filter(Boolean) as DBProduct[]) || [];
-    // Admin/Manager/Super Admin → vê todos os produtos da organização.
-    // Vendedor → vê só os produtos atribuídos.
+    // Admin/Manager/Super Admin → vê todos os productos da organización.
+    // Vendedor → vê só os productos atribuídos.
     if (isAdminOrManager) return (allProducts || []);
     return assignedList;
   }, [assignedProducts, allProducts, isAdminOrManager]);
 
-  // Cache de tabs já visitadas — mantemos montadas para revisita instantânea.
+  // Cache de tabs ya visitadas — mantemos montadas para revisita instantânea.
   const visitedRef = useRef<Set<string>>(new Set([activeTab]));
   visitedRef.current.add(activeTab);
 
@@ -207,7 +207,7 @@ const Index = () => {
     }, 2500);
   }, [isMobile]);
 
-  // Auto-seleção: restaura o produto salvo, ou seleciona o primeiro disponível.
+  // Auto-seleção: restaura o producto guardado, ou seleciona o primeiro disponível.
   useEffect(() => {
     if (products.length === 0 || selectedProduct) return;
     const savedId = savedProductIdRef.current;
@@ -246,17 +246,17 @@ const Index = () => {
       setPendingConversationId(data.conversation_id);
       setActiveTab('inbox');
       toast({
-        title: data.is_new ? 'Conversa criada' : 'Conversa encontrada',
+        title: data.is_new ? 'Conversación creada' : 'Conversación encontrada',
         description: 'Abrindo no inbox...',
       });
     } catch (err: any) {
-      toast({ title: 'Erro', description: err.message, variant: 'destructive' });
+      toast({ title: 'Error', description: err.message, variant: 'destructive' });
     }
   }, [toast]);
 
   const headerInfo = useMemo(() => {
     if (!selectedProduct) {
-      return { title: 'Meus Produtos', subtitle: 'Selecione um produto para começar' };
+      return { title: 'Meus Produtos', subtitle: 'Seleccioná um producto para comenzar' };
     }
     const map: Record<string, { title: string; subtitle: string }> = {
       'product-dashboard': { title: 'Visão Geral', subtitle: selectedProduct.name },
@@ -266,10 +266,10 @@ const Index = () => {
       'goals': { title: 'Metas', subtitle: selectedProduct.name },
       'financial': { title: 'Financeiro', subtitle: selectedProduct.name },
       'bookings': { title: 'Agendamientos', subtitle: selectedProduct.name },
-      'cadence': { title: 'Cadência', subtitle: selectedProduct.name },
+      'cadence': { title: 'Cadencia', subtitle: selectedProduct.name },
       'playbook': { title: 'Playbook', subtitle: selectedProduct.name },
       'objections': { title: 'Objeções', subtitle: selectedProduct.name },
-      'materials': { title: 'Materiais', subtitle: selectedProduct.name },
+      'materials': { title: 'Materiales', subtitle: selectedProduct.name },
       'ai': { title: 'IA Copiloto', subtitle: selectedProduct.name },
     };
     return map[activeTab] ?? { title: 'SalesOS', subtitle: '' };
@@ -280,17 +280,17 @@ const Index = () => {
   }
 
   // Primeiro acesso após remix: super admin vai direto ao painel global
-  // para concluir senha + configuração inicial. Após isso, fluxo normal.
+  // para concluir contraseña + configuración inicial. Após isso, flujo normal.
   if (isSuperAdmin() && shouldForceSetup) {
     return <Navigate to="/super-admin" replace />;
   }
 
   // Admin de empresa: por padrão redireciona ao painel administrativo.
   // Exceção (NÃO redireciona, deixa o admin usar o app do vendedor):
-  // Admin tem produtos atribuídos a ele (atua também como vendedor) —
-  //   nesse caso o "Voltar ao App" no painel admin deve funcionar.
+  // Admin tiene productos atribuídos a ele (atua también como vendedor) —
+  //   nesse caso o "Voltar ao App" no painel admin debe funcionar.
   // O onboarding guiado é renderizado dentro do /admin via OnboardingBanner,
-  // então não precisa mais bloquear o redirect aqui.
+  // então no precisa mais bloquear o redirect aqui.
   const adminHasAssignedProducts =
     (assignedProducts?.length || 0) > 0;
   if (
@@ -307,11 +307,11 @@ const Index = () => {
     return <Navigate to="/super-admin" replace />;
   }
 
-  // Estado vazio - vendedor/manager sem produtos atribuídos
+  // Estado vazio - vendedor/manager sem productos atribuídos
   if (products.length === 0) {
     return (
       <div className="min-h-screen bg-background">
-        <Header title={platformName} subtitle="Bem-vindo" />
+        <Header title={platformName} subtitle="Bienvenido" />
         <EmptyState />
       </div>
     );
@@ -418,7 +418,7 @@ const Index = () => {
     }
   };
 
-  // Renderiza TODAS as tabs já visitadas, escondendo as inativas → revisita instantânea.
+  // Renderiza TODAS as tabs ya visitadas, escondendo as inativas → revisita instantânea.
   const renderContent = () => {
     if (!selectedProduct) return <SectionLoader />;
     return (

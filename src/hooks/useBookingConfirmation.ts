@@ -43,7 +43,7 @@ export function useBookingByToken(token: string | undefined) {
     queryFn: async (): Promise<BookingDetails | null> => {
       if (!token) return null;
 
-      // Use SECURITY DEFINER RPC instead of direct table read.
+      // Usa SECURITY DEFINER RPC instead of direct table read.
       // The RPC validates the token server-side, preventing any anonymous
       // enumeration of booking PII.
       const { data: rows, error } = await supabase
@@ -136,7 +136,7 @@ export function useCancelBookingByToken() {
     },
     onError: (error: Error) => {
       console.error('Error cancelling:', error);
-      toast.error('Erro ao cancelar');
+      toast.error('Error ao cancelar');
     },
   });
 }

@@ -108,7 +108,7 @@ export function QuizBuilderShell({ funnel }: Props) {
   const handleAddStep = useCallback(() => {
     const nb = createDefaultBlock('buttons', { x: 0, y: 0 });
     nb.data = applyPresetToBlockData('single', nb.data) as any;
-    nb.data.content = 'Nova pergunta';
+    nb.data.content = 'Nova pregunta';
     insertAtEnd(nb);
   }, [insertAtEnd]);
 

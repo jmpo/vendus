@@ -47,13 +47,13 @@ serve(async (req) => {
     }
     try {
       const token = authHeader.replace("Bearer ", "");
-      const { fecha: claimsData, error: claimsErr } = await supabase.auth.getClaims(token);
+      const { data: claimsData, error: claimsErr } = await supabase.auth.getClaims(token);
       if (claimsErr || !claimsData?.claims?.sub) {
         return new Response(JSON.stringify({ error: "Unauthorized" }), {
           status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { fecha: prof } = await supabase
+      const { data: prof } = await supabase
         .from("profiles").select("organization_id").eq("id", claimsData.claims.sub as string).maybeSingle();
       organizationId = prof?.organization_id ?? null;
     } catch (e) {
@@ -69,27 +69,27 @@ serve(async (req) => {
     if (productId) {
 
       // Fetch AI knowledge base (manual entries)
-      const { fecha: knowledge } = await supabase
+      const { data: knowledge } = await supabase
         .from("ai_knowledge_base")
         .select("title, content, category")
         .eq("product_id", productId)
         .eq("is_active", true);
 
       // Fetch product details
-      const { fecha: product } = await supabase
+      const { data: product } = await supabase
         .from("products")
         .select("name, description, pitch_15s, pitch_30s, pitch_2min, icp, differentials, organization_id")
         .eq("id", productId)
         .single();
 
       // Fetch objections
-      const { fecha: objections } = await supabase
+      const { data: objections } = await supabase
         .from("objections")
         .select("category, what_they_say, what_they_mean, suggested_response")
         .eq("product_id", productId);
 
       // Fetch Product Brain knowledge sources
-      const { fecha: brainSources } = await supabase
+      const { data: brainSources } = await supabase
         .from("product_knowledge_sources")
         .select("source_type, title, extracted_content, transcript, question, answer")
         .eq("product_id", productId)

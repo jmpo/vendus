@@ -58,7 +58,7 @@ export function usePublicProfile(slug: string | undefined) {
   });
 }
 
-// Buscar tipos de evento ativos de um usuário
+// Buscar tipos de evento ativos de um usuario
 export function usePublicEventTypes(userId: string | undefined) {
   return useQuery({
     queryKey: ['public-event-types', userId],
@@ -86,7 +86,7 @@ export function usePublicEventTypeBySlug(userSlug: string | undefined, eventSlug
     queryFn: async () => {
       if (!userSlug || !eventSlug) return null;
       
-      // Primeiro buscar o usuário pelo slug (view pública segura)
+      // Primeiro buscar o usuario pelo slug (view pública segura)
       const { data: profile, error: profileError } = await (supabase as any)
         .from('public_booking_profiles')
         .select('id, full_name, avatar_url, booking_slug, booking_bio')
@@ -160,7 +160,7 @@ export function useSubmitBooking() {
     },
     onError: (error: Error) => {
       console.error('Error submitting booking:', error);
-      toast.error(error.message || 'Erro ao agendar');
+      toast.error(error.message || 'Error ao agendar');
     },
   });
 }
@@ -181,7 +181,7 @@ export function useCancelBookingPublic() {
 
       if (error) throw error;
 
-      // Também cancelar o evento de calendário associado
+      // También cancelar o evento de calendario associado
       if (data.calendar_event_id) {
         await supabase
           .from('calendar_events')

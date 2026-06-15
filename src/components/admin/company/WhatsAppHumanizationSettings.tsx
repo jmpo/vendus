@@ -68,7 +68,7 @@ export function WhatsAppHumanizationSettings() {
 
   const save = useMutation({
     mutationFn: async () => {
-      if (!orgId) throw new Error('Sem organização');
+      if (!orgId) throw new Error('Sem organización');
       const payload = {
         ...form,
         ai_grouping_window_ms: clamp(form.ai_grouping_window_ms, 0, 8000),
@@ -84,7 +84,7 @@ export function WhatsAppHumanizationSettings() {
       qc.invalidateQueries({ queryKey: ['org-humanization'] });
       toast({ title: 'Configurações salvas' });
     },
-    onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
 
   const update = <K extends keyof HumanizationSettings>(k: K, v: HumanizationSettings[K]) =>
@@ -97,8 +97,8 @@ export function WhatsAppHumanizationSettings() {
           <Bot className="h-4 w-4" /> Humanização do WhatsApp (IA)
         </CardTitle>
         <CardDescription>
-          Controle como a IA agrupa, responde e evita repetir mensagens. Valores altos pioram a
-          experiência do cliente.
+          Controle como a IA agrupa, responde e evita repetir mensajes. Valores altos pioram a
+          experiência del cliente.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -109,8 +109,8 @@ export function WhatsAppHumanizationSettings() {
         ) : (
           <>
             <Section
-              title="Agrupar mensagens recebidas"
-              hint="Espera curta antes de responder, para juntar mensagens do cliente em uma única resposta."
+              title="Agrupar mensajes recebidas"
+              hint="Espera corta antes de responder, para juntar mensajes del cliente em uma única respuesta."
             >
               <Toggle
                 label="Ativar agrupamento"
@@ -161,7 +161,7 @@ export function WhatsAppHumanizationSettings() {
 
             <Section
               title="Presença real no WhatsApp"
-              hint="Dispara o status de 'digitando...' e 'gravando áudio...' que aparece no celular do cliente, em tempo real (via Evolution Go)."
+              hint="Dispara o status de 'digitando...' e 'gravando áudio...' que aparece no celular del cliente, em tempo real (via Evolution Go)."
             >
               <Toggle
                 label="Mostrar 'digitando...' real"
@@ -169,7 +169,7 @@ export function WhatsAppHumanizationSettings() {
                 onChange={(v) => update('presence_enabled', v)}
               />
               <Toggle
-                label="Mostrar 'gravando áudio...' quando IA enviar áudio"
+                label="Mostrar 'gravando áudio...' cuando IA enviar áudio"
                 checked={form.presence_recording_enabled}
                 onChange={(v) => update('presence_recording_enabled', v)}
               />
@@ -194,8 +194,8 @@ export function WhatsAppHumanizationSettings() {
             </Section>
 
             <Section
-              title="Anti-duplicação de respostas"
-              hint="Bloqueia o envio de respostas idênticas para a mesma conversa em uma janela de tempo."
+              title="Anti-duplicação de respuestas"
+              hint="Bloqueia o envio de respuestas idênticas para a misma conversación em uma janela de tempo."
             >
               <Toggle
                 label="Ativar anti-duplicação"
@@ -213,11 +213,11 @@ export function WhatsAppHumanizationSettings() {
             </Section>
 
             <Section
-              title="Trava por conversa"
-              hint="Garante que apenas uma execução de IA por conversa rode por vez. Recomendado manter ligado."
+              title="Trava por conversación"
+              hint="Garante que apenas uma execução de IA por conversación rode por vez. Recomendado manter ligado."
             >
               <Toggle
-                label="Processamento único por conversa"
+                label="Processamento único por conversación"
                 checked={form.ai_single_processing_per_conversation}
                 onChange={(v) => update('ai_single_processing_per_conversation', v)}
               />
@@ -226,7 +226,7 @@ export function WhatsAppHumanizationSettings() {
             <div className="flex justify-end">
               <Button onClick={() => save.mutate()} disabled={save.isPending}>
                 {save.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Salvar configurações
+                Salvar configuraciones
               </Button>
             </div>
           </>

@@ -21,7 +21,7 @@ interface Props {
   onCreated: (funnelId: string) => void;
 }
 
-const PLACEHOLDER = 'Exemplo: Estou em um evento presencial para empresários e quero criar um quiz rápido para identificar quem tem maior potencial de compra. Quero perguntar sobre faturamento, equipe, principal desafio e urgência. No final, quero classificar o lead como iniciante, intermediário ou avançado.';
+const PLACEHOLDER = 'Exemplo: Estou em um evento presencial para empresários e quiero crear um quiz rápido para identificar quem tiene maior potencial de compra. Quero perguntar sobre faturamento, equipo, principal desafío e urgência. No final, quiero classificar o lead como iniciante, intermediário ou avançado.';
 
 export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
   const [productId, setProductId] = useState('');
@@ -47,7 +47,7 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
 
   const handleGenerate = async () => {
     if (!productId || !name.trim() || context.trim().length < 20) {
-      toast.error('Preencha produto, nome e contexto (mín. 20 caracteres)');
+      toast.error('Preencha producto, nombre e contexto (mín. 20 caracteres)');
       return;
     }
     setGenerating(true);
@@ -82,7 +82,7 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
         start_block_id: blocks[0]?.id,
       });
 
-      // Configura ações pós-quiz (agente / cadência) via update direto
+      // Configura acciones pós-quiz (agente / cadencia) via update direto
       if (enableAgent && agentId || enableCadence && cadenceId) {
         await (supabase as any).from('capture_funnels').update({
           ...(enableAgent && agentId ? { post_quiz_agent_id: agentId } : {}),
@@ -90,11 +90,11 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
         }).eq('id', created.id);
       }
 
-      toast.success('Quiz gerado pela IA com sucesso!');
+      toast.success('Quiz gerado pela IA com éxito!');
       onOpenChange(false);
       onCreated(created.id);
     } catch (e: any) {
-      toast.error('Erro ao gerar quiz: ' + (e.message || 'desconhecido'));
+      toast.error('Error ao gerar quiz: ' + (e.message || 'desconhecido'));
     } finally {
       setGenerating(false);
     }
@@ -113,16 +113,16 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
         <div className="space-y-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label>Produto *</Label>
+              <Label>Producto *</Label>
               <Select value={productId} onValueChange={setProductId}>
-                <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Seleccioná" /></SelectTrigger>
                 <SelectContent>
                   {products?.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Nome do Quiz *</Label>
+              <Label>Nombre do Quiz *</Label>
               <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Diagnóstico Comercial" />
             </div>
           </div>
@@ -159,7 +159,7 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
                   <SelectItem value="classificacao">Classificação (frio/morno/quente)</SelectItem>
                   <SelectItem value="diagnostico">Diagnóstico</SelectItem>
                   <SelectItem value="recomendacao">Recomendação</SelectItem>
-                  <SelectItem value="pontuacao">Pontuação simples</SelectItem>
+                  <SelectItem value="pontuacao">Pontuação simple</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -167,7 +167,7 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
 
           <div className="space-y-3 rounded-lg border p-3">
             <p className="text-sm font-medium">Campos de captura</p>
-            <div className="flex items-center justify-between"><Label className="font-normal">Capturar nome</Label><Switch checked={captureName} onCheckedChange={setCaptureName} /></div>
+            <div className="flex items-center justify-between"><Label className="font-normal">Capturar nombre</Label><Switch checked={captureName} onCheckedChange={setCaptureName} /></div>
             <div className="flex items-center justify-between"><Label className="font-normal">Capturar WhatsApp</Label><Switch checked={captureWa} onCheckedChange={setCaptureWa} /></div>
             <div className="flex items-center justify-between"><Label className="font-normal">Capturar e-mail</Label><Switch checked={captureEmail} onCheckedChange={setCaptureEmail} /></div>
           </div>
@@ -177,16 +177,16 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
             <div className="flex items-center justify-between"><Label className="font-normal">Acionar agente IA</Label><Switch checked={enableAgent} onCheckedChange={setEnableAgent} /></div>
             {enableAgent && (
               <Select value={agentId} onValueChange={setAgentId}>
-                <SelectTrigger><SelectValue placeholder={productId ? 'Selecione um agente' : 'Selecione um produto primeiro'} /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder={productId ? 'Seleccioná um agente' : 'Seleccioná um producto primeiro'} /></SelectTrigger>
                 <SelectContent>
                   {productAgents.map((a: any) => <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             )}
-            <div className="flex items-center justify-between"><Label className="font-normal">Inserir em cadência</Label><Switch checked={enableCadence} onCheckedChange={setEnableCadence} /></div>
+            <div className="flex items-center justify-between"><Label className="font-normal">Inserir em cadencia</Label><Switch checked={enableCadence} onCheckedChange={setEnableCadence} /></div>
             {enableCadence && (
               <Select value={cadenceId} onValueChange={setCadenceId}>
-                <SelectTrigger><SelectValue placeholder="Selecione uma cadência" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Seleccioná uma cadencia" /></SelectTrigger>
                 <SelectContent>
                   {(cadences || []).map((c: any) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
                 </SelectContent>

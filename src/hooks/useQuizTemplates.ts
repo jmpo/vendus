@@ -17,7 +17,7 @@ export interface DbQuizTemplate extends Omit<QuizTemplate, 'flow_blocks'> {
 }
 
 /**
- * Une os templates oficiais (seed em código) com os templates guardados pela organização.
+ * Une os templates oficiais (seed em código) com os templates guardados pela organización.
  */
 export function useQuizTemplates() {
   const { profile } = useAuth();

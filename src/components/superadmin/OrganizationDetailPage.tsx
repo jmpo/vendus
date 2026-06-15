@@ -153,7 +153,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
         oldRole: userToEdit.user_roles?.[0]?.role || null,
         newRole,
       });
-      toast.success('Rol atualizado com sucesso!');
+      toast.success('Rol actualizado com éxito!');
       setUserToEdit(null);
     } catch (error) {
       toast.error('Error al actualizar el rol');
@@ -198,7 +198,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
       if (manageAction === 'change_email') payload.email = manageInput.trim().toLowerCase();
 
       const { data, error } = await supabase.functions.invoke('super-admin-manage-user', { body: payload });
-      // Tenta extrair mensagem amigável do corpo de erro (FunctionsHttpError)
+      // Tenta extrair mensaje amigável do corpo de error (FunctionsHttpError)
       let bodyError: string | null = null;
       if (error && (error as any).context?.json) {
         try {
@@ -277,7 +277,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
       });
       toast.success(org.status === 'active' ? 'Empresa suspendida' : 'Empresa reactivada');
     } catch (error) {
-      toast.error('Erro ao atualizar status');
+      toast.error('Error ao actualizar status');
     }
   };
 
@@ -323,7 +323,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
   }
 
   const subscription = org.subscriptions?.[0];
-  // Fonte primária do plano: organizations + platform_plans (join). Fallback legado: subscriptions[0].
+  // Fonte primária do plan: organizations + platform_plans (join). Fallback legado: subscriptions[0].
   const plan = (org as any).platform_plans ?? null;
   const planMonthly = Number(plan?.price_monthly ?? subscription?.price_monthly ?? 0);
   const planActivatedAt = (org as any).plan_activated_at ?? null;
@@ -470,7 +470,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
               <div>
                 <CardTitle>Usuarios da Empresa</CardTitle>
                 <CardDescription>
-                  {org.profiles?.length || 0} usuários{pendingInvitations?.length ? ` | ${pendingInvitations.length} invitación(es) pendiente(s)` : ''}
+                  {org.profiles?.length || 0} usuarios{pendingInvitations?.length ? ` | ${pendingInvitations.length} invitación(es) pendiente(s)` : ''}
                 </CardDescription>
               </div>
               <Button onClick={() => setIsInviting(true)}>
@@ -482,7 +482,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
               {/* Usuarios existentes */}
               {!org.profiles?.length ? (
                 <p className="text-muted-foreground text-center py-8">
-                  Nenhum usuário cadastrado
+                  Nenhum usuario cadastrado
                 </p>
               ) : (
                 <div className="space-y-3">
@@ -497,7 +497,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                           <AvatarFallback>{getInitials(user.full_name)}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium">{user.full_name || 'Sem nome'}</p>
+                          <p className="font-medium">{user.full_name || 'Sem nombre'}</p>
                           <p className="text-sm text-muted-foreground">{user.email}</p>
                         </div>
                       </div>
@@ -525,7 +525,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => openManageModal(user, 'set_password')}>
                               <KeyRound className="h-4 w-4 mr-2" />
-                              Redefinir Senha
+                              Redefinir Contraseña
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => openManageModal(user, 'change_email')}>
                               <AtSign className="h-4 w-4 mr-2" />
@@ -665,7 +665,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                   </div>
                   
                   <p className="text-xs text-muted-foreground text-center">
-                    O convite expira em 7 dias
+                    O convite expira em 7 días
                   </p>
                 </div>
               )}
@@ -698,7 +698,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
               <AlertDialogHeader>
                 <AlertDialogTitle>Eliminar Convite</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Tem certeza que deseja excluir o convite para <strong>{inviteToDelete?.email}</strong>? Esta ação não pode ser desfeita.
+                  Tem certeza que desea eliminar o convite para <strong>{inviteToDelete?.email}</strong>? Esta acción no puede ser desfeita.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -726,7 +726,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                     <AvatarFallback>{getInitials(userToEdit?.full_name || '')}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium">{userToEdit?.full_name || 'Sem nome'}</p>
+                    <p className="font-medium">{userToEdit?.full_name || 'Sem nombre'}</p>
                     <p className="text-sm text-muted-foreground">{userToEdit?.email}</p>
                   </div>
                 </div>
@@ -761,13 +761,13 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
             </DialogContent>
           </Dialog>
 
-          {/* Alert de Remoção de Usuário */}
+          {/* Alert de Remoção de Usuario */}
           <AlertDialog open={!!userToRemove} onOpenChange={() => setUserToRemove(null)}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Remover Usuário</AlertDialogTitle>
+                <AlertDialogTitle>Remover Usuario</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Tem certeza que deseja remover <strong>{userToRemove?.full_name || userToRemove?.email}</strong> da empresa? O usuário perderá acesso e seus papéis serão removidos.
+                  Tem certeza que desea eliminar <strong>{userToRemove?.full_name || userToRemove?.email}</strong> de la empresa? O usuario perderá acesso e sus papéis serão removidos.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -782,13 +782,13 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
             </AlertDialogContent>
           </AlertDialog>
 
-          {/* Modal de Gerenciamento de Conta (validar email / senha / email) */}
+          {/* Modal de Gerenciamento de Cuenta (validar email / contraseña / email) */}
           <Dialog open={!!userToManage} onOpenChange={(o) => !o && closeManageModal()}>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>
                   {manageAction === 'confirm_email' && 'Validar Email'}
-                  {manageAction === 'set_password' && 'Redefinir Senha'}
+                  {manageAction === 'set_password' && 'Redefinir Contraseña'}
                   {manageAction === 'change_email' && 'Alterar Email'}
                 </DialogTitle>
               </DialogHeader>
@@ -799,20 +799,20 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                     <AvatarFallback>{getInitials(userToManage?.full_name || '')}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium">{userToManage?.full_name || 'Sem nome'}</p>
+                    <p className="font-medium">{userToManage?.full_name || 'Sem nombre'}</p>
                     <p className="text-sm text-muted-foreground">{userToManage?.email}</p>
                   </div>
                 </div>
 
                 {manageAction === 'confirm_email' && (
                   <p className="text-sm text-muted-foreground">
-                    Confirmar manualmente o email deste usuário, dispensando a verificação por link. Use quando o usuário não recebeu ou perdeu o email de validação.
+                    Confirmar manualmente o email deste usuario, dispensando a verificação por link. Usa cuando o usuario no recebeu ou perdeu o email de validação.
                   </p>
                 )}
 
                 {manageAction === 'set_password' && (
                   <div className="space-y-2">
-                    <Label>Nova Senha</Label>
+                    <Label>Nova Contraseña</Label>
                     <Input
                       type="text"
                       value={manageInput}
@@ -821,7 +821,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                       autoFocus
                     />
                     <p className="text-xs text-muted-foreground">
-                      Informe a nova senha. O usuário poderá trocá-la depois em Perfil → Trocar senha.
+                      Informe a nova contraseña. O usuario poderá trocá-la después em Perfil → Trocar contraseña.
                     </p>
                   </div>
                 )}
@@ -870,7 +870,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
             <CardContent>
               {!hasPlan ? (
                 <p className="text-muted-foreground text-center py-8">
-                  Nenhum plano ativo
+                  Nenhum plan ativo
                 </p>
               ) : (
                 <div className="space-y-4">
@@ -884,7 +884,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                     <div className="text-right">
                       <p className="text-sm text-muted-foreground">Valor</p>
                       <p className="text-xl font-bold">
-                        {formatCurrency(planMonthly)}/mês
+                        {formatCurrency(planMonthly)}/mes
                       </p>
                     </div>
                   </div>
@@ -933,7 +933,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
             <CardContent>
               {!billingHistory?.length ? (
                 <p className="text-muted-foreground text-center py-8">
-                  Nenhuma cobrança registrada
+                  Nenhuma cobro registrada
                 </p>
               ) : (
                 <div className="space-y-3">
@@ -973,9 +973,9 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
             <AlertDialogDescription asChild>
               <div className="space-y-3">
                 <p className="text-destructive font-medium">
-                  Esta ação é irreversível. Todos os dados (usuários, leads, conversas, produtos, integrações) serão removidos.
+                  Esta acción é irreversível. Todos os dados (usuarios, leads, conversaciones, productos, integraciones) serão removidos.
                 </p>
-                <p>Para confirmar, digite o nome exato: <strong>{org.name}</strong></p>
+                <p>Para confirmar, digite o nombre exato: <strong>{org.name}</strong></p>
                 <Input
                   autoFocus
                   value={deleteConfirmName}
@@ -997,7 +997,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                   toast.success(`Empresa "${org.name}" excluída`);
                   onBack();
                 } catch (err: any) {
-                  toast.error(err?.message || 'Erro ao excluir empresa');
+                  toast.error(err?.message || 'Error ao eliminar empresa');
                 }
               }}
             >

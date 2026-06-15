@@ -23,11 +23,11 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
     is_active: widget.is_active ?? true,
     primary_color: widget.primary_color || '#6366f1',
     secondary_color: widget.secondary_color || '#ffffff',
-    welcome_message: widget.welcome_message || 'Olá! Como posso ajudá-lo hoje?',
-    placeholder_text: widget.placeholder_text || 'Digite sua mensagem...',
+    welcome_message: widget.welcome_message || 'Hola! Como posso ajudá-lo hoy?',
+    placeholder_text: widget.placeholder_text || 'Escribí su mensaje...',
     position: widget.position || 'bottom-right',
     auto_open_delay: widget.auto_open_delay || 0,
-    offline_message: widget.offline_message || 'No momento não estamos disponíveis. Deixe sua mensagem que retornaremos.',
+    offline_message: widget.offline_message || 'No momento no estamos disponíveis. Deixe su mensaje que retornaremos.',
   });
 
   useEffect(() => {
@@ -36,11 +36,11 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
       is_active: widget.is_active ?? true,
       primary_color: widget.primary_color || '#6366f1',
       secondary_color: widget.secondary_color || '#ffffff',
-      welcome_message: widget.welcome_message || 'Olá! Como posso ajudá-lo hoje?',
-      placeholder_text: widget.placeholder_text || 'Digite sua mensagem...',
+      welcome_message: widget.welcome_message || 'Hola! Como posso ajudá-lo hoy?',
+      placeholder_text: widget.placeholder_text || 'Escribí su mensaje...',
       position: widget.position || 'bottom-right',
       auto_open_delay: widget.auto_open_delay || 0,
-      offline_message: widget.offline_message || 'No momento não estamos disponíveis. Deixe sua mensagem que retornaremos.',
+      offline_message: widget.offline_message || 'No momento no estamos disponíveis. Deixe su mensaje que retornaremos.',
     });
   }, [widget]);
 
@@ -50,9 +50,9 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
         id: widget.id,
         ...formData,
       });
-      toast.success('Configurações salvas com sucesso!');
+      toast.success('Configurações salvas com éxito!');
     } catch (error) {
-      toast.error('Erro ao salvar configurações');
+      toast.error('Error ao guardar configuraciones');
     }
   };
 
@@ -72,7 +72,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
             <div className="flex items-center justify-between">
               <div>
                 <Label>Widget Ativo</Label>
-                <p className="text-xs text-muted-foreground">Exibir widget no site</p>
+                <p className="text-xs text-muted-foreground">Mostrar widget no site</p>
               </div>
               <Switch
                 checked={formData.is_active}
@@ -81,7 +81,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
             </div>
 
             <div className="space-y-2">
-              <Label>Nome do Widget</Label>
+              <Label>Nombre do Widget</Label>
               <Input
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -164,11 +164,11 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Mensagem de Boas-vindas</Label>
+              <Label>Mensaje de Boas-vindas</Label>
               <Textarea
                 value={formData.welcome_message}
                 onChange={(e) => setFormData({ ...formData, welcome_message: e.target.value })}
-                placeholder="Olá! Como posso ajudá-lo?"
+                placeholder="Hola! Como posso ajudá-lo?"
                 rows={2}
               />
             </div>
@@ -178,16 +178,16 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
               <Input
                 value={formData.placeholder_text}
                 onChange={(e) => setFormData({ ...formData, placeholder_text: e.target.value })}
-                placeholder="Digite sua mensagem..."
+                placeholder="Escribí su mensaje..."
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Mensagem Offline</Label>
+              <Label>Mensaje Offline</Label>
               <Textarea
                 value={formData.offline_message}
                 onChange={(e) => setFormData({ ...formData, offline_message: e.target.value })}
-                placeholder="Não estamos disponíveis..."
+                placeholder="No estamos disponíveis..."
                 rows={2}
               />
             </div>
@@ -205,7 +205,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Delay para Abrir Automaticamente (segundos)</Label>
-              <p className="text-xs text-muted-foreground">0 = não abrir automaticamente</p>
+              <p className="text-xs text-muted-foreground">0 = no abrir automaticamente</p>
               <Input
                 type="number"
                 min={0}
@@ -276,7 +276,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
                       className="rounded-lg p-2 text-sm max-w-[85%] text-white"
                       style={{ backgroundColor: formData.primary_color }}
                     >
-                      {formData.welcome_message || 'Olá! Como posso ajudá-lo?'}
+                      {formData.welcome_message || 'Hola! Como posso ajudá-lo?'}
                     </div>
                   </div>
                   
@@ -284,7 +284,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
                   <div className="p-3 border-t bg-white">
                     <div className="flex gap-2">
                       <div className="flex-1 text-sm text-muted-foreground bg-muted rounded-full px-3 py-2">
-                        {formData.placeholder_text || 'Digite sua mensagem...'}
+                        {formData.placeholder_text || 'Escribí su mensaje...'}
                       </div>
                     </div>
                   </div>

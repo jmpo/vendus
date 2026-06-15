@@ -110,7 +110,7 @@ export function WhatsAppManager() {
             onChange={(e) => setSearchQuery(e.target.value)} className="pl-10" />
         </div>
         <Select value={productFilter} onValueChange={setProductFilter}>
-          <SelectTrigger className="w-full sm:w-[200px]"><SelectValue placeholder="Produto" /></SelectTrigger>
+          <SelectTrigger className="w-full sm:w-[200px]"><SelectValue placeholder="Producto" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos los productos</SelectItem>
             {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
@@ -257,7 +257,7 @@ export function WhatsAppManager() {
             <div className="space-y-2">
               <Label>Producto</Label>
               <Select value={productId} onValueChange={setProductId}>
-                <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Seleccioná" /></SelectTrigger>
                 <SelectContent>
                   {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
                 </SelectContent>
@@ -283,7 +283,7 @@ export function WhatsAppManager() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Eliminar flujo?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Las conversaciones existentes no se verán afectadas.
+              Esta acción no puede ser desfeita. Las conversaciones existentes no se verán afectadas.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -118,7 +118,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
 
   const getProductName = (productId: string | null) => {
     if (!productId) return 'Todos los productos';
-    return products?.find(p => p.id === productId)?.name || 'Produto';
+    return products?.find(p => p.id === productId)?.name || 'Producto';
   };
 
   if (isLoading) {
@@ -254,7 +254,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Vendedor</TableHead>
-                <TableHead>Produto</TableHead>
+                <TableHead>Producto</TableHead>
                 <TableHead>Período</TableHead>
                 <TableHead>Meta Valor</TableHead>
                 <TableHead>Meta Deals</TableHead>

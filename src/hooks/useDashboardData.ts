@@ -200,7 +200,7 @@ export function useDashboardData(productId: string, userId?: string) {
       return date >= currentMonthStart && date <= currentMonthEnd;
     });
     
-    // Use deals count as proxy for leads trend
+    // Usa deals count as proxy for leads trend
     const currentMonthLeadsCount = leads.length;
     const lastMonthLeadsCount = Math.max(1, currentMonthLeadsCount - Math.floor(Math.random() * 10));
     const lastMonthDealsValue = Math.max(1000, currentMonthDeals.reduce((sum, d) => sum + d.deal_value, 0) * 0.85);

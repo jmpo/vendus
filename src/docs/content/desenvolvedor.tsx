@@ -288,7 +288,7 @@ export const devPages: DocPage[] = [
         </Steps>
 
         <Callout type="info" title="Histórico preservado">
-          <code>evolution-webhook</code> nunca auto-fecha duplicatas. Se a mesma empresa tem instância A e B,
+          <code>evolution-webhook</code> nunca auto-data duplicatas. Se a mesma empresa tem instância A e B,
           conversa do mesmo telefone é reaproveitada e o histórico é mantido. Modal de transferência permite
           trocar a conexão Evolution.
         </Callout>

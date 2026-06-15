@@ -305,7 +305,7 @@ export function AIQualityPanel() {
           {evals.length === 0 && (
             <Card>
               <CardContent className="p-6 text-center text-sm text-muted-foreground">
-                Nenhuma avaliação ainda. Clique em "Evaluar últimas 24h" para gerar.
+                Nenhuma avaliação aún. Hacé clic em "Evaluar últimas 24h" para gerar.
               </CardContent>
             </Card>
           )}
@@ -463,7 +463,7 @@ function VariantsDialog({
         <DialogHeader>
           <DialogTitle>Variantes — {experiment.name}</DialogTitle>
           <DialogDescription>
-            Pesos definem a distribuição. A escolha por lead é determinística (mesmo lead → mesma variante).
+            Pesos definem a distribución. A escolha por lead é determinística (mismo lead → misma variante).
           </DialogDescription>
         </DialogHeader>
 
@@ -569,8 +569,8 @@ function VariantsDialog({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="append">Anexar ao prompt do agente</SelectItem>
-                      <SelectItem value="replace">Substituir prompt do agente</SelectItem>
+                      <SelectItem value="append">Anexar ao prompt del agente</SelectItem>
+                      <SelectItem value="replace">Substituir prompt del agente</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

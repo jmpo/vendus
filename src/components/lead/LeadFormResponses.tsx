@@ -34,7 +34,7 @@ export function LeadFormResponses({ metadata }: LeadFormResponsesProps) {
 
   // Filter out common fields that are shown elsewhere
   const filteredResponses = Object.entries(formResponses).filter(
-    ([key]) => !['name', 'nome', 'email', 'phone', 'teléfono', 'full_name'].includes(key)
+    ([key]) => !['name', 'nombre', 'email', 'phone', 'teléfono', 'full_name'].includes(key)
   );
 
   return (

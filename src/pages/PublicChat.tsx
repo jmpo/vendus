@@ -40,7 +40,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
   const scoreRef = useRef<number>(0);
   const tagsRef = useRef<Set<string>>(new Set());
   // Modo "Agente IA": após bloco ai_takeover/agent_switch, o chat passa a
-  // ser conduzido 100% pelo webchat-bot — input fica sempre livre.
+  // ser conduzido 100% pelo webchat-bot — input fica siempre livre.
   const [aiMode, setAiMode] = useState<null | {
     conversationId: string;
     agentId: string | null;
@@ -48,7 +48,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
   }>(null);
   const aiModeRef = useRef<typeof aiMode>(null);
   useEffect(() => { aiModeRef.current = aiMode; }, [aiMode]);
-  // Quando o takeover falha, mantemos o input livre para o usuário tentar de novo.
+  // Quando o takeover falla, mantemos o input livre para o usuario intentar de novo.
   const [aiError, setAiError] = useState(false);
   const pendingTakeoverBlockRef = useRef<FunnelBlock | null>(null);
   const visitorIdRef = useRef<string>('');
@@ -267,7 +267,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
     } else if (block.type === 'ai_takeover' || block.type === 'agent_switch') {
       await startAgentTakeover(block);
     } else if (block.type === 'condition') {
-      // Avalia condição contra responsesRef e ramifica
+      // Avalia condición contra responsesRef e ramifica
       const cond = block.data.condition;
       let matched = false;
       if (cond?.variable) {
@@ -301,17 +301,17 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
     }
   };
 
-  // ─── Agente IA: cria conversa no backend e delega ao webchat-bot ──────────
+  // ─── Agente IA: cria conversación no backend e delega ao webchat-bot ──────────
   const startAgentTakeover = async (block: FunnelBlock) => {
-    if (aiModeRef.current) return; // já em modo IA
+    if (aiModeRef.current) return; // ya em modo IA
     if (!funnel) return;
     pendingTakeoverBlockRef.current = block;
 
     const urlParams = new URLSearchParams(window.location.search);
     const collected = responsesRef.current;
-    const visitorName = collected.name || collected.nome || collected.first_name || undefined;
+    const visitorName = collected.name || collected.nombre || collected.first_name || undefined;
     const visitorEmail = collected.email || undefined;
-    const visitorPhone = collected.phone || collected.telefone || collected.whatsapp || undefined;
+    const visitorPhone = collected.phone || collected.teléfono || collected.whatsapp || undefined;
 
     setIsTyping(true);
     try {
@@ -357,7 +357,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       };
       setAiMode(newMode);
       aiModeRef.current = newMode;
-      // Dispara primeira mensagem (saudação proativa do agente).
+      // Dispara primeira mensaje (saudação proativa del agente).
       const lastUserMsg = [...messages].reverse().find(m => m.type === 'user')?.content;
       const initialTrigger = lastUserMsg && lastUserMsg.trim().length > 0
         ? lastUserMsg
@@ -424,7 +424,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
     }
   }, [funnel]);
 
-  // Hooks precisam rodar em todas as renderizações para não quebrar em produção.
+  // Hooks precisam rodar em todas as renderizações para no quebrar em produção.
   const a = useMemo(
     () => (funnel ? getChannelAppearance(funnel as any, channel) : defaultChannelAppearance(channel)),
     [funnel, channel]
@@ -437,21 +437,21 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
     const text = inputValue;
     setInputValue('');
 
-    // Modo Agente IA: envia direto para webchat-bot, sem fluxo estático.
+    // Modo Agente IA: envia direto para webchat-bot, sem flujo estático.
     if (aiModeRef.current) {
       await sendToAgent(text, aiModeRef.current);
       setTimeout(() => inputRef.current?.focus(), 100);
       return;
     }
 
-    // Retentativa de takeover após falha anterior.
+    // Retentativa de takeover após falla anterior.
     if (aiError && pendingTakeoverBlockRef.current) {
       setMessages(prev => [...prev, {
         id: `user-${Date.now()}`,
         type: 'user',
         content: text,
       }]);
-      // Guarda como última resposta para o agente já ter contexto.
+      // Guarda como última respuesta para el agente ya ter contexto.
       const variableName = '__last_message__';
       const next = { ...responsesRef.current, [variableName]: text };
       setResponses(next);
@@ -503,7 +503,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
 
     // Find next block (could be option-specific or default)
     const selectedOption = currentBlock.data.options?.find(o => o.id === option.id);
-    // Fase 3: acumula score e tag da opção
+    // Fase 3: acumula score e tag da opción
     if (selectedOption?.score) scoreRef.current += Number(selectedOption.score) || 0;
     if (selectedOption?.tag) tagsRef.current.add(String(selectedOption.tag));
     const nextBlockId = selectedOption?.next_block_id || currentBlock.next_block_id;
@@ -587,8 +587,8 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h1 className="text-xl font-semibold mb-2">Chat não encontrado</h1>
-          <p className="text-muted-foreground">Este link pode estar inativo ou incorreto.</p>
+          <h1 className="text-xl font-semibold mb-2">Chat no encontrado</h1>
+          <p className="text-muted-foreground">Este link puede estar inativo ou incorreto.</p>
         </div>
       </div>
     );
@@ -606,8 +606,8 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
   const bubbleRadius = chatOpts.bubble_style === 'squared' ? 4
     : chatOpts.bubble_style === 'bubble' ? 24
     : (a.border_radius || 14);
-  // "Tail" da bolha só faz sentido no estilo padrão (rounded). Squared já é reto
-  // e bubble já é arredondado uniforme — manter o tail estraga a forma.
+  // "Tail" da bolha só faz sentido no estilo padrão (rounded). Squared ya é reto
+  // e bubble ya é arredondado uniforme — manter o tail estraga a forma.
   const botTailRadius = chatOpts.bubble_style && chatOpts.bubble_style !== 'rounded' ? bubbleRadius : 4;
   const userTailRadius = botTailRadius;
   const botAvatarSrc = a.avatar_url || a.logo_url || null;
@@ -755,8 +755,8 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
             ))}
           </AnimatePresence>
 
-          {/* Typing indicator: sempre visível em modo IA (mesmo com show_typing=false),
-              senão o usuário fica sem feedback enquanto o webchat-bot processa. */}
+          {/* Typing indicator: siempre visível em modo IA (mismo com show_typing=false),
+              senão o usuario fica sem feedback enquanto o webchat-bot processa. */}
           {isTyping && (chatOpts.show_typing || !!aiMode) && (
             <motion.div
               initial={{ opacity: 0 }}

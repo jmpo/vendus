@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     const userClient = createClient(SUPABASE_URL, ANON_KEY, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { fecha: { user: caller } } = await userClient.auth.getUser();
+    const { data: { user: caller } } = await userClient.auth.getUser();
     if (!caller) {
       return new Response(JSON.stringify({ error: 'Sessão inválida' }), {
         status: 401,
@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
     });
 
     // Caller's profile + role check
-    const { fecha: callerProfile } = await admin
+    const { data: callerProfile } = await admin
       .from('profiles')
       .select('organization_id')
       .eq('id', caller.id)
@@ -69,7 +69,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { fecha: roles } = await admin
+    const { data: roles } = await admin
       .from('user_roles')
       .select('role')
       .eq('user_id', caller.id);
@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
     }
 
     // Create user
-    const { fecha: created, error: createErr } = await admin.auth.admin.createUser({
+    const { data: created, error: createErr } = await admin.auth.admin.createUser({
       email: body.email,
       password: body.password,
       email_confirm: true,
@@ -117,7 +117,7 @@ Deno.serve(async (req) => {
 
     let resolvedConnectionId: string | null = body.default_connection_id || null;
     if (!resolvedConnectionId) {
-      const { fecha: firstInstance } = await admin
+      const { data: firstInstance } = await admin
         .from('evolution_instances')
         .select('id')
         .eq('organization_id', orgId)

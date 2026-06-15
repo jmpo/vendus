@@ -119,7 +119,7 @@ export function useOpportunityScan(scanId: string | null) {
     },
     enabled: !!scanId,
     // SECURITY: substitui assinatura Realtime por polling para evitar
-    // exposição de eventos entre organizações na tabela opportunity_scans.
+    // exposição de eventos entre organizaciones na tabela opportunity_scans.
     refetchInterval: (q) => {
       const status = (q.state.data as any)?.status;
       return status && status !== 'completed' && status !== 'failed' ? 3000 : false;
@@ -163,7 +163,7 @@ export function useRunOpportunityScan() {
         },
       });
       if (error) {
-        // Tenta extrair mensagem do contexto (FunctionsHttpError vem com body em .context)
+        // Tenta extrair mensaje do contexto (FunctionsHttpError vem com body em .context)
         let detail = error.message;
         try {
           const ctx: any = (error as any).context;

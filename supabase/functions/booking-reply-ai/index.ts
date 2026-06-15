@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
   }
 
   // Load booking context
-  const { fecha: booking, error: bErr } = await supabase
+  const { data: booking, error: bErr } = await supabase
     .from("booking_requests")
     .select("*, booking_event_types(name, duration_minutes), profiles:host_user_id(full_name)")
     .eq("id", booking_id)
@@ -109,9 +109,9 @@ Contexto da reunión:
 
 Su tarea: interpretar a respuesta del lead e chamar UMA tool apropriada:
 - Se confirma/aceita → confirm_booking
-- Se pede otro horario específico → reschedule_booking(new_start_iso) — converta fecha/hora natural para ISO 8601 com offset -03:00 (Brasília). NÃO invente: se no der pra inferir fecha exata, prefira propose_followup.
+- Se pede otro horario específico → reschedule_booking(new_start_iso) — converta data/hora natural para ISO 8601 com offset -03:00 (Brasília). NÃO invente: se no der pra inferir data exata, prefira propose_followup.
 - Se cancela definitivamente → cancel_booking
-- Se diz "no posso ahora, me chama después/semana que vem/mes que vem" → propose_followup(when_iso) com fecha aproximada
+- Se diz "no posso ahora, me chama después/semana que vem/mes que vem" → propose_followup(when_iso) com data aproximada
 
 Sempre execute UMA tool. Depois escreva uma respuesta corta e gentil para enviar al lead via WhatsApp (máx 2 linhas, 1 emoji).`;
 
@@ -257,7 +257,7 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
       let leadId: string | null = null;
       if (booking.guest_phone) {
         const suffix = booking.guest_phone.replace(/\D/g, "").slice(-10);
-        const { fecha: leads } = await supabase
+        const { data: leads } = await supabase
           .from("leads")
           .select("id, phone")
           .eq("organization_id", booking.organization_id)

@@ -225,7 +225,7 @@ export function MobileSellerCalendar({ userId, productId }: MobileSellerCalendar
                   >
                     <CardContent className="p-4">
                       <div className="flex gap-3">
-                        {/* Time indicator */}
+                        {/* Equipo indicator */}
                         <div className={cn(
                           "w-1 rounded-full flex-shrink-0",
                           EVENT_TYPE_COLORS[event.event_type] || 'bg-gray-400'

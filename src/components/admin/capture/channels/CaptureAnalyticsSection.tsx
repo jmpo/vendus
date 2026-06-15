@@ -18,9 +18,9 @@ import {
 } from 'recharts';
 
 const PERIODS = [
-  { value: '7', label: 'Últimos 7 dias' },
-  { value: '30', label: 'Últimos 30 dias' },
-  { value: '90', label: 'Últimos 90 dias' },
+  { value: '7', label: 'Últimos 7 días' },
+  { value: '30', label: 'Últimos 30 días' },
+  { value: '90', label: 'Últimos 90 días' },
 ];
 
 const TIER_COLORS: Record<string, string> = {
@@ -121,9 +121,9 @@ export function CaptureAnalyticsSection() {
             <BarChart3 className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-semibold">Analytics de Captação</h1>
+            <h1 className="text-2xl font-semibold">Analytics de Captación</h1>
             <p className="text-sm text-muted-foreground">
-              Performance dos seus quizzes em tempo real.
+              Performance dos sus quizzes em tempo real.
             </p>
           </div>
         </div>
@@ -163,7 +163,7 @@ export function CaptureAnalyticsSection() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <Card className="lg:col-span-2">
               <CardHeader>
-                <CardTitle className="text-base">Conclusões por dia</CardTitle>
+                <CardTitle className="text-base">Conclusões por día</CardTitle>
                 <CardDescription>Tendência diária de leads gerados.</CardDescription>
               </CardHeader>
               <CardContent>
@@ -187,7 +187,7 @@ export function CaptureAnalyticsSection() {
                 <CardTitle className="text-base flex items-center gap-2">
                   <Flame className="h-4 w-4 text-orange-500" /> Temperatura
                 </CardTitle>
-                <CardDescription>Qualificação automática dos leads.</CardDescription>
+                <CardDescription>Calificación automática dos leads.</CardDescription>
               </CardHeader>
               <CardContent>
                 {stats.temperatureData.length === 0 ? (
@@ -217,8 +217,8 @@ export function CaptureAnalyticsSection() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Distribuição de Score</CardTitle>
-                <CardDescription>Como seus leads se distribuem por faixa.</CardDescription>
+                <CardTitle className="text-base">Distribución de Score</CardTitle>
+                <CardDescription>Como sus leads se distribuem por faixa.</CardDescription>
               </CardHeader>
               <CardContent>
                 {stats.scoreDist.every(s => s.count === 0) ? (
@@ -241,7 +241,7 @@ export function CaptureAnalyticsSection() {
                 <CardTitle className="text-base flex items-center gap-2">
                   <TagIcon className="h-4 w-4 text-primary" /> Top tags dinâmicas
                 </CardTitle>
-                <CardDescription>Tags mais aplicadas pelas respostas do quiz.</CardDescription>
+                <CardDescription>Tags mais aplicadas pelas respuestas do quiz.</CardDescription>
               </CardHeader>
               <CardContent>
                 {stats.topTags.length === 0 ? (

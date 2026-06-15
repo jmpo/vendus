@@ -52,7 +52,7 @@ export function ChatBotFlowTab({ funnel }: Props) {
         await saveFlowBlocks.mutateAsync({ id: funnel.id, flow_blocks: blocks, start_block_id: validStart });
         setIsDirty(false);
         setLastSavedAt(new Date());
-      } catch { /* toast já é tratado pelo hook */ }
+      } catch { /* toast ya é tratado pelo hook */ }
     }, 1500);
     return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current); };
   }, [blocks, startBlockId, isDirty, funnel.id, saveFlowBlocks]);
@@ -219,7 +219,7 @@ export function ChatBotFlowTab({ funnel }: Props) {
                   <MousePointerClick className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Selecione um bloco para editar suas propriedades
+                  Seleccioná um bloco para editar sus propriedades
                 </p>
               </div>
             )}

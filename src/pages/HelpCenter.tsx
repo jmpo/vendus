@@ -48,7 +48,7 @@ export default function HelpCenter() {
             <h1 className="text-lg font-semibold">Centro de Ayuda</h1>
           </div>
           <div className="ml-auto">
-            <Link to="/novidades">
+            <Link to="/novedades">
               <Button variant="outline" size="sm" className="gap-2">
                 <Sparkles className="h-4 w-4" /> Novedades
               </Button>
@@ -103,7 +103,7 @@ export default function HelpCenter() {
                 </div>
                 <div className="space-y-2">
                   {items.map(article => (
-                    <Link key={article.id} to={`/ajuda/${article.slug}`} className="block">
+                    <Link key={article.id} to={`/ayuda/${article.slug}`} className="block">
                       <Card className="hover:border-primary/40 hover:shadow-sm transition-all">
                         <CardContent className="p-3 sm:p-4 flex items-start gap-3">
                           <FileText className="h-4 w-4 text-muted-foreground mt-1 shrink-0" />

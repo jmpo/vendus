@@ -82,7 +82,7 @@ export function useUpsertRelease() {
       }
 
       if (publish_as_article && release.is_published) {
-        // Verifica se já existe artigo vinculado
+        // Verifica se ya existe artigo vinculado
         const { data: existing } = await supabase.from('help_articles').select('id').eq('related_release_id', release.id).maybeSingle();
         const slug = `release-${(release.version || release.id).toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${release.id.slice(0, 6)}`;
         const articlePayload = {

@@ -130,7 +130,7 @@ export function CampaignWizard({
     post_cadence_id: null as string | null,
   });
 
-  // Carregar dados auxiliares (produtos, agentes, instâncias)
+  // Carregar dados auxiliares (productos, agentes, instâncias)
   useEffect(() => {
     if (!orgId) return;
     (async () => {
@@ -149,7 +149,7 @@ export function CampaignWizard({
     })();
   }, [orgId]);
 
-  // Carregar etapas do produto selecionado
+  // Carregar etapas do producto selecionado
   useEffect(() => {
     if (!productId) { setStages([]); return; }
     (async () => {
@@ -162,7 +162,7 @@ export function CampaignWizard({
     })();
   }, [productId]);
 
-  // Carregar campanha existente
+  // Carregar campaña existente
   useEffect(() => {
     if (!campaignId) return;
     supabase.from('campaigns').select('*').eq('id', campaignId).maybeSingle().then(({ data }) => {
@@ -256,7 +256,7 @@ export function CampaignWizard({
   };
 
   const buildPayload = () => {
-    if (!orgId) throw new Error('Organização não encontrada');
+    if (!orgId) throw new Error('Organización no encontrada');
     const contexts = [...form.contexts];
     if (form.inline_context.trim() && !contexts.some((c) => c.inline_text === form.inline_context)) {
       contexts.push({ inline_text: form.inline_context.trim(), weight: 1 });
@@ -286,8 +286,8 @@ export function CampaignWizard({
   };
 
   const saveDraft = async (): Promise<string | null> => {
-    if (!form.name.trim()) { toast.error('Nome da campanha é obrigatório'); return null; }
-    if (!form.agent_id) { toast.error('Selecione um agente'); return null; }
+    if (!form.name.trim()) { toast.error('Nombre da campaña é obligatorio'); return null; }
+    if (!form.agent_id) { toast.error('Seleccioná um agente'); return null; }
     setSaving(true);
     try {
       const payload = buildPayload();
@@ -295,7 +295,7 @@ export function CampaignWizard({
         ? await supabase.from('campaigns').update(payload).eq('id', campaignId).select('id').single()
         : await supabase.from('campaigns').insert(payload).select('id').single();
       if (error) { toast.error(error.message); return null; }
-      toast.success('Rascunho salvo');
+      toast.success('Rascunho guardado');
       return data?.id ?? null;
     } finally {
       setSaving(false);
@@ -312,7 +312,7 @@ export function CampaignWizard({
     const { data, error } = await supabase.functions.invoke('campaign-start', { body: { campaign_id: id } });
     setStarting(false);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Campanha iniciada · ${data?.scheduled ?? 0} envios programados`);
+    toast.success(`Campaña iniciada · ${data?.scheduled ?? 0} envios programados`);
     onClose();
   };
 
@@ -360,7 +360,7 @@ export function CampaignWizard({
           <div>
             <Label>Producto (define las etapas del pipeline)</Label>
             <Select value={productId} onValueChange={setProductId}>
-              <SelectTrigger><SelectValue placeholder="Selecione um produto" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Seleccioná um producto" /></SelectTrigger>
               <SelectContent>
                 {products.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
               </SelectContent>
@@ -390,7 +390,7 @@ export function CampaignWizard({
             options={stages.map((s) => ({ value: s.id, label: s.name }))}
             selected={form.audience_filters.stage_ids ?? []}
             onToggle={(v) => toggleArr('audience_filters', 'stage_ids', v)}
-            emptyHint={productId ? 'Este produto não tem etapas.' : 'Selecione um produto acima.'}
+            emptyHint={productId ? 'Este producto no tiene etapas.' : 'Seleccioná um producto acima.'}
           />
           <TagFilterBlock
             title="Etiquetas (tiene al menos una)"
@@ -458,7 +458,7 @@ export function CampaignWizard({
 
       {/* 3. Exclusões */}
       <Card className="border-destructive/30">
-        <CardHeader><CardTitle className="text-base">3. Quem NÃO deve receber?</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">3. Quem NÃO debe receber?</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <TagFilterBlock
             title="Sem as etiquetas"
@@ -491,7 +491,7 @@ export function CampaignWizard({
         </CardContent>
       </Card>
 
-      {/* Resumo público */}
+      {/* Resumen público */}
       <Card className="bg-primary/5 border-primary/20">
         <CardContent className="p-4 flex flex-wrap items-center gap-6 text-sm">
           {previewLoading && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -508,7 +508,7 @@ export function CampaignWizard({
           <div>
             <Label>Agente *</Label>
             <Select value={form.agent_id} onValueChange={(v) => setForm({ ...form, agent_id: v })}>
-              <SelectTrigger><SelectValue placeholder="Selecione um agente" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Seleccioná um agente" /></SelectTrigger>
               <SelectContent>
                 {agents.map((a) => <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>)}
               </SelectContent>
@@ -521,7 +521,7 @@ export function CampaignWizard({
               rows={5}
               value={form.inline_context}
               onChange={(e) => setForm({ ...form, inline_context: e.target.value })}
-              placeholder="Ex: Este lead participou da aula ao vivo. Descubra qual foi sua principal objeção. Não envie proposta imediatamente."
+              placeholder="Ex: Este lead participou da aula ao vivo. Descubrí qual fue su principal objeção. No envie propuesta imediatamente."
             />
           </div>
 
@@ -551,7 +551,7 @@ export function CampaignWizard({
 
           {(selectedContexts.length > 0 || form.contexts.length > 1) && (
             <div>
-              <Label>Distribuição entre contextos</Label>
+              <Label>Distribución entre contextos</Label>
               <RadioGroup value={form.context_distribution} onValueChange={(v) => setForm({ ...form, context_distribution: v })} className="flex gap-4 mt-1">
                 <label className="flex items-center gap-2"><RadioGroupItem value="random" />Aleatório</label>
                 <label className="flex items-center gap-2"><RadioGroupItem value="sequential" />Sequencial</label>
@@ -569,7 +569,7 @@ export function CampaignWizard({
           <RadioGroup value={form.instance_strategy} onValueChange={(v) => setForm({ ...form, instance_strategy: v })} className="flex gap-4">
             <label className="flex items-center gap-2"><RadioGroupItem value="all" />Todos conectados</label>
             <label className="flex items-center gap-2"><RadioGroupItem value="rotation" />Rodízio automático</label>
-            <label className="flex items-center gap-2"><RadioGroupItem value="manual" />Escolha manual</label>
+            <label className="flex items-center gap-2"><RadioGroupItem value="manual" />Elegí manual</label>
           </RadioGroup>
 
           <div className="grid gap-2">
@@ -627,7 +627,7 @@ export function CampaignWizard({
         <CardHeader><CardTitle className="text-base">7. Quando enviar?</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           <RadioGroup value={form.schedule_type} onValueChange={(v) => setForm({ ...form, schedule_type: v })} className="flex gap-4">
-            <label className="flex items-center gap-2"><RadioGroupItem value="now" />Enviar agora</label>
+            <label className="flex items-center gap-2"><RadioGroupItem value="now" />Enviar ahora</label>
             <label className="flex items-center gap-2"><RadioGroupItem value="scheduled" />Agendar</label>
             <label className="flex items-center gap-2"><RadioGroupItem value="recurring" />Recorrente</label>
           </RadioGroup>
@@ -637,12 +637,12 @@ export function CampaignWizard({
           {form.schedule_type === 'recurring' && (
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Início</Label>
-                <Input type="time" value={form.recurrence.start} onChange={(e) => setForm({ ...form, recurrence: { ...form.recurrence, start: e.target.value } })} />
+                <Label>Inicio</Label>
+                <Input type="equipo" value={form.recurrence.start} onChange={(e) => setForm({ ...form, recurrence: { ...form.recurrence, start: e.target.value } })} />
               </div>
               <div>
-                <Label>Fim</Label>
-                <Input type="time" value={form.recurrence.end} onChange={(e) => setForm({ ...form, recurrence: { ...form.recurrence, end: e.target.value } })} />
+                <Label>Fin</Label>
+                <Input type="equipo" value={form.recurrence.end} onChange={(e) => setForm({ ...form, recurrence: { ...form.recurrence, end: e.target.value } })} />
               </div>
               <div className="col-span-2">
                 <Label>Dias da semana</Label>
@@ -674,7 +674,7 @@ export function CampaignWizard({
         </CardContent>
       </Card>
 
-      {/* 8. Pós-resposta */}
+      {/* 8. Pós-respuesta */}
       <Card>
         <CardHeader><CardTitle className="text-base">8. Quando o lead responder…</CardTitle></CardHeader>
         <CardContent className="space-y-3">
@@ -683,14 +683,14 @@ export function CampaignWizard({
               checked={form.post_response_actions.stop}
               onCheckedChange={(c) => setForm({ ...form, post_response_actions: { ...form.post_response_actions, stop: !!c } })}
             />
-            Parar campanha para este lead
+            Parar campaña para este lead
           </label>
           <label className="flex items-center gap-2">
             <Checkbox
               checked={form.post_response_actions.take_over}
               onCheckedChange={(c) => setForm({ ...form, post_response_actions: { ...form.post_response_actions, take_over: !!c } })}
             />
-            Assumir conversa automaticamente (humano)
+            Assumir conversación automaticamente (humano)
           </label>
           <Separator />
           <div className="grid grid-cols-2 gap-3">
@@ -781,19 +781,19 @@ export function CampaignWizard({
               rows={2}
               value={form.post_response_actions.note ?? ''}
               onChange={(e) => setForm({ ...form, post_response_actions: { ...form.post_response_actions, note: e.target.value } })}
-              placeholder="Ex: Lead respondeu à campanha de reativação — verificar contexto."
+              placeholder="Ex: Lead respondeu à campaña de reativação — verificar contexto."
             />
           </div>
           <Separator />
           <div>
-            <Label>Após o disparo — inserir em cadência</Label>
+            <Label>Após o disparo — inserir em cadencia</Label>
             <p className="text-xs text-muted-foreground mb-2">
-              Cada lead disparado pela campanha é inscrito automaticamente nesta cadência.
+              Cada lead disparado pela campaña é inscrito automaticamente nesta cadencia.
             </p>
             <CadencePicker
               value={form.post_cadence_id ?? null}
               onChange={(id) => setForm({ ...form, post_cadence_id: id })}
-              placeholder="Não inscrever em cadência"
+              placeholder="No inscrever em cadencia"
             />
           </div>
         </CardContent>
@@ -897,7 +897,7 @@ function CustomFieldsFilter({
   return (
     <div>
       <Label className="text-xs uppercase tracking-wide text-muted-foreground">
-        Campos personalizados {destructive && '(excluir quando)'}
+        Campos personalizados {destructive && '(eliminar cuando)'}
       </Label>
       <div className="space-y-2 mt-1">
         {filters.map((f, i) => {
@@ -944,8 +944,8 @@ function CustomFieldsFilter({
                   <Select value={String(f.value ?? '')} onValueChange={(v) => update(i, { value: v })}>
                     <SelectTrigger className="h-9"><SelectValue placeholder="Valor" /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="true">Sim</SelectItem>
-                      <SelectItem value="false">Não</SelectItem>
+                      <SelectItem value="true">Sí</SelectItem>
+                      <SelectItem value="false">No</SelectItem>
                     </SelectContent>
                   </Select>
                 )}

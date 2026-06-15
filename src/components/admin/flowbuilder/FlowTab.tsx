@@ -32,7 +32,7 @@ export function FlowTab({ productId }: FlowTabProps) {
             Voltar para lista
           </Button>
           <div className="text-center text-muted-foreground py-8">
-            Fluxo não encontrado
+            Flujo no encontrado
           </div>
         </div>
       );

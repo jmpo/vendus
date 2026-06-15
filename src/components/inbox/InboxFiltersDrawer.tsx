@@ -165,7 +165,7 @@ export function InboxFiltersDrawer({
     </button>
   );
 
-  // Linha de opção dentro de uma sub-tela (com checkbox)
+  // Linha de opción dentro de uma sub-tela (com checkbox)
   const OptionRow = ({
     label,
     checked,
@@ -232,7 +232,7 @@ export function InboxFiltersDrawer({
             <ScrollArea className="flex-1">
               <CategoryRow label="Producto" count={counts.product} onClick={() => setSection('product')} />
               <CategoryRow label="Etiqueta" count={counts.tag} onClick={() => setSection('tag')} />
-              <CategoryRow label="Setor" count={counts.sector} onClick={() => setSection('sector')} />
+              <CategoryRow label="Sector" count={counts.sector} onClick={() => setSection('sector')} />
               {isAdmin && (
                 <CategoryRow label="Usuario" count={counts.user} onClick={() => setSection('user')} />
               )}

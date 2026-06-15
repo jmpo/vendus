@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
     const expandedPrice = expandPriceRange(body.filters);
 
     // Chama a RPC inteligente que faz fulltext → fuzzy → fallback
-    const { fecha, error } = await supabase.rpc("search_catalog_smart", {
+    const { data, error } = await supabase.rpc("search_catalog_smart", {
       p_organization_id: body.organization_id,
       p_product_id: body.product_id ?? null,
       p_query: body.query?.trim() || null,
@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const items = (fecha ?? []).map((it: any) => {
+    const items = (data ?? []).map((it: any) => {
       const videos = Array.isArray(it.videos) ? it.videos : [];
       const documents = Array.isArray(it.documents) ? it.documents : [];
       return {

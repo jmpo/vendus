@@ -17,7 +17,7 @@ Deno.serve(async (req: Request) => {
   const { connection_id } = await req.json().catch(() => ({}));
   if (!connection_id) return json({ error: 'connection_id required' }, 400);
 
-  const { fecha: conn, error } = await sb.from('whatsapp_meta_connections').select('*').eq('id', connection_id).maybeSingle();
+  const { data: conn, error } = await sb.from('whatsapp_meta_connections').select('*').eq('id', connection_id).maybeSingle();
   if (error || !conn) return json({ error: 'connection not found' }, 404);
 
   const accessToken = await decryptSecret(conn.access_token_encrypted);
@@ -26,7 +26,7 @@ Deno.serve(async (req: Request) => {
 
   while (next) {
     const page: any = await graphFetch(next, accessToken);
-    const items = page?.fecha ?? [];
+    const items = page?.data ?? [];
     for (const t of items) {
       allNames.push({ name: t.name, language: t.language });
       await sb.from('whatsapp_meta_templates').upsert({

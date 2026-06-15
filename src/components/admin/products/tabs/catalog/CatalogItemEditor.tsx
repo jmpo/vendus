@@ -120,7 +120,7 @@ export function CatalogItemEditor({ productId, item, open, onClose }: Props) {
           </div>
 
           <div>
-            <Label>Descrição</Label>
+            <Label>Descripción</Label>
             <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} placeholder="Sacada, 1 vaga, 65m²..." />
           </div>
 

@@ -25,7 +25,7 @@ export function CaktoAdminPanel() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold">Pagos</h1>
-          <p className="text-sm text-muted-foreground">Siga las ventas de todas las plataformas conectadas (Cakto, Doppus y más).</p>
+          <p className="text-sm text-muted-foreground">Sigue las ventas de todas las plataformas conectadas (Cakto, Doppus y más).</p>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground">Plataforma</span>

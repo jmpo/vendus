@@ -24,9 +24,9 @@ interface FormResponseDetailProps {
   onClose: () => void;
 }
 
-const NAME_KEYWORDS = ['nome', 'name', 'full name'];
+const NAME_KEYWORDS = ['nombre', 'name', 'full name'];
 const EMAIL_KEYWORDS = ['email', 'e-mail'];
-const PHONE_KEYWORDS = ['whatsapp', 'telefone', 'phone', 'celular'];
+const PHONE_KEYWORDS = ['whatsapp', 'teléfono', 'phone', 'celular'];
 
 export function FormResponseDetail({ submission, blocks, onClose }: FormResponseDetailProps) {
   const responses = submission.responses as Record<string, unknown>;
@@ -38,7 +38,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
 
   const formatValue = (value: unknown): string => {
     if (value === null || value === undefined) return '-';
-    if (typeof value === 'boolean') return value ? 'Sim' : 'Não';
+    if (typeof value === 'boolean') return value ? 'Sí' : 'No';
     if (Array.isArray(value)) return value.join(', ');
     if (typeof value === 'object') return JSON.stringify(value);
     return String(value);
@@ -47,7 +47,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
   const matchLabel = (label: string, keywords: string[]) =>
     keywords.some((k) => (label || '').toLowerCase().includes(k));
 
-  // Respostas são salvas com LABEL como chave (responsesWithLabels), mas pode
+  // Respostas son salvas com LABEL como chave (responsesWithLabels), mas puede
   // haver chaves por block.id legado. Resolve nos dois formatos.
   const getValueByMapping = (mapping: string): string | null => {
     if (responses[mapping]) return String(responses[mapping]);
@@ -65,7 +65,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
       return responses[b.id] || (b.label && responses[b.label]);
     });
     if (block) return String(responses[block.id] ?? responses[block.label] ?? '');
-    // Fallback: qualquer chave de resposta cujo nome bata com o keyword
+    // Fallback: qualquer chave de respuesta cujo nombre bata com o keyword
     const key = Object.keys(responses).find((k) => matchLabel(k, keywords));
     return key ? String(responses[key]) : null;
   };
@@ -77,7 +77,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
       getValueByMapping('full_name') ||
       getByHeuristic(NAME_KEYWORDS) ||
       lead?.name ||
-      String(responses?.name || responses?.nome || responses?.full_name || 'Anônimo')
+      String(responses?.name || responses?.nombre || responses?.full_name || 'Anônimo')
     );
   };
 
@@ -98,7 +98,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
       getByHeuristic(PHONE_KEYWORDS, (t) => t === 'phone' || t === 'short_text' || t === 'text') ||
       lead?.phone ||
       (responses?.phone ? String(responses.phone) : null) ||
-      (responses?.telefone ? String(responses.telefone) : null)
+      (responses?.teléfono ? String(responses.teléfono) : null)
     );
   };
 
@@ -125,10 +125,10 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
         seenLabels.add(block.label);
       }
     });
-    // Inclui respostas órfãs (labels que não bateram com nenhum bloco atual)
+    // Inclui respuestas órfãs (labels que no bateram com ningún bloco atual)
     Object.entries(responses).forEach(([key, value]) => {
       if (seenLabels.has(key)) return;
-      if (['name', 'nome', 'email', 'phone', 'telefone', 'full_name'].includes(key)) return;
+      if (['name', 'nombre', 'email', 'phone', 'teléfono', 'full_name'].includes(key)) return;
       if (value === undefined || value === null || value === '') return;
       answers.push({ label: key, value: formatValue(value), key });
     });
@@ -139,11 +139,11 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
   const leadName = getLeadName();
   const leadPhone = getLeadPhone();
 
-  // Contexto Q&A para a IA chamar com base nas respostas reais
+  // Contexto Q&A para a IA chamar com base nas respuestas reais
   const qaContext = useMemo(() => {
     const lines = answers.map((a) => `- ${a.label}: ${a.value}`).join('\n');
     const header = `Lead "${leadName}" respondeu o formulário "${(submission as any).form_name || ''}".`;
-    return `${header}\nUse essas respostas para personalizar a abordagem:\n${lines}`;
+    return `${header}\nUse essas respuestas para personalizar a abordaje:\n${lines}`;
   }, [answers, submission, leadName]);
 
 
@@ -167,12 +167,12 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
         },
       });
       if (error) throw error;
-      toast.success('Lead inscrito na cadência.');
+      toast.success('Lead inscrito na cadencia.');
       setCadenceOpen(false);
       setSelectedCadence('');
     } catch (err: any) {
       console.error(err);
-      toast.error(err?.message || 'Erro ao inscrever na cadência.');
+      toast.error(err?.message || 'Error ao inscrever na cadencia.');
     } finally {
       setEnrolling(false);
     }
@@ -240,7 +240,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
                     </CardContent>
                   </Card>
                 )) : (
-                  <p className="text-muted-foreground text-center py-4">Nenhuma resposta registrada</p>
+                  <p className="text-muted-foreground text-center py-4">Nenhuma respuesta registrada</p>
                 )}
               </div>
             </div>
@@ -321,7 +321,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
                 className="gap-2"
               >
                 <Repeat className="h-4 w-4" />
-                Inserir em Cadência
+                Inserir em Cadencia
               </Button>
               {leadPhone && (
                 <Button
@@ -361,16 +361,16 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Repeat className="h-5 w-5 text-primary" />
-              Inserir em Cadência
+              Inserir em Cadencia
             </DialogTitle>
             <DialogDescription>
-              Escolha uma cadência ativa para inscrever este lead.
+              Elegí uma cadencia ativa para inscrever este lead.
             </DialogDescription>
           </DialogHeader>
           <div className="py-2">
             <Select value={selectedCadence} onValueChange={setSelectedCadence}>
               <SelectTrigger>
-                <SelectValue placeholder={activeCadences.length ? 'Selecione uma cadência' : 'Nenhuma cadência ativa'} />
+                <SelectValue placeholder={activeCadences.length ? 'Seleccioná uma cadencia' : 'Nenhuma cadencia ativa'} />
               </SelectTrigger>
               <SelectContent>
                 {activeCadences.map((c) => (

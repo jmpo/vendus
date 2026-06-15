@@ -117,12 +117,12 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
             <Label className="text-xs">Texto del saludo</Label>
             <Textarea
               rows={3}
-              placeholder="Olá! Sou a Malu da TechSales Brasil. Como posso te ajudar hoje?"
+              placeholder="Hola! Sou a Malu da TechSales Brasil. Como posso te ajudar hoy?"
               value={formData.welcome_message || ''}
               onChange={(e) => onChange({ welcome_message: e.target.value })}
             />
             <p className="text-[11px] text-muted-foreground">
-              Variables: <code>{'{{nome}}'}</code>, <code>{'{{agent_name}}'}</code>, <code>{'{{organization_name}}'}</code>
+              Variables: <code>{'{{nombre}}'}</code>, <code>{'{{agent_name}}'}</code>, <code>{'{{organization_name}}'}</code>
             </p>
           </CardContent>
         )}
@@ -195,7 +195,7 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
                     <Badge variant="secondary" className="shrink-0">{idx + 1}</Badge>
                     <Input
                       className="flex-1"
-                      placeholder="Ex: Quero saber mais sobre o produto X"
+                      placeholder="Ex: Quero saber mais sobre o producto X"
                       value={opt.label}
                       onChange={(e) => updateOption(idx, { label: e.target.value })}
                     />
@@ -264,7 +264,7 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
             <div className="space-y-2">
               <Label className="text-xs">Mensaje si el cliente escribe una opción inválida</Label>
               <Input
-                placeholder="No entendí su elección. Responda con el número de la opción (1, 2, 3...)."
+                placeholder="No entendí su elección. Respondé con el número de la opción (1, 2, 3...)."
                 value={formData.quick_menu_invalid_message || ''}
                 onChange={(e) => onChange({ quick_menu_invalid_message: e.target.value })}
               />

@@ -51,7 +51,7 @@ export function CommissionManager() {
 
   const handleSubmit = async () => {
     if (!formData.product_id) {
-      toast.error('Selecione um produto');
+      toast.error('Seleccioná um producto');
       return;
     }
 
@@ -136,20 +136,20 @@ export function CommissionManager() {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle>{editingRule ? 'Editar Regla' : 'Nueva Regla de Comissão'}</DialogTitle>
+              <DialogTitle>{editingRule ? 'Editar Regla' : 'Nueva Regla de Comisión'}</DialogTitle>
               <DialogDescription>
                 Configure la regla de comisión para los vendedores
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="space-y-2">
-                <Label>Produto</Label>
+                <Label>Producto</Label>
                 <Select
                   value={formData.product_id}
                   onValueChange={(value) => setFormData({ ...formData, product_id: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione um produto" />
+                    <SelectValue placeholder="Seleccioná um producto" />
                   </SelectTrigger>
                   <SelectContent>
                     {products?.map((product) => (
@@ -178,7 +178,7 @@ export function CommissionManager() {
                     onValueChange={(value) => setFormData({ ...formData, user_id: value })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione um vendedor" />
+                      <SelectValue placeholder="Seleccioná um vendedor" />
                     </SelectTrigger>
                     <SelectContent>
                       {teamMembers?.map((member) => (

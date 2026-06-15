@@ -22,14 +22,14 @@ export function StageValueManager() {
   const [localValues, setLocalValues] = useState<Record<string, { expected_value: number; probability_percent: number }>>({});
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Selecionar primeiro produto automaticamente
+  // Selecionar primeiro producto automaticamente
   useEffect(() => {
     if (products?.length && !selectedProductId) {
       setSelectedProductId(products[0].id);
     }
   }, [products, selectedProductId]);
 
-  // Inicializar valores locais quando os dados carregam
+  // Inicializar valores locais cuando os dados carregam
   useEffect(() => {
     if (stageValues && stages) {
       const values: Record<string, { expected_value: number; probability_percent: number }> = {};

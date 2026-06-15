@@ -392,7 +392,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
 
       {step === 4 && (
         <Card><CardContent className="p-5 space-y-2 text-sm text-muted-foreground">
-          As regras de execução são configuradas dentro de cada etapa na seção "Cronograma" (etapa 4). Use os checkboxes "Ejecutar solo si" em cada etapa.
+          As regras de execução son configuradas dentro de cada etapa na seção "Cronograma" (etapa 4). Usa os checkboxes "Ejecutar solo si" em cada etapa.
         </CardContent></Card>
       )}
 
@@ -411,8 +411,8 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Horario inicial"><Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} /></Field>
-            <Field label="Horario final"><Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} /></Field>
+            <Field label="Horario inicial"><Input type="equipo" value={startTime} onChange={(e) => setStartTime(e.target.value)} /></Field>
+            <Field label="Horario final"><Input type="equipo" value={endTime} onChange={(e) => setEndTime(e.target.value)} /></Field>
           </div>
           <div className="flex items-center gap-2">
             <Switch checked={randomize} onCheckedChange={setRandomize} />

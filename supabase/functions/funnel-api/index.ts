@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
           }
 
           // Fetch funnel by ID
-          const { fecha: funnel, error: funnelError } = await supabase
+          const { data: funnel, error: funnelError } = await supabase
             .from('capture_funnels')
             .select(`
               id,
@@ -142,8 +142,8 @@ Deno.serve(async (req) => {
               .maybeSingle(),
           ]);
 
-          const funnelRow = funnelRes.fecha as any;
-          const agent = agentRes.fecha as any;
+          const funnelRow = funnelRes.data as any;
+          const agent = agentRes.data as any;
 
           if (!agent) {
             return new Response(
@@ -156,7 +156,7 @@ Deno.serve(async (req) => {
           let brainContext = '';
           if (agent.product_id || funnelRow?.product_id) {
             const pid = agent.product_id || funnelRow?.product_id;
-            const { fecha: product } = await supabase
+            const { data: product } = await supabase
               .from('products')
               .select('name, description, brain_summary')
               .eq('id', pid)
@@ -258,7 +258,7 @@ Deno.serve(async (req) => {
           }
 
           // Fetch funnel with flow_blocks for score/tag calculation
-          const { fecha: funnel, error: funnelError } = await supabase
+          const { data: funnel, error: funnelError } = await supabase
             .from('capture_funnels')
             .select(`
               id,
@@ -313,7 +313,7 @@ Deno.serve(async (req) => {
           const flowBlocks = (funnel.flow_blocks || []) as Array<{
             id: string;
             type: string;
-            fecha: { score_value?: number; apply_tags?: string[]; };
+            data: { score_value?: number; apply_tags?: string[]; };
           }>;
 
           let totalScore = 0;
@@ -324,14 +324,14 @@ Deno.serve(async (req) => {
           if (Array.isArray(variables.__tags)) tags.push(...variables.__tags);
 
           for (const block of flowBlocks) {
-            if (block.fecha?.score_value) totalScore += block.fecha.score_value;
-            if (block.fecha?.apply_tags) tags.push(...block.fecha.apply_tags);
+            if (block.data?.score_value) totalScore += block.data.score_value;
+            if (block.data?.apply_tags) tags.push(...block.data.apply_tags);
           }
 
           const uniqueTags = [...new Set(tags)];
 
           // Get first stage of pipeline
-          const { fecha: firstStage } = await supabase
+          const { data: firstStage } = await supabase
             .from('pipeline_stages')
             .select('id')
             .eq('product_id', funnel.product_id)
@@ -366,7 +366,7 @@ Deno.serve(async (req) => {
           const utmTerm = metadata.utmTerm || metadata.utm_term || null;
 
           // Create lead
-          const { fecha: lead, error: leadError } = await supabase
+          const { data: lead, error: leadError } = await supabase
             .from('leads')
             .insert({
               organization_id: funnel.organization_id,
@@ -414,7 +414,7 @@ Deno.serve(async (req) => {
           // Auto Dispatch
           if (useAutoDispatch && squadId && lead) {
             try {
-              const { fecha: assignedUserId } = await supabase.rpc('distribute_lead', {
+              const { data: assignedUserId } = await supabase.rpc('distribute_lead', {
                 p_lead_id: lead.id,
                 p_squad_id: squadId,
                 p_organization_id: funnel.organization_id,
@@ -482,7 +482,7 @@ Deno.serve(async (req) => {
       }
 
       // Fetch funnel by slug
-      const { fecha: funnel, error: funnelError } = await supabase
+      const { data: funnel, error: funnelError } = await supabase
         .from('capture_funnels')
         .select(`
           id,
@@ -550,7 +550,7 @@ Deno.serve(async (req) => {
         p_channel: channel 
       });
 
-      // Return public funnel fecha (without sensitive info)
+      // Return public funnel data (without sensitive info)
       return new Response(
         JSON.stringify({
           id: funnel.id,

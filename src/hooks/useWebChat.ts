@@ -175,7 +175,7 @@ export function useWebChatWidget(widgetId: string) {
   });
 }
 
-// Hook para buscar widget por produto
+// Hook para buscar widget por producto
 export function useWebChatWidgetByProduct(productId: string) {
   const { profile } = useAuth();
   
@@ -214,7 +214,7 @@ export function useWebChatWidgetByProduct(productId: string) {
   });
 }
 
-// Hook para criar widget para produto
+// Hook para crear widget para producto
 export function useCreateProductWidget() {
   const queryClient = useQueryClient();
   const { profile } = useAuth();
@@ -346,14 +346,14 @@ export function useUpdateAgentConfig() {
 }
 
 // ============================================================================
-// Hooks for Conversations (Inbox) — todos os filtros são aplicados no backend
+// Hooks for Conversations (Inbox) — todos os filtros son aplicados no backend
 // ============================================================================
 
 export interface InboxBackendFilters {
   tab?: 'attending' | 'waiting' | 'resolved' | 'all';
-  product_ids?: string[];        // pode incluir '__none__'
-  sector_ids?: string[];         // pode incluir '__none__'
-  assigned_user_ids?: string[];  // pode incluir 'unassigned'
+  product_ids?: string[];        // puede incluir '__none__'
+  sector_ids?: string[];         // puede incluir '__none__'
+  assigned_user_ids?: string[];  // puede incluir 'unassigned'
   tag_ids?: string[];
   channel?: string | null;
   search?: string | null;
@@ -462,9 +462,9 @@ export function useWebChatConversation(conversationId: string) {
     },
     enabled: !!session?.access_token && !!conversationId,
     staleTime: 30000,
-    // Mantém a conversa anterior visível enquanto a nova carrega — elimina o "flash" de loading
+    // Mantém a conversación anterior visível enquanto a nova carrega — elimina o "flash" de loading
     placeholderData: (prev) => prev,
-    // Pinta cabeçalho/última mensagem instantaneamente a partir do cache da lista de conversas
+    // Pinta cabeçalho/última mensaje instantaneamente a partir do cache da lista de conversaciones
     initialData: () => {
       if (!conversationId) return undefined;
       const list = queryClient.getQueryData<any>(['webchat-conversations']);
@@ -473,11 +473,11 @@ export function useWebChatConversation(conversationId: string) {
       if (!found) return undefined;
       return { conversation: found as WebChatConversation, messages: [] as WebChatMessage[] };
     },
-    initialDataUpdatedAt: 0, // força refetch em background mesmo com initialData
+    initialDataUpdatedAt: 0, // força refetch em background mismo com initialData
     refetchInterval: 15000,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: false,
-    // Não insiste em IDs inválidos / sem permissão
+    // No insiste em IDs inválidos / sem permiso
     retry: (failureCount, error: any) => {
       if (error?.status === 404 || error?.status === 403) return false;
       return failureCount < 2;
@@ -560,7 +560,7 @@ export function useSendAgentMessage() {
     // Optimistic update - show message immediately.
     // Usa um clientTempId estável que é enviado para o backend e ecoado de volta
     // no broadcast `new_message` — assim o listener consegue SUBSTITUIR a bolha
-    // otimista pela mensagem persistida em vez de duplicar.
+    // otimista pela mensaje persistida em vez de duplicar.
     onMutate: async (vars) => {
       const { conversationId, content, media } = vars;
       const clientTempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -593,7 +593,7 @@ export function useSendAgentMessage() {
               created_at: new Date().toISOString(),
               profiles: {
                 id: user?.id,
-                full_name: profile?.full_name || 'Você',
+                full_name: profile?.full_name || 'Usted',
                 avatar_url: profile?.avatar_url || null,
               },
             },
@@ -669,8 +669,8 @@ export function useLinkLead() {
 }
 
 /**
- * Define (ou limpa) o produto de uma conversa do Inbox manualmente.
- * Override manual feito pelo atendente no painel direito.
+ * Define (ou limpa) o producto de uma conversación do Inbox manualmente.
+ * Override manual feito pelo agente no painel direito.
  */
 export function useSetConversationProduct() {
   const queryClient = useQueryClient();
@@ -721,7 +721,7 @@ export function useSetConversationSector() {
 }
 
 // New hooks for conversation management
-// Mapeia ação -> status alvo para atualização otimista da UI.
+// Mapeia acción -> status alvo para atualização otimista da UI.
 const ACTION_TO_STATUS: Record<string, string | undefined> = {
   reopen: 'human_active',
   resume: 'human_active',

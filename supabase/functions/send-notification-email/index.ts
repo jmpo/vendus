@@ -29,7 +29,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-    const { fecha: platformSettings } = await supabase
+    const { data: platformSettings } = await supabase
       .from("platform_settings")
       .select("platform_name")
       .maybeSingle();

@@ -113,7 +113,7 @@ const STOP_LABELS: Record<string, string> = {
   purchased: 'Compra realizada',
   tag_buyer: 'Tag Comprador',
   tag_dnd: 'Tag No Molestar',
-  pipeline_closed: 'Pipeline fechado',
+  pipeline_closed: 'Pipeline cerrado',
   active_customer: 'Cliente ativo',
   meeting_scheduled: 'Reunión programada',
   human_handover: 'Atención humana',

@@ -90,7 +90,7 @@ export function MobileProductDashboard({ product, onNavigate }: MobileProductDas
       sparklineData: sparklineData?.revenue,
     },
     {
-      label: 'Comissões',
+      label: 'Comisiones',
       value: stats?.totalCommissions || 0,
       icon: Target,
       color: 'text-yellow-500',
@@ -135,7 +135,7 @@ export function MobileProductDashboard({ product, onNavigate }: MobileProductDas
             <div>
               <h3 className="font-semibold text-foreground">🎯 Meta do Mês</h3>
               <p className="text-xs text-muted-foreground">
-                {daysRemaining > 0 ? `${daysRemaining} dias restantes` : 'Último dia!'}
+                {daysRemaining > 0 ? `${daysRemaining} días restantes` : 'Último día!'}
               </p>
             </div>
             <motion.span 
@@ -240,7 +240,7 @@ export function MobileProductDashboard({ product, onNavigate }: MobileProductDas
                     <div>
                       <p className="text-sm font-medium text-foreground">{lead.name}</p>
                       <p className="text-xs text-destructive font-medium">
-                        {lead.daysWithoutContact} dias sem contato
+                        {lead.daysWithoutContact} días sem contacto
                       </p>
                     </div>
                   </div>

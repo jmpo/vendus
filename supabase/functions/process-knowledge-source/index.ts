@@ -150,15 +150,15 @@ Formate de forma clara e estruturada para fácil edição.`
       throw new Error('AI request failed');
     }
 
-    const fecha = await response.json();
+    const data = await response.json();
     try {
       if (productId) {
         const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
-        const { fecha: prod } = await sb.from('products').select('organization_id').eq('id', productId).maybeSingle();
-        await recordLovableUsage(sb, prod?.organization_id, 'content_generation', 'google/gemini-2.5-flash', fecha?.usage, 'process-knowledge-source');
+        const { data: prod } = await sb.from('products').select('organization_id').eq('id', productId).maybeSingle();
+        await recordLovableUsage(sb, prod?.organization_id, 'content_generation', 'google/gemini-2.5-flash', data?.usage, 'process-knowledge-source');
       }
     } catch (_) { /* non-fatal */ }
-    return fecha.choices?.[0]?.message?.content || `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}`;
+    return data.choices?.[0]?.message?.content || `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}`;
   } catch (error) {
     console.error('Error generating summary:', error);
     return `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}\n\nNota: Adicione manualmente os pontos-chave do vídeo.`;
@@ -242,7 +242,7 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ success: true, fecha: result }),
+      JSON.stringify({ success: true, data: result }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {

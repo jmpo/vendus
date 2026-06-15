@@ -111,7 +111,7 @@ export function WidgetManager() {
             onChange={(e) => setSearchQuery(e.target.value)} className="pl-10" />
         </div>
         <Select value={productFilter} onValueChange={setProductFilter}>
-          <SelectTrigger className="w-full sm:w-[200px]"><SelectValue placeholder="Produto" /></SelectTrigger>
+          <SelectTrigger className="w-full sm:w-[200px]"><SelectValue placeholder="Producto" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos los productos</SelectItem>
             {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
@@ -263,7 +263,7 @@ export function WidgetManager() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Eliminar Widget?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Todos os dados do fluxo serão perdidos
+              Esta acción no puede ser desfeita. Todos os dados do flujo serão perdidos
               e o snippet instalado em sites externos deixará de funcionar.
             </AlertDialogDescription>
           </AlertDialogHeader>

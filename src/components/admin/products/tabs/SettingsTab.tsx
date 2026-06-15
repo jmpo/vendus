@@ -263,7 +263,7 @@ export function SettingsTab({ productId }: SettingsTabProps) {
               onChange={(url) => setFormData(prev => ({ ...prev, product_image_url: url }))}
               bucket="product-documents"
               folder={`products/${productId}/image`}
-              label="Imagem do Produto"
+              label="Imagen do Producto"
               description="Imagen principal para visualización"
               aspectRatio="square"
               maxSizeMB={5}

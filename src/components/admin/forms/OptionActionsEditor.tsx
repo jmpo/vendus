@@ -42,13 +42,13 @@ import {
 } from 'lucide-react';
 
 const ACTION_LABELS: Record<FormOptionAction['type'], string> = {
-  redirect: 'Redirecionar (URL/pagamento)',
+  redirect: 'Redirecionar (URL/pago)',
   add_tags: 'Adicionar etiqueta',
   start_ai_agent: 'Atribuir agente IA (passivo)',
-  start_ai_outreach: 'Agente IA inicia conversa no WhatsApp',
-  open_calendar: 'Abrir calendário',
-  assign_sector: 'Atribuir setor',
-  assign_user: 'Atribuir a usuário',
+  start_ai_outreach: 'Agente IA inicia conversación no WhatsApp',
+  open_calendar: 'Abrir calendario',
+  assign_sector: 'Atribuir sector',
+  assign_user: 'Atribuir a usuario',
   go_to_block: 'Pular para bloco',
 };
 
@@ -147,7 +147,7 @@ export function OptionActionsEditor({ actions, onChange, allBlocks, currentBlock
           variant={list.length ? 'default' : 'outline'}
           size="sm"
           className="h-7 px-2 gap-1"
-          title="Configurar ações desta opção"
+          title="Configurar acciones desta opción"
         >
           <Zap className="w-3 h-3" />
           {list.length > 0 && <span className="text-xs">{list.length}</span>}
@@ -155,14 +155,14 @@ export function OptionActionsEditor({ actions, onChange, allBlocks, currentBlock
       </PopoverTrigger>
       <PopoverContent className="w-96 p-0" align="end" sideOffset={6}>
         <div className="p-3 border-b">
-          <p className="text-sm font-semibold">Ações ao escolher esta opção</p>
+          <p className="text-sm font-semibold">Ações ao escolher esta opción</p>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Combine quantas ações quiser. Executadas ao enviar o formulário.
+            Combine quantas acciones quiser. Executadas al enviar o formulário.
           </p>
           <p className="text-[11px] text-muted-foreground mt-2 leading-snug bg-muted/40 rounded p-2 border border-border/40">
-            ✅ As respostas do formulário são <strong>sempre enviadas</strong> antes
-            de qualquer ação de saída (calendário, redirect, agente, setor). O CRM
-            também registra <strong>qual opção</strong> o lead escolheu.
+            ✅ As respuestas do formulário son <strong>siempre enviadas</strong> antes
+            de qualquer acción de saída (calendario, redirect, agente, sector). O CRM
+            también registra <strong>qual opción</strong> o lead escolheu.
           </p>
         </div>
 
@@ -170,7 +170,7 @@ export function OptionActionsEditor({ actions, onChange, allBlocks, currentBlock
           <div className="p-3 space-y-3">
             {list.length === 0 && (
               <p className="text-xs text-muted-foreground italic text-center py-2">
-                Nenhuma ação ainda. Adicione abaixo.
+                Nenhuma acción aún. Adicione abaixo.
               </p>
             )}
 
@@ -205,7 +205,7 @@ export function OptionActionsEditor({ actions, onChange, allBlocks, currentBlock
         </ScrollArea>
 
         <div className="p-3 border-t bg-muted/30">
-          <Label className="text-xs">Adicionar ação</Label>
+          <Label className="text-xs">Adicionar acción</Label>
           <div className="grid grid-cols-2 gap-1.5 mt-1.5">
             {(Object.keys(ACTION_LABELS) as FormOptionAction['type'][]).map((type) => {
               const Icon = ACTION_ICONS[type];
@@ -281,7 +281,7 @@ function ActionForm({
       return (
         <div className="space-y-1.5">
           <Select value={action.agent_id} onValueChange={(v) => onUpdate({ agent_id: v } as any)}>
-            <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Escolha um agente IA" /></SelectTrigger>
+            <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Elegí um agente IA" /></SelectTrigger>
             <SelectContent>
               {(agents || []).map((a) => (
                 <SelectItem key={a.id} value={a.id} className="text-xs">
@@ -291,7 +291,7 @@ function ActionForm({
             </SelectContent>
           </Select>
           <p className="text-[10px] text-muted-foreground leading-tight">
-            Marca o agente como responsável. Ele só responde quando o lead falar.
+            Marca o agente como responsável. Ele só responde cuando o lead falar.
           </p>
         </div>
       );
@@ -300,7 +300,7 @@ function ActionForm({
       return (
         <div className="space-y-1.5">
           <Select value={action.agent_id} onValueChange={(v) => onUpdate({ agent_id: v } as any)}>
-            <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Escolha um agente IA" /></SelectTrigger>
+            <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Elegí um agente IA" /></SelectTrigger>
             <SelectContent>
               {(agents || []).map((a) => (
                 <SelectItem key={a.id} value={a.id} className="text-xs">
@@ -311,13 +311,13 @@ function ActionForm({
           </Select>
           <Input
             value={action.objective || ''}
-            placeholder="Objetivo da abordagem (opcional). Ex: tirar dúvidas e agendar reunião."
+            placeholder="Objetivo da abordaje (opcional). Ex: tirar dudas e agendar reunión."
             onChange={(e) => onUpdate({ objective: e.target.value } as any)}
             className="h-8 text-xs"
           />
           <p className="text-[10px] text-muted-foreground leading-tight">
-            Requer telefone capturado no formulário (DDI 55) e instância WhatsApp ativa.
-            O agente envia a 1ª mensagem usando as respostas como contexto.
+            Requer teléfono capturado no formulário (DDI 55) e instância WhatsApp ativa.
+            O agente envia a 1ª mensaje usando as respuestas como contexto.
           </p>
         </div>
       );
@@ -344,7 +344,7 @@ function ActionForm({
             />
           </div>
           <p className="text-[10px] text-muted-foreground leading-tight">
-            Ao enviar, o lead será redirecionado para o calendário com nome e WhatsApp já preenchidos.
+            Ao enviar, o lead será redirecionado para o calendario com nombre e WhatsApp ya preenchidos.
           </p>
         </div>
       );
@@ -352,7 +352,7 @@ function ActionForm({
     case 'assign_sector':
       return (
         <Select value={action.sector_id} onValueChange={(v) => onUpdate({ sector_id: v } as any)}>
-          <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Escolha um setor" /></SelectTrigger>
+          <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Elegí um sector" /></SelectTrigger>
           <SelectContent>
             {(sectors || []).map((s) => (
               <SelectItem key={s.id} value={s.id} className="text-xs">{s.name}</SelectItem>
@@ -365,7 +365,7 @@ function ActionForm({
       return (
         <div className="space-y-1.5">
           <Select value={action.user_id} onValueChange={(v) => onUpdate({ user_id: v } as any)}>
-            <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Escolha um usuário" /></SelectTrigger>
+            <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Elegí um usuario" /></SelectTrigger>
             <SelectContent>
               {(team || []).map((m) => (
                 <SelectItem key={m.id} value={m.id} className="text-xs">{m.full_name || m.id.slice(0, 8)}</SelectItem>
@@ -449,7 +449,7 @@ function TagAutocomplete({
       });
       if (created?.id) addTag(created.id);
     } catch {
-      // toast já tratado pelo hook
+      // toast ya tratado pelo hook
     }
   };
 
@@ -500,7 +500,7 @@ function TagAutocomplete({
           onFocus={() => setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
           onKeyDown={handleKeyDown}
-          placeholder="Buscar ou criar etiqueta…"
+          placeholder="Buscar ou crear etiqueta…"
           className="h-8 text-xs"
         />
 
@@ -543,7 +543,7 @@ function TagAutocomplete({
 
       {tags.length === 0 && !query && (
         <p className="text-[10px] text-muted-foreground italic">
-          Digite para criar sua primeira etiqueta.
+          Escribí para crear su primeira etiqueta.
         </p>
       )}
     </div>

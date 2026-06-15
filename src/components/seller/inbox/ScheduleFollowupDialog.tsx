@@ -45,8 +45,8 @@ export function ScheduleFollowupDialog({
     setIsSaving(true);
     try {
       const { error } = await supabase.from('tasks').insert({
-        title: `Follow-up: ${visitorName || 'Conversa'}`,
-        description: note.trim() || `Follow-up da conversa ${conversationId}`,
+        title: `Follow-up: ${visitorName || 'Conversación'}`,
+        description: note.trim() || `Follow-up da conversación ${conversationId}`,
         due_date: new Date(dueDate).toISOString(),
         user_id: user.id,
         created_by: user.id,
@@ -80,7 +80,7 @@ export function ScheduleFollowupDialog({
 
         <div className="space-y-4">
           <div>
-            <Label htmlFor="followup-date">Data e Hora</Label>
+            <Label htmlFor="followup-date">Fecha e Hora</Label>
             <Input
               id="followup-date"
               type="datetime-local"
@@ -95,7 +95,7 @@ export function ScheduleFollowupDialog({
               id="followup-note"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="Ex: Enviar proposta comercial..."
+              placeholder="Ex: Enviar propuesta comercial..."
               rows={3}
             />
           </div>

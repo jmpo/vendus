@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
       if (!orgId) return json({ error: 'org param required' }, 400);
       credQuery.eq('organization_id', orgId);
     }
-    const { fecha: cred } = await credQuery.maybeSingle();
+    const { data: cred } = await credQuery.maybeSingle();
     if (!cred) return json({ error: 'credentials not found' }, 404);
     if (cred.webhook_secret && cred.webhook_secret !== secretParam) {
       return json({ error: 'invalid secret' }, 401);
@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
 
     const payload = await req.json();
     const event = payload.event ?? payload.type ?? null;
-    const order = payload.fecha?.order ?? payload.fecha ?? payload.order ?? payload;
+    const order = payload.data?.order ?? payload.data ?? payload.order ?? payload;
 
     if (!order?.id) return json({ error: 'invalid payload' }, 400);
 
@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
 
     // Resolve product_id + offer_id a partir do product_cakto_id (mapeamento manual em product_offers)
     if (row.organization_id && row.product_cakto_id) {
-      const { fecha: offer } = await admin
+      const { data: offer } = await admin
         .from('product_offers')
         .select('id, product_id')
         .eq('organization_id', row.organization_id)
@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
         row.product_id = offer.product_id;
       } else {
         // Auto-cria oferta órfã (sem producto) pra aparecer na tela de mapeamento
-        const { fecha: created } = await admin
+        const { data: created } = await admin
           .from('product_offers')
           .insert({
             organization_id: row.organization_id,
@@ -123,7 +123,7 @@ Deno.serve(async (req) => {
     // Dispara o agente de recuperação automática (fire-and-forget)
     if (scopeParam === 'organization' && row.organization_id) {
       try {
-        const { fecha: savedOrder } = await admin
+        const { data: savedOrder } = await admin
           .from('cakto_orders')
           .select('id')
           .eq('scope', 'organization')
@@ -151,7 +151,7 @@ Deno.serve(async (req) => {
 
     // Para escopo platform: tenta vincular pedido a uma organização pelo email del cliente
     if (scopeParam === 'platform' && row.customer_email) {
-      const { fecha: org } = await admin
+      const { data: org } = await admin
         .from('organizations')
         .select('id')
         .eq('cakto_customer_email', row.customer_email)
@@ -227,28 +227,28 @@ async function resolveOrCreateLead(admin: any, row: any): Promise<string | null>
   // Tenta achar lead existente por email primeiro, después teléfono
   let lead: { id: string } | null = null;
   if (email) {
-    const { fecha } = await admin
+    const { data } = await admin
       .from('leads')
       .select('id')
       .eq('organization_id', orgId)
       .eq('email', email)
       .maybeSingle();
-    lead = fecha;
+    lead = data;
   }
   if (!lead && phone) {
-    const { fecha } = await admin
+    const { data } = await admin
       .from('leads')
       .select('id')
       .eq('organization_id', orgId)
       .eq('phone', phone)
       .maybeSingle();
-    lead = fecha;
+    lead = data;
   }
 
   if (lead) return lead.id;
 
   // Cria lead novo
-  const { fecha: created } = await admin
+  const { data: created } = await admin
     .from('leads')
     .insert({
       organization_id: orgId,

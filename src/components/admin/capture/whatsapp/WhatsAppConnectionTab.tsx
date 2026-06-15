@@ -45,7 +45,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
             Conexão WhatsApp
           </h2>
           <p className="text-muted-foreground text-sm">
-            Defina em qual instância Evolution este fluxo dispara.
+            Defina em qual instância Evolution este flujo dispara.
           </p>
         </div>
         <Button onClick={handleSave} disabled={!isDirty || update.isPending} className="gap-2">
@@ -58,15 +58,15 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
         <CardHeader>
           <CardTitle className="text-base">Status do canal</CardTitle>
           <CardDescription>
-            Quando habilitado, toda primeira mensagem recebida na instância selecionada inicia este fluxo.
+            Quando habilitado, toda primeira mensaje recibida na instância selecionada inicia este flujo.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between rounded-lg border p-4">
             <div className="space-y-1">
-              <Label className="text-sm font-medium">Fluxo ativo no WhatsApp</Label>
+              <Label className="text-sm font-medium">Flujo ativo no WhatsApp</Label>
               <p className="text-xs text-muted-foreground">
-                Desabilite para pausar o disparo sem despublicar o funil.
+                Desabilite para pausar o disparo sem despublicar o embudo.
               </p>
             </div>
             <Switch checked={enabled} onCheckedChange={setEnabled} />
@@ -75,7 +75,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
           {!enabled && (
             <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-sm">
               <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
-              <p>Com o canal desabilitado, mensagens recebidas serão tratadas pelo agente IA padrão ou pela fila humana.</p>
+              <p>Com o canal desabilitado, mensajes recebidas serão tratadas pelo agente IA padrão ou pela fila humana.</p>
             </div>
           )}
         </CardContent>
@@ -88,7 +88,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
             Instância vinculada
           </CardTitle>
           <CardDescription>
-            Escolha uma instância específica para isolar o fluxo, ou deixe em "Qualquer instância" para que dispare em todas.
+            Elegí uma instância específica para isolar o flujo, ou deixe em "Qualquer instância" para que dispare em todas.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -96,13 +96,13 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
             <Label>Instância Evolution</Label>
             <Select value={instanceId} onValueChange={setInstanceId} disabled={loadingInstances}>
               <SelectTrigger>
-                <SelectValue placeholder={loadingInstances ? 'Carregando...' : 'Selecione'} />
+                <SelectValue placeholder={loadingInstances ? 'Carregando...' : 'Seleccioná'} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="any">
                   <div className="flex items-center gap-2">
                     <Wifi className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span>Qualquer instância da empresa</span>
+                    <span>Qualquer instância de la empresa</span>
                   </div>
                 </SelectItem>
                 {instances.map(i => (
@@ -156,16 +156,16 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-2">
           <p>
-            <strong className="text-foreground">1.</strong> Lead envia a primeira mensagem para a instância acima.
+            <strong className="text-foreground">1.</strong> Lead envia a primeira mensaje para a instância acima.
           </p>
           <p>
-            <strong className="text-foreground">2.</strong> O sistema verifica funis ativos com WhatsApp habilitado e cria uma conversa.
+            <strong className="text-foreground">2.</strong> O sistema verifica funis ativos com WhatsApp habilitado e cria uma conversación.
           </p>
           <p>
-            <strong className="text-foreground">3.</strong> Este fluxo assume — executa cada bloco em ordem, podendo passar para IA, agendar reunião ou transferir para humano.
+            <strong className="text-foreground">3.</strong> Este flujo assume — executa cada bloco em ordem, podendo passar para IA, agendar reunión ou transferir para humano.
           </p>
           <p className="pt-2 text-xs">
-            Apenas um funil dispara por mensagem. Se houver múltiplos ativos, o primeiro encontrado prevalece — use a instância para segmentar.
+            Apenas um embudo dispara por mensaje. Se houver múltiplos ativos, o primeiro encontrado prevalece — use a instância para segmentar.
           </p>
         </CardContent>
       </Card>

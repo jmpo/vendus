@@ -23,7 +23,7 @@ export function Inspector({ block, blocks, startBlockId, onUpdate, onConnect }: 
           <MousePointerClick className="h-5 w-5 text-muted-foreground" />
         </div>
         <p className="text-sm text-muted-foreground max-w-[220px]">
-          Selecione uma etapa na sidebar ou clique em um elemento do preview para editar.
+          Seleccioná uma etapa na sidebar ou clique em um elemento do preview para editar.
         </p>
       </div>
     );

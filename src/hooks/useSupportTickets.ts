@@ -40,7 +40,7 @@ export const SUPPORT_STATUS_LABELS: Record<SupportStatus, string> = {
   open: 'Aberto',
   in_progress: 'Em andamento',
   resolved: 'Resolvido',
-  closed: 'Fechado',
+  closed: 'Cerrado',
 };
 
 export const SUPPORT_PRIORITY_LABELS: Record<SupportPriority, string> = {
@@ -168,7 +168,7 @@ export function useCreateTicket() {
       qc.invalidateQueries({ queryKey: ['support-tickets'] });
       toast({ title: 'Chamado aberto' });
     },
-    onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
 }
 

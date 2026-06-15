@@ -277,7 +277,7 @@ export function FlowCanvas({
           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <Plus className="h-8 w-8 text-primary" />
           </div>
-          <h3 className="text-lg font-semibold mb-2">Comece seu fluxo</h3>
+          <h3 className="text-lg font-semibold mb-2">Comece su flujo</h3>
           <p className="text-muted-foreground text-sm mb-4">
             Arraste um bloco da paleta à esquerda ou clique para adicionar.
           </p>
@@ -287,7 +287,7 @@ export function FlowCanvas({
             className="gap-2"
           >
             <Plus className="h-4 w-4" />
-            Adicionar mensagem inicial
+            Adicionar mensaje inicial
           </Button>
         </div>
       </div>

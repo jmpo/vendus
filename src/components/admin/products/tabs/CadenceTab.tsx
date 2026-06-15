@@ -25,7 +25,7 @@ export function CadenceTab({ productId }: CadenceTabProps) {
     <CadenceEditor 
       cadence={cadence || []} 
       productId={productId}
-      productName={product?.name || 'Produto'} 
+      productName={product?.name || 'Producto'} 
     />
   );
 }

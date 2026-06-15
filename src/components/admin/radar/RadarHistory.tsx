@@ -17,7 +17,7 @@ export function RadarHistory({ onSelect }: { onSelect: (id: string) => void }) {
 
   if (!scans?.length) {
     return (
-      <Card><CardContent className="py-12 text-center text-muted-foreground">Nenhuma análise realizada ainda</CardContent></Card>
+      <Card><CardContent className="py-12 text-center text-muted-foreground">Nenhuma análise realizada aún</CardContent></Card>
     );
   }
 

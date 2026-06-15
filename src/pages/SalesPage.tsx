@@ -134,7 +134,7 @@ export default function SalesPage() {
             </motion.h1>
             <motion.p variants={fadeUp} className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               CRM, inbox omnichannel, embudos de captación, agentes de IA y automatizaciones — 
-              todo en una plataforma integrada para que su equipo venda más y mejor.
+              todo en una plataforma integrada para que su equipo venta más y mejor.
             </motion.p>
             <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="xl" onClick={scrollToForm}>
@@ -234,7 +234,7 @@ export default function SalesPage() {
       </section>
 
       {/* Contact Form */}
-      <section ref={formRef} id="contato" className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
+      <section ref={formRef} id="contacto" className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
         <div className="max-w-2xl mx-auto">
           <AnimatedSection>
             <motion.div variants={fadeUp} className="text-center mb-10">

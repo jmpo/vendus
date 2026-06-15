@@ -18,7 +18,7 @@ import {
 import { DAY_NAMES } from '@/hooks/useUserAvailability';
 import { Plus, X } from 'lucide-react';
 
-// Generate time options in 30-minute increments
+// Generate equipo options in 30-minute increments
 const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
   const hours = Math.floor(i / 2);
   const minutes = i % 2 === 0 ? '00' : '30';
@@ -89,7 +89,7 @@ export function AddTimeSlotDialog({
         <DialogHeader>
           <DialogTitle>Adicionar horários - {DAY_NAMES[dayOfWeek]}</DialogTitle>
           <DialogDescription>
-            Defina os intervalos de disponibilidade para este dia
+            Defina os intervalos de disponibilidade para este día
           </DialogDescription>
         </DialogHeader>
 
@@ -101,7 +101,7 @@ export function AddTimeSlotDialog({
                 onValueChange={(v) => handleUpdateSlot(index, 'start_time', v)}
               >
                 <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Início" />
+                  <SelectValue placeholder="Inicio" />
                 </SelectTrigger>
                 <SelectContent>
                   {TIME_OPTIONS.map((t) => (
@@ -117,7 +117,7 @@ export function AddTimeSlotDialog({
                 onValueChange={(v) => handleUpdateSlot(index, 'end_time', v)}
               >
                 <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Fim" />
+                  <SelectValue placeholder="Fin" />
                 </SelectTrigger>
                 <SelectContent>
                   {TIME_OPTIONS.map((t) => (
@@ -143,7 +143,7 @@ export function AddTimeSlotDialog({
           {/* Validation warnings */}
           {slots.some(slot => slot.start_time >= slot.end_time) && (
             <p className="text-sm text-destructive">
-              O horário de término deve ser após o início
+              O horario de término debe ser após o inicio
             </p>
           )}
 
@@ -154,7 +154,7 @@ export function AddTimeSlotDialog({
             onClick={handleAddSlot}
           >
             <Plus className="h-4 w-4 mr-2" />
-            Adicionar outro intervalo
+            Adicionar otro intervalo
           </Button>
         </div>
 

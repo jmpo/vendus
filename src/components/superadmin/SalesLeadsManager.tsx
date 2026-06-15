@@ -17,7 +17,7 @@ import { es } from 'date-fns/locale';
 const STATUS_MAP: Record<string, { label: string; variant: 'default' | 'secondary' | 'outline' | 'destructive' }> = {
   new: { label: 'Novo', variant: 'default' },
   contacted: { label: 'Contactado', variant: 'secondary' },
-  qualified: { label: 'Qualificado', variant: 'outline' },
+  qualified: { label: 'Calificado', variant: 'outline' },
   converted: { label: 'Convertido', variant: 'default' },
   lost: { label: 'Perdido', variant: 'destructive' },
 };

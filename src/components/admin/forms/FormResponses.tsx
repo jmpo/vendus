@@ -35,7 +35,7 @@ export function FormResponses({ formId }: FormResponsesProps) {
   const [page, setPage] = useState(1);
   const perPage = 10;
 
-  // Respostas são salvas com LABEL como chave; também tenta block.id legado.
+  // Respostas son salvas com LABEL como chave; también tenta block.id legado.
   const getValueByMapping = (responses: Record<string, unknown>, mapping: string): string | null => {
     if (responses[mapping]) return String(responses[mapping]);
     const block = blocks?.find(b => b.maps_to === mapping);
@@ -59,7 +59,7 @@ export function FormResponses({ formId }: FormResponsesProps) {
 
     // Get name: lead first, then mapping/responses
     const mappedName = getValueByMapping(responses, 'name') || getValueByMapping(responses, 'full_name');
-    const name = (lead?.name || mappedName || String(responses?.name || responses?.nome || '')).toLowerCase();
+    const name = (lead?.name || mappedName || String(responses?.name || responses?.nombre || '')).toLowerCase();
 
     // Get email: lead first
     const mappedEmail = getValueByMapping(responses, 'email');
@@ -106,29 +106,29 @@ export function FormResponses({ formId }: FormResponsesProps) {
     const responses = sub.responses as Record<string, unknown>;
     const mappedName = getValueByMapping(responses, 'name') || getValueByMapping(responses, 'full_name');
     if (mappedName) return mappedName;
-    const byLabel = getByLabelKeyword(responses, ['nome', 'name']);
+    const byLabel = getByLabelKeyword(responses, ['nombre', 'name']);
     if (byLabel) return byLabel;
     const lead = (sub as any).leads as { name?: string } | null | undefined;
     if (lead?.name) return lead.name;
-    return String(responses?.name || responses?.nome || responses?.full_name || 'Anônimo');
+    return String(responses?.name || responses?.nombre || responses?.full_name || 'Anônimo');
   };
 
   const getLeadContact = (sub: FormSubmission): string => {
     const responses = sub.responses as Record<string, unknown>;
     const mappedEmail = getValueByMapping(responses, 'email') || getByLabelKeyword(responses, ['email', 'e-mail']);
-    const mappedPhone = getValueByMapping(responses, 'phone') || getByLabelKeyword(responses, ['whatsapp', 'telefone', 'phone', 'celular']);
+    const mappedPhone = getValueByMapping(responses, 'phone') || getByLabelKeyword(responses, ['whatsapp', 'teléfono', 'phone', 'celular']);
     const lead = (sub as any).leads as { email?: string; phone?: string } | null | undefined;
     if (mappedEmail) return mappedEmail;
     if (lead?.email) return lead.email;
     if (mappedPhone) return mappedPhone;
     if (lead?.phone) return lead.phone;
-    return String(responses?.email || responses?.phone || responses?.telefone || '-');
+    return String(responses?.email || responses?.phone || responses?.teléfono || '-');
   };
 
   const handleExport = () => {
     if (!filteredSubmissions.length) return;
     
-    const headers = ['Nome', 'Email', 'Score', 'Status', 'Data'];
+    const headers = ['Nombre', 'Email', 'Score', 'Status', 'Fecha'];
     const rows = filteredSubmissions.map(sub => {
       return [
         getLeadName(sub),
@@ -144,7 +144,7 @@ export function FormResponses({ formId }: FormResponsesProps) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `respostas-${formId}-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+    link.download = `respuestas-${formId}-${format(new Date(), 'yyyy-MM-dd')}.csv`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -164,7 +164,7 @@ export function FormResponses({ formId }: FormResponsesProps) {
         <div>
           <h2 className="text-2xl font-bold">Respostas</h2>
           <p className="text-muted-foreground">
-            {submissions?.length || 0} {submissions?.length === 1 ? 'resposta' : 'respostas'} recebidas
+            {submissions?.length || 0} {submissions?.length === 1 ? 'respuesta' : 'respuestas'} recebidas
           </p>
         </div>
         <Button variant="outline" onClick={handleExport} disabled={!filteredSubmissions.length}>
@@ -180,7 +180,7 @@ export function FormResponses({ formId }: FormResponsesProps) {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nome ou email..."
+                placeholder="Buscar por nombre ou email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -207,9 +207,9 @@ export function FormResponses({ formId }: FormResponsesProps) {
         <Card>
           <CardContent className="py-16 text-center">
             <Inbox className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
-            <h3 className="text-lg font-medium mb-2">Nenhuma resposta ainda</h3>
+            <h3 className="text-lg font-medium mb-2">Nenhuma respuesta aún</h3>
             <p className="text-muted-foreground">
-              Quando alguém preencher o formulário, as respostas aparecerão aqui.
+              Quando alguém preencher o formulário, as respuestas aparecerão aqui.
             </p>
           </CardContent>
         </Card>
@@ -220,10 +220,10 @@ export function FormResponses({ formId }: FormResponsesProps) {
               <TableRow>
                 <TableHead className="w-[50px]"></TableHead>
                 <TableHead>Lead</TableHead>
-                <TableHead>Contato</TableHead>
+                <TableHead>Contacto</TableHead>
                 <TableHead className="text-center">Score</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Data</TableHead>
+                <TableHead>Fecha</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>

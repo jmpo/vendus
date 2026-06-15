@@ -50,7 +50,7 @@ export function ApiKeysManager() {
       });
 
       if (error) throw error;
-      toast.success('Conexão testada com sucesso!');
+      toast.success('Conexão testada com éxito!');
     } catch (error) {
       toast.error('Falha na conexão: ' + (error as Error).message);
     } finally {
@@ -72,7 +72,7 @@ export function ApiKeysManager() {
         <div>
           <h3 className="text-lg font-semibold">Chaves de API</h3>
           <p className="text-sm text-muted-foreground">
-            Configure as integrações com serviços externos
+            Configure as integraciones com serviços externos
           </p>
         </div>
       </div>
@@ -101,7 +101,7 @@ export function ApiKeysManager() {
                         ) : (
                           <Badge variant="outline" className="text-amber-600 border-amber-600">
                             <AlertCircle className="h-3 w-3 mr-1" />
-                            Não configurado
+                            No configurado
                           </Badge>
                         )}
                       </CardTitle>
@@ -163,7 +163,7 @@ export function ApiKeysManager() {
               Configurar {integrations?.find(i => i.type === editingIntegration)?.name}
             </DialogTitle>
             <DialogDescription>
-              Insira a chave de API para habilitar esta integração
+              Insira a chave de API para habilitar esta integración
             </DialogDescription>
           </DialogHeader>
 
@@ -171,7 +171,7 @@ export function ApiKeysManager() {
             <div className="relative">
               <Input
                 type={showKey ? 'text' : 'password'}
-                placeholder="Cole sua chave de API aqui"
+                placeholder="Cole su chave de API aqui"
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
               />

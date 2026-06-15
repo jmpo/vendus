@@ -205,7 +205,7 @@ export function ChatInput({
         resetUpload();
         if (onTyping) onTyping(false);
       } catch {
-        // toast já disparado pelo useEffect
+        // toast ya disparado pelo useEffect
       }
       return;
     }
@@ -230,9 +230,9 @@ export function ChatInput({
     }
   };
 
-  // ---------- Contato / Enquete / Link de Reunião ----------
+  // ---------- Contacto / Enquete / Link de Reunión ----------
   const handleContactConfirm = ({ name, phone }: { name: string; phone: string }) => {
-    onSend(`📇 *Contato*\nNome: ${name}\nTelefone: ${phone}`);
+    onSend(`📇 *Contacto*\nNome: ${name}\nTelefone: ${phone}`);
   };
 
   const handlePollConfirm = ({ question, options }: { question: string; options: string[] }) => {
@@ -331,7 +331,7 @@ export function ChatInput({
                 </PopoverContent>
               </Popover>
 
-              {/* Unified "+" attach menu (Documento, Câmera, Contato, Mídia, Link de Reunião, Enquete) */}
+              {/* Unified "+" attach menu (Documento, Câmera, Contacto, Mídia, Link de Reunión, Enquete) */}
               <Popover open={attachOpen} onOpenChange={setAttachOpen}>
                 <PopoverTrigger asChild>
                   <Button

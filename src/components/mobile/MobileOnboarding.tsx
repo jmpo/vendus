@@ -13,26 +13,26 @@ interface MobileOnboardingProps {
 const slides = [
   {
     icon: Users,
-    title: 'Seus leads, na palma da mão',
-    description: 'Gerencie todos os seus contatos de vendas em um único lugar, com kanban visual e atualizações em tempo real.',
+    title: 'Sus leads, na palma da mão',
+    description: 'Gerencie todos os sus contactos de ventas em um único lugar, com kanban visual e actualizaciones em tempo real.',
     color: 'from-blue-500 to-cyan-500',
   },
   {
     icon: Bot,
-    title: 'IA que vende com você',
-    description: 'Copiloto inteligente que sugere respostas, quebra objeções e ajuda você a fechar mais negócios.',
+    title: 'IA que vende com usted',
+    description: 'Copiloto inteligente que sugere respuestas, quebra objeções e ayuda usted a fechar mais negocios.',
     color: 'from-purple-500 to-pink-500',
   },
   {
     icon: Target,
     title: 'Metas em tempo real',
-    description: 'Acompanhe seu progresso, compare com a equipe e celebre cada conquista no caminho para o topo.',
+    description: 'Acompanhe su progresso, compare com a equipo e celebre cada conquista no caminho para o topo.',
     color: 'from-orange-500 to-red-500',
   },
   {
     icon: Zap,
     title: 'Pronto para decolar!',
-    description: 'Tudo configurado para você começar a vender mais. Bora bater recordes?',
+    description: 'Tudo configurado para usted comenzar a vender mais. Bora bater recordes?',
     color: 'from-primary to-primary/80',
   },
 ];
@@ -181,7 +181,7 @@ export function MobileOnboarding({ onComplete, onSkip }: MobileOnboardingProps) 
           className="w-full h-14 text-base font-semibold rounded-2xl gap-2"
           size="lg"
         >
-          {isLastSlide ? 'Começar agora' : 'Próximo'}
+          {isLastSlide ? 'Comenzar ahora' : 'Próximo'}
           <ChevronRight size={20} />
         </Button>
       </div>

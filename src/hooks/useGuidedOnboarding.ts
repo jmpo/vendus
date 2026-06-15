@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 /**
  * Controla a exibição do onboarding guiado pós-cadastro para admins.
  * Persiste o estado em profiles.guided_onboarding_completed_at / skipped_at
- * para não depender de localStorage (sobrevive a troca de device).
+ * para no depender de localStorage (sobrevive a troca de device).
  */
 export function useGuidedOnboarding() {
   const { user, isAdmin } = useAuth();

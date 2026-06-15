@@ -71,7 +71,7 @@ export function CalendarDayView({ currentDate, events, onEventClick }: CalendarD
         </div>
       </div>
 
-      {/* Time grid */}
+      {/* Equipo grid */}
       <ScrollArea className="h-[600px]">
         <div className="grid grid-cols-[80px_1fr]">
           {/* Hours column */}

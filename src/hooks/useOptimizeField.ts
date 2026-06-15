@@ -18,7 +18,7 @@ export function useOptimizeField() {
     productContext?: Record<string, any>
   ): Promise<OptimizeResult | null> => {
     if (!value.trim()) {
-      toast.error('Digite algo antes de otimizar');
+      toast.error('Escribí algo antes de otimizar');
       return null;
     }
 

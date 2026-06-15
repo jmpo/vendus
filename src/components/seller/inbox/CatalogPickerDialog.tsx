@@ -110,7 +110,7 @@ export function CatalogPickerDialog({ open, onOpenChange, productId, onSend }: C
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar por nome, descrição o etiqueta..."
+              placeholder="Buscar por nombre, descripción o etiqueta..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9"
@@ -128,7 +128,7 @@ export function CatalogPickerDialog({ open, onOpenChange, productId, onSend }: C
               <p className="text-sm font-medium">{items.length === 0 ? 'Ninguno item no catálogo' : 'Nada encontrado'}</p>
               <p className="text-xs mt-1">
                 {items.length === 0
-                  ? 'Cadastre productos no catálogo para enviá-los rapidamente no chat.'
+                  ? 'Cadastre productos no catálogo para enviá-los rápidamente no chat.'
                   : 'Tente outros termos de busca.'}
               </p>
             </div>

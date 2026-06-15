@@ -47,7 +47,7 @@ interface ConversationListProps {
   onNewConversation?: () => void;
   soundEnabled?: boolean;
   onToggleSound?: () => void;
-  /** Mostra o nome do atendente em cada card (modo Admin). */
+  /** Mostra o nombre del agente em cada card (modo Admin). */
   showAssignedUser?: boolean;
   headerLabel?: string;
   /** Substitui o botão de filtro padrão (usado para ancorar popover). */
@@ -143,10 +143,10 @@ export function ConversationList({
     return Array.from(map.values());
   }, [conversations]);
 
-  // Contadores: usar os do backend (totais reais por aba) quando vierem; caso
+  // Contadores: usar os do backend (totais reais por aba) cuando vierem; caso
   // contrário, calcular a partir do que está em tela.
   // "Atendendo" = humano. "Aguardando" inclui IA atendendo (bot_active) +
-  // sem ninguém (waiting_human) — em ambos os casos, ainda no há humano.
+  // sem ninguém (waiting_human) — em ambos os casos, aún no há humano.
   const counts = useMemo(() => {
     if (tabCounts) return tabCounts;
     return {
@@ -158,7 +158,7 @@ export function ConversationList({
     };
   }, [dedupedConversations, tabCounts]);
 
-  // O backend já filtra por status conforme a aba selecionada. Aqui só aplicamos
+  // O backend ya filtra por status conforme a aba selecionada. Aqui só aplicamos
   // a busca local opcional (digitada na toolbar deste componente).
   const filteredConversations = useMemo(() => {
     let filtered = dedupedConversations;
@@ -189,8 +189,8 @@ export function ConversationList({
     return 'V';
   };
 
-  // Data BR como na referência: hoy → "HH:mm", ayer → "Ayer",
-  // mesma semana → "EEE HH:mm", más antigo → "dd/MM/yyyy".
+  // Fecha BR como na referência: hoy → "HH:mm", ayer → "Ayer",
+  // misma semana → "EEE HH:mm", más antigo → "dd/MM/yyyy".
   const formatDate = (date: string | null) => {
     if (!date) return '';
     const d = new Date(date);
@@ -202,7 +202,7 @@ export function ConversationList({
     return format(d, 'dd/MM/yyyy');
   };
 
-  // Encurta nomes muito longos preservando o início + sufixo entre parênteses
+  // Encurta nomes mucho longos preservando o inicio + sufixo entre parênteses
   // ex.: "Allan Savaris - Agência Tabuleiro (LGND)" → "Allan Savaris - Agência..."
   const shortenName = (name: string, max = 32) => {
     if (name.length <= max) return name;
@@ -299,7 +299,7 @@ export function ConversationList({
         </div>
       </div>
 
-      {/* Lista de conversas */}
+      {/* Lista de conversaciones */}
       <ScrollArea className="flex-1 bg-muted/20">
         {isLoading ? (
           <div className="p-4 space-y-3">
@@ -383,9 +383,9 @@ export function ConversationList({
                     </div>
                   </div>
 
-                  {/* Conteúdo (linhas: nome / preview / tags) */}
+                  {/* Conteúdo (linhas: nombre / preview / tags) */}
                   <div className="flex-1 min-w-0">
-                    {/* Linha 1: nome (encurtado para sempre caber) */}
+                    {/* Linha 1: nombre (encurtado para siempre caber) */}
                     <div className="min-w-0">
                       <span
                         className={cn(
@@ -414,7 +414,7 @@ export function ConversationList({
                       )}
                     </p>
 
-                    {/* Linha 3: tags (setor + producto + atendente) */}
+                    {/* Linha 3: tags (sector + producto + agente) */}
                     {(conv.sector_name || conv.product_name || (showAssignedUser && conv.assigned_user_name) || conv.current_agent_name) && (
                       <div className="flex items-center gap-1 flex-wrap mt-1.5 min-w-0">
                         {conv.sector_name && (

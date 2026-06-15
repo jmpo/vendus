@@ -109,7 +109,7 @@ export function useUpdateSankhyaConfig() {
       toast.success('Ajustes do Sankhya guardadas');
     },
     onError: (error) => {
-      toast.error('Error al guardar configurações: ' + error.message);
+      toast.error('Error al guardar configuraciones: ' + error.message);
     }
   });
 }
@@ -177,7 +177,7 @@ export function useSankhyaSync() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['sankhya-sync-logs'] });
-      const entity = variables.entityType === 'clients' ? 'clientes' : 'produtos';
+      const entity = variables.entityType === 'clients' ? 'clientes' : 'productos';
       toast.success(`Sincronización de ${entity} iniciada`);
     },
     onError: (error) => {

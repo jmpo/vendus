@@ -51,7 +51,7 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
 
   const handleLogoUpload = async (file: File) => {
     if (!profile?.organization_id) {
-      toast.error('Organização não encontrada');
+      toast.error('Organización no encontrada');
       return;
     }
     setUploading(true);
@@ -62,13 +62,13 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
         .from('form-media')
         .upload(path, file, { cacheControl: '3600', upsert: true });
       if (error) throw error;
-      // Bucket é privado — usar URL assinada de longa duração (10 anos)
+      // Bucket é privado — usar URL assinada de larga duración (10 anos)
       const { data: signed, error: signErr } = await supabase.storage
         .from('form-media')
         .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
       if (signErr || !signed?.signedUrl) throw signErr || new Error('Falha ao gerar URL');
       onUpdateTheme({ logo_url: signed.signedUrl });
-      toast.success('Logo atualizada');
+      toast.success('Logo actualizada');
     } catch (err: any) {
       toast.error('Falha no upload: ' + err.message);
     } finally {
@@ -176,7 +176,7 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
           <section className="space-y-3">
             <Label className="text-xs font-semibold uppercase text-muted-foreground">Barra de progresso</Label>
             <div className="flex items-center justify-between">
-              <Label htmlFor="progress-show" className="text-sm">Exibir</Label>
+              <Label htmlFor="progress-show" className="text-sm">Mostrar</Label>
               <Switch
                 id="progress-show"
                 checked={theme.show_progress}
@@ -357,7 +357,7 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
               >
                 <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="one_per_step">Uma pergunta por vez</SelectItem>
+                  <SelectItem value="one_per_step">Uma pregunta por vez</SelectItem>
                   <SelectItem value="all_in_one">Tudo em uma página</SelectItem>
                 </SelectContent>
               </Select>

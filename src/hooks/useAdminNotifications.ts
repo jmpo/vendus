@@ -213,7 +213,7 @@ export function useCreateAdminNotification() {
       toast.success(`Notificación enviada para ${result.recipientsCount} destinatario(s)`);
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Error al enviar notificação');
+      toast.error(error.message || 'Error al enviar notificación');
     },
   });
 }

@@ -26,7 +26,7 @@ function jsonResponse(body: any, status = 200) {
 }
 
 function base64ToBytes(b64: string): Uint8Array {
-  // Accepts fecha URLs and raw base64.
+  // Accepts data URLs and raw base64.
   const cleaned = b64.includes(",") ? b64.split(",", 2)[1] : b64;
   const bin = atob(cleaned);
   const out = new Uint8Array(bin.length);
@@ -108,14 +108,14 @@ async function describeImage(
   caption: string | undefined,
   apiKey: string,
 ): Promise<string> {
-  // Encode back to base64 for the fecha URL the Vision API expects.
+  // Encode back to base64 for the data URL the Vision API expects.
   let bin = "";
   const chunk = 0x8000;
   for (let i = 0; i < bytes.length; i += chunk) {
     bin += String.fromCharCode(...bytes.subarray(i, i + chunk));
   }
   const b64 = btoa(bin);
-  const dataUrl = `fecha:${mime};base64,${b64}`;
+  const dataUrl = `data:${mime};base64,${b64}`;
 
   const userContent: any[] = [
     {
@@ -123,7 +123,7 @@ async function describeImage(
       text:
         "Descreva objetivamente o conteúdo desta imagen en español, " +
         "em no máximo 3 frases. Se for um comprovante (Pix, boleto, tarjeta), " +
-        "extraia valor, fecha, chave/destino e nombre quando possíveis. " +
+        "extraia valor, data, chave/destino e nombre quando possíveis. " +
         "Se for um documento, identifique o tipo. " +
         "Se contiver texto legível, transcreva o trecho mais importante. " +
         "No invente información.",
@@ -164,8 +164,8 @@ async function describeImage(
     const t = await res.text();
     throw new Error(`vision error ${res.status} (mime=${mime}, bytes=${bytes.byteLength}, head=${Array.from(bytes.slice(0,12)).map(x=>x.toString(16).padStart(2,'0')).join('')}): ${t.slice(0, 300)}`);
   }
-  const fecha = await res.json();
-  const text = fecha?.choices?.[0]?.message?.content?.trim();
+  const data = await res.json();
+  const text = data?.choices?.[0]?.message?.content?.trim();
   if (!text) throw new Error("vision returned empty");
   return text;
 }

@@ -28,14 +28,14 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
-    const { fecha: campaign } = await supabase.from("campaigns").select("*").eq("id", campaign_id).maybeSingle();
+    const { data: campaign } = await supabase.from("campaigns").select("*").eq("id", campaign_id).maybeSingle();
     if (!campaign) {
       return new Response(JSON.stringify({ error: "Campaign not found" }), {
         status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const { fecha: targets } = await supabase
+    const { data: targets } = await supabase
       .from("campaign_targets")
       .select("status, context_id, instance_id, sent_at, responded_at")
       .eq("campaign_id", campaign_id)

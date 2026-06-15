@@ -102,7 +102,7 @@ export const DEFAULT_HUMANIZATION: HumanizationConfig = {
     lowercase_prob: 0.6,
     relaxed_punct_prob: 0.4,
     abbrev_prob: 0.5,
-    abbreviations: 'você=vc\ntambém=tbm\nporque=pq\nestá=tá\nbeleza=blz',
+    abbreviations: 'usted=vc\ntambém=tbm\nporque=pq\nestá=tá\nbeleza=blz',
     typo_correction_prob: 0.05,
     laughter_prob: 0.3,
     laughter_style: 'auto',
@@ -127,12 +127,12 @@ export const DEFAULT_HUMANIZATION: HumanizationConfig = {
   reactions: {
     enabled: true,
     rules: [
-      { id: 'r-emoji', enabled: true, label: 'Lead respondeu só com emoji', type: 'message_type', message_type: 'emoji_only', action: 'context', context: 'O lead acabou de responder APENAS com emoji. Reaja de forma curta e natural (1 linha) e faça uma pergunta leve para destravar a conversa.' },
-      { id: 'r-audio', enabled: true, label: 'Lead mandou áudio', type: 'message_type', message_type: 'audio', action: 'context', context: 'O lead enviou um áudio (você recebeu a transcrição). Comente brevemente ("entendi seu áudio…") antes de responder, soando humano.' },
+      { id: 'r-emoji', enabled: true, label: 'Lead respondeu só com emoji', type: 'message_type', message_type: 'emoji_only', action: 'context', context: 'O lead acabou de responder APENAS com emoji. Reaja de forma corta e natural (1 linha) e faça uma pregunta leve para destravar a conversación.' },
+      { id: 'r-audio', enabled: true, label: 'Lead mandou áudio', type: 'message_type', message_type: 'audio', action: 'context', context: 'O lead envió um áudio (usted recebeu a transcrição). Comente brevemente ("entendi su áudio…") antes de responder, soando humano.' },
       { id: 'r-sticker', enabled: true, label: 'Lead mandou figurinha', type: 'message_type', message_type: 'sticker', action: 'reply', reply: 'kkk boa 😄' },
-      { id: 'r-bot-suspicion', enabled: true, label: 'Lead acha que é robô', type: 'keyword', match: 'any', keywords: ['é robô', 'é bot', 'é uma ia', 'voce é humano', 'é humano?'], action: 'context', context: 'O lead está desconfiado se você é bot/IA. NÃO confirme nem negue mecanicamente — responda de forma humana e natural.' },
-      { id: 'r-busy', enabled: true, label: 'Lead disse que está ocupado', type: 'keyword', match: 'any', keywords: ['ocupado', 'sem tempo', 'depois falo', 'agora não', 'em reunião'], action: 'reply', reply: 'tranquilo! qual o melhor horário pra te chamar mais tarde?' },
-      { id: 'r-apology', enabled: true, label: 'Lead pediu desculpa pela demora', type: 'keyword', match: 'any', keywords: ['desculpa a demora', 'foi mal a demora', 'demorei pra responder'], action: 'context', context: 'O lead pediu desculpa pela demora. Acolha de forma leve ("imagina, sem stress") antes de continuar.' },
+      { id: 'r-bot-suspicion', enabled: true, label: 'Lead acha que é robô', type: 'keyword', match: 'any', keywords: ['é robô', 'é bot', 'é uma ia', 'voce é humano', 'é humano?'], action: 'context', context: 'O lead está desconfiado se usted é bot/IA. NÃO confirme nem negue mecanicamente — responda de forma humana e natural.' },
+      { id: 'r-busy', enabled: true, label: 'Lead disse que está ocupado', type: 'keyword', match: 'any', keywords: ['ocupado', 'sem tempo', 'después falo', 'ahora no', 'em reunión'], action: 'reply', reply: 'tranquilo! qual o melhor horario pra te chamar mais tarde?' },
+      { id: 'r-apology', enabled: true, label: 'Lead pediu desculpa pela demora', type: 'keyword', match: 'any', keywords: ['desculpa a demora', 'fue mal a demora', 'demorei pra responder'], action: 'context', context: 'O lead pediu desculpa pela demora. Acolha de forma leve ("imagina, sem stress") antes de continuar.' },
     ],
   },
 };
@@ -243,7 +243,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
                 rows={3} maxLength={500}
                 value={cfg.persona?.backstory ?? ''}
                 onChange={(e) => setPersona({ backstory: e.target.value })}
-                placeholder="Ex: Trabalhei 3 anos em agência de tráfego antes de entrar no time."
+                placeholder="Ex: Trabalhei 3 anos em agência de tráfego antes de entrar no equipo."
               />
             </div>
             <TagsInput
@@ -306,19 +306,19 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
 
             <ToggleRow
               label='Mostrar "escribiendo..." real en WhatsApp'
-              hint="Dispara o status real (Evolution Go) no celular do cliente. Teste em Admin → WhatsApp → Instâncias → Testar presença."
+              hint="Dispara o status real (Evolution Go) no celular del cliente. Teste em Admin → WhatsApp → Instâncias → Testar presença."
               checked={cfg.timing?.typing_indicator !== false}
               onCheckedChange={(v) => setTiming({ typing_indicator: v })}
             />
             <ToggleRow
               label="Variar por horario"
-              hint="Fora do horário comercial (8h-18h) os delays aumentam ~50% (antes dobravam)"
+              hint="Fora do horario comercial (8h-18h) os delays aumentam ~50% (antes dobravam)"
               checked={cfg.timing?.vary_by_hours === true}
               onCheckedChange={(v) => setTiming({ vary_by_hours: v })}
             />
             <ToggleRow
               label="No responder de madrugada"
-              hint="Mensagens recebidas entre 0h e 6h são respondidas a partir das 8h"
+              hint="Mensagens recebidas entre 0h e 6h son respondidas a partir das 8h"
               checked={!!cfg.timing?.no_reply_dawn}
               onCheckedChange={(v) => setTiming({ no_reply_dawn: v })}
             />
@@ -351,9 +351,9 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               onChange={(v) => setSplit({ aggressiveness: v })}
               hintMap={{
                 1: '1 — Nunca quebra',
-                2: '2 — Só mensagens longas',
+                2: '2 — Só mensajes longas',
                 3: '3 — Equilibrado (2-3 bolhas)',
-                4: '4 — Quebra muito (3-4 bolhas)',
+                4: '4 — Quebra mucho (3-4 bolhas)',
                 5: '5 — Cada frase = uma bolha',
               }}
             />
@@ -383,7 +383,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
           </CardHeader>
           <CardContent className="space-y-5">
             <PercentSlider
-              label="Probabilidad de minúscula no início"
+              label="Probabilidad de minúscula no inicio"
               value={cfg.style?.lowercase_prob ?? 0.6}
               onChange={(v) => setStyle({ lowercase_prob: v })}
             />
@@ -404,7 +404,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
                 className="font-mono text-xs"
                 value={cfg.style?.abbreviations ?? ''}
                 onChange={(e) => setStyle({ abbreviations: e.target.value })}
-                placeholder="você=vc&#10;também=tbm&#10;porque=pq"
+                placeholder="usted=vc&#10;también=tbm&#10;porque=pq"
               />
             </div>
             <PercentSlider
@@ -496,7 +496,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               label="Conectivos casuais"
               items={cfg.tics?.connectors ?? []}
               onChange={(items) => setTics({ connectors: items })}
-              placeholder="ex: tipo, sabe, né, daí, aí"
+              placeholder="ex: tipo, sabe, né, desde ahí, aí"
             />
             <TagsInput
               label="Frases de muleta (até 10)"
@@ -532,7 +532,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
           <CardContent className={cn('space-y-3', cfg.reactions?.enabled === false && 'opacity-50 pointer-events-none')}>
             {(cfg.reactions?.rules ?? []).length === 0 && (
               <div className="text-xs text-muted-foreground text-center py-6 border border-dashed rounded-md">
-                Nenhuma regra. Clique em "Nova regra" para começar.
+                Nenhuma regra. Hacé clic em "Nova regra" para comenzar.
               </div>
             )}
             {(cfg.reactions?.rules ?? []).map((rule, idx) => (
@@ -621,7 +621,7 @@ function StoriesInput({
             rows={2}
             value={desc}
             onChange={(e) => setDesc(e.target.value)}
-            placeholder="Descrição curta — quando usar e o que mencionar"
+            placeholder="Descripción corta — cuando usar e o que mencionar"
           />
           <Button type="button" size="icon" variant="outline" onClick={add} disabled={items.length >= max}>
             <Plus className="h-4 w-4" />
@@ -728,7 +728,7 @@ function NumberField({
 
 function PreviewCard({ cfg }: { cfg: HumanizationConfig }) {
   const [input, setInput] = useState(
-    'Boa pergunta! O Vendus funciona como uma plataforma white label. Você consegue revender pros seus clientes. Quer que eu te explique como funciona o modelo de receita?'
+    'Boa pregunta! O Vendus funciona como uma plataforma white label. Usted consegue revender pros sus clientes. Quer que eu te explique como funciona o modelo de receita?'
   );
   const [bubbles, setBubbles] = useState<string[]>([]);
   const [delays, setDelays] = useState<{ first: number; between: number[] } | null>(null);
@@ -865,7 +865,7 @@ function ReactionRuleCard({
           className="h-8 text-sm font-medium"
           value={rule.label ?? ''}
           onChange={(e) => onChange({ label: e.target.value })}
-          placeholder="Nome da regra"
+          placeholder="Nombre da regra"
         />
         <Button type="button" size="icon" variant="ghost" onClick={onRemove} title="Remover">
           <Trash2 className="h-4 w-4 text-destructive" />
@@ -879,13 +879,13 @@ function ReactionRuleCard({
             <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="keyword">Palavra-chave</SelectItem>
-              <SelectItem value="message_type">Tipo de mensagem</SelectItem>
+              <SelectItem value="message_type">Tipo de mensaje</SelectItem>
               <SelectItem value="inactive_hours">Tempo inativo</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1">
-          <Label className="text-xs">Ação</Label>
+          <Label className="text-xs">Acción</Label>
           <Select value={rule.action} onValueChange={(v) => onChange({ action: v as ReactionAction })}>
             <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -902,7 +902,7 @@ function ReactionRuleCard({
             label="Palavras-chave (case-insensitive)"
             items={rule.keywords ?? []}
             onChange={(items) => onChange({ keywords: items })}
-            placeholder="ex: ocupado, robô, depois falo"
+            placeholder="ex: ocupado, robô, después falo"
           />
           <div className="flex items-center gap-2">
             <Label className="text-xs">Modo:</Label>
@@ -919,7 +919,7 @@ function ReactionRuleCard({
 
       {rule.type === 'message_type' && (
         <div className="space-y-1">
-          <Label className="text-xs">Tipo de mensagem</Label>
+          <Label className="text-xs">Tipo de mensaje</Label>
           <Select
             value={rule.message_type ?? 'audio'}
             onValueChange={(v) => onChange({ message_type: v as ReactionMessageType })}
@@ -929,7 +929,7 @@ function ReactionRuleCard({
               <SelectItem value="audio">Áudio</SelectItem>
               <SelectItem value="sticker">Figurinha / Sticker</SelectItem>
               <SelectItem value="emoji_only">Apenas emoji</SelectItem>
-              <SelectItem value="image">Imagem</SelectItem>
+              <SelectItem value="image">Imagen</SelectItem>
               <SelectItem value="video">Vídeo</SelectItem>
             </SelectContent>
           </Select>
@@ -962,8 +962,8 @@ function ReactionRuleCard({
           }
           placeholder={
             rule.action === 'reply'
-              ? 'ex: tranquilo! qual o melhor horário pra te chamar?'
-              : 'ex: O lead está desconfiado. Responda de forma humana, sem confirmar nem negar.'
+              ? 'ex: tranquilo! qual o melhor horario pra te chamar?'
+              : 'ex: O lead está desconfiado. Respondé de forma humana, sem confirmar nem negar.'
           }
         />
       </div>

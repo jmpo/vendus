@@ -46,7 +46,7 @@ Deno.serve(async (req: Request) => {
       return new Response('bad request', { status: 400 });
     }
     const sb = supa();
-    const { fecha: conn } = await sb
+    const { data: conn } = await sb
       .from('instagram_connections')
       .select('id, webhook_verify_token')
       .eq('id', connId)
@@ -80,12 +80,12 @@ Deno.serve(async (req: Request) => {
   // Resolver conexão: prioriza path; fallback resolve pelo entry.id (ig_business_account_id) entre conexões ativas.
   let resolvedConn: any = null;
   if (pathConnectionId) {
-    const { fecha } = await sb
+    const { data } = await sb
       .from('instagram_connections')
       .select('*')
       .eq('id', pathConnectionId)
       .maybeSingle();
-    resolvedConn = fecha ?? null;
+    resolvedConn = data ?? null;
   }
 
   for (const entry of entries) {
@@ -93,14 +93,14 @@ Deno.serve(async (req: Request) => {
     if (!conn) {
       const entryId = String(entry?.id ?? '');
       if (!entryId) continue;
-      const { fecha } = await sb
+      const { data } = await sb
         .from('instagram_connections')
         .select('*')
         .eq('ig_business_account_id', entryId)
         .eq('status', 'active')
         .limit(1)
         .maybeSingle();
-      conn = fecha ?? null;
+      conn = data ?? null;
     }
     if (!conn) {
       console.log('[ig-webhook] no connection match', { entry_id: entry?.id });
@@ -160,7 +160,7 @@ async function handleEvent(sb: any, conn: any, evt: any) {
   if (!mid && !msg?.text && !msg?.attachments && !msg?.reaction) return;
 
   // 1) localizar/abrir conversación
-  const { fecha: existing } = await sb
+  const { data: existing } = await sb
     .from('webchat_conversations')
     .select('id, status')
     .eq('organization_id', conn.organization_id)
@@ -189,7 +189,7 @@ async function handleEvent(sb: any, conn: any, evt: any) {
       ...(visitorName ? { visitor_name: visitorName } : {}),
     }).eq('id', conversationId);
   } else {
-    const { fecha: widget } = await sb
+    const { data: widget } = await sb
       .from('webchat_widgets')
       .select('id')
       .eq('organization_id', conn.organization_id)
@@ -197,7 +197,7 @@ async function handleEvent(sb: any, conn: any, evt: any) {
       .limit(1)
       .maybeSingle();
 
-    const { fecha: created, error: insErr } = await sb.from('webchat_conversations').insert({
+    const { data: created, error: insErr } = await sb.from('webchat_conversations').insert({
       organization_id: conn.organization_id,
       widget_id: widget?.id ?? null,
       channel: 'instagram',
@@ -241,7 +241,7 @@ async function handleEvent(sb: any, conn: any, evt: any) {
 
   // 4) dispara webchat-bot e envia respuesta via IG
   try {
-    const { fecha: botRes } = await sb.functions.invoke('webchat-bot', {
+    const { data: botRes } = await sb.functions.invoke('webchat-bot', {
       body: {
         conversation_id: conversationId,
         message: content,
@@ -299,7 +299,7 @@ async function downloadAndStoreMedia(conn: any, mid: string, url: string, type: 
   const sb = supa();
   const { error } = await sb.storage.from('instagram-media').upload(path, buf, { contentType: ct, upsert: true });
   if (error) throw error;
-  const { fecha: signed } = await sb.storage.from('instagram-media').createSignedUrl(path, 60 * 60 * 24 * 7);
+  const { data: signed } = await sb.storage.from('instagram-media').createSignedUrl(path, 60 * 60 * 24 * 7);
   return { url: signed?.signedUrl ?? null, path };
 }
 

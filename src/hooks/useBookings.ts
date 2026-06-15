@@ -106,7 +106,7 @@ export function useBookings(filter?: BookingsFilter) {
 
       if (error) throw error;
 
-      // Também cancelar o evento de calendário associado
+      // También cancelar o evento de calendario associado
       if (data.calendar_event_id) {
         await supabase
           .from('calendar_events')

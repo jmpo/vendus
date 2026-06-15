@@ -86,7 +86,7 @@ export function useUpsertHotmartCredentials() {
       qc.invalidateQueries({ queryKey: ['hotmart-credentials'] });
       toast.success('Credenciais Hotmart guardadas');
     },
-    onError: (e: Error) => toast.error('Erro ao guardadar: ' + e.message),
+    onError: (e: Error) => toast.error('Error ao guardadar: ' + e.message),
   });
 }
 

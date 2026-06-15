@@ -95,12 +95,12 @@ export async function resolveAIConfig(
   async function readPlan(): Promise<{ allow: boolean; provider: string; strategy: string }> {
     if (!organizationId) return { allow: true, provider: 'lovable', strategy: 'random' };
     try {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('organizations')
         .select('plan_id, platform_plans!inner(allow_platform_ai, platform_ai_provider, platform_ai_strategy)')
         .eq('id', organizationId)
         .maybeSingle();
-      const plan = (fecha as any)?.platform_plans;
+      const plan = (data as any)?.platform_plans;
       return {
         allow: plan?.allow_platform_ai !== false,
         provider: (plan?.platform_ai_provider as string) || 'lovable',
@@ -115,12 +115,12 @@ export async function resolveAIConfig(
   /** Tenta escolher uma chave do pool da plataforma. Retorna null se vazio. */
   async function pickPoolKey(provider: string, strategy: string): Promise<{ id: string; api_key: string; model_default?: string; label: string } | null> {
     try {
-      const { fecha, error } = await supabase.rpc('pick_platform_ai_key', { p_provider: provider, p_strategy: strategy });
+      const { data, error } = await supabase.rpc('pick_platform_ai_key', { p_provider: provider, p_strategy: strategy });
       if (error) {
         console.warn('[ai-router] pick_platform_ai_key error:', error);
         return null;
       }
-      const row = Array.isArray(fecha) ? fecha[0] : fecha;
+      const row = Array.isArray(data) ? data[0] : data;
       if (!row) return null;
       return { id: row.id, api_key: row.api_key_encrypted, model_default: row.model_default ?? undefined, label: row.label };
     } catch (e) {
@@ -162,7 +162,7 @@ export async function resolveAIConfig(
 
   try {
     // 1) Roteamento configurado pela empresa (chave própria) tiene prioridade
-    const { fecha: routing } = await supabase
+    const { data: routing } = await supabase
       .from('org_ai_routing')
       .select('provider, model, fallback_to_lovable')
       .eq('organization_id', organizationId)
@@ -173,7 +173,7 @@ export async function resolveAIConfig(
     const routedModel = (routing?.model || preferredModel || DEFAULT_MODEL) as string;
 
     if (orgProvider && orgProvider !== 'lovable') {
-      const { fecha: cred } = await supabase
+      const { data: cred } = await supabase
         .from('org_ai_credentials')
         .select('api_key_encrypted')
         .eq('organization_id', organizationId)

@@ -159,7 +159,7 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
             <div>
               <p className="font-medium text-amber-500">Lead sin contacto desde hace {stats.daysSinceContact} días</p>
               <p className="text-sm text-muted-foreground">
-                Considere ingresar en contacto para no perder el timing
+                Considera ingresar en contacto para no perder el timing
               </p>
             </div>
           </CardContent>
@@ -327,11 +327,11 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
       {/* Respostas importantes */}
       <LeadKeyResponses metadata={lead.metadata} />
 
-      {/* Campos personalizados (preenchidos por webhooks/integrações) */}
+      {/* Campos personalizados (preenchidos por webhooks/integraciones) */}
       <LeadCustomFields metadata={lead.metadata} />
 
 
-      {/* Conversa recente */}
+      {/* Conversación recente */}
       <LeadConversationPreview leadId={lead.id} />
 
       {/* Cadencia + Siguiente acción */}

@@ -38,7 +38,7 @@ serve(async (req) => {
     console.log(`Processing OAuth callback for user ${userId}`);
 
     // Get OAuth credentials from integration_settings
-    const { fecha: oauthConfig, error: configError } = await supabase
+    const { data: oauthConfig, error: configError } = await supabase
       .from("integration_settings")
       .select("settings")
       .eq("organization_id", organizationId)
@@ -99,7 +99,7 @@ serve(async (req) => {
     const expiresAt = new Date(Date.now() + (tokenData.expires_in * 1000)).toISOString();
 
     // Check if connection already exists
-    const { fecha: existingConnection } = await supabase
+    const { data: existingConnection } = await supabase
       .from("google_calendar_connections")
       .select("id")
       .eq("user_id", userId)

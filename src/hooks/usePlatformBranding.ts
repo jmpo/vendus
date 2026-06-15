@@ -103,14 +103,14 @@ export async function fetchPlatformBranding(): Promise<PlatformSettings | null> 
 }
 
 /**
- * Hook canônico de identidade visual.
+ * Hook canônico de identidad visual.
  *
  * Importante:
  *  - NÃO usamos `initialData` aqui. Quando combinado com `staleTime > 0`,
- *    o React Query trata o cache como "fresco" e não busca o estado real
- *    do banco — foi por isso que alterações feitas no painel Super Admin
+ *    o React Query trata o cache como "fresco" e no busca o estado real
+ *    do banco — fue por isso que alterações feitas no painel Super Admin
  *    paravam de aparecer ("travadas" em uma versão antiga).
- *  - O `localStorage` continua sendo usado como fallback visual imediato
+ *  - O `localStorage` continua siendo usado como fallback visual imediato
  *    apenas para evitar flash, lido em sync na primeira renderização.
  */
 export function usePlatformBranding() {
@@ -212,7 +212,7 @@ export function usePlatformBranding() {
         const dynamicManifest = {
           name: settings.platform_name || 'Plataforma',
           short_name: settings.platform_name || 'Plataforma',
-          description: settings.meta_description || 'Plataforma de vendas',
+          description: settings.meta_description || 'Plataforma de ventas',
           start_url: '/',
           display: 'standalone',
           orientation: 'portrait',
@@ -248,7 +248,7 @@ export function usePlatformBranding() {
     }
 
     const platformName = settings.platform_name || 'Plataforma';
-    const description = settings.meta_description || 'Plataforma de vendas com IA';
+    const description = settings.meta_description || 'Plataforma de ventas com IA';
 
     const updateMeta = (selector: string, attr: string, value: string) => {
       let el = document.querySelector(selector) as HTMLMetaElement;
@@ -283,7 +283,7 @@ export function usePlatformBranding() {
 
 /**
  * Lê o cache local de branding síncronamente — usado apenas como
- * placeholder visual antes do React Query carregar a versão real.
+ * placeholder visual antes do React Query cargar a versão real.
  */
 export function readCachedBrandingSync(): PlatformSettings | null {
   try {

@@ -28,7 +28,7 @@ Deno.serve(async (req) => {
     const userClient = createClient(SUPABASE_URL, ANON_KEY, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { fecha: claims, error: claimsErr } = await userClient.auth.getClaims(
+    const { data: claims, error: claimsErr } = await userClient.auth.getClaims(
       authHeader.replace('Bearer ', ''),
     );
     if (claimsErr || !claims?.claims?.sub) return json({ error: 'Unauthorized' }, 401);
@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
     const admin = createClient(SUPABASE_URL, SERVICE_KEY);
     const userId = claims.claims.sub;
 
-    const { fecha: profile } = await admin
+    const { data: profile } = await admin
       .from('profiles')
       .select('organization_id')
       .eq('id', userId)
@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
     let useBasic = basicToken;
 
     if (!useClientId || !useClientSecret || !useBasic) {
-      const { fecha: cred } = await admin
+      const { data: cred } = await admin
         .from('hotmart_credentials')
         .select('client_id, client_secret, basic_token')
         .eq('organization_id', orgId)

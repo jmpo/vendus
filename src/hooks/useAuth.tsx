@@ -139,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .eq('user_id', userId)
         .maybeSingle();
 
-      // Use allSettled — partial failures must NOT block the app
+      // Usa allSettled — partial failures must NOT block the app
       const results = await withTimeout(
         Promise.allSettled([profilePromise, rolesPromise, permsPromise]),
         7000,

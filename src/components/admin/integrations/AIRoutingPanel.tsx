@@ -28,7 +28,7 @@ const PROVIDER_LABELS: Record<AIProvider, string> = {
 
 // Algumas capacidades só funcionam em provedores específicos
 const CAPABILITY_RESTRICTIONS: Partial<Record<AICapability, AIProvider[]>> = {
-  audio_transcription: ['openai'], // só OpenAI Whisper/GPT-4o Transcribe hoje
+  audio_transcription: ['openai'], // só OpenAI Whisper/GPT-4o Transcribe hoy
   embeddings: ['openai', 'gemini'],
 };
 
@@ -86,10 +86,10 @@ export function AIRoutingPanel() {
               <div>
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-primary" />
-                  <span className="font-semibold text-sm">IA da Plataforma — Tokens do mês</span>
+                  <span className="font-semibold text-sm">IA da Plataforma — Tokens do mes</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Seu plano inclui {tokenStatus.included.toLocaleString('es-PY')} tokens
+                  Su plan inclui {tokenStatus.included.toLocaleString('es-PY')} tokens
                   {tokenStatus.bonus > 0 && ` + ${tokenStatus.bonus.toLocaleString('es-PY')} bônus`}.
                 </p>
               </div>
@@ -110,8 +110,8 @@ export function AIRoutingPanel() {
         <Alert variant="destructive" className="border-amber-500/40 bg-amber-500/5 text-foreground">
           <AlertTriangle className="h-4 w-4 text-amber-500" />
           <AlertDescription>
-            <strong>Seu plano não inclui IA da plataforma.</strong> Para ativar agentes, copiloto e
-            demais recursos com IA, cadastre sua própria chave (OpenAI, Anthropic ou Gemini) abaixo
+            <strong>Su plan no inclui IA da plataforma.</strong> Para ativar agentes, copiloto e
+            demais recursos com IA, cadastre su própria chave (OpenAI, Anthropic ou Gemini) abaixo
             em <strong>Provedores</strong>.
           </AlertDescription>
         </Alert>
@@ -120,11 +120,11 @@ export function AIRoutingPanel() {
       <Alert>
         <Info className="h-4 w-4" />
         <AlertDescription>
-          Escolha qual IA atende cada parte da plataforma e qual modelo usar.
+          Elegí qual IA atende cada parte da plataforma e qual modelo usar.
           {platformAllowed ? (
             <> <strong>Lovable AI</strong> é o padrão. Para usar OpenAI, Claude ou Gemini, configure a chave correspondente.</>
           ) : (
-            <> Configure pelo menos uma chave externa (OpenAI, Claude ou Gemini) para começar.</>
+            <> Configure pelo menos uma chave externa (OpenAI, Claude ou Gemini) para comenzar.</>
           )}
         </AlertDescription>
       </Alert>
@@ -136,7 +136,7 @@ export function AIRoutingPanel() {
             Roteamento de IA por capacidade
           </CardTitle>
           <CardDescription>
-            Cada capacidade pode usar um provedor e modelo diferente. Os badges indicam o
+            Cada capacidade puede usar um provedor e modelo diferente. Os badges indicam o
             modelo recomendado, mais barato ou mais potente.
           </CardDescription>
         </CardHeader>
@@ -186,7 +186,7 @@ export function AIRoutingPanel() {
                           const enabled = configuredProviders.has(p);
                           const isLovableBlocked = p === 'lovable' && !platformAllowed;
                           const suffix = isLovableBlocked
-                            ? ' — bloqueado no seu plano'
+                            ? ' — bloqueado no su plan'
                             : !enabled
                               ? ' — sem chave'
                               : '';
@@ -210,7 +210,7 @@ export function AIRoutingPanel() {
                       disabled={availableModels.length === 0}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecione um modelo" />
+                        <SelectValue placeholder="Seleccioná um modelo" />
                       </SelectTrigger>
                       <SelectContent className="max-w-[420px]">
                         {availableModels.map((m) => (

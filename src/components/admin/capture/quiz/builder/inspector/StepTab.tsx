@@ -8,7 +8,7 @@ interface Props {
   onUpdate: (updates: Partial<FunnelBlock>) => void;
 }
 
-/** Aba "Etapa" — toggles globais da tela (logo, duração). */
+/** Aba "Etapa" — toggles globais da tela (logo, duración). */
 export function StepTab({ block, onUpdate }: Props) {
   const update = (key: string, value: any) =>
     onUpdate({ data: { ...block.data, [key]: value } });
@@ -16,7 +16,7 @@ export function StepTab({ block, onUpdate }: Props) {
   return (
     <div className="space-y-4">
       <div>
-        <Label className="text-xs">Nome da etapa</Label>
+        <Label className="text-xs">Nombre da etapa</Label>
         <Input
           className="text-xs h-8 mt-1"
           value={(block.data as any).step_label || ''}
@@ -34,7 +34,7 @@ export function StepTab({ block, onUpdate }: Props) {
           />
         </div>
         <div className="flex items-center justify-between">
-          <Label className="text-xs">Mostrar duração estimada</Label>
+          <Label className="text-xs">Mostrar duración estimada</Label>
           <Switch
             checked={!!block.data.show_duration}
             onCheckedChange={(v) => update('show_duration', v)}

@@ -65,7 +65,7 @@ export function FloatingActionButton({
         return [
           {
             icon: <MessageSquare size={20} />,
-            label: 'Nova Conversa',
+            label: 'Nova Conversación',
             onClick: () => handleAction(onOpenAI),
             color: 'bg-purple-500',
           },

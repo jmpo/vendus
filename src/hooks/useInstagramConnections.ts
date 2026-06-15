@@ -58,7 +58,7 @@ export function useDraftInstagramConnection() {
       return data as DraftInstagramResponse;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['instagram-connections'] }),
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao criar rascunho'),
+    onError: (e: any) => toast.error(e?.message ?? 'Falha ao crear rascunho'),
   });
 }
 
@@ -107,6 +107,6 @@ export function useDeleteInstagramConnection() {
       qc.invalidateQueries({ queryKey: ['instagram-connections'] });
       toast.success('Conexión eliminada');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao remover'),
+    onError: (e: any) => toast.error(e?.message ?? 'Falha ao eliminar'),
   });
 }

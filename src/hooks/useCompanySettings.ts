@@ -65,9 +65,9 @@ export function useUpdateCompanySettings() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['company-settings'] });
-      toast({ title: 'Dados da empresa guardados' });
+      toast({ title: 'Dados de la empresa guardados' });
     },
-    onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
 }
 

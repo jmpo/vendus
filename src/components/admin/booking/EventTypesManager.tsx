@@ -51,7 +51,7 @@ const locationIcons: Record<string, typeof Video> = {
 const locationLabels: Record<string, string> = {
   google_meet: 'Google Meet',
   zoom: 'Zoom',
-  phone: 'Telefone',
+  phone: 'Teléfono',
   in_person: 'Presencial',
 };
 

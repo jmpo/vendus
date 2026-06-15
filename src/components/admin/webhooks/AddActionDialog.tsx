@@ -161,7 +161,7 @@ export function AddActionDialog({
             {/* Automation Actions */}
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3">
-                Automação
+                Automatización
               </h3>
               <div className="space-y-2">
                 {automationActions.map(([type, info]) => renderActionButton([type, info]))}

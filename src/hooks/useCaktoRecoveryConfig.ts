@@ -67,7 +67,7 @@ export function useSaveCaktoRecoveryConfig() {
       qc.invalidateQueries({ queryKey: ['cakto-recovery-config', orgId] });
       toast.success('Configuración guardada');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Erro ao guardadar'),
+    onError: (e: any) => toast.error(e?.message ?? 'Error ao guardadar'),
   });
 }
 

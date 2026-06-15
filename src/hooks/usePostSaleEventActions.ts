@@ -9,8 +9,8 @@ export type PostSaleEventLog = Tables<'post_sale_event_logs'>;
 
 export const POST_SALE_EVENT_TYPES = [
   { value: 'compra_aprovada', label: 'Compra Aprovada', description: 'Pago confirmado, entregar acceso' },
-  { value: 'pix_gerado', label: 'PIX Gerado', description: 'Lembrar e converter PIX pendente' },
-  { value: 'boleto_gerado', label: 'Boleto Gerado', description: 'Lembrar do boleto antes do vencimento' },
+  { value: 'pix_gerado', label: 'PIX Generado', description: 'Lembrar e converter PIX pendente' },
+  { value: 'boleto_gerado', label: 'Boleto Generado', description: 'Lembrar do boleto antes do vencimento' },
   { value: 'carrinho_abandonado', label: 'Carrinho Abandonado', description: 'Recuperar checkout no finalizado' },
   { value: 'reembolso', label: 'Reembolso / Estorno', description: 'Gestionar cancelación e intento de retención' },
   { value: 'chargeback', label: 'Chargeback', description: 'Disputa de pago iniciada' },
@@ -66,7 +66,7 @@ export function useUpsertPostSaleEventAction() {
       qc.invalidateQueries({ queryKey: ['post-sale-event-actions', vars.product_id] });
       toast.success('Acción guardada');
     },
-    onError: (e: any) => toast.error('Erro ao guardadar: ' + e.message),
+    onError: (e: any) => toast.error('Error ao guardadar: ' + e.message),
   });
 }
 
