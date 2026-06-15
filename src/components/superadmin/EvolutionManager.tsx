@@ -63,7 +63,7 @@ function useOrganizations() {
   });
 }
 
-export function EvolutionGestor() {
+export function EvolutionManager() {
   const { data: config, isLoading: cfgLoading } = usePlatformEvolutionConfig();
   const updateCfg = useUpdatePlatformEvolutionConfig();
   const testMut = useTestEvolutionConnection();
