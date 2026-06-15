@@ -47,7 +47,7 @@ export function useSuperAdminFirstAccess() {
   const noOrganizations =
     !query.isLoading && !query.isError && (query.data?.orgCount ?? 0) === 0;
 
-  // Wizard abre enquanto a configuração inicial (senha + obrigatórios) não estiver concluída.
+  // Wizard abre enquanto a configuración inicial (senha + obrigatórios) não estiver concluída.
   const shouldForceSetup =
     !!user?.id &&
     isSuperAdmin() &&

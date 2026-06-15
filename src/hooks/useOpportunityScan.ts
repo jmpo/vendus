@@ -223,7 +223,7 @@ export function useUpsertSchedule() {
       }
     },
     onSuccess: () => {
-      toast.success('Agendamento guardado');
+      toast.success('Reserva guardada');
       qc.invalidateQueries({ queryKey: ['opportunity-schedules'] });
     },
     onError: (e: any) => toast.error('Error: ' + e.message),
@@ -238,7 +238,7 @@ export function useDeleteSchedule() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success('Agendamento eliminado');
+      toast.success('Reserva eliminada');
       qc.invalidateQueries({ queryKey: ['opportunity-schedules'] });
     },
   });

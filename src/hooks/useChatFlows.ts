@@ -23,7 +23,7 @@ function parseChatFlow(data: any): ChatFlow {
   };
 }
 
-// Buscar todos os fluxos de um produto
+// Buscar todos os flujos de um produto
 export function useChatFlows(productId?: string) {
   return useQuery({
     queryKey: ['chat-flows', productId],
@@ -87,7 +87,7 @@ export function useActiveChatFlow(productId?: string) {
   });
 }
 
-// Criar novo fluxo
+// Criar novo flujo
 export function useCreateChatFlow() {
   const queryClient = useQueryClient();
   
@@ -123,12 +123,12 @@ export function useCreateChatFlow() {
       toast.success('Flujo creado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Error al crear fluxo: ' + error.message);
+      toast.error('Error al crear flujo: ' + error.message);
     },
   });
 }
 
-// Atualizar fluxo
+// Atualizar flujo
 export function useUpdateChatFlow() {
   const queryClient = useQueryClient();
   
@@ -168,12 +168,12 @@ export function useUpdateChatFlow() {
       queryClient.invalidateQueries({ queryKey: ['chat-flow-active', data.product_id] });
     },
     onError: (error: Error) => {
-      toast.error('Error al actualizar fluxo: ' + error.message);
+      toast.error('Error al actualizar flujo: ' + error.message);
     },
   });
 }
 
-// Salvar blocos do fluxo
+// Salvar blocos do flujo
 export function useSaveChatFlowBlocks() {
   const queryClient = useQueryClient();
   
@@ -205,18 +205,18 @@ export function useSaveChatFlowBlocks() {
       toast.success('Flujo guardado!');
     },
     onError: (error: Error) => {
-      toast.error('Error al guardar fluxo: ' + error.message);
+      toast.error('Error al guardar flujo: ' + error.message);
     },
   });
 }
 
-// Ativar/Desativar fluxo
+// Ativar/Desativar flujo
 export function useToggleChatFlowActive() {
   const queryClient = useQueryClient();
   
   return useMutation({
     mutationFn: async (params: { flowId: string; isActive: boolean; productId: string }) => {
-      // Se ativando, desativar outros fluxos do produto primeiro
+      // Se ativando, desativar outros flujos do produto primeiro
       if (params.isActive) {
         await supabase
           .from('chat_flows')
@@ -250,7 +250,7 @@ export function useToggleChatFlowActive() {
   });
 }
 
-// Deletar fluxo
+// Deletar flujo
 export function useDeleteChatFlow() {
   const queryClient = useQueryClient();
   
@@ -270,12 +270,12 @@ export function useDeleteChatFlow() {
       toast.success('Flujo eliminado!');
     },
     onError: (error: Error) => {
-      toast.error('Error al eliminar fluxo: ' + error.message);
+      toast.error('Error al eliminar flujo: ' + error.message);
     },
   });
 }
 
-// Duplicar fluxo
+// Duplicar flujo
 export function useDuplicateChatFlow() {
   const queryClient = useQueryClient();
   
@@ -316,7 +316,7 @@ export function useDuplicateChatFlow() {
       toast.success('Flujo duplicado!');
     },
     onError: (error: Error) => {
-      toast.error('Error al duplicar fluxo: ' + error.message);
+      toast.error('Error al duplicar flujo: ' + error.message);
     },
   });
 }

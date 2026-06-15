@@ -97,7 +97,7 @@ export function useSuperAdminSetupChecklist() {
       qc.invalidateQueries({ queryKey: ['super-admin-setup-checklist'] });
     },
     onError: (e: Error) =>
-      toast.error('Error al concluir configuração', { description: e.message }),
+      toast.error('Error al concluir configuración', { description: e.message }),
   });
 
   return {

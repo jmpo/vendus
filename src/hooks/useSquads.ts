@@ -309,7 +309,7 @@ export function useUpdateSquadMemberRole() {
       toast.success('Rol actualizada!');
     },
     onError: (error) => {
-      toast.error('Error al actualizar função');
+      toast.error('Error al actualizar rol');
       console.error(error);
     }
   });

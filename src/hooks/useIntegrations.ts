@@ -120,7 +120,7 @@ export function useUpdateIntegration() {
       toast.success('Integración actualizada');
     },
     onError: (error) => {
-      toast.error('Error al actualizar integração: ' + error.message);
+      toast.error('Error al actualizar integración: ' + error.message);
     }
   });
 }

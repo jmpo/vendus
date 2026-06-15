@@ -63,7 +63,7 @@ export function useUpsertOrchestratorConfig() {
     },
     onError: (err: any) => {
       console.error(err);
-      toast.error('Error al guardar configuração');
+      toast.error('Error al guardar configuración');
     },
   });
 }

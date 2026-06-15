@@ -264,7 +264,7 @@ export function useCreateForm() {
       toast.success('Formulario creado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Error al crear formulário: ' + error.message);
+      toast.error('Error al crear formulario: ' + error.message);
     },
   });
 }
@@ -312,7 +312,7 @@ export function useUpdateForm() {
       queryClient.invalidateQueries({ queryKey: ['form', data.id] });
     },
     onError: (error: Error) => {
-      toast.error('Error al actualizar formulário: ' + error.message);
+      toast.error('Error al actualizar formulario: ' + error.message);
     },
   });
 }
@@ -378,7 +378,7 @@ export function useSaveFormBlocks() {
       toast.success('Formulario guardado!');
     },
     onError: (error: Error) => {
-      toast.error('Error al guardar formulário: ' + error.message);
+      toast.error('Error al guardar formulario: ' + error.message);
     },
   });
 }
@@ -402,7 +402,7 @@ export function useDeleteForm() {
       toast.success('Formulario eliminado!');
     },
     onError: (error: Error) => {
-      toast.error('Error al eliminar formulário: ' + error.message);
+      toast.error('Error al eliminar formulario: ' + error.message);
     },
   });
 }
@@ -492,7 +492,7 @@ export function useDuplicateForm() {
       toast.success('Formulario duplicado!');
     },
     onError: (error: Error) => {
-      toast.error('Error al duplicar formulário: ' + error.message);
+      toast.error('Error al duplicar formulario: ' + error.message);
     },
   });
 }

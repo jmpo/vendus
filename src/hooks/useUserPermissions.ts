@@ -35,7 +35,7 @@ export const PERMISSION_LABELS: Record<PermissionKey, { label: string; category:
   allow_pipeline: { label: 'Permitir Pipeline', category: 'CRM' },
   allow_manage_client_portfolio: { label: 'Gerenciar carteira de clientes', category: 'CRM' },
   view_all_kanban_cards: { label: 'Ver todos os cards do Kanban', category: 'CRM' },
-  view_all_schedules: { label: 'Ver todos os agendamentos', category: 'Calendário' },
+  view_all_schedules: { label: 'Ver todos os reservas', category: 'Calendário' },
   allow_dashboard: { label: 'Ver Dashboard', category: 'Painéis' },
   allow_inbox_panel: { label: 'Ver Painel de Atendimentos', category: 'Painéis' },
   allow_groups: { label: 'Permitir Grupos', category: 'Organização' },

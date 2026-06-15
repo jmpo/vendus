@@ -35,7 +35,7 @@ export const CAPABILITY_LABELS: Record<AICapability, { title: string; desc: stri
   sales_copilot:        { title: 'Copiloto de vendas',      desc: 'Sugestões para vendedores no painel' },
   audio_transcription:  { title: 'Transcrição de áudio',    desc: 'Conversão de áudios em texto (Whisper)' },
   image_vision:         { title: 'Leitura de imagens',      desc: 'Análise de fotos e prints recebidos' },
-  content_generation:   { title: 'Geração de conteúdo',     desc: 'Criação de funis, formulários, agentes, objeções' },
+  content_generation:   { title: 'Geração de conteúdo',     desc: 'Criação de funis, formularios, agentes, objeções' },
   analysis_insights:    { title: 'Análise e insights',      desc: 'Avaliação de conversas, supervisão e relatórios' },
   embeddings:           { title: 'Memória semântica',       desc: 'Embeddings para busca contextual em conversas' },
 };

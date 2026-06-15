@@ -64,7 +64,7 @@ export function useUpsertPostSaleEventAction() {
     },
     onSuccess: (_id, vars) => {
       qc.invalidateQueries({ queryKey: ['post-sale-event-actions', vars.product_id] });
-      toast.success('Ação guardada');
+      toast.success('Acción guardada');
     },
     onError: (e: any) => toast.error('Erro ao guardadar: ' + e.message),
   });
@@ -79,7 +79,7 @@ export function useDeletePostSaleEventAction(productId: string) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['post-sale-event-actions', productId] });
-      toast.success('Ação eliminada');
+      toast.success('Acción eliminada');
     },
     onError: (e: any) => toast.error('Error al eliminar: ' + e.message),
   });

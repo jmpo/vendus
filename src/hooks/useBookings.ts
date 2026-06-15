@@ -123,7 +123,7 @@ export function useBookings(filter?: BookingsFilter) {
     },
     onError: (error: Error) => {
       console.error('Error cancelling booking:', error);
-      toast.error('Error al cancelar agendamento');
+      toast.error('Error al cancelar la reserva');
     },
   });
 
@@ -145,7 +145,7 @@ export function useBookings(filter?: BookingsFilter) {
     },
     onError: (error: Error) => {
       console.error('Error marking booking completed:', error);
-      toast.error('Error al concluir agendamento');
+      toast.error('Error al completar la reserva');
     },
   });
 

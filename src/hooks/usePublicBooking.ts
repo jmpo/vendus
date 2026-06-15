@@ -136,7 +136,7 @@ export function useAvailableSlots(eventTypeId: string | undefined, date: string 
   });
 }
 
-// Submeter agendamento
+// Submeter reserva
 export function useSubmitBooking() {
   return useMutation({
     mutationFn: async (input: BookingSubmitInput) => {
@@ -196,7 +196,7 @@ export function useCancelBookingPublic() {
     },
     onError: (error: Error) => {
       console.error('Error cancelling booking:', error);
-      toast.error('Error al cancelar agendamento');
+      toast.error('Error al cancelar la reserva');
     },
   });
 }

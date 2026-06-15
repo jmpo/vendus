@@ -143,7 +143,7 @@ export function useCreateFacebookIntegration() {
     },
     onError: (error) => {
       console.error('Error creating integration:', error);
-      toast.error('Error al crear integração');
+      toast.error('Error al crear integración');
     }
   });
 }
@@ -169,7 +169,7 @@ export function useUpdateFacebookIntegration() {
     },
     onError: (error) => {
       console.error('Error updating integration:', error);
-      toast.error('Error al actualizar integração');
+      toast.error('Error al actualizar integración');
     }
   });
 }
@@ -192,7 +192,7 @@ export function useDeleteFacebookIntegration() {
     },
     onError: (error) => {
       console.error('Error deleting integration:', error);
-      toast.error('Error al eliminar integração');
+      toast.error('Error al eliminar integración');
     }
   });
 }

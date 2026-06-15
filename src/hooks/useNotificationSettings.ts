@@ -20,7 +20,7 @@ export const NOTIFICATION_LABELS: Record<keyof Omit<NotificationSettings, 'user_
   notify_new_messages: 'Notificaciones de novas mensagens',
   notify_groups: 'Notificaciones de grupos',
   notify_unassigned_sector_tickets: 'Notificaciones de tickets sem setor',
-  notify_appointments: 'Notificaciones de agendamentos',
+  notify_appointments: 'Notificaciones de reservas',
 };
 
 export function useNotificationSettings(userId: string | undefined) {

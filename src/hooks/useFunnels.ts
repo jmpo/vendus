@@ -199,7 +199,7 @@ export function useFunnelBySlug(slug?: string, channel?: 'chat' | 'form' | 'land
 }
 
 // =====================================================
-// Hook: Criar funil
+// Hook: Criar embudo
 // =====================================================
 
 export function useCreateFunnel() {
@@ -272,13 +272,13 @@ export function useCreateFunnel() {
       toast.success('Embudo creado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Error al crear funil: ' + error.message);
+      toast.error('Error al crear embudo: ' + error.message);
     },
   });
 }
 
 // =====================================================
-// Hook: Atualizar funil
+// Hook: Atualizar embudo
 // =====================================================
 
 export function useUpdateFunnel() {
@@ -338,13 +338,13 @@ export function useUpdateFunnel() {
       queryClient.invalidateQueries({ queryKey: ['funnel', data.id] });
     },
     onError: (error: Error) => {
-      toast.error('Error al actualizar funil: ' + error.message);
+      toast.error('Error al actualizar embudo: ' + error.message);
     },
   });
 }
 
 // =====================================================
-// Hook: Excluir funil
+// Hook: Excluir embudo
 // =====================================================
 
 export function useDeleteFunnel() {
@@ -364,13 +364,13 @@ export function useDeleteFunnel() {
       toast.success('Embudo eliminado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Error al eliminar funil: ' + error.message);
+      toast.error('Error al eliminar embudo: ' + error.message);
     },
   });
 }
 
 // =====================================================
-// Hook: Duplicar funil
+// Hook: Duplicar embudo
 // =====================================================
 
 export function useDuplicateFunnel() {
@@ -444,13 +444,13 @@ export function useDuplicateFunnel() {
       toast.success('Embudo duplicado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Error al duplicar funil: ' + error.message);
+      toast.error('Error al duplicar embudo: ' + error.message);
     },
   });
 }
 
 // =====================================================
-// Hook: Analytics do funil
+// Hook: Analytics do embudo
 // =====================================================
 
 export function useFunnelAnalytics(funnelId?: string, days = 30) {
@@ -477,7 +477,7 @@ export function useFunnelAnalytics(funnelId?: string, days = 30) {
 }
 
 // =====================================================
-// Hook: Alterar status do funil
+// Hook: Alterar status do embudo
 // =====================================================
 
 export function useUpdateFunnelStatus() {
@@ -548,7 +548,7 @@ export function useSaveFlowBlocks() {
       toast.success('Flujo guardado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Error al guardar fluxo: ' + error.message);
+      toast.error('Error al guardar flujo: ' + error.message);
     },
   });
 }
