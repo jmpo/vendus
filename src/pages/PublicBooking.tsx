@@ -68,10 +68,10 @@ export default function PublicBooking() {
   } | null>(null);
 
   // Queries
-  const { fecha: profile, isLoading: loadingProfile } = usePublicProfile(userSlug);
-  const { fecha: eventTypes, isLoading: loadingEventTypes } = usePublicEventTypes(profile?.id);
-  const { fecha: eventData, isLoading: loadingEventType } = usePublicEventTypeBySlug(userSlug, eventSlug);
-  const { fecha: slots, isLoading: loadingSlots } = useAvailableSlots(
+  const { data: profile, isLoading: loadingProfile } = usePublicProfile(userSlug);
+  const { data: eventTypes, isLoading: loadingEventTypes } = usePublicEventTypes(profile?.id);
+  const { data: eventData, isLoading: loadingEventType } = usePublicEventTypeBySlug(userSlug, eventSlug);
+  const { data: slots, isLoading: loadingSlots } = useAvailableSlots(
     eventData?.eventType?.id,
     selectedDate ? format(selectedDate, 'yyyy-MM-dd') : undefined
   );
@@ -122,16 +122,16 @@ export default function PublicBooking() {
   };
 
   // Handler for conversational booking submit
-  const handleConversationalSubmit = async (fecha: BookingFormData) => {
+  const handleConversationalSubmit = async (data: BookingFormData) => {
     if (!eventType || !selectedDate) return;
 
     // Horario fixo de Brasília (-03:00, sem horario de verão) — slots vêm em hora local BRT
-    const startTime = `${format(selectedDate, 'yyyy-MM-dd')}T${fecha.selectedSlot.start}:00-03:00`;
+    const startTime = `${format(selectedDate, 'yyyy-MM-dd')}T${data.selectedSlot.start}:00-03:00`;
     
     // Collect additional info
     const additionalInfo: Record<string, string> = {};
-    if (fecha.additionalInfo) {
-      Object.entries(fecha.additionalInfo).forEach(([key, value]) => {
+    if (data.additionalInfo) {
+      Object.entries(data.additionalInfo).forEach(([key, value]) => {
         additionalInfo[key] = value;
       });
     }
@@ -140,9 +140,9 @@ export default function PublicBooking() {
       const result = await submitBooking.mutateAsync({
         eventTypeId: eventType.id,
         startTime,
-        guestName: fecha.name,
-        guestEmail: fecha.email,
-        guestPhone: fecha.phone || undefined,
+        guestName: data.name,
+        guestEmail: data.email,
+        guestPhone: data.phone || undefined,
         additionalInfo,
         timezone: 'America/Sao_Paulo',
         tracking: {
@@ -153,11 +153,11 @@ export default function PublicBooking() {
       });
 
       setFormData({
-        name: fecha.name,
-        email: fecha.email,
-        phone: fecha.phone,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
       });
-      setSelectedSlot(fecha.selectedSlot);
+      setSelectedSlot(data.selectedSlot);
       setBookingResult(result);
       setStep('confirmation');
     } catch (error) {
@@ -367,7 +367,7 @@ export default function PublicBooking() {
 
                 {/* Calendar & Slots */}
                 <div className="flex-1 p-6">
-                  <h3 className="font-medium mb-4">Elija una fecha y hora</h3>
+                  <h3 className="font-medium mb-4">Elija una data y hora</h3>
                   
                   <div className="flex flex-col gap-4 sm:gap-6">
                     <div>
@@ -399,7 +399,7 @@ export default function PublicBooking() {
                           </div>
                         ) : slots?.length === 0 ? (
                           <p className="text-sm text-muted-foreground py-4">
-                            No hay horarios disponibles en esta fecha. Elija otra fecha.
+                            No hay horarios disponibles en esta data. Elija otra data.
                           </p>
                         ) : (
                           <div className="grid grid-cols-2 sm:grid-cols-1 gap-2 max-h-80 overflow-y-auto pr-2">

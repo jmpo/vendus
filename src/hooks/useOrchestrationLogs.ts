@@ -28,14 +28,14 @@ export function useOrchestrationLogs(limit = 20) {
     queryKey: ['orchestration-logs', orgId, limit],
     enabled: !!orgId,
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('orchestration_logs')
         .select('*')
         .eq('organization_id', orgId!)
         .order('created_at', { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return fecha as OrchestrationLog[];
+      return data as OrchestrationLog[];
     },
   });
 }

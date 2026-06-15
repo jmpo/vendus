@@ -23,8 +23,8 @@ interface Props {
 }
 
 export function TagPackageGeneratorDialog({ open, onOpenChange }: Props) {
-  const { fecha: products } = useProducts();
-  const { fecha: automations } = useTagAutomations();
+  const { data: products } = useProducts();
+  const { data: automations } = useTagAutomations();
   const generateMut = useGenerateTagPackage();
   const [productId, setProductId] = useState<string>('');
 

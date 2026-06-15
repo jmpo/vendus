@@ -45,9 +45,9 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
   const [status, setStatus] = useState('all');
   const [reprocessingId, setReprocessingId] = useState<string | null>(null);
   const [selected, setSelected] = useState<CaktoOrder | null>(null);
-  const { fecha: orders, isLoading } = useCaktoOrders(scope, { search, status, provider });
+  const { data: orders, isLoading } = useCaktoOrders(scope, { search, status, provider });
   const sync = useSyncCaktoOrders(scope);
-  const { fecha: isSuperAdmin } = useIsSuperAdmin();
+  const { data: isSuperAdmin } = useIsSuperAdmin();
   const showReprocess = scope === 'platform' && !!isSuperAdmin;
 
   const handleSync = async () => {
@@ -62,13 +62,13 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
   const handleReprocess = async (orderId: string) => {
     setReprocessingId(orderId);
     try {
-      const { fecha, error } = await supabase.functions.invoke('cakto-reprocess-order', {
+      const { data, error } = await supabase.functions.invoke('cakto-reprocess-order', {
         body: { order_id: orderId },
       });
       if (error) throw error;
-      if (!fecha?.ok) {
-        const skipped = fecha?.result?.skipped;
-        const errs = fecha?.result?.errors?.join(' · ');
+      if (!data?.ok) {
+        const skipped = data?.result?.skipped;
+        const errs = data?.result?.errors?.join(' · ');
         toast.warning(`Reprocesso concluído com avisos${skipped ? `: ${skipped}` : ''}${errs ? ` — ${errs}` : ''}`);
       } else {
         toast.success('Pedido reprocessado');

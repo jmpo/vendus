@@ -97,7 +97,7 @@ const tagOptions = [
 
 export function MaterialsTab({ productId }: MaterialsTabProps) {
   const { profile } = useAuth();
-  const { fecha: materials, isLoading } = useMaterials(productId);
+  const { data: materials, isLoading } = useMaterials(productId);
   const createMaterial = useCreateMaterial();
   const deleteMaterial = useDeleteMaterial();
 
@@ -197,7 +197,7 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
 
         if (uploadError) throw uploadError;
 
-        const { fecha: { publicUrl } } = supabase.storage
+        const { data: { publicUrl } } = supabase.storage
           .from('materials')
           .getPublicUrl(fileName);
 

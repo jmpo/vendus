@@ -27,9 +27,9 @@ export function usePlatformTemplates(category?: string) {
         .order('category', { ascending: true })
         .order('name', { ascending: true });
       if (category) q = q.eq('category', category);
-      const { fecha, error } = await q;
+      const { data, error } = await q;
       if (error) throw error;
-      return (fecha ?? []) as unknown as PlatformEmailTemplate[];
+      return (data ?? []) as unknown as PlatformEmailTemplate[];
     },
   });
 }
@@ -39,13 +39,13 @@ export function usePlatformTemplate(slug: string | null) {
     queryKey: ['platform_email_template', slug],
     enabled: !!slug,
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('platform_email_templates')
         .select('*')
         .eq('slug', slug as string)
         .maybeSingle();
       if (error) throw error;
-      return fecha as unknown as PlatformEmailTemplate | null;
+      return data as unknown as PlatformEmailTemplate | null;
     },
   });
 }

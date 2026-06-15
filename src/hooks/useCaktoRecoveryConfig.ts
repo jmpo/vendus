@@ -34,13 +34,13 @@ export function useCaktoRecoveryConfig() {
     queryKey: ['cakto-recovery-config', orgId],
     queryFn: async () => {
       if (!orgId) return null;
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('cakto_recovery_config')
         .select('*')
         .eq('organization_id', orgId)
         .maybeSingle();
       if (error) throw error;
-      return (fecha ?? DEFAULT_CONFIG(orgId)) as CaktoRecoveryConfig;
+      return (data ?? DEFAULT_CONFIG(orgId)) as CaktoRecoveryConfig;
     },
     enabled: !!orgId,
   });
@@ -55,13 +55,13 @@ export function useSaveCaktoRecoveryConfig() {
     mutationFn: async (cfg: Partial<CaktoRecoveryConfig>) => {
       if (!orgId) throw new Error('sin organización');
       const payload = { ...DEFAULT_CONFIG(orgId), ...cfg, organization_id: orgId };
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('cakto_recovery_config')
         .upsert(payload, { onConflict: 'organization_id' })
         .select()
         .single();
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['cakto-recovery-config', orgId] });
@@ -79,14 +79,14 @@ export function useCaktoRecoveryDispatches(limit = 30) {
     queryKey: ['cakto-recovery-dispatches', orgId, limit],
     queryFn: async () => {
       if (!orgId) return [];
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('cakto_recovery_dispatches')
         .select('*')
         .eq('organization_id', orgId)
         .order('created_at', { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return fecha ?? [];
+      return data ?? [];
     },
     enabled: !!orgId,
     refetchInterval: 30_000,

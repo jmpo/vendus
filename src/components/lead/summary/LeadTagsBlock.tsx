@@ -17,8 +17,8 @@ interface Props {
 
 export function LeadTagsBlock({ leadId }: Props) {
   const [open, setOpen] = useState(false);
-  const { fecha: orgTags = [] } = useLeadTags();
-  const { fecha: assignments = [] } = useLeadTagsForLead(leadId);
+  const { data: orgTags = [] } = useLeadTags();
+  const { data: assignments = [] } = useLeadTagsForLead(leadId);
   const assign = useAssignLeadTag();
   const remove = useRemoveLeadTag();
 

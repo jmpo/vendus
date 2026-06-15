@@ -16,11 +16,11 @@ export function WhatsAppDisconnectedBanner() {
   const navigate = useNavigate();
   const orgId = profile?.organization_id;
 
-  const { fecha } = useQuery({
+  const { data } = useQuery({
     queryKey: ['evolution-instances-health', orgId],
     queryFn: async () => {
       if (!orgId) return { total: 0, connected: 0 };
-      const { fecha: rows } = await supabase
+      const { data: rows } = await supabase
         .from('evolution_instances')
         .select('status')
         .eq('organization_id', orgId);
@@ -33,7 +33,7 @@ export function WhatsAppDisconnectedBanner() {
     staleTime: 30_000,
   });
 
-  if (!fecha || fecha.total === 0 || fecha.connected > 0) return null;
+  if (!data || data.total === 0 || data.connected > 0) return null;
 
   const canManage = roles.includes('admin') || roles.includes('manager');
 

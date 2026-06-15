@@ -20,9 +20,9 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export function SankhyaConfigManager() {
-  const { fecha: configData, isLoading } = useSankhyaConfig();
-  const { fecha: syncLogs } = useSankhyaSyncLogs();
-  const { fecha: lastSync } = useLastSyncByType();
+  const { data: configData, isLoading } = useSankhyaConfig();
+  const { data: syncLogs } = useSankhyaSyncLogs();
+  const { data: lastSync } = useLastSyncByType();
   const updateConfig = useUpdateSankhyaConfig();
   const testConnection = useTestSankhyaConnection();
   const syncMutation = useSankhyaSync();
@@ -34,7 +34,7 @@ export function SankhyaConfigManager() {
   const [autoSync, setAutoSync] = useState(false);
   const [syncInterval, setSyncInterval] = useState<'1h' | '6h' | '12h' | '24h'>('24h');
 
-  // Initialize form when fecha loads
+  // Initialize form when data loads
   useState(() => {
     if (configData?.config) {
       setClientId(configData.config.client_id || '');

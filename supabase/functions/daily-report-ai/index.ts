@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Get organizations with daily report enabled
-    const { fecha: allSettings, error: settingsError } = await supabase
+    const { data: allSettings, error: settingsError } = await supabase
       .from('auto_notification_settings')
       .select('*')
       .eq('daily_report_enabled', true);
@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
     for (const settings of allSettings || []) {
       try {
         // Get all sellers in the organization
-        const { fecha: sellers, error: sellersError } = await supabase
+        const { data: sellers, error: sellersError } = await supabase
           .from('profiles')
           .select('id, full_name, email, organization_id')
           .eq('organization_id', settings.organization_id)
@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
         for (const seller of sellers || []) {
           try {
             // Check if already sent today
-            const { fecha: existingLog } = await supabase
+            const { data: existingLog } = await supabase
               .from('notification_logs')
               .select('id')
               .eq('user_id', seller.id)
@@ -203,13 +203,13 @@ async function gatherSellerContext(supabase: any, userId: string, orgId: string)
   ]);
 
   return {
-    profile: profileResult.fecha,
-    tasksToday: tasksTodayResult.fecha || [],
-    overdueTasks: overdueTasksResult.fecha || [],
-    stalledLeads: stalledLeadsResult.fecha || [],
-    hotLeads: hotLeadsResult.fecha || [],
-    goalProgress: goalProgressResult.fecha || [],
-    recentDeals: recentDealsResult.fecha || [],
+    profile: profileResult.data,
+    tasksToday: tasksTodayResult.data || [],
+    overdueTasks: overdueTasksResult.data || [],
+    stalledLeads: stalledLeadsResult.data || [],
+    hotLeads: hotLeadsResult.data || [],
+    goalProgress: goalProgressResult.data || [],
+    recentDeals: recentDealsResult.data || [],
     pendingCadences: [], // Could be enhanced later
   };
 }

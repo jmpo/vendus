@@ -4,8 +4,8 @@ import { toast } from 'sonner';
 import type { BookingEventType, QuestionField } from './useBookingEventTypes';
 
 // Helper function to parse questions from JSON
-function parseEventType(fecha: unknown): BookingEventType {
-  const item = fecha as Record<string, unknown>;
+function parseEventType(data: unknown): BookingEventType {
+  const item = data as Record<string, unknown>;
   return {
     ...item,
     questions: Array.isArray(item.questions) ? item.questions as QuestionField[] : [],
@@ -45,14 +45,14 @@ export function usePublicProfile(slug: string | undefined) {
     queryFn: async () => {
       if (!slug) return null;
       
-      const { fecha, error } = await (supabase as any)
+      const { data, error } = await (supabase as any)
         .from('public_booking_profiles')
         .select('id, full_name, avatar_url, booking_slug, booking_bio')
         .eq('booking_slug', slug)
         .maybeSingle();
 
       if (error) throw error;
-      return fecha as PublicProfile | null;
+      return data as PublicProfile | null;
     },
     enabled: !!slug,
   });
@@ -65,7 +65,7 @@ export function usePublicEventTypes(userId: string | undefined) {
     queryFn: async () => {
       if (!userId) return [];
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('booking_event_types')
         .select('*')
         .eq('user_id', userId)
@@ -73,7 +73,7 @@ export function usePublicEventTypes(userId: string | undefined) {
         .order('name');
 
       if (error) throw error;
-      return (fecha || []).map(parseEventType);
+      return (data || []).map(parseEventType);
     },
     enabled: !!userId,
   });
@@ -87,7 +87,7 @@ export function usePublicEventTypeBySlug(userSlug: string | undefined, eventSlug
       if (!userSlug || !eventSlug) return null;
       
       // Primeiro buscar o usuario pelo slug (view pública segura)
-      const { fecha: profile, error: profileError } = await (supabase as any)
+      const { data: profile, error: profileError } = await (supabase as any)
         .from('public_booking_profiles')
         .select('id, full_name, avatar_url, booking_slug, booking_bio')
         .eq('booking_slug', userSlug)
@@ -97,7 +97,7 @@ export function usePublicEventTypeBySlug(userSlug: string | undefined, eventSlug
       if (!profile) return null;
 
       // Depois buscar o tipo de evento
-      const { fecha: eventType, error: eventError } = await supabase
+      const { data: eventType, error: eventError } = await supabase
         .from('booking_event_types')
         .select('*')
         .eq('user_id', profile.id)
@@ -117,19 +117,19 @@ export function usePublicEventTypeBySlug(userSlug: string | undefined, eventSlug
   });
 }
 
-// Buscar slots disponíveis para uma fecha
+// Buscar slots disponíveis para uma data
 export function useAvailableSlots(eventTypeId: string | undefined, date: string | undefined, timezone: string = 'America/Sao_Paulo') {
   return useQuery({
     queryKey: ['available-slots', eventTypeId, date, timezone],
     queryFn: async () => {
       if (!eventTypeId || !date) return [];
       
-      const { fecha, error } = await supabase.functions.invoke('booking-availability', {
+      const { data, error } = await supabase.functions.invoke('booking-availability', {
         body: { eventTypeId, date, timezone },
       });
 
       if (error) throw error;
-      return (fecha?.slots || []) as AvailableSlot[];
+      return (data?.slots || []) as AvailableSlot[];
     },
     enabled: !!eventTypeId && !!date,
     staleTime: 1000 * 60, // 1 minuto
@@ -140,14 +140,14 @@ export function useAvailableSlots(eventTypeId: string | undefined, date: string 
 export function useSubmitBooking() {
   return useMutation({
     mutationFn: async (input: BookingSubmitInput) => {
-      const { fecha, error } = await supabase.functions.invoke('booking-submit', {
+      const { data, error } = await supabase.functions.invoke('booking-submit', {
         body: input,
       });
 
       if (error) throw error;
-      if (fecha?.error) throw new Error(fecha.error);
+      if (data?.error) throw new Error(data.error);
       
-      return fecha as {
+      return data as {
         success: boolean;
         bookingId: string;
         calendarEventId: string;
@@ -169,7 +169,7 @@ export function useSubmitBooking() {
 export function useCancelBookingPublic() {
   return useMutation({
     mutationFn: async ({ token, reason }: { token: string; reason?: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('booking_requests')
         .update({ 
           status: 'cancelled',
@@ -182,14 +182,14 @@ export function useCancelBookingPublic() {
       if (error) throw error;
 
       // También cancelar o evento de calendario associado
-      if (fecha.calendar_event_id) {
+      if (data.calendar_event_id) {
         await supabase
           .from('calendar_events')
           .update({ status: 'cancelled' })
-          .eq('id', fecha.calendar_event_id);
+          .eq('id', data.calendar_event_id);
       }
 
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       toast.success('Reserva cancelada con éxito!');

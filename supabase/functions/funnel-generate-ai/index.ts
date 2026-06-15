@@ -46,7 +46,7 @@ serve(async (req) => {
     console.log('Generating funnel for product:', product_id);
 
     // Fetch product details
-    const { fecha: product, error: productError } = await supabase
+    const { data: product, error: productError } = await supabase
       .from('products')
       .select('*')
       .eq('id', product_id)
@@ -72,7 +72,7 @@ Problemas que resolve: ${product.problems_solved || 'N/A'}
     // Fetch knowledge sources if use_brain
     let knowledgeContext = '';
     if (use_brain) {
-      const { fecha: knowledgeSources } = await supabase
+      const { data: knowledgeSources } = await supabase
         .from('product_knowledge_sources')
         .select('title, source_type, extracted_content, question, answer')
         .eq('product_id', product_id)
@@ -159,7 +159,7 @@ FORMATO DE RESPOSTA (JSON):
       "id": "uuid-gerado",
       "type": "message",
       "position": { "x": 250, "y": 50 },
-      "fecha": { "content": "Texto..." },
+      "data": { "content": "Texto..." },
       "next_block_id": "uuid-proximo"
     }
   ]
@@ -260,7 +260,7 @@ Retorne APENAS o JSON no formato especificado, sem explicações.`;
       id: block.id || crypto.randomUUID(),
       type: block.type || 'message',
       position: block.position || { x: 250, y: 50 },
-      fecha: block.fecha || {},
+      data: block.data || {},
       next_block_id: block.next_block_id || null,
     }));
 

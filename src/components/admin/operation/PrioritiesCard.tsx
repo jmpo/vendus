@@ -3,37 +3,37 @@ import { MessageCircle, Flame, Calendar, CheckSquare, ChevronRight } from 'lucid
 import type { OperationPriorities } from '@/hooks/useOperationCenter';
 
 interface Props {
-  fecha?: OperationPriorities;
+  data?: OperationPriorities;
   onNavigate: (section: string) => void;
 }
 
-export function PrioritiesCard({ fecha, onNavigate }: Props) {
+export function PrioritiesCard({ data, onNavigate }: Props) {
   const items = [
     {
       icon: MessageCircle,
       iconBg: 'bg-red-50 text-red-500',
-      count: fecha?.unansweredConversations ?? 0,
+      count: data?.unansweredConversations ?? 0,
       label: 'conversaciones sin respuesta',
       onClick: () => onNavigate('inbox'),
     },
     {
       icon: Flame,
       iconBg: 'bg-orange-50 text-orange-500',
-      count: fecha?.hotLeadsUnassigned ?? 0,
+      count: data?.hotLeadsUnassigned ?? 0,
       label: 'leads calientes sin responsable',
       onClick: () => onNavigate('leads'),
     },
     {
       icon: Calendar,
       iconBg: 'bg-blue-50 text-blue-500',
-      count: fecha?.pendingMeetings ?? 0,
+      count: data?.pendingMeetings ?? 0,
       label: 'reuniones pendientes de confirmación',
       onClick: () => onNavigate('calendar'),
     },
     {
       icon: CheckSquare,
       iconBg: 'bg-violet-50 text-violet-500',
-      count: fecha?.overdueTasks ?? 0,
+      count: data?.overdueTasks ?? 0,
       label: 'tareas atrasadas',
       onClick: () => onNavigate('leads'),
     },

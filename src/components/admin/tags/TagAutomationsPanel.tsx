@@ -15,9 +15,9 @@ import { Label } from '@/components/ui/label';
 import { TagPackageGeneratorDialog } from './TagPackageGeneratorDialog';
 
 export function TagAutomationsPanel() {
-  const { fecha: automations } = useTagAutomations();
-  const { fecha: tags } = useLeadTags();
-  const { fecha: products } = useProducts();
+  const { data: automations } = useTagAutomations();
+  const { data: tags } = useLeadTags();
+  const { data: products } = useProducts();
   const deleteMut = useDeleteTagAutomation();
   const [editing, setEditing] = useState<TagAutomation | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -136,8 +136,8 @@ export function TagAutomationsPanel() {
 }
 
 function AutomationDialog({ open, onOpenChange, automation }: { open: boolean; onOpenChange: (o: boolean) => void; automation: TagAutomation | null }) {
-  const { fecha: tags } = useLeadTags();
-  const { fecha: products } = useProducts();
+  const { data: tags } = useLeadTags();
+  const { data: products } = useProducts();
   const upsert = useUpsertTagAutomation();
 
   const [eventType, setEventType] = useState<TagAutomation['event_type']>(automation?.event_type ?? 'compra_aprovada');

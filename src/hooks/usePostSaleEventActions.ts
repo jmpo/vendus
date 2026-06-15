@@ -23,13 +23,13 @@ export function usePostSaleEventActions(productId: string) {
   return useQuery({
     queryKey: ['post-sale-event-actions', productId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('post_sale_event_actions')
         .select('*')
         .eq('product_id', productId)
         .order('event_type', { ascending: true });
       if (error) throw error;
-      return (fecha || []) as PostSaleEventAction[];
+      return (data || []) as PostSaleEventAction[];
     },
     enabled: !!productId && !!profile?.organization_id,
   });
@@ -50,7 +50,7 @@ export function useUpsertPostSaleEventAction() {
         if (error) throw error;
         return id;
       }
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('post_sale_event_actions')
         .insert({
           ...input,
@@ -60,7 +60,7 @@ export function useUpsertPostSaleEventAction() {
         .select('id')
         .single();
       if (error) throw error;
-      return fecha.id;
+      return data.id;
     },
     onSuccess: (_id, vars) => {
       qc.invalidateQueries({ queryKey: ['post-sale-event-actions', vars.product_id] });
@@ -89,14 +89,14 @@ export function usePostSaleEventLogs(productId: string, limit = 20) {
   return useQuery({
     queryKey: ['post-sale-event-logs', productId, limit],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('post_sale_event_logs')
         .select('*')
         .eq('product_id', productId)
         .order('created_at', { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return (fecha || []) as PostSaleEventLog[];
+      return (data || []) as PostSaleEventLog[];
     },
     enabled: !!productId,
   });

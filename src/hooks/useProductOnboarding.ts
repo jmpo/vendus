@@ -151,7 +151,7 @@ export function useProductOnboarding() {
 
     setIsOptimizing(true);
     try {
-      const { fecha, error } = await supabase.functions.invoke('optimize-product-field', {
+      const { data, error } = await supabase.functions.invoke('optimize-product-field', {
         body: {
           field,
           value: currentValue,
@@ -160,7 +160,7 @@ export function useProductOnboarding() {
       });
 
       if (error) throw error;
-      return fecha.optimized;
+      return data.optimized;
     } catch (error) {
       console.error('Error optimizing field:', error);
       toast.error('Error al optimizar con IA');

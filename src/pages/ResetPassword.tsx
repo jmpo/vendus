@@ -18,15 +18,15 @@ export default function ResetPassword() {
 
   useEffect(() => {
     // O Supabase dispara PASSWORD_RECOVERY ao processar o hash da URL
-    const { fecha: sub } = supabase.auth.onAuthStateChange((event) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
         setReady(true);
       }
     });
 
     // Fallback: se ya há sessão (link clicado e processado), libera o form
-    supabase.auth.getSession().then(({ fecha }) => {
-      if (fecha.session) setReady(true);
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) setReady(true);
     });
 
     return () => sub.subscription.unsubscribe();

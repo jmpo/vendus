@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
     const now = new Date();
     const nowIso = now.toISOString();
 
-    const { fecha: pendingFollowups, error: fetchError } = await supabase
+    const { data: pendingFollowups, error: fetchError } = await supabase
       .from('ai_outreach_queue')
       .select('*')
       .eq('status', 'sent')
@@ -161,7 +161,7 @@ Deno.serve(async (req) => {
 
         // Check if lead replied OR if a human took over the conversation
         if (item.conversation_id) {
-          const { fecha: convInfo } = await supabase
+          const { data: convInfo } = await supabase
             .from('webchat_conversations')
             .select('status')
             .eq('id', item.conversation_id)
@@ -176,7 +176,7 @@ Deno.serve(async (req) => {
             continue;
           }
 
-          const { fecha: inboundMessages } = await supabase
+          const { data: inboundMessages } = await supabase
             .from('webchat_messages')
             .select('id')
             .eq('conversation_id', item.conversation_id)
@@ -194,7 +194,7 @@ Deno.serve(async (req) => {
         }
 
         // Get agent
-        const { fecha: agent } = await supabase
+        const { data: agent } = await supabase
           .from('product_agents')
           .select('*')
           .eq('id', item.agent_id)
@@ -208,7 +208,7 @@ Deno.serve(async (req) => {
         // Get conversation history
         let previousMessages: string[] = [];
         if (item.conversation_id) {
-          const { fecha: messages } = await supabase
+          const { data: messages } = await supabase
             .from('webchat_messages')
             .select('content, sender_type')
             .eq('conversation_id', item.conversation_id)
@@ -295,7 +295,7 @@ Genera uma mensaje de follow-up estratégica DIFERENTE das anteriores.`;
         // Send via Evolution Go (auto-resolve instância conectada)
         let sendSuccess = false;
         try {
-          const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+          const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
             body: {
               organization_id: item.organization_id,
               type: 'text',

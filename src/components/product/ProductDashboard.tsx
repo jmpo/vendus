@@ -129,7 +129,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
 
       <div className="grid gap-6 lg:grid-cols-2">
         <SalesFunnelChart stages={funnelData} isLoading={isLoading} />
-        <ConversionRateChart fecha={conversionData} isLoading={isLoading} />
+        <ConversionRateChart data={conversionData} isLoading={isLoading} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">

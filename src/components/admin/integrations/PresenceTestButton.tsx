@@ -29,7 +29,7 @@ export function PresenceTestButton({ instanceId, instanceName }: Props) {
     }
     setLoading(true);
     try {
-      const { fecha, error } = await supabase.functions.invoke('presence-test', {
+      const { data, error } = await supabase.functions.invoke('presence-test', {
         body: {
           instance_id: instanceId,
           phone: digits,
@@ -38,7 +38,7 @@ export function PresenceTestButton({ instanceId, instanceName }: Props) {
         },
       });
       if (error) throw error;
-      if ((fecha as any)?.error) throw new Error((fecha as any).error);
+      if ((data as any)?.error) throw new Error((data as any).error);
       toast.success(
         isAudio
           ? `Disparado "gravando áudio..." por ${duration}s. Confira o celular.`

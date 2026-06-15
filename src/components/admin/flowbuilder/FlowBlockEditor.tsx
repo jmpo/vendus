@@ -44,10 +44,10 @@ export function FlowBlockEditor({
 
   const blockMeta = BLOCK_TYPES.find(b => b.type === localBlock.type);
   
-  const handleChange = (updates: Partial<FlowBlock['fecha']>) => {
+  const handleChange = (updates: Partial<FlowBlock['data']>) => {
     const updated = {
       ...localBlock,
-      fecha: { ...localBlock.fecha, ...updates },
+      data: { ...localBlock.data, ...updates },
     };
     setLocalBlock(updated);
     onUpdate(updated);
@@ -68,19 +68,19 @@ export function FlowBlockEditor({
       next_block_id: null,
     };
     handleChange({
-      buttons: [...(localBlock.fecha.buttons || []), newButton],
+      buttons: [...(localBlock.data.buttons || []), newButton],
     });
     setExpandedButton(newButton.id);
   };
 
   const updateButton = (index: number, updates: Partial<FlowButton>) => {
-    const buttons = [...(localBlock.fecha.buttons || [])];
+    const buttons = [...(localBlock.data.buttons || [])];
     buttons[index] = { ...buttons[index], ...updates };
     handleChange({ buttons });
   };
 
   const removeButton = (index: number) => {
-    const buttons = [...(localBlock.fecha.buttons || [])];
+    const buttons = [...(localBlock.data.buttons || [])];
     buttons.splice(index, 1);
     handleChange({ buttons });
   };
@@ -117,7 +117,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>Mensaje</Label>
               <Textarea
-                value={localBlock.fecha.content || ''}
+                value={localBlock.data.content || ''}
                 onChange={(e) => handleChange({ content: e.target.value })}
                 placeholder="Escribí a mensaje..."
                 rows={4}
@@ -130,7 +130,7 @@ export function FlowBlockEditor({
               <Label>Delay (ms)</Label>
               <Input
                 type="number"
-                value={localBlock.fecha.delay_ms || 500}
+                value={localBlock.data.delay_ms || 500}
                 onChange={(e) => handleChange({ delay_ms: parseInt(e.target.value) })}
                 min={0}
                 step={100}
@@ -145,7 +145,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>Tipo de Captura</Label>
               <Select
-                value={localBlock.fecha.input_type || 'text'}
+                value={localBlock.data.input_type || 'text'}
                 onValueChange={(value) => handleChange({ input_type: value as any })}
               >
                 <SelectTrigger>
@@ -163,7 +163,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>Nombre da Variável</Label>
               <Input
-                value={localBlock.fecha.variable_name || ''}
+                value={localBlock.data.variable_name || ''}
                 onChange={(e) => handleChange({ variable_name: e.target.value.toLowerCase().replace(/\s/g, '_') })}
                 placeholder="nome_do_campo"
               />
@@ -174,7 +174,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>Placeholder</Label>
               <Input
-                value={localBlock.fecha.placeholder || ''}
+                value={localBlock.data.placeholder || ''}
                 onChange={(e) => handleChange({ placeholder: e.target.value })}
                 placeholder="Escribí aqui..."
               />
@@ -182,7 +182,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>Validação</Label>
               <Select
-                value={localBlock.fecha.validation || 'none'}
+                value={localBlock.data.validation || 'none'}
                 onValueChange={(value) => handleChange({ validation: value as any })}
               >
                 <SelectTrigger>
@@ -206,7 +206,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>Mensaje (opcional)</Label>
               <Textarea
-                value={localBlock.fecha.content || ''}
+                value={localBlock.data.content || ''}
                 onChange={(e) => handleChange({ content: e.target.value })}
                 placeholder="Elegí uma opción:"
                 rows={2}
@@ -223,7 +223,7 @@ export function FlowBlockEditor({
               </div>
               
               <div className="space-y-3">
-                {(localBlock.fecha.buttons || []).map((btn, idx) => (
+                {(localBlock.data.buttons || []).map((btn, idx) => (
                   <Collapsible 
                     key={btn.id}
                     open={expandedButton === btn.id}
@@ -410,7 +410,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>Instruções Extras (opcional)</Label>
               <Textarea
-                value={localBlock.fecha.ai_context_prompt || ''}
+                value={localBlock.data.ai_context_prompt || ''}
                 onChange={(e) => handleChange({ ai_context_prompt: e.target.value })}
                 placeholder="Ex: Foque em apresentar o plan Premium..."
                 rows={3}
@@ -422,7 +422,7 @@ export function FlowBlockEditor({
                 <p className="text-xs text-muted-foreground">Enviar dados coletados para a IA</p>
               </div>
               <Switch
-                checked={localBlock.fecha.transfer_variables !== false}
+                checked={localBlock.data.transfer_variables !== false}
                 onCheckedChange={(checked) => handleChange({ transfer_variables: checked })}
               />
             </div>
@@ -435,7 +435,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>Mensaje de Transferência</Label>
               <Textarea
-                value={localBlock.fecha.handoff_message || ''}
+                value={localBlock.data.handoff_message || ''}
                 onChange={(e) => handleChange({ handoff_message: e.target.value })}
                 placeholder="Vou te transferir para um especialista..."
                 rows={2}
@@ -444,7 +444,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>Destino</Label>
               <Select
-                value={localBlock.fecha.handoff_target || 'queue'}
+                value={localBlock.data.handoff_target || 'queue'}
                 onValueChange={(value) => handleChange({ handoff_target: value as any })}
               >
                 <SelectTrigger>
@@ -466,7 +466,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>Nombre da Tag</Label>
               <Input
-                value={localBlock.fecha.tag_name || ''}
+                value={localBlock.data.tag_name || ''}
                 onChange={(e) => handleChange({ tag_name: e.target.value })}
                 placeholder="interesse_curso"
               />
@@ -474,7 +474,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>Valor (opcional)</Label>
               <Input
-                value={localBlock.fecha.tag_value || ''}
+                value={localBlock.data.tag_value || ''}
                 onChange={(e) => handleChange({ tag_value: e.target.value })}
                 placeholder="plano_premium"
               />
@@ -488,7 +488,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>URL do Vídeo</Label>
               <Input
-                value={localBlock.fecha.video_url || ''}
+                value={localBlock.data.video_url || ''}
                 onChange={(e) => handleChange({ video_url: e.target.value })}
                 placeholder="https://youtube.com/..."
               />
@@ -496,7 +496,7 @@ export function FlowBlockEditor({
             <div className="space-y-2">
               <Label>Título</Label>
               <Input
-                value={localBlock.fecha.video_title || ''}
+                value={localBlock.data.video_title || ''}
                 onChange={(e) => handleChange({ video_title: e.target.value })}
                 placeholder="Conocé nosso producto"
               />
@@ -510,7 +510,7 @@ export function FlowBlockEditor({
             <Label>Tempo de Espera (segundos)</Label>
             <Input
               type="number"
-              value={localBlock.fecha.delay_seconds || 2}
+              value={localBlock.data.delay_seconds || 2}
               onChange={(e) => handleChange({ delay_seconds: parseInt(e.target.value) })}
               min={1}
               max={30}

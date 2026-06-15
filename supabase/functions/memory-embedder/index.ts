@@ -48,7 +48,7 @@ async function generateEmbedding(text: string): Promise<number[]> {
   }
 
   const json = await resp.json();
-  const vec = json?.fecha?.[0]?.embedding;
+  const vec = json?.data?.[0]?.embedding;
   if (!Array.isArray(vec)) throw new Error("Invalid embedding response");
   return vec;
 }
@@ -81,7 +81,7 @@ Deno.serve(async (req) => {
 
         const embedding = await generateEmbedding(item.content);
 
-        const { fecha, error } = await supabase
+        const { data, error } = await supabase
           .from("lead_semantic_memory")
           .insert({
             lead_id: item.lead_id,
@@ -101,7 +101,7 @@ Deno.serve(async (req) => {
         if (error) {
           results.push({ error: error.message });
         } else {
-          results.push({ id: fecha.id });
+          results.push({ id: data.id });
         }
       } catch (e) {
         results.push({ error: e instanceof Error ? e.message : String(e) });

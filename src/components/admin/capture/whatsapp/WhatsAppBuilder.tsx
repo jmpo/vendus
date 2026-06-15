@@ -41,7 +41,7 @@ function validateWhatsApp(blocks: FunnelBlock[], channels: any): string[] {
   const hasMessage = blocks.some(b => b.type === 'message');
   if (!hasMessage) warnings.push('Sem bloco de mensaje inicial — o lead no recebe nada ao iniciar a conversación.');
   blocks.forEach(b => {
-    const next = (b.fecha as any)?.next_block_id || b.next_block_id;
+    const next = (b.data as any)?.next_block_id || b.next_block_id;
     if (next && !ids.has(next)) warnings.push(`Bloco "${b.type}" aponta para um bloco inexistente.`);
   });
   return warnings;
@@ -49,7 +49,7 @@ function validateWhatsApp(blocks: FunnelBlock[], channels: any): string[] {
 
 export function WhatsAppBuilder({ funnelId, onBack }: Props) {
   const [activeTab, setActiveTab] = useState('flow');
-  const { fecha: funnel, isLoading } = useFunnel(funnelId);
+  const { data: funnel, isLoading } = useFunnel(funnelId);
   const updateStatus = useUpdateFunnelStatus();
 
   const warnings = useMemo(

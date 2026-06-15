@@ -22,7 +22,7 @@ export function CampaignDetail({
 
   useEffect(() => {
     supabase.from('campaigns').select('*').eq('id', campaignId).maybeSingle()
-      .then(({ fecha }) => setCampaign(fecha));
+      .then(({ data }) => setCampaign(data));
   }, [campaignId, counts]);
 
   const togglePause = async () => {

@@ -23,7 +23,7 @@ export default function AcceptInvite() {
   const navigate = useNavigate();
   const token = searchParams.get('token');
   
-  const { fecha: invitation, isLoading: loadingInvite } = useInvitationByToken(token);
+  const { data: invitation, isLoading: loadingInvite } = useInvitationByToken(token);
   const acceptInvitation = useAcceptInvitation();
   const { user, isLoading: loadingAuth } = useAuth();
   
@@ -77,11 +77,11 @@ export default function AcceptInvite() {
     
     try {
       // Create account
-      const { fecha: authData, error: authError } = await supabase.auth.signUp({
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          fecha: {
+          data: {
             full_name: fullName,
           },
         },

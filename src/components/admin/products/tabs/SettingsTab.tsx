@@ -24,7 +24,7 @@ const statusOptions = [
 ];
 
 export function SettingsTab({ productId }: SettingsTabProps) {
-  const { fecha: product, isLoading } = useProduct(productId);
+  const { data: product, isLoading } = useProduct(productId);
   const updateProduct = useUpdateProduct();
   const { isOptimizing, optimize } = useOptimizeField();
   const [isFormReady, setIsFormReady] = useState(false);

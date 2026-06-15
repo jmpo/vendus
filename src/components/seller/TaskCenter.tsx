@@ -62,10 +62,10 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
   });
   
   const { profile } = useAuth();
-  const { fecha: todaysTasks, isLoading: loadingToday } = useTodaysTasks(userId);
-  const { fecha: allTasks, isLoading: loadingAll } = useTasks(userId, productId);
-  const { fecha: stats } = useTaskStats(userId);
-  const { fecha: leads } = useLeads(productId);
+  const { data: todaysTasks, isLoading: loadingToday } = useTodaysTasks(userId);
+  const { data: allTasks, isLoading: loadingAll } = useTasks(userId, productId);
+  const { data: stats } = useTaskStats(userId);
+  const { data: leads } = useLeads(productId);
   const completeTask = useCompleteTask();
   const uncompleteTask = useUncompleteTask();
   const createTask = useCreateTask();

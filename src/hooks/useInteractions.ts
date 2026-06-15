@@ -9,14 +9,14 @@ export function useInteractions(leadId: string) {
   return useQuery({
     queryKey: ['interactions', leadId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('interactions')
         .select('*')
         .eq('lead_id', leadId)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return fecha as Interaction[];
+      return data as Interaction[];
     },
     enabled: !!leadId
   });
@@ -26,7 +26,7 @@ export function useLeadStageHistory(leadId: string) {
   return useQuery({
     queryKey: ['lead-stage-history', leadId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('lead_stage_history')
         .select(`
           *,
@@ -36,7 +36,7 @@ export function useLeadStageHistory(leadId: string) {
         .order('entered_at', { ascending: false });
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     enabled: !!leadId
   });
@@ -47,7 +47,7 @@ export function useCreateInteraction() {
   
   return useMutation({
     mutationFn: async (interaction: TablesInsert<'interactions'>) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('interactions')
         .insert(interaction)
         .select()
@@ -61,19 +61,19 @@ export function useCreateInteraction() {
         .update({ last_contact_at: new Date().toISOString() })
         .eq('id', interaction.lead_id);
       
-      return fecha;
+      return data;
     },
-    onSuccess: (fecha) => {
-      queryClient.invalidateQueries({ queryKey: ['interactions', fecha.lead_id] });
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['interactions', data.lead_id] });
       queryClient.invalidateQueries({ queryKey: ['leads'] });
     }
   });
 }
 
-// Combined timeline fecha (interactions + stage changes)
+// Combined timeline data (interactions + stage changes)
 export function useLeadTimeline(leadId: string) {
-  const { fecha: interactions, isLoading: interactionsLoading } = useInteractions(leadId);
-  const { fecha: stageHistory, isLoading: historyLoading } = useLeadStageHistory(leadId);
+  const { data: interactions, isLoading: interactionsLoading } = useInteractions(leadId);
+  const { data: stageHistory, isLoading: historyLoading } = useLeadStageHistory(leadId);
 
   const timelineItems = [
     ...(interactions?.map(i => ({
@@ -96,7 +96,7 @@ export function useLeadTimeline(leadId: string) {
   ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
   return {
-    fecha: timelineItems,
+    data: timelineItems,
     isLoading: interactionsLoading || historyLoading
   };
 }

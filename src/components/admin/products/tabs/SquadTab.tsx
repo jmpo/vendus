@@ -20,10 +20,10 @@ interface SquadTabProps {
 
 export function SquadTab({ productId }: SquadTabProps) {
   const { profile } = useAuth();
-  const { fecha: product } = useProduct(productId);
-  const { fecha: teamMembers, isLoading: loadingMembers } = useTeamMembers();
-  const { fecha: squads } = useSquads();
-  const { fecha: goals } = useSalesGoals(undefined, productId);
+  const { data: product } = useProduct(productId);
+  const { data: teamMembers, isLoading: loadingMembers } = useTeamMembers();
+  const { data: squads } = useSquads();
+  const { data: goals } = useSalesGoals(undefined, productId);
   const createGoal = useCreateSalesGoal();
   const updateGoal = useUpdateSalesGoal();
 

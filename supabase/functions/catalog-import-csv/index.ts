@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
       source_type: "csv",
     }));
 
-    const { fecha, error } = await supabase
+    const { data, error } = await supabase
       .from("product_catalog_items")
       .insert(rows)
       .select("id");
@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    return new Response(JSON.stringify({ success: true, inserted: fecha?.length ?? 0 }), {
+    return new Response(JSON.stringify({ success: true, inserted: data?.length ?? 0 }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err: any) {

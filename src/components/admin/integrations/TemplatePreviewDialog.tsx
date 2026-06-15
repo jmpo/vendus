@@ -13,7 +13,7 @@ export function TemplatePreviewDialog({ template, open, onClose }: TemplatePrevi
   const renderPreview = () => {
     let html = template.html_content;
     
-    // Replace variables with sample fecha
+    // Replace variables with sample data
     const sampleData: Record<string, string> = {
       userName: 'João Silva',
       role: 'Vendedor',

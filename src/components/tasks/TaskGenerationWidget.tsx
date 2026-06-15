@@ -28,8 +28,8 @@ export function TaskGenerationWidget({ productId, productName }: TaskGenerationW
   const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set());
   const [isGenerating, setIsGenerating] = useState(false);
   
-  const { fecha: leadsNeedingTasks, isLoading } = useLeadsNeedingTasks(user?.id, productId);
-  const { fecha: cadence } = useCadence(productId);
+  const { data: leadsNeedingTasks, isLoading } = useLeadsNeedingTasks(user?.id, productId);
+  const { data: cadence } = useCadence(productId);
   const generateTasks = useGenerateCadenceTasks();
 
   const toggleLead = (leadId: string) => {

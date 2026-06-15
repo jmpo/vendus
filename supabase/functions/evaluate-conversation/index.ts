@@ -122,7 +122,7 @@ async function evaluateOne(
   apiKey: string,
   conversationId: string,
 ): Promise<{ ok: boolean; reason?: string; eval_id?: string }> {
-  const { fecha: conv, error: cErr } = await supabase
+  const { data: conv, error: cErr } = await supabase
     .from("webchat_conversations")
     .select("id, organization_id, lead_id, current_agent_id")
     .eq("id", conversationId)
@@ -130,7 +130,7 @@ async function evaluateOne(
 
   if (cErr || !conv) return { ok: false, reason: "conv not found" };
 
-  const { fecha: messages, error: mErr } = await supabase
+  const { data: messages, error: mErr } = await supabase
     .from("webchat_messages")
     .select("direction, content, created_at, metadata")
     .eq("conversation_id", conversationId)
@@ -153,7 +153,7 @@ async function evaluateOne(
   // Buscar nombre del agente (opcional)
   let agentName: string | null = null;
   if (conv.current_agent_id) {
-    const { fecha: agent } = await supabase
+    const { data: agent } = await supabase
       .from("product_agents")
       .select("name")
       .eq("id", conv.current_agent_id)
@@ -164,7 +164,7 @@ async function evaluateOne(
   const evaluation = await judgeConversation(supabase, apiKey, agentName, transcript, conv.organization_id);
   if (!evaluation) return { ok: false, reason: "judge failed" };
 
-  const { fecha: inserted, error: iErr } = await supabase
+  const { data: inserted, error: iErr } = await supabase
     .from("ai_quality_evaluations")
     .insert({
       organization_id: conv.organization_id,
@@ -249,13 +249,13 @@ Deno.serve(async (req) => {
 
     if (body.organization_id) q = q.eq("organization_id", body.organization_id);
 
-    const { fecha: convs, error: qErr } = await q;
+    const { data: convs, error: qErr } = await q;
     if (qErr) throw qErr;
 
     const results: any[] = [];
     for (const c of convs ?? []) {
       // pula se já fue avaliada nas últimas N horas
-      const { fecha: existing } = await supabase
+      const { data: existing } = await supabase
         .from("ai_quality_evaluations")
         .select("id")
         .eq("conversation_id", c.id)

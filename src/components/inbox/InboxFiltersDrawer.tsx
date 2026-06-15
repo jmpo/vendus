@@ -64,10 +64,10 @@ export function InboxFiltersDrawer({
   trigger,
 }: InboxFiltersDrawerProps) {
   const { profile } = useAuth();
-  const { fecha: sectors = [] } = useSectors();
-  const { fecha: tags = [] } = useLeadTags();
-  const { fecha: members = [] } = useTeamMembers(profile?.organization_id);
-  const { fecha: products = [] } = useProducts();
+  const { data: sectors = [] } = useSectors();
+  const { data: tags = [] } = useLeadTags();
+  const { data: members = [] } = useTeamMembers(profile?.organization_id);
+  const { data: products = [] } = useProducts();
 
   const [section, setSection] = useState<Section>('root');
   const [subSearch, setSubSearch] = useState('');

@@ -34,7 +34,7 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ activeSection, onSectionChange }: AdminSidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const { fecha: isSuperAdmin } = useIsSuperAdmin();
+  const { data: isSuperAdmin } = useIsSuperAdmin();
 
   const activeGroupId = findGroupIdForSection(activeSection);
 
@@ -153,7 +153,7 @@ export function AdminSidebar({ activeSection, onSectionChange }: AdminSidebarPro
                     value={group.id}
                     className="border-none"
                   >
-                    <AccordionTrigger className="px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:no-underline [&[fecha-state=open]]:bg-sidebar-accent/50">
+                    <AccordionTrigger className="px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:no-underline [&[data-state=open]]:bg-sidebar-accent/50">
                       <span className="flex items-center gap-3">
                         <GroupIcon className="h-4 w-4 flex-shrink-0" />
                         <span>{group.label}</span>

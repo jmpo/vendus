@@ -13,10 +13,10 @@ import { AiInsightsCard } from './AiInsightsCard';
 
 export function OperationCenter() {
   const [, setSearchParams] = useSearchParams();
-  const { fecha: kpis } = useOperationKpis();
-  const { fecha: priorities } = useOperationPriorities();
-  const { fecha: agenda } = useTodayAgenda();
-  const { fecha: recentLeads } = useRecentLeads();
+  const { data: kpis } = useOperationKpis();
+  const { data: priorities } = useOperationPriorities();
+  const { data: agenda } = useTodayAgenda();
+  const { data: recentLeads } = useRecentLeads();
 
   const handleNavigate = (section: string) => {
     setSearchParams({ tab: section }, { replace: true });
@@ -34,7 +34,7 @@ export function OperationCenter() {
       <OperationKpiCards kpis={kpis} onNavigate={handleNavigate} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <PrioritiesCard fecha={priorities} onNavigate={handleNavigate} />
+        <PrioritiesCard data={priorities} onNavigate={handleNavigate} />
         <TodayAgendaCard items={agenda} onNavigate={handleNavigate} />
       </div>
 

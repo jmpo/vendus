@@ -28,7 +28,7 @@ export function ForwardMessageDialog({
   conversationId,
 }: ForwardMessageDialogProps) {
   const [search, setSearch] = useState('');
-  const { fecha: conversations } = useWebChatConversations({ tab: 'attending', limit: 100 });
+  const { data: conversations } = useWebChatConversations({ tab: 'attending', limit: 100 });
 
   const filteredConversations = (conversations || [])
     .filter(c => c.id !== conversationId)

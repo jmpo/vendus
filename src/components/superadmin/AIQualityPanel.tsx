@@ -78,9 +78,9 @@ function MetricCard({
 }
 
 export function AIQualityPanel() {
-  const { fecha: evals = [], isLoading } = useQualityEvaluations(200);
-  const { fecha: experiments = [] } = usePromptExperiments();
-  const { fecha: agents = [] } = useAllAgents();
+  const { data: evals = [], isLoading } = useQualityEvaluations(200);
+  const { data: experiments = [] } = usePromptExperiments();
+  const { data: agents = [] } = useAllAgents();
   const trigger = useTriggerEvaluation();
   const upsertExp = useUpsertExperiment();
   const deleteExp = useDeleteExperiment();
@@ -450,7 +450,7 @@ function VariantsDialog({
   experiment: PromptExperiment | null;
   onClose: () => void;
 }) {
-  const { fecha: variants = [] } = usePromptVariants(experiment?.id ?? null);
+  const { data: variants = [] } = usePromptVariants(experiment?.id ?? null);
   const upsert = useUpsertVariant();
   const remove = useDeleteVariant();
   const [editing, setEditing] = useState<Partial<PromptVariant> | null>(null);

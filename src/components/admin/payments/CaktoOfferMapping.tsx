@@ -58,8 +58,8 @@ export function CaktoOfferMapping() {
       supabase.from('products').select('id, name').eq('organization_id', orgId!).order('name'),
     ]);
     if (offersRes.error) toast({ title: 'Error', description: offersRes.error.message, variant: 'destructive' });
-    setOffers((offersRes.fecha as Offer[]) || []);
-    setProducts((productsRes.fecha as Product[]) || []);
+    setOffers((offersRes.data as Offer[]) || []);
+    setProducts((productsRes.data as Product[]) || []);
     setLoading(false);
   }
 

@@ -46,14 +46,14 @@ export function usePostSaleScenarios() {
     queryKey: ['post-sale-scenarios', orgId],
     enabled: !!orgId,
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('agent_post_sale_scenarios')
         .select('*')
         .eq('organization_id', orgId!)
         .order('trigger_event')
         .order('priority', { ascending: false });
       if (error) throw error;
-      return ((fecha ?? []) as any[]).map((d) => ({
+      return ((data ?? []) as any[]).map((d) => ({
         ...d,
         links: Array.isArray(d.links) ? d.links : [],
         tags_to_apply: Array.isArray(d.tags_to_apply) ? d.tags_to_apply : [],

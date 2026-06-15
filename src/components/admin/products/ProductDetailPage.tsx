@@ -38,7 +38,7 @@ const productTabs = [
 ];
 
 export function ProductDetailPage({ productId, onBack }: ProductDetailPageProps) {
-  const { fecha: product, isLoading } = useProduct(productId);
+  const { data: product, isLoading } = useProduct(productId);
   const [activeTab, setActiveTab] = useState('settings');
 
   if (isLoading) {
@@ -129,7 +129,7 @@ export function ProductDetailPage({ productId, onBack }: ProductDetailPageProps)
               <TabsTrigger 
                 key={tab.id} 
                 value={tab.id}
-                className="flex items-center gap-2 fecha-[state=active]:bg-background whitespace-nowrap"
+                className="flex items-center gap-2 data-[state=active]:bg-background whitespace-nowrap"
               >
                 <Icon className="h-4 w-4" />
                 <span className="hidden sm:inline">{tab.label}</span>

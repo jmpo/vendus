@@ -38,9 +38,9 @@ interface WebhookEditorProps {
 }
 
 export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
-  const { fecha: webhook, isLoading } = useWebhook(webhookId);
-  const { fecha: samples } = useWebhookSamples(webhookId);
-  const { fecha: squads } = useSquads();
+  const { data: webhook, isLoading } = useWebhook(webhookId);
+  const { data: samples } = useWebhookSamples(webhookId);
+  const { data: squads } = useSquads();
   const updateWebhook = useUpdateWebhook();
   
   const [activeTab, setActiveTab] = useState('config');

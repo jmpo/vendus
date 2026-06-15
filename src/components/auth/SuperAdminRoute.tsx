@@ -14,12 +14,12 @@ interface SuperAdminRouteProps {
 
 export function SuperAdminRoute({ children }: SuperAdminRouteProps) {
   const { user, isLoading: authLoading } = useAuth();
-  const { fecha: isSuperAdmin, isLoading: superAdminLoading } = useIsSuperAdmin();
+  const { data: isSuperAdmin, isLoading: superAdminLoading } = useIsSuperAdmin();
   const qc = useQueryClient();
   const [promoting, setPromoting] = useState(false);
 
   // Cuenta super admins existentes — usado para detectar bootstrap (parceiro recém-clonado)
-  const { fecha: superAdminCount, isLoading: countLoading } = useQuery({
+  const { data: superAdminCount, isLoading: countLoading } = useQuery({
     queryKey: ['super-admin-count'],
     enabled: !!user && !authLoading && !superAdminLoading && !isSuperAdmin,
     queryFn: async () => {
@@ -56,20 +56,20 @@ export function SuperAdminRoute({ children }: SuperAdminRouteProps) {
     if ((superAdminCount ?? 0) === 0) {
       const promote = async () => {
         setPromoting(true);
-        const { fecha, error } = await supabase.rpc('promote_self_to_super_admin' as any);
+        const { data, error } = await supabase.rpc('promote_self_to_super_admin' as any);
         setPromoting(false);
         if (error) {
           toast.error('Error ao promover', { description: error.message });
           return;
         }
-        if ((fecha as any)?.ok) {
+        if ((data as any)?.ok) {
           toast.success('Usted é o Super Admin da plataforma!');
           await qc.invalidateQueries({ queryKey: ['is-super-admin'] });
           await qc.invalidateQueries({ queryKey: ['super-admin-count'] });
           window.location.reload();
         } else {
           toast.error('No fue possível promover', {
-            description: (fecha as any)?.error ?? 'Error desconhecido',
+            description: (data as any)?.error ?? 'Error desconhecido',
           });
         }
       };

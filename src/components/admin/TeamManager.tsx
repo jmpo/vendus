@@ -21,9 +21,9 @@ import { UserFormDialog } from './team/UserFormDialog';
 import { SectorsManager } from './sectors/SectorsManager';
 
 export function TeamManager() {
-  const { fecha: members, isLoading } = useTeamMembers();
-  const { fecha: squads } = useSquads();
-  const { fecha: products } = useProducts();
+  const { data: members, isLoading } = useTeamMembers();
+  const { data: squads } = useSquads();
+  const { data: products } = useProducts();
   const updateRole = useUpdateUserRole();
   const removeMember = useRemoveTeamMember();
   

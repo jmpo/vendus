@@ -31,8 +31,8 @@ export function MobileProductDashboard({ product, onNavigate }: MobileProductDas
   const { user, isAdmin, isManager } = useAuth();
   const userId = (isAdmin() || isManager()) ? undefined : user?.id;
   const { stats, trends, funnelData, weeklyData, sparklineData, isLoading } = useDashboardData(product.id, userId);
-  const { fecha: todaysTasks } = useTodaysTasks(user?.id || '');
-  const { fecha: currentGoal } = useCurrentGoal(user?.id || '', product.id);
+  const { data: todaysTasks } = useTodaysTasks(user?.id || '');
+  const { data: currentGoal } = useCurrentGoal(user?.id || '', product.id);
   const completeTask = useCompleteTask();
   const haptics = useHaptics();
   

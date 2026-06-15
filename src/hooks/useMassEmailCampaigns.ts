@@ -44,14 +44,14 @@ export function useMassEmailCampaigns() {
   return useQuery({
     queryKey: ['mass-email-campaigns', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('mass_email_campaigns')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return fecha as MassEmailCampaign[];
+      return data as MassEmailCampaign[];
     },
     enabled: !!profile?.organization_id
   });
@@ -61,14 +61,14 @@ export function useCampaignRecipients(campaignId: string | null) {
   return useQuery({
     queryKey: ['campaign-recipients', campaignId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('mass_email_recipients')
         .select('*')
         .eq('campaign_id', campaignId!)
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      return fecha as MassEmailRecipient[];
+      return data as MassEmailRecipient[];
     },
     enabled: !!campaignId
   });
@@ -80,7 +80,7 @@ export function useCreateCampaign() {
 
   return useMutation({
     mutationFn: async (campaign: Omit<MassEmailCampaign, 'id' | 'organization_id' | 'created_at' | 'sent_at' | 'stats' | 'created_by'>) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('mass_email_campaigns')
         .insert({
           organization_id: profile!.organization_id!,
@@ -92,7 +92,7 @@ export function useCreateCampaign() {
         .single();
 
       if (error) throw error;
-      return fecha as MassEmailCampaign;
+      return data as MassEmailCampaign;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mass-email-campaigns'] });

@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
   );
 
   try {
-    const { fecha: schedules } = await supabase
+    const { data: schedules } = await supabase
       .from('opportunity_scan_schedules')
       .select('*')
       .eq('is_active', true);

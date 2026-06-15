@@ -35,8 +35,8 @@ const formatCurrency = (value: number) =>
   new Intl.NumberFormat( 'es' , { style: 'currency', currency: 'PYG' }).format(value || 0);
 
 export function PlansManager() {
-  const { fecha: plans, isLoading } = useAllPlans();
-  const { fecha: usage } = usePlanUsageCounts();
+  const { data: plans, isLoading } = useAllPlans();
+  const { data: usage } = usePlanUsageCounts();
   const deletePlan = useDeletePlan();
 
   const [editing, setEditing] = useState<PlatformPlan | null>(null);

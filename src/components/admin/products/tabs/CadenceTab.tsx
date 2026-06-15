@@ -8,8 +8,8 @@ interface CadenceTabProps {
 }
 
 export function CadenceTab({ productId }: CadenceTabProps) {
-  const { fecha: cadence, isLoading: cadenceLoading } = useCadence(productId);
-  const { fecha: products } = useProducts();
+  const { data: cadence, isLoading: cadenceLoading } = useCadence(productId);
+  const { data: products } = useProducts();
   
   const product = products?.find(p => p.id === productId);
   

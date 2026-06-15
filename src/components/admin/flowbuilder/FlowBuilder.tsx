@@ -32,11 +32,11 @@ export function FlowBuilder({ flow, onBack }: FlowBuilderProps) {
   // Extract collected variables from input blocks
   const getCollectedVariables = useCallback((): CollectedVariable[] => {
     return blocks
-      .filter(b => b.type === 'input' && b.fecha.variable_name)
+      .filter(b => b.type === 'input' && b.data.variable_name)
       .map(b => ({
-        name: b.fecha.variable_name!,
-        type: b.fecha.input_type || 'text',
-        label: b.fecha.placeholder || b.fecha.variable_name!,
+        name: b.data.variable_name!,
+        type: b.data.input_type || 'text',
+        label: b.data.placeholder || b.data.variable_name!,
       }));
   }, [blocks]);
 
@@ -45,7 +45,7 @@ export function FlowBuilder({ flow, onBack }: FlowBuilderProps) {
       id: `block_${Date.now()}`,
       type,
       position,
-      fecha: { ...DEFAULT_BLOCK_DATA[type] },
+      data: { ...DEFAULT_BLOCK_DATA[type] },
       next_block_id: null,
     };
     

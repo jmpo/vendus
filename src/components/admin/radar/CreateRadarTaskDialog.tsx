@@ -41,7 +41,7 @@ export function CreateRadarTaskDialog({
 }: Props) {
   const { profile, user } = useAuth();
   const orgId = profile?.organization_id;
-  const { fecha: members } = useTeamMembers(orgId);
+  const { data: members } = useTeamMembers(orgId);
   const createTask = useCreateTask();
 
   const [title, setTitle] = useState(defaultTitle || '');

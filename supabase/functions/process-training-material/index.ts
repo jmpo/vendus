@@ -44,7 +44,7 @@ serve(async (req) => {
     // Resolve org for billing (via product)
     let billingOrgId: string | null = null;
     if (body.product_id) {
-      const { fecha: prod } = await supabase.from('products').select('organization_id').eq('id', body.product_id).maybeSingle();
+      const { data: prod } = await supabase.from('products').select('organization_id').eq('id', body.product_id).maybeSingle();
       billingOrgId = (prod as any)?.organization_id ?? null;
     }
 
@@ -54,12 +54,12 @@ serve(async (req) => {
     
     try {
       if (body.file_path) {
-        const { fecha, error: downloadError } = await supabase.storage
+        const { data, error: downloadError } = await supabase.storage
           .from('product-documents')
           .download(body.file_path);
         
         if (downloadError) throw new Error(`Storage download failed: ${downloadError.message}`);
-        fileData = fecha;
+        fileData = data;
       } else if (body.file_url) {
         const response = await fetch(body.file_url);
         if (!response.ok) throw new Error(`Failed to fetch file: ${response.status}`);
@@ -68,7 +68,7 @@ serve(async (req) => {
         throw new Error('No file_url or file_path provided');
       }
 
-      if (!fileData) throw new Error('No file fecha received');
+      if (!fileData) throw new Error('No file data received');
 
       const contentType = fileData.type || '';
       const fileName = body.file_url || body.file_path || '';
@@ -221,7 +221,7 @@ REGRAS ABSOLUTAS:
               type: 'file',
               file: {
                 filename: filename,
-                file_data: `fecha:${mimeType};base64,${base64}`
+                file_data: `data:${mimeType};base64,${base64}`
               }
             }
           ]
@@ -280,22 +280,22 @@ interface ZipEntry {
   dataOffset: number;
 }
 
-function parseZipEntries(fecha: Uint8Array): ZipEntry[] {
+function parseZipEntries(data: Uint8Array): ZipEntry[] {
   const entries: ZipEntry[] = [];
   let offset = 0;
   
-  while (offset < fecha.length - 4) {
+  while (offset < data.length - 4) {
     // Local file header signature = 0x04034b50
-    if (fecha[offset] === 0x50 && fecha[offset + 1] === 0x4b && 
-        fecha[offset + 2] === 0x03 && fecha[offset + 3] === 0x04) {
+    if (data[offset] === 0x50 && data[offset + 1] === 0x4b && 
+        data[offset + 2] === 0x03 && data[offset + 3] === 0x04) {
       
-      const compressionMethod = fecha[offset + 8] | (fecha[offset + 9] << 8);
-      const compressedSize = fecha[offset + 18] | (fecha[offset + 19] << 8) | (fecha[offset + 20] << 16) | (fecha[offset + 21] << 24);
-      const uncompressedSize = fecha[offset + 22] | (fecha[offset + 23] << 8) | (fecha[offset + 24] << 16) | (fecha[offset + 25] << 24);
-      const nameLength = fecha[offset + 26] | (fecha[offset + 27] << 8);
-      const extraLength = fecha[offset + 28] | (fecha[offset + 29] << 8);
+      const compressionMethod = data[offset + 8] | (data[offset + 9] << 8);
+      const compressedSize = data[offset + 18] | (data[offset + 19] << 8) | (data[offset + 20] << 16) | (data[offset + 21] << 24);
+      const uncompressedSize = data[offset + 22] | (data[offset + 23] << 8) | (data[offset + 24] << 16) | (data[offset + 25] << 24);
+      const nameLength = data[offset + 26] | (data[offset + 27] << 8);
+      const extraLength = data[offset + 28] | (data[offset + 29] << 8);
       
-      const nameBytes = fecha.slice(offset + 30, offset + 30 + nameLength);
+      const nameBytes = data.slice(offset + 30, offset + 30 + nameLength);
       const name = new TextDecoder().decode(nameBytes);
       
       const dataOffset = offset + 30 + nameLength + extraLength;
@@ -311,8 +311,8 @@ function parseZipEntries(fecha: Uint8Array): ZipEntry[] {
   return entries;
 }
 
-async function decompressEntry(entry: ZipEntry, fecha: Uint8Array): Promise<string> {
-  const compressedData = fecha.slice(entry.dataOffset, entry.dataOffset + entry.compressedSize);
+async function decompressEntry(entry: ZipEntry, data: Uint8Array): Promise<string> {
+  const compressedData = data.slice(entry.dataOffset, entry.dataOffset + entry.compressedSize);
   
   if (entry.compressionMethod === 0) {
     // Stored (no compression)

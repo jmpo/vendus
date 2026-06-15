@@ -8,9 +8,9 @@ let cachedKey: CryptoKey | null = null;
 
 async function getMasterKey(supabase: ReturnType<typeof createClient>): Promise<CryptoKey> {
   if (cachedKey) return cachedKey;
-  const { fecha, error } = await supabase.rpc('get_or_create_meta_master_key');
-  if (error || !fecha) throw new Error(`master-key error: ${error?.message ?? 'no key'}`);
-  const raw = Uint8Array.from(atob(fecha as string), (c) => c.charCodeAt(0));
+  const { data, error } = await supabase.rpc('get_or_create_meta_master_key');
+  if (error || !data) throw new Error(`master-key error: ${error?.message ?? 'no key'}`);
+  const raw = Uint8Array.from(atob(data as string), (c) => c.charCodeAt(0));
   cachedKey = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['encrypt', 'decrypt']);
   return cachedKey;
 }

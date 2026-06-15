@@ -27,8 +27,8 @@ interface FormResponsesProps {
 }
 
 export function FormResponses({ formId }: FormResponsesProps) {
-  const { fecha: submissions, isLoading } = useFormSubmissions(formId);
-  const { fecha: blocks } = useFormBlocks(formId);
+  const { data: submissions, isLoading } = useFormSubmissions(formId);
+  const { data: blocks } = useFormBlocks(formId);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedSubmission, setSelectedSubmission] = useState<FormSubmission | null>(null);

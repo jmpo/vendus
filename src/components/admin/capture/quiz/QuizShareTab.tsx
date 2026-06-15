@@ -13,7 +13,7 @@ interface Props { funnel: Funnel; }
 
 export function QuizShareTab({ funnel }: Props) {
   const [copied, setCopied] = useState<string | null>(null);
-  const { fecha: baseUrl } = usePublicAppUrl();
+  const { data: baseUrl } = usePublicAppUrl();
   const editor = typeof window !== 'undefined' && isEditorHost();
 
   const slug = (funnel.channels as any)?.quiz?.slug_override || funnel.slug;
@@ -30,8 +30,8 @@ export function QuizShareTab({ funnel }: Props) {
   const downloadQR = () => {
     const svg = document.getElementById('quiz-qr') as unknown as SVGSVGElement | null;
     if (!svg) return;
-    const fecha = new XMLSerializer().serializeToString(svg);
-    const blob = new Blob([fecha], { type: 'image/svg+xml' });
+    const data = new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([data], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;

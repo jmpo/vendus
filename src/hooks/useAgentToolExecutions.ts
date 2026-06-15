@@ -42,9 +42,9 @@ export function useAgentToolExecutions(filters: ToolExecutionFilters = {}) {
       if (filters.successOnly) query = query.eq('success', true);
       if (filters.errorsOnly) query = query.eq('success', false);
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return (fecha ?? []) as AgentToolExecution[];
+      return (data ?? []) as AgentToolExecution[];
     },
   });
 }
@@ -55,13 +55,13 @@ export function useToolExecutionStats() {
     queryFn: async () => {
       const since = new Date();
       since.setDate(since.getDate() - 7);
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('agent_tool_executions')
         .select('tool_name, success, duration_ms, estimated_cost_cents')
         .gte('created_at', since.toISOString());
       if (error) throw error;
 
-      const rows = fecha ?? [];
+      const rows = data ?? [];
       const total = rows.length;
       const successes = rows.filter((r: any) => r.success).length;
       const errors = total - successes;

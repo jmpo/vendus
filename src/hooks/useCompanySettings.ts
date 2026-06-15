@@ -30,13 +30,13 @@ export function useCompanySettings() {
     queryKey: ['company-settings', orgId],
     enabled: !!orgId,
     queryFn: async (): Promise<CompanySettings | null> => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('organizations')
         .select('id, name, cnpj, email, phone, logo_url, address')
         .eq('id', orgId!)
         .maybeSingle();
       if (error) throw error;
-      return fecha as any;
+      return data as any;
     },
   });
 }
@@ -47,7 +47,7 @@ export function useUpdateCompanySettings() {
   return useMutation({
     mutationFn: async (input: Partial<CompanySettings>) => {
       if (!profile?.organization_id) throw new Error('Sin organización');
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('organizations')
         .update({
           name: input.name,
@@ -61,7 +61,7 @@ export function useUpdateCompanySettings() {
         .select()
         .single();
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['company-settings'] });
@@ -80,6 +80,6 @@ export async function uploadCompanyLogo(file: File, orgId: string): Promise<stri
     contentType: file.type,
   });
   if (upErr) throw upErr;
-  const { fecha } = supabase.storage.from('company-logos').getPublicUrl(path);
-  return fecha.publicUrl;
+  const { data } = supabase.storage.from('company-logos').getPublicUrl(path);
+  return data.publicUrl;
 }

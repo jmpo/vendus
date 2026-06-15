@@ -44,8 +44,8 @@ interface LeadsKanbanProps {
 
 export function LeadsKanban({ productId, productName, organizationId, onWhatsApp }: LeadsKanbanProps) {
   const { user, profile } = useAuth();
-  const { fecha: leads, isLoading: leadsLoading } = useLeads(productId);
-  const { fecha: stages, isLoading: stagesLoading } = usePipelineStages(productId);
+  const { data: leads, isLoading: leadsLoading } = useLeads(productId);
+  const { data: stages, isLoading: stagesLoading } = usePipelineStages(productId);
   const moveLead = useMoveLead();
   const createLead = useCreateLead();
   

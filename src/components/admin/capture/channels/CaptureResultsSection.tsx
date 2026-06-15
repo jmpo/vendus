@@ -38,12 +38,12 @@ const tempIcon = (t: string) => {
 
 export function CaptureResultsSection() {
   const { profile } = useAuth();
-  const { fecha: funnels } = useFunnels({ channelType: 'quiz' } as any);
+  const { data: funnels } = useFunnels({ channelType: 'quiz' } as any);
   const [funnelId, setFunnelId] = useState<string>('all');
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<QuizLead | null>(null);
 
-  const { fecha: leads, isLoading } = useQuery({
+  const { data: leads, isLoading } = useQuery({
     queryKey: ['quiz-results', profile?.organization_id, funnelId],
     enabled: !!profile?.organization_id,
     queryFn: async () => {
@@ -54,9 +54,9 @@ export function CaptureResultsSection() {
         .eq('lead_origin', 'funnel')
         .order('created_at', { ascending: false })
         .limit(500);
-      const { fecha, error } = await q;
+      const { data, error } = await q;
       if (error) throw error;
-      const rows = (fecha as QuizLead[]) || [];
+      const rows = (data as QuizLead[]) || [];
       if (funnelId !== 'all') {
         return rows.filter(l => (l.metadata as any)?.funnel_id === funnelId);
       }

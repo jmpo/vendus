@@ -28,7 +28,7 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const {
-      fecha: { user: caller },
+      data: { user: caller },
     } = await userClient.auth.getUser();
     if (!caller) {
       return new Response(JSON.stringify({ error: "Sessão inválida" }), {
@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    const { fecha: isSuper } = await admin.rpc("is_super_admin", {
+    const { data: isSuper } = await admin.rpc("is_super_admin", {
       _user_id: caller.id,
     });
     if (!isSuper) {
@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { fecha: org } = await admin
+    const { data: org } = await admin
       .from("organizations")
       .select("id, name")
       .eq("id", organization_id)
@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
     }
 
     // Deleta usuarios da org no auth (cascata limpa profiles e roles)
-    const { fecha: members } = await admin
+    const { data: members } = await admin
       .from("profiles")
       .select("id")
       .eq("organization_id", organization_id);

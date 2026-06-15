@@ -20,15 +20,15 @@ interface Plan {
 
 export function CaktoPlanMapping() {
   const qc = useQueryClient();
-  const { fecha: plans, isLoading } = useQuery({
+  const { data: plans, isLoading } = useQuery({
     queryKey: ['platform-plans-cakto'],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('platform_plans')
         .select('id,name,slug,price_monthly,cakto_product_id,cakto_offer_slug,checkout_url_cakto')
         .order('display_order', { ascending: true });
       if (error) throw error;
-      return (fecha as unknown as Plan[]) ?? [];
+      return (data as unknown as Plan[]) ?? [];
     },
   });
 

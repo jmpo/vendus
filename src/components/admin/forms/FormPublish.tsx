@@ -17,7 +17,7 @@ interface FormPublishProps {
 export function FormPublish({ form }: FormPublishProps) {
   const [copied, setCopied] = useState<string | null>(null);
 
-  const { fecha: baseUrl } = usePublicAppUrl();
+  const { data: baseUrl } = usePublicAppUrl();
   const publicUrl = `${baseUrl}/f/${form.slug}`;
   const embedUrl = `${baseUrl}/embed/form/${form.id}`;
   

@@ -37,10 +37,10 @@ export function useTeamMembers(organizationId?: string) {
       // organizations leak into team listings.
       let orgId = organizationId;
       if (!orgId) {
-        const { fecha: authData } = await supabase.auth.getUser();
+        const { data: authData } = await supabase.auth.getUser();
         const uid = authData?.user?.id;
         if (uid) {
-          const { fecha: me } = await supabase
+          const { data: me } = await supabase
             .from('profiles')
             .select('organization_id')
             .eq('id', uid)
@@ -61,7 +61,7 @@ export function useTeamMembers(organizationId?: string) {
         .order('created_at', { ascending: false });
 
       if (profilesResult.error) throw profilesResult.error;
-      const profiles = profilesResult.fecha || [];
+      const profiles = profilesResult.data || [];
       const userIds = profiles.map(p => p.id);
 
       if (userIds.length === 0) {
@@ -93,9 +93,9 @@ export function useTeamMembers(organizationId?: string) {
       if (squadMembershipsResult.error) throw squadMembershipsResult.error;
       if (assignmentsResult.error) throw assignmentsResult.error;
 
-      const roles = rolesResult.fecha || [];
-      const squadMemberships = squadMembershipsResult.fecha || [];
-      const assignments = assignmentsResult.fecha || [];
+      const roles = rolesResult.data || [];
+      const squadMemberships = squadMembershipsResult.data || [];
+      const assignments = assignmentsResult.data || [];
 
       const rolesByUserId = new Map<string, UserRole[]>();
       roles.forEach(role => {
@@ -156,7 +156,7 @@ export function useAddMemberToSquad() {
       squadId: string;
       role?: string;
     }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('squad_members')
         .insert({
           user_id: userId,
@@ -167,7 +167,7 @@ export function useAddMemberToSquad() {
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['team-members'] });
@@ -205,11 +205,11 @@ export function useProductAssignments(productId?: string) {
     queryFn: async () => {
       // Resolve org context: super admins poderiam ver atribuições de
       // outras empresas; aplicamos defesa em profundidade no cliente.
-      const { fecha: authData } = await supabase.auth.getUser();
+      const { data: authData } = await supabase.auth.getUser();
       const uid = authData?.user?.id;
       let orgId: string | undefined;
       if (uid) {
-        const { fecha: me } = await supabase
+        const { data: me } = await supabase
           .from('profiles')
           .select('organization_id')
           .eq('id', uid)
@@ -219,7 +219,7 @@ export function useProductAssignments(productId?: string) {
       if (!orgId) return [];
 
       // Busca somente IDs de usuarios de la empresa atual.
-      const { fecha: orgProfiles, error: orgErr } = await supabase
+      const { data: orgProfiles, error: orgErr } = await supabase
         .from('profiles')
         .select('id')
         .eq('organization_id', orgId);
@@ -240,9 +240,9 @@ export function useProductAssignments(productId?: string) {
         query = query.eq('product_id', productId);
       }
       
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return fecha;
+      return data;
     },
     staleTime: 30000,
     gcTime: 60000,
@@ -260,7 +260,7 @@ export function useAssignProduct() {
       assignedBy?: string;
     }) => {
       // Usa upsert to handle duplicates gracefully
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_product_assignments')
         .upsert({
           user_id: userId,
@@ -275,7 +275,7 @@ export function useAssignProduct() {
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['product-assignments'] });
@@ -310,7 +310,7 @@ export function useUpdateAssignment() {
   
   return useMutation({
     mutationFn: async ({ id, monthlyGoal }: { id: string; monthlyGoal: number }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_product_assignments')
         .update({ monthly_goal: monthlyGoal })
         .eq('id', id)
@@ -318,7 +318,7 @@ export function useUpdateAssignment() {
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['product-assignments'] });
@@ -354,14 +354,14 @@ export function useUpdateUserRole() {
         .eq('user_id', userId);
       
       // Add new role
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_roles')
         .insert({ user_id: userId, role })
         .select()
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['team-members'] });

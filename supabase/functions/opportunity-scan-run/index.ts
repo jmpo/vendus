@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
     }
 
     // 2. Criar registro do scan
-    const { fecha: scan, error: scanErr } = await supabase
+    const { data: scan, error: scanErr } = await supabase
       .from('opportunity_scans')
       .insert({
         organization_id,
@@ -180,15 +180,15 @@ async function fetchCandidates(supabase: any, orgId: string, f: ScanFilters) {
   q = q.gte('last_message_at', minDate).lte('last_message_at', maxDate);
 
   q = q.order('last_message_at', { ascending: false }).limit(500);
-  const { fecha, error } = await q;
+  const { data, error } = await q;
   if (error) throw error;
-  let convs = fecha || [];
+  let convs = data || [];
 
   const leadIds = convs.map((c: any) => c.lead_id).filter(Boolean);
 
   // Filtros por tag (inclusão / exclusão / require_no_tags)
   if (leadIds.length && (f.tag_ids?.length || f.exclude_tag_ids?.length || f.require_no_tags)) {
-    const { fecha: allTags } = await supabase
+    const { data: allTags } = await supabase
       .from('lead_tag_assignments')
       .select('lead_id, tag_id')
       .in('lead_id', leadIds);
@@ -219,7 +219,7 @@ async function fetchCandidates(supabase: any, orgId: string, f: ScanFilters) {
   if (needLeadJoin) {
     const remainIds = convs.map((c: any) => c.lead_id).filter(Boolean);
     if (remainIds.length) {
-      const { fecha: leads } = await supabase
+      const { data: leads } = await supabase
         .from('leads')
         .select('id, temperature, deal_value, squad_id')
         .in('id', remainIds);
@@ -302,7 +302,7 @@ async function processScan(supabase: any, scanId: string, orgId: string, convers
 async function classifyConversation(supabase: any, orgId: string, conv: any, apiKey: string) {
   try {
     // Últimas 20 mensajes
-    const { fecha: messages } = await supabase
+    const { data: messages } = await supabase
       .from('webchat_messages')
       .select('role, content, created_at')
       .eq('conversation_id', conv.id)
@@ -404,7 +404,7 @@ async function getLeadSnapshot(supabase: any, conv: any) {
       deal_value: 0, product_id: conv.product_id,
     };
   }
-  const { fecha: lead } = await supabase
+  const { data: lead } = await supabase
     .from('leads')
     .select('name, email, phone, deal_value, product_id, current_stage_id, assigned_to, temperature')
     .eq('id', conv.lead_id)
@@ -425,7 +425,7 @@ async function applyActions(supabase: any, orgId: string, item: any, actions: Ac
 
     if (cfg.create_task?.enabled && item.lead_id) {
       const dueAt = new Date(Date.now() + (cfg.create_task.due_in_hours ?? 24) * 3600000).toISOString();
-      const { fecha: lead } = await supabase.from('leads').select('assigned_to').eq('id', item.lead_id).maybeSingle();
+      const { data: lead } = await supabase.from('leads').select('assigned_to').eq('id', item.lead_id).maybeSingle();
       await supabase.from('tasks').insert({
         organization_id: orgId,
         lead_id: item.lead_id,
@@ -443,7 +443,7 @@ async function applyActions(supabase: any, orgId: string, item: any, actions: Ac
     }
 
     if (cfg.notify_owner && item.lead_id) {
-      const { fecha: lead } = await supabase.from('leads').select('assigned_to').eq('id', item.lead_id).maybeSingle();
+      const { data: lead } = await supabase.from('leads').select('assigned_to').eq('id', item.lead_id).maybeSingle();
       if (lead?.assigned_to) {
         await supabase.from('notifications').insert({
           user_id: lead.assigned_to,

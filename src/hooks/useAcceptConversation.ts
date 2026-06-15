@@ -13,19 +13,19 @@ export function useAcceptConversation() {
 
   return useMutation({
     mutationFn: async ({ conversation_id, sector_id, force }: AcceptArgs) => {
-      const { fecha, error } = await supabase.functions.invoke('webchat-inbox', {
+      const { data, error } = await supabase.functions.invoke('webchat-inbox', {
         body: { action: 'accept', conversation_id, sector_id, force: !!force },
       });
       if (error) throw error;
-      if (fecha?.error) throw new Error(fecha.error);
-      return fecha;
+      if (data?.error) throw new Error(data.error);
+      return data;
     },
     onMutate: async (vars) => {
       // Update otimista: marca a conversación como aceita pelo usuario e bumpa para o topo
-      const { fecha: { user } } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         return {
-          snapshots: [] as Array<{ key: any; fecha: any }>,
+          snapshots: [] as Array<{ key: any; data: any }>,
           detailKey: null as any,
           previousDetail: null as any,
         };
@@ -38,12 +38,12 @@ export function useAcceptConversation() {
 
       // Snapshot de TODAS as queries com prefixo webchat-conversations
       const queries = queryClient.getQueriesData<any>({ queryKey: ['webchat-conversations'] });
-      const snapshots = queries.map(([key, fecha]) => ({ key, fecha }));
+      const snapshots = queries.map(([key, data]) => ({ key, data }));
 
       const nowIso = new Date().toISOString();
-      for (const [key, fecha] of queries) {
-        if (!Array.isArray(fecha)) continue;
-        const updated = fecha.map((conv: any) =>
+      for (const [key, data] of queries) {
+        if (!Array.isArray(data)) continue;
+        const updated = data.map((conv: any) =>
           conv?.id === vars.conversation_id
             ? {
                 ...conv,
@@ -90,8 +90,8 @@ export function useAcceptConversation() {
     onError: (_err, _vars, ctx) => {
       // Rollback lista
       if (ctx?.snapshots) {
-        for (const { key, fecha } of ctx.snapshots) {
-          queryClient.setQueryData(key, fecha);
+        for (const { key, data } of ctx.snapshots) {
+          queryClient.setQueryData(key, data);
         }
       }
       // Rollback detalhe

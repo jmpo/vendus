@@ -36,7 +36,7 @@ export function OrganizationCreateForm({
   submitLabel = 'Crear Empresa',
   cancelLabel = 'Cancelar',
 }: Props) {
-  const { fecha: activePlans } = useActivePlans();
+  const { data: activePlans } = useActivePlans();
   const createOrganization = useCreateOrganization();
   const createSubscription = useCreateSubscription();
   const createAuditLog = useCreateAuditLog();
@@ -148,7 +148,7 @@ export function OrganizationCreateForm({
       // Cria o usuario admin de la empresa com o e-mail informado
       let adminInviteToken: string | null = null;
       try {
-        const { fecha: adminResult, error: adminError } = await supabase.functions.invoke(
+        const { data: adminResult, error: adminError } = await supabase.functions.invoke(
           'create-organization-admin',
           {
             body: {

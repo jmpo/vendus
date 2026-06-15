@@ -6,8 +6,8 @@ import { AlertTriangle, Clock, Bell } from 'lucide-react';
 
 export function TaskAlerts() {
   const { user } = useAuth();
-  const { fecha: overdueTasks } = useOverdueTasks(user?.id);
-  const { fecha: upcomingTasks } = useUpcomingTasks(user?.id, 2); // Next 2 hours
+  const { data: overdueTasks } = useOverdueTasks(user?.id);
+  const { data: upcomingTasks } = useUpcomingTasks(user?.id, 2); // Next 2 hours
   const markOverdue = useMarkTasksOverdue();
 
   // Check and mark overdue tasks periodically

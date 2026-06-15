@@ -16,7 +16,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 export function ApiKeysManager() {
-  const { fecha: integrations, isLoading } = useIntegrations();
+  const { data: integrations, isLoading } = useIntegrations();
   const updateIntegration = useUpdateIntegration();
   
   const [editingIntegration, setEditingIntegration] = useState<string | null>(null);

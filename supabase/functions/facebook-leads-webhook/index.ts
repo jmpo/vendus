@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
     console.log('Webhook verification request:', { mode, token });
     
     // Verificar token em todas as integraciones ativas
-    const { fecha: integration, error } = await supabase
+    const { data: integration, error } = await supabase
       .from('facebook_lead_integrations')
       .select('id')
       .eq('verify_token', token)
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
         const pageId = entry.id;
         
         // Buscar integración pela page_id
-        const { fecha: integration, error: integrationError } = await supabase
+        const { data: integration, error: integrationError } = await supabase
           .from('facebook_lead_integrations')
           .select('*, products(*)')
           .eq('page_id', pageId)
@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
           console.log('Processing lead:', { leadgenId, formId, adId });
           
           // Logar recebimento
-          const { fecha: log, error: logError } = await supabase
+          const { data: log, error: logError } = await supabase
             .from('facebook_lead_logs')
             .insert({
               integration_id: integration.id,
@@ -116,7 +116,7 @@ Deno.serve(async (req) => {
               .from('facebook_lead_logs')
               .update({ 
                 status: 'error', 
-                error_message: 'Failed to fetch lead fecha from Graph API' 
+                error_message: 'Failed to fetch lead data from Graph API' 
               })
               .eq('id', log.id);
             continue;
@@ -126,7 +126,7 @@ Deno.serve(async (req) => {
           const fieldMapping = integration.field_mapping as Record<string, string> || {};
           const mappedData = mapLeadFields(leadData, fieldMapping);
           
-          console.log('Mapped lead fecha:', mappedData);
+          console.log('Mapped lead data:', mappedData);
           
           // Criar lead no CRM
           const lead = await createLeadFromFacebook(
@@ -186,7 +186,7 @@ async function fetchLeadData(leadgenId: string, accessToken: string) {
     
     return await response.json();
   } catch (error) {
-    console.error('Exception fetching lead fecha:', error);
+    console.error('Exception fetching lead data:', error);
     return null;
   }
 }
@@ -213,7 +213,7 @@ async function createLeadFromFacebook(
 ) {
   try {
     // Buscar primeiro estágio do pipeline
-    const { fecha: firstStage } = await supabase
+    const { data: firstStage } = await supabase
       .from('pipeline_stages')
       .select('id')
       .eq('product_id', integration.product_id)
@@ -223,7 +223,7 @@ async function createLeadFromFacebook(
     
     const leadName = mappedData.name || mappedData.full_name || mappedData.email || 'Lead Facebook';
     
-    const { fecha: lead, error } = await supabase
+    const { data: lead, error } = await supabase
       .from('leads')
       .insert({
         organization_id: integration.organization_id,

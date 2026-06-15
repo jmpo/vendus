@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
 
-  const { fecha: due, error: dueErr } = await supabase
+  const { data: due, error: dueErr } = await supabase
     .from('post_sale_scheduled_runs')
     .select('*')
     .eq('status', 'pending')
@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
 
   for (const run of due ?? []) {
     // claim
-    const { fecha: claimed } = await supabase
+    const { data: claimed } = await supabase
       .from('post_sale_scheduled_runs')
       .update({ status: 'running', attempts: (run.attempts ?? 0) + 1 })
       .eq('id', run.id)
@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
     // Defesa: se um evento "final" (compra_aprovada/reembolso/chargeback/cancelamento)
     // chegou DEPOIS desta run ser creada, cancela em vez de disparar.
     if (['pix_gerado', 'boleto_gerado', 'checkout_abandonado'].includes(run.event_type)) {
-      const { fecha: laterClose } = await supabase
+      const { data: laterClose } = await supabase
         .from('post_sale_scheduled_runs')
         .select('id')
         .eq('lead_id', run.lead_id)
@@ -108,13 +108,13 @@ Deno.serve(async (req) => {
 
 
     try {
-      const { fecha: action } = await supabase
+      const { data: action } = await supabase
         .from('post_sale_event_actions')
         .select('*')
         .eq('id', run.action_id)
         .maybeSingle();
 
-      const { fecha: lead } = await supabase
+      const { data: lead } = await supabase
         .from('leads')
         .select('id, name, email, phone')
         .eq('id', run.lead_id)
@@ -132,7 +132,7 @@ Deno.serve(async (req) => {
           const message = replaceVars(action.inline_message, vars);
           if (action.message_channel === 'whatsapp' && lead.phone) {
             const phone = normalizePhone(lead.phone);
-            const { fecha: sd, error: se } = await supabase.functions.invoke('evolution-send', {
+            const { data: sd, error: se } = await supabase.functions.invoke('evolution-send', {
               body: {
                 type: 'text', to: phone, payload: { text: message },
                 organization_id: run.organization_id,
@@ -156,7 +156,7 @@ Deno.serve(async (req) => {
 
         // 2) Agente IA
         if (action.agent_id && lead.phone) {
-          const { fecha: od, error: oe } = await supabase.functions.invoke('manual-outreach', {
+          const { data: od, error: oe } = await supabase.functions.invoke('manual-outreach', {
             body: {
               lead_ids: [lead.id],
               agent_id: action.agent_id,
@@ -182,7 +182,7 @@ Deno.serve(async (req) => {
 
         // 3) E-mail por template
         if (action.email_template_id && lead.email) {
-          const { fecha: tpl } = await supabase
+          const { data: tpl } = await supabase
             .from('email_templates')
             .select('subject, html_content')
             .eq('id', action.email_template_id)

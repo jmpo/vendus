@@ -37,10 +37,10 @@ export function InternalNotes({ conversationId, className }: InternalNotesProps)
   const [noteText, setNoteText] = useState('');
 
   // Fetch notes
-  const { fecha: notes = [], isLoading } = useQuery({
+  const { data: notes = [], isLoading } = useQuery({
     queryKey: ['conversation-notes', conversationId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('conversation_notes')
         .select(`
           id,
@@ -57,7 +57,7 @@ export function InternalNotes({ conversationId, className }: InternalNotesProps)
 
       if (error) throw error;
       
-      return fecha.map((note: any) => ({
+      return data.map((note: any) => ({
         ...note,
         user: note.profiles,
       })) as ConversationNote[];

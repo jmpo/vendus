@@ -21,9 +21,9 @@ interface SuperAdminDashboardProps {
 }
 
 export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {}) {
-  const { fecha: stats, isLoading: statsLoading } = useSuperAdminStats();
-  const { fecha: logs, isLoading: logsLoading } = useAuditLogs(10);
-  const { fecha: orgs, isLoading: orgsLoading } = useAllOrganizations();
+  const { data: stats, isLoading: statsLoading } = useSuperAdminStats();
+  const { data: logs, isLoading: logsLoading } = useAuditLogs(10);
+  const { data: orgs, isLoading: orgsLoading } = useAllOrganizations();
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat( 'es' , {

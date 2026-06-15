@@ -76,8 +76,8 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
     customize: false,
   });
 
-  const { fecha: organizations, isLoading } = useAllOrganizations();
-  const { fecha: activePlans } = useActivePlans();
+  const { data: organizations, isLoading } = useAllOrganizations();
+  const { data: activePlans } = useActivePlans();
   const updateOrganization = useUpdateOrganization();
   const createAuditLog = useCreateAuditLog();
   const createOrganization = useCreateOrganization();
@@ -241,7 +241,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
       // Sincroniza subscription cuando o plan muda
       if (newPlanId !== previousPlanId) {
         const { supabase } = await import('@/integrations/supabase/client');
-        const { fecha: existingSub } = await supabase
+        const { data: existingSub } = await supabase
           .from('subscriptions')
           .select('id')
           .eq('organization_id', editingOrg.id)

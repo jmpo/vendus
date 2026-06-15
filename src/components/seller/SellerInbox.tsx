@@ -52,7 +52,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
   const { playNotification, isEnabled: soundEnabled, toggleSound } = useNotificationSound();
-  const { fecha: evolutionInstances } = useEvolutionInstances();
+  const { data: evolutionInstances } = useEvolutionInstances();
 
   /**
    * Resolve label da conexão DO BOT (no o teléfono del lead).
@@ -121,7 +121,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   });
 
   // Productos atribuídos ao vendedor — fonte para o seletor
-  const { fecha: assignedProductsData } = useAssignedProducts(user?.id || '');
+  const { data: assignedProductsData } = useAssignedProducts(user?.id || '');
   const assignedProducts = useMemo(
     () => (assignedProductsData?.map((ap: any) => ap.products).filter(Boolean) || []),
     [assignedProductsData]
@@ -182,11 +182,11 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     return rest;
   }, [inboxFilters]);
 
-  const { fecha: conversationsData, isLoading: loadingConversations, refetch: refetchConversations } = useWebChatConversations(inboxFilters);
-  const { fecha: tabCounts, refetch: refetchCounts } = useWebChatConversationCounts(countsFilters);
+  const { data: conversationsData, isLoading: loadingConversations, refetch: refetchConversations } = useWebChatConversations(inboxFilters);
+  const { data: tabCounts, refetch: refetchCounts } = useWebChatConversationCounts(countsFilters);
 
   // Fetch selected conversation details
-  const { fecha: conversationDetail, isLoading: loadingDetail, error: conversationError } = useWebChatConversation(
+  const { data: conversationDetail, isLoading: loadingDetail, error: conversationError } = useWebChatConversation(
     selectedConversation?.id || ''
   );
 
@@ -224,7 +224,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const forwardMessageMutation = useForwardMessage();
 
   // Mapa global de productos da org (para resolver o nombre cuando vier só del lead)
-  const { fecha: allProducts = [] } = useProducts();
+  const { data: allProducts = [] } = useProducts();
   const productNameById = useMemo(() => {
     const m = new Map<string, string>();
     (allProducts || []).forEach((p: any) => m.set(p.id, p.name));
@@ -308,13 +308,13 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
 
     pendingHandledRef.current = pendingConversationId;
     (async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('webchat_conversations')
         .select('id, visitor_name, visitor_email, visitor_phone, visitor_avatar_url, channel, status, lead_id, product_id, sector_id, assigned_user_id, last_message_at, evolution_instance_id')
         .eq('id', pendingConversationId)
         .maybeSingle();
 
-      if (error || !fecha) {
+      if (error || !data) {
         toast({
           title: 'Conversación no disponible',
           description: 'No fue posible abrir esta conversación en este contexto.',
@@ -325,51 +325,51 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       }
 
       const stub: Conversation = {
-        id: fecha.id,
-        visitor_name: fecha.visitor_name ?? null,
-        visitor_email: fecha.visitor_email ?? null,
-        visitor_phone: fecha.visitor_phone ?? null,
-        visitor_avatar_url: (fecha as any).visitor_avatar_url ?? null,
-        channel: fecha.channel || 'webchat',
-        status: fecha.status || 'open',
+        id: data.id,
+        visitor_name: data.visitor_name ?? null,
+        visitor_email: data.visitor_email ?? null,
+        visitor_phone: data.visitor_phone ?? null,
+        visitor_avatar_url: (data as any).visitor_avatar_url ?? null,
+        channel: data.channel || 'webchat',
+        status: data.status || 'open',
         unread_count: 0,
-        last_message_at: fecha.last_message_at ?? null,
-        lead_id: fecha.lead_id ?? null,
-        product_id: fecha.product_id ?? null,
-        sector_id: fecha.sector_id ?? null,
-        assigned_user_id: fecha.assigned_user_id ?? null,
+        last_message_at: data.last_message_at ?? null,
+        lead_id: data.lead_id ?? null,
+        product_id: data.product_id ?? null,
+        sector_id: data.sector_id ?? null,
+        assigned_user_id: data.assigned_user_id ?? null,
       };
       setSelectedConversation(stub);
       onConversationSelected?.();
     })();
   }, [pendingConversationId, filteredConversations, loadingConversations, onConversationSelected, toast]);
 
-  // Fetch linked lead fecha
-  const { fecha: linkedLead } = useQuery({
+  // Fetch linked lead data
+  const { data: linkedLead } = useQuery({
     queryKey: ['linked-lead', selectedConversation?.lead_id],
     queryFn: async () => {
       if (!selectedConversation?.lead_id) return null;
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('leads')
         .select('*, pipeline_stages:current_stage_id(id, name, color)')
         .eq('id', selectedConversation.lead_id)
         .single();
-      return fecha;
+      return data;
     },
     enabled: !!selectedConversation?.lead_id,
   });
 
   // Fetch pipeline stages for the lead's product
-  const { fecha: pipelineStages } = useQuery({
+  const { data: pipelineStages } = useQuery({
     queryKey: ['pipeline-stages-for-lead', linkedLead?.product_id],
     queryFn: async () => {
       if (!linkedLead?.product_id) return [];
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('pipeline_stages')
         .select('id, name, color, order_index')
         .eq('product_id', linkedLead.product_id)
         .order('order_index');
-      return fecha || [];
+      return data || [];
     },
     enabled: !!linkedLead?.product_id,
   });
@@ -410,7 +410,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         // Focus the search in ConversationList
-        const searchInput = document.querySelector<HTMLInputElement>('[fecha-inbox-search]');
+        const searchInput = document.querySelector<HTMLInputElement>('[data-inbox-search]');
         searchInput?.focus();
       }
       if (e.key === 'Escape' && isMobile && selectedConversation) {
@@ -443,14 +443,14 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const handleAiSuggest = useCallback(async (): Promise<string> => {
     if (!selectedConversation?.id || !profile?.organization_id) return '';
     const lastMessages = messages.slice(-5).map(m => `${m.sender_type}: ${m.content}`).join('\n');
-    const { fecha, error } = await supabase.functions.invoke('sales-copilot', {
+    const { data, error } = await supabase.functions.invoke('sales-copilot', {
       body: {
         question: `Baseado na conversación abaixo, sugira uma respuesta profissional para o visitante. Sé direto e estratégico.\n\nConversa:\n${lastMessages}\n\nSugira a melhor respuesta para enviar ahora:`,
         organizationId: profile.organization_id,
       },
     });
     if (error) throw error;
-    return fecha?.answer || '';
+    return data?.answer || '';
   }, [selectedConversation, messages, profile?.organization_id]);
 
   // Handle send message
@@ -774,7 +774,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
 
       // Usa the new edge function action so server-side enforces sector membership.
       try {
-        const { fecha, error } = await supabase.functions.invoke('webchat-inbox', {
+        const { data, error } = await supabase.functions.invoke('webchat-inbox', {
           body: {
             action: 'accept',
             conversation_id: selectedConversation.id,
@@ -782,7 +782,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
           },
         });
         if (error) throw error;
-        if (fecha?.error) throw new Error(fecha.error);
+        if (data?.error) throw new Error(data.error);
         toast({ title: 'Atención aceptada' });
         queryClient.invalidateQueries({ queryKey: detailKey, refetchType: 'active' });
         refetchConversations();

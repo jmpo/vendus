@@ -50,7 +50,7 @@ export const DEFAULT_CONFIRMATION_WHATSAPP = `Hola, {{nome_lead}}! 👋
 
 Passando para confirmar a *{{nome_evento}}* da *{{empresa}}*.
 
-📅 {{fecha}}
+📅 {{data}}
 ⏰ {{hora}}
 📍 {{modalidade}}
 
@@ -70,7 +70,7 @@ Usted conseguirá participar?
 
 export const DEFAULT_INTERNAL = `✅ {{nome_lead}} confirmou a reunión.
 
-🗓 {{fecha}} às {{hora}}
+🗓 {{data}} às {{hora}}
 📞 {{telefone_lead}}
 🔗 {{link_reuniao}}`;
 
@@ -105,13 +105,13 @@ export function useBookingNotifications(eventTypeId: string | null | undefined) 
     queryKey: ['booking-notification-settings', eventTypeId],
     queryFn: async (): Promise<BookingNotificationSettings | null> => {
       if (!eventTypeId) return null;
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('booking_notification_settings' as any)
         .select('*')
         .eq('event_type_id', eventTypeId)
         .maybeSingle();
       if (error) throw error;
-      return (fecha as any) ?? null;
+      return (data as any) ?? null;
     },
     enabled: !!eventTypeId,
   });
@@ -120,13 +120,13 @@ export function useBookingNotifications(eventTypeId: string | null | undefined) 
     queryKey: ['booking-reminders', eventTypeId],
     queryFn: async (): Promise<BookingReminder[]> => {
       if (!eventTypeId) return [];
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('booking_reminders' as any)
         .select('*')
         .eq('event_type_id', eventTypeId)
         .order('order_index', { ascending: true });
       if (error) throw error;
-      return ((fecha as any) || []) as BookingReminder[];
+      return ((data as any) || []) as BookingReminder[];
     },
     enabled: !!eventTypeId,
   });
@@ -140,13 +140,13 @@ export function useBookingNotifications(eventTypeId: string | null | undefined) 
         organization_id: profile.organization_id,
         event_type_id: eventTypeId,
       };
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('booking_notification_settings' as any)
         .upsert(payload as any, { onConflict: 'event_type_id' })
         .select()
         .single();
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['booking-notification-settings', eventTypeId] });
@@ -164,14 +164,14 @@ export function useBookingNotifications(eventTypeId: string | null | undefined) 
         offset_value: input.offset_value ?? 1,
         offset_unit: (input.offset_unit ?? 'hours') as OffsetUnit,
         channel: (input.channel ?? 'whatsapp') as ReminderChannel,
-        message_template: input.message_template ?? `Hola, {{nome_lead}}! Lembrete: su reunión com {{nome_vendedor}} é em breve.\n\n🗓 {{fecha}}\n⏰ {{hora}}\n{{link_reuniao}}`,
+        message_template: input.message_template ?? `Hola, {{nome_lead}}! Lembrete: su reunión com {{nome_vendedor}} é em breve.\n\n🗓 {{data}}\n⏰ {{hora}}\n{{link_reuniao}}`,
         email_subject: input.email_subject ?? 'Lembrete da su reunión',
         is_active: input.is_active ?? true,
-        order_index: input.order_index ?? (reminders.fecha?.length ?? 0),
+        order_index: input.order_index ?? (reminders.data?.length ?? 0),
       };
-      const { fecha, error } = await supabase.from('booking_reminders' as any).insert(payload as any).select().single();
+      const { data, error } = await supabase.from('booking_reminders' as any).insert(payload as any).select().single();
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['booking-reminders', eventTypeId] }),
     onError: (e: any) => toast.error(e.message),
@@ -179,14 +179,14 @@ export function useBookingNotifications(eventTypeId: string | null | undefined) 
 
   const updateReminder = useMutation({
     mutationFn: async ({ id, ...patch }: Partial<BookingReminder> & { id: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('booking_reminders' as any)
         .update(patch as any)
         .eq('id', id)
         .select()
         .single();
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['booking-reminders', eventTypeId] }),
     onError: (e: any) => toast.error(e.message),
@@ -202,9 +202,9 @@ export function useBookingNotifications(eventTypeId: string | null | undefined) 
   });
 
   return {
-    settings: settings.fecha,
+    settings: settings.data,
     isLoading: settings.isLoading || reminders.isLoading,
-    reminders: reminders.fecha || [],
+    reminders: reminders.data || [],
     upsertSettings,
     createReminder,
     updateReminder,
@@ -217,7 +217,7 @@ export const TEMPLATE_VARIABLES = [
   { key: '{{nome_vendedor}}', label: 'Vendedor' },
   { key: '{{email_lead}}', label: 'Email' },
   { key: '{{telefone_lead}}', label: 'Teléfono' },
-  { key: '{{fecha}}', label: 'Fecha' },
+  { key: '{{data}}', label: 'Fecha' },
   { key: '{{hora}}', label: 'Hora' },
   { key: '{{modalidade}}', label: 'Modalidade' },
   { key: '{{nome_evento}}', label: 'Evento' },

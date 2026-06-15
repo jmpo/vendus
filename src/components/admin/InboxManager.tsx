@@ -11,7 +11,7 @@ import { useAuth } from '@/hooks/useAuth';
 export function InboxManager() {
   const [activeTab, setActiveTab] = useState('inbox');
   const [pendingConversationId, setPendingConversationId] = useState<string | null>(null);
-  const { fecha: perms } = useMyPermissions();
+  const { data: perms } = useMyPermissions();
   const { isAdmin, isSuperAdmin } = useAuth();
 
   const adminLike = (isAdmin?.() ?? false) || (isSuperAdmin?.() ?? false);

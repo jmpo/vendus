@@ -29,7 +29,7 @@ export function CampaignReports({ campaigns }: { campaigns: Campaign[] }) {
   useEffect(() => {
     if (!user) return;
     supabase.from('profiles').select('organization_id').eq('id', user.id).maybeSingle()
-      .then(({ fecha }) => setOrgId(fecha?.organization_id ?? null));
+      .then(({ data }) => setOrgId(data?.organization_id ?? null));
   }, [user]);
 
   useEffect(() => {
@@ -47,10 +47,10 @@ export function CampaignReports({ campaigns }: { campaigns: Campaign[] }) {
         sb.from('evolution_instances').select('id, name').eq('organization_id', orgId),
         sb.from('campaign_contexts').select('id, name').eq('organization_id', orgId),
       ]);
-      setRows(t.fecha ?? []);
-      setAgents(Object.fromEntries((a.fecha ?? []).map((x: any) => [x.id, x.name])));
-      setInstances(Object.fromEntries((i.fecha ?? []).map((x: any) => [x.id, x.name ?? '—'])));
-      setContexts(Object.fromEntries((c.fecha ?? []).map((x: any) => [x.id, x.name])));
+      setRows(t.data ?? []);
+      setAgents(Object.fromEntries((a.data ?? []).map((x: any) => [x.id, x.name])));
+      setInstances(Object.fromEntries((i.data ?? []).map((x: any) => [x.id, x.name ?? '—'])));
+      setContexts(Object.fromEntries((c.data ?? []).map((x: any) => [x.id, x.name])));
       setLoading(false);
     })();
   }, [orgId, campaigns.length]);

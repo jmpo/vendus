@@ -61,14 +61,14 @@ export function useFacebookLeadIntegrations() {
   return useQuery({
     queryKey: ['facebook-lead-integrations', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('facebook_lead_integrations')
         .select('*, products(id, name)')
         .eq('organization_id', profile!.organization_id!)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return fecha as unknown as FacebookLeadIntegration[];
+      return data as unknown as FacebookLeadIntegration[];
     },
     enabled: !!profile?.organization_id
   });
@@ -78,7 +78,7 @@ export function useFacebookLeadLogs(integrationId?: string) {
   return useQuery({
     queryKey: ['facebook-lead-logs', integrationId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('facebook_lead_logs')
         .select('*')
         .eq('integration_id', integrationId!)
@@ -86,7 +86,7 @@ export function useFacebookLeadLogs(integrationId?: string) {
         .limit(100);
 
       if (error) throw error;
-      return fecha as FacebookLeadLog[];
+      return data as FacebookLeadLog[];
     },
     enabled: !!integrationId
   });
@@ -97,7 +97,7 @@ export function useCreateFacebookIntegration() {
   const { profile } = useAuth();
 
   return useMutation({
-    mutationFn: async (fecha: {
+    mutationFn: async (data: {
       product_id: string;
       page_id: string;
       page_name?: string;
@@ -110,26 +110,26 @@ export function useCreateFacebookIntegration() {
       default_temperature?: string;
       default_tags?: string[];
     }) => {
-      const { error, fecha: result } = await supabase
+      const { error, data: result } = await supabase
         .from('facebook_lead_integrations')
         .insert({
           organization_id: profile!.organization_id!,
-          product_id: fecha.product_id,
-          page_id: fecha.page_id,
-          page_name: fecha.page_name || null,
-          page_access_token: fecha.page_access_token,
-          app_secret: fecha.app_secret || null,
+          product_id: data.product_id,
+          page_id: data.page_id,
+          page_name: data.page_name || null,
+          page_access_token: data.page_access_token,
+          app_secret: data.app_secret || null,
           verify_token: generateVerifyToken(),
-          field_mapping: fecha.field_mapping || {
+          field_mapping: data.field_mapping || {
             full_name: 'name',
             email: 'email',
             phone_number: 'phone'
           },
-          distribution_rule: fecha.distribution_rule || 'manual',
-          assigned_user_id: fecha.assigned_user_id || null,
-          assigned_squad_id: fecha.assigned_squad_id || null,
-          default_temperature: fecha.default_temperature || 'hot',
-          default_tags: fecha.default_tags || []
+          distribution_rule: data.distribution_rule || 'manual',
+          assigned_user_id: data.assigned_user_id || null,
+          assigned_squad_id: data.assigned_squad_id || null,
+          default_temperature: data.default_temperature || 'hot',
+          default_tags: data.default_tags || []
         })
         .select()
         .single();
@@ -154,11 +154,11 @@ export function useUpdateFacebookIntegration() {
   return useMutation({
     mutationFn: async ({ 
       id, 
-      ...fecha 
+      ...data 
     }: Partial<FacebookLeadIntegration> & { id: string }) => {
       const { error } = await supabase
         .from('facebook_lead_integrations')
-        .update(fecha)
+        .update(data)
         .eq('id', id);
 
       if (error) throw error;

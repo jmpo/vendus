@@ -34,17 +34,17 @@ export function SquadDistributionConfig({ squadId, organizationId }: SquadDistri
 
   useEffect(() => {
     const fetchConfig = async () => {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('distribution_config')
         .select('*')
         .eq('squad_id', squadId)
         .maybeSingle();
 
-      if (fecha) {
+      if (data) {
         setConfig({
-          method: fecha.method,
-          auto_reassign: fecha.auto_reassign,
-          max_accept_time_minutes: fecha.max_accept_time_minutes || 5,
+          method: data.method,
+          auto_reassign: data.auto_reassign,
+          max_accept_time_minutes: data.max_accept_time_minutes || 5,
         });
       }
     };

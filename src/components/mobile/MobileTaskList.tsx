@@ -12,7 +12,7 @@ interface MobileTaskListProps {
 }
 
 export function MobileTaskList({ userId, productId }: MobileTaskListProps) {
-  const { fecha: tasksData, isLoading } = useTasks(userId, productId);
+  const { data: tasksData, isLoading } = useTasks(userId, productId);
   const completeTaskMutation = useCompleteTask();
 
   const tasks = tasksData || [];

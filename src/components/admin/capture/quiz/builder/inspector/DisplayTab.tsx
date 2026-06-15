@@ -18,22 +18,22 @@ type Display = NonNullable<FunnelBlockData['block_display']>;
 type Rule = NonNullable<Display['rules']>[number];
 
 export function DisplayTab({ block, blocks, onUpdate }: Props) {
-  const disp: Display = block.fecha.block_display || {};
+  const disp: Display = block.data.block_display || {};
   const setDisp = (patch: Partial<Display>) =>
-    onUpdate({ fecha: { ...block.fecha, block_display: { ...disp, ...patch } } });
+    onUpdate({ data: { ...block.data, block_display: { ...disp, ...patch } } });
 
   const rules: Rule[] = disp.rules || [];
 
   const sources = useMemo(
     () =>
       blocks
-        .filter((b) => b.id !== block.id && (b.fecha.variable_name || b.type === 'buttons' || b.type === 'input'))
+        .filter((b) => b.id !== block.id && (b.data.variable_name || b.type === 'buttons' || b.type === 'input'))
         .map((b) => ({
-          id: b.fecha.variable_name || b.id,
+          id: b.data.variable_name || b.id,
           label:
-            (b.fecha as any).step_label ||
-            b.fecha.content ||
-            b.fecha.variable_name ||
+            (b.data as any).step_label ||
+            b.data.content ||
+            b.data.variable_name ||
             b.id.slice(0, 8),
         })),
     [blocks, block.id],

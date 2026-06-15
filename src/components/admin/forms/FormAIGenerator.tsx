@@ -53,10 +53,10 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
   const [useBrain, setUseBrain] = useState(true);
   const [useObjectionsData, setUseObjectionsData] = useState(true);
 
-  // Fetch product fecha for brain summary
-  const { fecha: product } = useProduct(productId);
-  const { fecha: objections } = useObjections(productId);
-  const { fecha: knowledgeSources } = useKnowledgeSources(productId);
+  // Fetch product data for brain summary
+  const { data: product } = useProduct(productId);
+  const { data: objections } = useObjections(productId);
+  const { data: knowledgeSources } = useKnowledgeSources(productId);
 
   // Filter active knowledge sources
   const activeKnowledgeSources = knowledgeSources?.filter(ks => ks.is_active) || [];
@@ -78,7 +78,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
     setIsGenerating(true);
     
     try {
-      const { fecha, error } = await supabase.functions.invoke('form-generate-ai', {
+      const { data, error } = await supabase.functions.invoke('form-generate-ai', {
         body: {
           product_id: productId,
           objective,
@@ -92,13 +92,13 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
 
       if (error) throw error;
 
-      if (fecha.success && fecha.blocks) {
+      if (data.success && data.blocks) {
         toast.success('Formulário gerado com éxito!');
         // IMPORTANT: Wait for callback to complete (saves to DB) before closing
-        await onGenerated(fecha.blocks, fecha.suggested_name);
+        await onGenerated(data.blocks, data.suggested_name);
         // Dialog is closed by FormsManager after successful creation
       } else {
-        throw new Error(fecha.error || 'Error ao gerar formulário');
+        throw new Error(data.error || 'Error ao gerar formulário');
       }
     } catch (error: any) {
       console.error('Error generating form:', error);

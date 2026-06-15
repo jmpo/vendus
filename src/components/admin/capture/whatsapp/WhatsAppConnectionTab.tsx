@@ -17,7 +17,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
   const wa = (funnel.channels as any)?.whatsapp || { enabled: true };
   const [enabled, setEnabled] = useState<boolean>(wa.enabled !== false);
   const [instanceId, setInstanceId] = useState<string>(wa.evolution_instance_id || 'any');
-  const { fecha: instances = [], isLoading: loadingInstances } = useEvolutionInstances();
+  const { data: instances = [], isLoading: loadingInstances } = useEvolutionInstances();
   const update = useUpdateFunnel();
 
   const handleSave = async () => {

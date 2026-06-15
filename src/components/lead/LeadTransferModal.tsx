@@ -60,8 +60,8 @@ export function LeadTransferModal({
   const [selectedSquad, setSelectedSquad] = useState<string>(lead.squad_id || '');
   const [reason, setReason] = useState('');
 
-  const { fecha: teamMembers, isLoading: isLoadingTeam } = useTeamMembers();
-  const { fecha: squads, isLoading: isLoadingSquads } = useSquads();
+  const { data: teamMembers, isLoading: isLoadingTeam } = useTeamMembers();
+  const { data: squads, isLoading: isLoadingSquads } = useSquads();
   const transferLead = useTransferLead();
 
   const handleTransfer = async () => {

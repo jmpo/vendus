@@ -35,9 +35,9 @@ export function useCatalogItems(productId?: string | null, search?: string) {
       if (search && search.trim()) {
         q = q.textSearch('search_vector', search, { config: 'portuguese', type: 'websearch' });
       }
-      const { fecha, error } = await q.limit(200);
+      const { data, error } = await q.limit(200);
       if (error) throw error;
-      return (fecha || []) as unknown as CatalogItem[];
+      return (data || []) as unknown as CatalogItem[];
     },
   });
 }
@@ -49,7 +49,7 @@ export function useCatalogItemMutations(productId?: string | null) {
 
   const create = useMutation({
     mutationFn: async (input: Partial<CatalogItem> & { title: string; organization_id: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('product_catalog_items')
         .insert({
           ...input,
@@ -59,7 +59,7 @@ export function useCatalogItemMutations(productId?: string | null) {
         .select()
         .single();
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       invalidate();
@@ -70,14 +70,14 @@ export function useCatalogItemMutations(productId?: string | null) {
 
   const update = useMutation({
     mutationFn: async ({ id, ...patch }: Partial<CatalogItem> & { id: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('product_catalog_items')
         .update(patch)
         .eq('id', id)
         .select()
         .single();
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       invalidate();
@@ -111,14 +111,14 @@ export function useCatalogSync() {
       catalog_type?: string;
       max_items?: number;
     }) => {
-      const { fecha, error } = await supabase.functions.invoke('catalog-sync-website', { body: input });
+      const { data, error } = await supabase.functions.invoke('catalog-sync-website', { body: input });
       if (error) throw error;
-      return fecha;
+      return data;
     },
-    onSuccess: (fecha: any) => {
+    onSuccess: (data: any) => {
       toast({
         title: 'Sincronización completada',
-        description: `${fecha.items_created || 0} novos · ${fecha.items_updated || 0} actualizados · ${fecha.items_failed || 0} falhas`,
+        description: `${data.items_created || 0} novos · ${data.items_updated || 0} actualizados · ${data.items_failed || 0} falhas`,
       });
     },
     onError: (e: any) => toast({ title: 'Error en la sincronización', description: e.message, variant: 'destructive' }),
@@ -128,12 +128,12 @@ export function useCatalogSync() {
 export function useCatalogImport() {
   return useMutation({
     mutationFn: async (input: { organization_id: string; product_id?: string | null; items: any[] }) => {
-      const { fecha, error } = await supabase.functions.invoke('catalog-import-csv', { body: input });
+      const { data, error } = await supabase.functions.invoke('catalog-import-csv', { body: input });
       if (error) throw error;
-      return fecha;
+      return data;
     },
-    onSuccess: (fecha: any) => {
-      toast({ title: 'Importación completada', description: `${fecha.inserted || 0} itens importados` });
+    onSuccess: (data: any) => {
+      toast({ title: 'Importación completada', description: `${data.inserted || 0} itens importados` });
     },
     onError: (e: any) => toast({ title: 'Error en la importación', description: e.message, variant: 'destructive' }),
   });

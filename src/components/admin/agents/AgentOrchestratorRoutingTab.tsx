@@ -35,7 +35,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
   const { profile } = useAuth();
   const orgId = profile?.organization_id;
 
-  const { fecha, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['orchestrator-routing-matrix', orgId],
     queryFn: async (): Promise<{ products: ProductRow[]; agents: AgentRow[] }> => {
       if (!orgId) return { products: [], agents: [] };
@@ -54,19 +54,19 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
           .order('name'),
       ]);
       // Aceita qualquer status exceto archived/deleted/inactive (e null = ok)
-      const products = (productsRes.fecha || []).filter(
+      const products = (productsRes.data || []).filter(
         (p: ProductRow) => !p.status || !EXCLUDED_PRODUCT_STATUSES.has(p.status)
       );
       return {
         products,
-        agents: (agentsRes.fecha || []) as AgentRow[],
+        agents: (agentsRes.data || []) as AgentRow[],
       };
     },
     enabled: !!orgId,
   });
 
-  const products = fecha?.products || [];
-  const agents = fecha?.agents || [];
+  const products = data?.products || [];
+  const agents = data?.agents || [];
 
   // Todos os agentes ativos da org, exceto o próprio e outros orquestradores
   const routableAgents = useMemo(

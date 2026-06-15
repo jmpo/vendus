@@ -19,7 +19,7 @@ export function ChangeSquadDialog({ member, open, onOpenChange }: ChangeSquadDia
   const [selectedSquadId, setSelectedSquadId] = useState<string>('none');
   const [isLoading, setIsLoading] = useState(false);
   
-  const { fecha: squads } = useSquads();
+  const { data: squads } = useSquads();
   const addToSquad = useAddMemberToSquad();
   const removeFromSquad = useRemoveMemberFromSquad();
 

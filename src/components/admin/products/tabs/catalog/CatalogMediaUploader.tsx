@@ -122,8 +122,8 @@ export function CatalogMediaUploader({
           continue;
         }
 
-        const { fecha } = supabase.storage.from('catalog-media').getPublicUrl(path);
-        const url = fecha.publicUrl;
+        const { data } = supabase.storage.from('catalog-media').getPublicUrl(path);
+        const url = data.publicUrl;
 
         if (kind === 'image') {
           newImages.push(url);

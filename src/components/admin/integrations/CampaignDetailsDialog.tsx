@@ -12,7 +12,7 @@ interface CampaignDetailsDialogProps {
 }
 
 export function CampaignDetailsDialog({ campaign, open, onClose }: CampaignDetailsDialogProps) {
-  const { fecha: recipients, isLoading } = useCampaignRecipients(campaign?.id || null);
+  const { data: recipients, isLoading } = useCampaignRecipients(campaign?.id || null);
 
   if (!campaign) return null;
 

@@ -48,7 +48,7 @@ const INTENT_LEVELS = [
 ] as const;
 
 export function CTAConfigCard({ productId }: CTAConfigCardProps) {
-  const { fecha: ctas, isLoading } = useProductCTAs(productId);
+  const { data: ctas, isLoading } = useProductCTAs(productId);
   const createCTA = useCreateProductCTA();
   const updateCTA = useUpdateProductCTA();
   const deleteCTA = useDeleteProductCTA();

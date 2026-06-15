@@ -15,7 +15,7 @@ export default function HelpArticle() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { fecha: article, isLoading } = useHelpArticle(slug);
+  const { data: article, isLoading } = useHelpArticle(slug);
   const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
 
   if (isLoading) {

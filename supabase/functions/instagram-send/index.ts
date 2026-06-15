@@ -40,7 +40,7 @@ Deno.serve(async (req: Request) => {
 
   // Resolver via conversation_id se faltar
   if (conversation_id && (!connId || !toId)) {
-    const { fecha: conv } = await sb
+    const { data: conv } = await sb
       .from('webchat_conversations')
       .select('instagram_connection_id, ig_sender_id, organization_id')
       .eq('id', conversation_id)
@@ -52,7 +52,7 @@ Deno.serve(async (req: Request) => {
 
   if (!connId || !toId) return json({ error: 'missing connection_id or recipient_id' }, 400);
 
-  const { fecha: conn, error: connErr } = await sb
+  const { data: conn, error: connErr } = await sb
     .from('instagram_connections')
     .select('*')
     .eq('id', connId)
@@ -63,7 +63,7 @@ Deno.serve(async (req: Request) => {
 
   // janela 24h
   if (conversation_id && !tag) {
-    const { fecha: ok } = await sb.rpc('is_within_24h_window', { _conversation_id: conversation_id });
+    const { data: ok } = await sb.rpc('is_within_24h_window', { _conversation_id: conversation_id });
     if (ok === false) {
       return json({
         error: 'OUT_OF_WINDOW',

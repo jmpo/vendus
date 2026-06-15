@@ -33,7 +33,7 @@ export function SendCadenceDialog({
 }: SendCadenceDialogProps) {
   const { profile } = useAuth();
   const { toast } = useToast();
-  const { fecha: cadenceDays, isLoading } = useCadence(productId);
+  const { data: cadenceDays, isLoading } = useCadence(productId);
   const [selectedDay, setSelectedDay] = useState<CadenceDay | null>(null);
   const [isSending, setIsSending] = useState(false);
 

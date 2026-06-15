@@ -34,8 +34,8 @@ const DEFAULT_SCHEDULE: WeekSchedule = {
 };
 
 export function BusinessHoursManager() {
-  const { fecha: bh } = useBusinessHours();
-  const { fecha: holidays } = useBusinessHolidays();
+  const { data: bh } = useBusinessHours();
+  const { data: holidays } = useBusinessHolidays();
   const upsert = useUpsertBusinessHours();
   const addHoliday = useAddHoliday();
   const delHoliday = useDeleteHoliday();

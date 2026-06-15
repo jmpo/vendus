@@ -154,10 +154,10 @@ export function QuizLiveCanvas({
     );
   }
 
-  const showLogo = a.logo_url && (currentBlock.fecha.show_logo !== false);
-  const ctaLabel = currentBlock.fecha.cta_label || 'Continuar';
-  const ctaEmoji = currentBlock.fecha.cta_emoji || '👉';
-  const widthPct = currentBlock.fecha.block_appearance?.width_pct ?? 100;
+  const showLogo = a.logo_url && (currentBlock.data.show_logo !== false);
+  const ctaLabel = currentBlock.data.cta_label || 'Continuar';
+  const ctaEmoji = currentBlock.data.cta_emoji || '👉';
+  const widthPct = currentBlock.data.block_appearance?.width_pct ?? 100;
 
   const stepContent = (
     <div
@@ -202,24 +202,24 @@ export function QuizLiveCanvas({
                   letterSpacing: '-0.02em',
                 }}
               >
-                {currentBlock.fecha.content || 'Pergunta'}
+                {currentBlock.data.content || 'Pergunta'}
               </h1>
-              {currentBlock.fecha.subtitle && (
+              {currentBlock.data.subtitle && (
                 <p className="mb-3 leading-snug" style={{ color: mutedText, fontSize: a.font_size_base * 1.05 }}>
-                  {currentBlock.fecha.subtitle}
+                  {currentBlock.data.subtitle}
                 </p>
               )}
-              {currentBlock.fecha.show_duration && (
+              {currentBlock.data.show_duration && (
                 <p className="mb-5 text-xs font-medium" style={{ color: mutedText }}>
-                  ⏳ {currentBlock.fecha.duration_label || 'Duración de 2min para responder'}
+                  ⏳ {currentBlock.data.duration_label || 'Duración de 2min para responder'}
                 </p>
               )}
             </EditableArea>
           )}
 
-          {currentBlock.fecha.image_url && currentBlock.type !== 'end' && (
+          {currentBlock.data.image_url && currentBlock.type !== 'end' && (
             <img
-              src={currentBlock.fecha.image_url}
+              src={currentBlock.data.image_url}
               alt=""
               className="w-full mb-5 object-cover max-h-[240px]"
               style={{ borderRadius: a.border_radius }}
@@ -231,12 +231,12 @@ export function QuizLiveCanvas({
             <div
               className={cn(
                 'mb-2',
-                (currentBlock.fecha.block_appearance?.layout === 'grid-2')
+                (currentBlock.data.block_appearance?.layout === 'grid-2')
                   ? 'grid grid-cols-2 gap-2.5'
                   : 'space-y-3',
               )}
             >
-              {(currentBlock.fecha.options || []).map((opt) => (
+              {(currentBlock.data.options || []).map((opt) => (
                 <div
                   key={opt.id}
                   className="w-full text-left px-4 py-4 sm:py-[18px] flex items-center gap-3 cursor-default"
@@ -255,7 +255,7 @@ export function QuizLiveCanvas({
                   <span className="text-[15px] sm:text-base font-medium flex-1">{opt.label}</span>
                 </div>
               ))}
-              {(currentBlock.fecha.options || []).length === 0 && (
+              {(currentBlock.data.options || []).length === 0 && (
                 <div className="text-xs text-center py-6 rounded-lg border border-dashed" style={{ color: mutedText, borderColor: subtleBorder }}>
                   Adicione opciones no painel direito →
                 </div>
@@ -275,7 +275,7 @@ export function QuizLiveCanvas({
                   borderRadius: a.border_radius,
                 }}
               >
-                {currentBlock.fecha.placeholder || 'Su respuesta...'}
+                {currentBlock.data.placeholder || 'Su respuesta...'}
               </div>
             </div>
           )}
@@ -294,10 +294,10 @@ export function QuizLiveCanvas({
                   style={{ background: a.primary_color }}
                 />
                 <h2 className="text-2xl font-bold mb-2" style={{ letterSpacing: '-0.01em' }}>
-                  {currentBlock.fecha.content || 'Gracias!'}
+                  {currentBlock.data.content || 'Gracias!'}
                 </h2>
-                {currentBlock.fecha.success_message && (
-                  <p className="text-sm" style={{ color: mutedText }}>{currentBlock.fecha.success_message}</p>
+                {currentBlock.data.success_message && (
+                  <p className="text-sm" style={{ color: mutedText }}>{currentBlock.data.success_message}</p>
                 )}
               </div>
             </EditableArea>

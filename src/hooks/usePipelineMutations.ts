@@ -29,14 +29,14 @@ export function usePipelineStages(productId?: string) {
     queryFn: async () => {
       if (!productId) return [];
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('pipeline_stages')
         .select('*')
         .eq('product_id', productId)
         .order('order_index', { ascending: true });
 
       if (error) throw error;
-      return fecha as PipelineStage[];
+      return data as PipelineStage[];
     },
     enabled: !!productId,
   });
@@ -52,13 +52,13 @@ export function useCreateDefaultPipelineStages() {
         product_id: productId,
       }));
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('pipeline_stages')
         .insert(stages)
         .select();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: (_, productId) => {
       queryClient.invalidateQueries({ queryKey: ['pipeline-stages', productId] });
@@ -74,7 +74,7 @@ export function useUpdatePipelineStage() {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<PipelineStage> & { id: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('pipeline_stages')
         .update(updates)
         .eq('id', id)
@@ -82,10 +82,10 @@ export function useUpdatePipelineStage() {
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
-    onSuccess: (fecha) => {
-      queryClient.invalidateQueries({ queryKey: ['pipeline-stages', fecha.product_id] });
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['pipeline-stages', data.product_id] });
       toast.success('Etapa actualizada!');
     },
     onError: (error) => {
@@ -100,17 +100,17 @@ export function useCreatePipelineStage() {
 
   return useMutation({
     mutationFn: async (stage: Omit<PipelineStage, 'id'>) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('pipeline_stages')
         .insert(stage)
         .select()
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
-    onSuccess: (fecha) => {
-      queryClient.invalidateQueries({ queryKey: ['pipeline-stages', fecha.product_id] });
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['pipeline-stages', data.product_id] });
       toast.success('Etapa creada!');
     },
     onError: (error) => {

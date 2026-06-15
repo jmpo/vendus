@@ -47,7 +47,7 @@ export function CatalogPickerDialog({ open, onOpenChange, productId, onSend }: C
   const [search, setSearch] = useState('');
   const [sendingId, setSendingId] = useState<string | null>(null);
 
-  const { fecha: items = [], isLoading } = useQuery({
+  const { data: items = [], isLoading } = useQuery({
     queryKey: ['catalog-items-chat', profile?.organization_id, productId],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
@@ -59,9 +59,9 @@ export function CatalogPickerDialog({ open, onOpenChange, productId, onSend }: C
         .order('created_at', { ascending: false })
         .limit(60);
       if (productId) q = q.eq('product_id', productId);
-      const { fecha, error } = await q;
+      const { data, error } = await q;
       if (error) throw error;
-      return (fecha || []) as CatalogItem[];
+      return (data || []) as CatalogItem[];
     },
     enabled: !!profile?.organization_id && open,
   });

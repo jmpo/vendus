@@ -40,21 +40,21 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
   const { profile } = useAuth();
   const orgId = profile?.organization_id;
 
-  const { fecha: members = [] } = useQuery({
+  const { data: members = [] } = useQuery({
     queryKey: ['org-members-with-name', orgId],
     queryFn: async (): Promise<OrgMember[]> => {
       if (!orgId) return [];
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('profiles')
         .select('id, full_name, email')
         .eq('organization_id', orgId)
         .order('full_name', { ascending: true });
-      return (fecha ?? []) as OrgMember[];
+      return (data ?? []) as OrgMember[];
     },
     enabled: !!orgId,
   });
 
-  const { fecha: eventTypes = [], refetch: refetchEventTypes } = useQuery({
+  const { data: eventTypes = [], refetch: refetchEventTypes } = useQuery({
     queryKey: ['org-event-types', orgId, formData.default_schedule_user_id],
     queryFn: async (): Promise<EventType[]> => {
       if (!orgId) return [];
@@ -67,22 +67,22 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
       if (formData.default_schedule_user_id) {
         q = q.eq('user_id', formData.default_schedule_user_id);
       }
-      const { fecha } = await q;
-      return (fecha ?? []) as EventType[];
+      const { data } = await q;
+      return (data ?? []) as EventType[];
     },
     enabled: !!orgId,
   });
 
-  const { fecha: linkedProduct } = useQuery({
+  const { data: linkedProduct } = useQuery({
     queryKey: ['agent-linked-product', formData.product_id],
     queryFn: async (): Promise<{ id: string; name: string } | null> => {
       if (!formData.product_id) return null;
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('products')
         .select('id, name')
         .eq('id', formData.product_id)
         .maybeSingle();
-      return fecha as { id: string; name: string } | null;
+      return data as { id: string; name: string } | null;
     },
     enabled: !!formData.product_id,
   });

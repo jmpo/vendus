@@ -14,7 +14,7 @@ const roleConfig = {
 };
 
 export function PendingInvitations() {
-  const { fecha: invitations, isLoading } = useTeamInvitations();
+  const { data: invitations, isLoading } = useTeamInvitations();
   const cancelInvitation = useCancelInvitation();
   const resendInvitation = useResendInvitation();
 

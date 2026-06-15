@@ -43,7 +43,7 @@ export default function PublicForm() {
       setLoading(true);
       
       // Fetch form by slug
-      const { fecha: formData, error: formError } = await supabase
+      const { data: formData, error: formError } = await supabase
         .from('forms')
         .select('*')
         .eq('slug', slug)
@@ -114,7 +114,7 @@ export default function PublicForm() {
       setForm(parsedForm);
 
       // Fetch blocks
-      const { fecha: blocksData, error: blocksError } = await supabase
+      const { data: blocksData, error: blocksError } = await supabase
         .from('form_blocks')
         .select('*')
         .eq('form_id', formData.id)
@@ -323,7 +323,7 @@ export default function PublicForm() {
       const selected_actions = collectAllSelectedActions();
       const selected_options = collectSelectedOptions();
 
-      const { fecha, error } = await supabase.functions.invoke('form-submit', {
+      const { data, error } = await supabase.functions.invoke('form-submit', {
         body: {
           form_id: form.id,
           responses: cleanResponses,
@@ -335,11 +335,11 @@ export default function PublicForm() {
 
       if (error) throw error;
 
-      if (fecha?.success) {
+      if (data?.success) {
         setSubmitted(true);
         // Server may override the theme redirect (e.g. open_calendar action builds a /agendar URL)
-        const target: string | null = fecha.redirect_url || form.theme.redirect_url || null;
-        const newTab: boolean = !!fecha.redirect_new_tab;
+        const target: string | null = data.redirect_url || form.theme.redirect_url || null;
+        const newTab: boolean = !!data.redirect_new_tab;
         if (target) {
           if (newTab) {
             window.open(target, '_blank', 'noopener');
@@ -348,7 +348,7 @@ export default function PublicForm() {
           }
         }
       } else {
-        throw new Error(fecha?.error || 'Error al enviar el formulario');
+        throw new Error(data?.error || 'Error al enviar el formulario');
       }
     } catch (err: any) {
       console.error('Error submitting form:', err);

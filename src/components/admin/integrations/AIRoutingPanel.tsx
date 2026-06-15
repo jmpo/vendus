@@ -33,9 +33,9 @@ const CAPABILITY_RESTRICTIONS: Partial<Record<AICapability, AIProvider[]>> = {
 };
 
 export function AIRoutingPanel() {
-  const { fecha: credentials = [], isLoading: loadingCreds } = useAICredentials();
-  const { fecha: routing = [], isLoading: loadingRouting } = useAIRouting();
-  const { fecha: tokenStatus } = useAITokenStatus();
+  const { data: credentials = [], isLoading: loadingCreds } = useAICredentials();
+  const { data: routing = [], isLoading: loadingRouting } = useAIRouting();
+  const { data: tokenStatus } = useAITokenStatus();
   const save = useSaveAIRouting();
   const platformAllowed = tokenStatus?.allow_platform_ai !== false;
 

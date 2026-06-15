@@ -41,12 +41,12 @@ export function CadenceApiKeys({ orgId }: Props) {
   const load = async () => {
     if (!orgId) return;
     setLoading(true);
-    const { fecha } = await supabase
+    const { data } = await supabase
       .from('cadence_api_keys' as any)
       .select('id,name,key_prefix,created_at,last_used_at,revoked_at')
       .eq('organization_id', orgId)
       .order('created_at', { ascending: false });
-    setKeys((fecha as any[]) ?? []);
+    setKeys((data as any[]) ?? []);
     setLoading(false);
   };
 

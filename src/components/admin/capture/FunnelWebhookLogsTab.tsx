@@ -14,7 +14,7 @@ interface FunnelWebhookLogsTabProps {
 }
 
 export function FunnelWebhookLogsTab({ funnelId }: FunnelWebhookLogsTabProps) {
-  const { fecha: logs, isLoading, refetch, isFetching } = useFunnelWebhookLogs(funnelId);
+  const { data: logs, isLoading, refetch, isFetching } = useFunnelWebhookLogs(funnelId);
   const [filter, setFilter] = useState<'all' | 'success' | 'error'>('all');
 
   const filtered = (logs || []).filter((l) => {

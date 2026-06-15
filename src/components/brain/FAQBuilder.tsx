@@ -32,7 +32,7 @@ interface FAQBuilderProps {
 }
 
 export function FAQBuilder({ productId }: FAQBuilderProps) {
-  const { fecha: faqs, isLoading } = useKnowledgeSourcesByType(productId, 'faq');
+  const { data: faqs, isLoading } = useKnowledgeSourcesByType(productId, 'faq');
   const createFaq = useCreateKnowledgeSource();
   const deleteFaq = useDeleteKnowledgeSource();
   

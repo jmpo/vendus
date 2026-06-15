@@ -69,14 +69,14 @@ function useOrgBookingEventTypes() {
     queryKey: ['org-booking-event-types', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('booking_event_types')
         .select('id, name, slug, user_id, is_active')
         .eq('organization_id', profile.organization_id)
         .eq('is_active', true)
         .order('name');
       if (error) throw error;
-      return fecha || [];
+      return data || [];
     },
     enabled: !!profile?.organization_id,
   });
@@ -88,14 +88,14 @@ function useOrgAgents() {
     queryKey: ['org-product-agents', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('product_agents')
         .select('id, name, is_active, product:products(name)')
         .eq('organization_id', profile.organization_id)
         .eq('is_active', true)
         .order('name');
       if (error) throw error;
-      return (fecha || []) as Array<{ id: string; name: string; product?: { name?: string } | null }>;
+      return (data || []) as Array<{ id: string; name: string; product?: { name?: string } | null }>;
     },
     enabled: !!profile?.organization_id,
   });
@@ -240,11 +240,11 @@ function ActionForm({
   allBlocks: FormBlock[];
   currentBlockId: string;
 }) {
-  const { fecha: tags } = useLeadTags();
-  const { fecha: sectors } = useSectors();
-  const { fecha: team } = useTeamMembers();
-  const { fecha: eventTypes } = useOrgBookingEventTypes();
-  const { fecha: agents } = useOrgAgents();
+  const { data: tags } = useLeadTags();
+  const { data: sectors } = useSectors();
+  const { data: team } = useTeamMembers();
+  const { data: eventTypes } = useOrgBookingEventTypes();
+  const { data: agents } = useOrgAgents();
 
   switch (action.type) {
     case 'redirect':

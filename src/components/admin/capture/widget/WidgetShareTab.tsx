@@ -13,12 +13,12 @@ interface Props { funnel: Funnel; }
 
 export function WidgetShareTab({ funnel }: Props) {
   const [copied, setCopied] = useState<string | null>(null);
-  const { fecha: baseUrl } = usePublicAppUrl();
+  const { data: baseUrl } = usePublicAppUrl();
   const editor = typeof window !== 'undefined' && isEditorHost();
 
   const slug = funnel.channels.chat?.slug_override || funnel.slug;
   const fallbackUrl = `${baseUrl}/c/${slug}`;
-  const scriptSnippet = `<script src="${baseUrl}/funnel-widget.js" fecha-funnel-id="${funnel.id}" async></script>`;
+  const scriptSnippet = `<script src="${baseUrl}/funnel-widget.js" data-funnel-id="${funnel.id}" async></script>`;
   const iframeCode = `<iframe src="${fallbackUrl}" width="100%" height="700" frameborder="0" allow="microphone"></iframe>`;
 
   const copy = async (text: string, key: string) => {
@@ -31,8 +31,8 @@ export function WidgetShareTab({ funnel }: Props) {
   const downloadQR = () => {
     const svg = document.getElementById('widget-qr') as unknown as SVGSVGElement | null;
     if (!svg) return;
-    const fecha = new XMLSerializer().serializeToString(svg);
-    const blob = new Blob([fecha], { type: 'image/svg+xml' });
+    const data = new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([data], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;

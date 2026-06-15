@@ -24,7 +24,7 @@ export async function sendPlatformEmail(args: SendPlatformEmailArgs): Promise<{ 
   const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 
-  const { fecha: tpl, error: tplErr } = await supabase
+  const { data: tpl, error: tplErr } = await supabase
     .from("platform_email_templates")
     .select("subject, html_content, variables, is_active")
     .eq("slug", args.slug)

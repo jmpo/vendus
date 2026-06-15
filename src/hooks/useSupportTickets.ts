@@ -64,9 +64,9 @@ export function useSupportTickets(scope: 'admin' | 'super_admin' = 'admin') {
       if (scope === 'admin' && profile?.organization_id) {
         q = q.eq('organization_id', profile.organization_id);
       }
-      const { fecha, error } = await q;
+      const { data, error } = await q;
       if (error) throw error;
-      return (fecha ?? []) as any;
+      return (data ?? []) as any;
     },
   });
 
@@ -110,13 +110,13 @@ export function useSupportMessages(ticketId: string | null) {
     queryKey: ['support-messages', ticketId],
     enabled: !!ticketId,
     queryFn: async (): Promise<SupportMessage[]> => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('support_messages')
         .select('*, author:profiles!support_messages_author_id_fkey(full_name, email)')
         .eq('ticket_id', ticketId!)
         .order('created_at');
       if (error) throw error;
-      return (fecha ?? []) as any;
+      return (data ?? []) as any;
     },
   });
 
@@ -142,7 +142,7 @@ export function useCreateTicket() {
   return useMutation({
     mutationFn: async (input: { subject: string; category?: string; priority?: SupportPriority; firstMessage: string }) => {
       if (!profile?.organization_id || !user) throw new Error('Sin usuario');
-      const { fecha: ticket, error } = await supabase
+      const { data: ticket, error } = await supabase
         .from('support_tickets')
         .insert({
           organization_id: profile.organization_id,

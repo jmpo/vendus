@@ -25,9 +25,9 @@ export function useAITokenStatus() {
     queryKey: ['ai-token-status', orgId],
     queryFn: async (): Promise<AITokenStatus | null> => {
       if (!orgId) return null;
-      const { fecha, error } = await supabase.rpc('get_org_ai_tokens_status', { p_org_id: orgId });
+      const { data, error } = await supabase.rpc('get_org_ai_tokens_status', { p_org_id: orgId });
       if (error) throw error;
-      const row = Array.isArray(fecha) ? fecha[0] : fecha;
+      const row = Array.isArray(data) ? data[0] : data;
       if (!row) return null;
       const included = Number(row.included || 0);
       const bonus = Number(row.bonus || 0);

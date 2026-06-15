@@ -36,7 +36,7 @@ const OPERATORS: { value: string; label: string }[] = [
 ];
 
 function shortLabel(b: FunnelBlock): string {
-  const d: any = b.fecha || {};
+  const d: any = b.data || {};
   return (
     d.content || d.placeholder || d.success_message ||
     d.link_title || d.image_alt || b.type
@@ -66,15 +66,15 @@ export function QuizBlockInspector({
   const others = ordered.filter(b => b.id !== block.id);
 
   const update = <K extends keyof FunnelBlockData>(key: K, value: FunnelBlockData[K]) =>
-    onUpdate({ fecha: { ...block.fecha, [key]: value } });
+    onUpdate({ data: { ...block.data, [key]: value } });
 
   const updateOption = (optId: string, patch: Partial<FunnelBlockOption>) => {
-    const opts = block.fecha.options || [];
+    const opts = block.data.options || [];
     update('options', opts.map(o => o.id === optId ? { ...o, ...patch } : o));
   };
 
   const addOption = () => {
-    const opts = block.fecha.options || [];
+    const opts = block.data.options || [];
     const letter = String.fromCharCode(65 + opts.length);
     update('options', [...opts, {
       id: generateBlockId(),
@@ -84,10 +84,10 @@ export function QuizBlockInspector({
   };
 
   const removeOption = (id: string) =>
-    update('options', (block.fecha.options || []).filter(o => o.id !== id));
+    update('options', (block.data.options || []).filter(o => o.id !== id));
 
   const moveOption = (id: string, dir: -1 | 1) => {
-    const opts = [...(block.fecha.options || [])];
+    const opts = [...(block.data.options || [])];
     const i = opts.findIndex(o => o.id === id);
     if (i < 0) return;
     const j = i + dir;
@@ -101,19 +101,19 @@ export function QuizBlockInspector({
   const isScore = block.type === 'score';
   const isTag = block.type === 'tag';
   const isEnd = block.type === 'end';
-  const hasOptions = isChoice && (block.fecha.options?.length ?? 0) > 0;
+  const hasOptions = isChoice && (block.data.options?.length ?? 0) > 0;
 
   // ─── Fase 3: helpers para Resultado (tiers / metrics) ───
   type Tier = { id: string; label: string; min: number; max: number; color?: string; message?: string };
   type Metric = { id: string; label: string; value: number; display?: string; color?: string };
-  const tiers: Tier[] = ((block.fecha as any).result_tiers as Tier[]) || [
+  const tiers: Tier[] = ((block.data as any).result_tiers as Tier[]) || [
     { id: 't1', label: 'Iniciante', min: 0, max: 20, color: '#f97316', message: 'Há mucho espaço para crescer.' },
     { id: 't2', label: 'Intermediário', min: 21, max: 50, color: '#3b82f6', message: 'Bom caminho — vamos acelerar.' },
     { id: 't3', label: 'Avançado', min: 51, max: 100, color: '#10b981', message: 'Excelente! Pronto para o próximo nível.' },
   ];
-  const metrics: Metric[] = ((block.fecha as any).result_metrics as Metric[]) || [];
+  const metrics: Metric[] = ((block.data as any).result_metrics as Metric[]) || [];
   const updateAny = (key: string, value: any) =>
-    onUpdate({ fecha: { ...block.fecha, [key]: value } as any });
+    onUpdate({ data: { ...block.data, [key]: value } as any });
   const setTiers = (next: Tier[]) => updateAny('result_tiers', next);
   const setMetrics = (next: Metric[]) => updateAny('result_metrics', next);
 
@@ -144,7 +144,7 @@ export function QuizBlockInspector({
                 <Textarea
                   rows={2}
                   className="text-sm"
-                  value={block.fecha.content || ''}
+                  value={block.data.content || ''}
                   onChange={(e) => update('content', e.target.value)}
                   placeholder="Texto exibido para el lead..."
                 />
@@ -157,7 +157,7 @@ export function QuizBlockInspector({
                   </Label>
                   <Input
                     className="text-xs font-mono h-8"
-                    value={block.fecha.variable_name || ''}
+                    value={block.data.variable_name || ''}
                     onChange={(e) => update('variable_name', e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}
                     placeholder="ex: faturamento"
                   />
@@ -165,7 +165,7 @@ export function QuizBlockInspector({
                 <div className="flex items-end justify-between gap-2 pb-1">
                   <Label className="text-xs">Obrigatória</Label>
                   <Switch
-                    checked={!!block.fecha.required}
+                    checked={!!block.data.required}
                     onCheckedChange={(v) => update('required', v)}
                   />
                 </div>
@@ -176,7 +176,7 @@ export function QuizBlockInspector({
                   <Label className="text-xs">Placeholder</Label>
                   <Input
                     className="text-xs h-8"
-                    value={block.fecha.placeholder || ''}
+                    value={block.data.placeholder || ''}
                     onChange={(e) => update('placeholder', e.target.value)}
                   />
                 </div>
@@ -186,7 +186,7 @@ export function QuizBlockInspector({
                 <Label className="text-xs">Subtítulo (opcional)</Label>
                 <Input
                   className="text-xs h-8"
-                  value={block.fecha.subtitle || ''}
+                  value={block.data.subtitle || ''}
                   onChange={(e) => update('subtitle', e.target.value)}
                   placeholder="Ex: Seleccioná a opción que mais combina"
                 />
@@ -197,7 +197,7 @@ export function QuizBlockInspector({
                   <Label className="text-xs">Texto do botão</Label>
                   <Input
                     className="text-xs h-8"
-                    value={block.fecha.cta_label || ''}
+                    value={block.data.cta_label || ''}
                     onChange={(e) => update('cta_label', e.target.value)}
                     placeholder="Continuar"
                   />
@@ -206,7 +206,7 @@ export function QuizBlockInspector({
                   <Label className="text-xs">Emoji</Label>
                   <Input
                     className="text-xs h-8"
-                    value={block.fecha.cta_emoji || ''}
+                    value={block.data.cta_emoji || ''}
                     onChange={(e) => update('cta_emoji', e.target.value)}
                     placeholder="👉"
                     maxLength={4}
@@ -218,21 +218,21 @@ export function QuizBlockInspector({
                 <div className="flex items-center justify-between">
                   <Label className="text-xs">Mostrar logo no topo</Label>
                   <Switch
-                    checked={block.fecha.show_logo !== false}
+                    checked={block.data.show_logo !== false}
                     onCheckedChange={(v) => update('show_logo', v)}
                   />
                 </div>
                 <div className="flex items-center justify-between">
                   <Label className="text-xs">Mostrar duración estimada</Label>
                   <Switch
-                    checked={!!block.fecha.show_duration}
+                    checked={!!block.data.show_duration}
                     onCheckedChange={(v) => update('show_duration', v)}
                   />
                 </div>
-                {block.fecha.show_duration && (
+                {block.data.show_duration && (
                   <Input
                     className="text-xs h-8"
-                    value={block.fecha.duration_label || ''}
+                    value={block.data.duration_label || ''}
                     onChange={(e) => update('duration_label', e.target.value)}
                     placeholder="2min para responder"
                   />
@@ -245,7 +245,7 @@ export function QuizBlockInspector({
                 </Label>
                 <Input
                   className="text-xs h-8"
-                  value={block.fecha.image_url || ''}
+                  value={block.data.image_url || ''}
                   onChange={(e) => update('image_url', e.target.value)}
                   placeholder="https://..."
                 />
@@ -264,7 +264,7 @@ export function QuizBlockInspector({
               </div>
 
               <div className="space-y-2">
-                {(block.fecha.options || []).map((opt, idx) => (
+                {(block.data.options || []).map((opt, idx) => (
                   <div key={opt.id} className="rounded-lg border bg-card p-2 space-y-2">
                     <div className="flex items-center gap-1">
                       <span className="w-5 h-5 rounded-md bg-muted text-[10px] font-bold flex items-center justify-center text-muted-foreground">
@@ -282,7 +282,7 @@ export function QuizBlockInspector({
                       </Button>
                       <Button size="icon" variant="ghost" className="h-6 w-6"
                         onClick={() => moveOption(opt.id, 1)}
-                        disabled={idx === (block.fecha.options?.length ?? 0) - 1}>
+                        disabled={idx === (block.data.options?.length ?? 0) - 1}>
                         <ChevronDown className="h-3 w-3" />
                       </Button>
                       <Button size="icon" variant="ghost" className="h-6 w-6 text-destructive"
@@ -372,7 +372,7 @@ export function QuizBlockInspector({
                 <Label className="text-xs">Variável (opcional)</Label>
                 <Input
                   className="text-xs font-mono h-8"
-                  value={block.fecha.variable_name || ''}
+                  value={block.data.variable_name || ''}
                   onChange={(e) => update('variable_name', e.target.value)}
                   placeholder="score_total"
                 />
@@ -384,7 +384,7 @@ export function QuizBlockInspector({
                 <Input
                   type="number"
                   className="text-xs h-8"
-                  value={block.fecha.score_value ?? 0}
+                  value={block.data.score_value ?? 0}
                   onChange={(e) => update('score_value', Number(e.target.value))}
                 />
               </div>
@@ -398,7 +398,7 @@ export function QuizBlockInspector({
               </Label>
               <Input
                 className="text-xs h-8"
-                value={(block.fecha.apply_tags || []).join(', ')}
+                value={(block.data.apply_tags || []).join(', ')}
                 onChange={(e) => update('apply_tags',
                   e.target.value.split(',').map(s => s.trim()).filter(Boolean)
                 )}
@@ -420,17 +420,17 @@ export function QuizBlockInspector({
                   <Input
                     className="text-xs h-8 font-mono"
                     placeholder="variável"
-                    value={block.fecha.condition?.variable || ''}
+                    value={block.data.condition?.variable || ''}
                     onChange={(e) => update('condition', {
-                      ...(block.fecha.condition || { operator: 'equals', value: '' }),
+                      ...(block.data.condition || { operator: 'equals', value: '' }),
                       variable: e.target.value,
                     })}
                   />
                 </div>
                 <Select
-                  value={block.fecha.condition?.operator || 'equals'}
+                  value={block.data.condition?.operator || 'equals'}
                   onValueChange={(v: any) => update('condition', {
-                    ...(block.fecha.condition || { variable: '', value: '' }),
+                    ...(block.data.condition || { variable: '', value: '' }),
                     operator: v,
                   })}
                 >
@@ -444,9 +444,9 @@ export function QuizBlockInspector({
                 <Input
                   className="text-xs h-8"
                   placeholder="valor"
-                  value={String(block.fecha.condition?.value ?? '')}
+                  value={String(block.data.condition?.value ?? '')}
                   onChange={(e) => update('condition', {
-                    ...(block.fecha.condition || { variable: '', operator: 'equals' }),
+                    ...(block.data.condition || { variable: '', operator: 'equals' }),
                     value: e.target.value,
                   })}
                 />
@@ -457,7 +457,7 @@ export function QuizBlockInspector({
                   Então (verdadeiro) → Ir para
                 </p>
                 <Select
-                  value={block.fecha.true_next_block_id || 'sequential'}
+                  value={block.data.true_next_block_id || 'sequential'}
                   onValueChange={(v) => update('true_next_block_id', v === 'sequential' ? undefined : v)}
                 >
                   <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
@@ -477,7 +477,7 @@ export function QuizBlockInspector({
                   Senão (falso) → Ir para
                 </p>
                 <Select
-                  value={block.fecha.false_next_block_id || 'sequential'}
+                  value={block.data.false_next_block_id || 'sequential'}
                   onValueChange={(v) => update('false_next_block_id', v === 'sequential' ? undefined : v)}
                 >
                   <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
@@ -524,7 +524,7 @@ export function QuizBlockInspector({
                   <p className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
                     Ramificações por opción
                   </p>
-                  {(block.fecha.options || []).map((opt, idx) => {
+                  {(block.data.options || []).map((opt, idx) => {
                     const target = opt.next_block_id;
                     return (
                       <div key={opt.id} className="flex items-center justify-between gap-2 text-xs">
@@ -556,7 +556,7 @@ export function QuizBlockInspector({
               <Label className="text-xs">Mensaje do resultado</Label>
               <Input
                 className="text-xs h-8"
-                value={block.fecha.success_message || ''}
+                value={block.data.success_message || ''}
                 onChange={(e) => update('success_message', e.target.value)}
                 placeholder="Su resultado:"
               />
@@ -569,18 +569,18 @@ export function QuizBlockInspector({
                   ✨ Análise com IA
                 </Label>
                 <Switch
-                  checked={!!(block.fecha as any).result_ai_enabled || (block.fecha as any).quiz_subtype === 'result_ai'}
+                  checked={!!(block.data as any).result_ai_enabled || (block.data as any).quiz_subtype === 'result_ai'}
                   onCheckedChange={(v) => {
                     updateAny('result_ai_enabled', v);
                     updateAny('quiz_subtype', v ? 'result_ai' : 'result');
                   }}
                 />
               </div>
-              {((block.fecha as any).result_ai_enabled || (block.fecha as any).quiz_subtype === 'result_ai') && (
+              {((block.data as any).result_ai_enabled || (block.data as any).quiz_subtype === 'result_ai') && (
                 <Textarea
                   rows={3}
                   className="text-xs"
-                  value={(block.fecha as any).result_ai_prompt || ''}
+                  value={(block.data as any).result_ai_prompt || ''}
                   onChange={(e) => updateAny('result_ai_prompt', e.target.value)}
                   placeholder="Prompt personalizado (opcional). Ex: Usted é um consultor de marketing digital. Genera um diagnóstico..."
                 />
@@ -704,7 +704,7 @@ export function QuizBlockInspector({
               <Label className="text-xs">Redirect URL (após exibir resultado)</Label>
               <Input
                 className="text-xs h-8"
-                value={block.fecha.redirect_url || ''}
+                value={block.data.redirect_url || ''}
                 onChange={(e) => update('redirect_url', e.target.value)}
                 placeholder="https://..."
               />

@@ -21,7 +21,7 @@ import type { GradientStyle } from '@/lib/colors';
 const FONT_OPTIONS = ['Inter', 'Poppins', 'Roboto', 'Manrope', 'DM Sans', 'Plus Jakarta Sans'];
 
 export function PlatformSettings() {
-  const { fecha: settings, isLoading } = usePlatformSettings();
+  const { data: settings, isLoading } = usePlatformSettings();
   const updateSettings = useUpdatePlatformSettings();
   const createAuditLog = useCreateAuditLog();
 

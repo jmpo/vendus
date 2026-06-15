@@ -56,7 +56,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
   const allAgentsQuery = useAllAgents();
 
   // Se o lead tiene producto, usa agentes do producto; senão fallback p/ todos da org.
-  const agents = lead.product_id ? productAgentsQuery.fecha : allAgentsQuery.fecha;
+  const agents = lead.product_id ? productAgentsQuery.data : allAgentsQuery.data;
   const loadingAgents = lead.product_id ? productAgentsQuery.isLoading : allAgentsQuery.isLoading;
 
   const [agentId, setAgentId] = useState<string>('');
@@ -118,7 +118,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
 
     setIsSending(true);
     try {
-      const { fecha, error } = await supabase.functions.invoke('manual-outreach', {
+      const { data, error } = await supabase.functions.invoke('manual-outreach', {
         body: {
           lead_ids: [lead.id],
           agent_id: agentId,
@@ -131,7 +131,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
 
       if (error) throw error;
 
-      const result = Array.isArray((fecha as any)?.results) ? (fecha as any).results[0] : null;
+      const result = Array.isArray((data as any)?.results) ? (data as any).results[0] : null;
       if (result?.skipped) {
         toast.info(`La IA no se activó: ${result.reason || 'ya existe un outreach reciente'}`);
       } else if (result?.error) {

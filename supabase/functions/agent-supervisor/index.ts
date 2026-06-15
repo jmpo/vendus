@@ -159,7 +159,7 @@ Deno.serve(async (req) => {
     }
 
     // 1) tenta regras determinísticas
-    const { fecha: ruleMatch, error: ruleErr } = await supabase.rpc(
+    const { data: ruleMatch, error: ruleErr } = await supabase.rpc(
       "evaluate_routing_rules",
       {
         p_organization_id: payload.organization_id,
@@ -203,13 +203,13 @@ Deno.serve(async (req) => {
             .from("agent_routing_rules")
             .select("match_count")
             .eq("id", r.rule_id)
-            .single()).fecha?.match_count + 1 || 1,
+            .single()).data?.match_count + 1 || 1,
           last_matched_at: new Date().toISOString(),
         })
         .eq("id", r.rule_id);
     } else {
       // 2) fallback LLM
-      const { fecha: specialists } = await supabase
+      const { data: specialists } = await supabase
         .from("agent_specialists")
         .select("id, agent_id, role, display_name, description")
         .eq("organization_id", payload.organization_id)

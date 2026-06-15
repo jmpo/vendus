@@ -38,18 +38,18 @@ export function QuickRepliesManager() {
   const [creating, setCreating] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const { fecha: replies = [], isLoading } = useQuery({
+  const { data: replies = [], isLoading } = useQuery({
     queryKey: ['quick-replies-admin', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('quick_replies')
         .select('*')
         .eq('organization_id', profile.organization_id)
         .order('category')
         .order('title');
       if (error) throw error;
-      return fecha as QuickReply[];
+      return data as QuickReply[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -57,7 +57,7 @@ export function QuickRepliesManager() {
   const saveMutation = useMutation({
     mutationFn: async (payload: Partial<QuickReply> & { id?: string }) => {
       if (!profile?.organization_id || !user?.id) throw new Error('Sin organización');
-      const fecha = {
+      const data = {
         organization_id: profile.organization_id,
         category: payload.category?.trim() || 'General',
         title: payload.title!.trim(),
@@ -66,12 +66,12 @@ export function QuickRepliesManager() {
         is_active: payload.is_active ?? true,
       };
       if (payload.id) {
-        const { error } = await supabase.from('quick_replies').update(fecha).eq('id', payload.id);
+        const { error } = await supabase.from('quick_replies').update(data).eq('id', payload.id);
         if (error) throw error;
       } else {
         const { error } = await supabase
           .from('quick_replies')
-          .insert({ ...fecha, created_by: user.id });
+          .insert({ ...data, created_by: user.id });
         if (error) throw error;
       }
     },
@@ -192,7 +192,7 @@ export function QuickRepliesManager() {
         open={creating || !!editing}
         onClose={() => { setCreating(false); setEditing(null); }}
         initial={editing}
-        onSave={(fecha) => saveMutation.mutate({ ...fecha, id: editing?.id })}
+        onSave={(data) => saveMutation.mutate({ ...data, id: editing?.id })}
         isSaving={saveMutation.isPending}
       />
 
@@ -218,7 +218,7 @@ interface FormProps {
   open: boolean;
   onClose: () => void;
   initial: QuickReply | null;
-  onSave: (fecha: Partial<QuickReply>) => void;
+  onSave: (data: Partial<QuickReply>) => void;
   isSaving: boolean;
 }
 

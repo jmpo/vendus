@@ -135,7 +135,7 @@ export function QuickInsight({
   );
 }
 
-// Generate contextual insight based on dashboard fecha
+// Generate contextual insight based on dashboard data
 export function generateInsight(stats: {
   atRiskLeads?: number;
   hotLeads?: number;

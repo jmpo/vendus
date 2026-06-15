@@ -29,14 +29,14 @@ export function SalesLeadsManager() {
   const [selectedLead, setSelectedLead] = useState<any>(null);
   const [notes, setNotes] = useState('');
 
-  const { fecha: leads = [], isLoading } = useQuery({
+  const { data: leads = [], isLoading } = useQuery({
     queryKey: ['sales-leads', statusFilter],
     queryFn: async () => {
       let query = supabase.from('sales_leads').select('*').order('created_at', { ascending: false });
       if (statusFilter !== 'all') query = query.eq('status', statusFilter);
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return fecha;
+      return data;
     },
   });
 

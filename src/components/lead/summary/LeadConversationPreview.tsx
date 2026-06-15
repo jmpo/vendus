@@ -13,11 +13,11 @@ interface Props {
 }
 
 export function LeadConversationPreview({ leadId, onOpenConversation }: Props) {
-  const { fecha, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['lead-conversation-preview', leadId],
     enabled: !!leadId,
     queryFn: async () => {
-      const { fecha: convs } = await supabase
+      const { data: convs } = await supabase
         .from('webchat_conversations')
         .select('id, channel, last_message_at, status')
         .eq('lead_id', leadId)
@@ -27,7 +27,7 @@ export function LeadConversationPreview({ leadId, onOpenConversation }: Props) {
       const conv = convs?.[0];
       if (!conv) return null;
 
-      const { fecha: messages } = await supabase
+      const { data: messages } = await supabase
         .from('webchat_messages')
         .select('id, direction, sender_type, content, created_at, content_type')
         .eq('conversation_id', conv.id)
@@ -40,7 +40,7 @@ export function LeadConversationPreview({ leadId, onOpenConversation }: Props) {
   });
 
   if (isLoading) return null;
-  if (!fecha) return null;
+  if (!data) return null;
 
   return (
     <Card>
@@ -49,7 +49,7 @@ export function LeadConversationPreview({ leadId, onOpenConversation }: Props) {
           <MessageSquare className="h-4 w-4" />
           Conversación reciente
           <span className="text-xs text-muted-foreground font-normal capitalize">
-            · {fecha.conv.channel}
+            · {data.conv.channel}
           </span>
         </CardTitle>
         {onOpenConversation && (
@@ -57,17 +57,17 @@ export function LeadConversationPreview({ leadId, onOpenConversation }: Props) {
             variant="ghost"
             size="sm"
             className="h-7 gap-1"
-            onClick={() => onOpenConversation(fecha.conv.id)}
+            onClick={() => onOpenConversation(data.conv.id)}
           >
             Abrir <ArrowRight className="h-3 w-3" />
           </Button>
         )}
       </CardHeader>
       <CardContent className="pt-0 space-y-2">
-        {fecha.messages.length === 0 ? (
+        {data.messages.length === 0 ? (
           <p className="text-sm text-muted-foreground">Sin mensajes</p>
         ) : (
-          fecha.messages.map((m: any) => {
+          data.messages.map((m: any) => {
             const inbound = m.direction === 'inbound';
             return (
               <div

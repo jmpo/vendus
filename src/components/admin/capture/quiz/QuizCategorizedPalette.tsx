@@ -178,10 +178,10 @@ export const QuizCategorizedPalette = memo(function QuizCategorizedPalette({ onA
 /** Aplica o preset escolhido sobre um FunnelBlock recém-creado. */
 export function applyPresetToBlockData(
   preset: string | undefined,
-  fecha: Record<string, any>,
+  data: Record<string, any>,
 ): Record<string, any> {
-  if (!preset) return fecha;
-  const next = { ...fecha };
+  if (!preset) return data;
+  const next = { ...data };
   switch (preset) {
     case 'text':     next.input_type = 'text';     next.placeholder = 'Escribí su respuesta...'; break;
     case 'textarea': next.input_type = 'textarea'; next.placeholder = 'Escribe aqui...'; break;

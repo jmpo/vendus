@@ -145,9 +145,9 @@ export function FlowCanvas({
   // Render button connections
   const renderButtonConnections = () => {
     return blocks.flatMap((block) => {
-      if (block.type !== 'buttons' || !block.fecha.buttons) return [];
+      if (block.type !== 'buttons' || !block.data.buttons) return [];
       
-      return block.fecha.buttons.map((btn, idx) => {
+      return block.data.buttons.map((btn, idx) => {
         if (!btn.next_block_id) return null;
         
         const targetBlock = blocks.find(b => b.id === btn.next_block_id);

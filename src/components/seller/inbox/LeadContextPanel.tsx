@@ -115,8 +115,8 @@ export function LeadContextPanel({
   const [tagPopoverOpen, setTagPopoverOpen] = useState(false);
 
   const setSector = useSetConversationSector();
-  const { fecha: sectors = [] } = useSectors();
-  const { fecha: orgTags = [] } = useLeadTags();
+  const { data: sectors = [] } = useSectors();
+  const { data: orgTags = [] } = useLeadTags();
   const assignTag = useAssignLeadTag();
   const removeTag = useRemoveLeadTag();
   const createTag = useCreateLeadTag();
@@ -133,7 +133,7 @@ export function LeadContextPanel({
   const initials = displayName.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
 
   // Lead tags (only if a lead is linked)
-  const { fecha: leadTagAssignments = [] } = useLeadTagsForLead(lead?.id || undefined);
+  const { data: leadTagAssignments = [] } = useLeadTagsForLead(lead?.id || undefined);
   const leadTags = leadTagAssignments.map((a) => a.tag).filter(Boolean);
 
   return (

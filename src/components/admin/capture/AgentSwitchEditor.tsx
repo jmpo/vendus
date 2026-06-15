@@ -18,7 +18,7 @@ interface AgentSwitchEditorProps {
 }
 
 export function AgentSwitchEditor({ productId, agentId, onAgentChange }: AgentSwitchEditorProps) {
-  const { fecha: agents, isLoading } = useProductAgents(productId);
+  const { data: agents, isLoading } = useProductAgents(productId);
   
   // Admin agents are private to the org administrator and must NOT be
   // available as transfer targets in the regular routing flow.

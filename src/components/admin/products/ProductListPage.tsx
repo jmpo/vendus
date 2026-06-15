@@ -58,9 +58,9 @@ const statusOptions = [
 ];
 
 export function ProductListPage({ onProductSelect }: ProductListPageProps) {
-  const { fecha: products, isLoading } = useProducts();
-  const { fecha: leads } = useLeads();
-  const { fecha: deals } = useDeals();
+  const { data: products, isLoading } = useProducts();
+  const { data: leads } = useLeads();
+  const { data: deals } = useDeals();
   const { profile } = useAuth();
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();

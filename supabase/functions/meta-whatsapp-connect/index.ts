@@ -28,7 +28,7 @@ Deno.serve(async (req: Request) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
 
-  const { fecha: userData, error: userErr } = await sbUser.auth.getUser();
+  const { data: userData, error: userErr } = await sbUser.auth.getUser();
   if (userErr || !userData?.user) return json({ error: 'Unauthorized' }, 401);
   const userId = userData.user.id;
 
@@ -50,7 +50,7 @@ Deno.serve(async (req: Request) => {
   }
 
   // Confirma membership da org
-  const { fecha: belongs } = await sbAdmin.rpc('user_belongs_to_organization', {
+  const { data: belongs } = await sbAdmin.rpc('user_belongs_to_organization', {
     _user_id: userId,
     _organization_id: organization_id,
   });
@@ -78,7 +78,7 @@ Deno.serve(async (req: Request) => {
 
   if (isExisting) {
     // Carrega o registro (rascunho ou ativo) e promove a 'active'.
-    const { fecha: current, error: loadErr } = await sbAdmin
+    const { data: current, error: loadErr } = await sbAdmin
       .from('whatsapp_meta_connections')
       .select('id, status, app_secret_encrypted, access_token_encrypted, webhook_verify_token')
       .eq('id', connection_id)
@@ -111,7 +111,7 @@ Deno.serve(async (req: Request) => {
       return json({ error: 'access_token obligatorio (no há um guardado anteriormente)' }, 400);
     }
 
-    const { fecha, error } = await sbAdmin
+    const { data, error } = await sbAdmin
       .from('whatsapp_meta_connections')
       .update(updates)
       .eq('id', connection_id)
@@ -119,11 +119,11 @@ Deno.serve(async (req: Request) => {
       .select('id, webhook_verify_token')
       .single();
     if (error) return json({ error: error.message }, 500);
-    row = fecha;
+    row = data;
   } else {
     if (!app_secret) return json({ error: 'app_secret obligatorio na criação' }, 400);
     const verifyToken = generateVerifyToken();
-    const { fecha, error } = await sbAdmin
+    const { data, error } = await sbAdmin
       .from('whatsapp_meta_connections')
       .insert({
         organization_id,
@@ -145,7 +145,7 @@ Deno.serve(async (req: Request) => {
       .select('id, webhook_verify_token')
       .single();
     if (error) return json({ error: error.message }, 500);
-    row = fecha;
+    row = data;
   }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL');

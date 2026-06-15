@@ -30,17 +30,17 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_ANON_KEY')!,
       { global: { headers: { Authorization: authHeader } } },
     );
-    const { fecha: { user: caller } } = await userClient.auth.getUser();
+    const { data: { user: caller } } = await userClient.auth.getUser();
     if (!caller) return json({ error: 'unauthorized' }, 401);
 
-    const { fecha: isSuper } = await admin.rpc('is_super_admin', { _user_id: caller.id });
+    const { data: isSuper } = await admin.rpc('is_super_admin', { _user_id: caller.id });
     if (!isSuper) return json({ error: 'forbidden' }, 403);
 
     const body = await req.json().catch(() => ({}));
     const orderId = body.order_id ?? body.orderId;
     if (!orderId) return json({ error: 'order_id required' }, 400);
 
-    const { fecha: order, error } = await admin
+    const { data: order, error } = await admin
       .from('cakto_orders')
       .select('*')
       .eq('id', orderId)

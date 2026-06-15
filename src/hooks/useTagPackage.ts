@@ -27,18 +27,18 @@ export function useGenerateTagPackage() {
   return useMutation({
     mutationFn: async ({ product_id, product_label }: GeneratePackageParams) => {
       if (!orgId) throw new Error('Organización no encontrada');
-      const { fecha, error } = await supabase.rpc('create_product_tag_package', {
+      const { data, error } = await supabase.rpc('create_product_tag_package', {
         p_organization_id: orgId,
         p_product_id: product_id,
         p_product_label: product_label,
       });
       if (error) throw error;
-      return fecha as { ok: boolean; tags: { tag_id: string; name: string }[] };
+      return data as { ok: boolean; tags: { tag_id: string; name: string }[] };
     },
-    onSuccess: (fecha) => {
+    onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ['lead-tags'] });
       qc.invalidateQueries({ queryKey: ['tag-automations'] });
-      const count = fecha?.tags?.length ?? 0;
+      const count = data?.tags?.length ?? 0;
       toast.success(`Paquete generado: ${count} etiquetas + ${count} automatizaciones activas.`);
     },
     onError: (err: any) => {

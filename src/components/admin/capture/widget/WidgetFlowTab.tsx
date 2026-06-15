@@ -15,10 +15,10 @@ function findBestStartBlock(blocks: FunnelBlock[], currentStartId: string | null
   const targetedIds = new Set(
     blocks.flatMap(b => [
       b.next_block_id,
-      b.fecha.true_next_block_id,
-      b.fecha.false_next_block_id,
-      ...(b.fecha.options?.map(o => o.next_block_id) || []),
-      ...(b.fecha.ai_outputs?.map(o => o.next_block_id) || []),
+      b.data.true_next_block_id,
+      b.data.false_next_block_id,
+      ...(b.data.options?.map(o => o.next_block_id) || []),
+      ...(b.data.ai_outputs?.map(o => o.next_block_id) || []),
     ].filter(Boolean))
   );
   const orphans = blocks.filter(b => !targetedIds.has(b.id));
@@ -96,7 +96,7 @@ export function WidgetFlowTab({ funnel }: Props) {
     const block = blocks.find(b => b.id === blockId);
     if (!block) return;
     const nb = createDefaultBlock(block.type, { x: block.position.x + 30, y: block.position.y + 30 });
-    nb.fecha = { ...block.fecha };
+    nb.data = { ...block.data };
     setBlocks(prev => [...prev, nb]);
     setSelectedBlockId(nb.id);
     setIsDirty(true);
@@ -121,18 +121,18 @@ export function WidgetFlowTab({ funnel }: Props) {
       if (block.id !== sourceId) return block;
       switch (connectionType) {
         case 'normal': return { ...block, next_block_id: null };
-        case 'condition_true': return { ...block, fecha: { ...block.fecha, true_next_block_id: null } };
-        case 'condition_false': return { ...block, fecha: { ...block.fecha, false_next_block_id: null } };
+        case 'condition_true': return { ...block, data: { ...block.data, true_next_block_id: null } };
+        case 'condition_false': return { ...block, data: { ...block.data, false_next_block_id: null } };
         case 'option':
-          if (block.type === 'buttons' && block.fecha.options && optionIndex !== undefined) {
-            const opts = [...block.fecha.options];
+          if (block.type === 'buttons' && block.data.options && optionIndex !== undefined) {
+            const opts = [...block.data.options];
             opts[optionIndex] = { ...opts[optionIndex], next_block_id: null };
-            return { ...block, fecha: { ...block.fecha, options: opts } };
+            return { ...block, data: { ...block.data, options: opts } };
           }
-          if (block.type === 'ai_decide' && block.fecha.ai_outputs && optionIndex !== undefined) {
-            const outs = [...block.fecha.ai_outputs];
+          if (block.type === 'ai_decide' && block.data.ai_outputs && optionIndex !== undefined) {
+            const outs = [...block.data.ai_outputs];
             outs[optionIndex] = { ...outs[optionIndex], next_block_id: null };
-            return { ...block, fecha: { ...block.fecha, ai_outputs: outs } };
+            return { ...block, data: { ...block.data, ai_outputs: outs } };
           }
           return block;
         default: return block;

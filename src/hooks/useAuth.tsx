@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, 8000);
 
     // 1) Set up auth state listener BEFORE checking session
-    const { fecha: { subscription } } = supabase.auth.onAuthStateChange(
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, nextSession) => {
         if (!mounted) return;
         setSession(nextSession);
@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // 2) Restore session from storage
     withTimeout(supabase.auth.getSession(), 6000, 'getSession')
-      .then(({ fecha: { session: existing } }) => {
+      .then(({ data: { session: existing } }) => {
         if (!mounted) return;
         setSession(existing);
         setUser(existing?.user ?? null);
@@ -149,19 +149,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const [profileRes, rolesRes, permsRes] = results;
 
       if (profileRes.status === 'fulfilled' && !profileRes.value.error) {
-        setProfile((profileRes.value.fecha as any) ?? null);
+        setProfile((profileRes.value.data as any) ?? null);
       } else if (profileRes.status === 'rejected') {
         console.warn('[auth] profile fetch failed:', profileRes.reason);
       }
 
-      if (rolesRes.status === 'fulfilled' && !rolesRes.value.error && rolesRes.value.fecha) {
-        setRoles(rolesRes.value.fecha.map((r: any) => r.role as AppRole));
+      if (rolesRes.status === 'fulfilled' && !rolesRes.value.error && rolesRes.value.data) {
+        setRoles(rolesRes.value.data.map((r: any) => r.role as AppRole));
       } else if (rolesRes.status === 'rejected') {
         console.warn('[auth] roles fetch failed:', rolesRes.reason);
       }
 
-      if (permsRes.status === 'fulfilled' && !permsRes.value.error && permsRes.value.fecha) {
-        setPermissions(permsRes.value.fecha as unknown as UserPermissions);
+      if (permsRes.status === 'fulfilled' && !permsRes.value.error && permsRes.value.data) {
+        setPermissions(permsRes.value.data as unknown as UserPermissions);
       } else if (permsRes.status === 'rejected') {
         console.warn('[auth] permissions fetch failed:', permsRes.reason);
       }
@@ -183,7 +183,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
       options: {
         emailRedirectTo: window.location.origin,
-        fecha: { full_name: fullName }
+        data: { full_name: fullName }
       }
     });
     return { error: error as Error | null };

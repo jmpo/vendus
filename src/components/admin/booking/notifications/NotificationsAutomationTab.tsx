@@ -32,7 +32,7 @@ interface Props {
 export function NotificationsAutomationTab({ eventTypeId }: Props) {
   const { profile } = useAuth();
   const { settings, isLoading, upsertSettings } = useBookingNotifications(eventTypeId);
-  const { fecha: instances = [] } = useEvolutionInstances();
+  const { data: instances = [] } = useEvolutionInstances();
   const [draft, setDraft] = useState<Partial<BookingNotificationSettings>>({});
   const [recoveryEditOpen, setRecoveryEditOpen] = useState(false);
 

@@ -49,7 +49,7 @@ type FormData = z.infer<typeof formSchema>;
 interface CreateLeadDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (fecha: FormData) => void;
+  onSubmit: (data: FormData) => void;
   isLoading?: boolean;
   products: { id: string; name: string }[];
   teamMembers: { id: string; full_name: string }[];
@@ -83,8 +83,8 @@ export function CreateLeadDialog({
     },
   });
 
-  const handleSubmit = (fecha: FormData) => {
-    onSubmit(fecha);
+  const handleSubmit = (data: FormData) => {
+    onSubmit(data);
     form.reset();
   };
 

@@ -11,7 +11,7 @@ export function ChatBotPreviewTab({ funnel }: Props) {
   const [device, setDevice] = useState<'mobile' | 'desktop'>('mobile');
   const [reloadKey, setReloadKey] = useState(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const { fecha: baseUrl } = usePublicAppUrl();
+  const { data: baseUrl } = usePublicAppUrl();
 
   const slug = funnel.channels.chat?.slug_override || funnel.slug;
   const chatUrl = `${baseUrl}/c/${slug}?preview=1`;

@@ -17,7 +17,7 @@ interface Props {
 const ALL_SCOPES = ['read', 'write', 'orders', 'products', 'offers'];
 
 export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
-  const { fecha: cred, isLoading } = useCaktoCredentials(scope);
+  const { data: cred, isLoading } = useCaktoCredentials(scope);
   const save = useSaveCaktoCredentials(scope);
   const test = useTestCaktoConnection(scope);
   const disconnect = useDisconnectCakto(scope);

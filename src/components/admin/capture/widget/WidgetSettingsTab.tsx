@@ -34,9 +34,9 @@ export function WidgetSettingsTab({ funnel }: Props) {
   });
 
   const updateFunnel = useUpdateFunnel();
-  const { fecha: products } = useProducts();
-  const { fecha: squads } = useSquads();
-  const { fecha: teamMembers } = useTeamMembers();
+  const { data: products } = useProducts();
+  const { data: squads } = useSquads();
+  const { data: teamMembers } = useTeamMembers();
 
   const handleSave = async () => {
     const updates = {

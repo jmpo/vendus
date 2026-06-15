@@ -91,7 +91,7 @@ export function ChatInput({
   const { upload, isUploading, progress, error: uploadError, reset: resetUpload } = useMediaUpload();
   const { toast } = useToast();
   const { profile } = useAuth();
-  const { fecha: publicAppUrl } = usePublicAppUrl();
+  const { data: publicAppUrl } = usePublicAppUrl();
 
   // Fill input with AI suggestion
   useEffect(() => {

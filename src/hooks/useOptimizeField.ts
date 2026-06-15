@@ -26,7 +26,7 @@ export function useOptimizeField() {
     setResult(null);
 
     try {
-      const { fecha, error } = await supabase.functions.invoke('optimize-product-field', {
+      const { data, error } = await supabase.functions.invoke('optimize-product-field', {
         body: {
           field,
           value,
@@ -38,8 +38,8 @@ export function useOptimizeField() {
 
       const optimizeResult: OptimizeResult = {
         original: value,
-        optimized: fecha.optimized,
-        improvements: fecha.improvements || [],
+        optimized: data.optimized,
+        improvements: data.improvements || [],
       };
 
       setResult(optimizeResult);

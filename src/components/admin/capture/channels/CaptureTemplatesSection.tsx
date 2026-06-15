@@ -11,7 +11,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { LayoutGrid, Sparkles, Clock, ListChecks, Rocket, Loader2 } from 'lucide-react';
-import { QUIZ_TEMPLATES, CATEGORY_LABELS, type QuizTemplate } from '@/fecha/quizTemplates';
+import { QUIZ_TEMPLATES, CATEGORY_LABELS, type QuizTemplate } from '@/data/quizTemplates';
 import { useCreateFunnel } from '@/hooks/useFunnels';
 import { useProducts } from '@/hooks/useProducts';
 import { cn } from '@/lib/utils';
@@ -25,7 +25,7 @@ export function CaptureTemplatesSection() {
   const [productId, setProductId] = useState<string>('');
   const [name, setName] = useState('');
   const createFunnel = useCreateFunnel();
-  const { fecha: products } = useProducts();
+  const { data: products } = useProducts();
 
   const filtered = filter === 'todos'
     ? QUIZ_TEMPLATES

@@ -22,10 +22,10 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
   const userId = user?.id;
   const isMobile = useIsMobile();
 
-  const { fecha: commissions } = useCommissions({ userId, productId });
-  const { fecha: commissionsSummary } = useCommissionsSummary(userId, productId);
-  const { fecha: dealsSummary } = useDealsSummary(productId, userId);
-  const { fecha: pipelineSummary } = usePipelineFinancialSummary(productId, userId);
+  const { data: commissions } = useCommissions({ userId, productId });
+  const { data: commissionsSummary } = useCommissionsSummary(userId, productId);
+  const { data: dealsSummary } = useDealsSummary(productId, userId);
+  const { data: pipelineSummary } = usePipelineFinancialSummary(productId, userId);
 
   // Mock goal - na prática viria de user_product_assignments
   const monthlyGoal = 50000;

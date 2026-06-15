@@ -41,7 +41,7 @@ serve(async (req: Request): Promise<Response> => {
       const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
       const supabase = createClient(supabaseUrl, supabaseKey);
 
-      const { fecha: settings, error } = await supabase
+      const { data: settings, error } = await supabase
         .from("integration_settings")
         .select("settings")
         .eq("organization_id", organization_id)

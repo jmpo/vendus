@@ -31,7 +31,7 @@ interface AcceptTicketBarProps {
  * pede para el agente escolher antes de assumir.
  */
 export function AcceptTicketBar({ onAccept, loading }: AcceptTicketBarProps) {
-  const { fecha: sectors = [] } = useSectors();
+  const { data: sectors = [] } = useSectors();
   const [open, setOpen] = useState(false);
   const [selectedSector, setSelectedSector] = useState<string>('');
 

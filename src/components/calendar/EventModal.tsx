@@ -46,8 +46,8 @@ const REMINDER_OPTIONS = [
 export function EventModal({ open, onOpenChange, event, defaultDate, defaultLeadId, defaultProductId }: EventModalProps) {
   const createEvent = useCreateEvent();
   const updateEvent = useUpdateEvent();
-  const { fecha: products } = useProducts();
-  const { fecha: leads } = useLeads();
+  const { data: products } = useProducts();
+  const { data: leads } = useLeads();
   const { isConnected } = useGoogleCalendarConnection();
 
   const [formData, setFormData] = useState<CreateEventData & { create_meet?: boolean }>({

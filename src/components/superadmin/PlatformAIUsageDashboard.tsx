@@ -29,9 +29,9 @@ function useOrgs() {
   return useQuery({
     queryKey: ['orgs-list-min'],
     queryFn: async () => {
-      const { fecha, error } = await supabase.from('organizations').select('id, name').order('name');
+      const { data, error } = await supabase.from('organizations').select('id, name').order('name');
       if (error) throw error;
-      return fecha ?? [];
+      return data ?? [];
     },
   });
 }
@@ -54,12 +54,12 @@ export function PlatformAIUsageDashboard() {
     };
   }, [range, provider, orgId]);
 
-  const { fecha: orgs = [] } = useOrgs();
-  const { fecha: summary } = useAIUsageSummary(filters);
-  const { fecha: timeseries = [] } = useAIUsageTimeseries(filters);
-  const { fecha: byOrg = [] } = useAIUsageByOrg(filters, 10);
-  const { fecha: byModel = [] } = useAIUsageByModel(filters, 20);
-  const { fecha: byKey = [] } = useAIUsageByKey(filters, 20);
+  const { data: orgs = [] } = useOrgs();
+  const { data: summary } = useAIUsageSummary(filters);
+  const { data: timeseries = [] } = useAIUsageTimeseries(filters);
+  const { data: byOrg = [] } = useAIUsageByOrg(filters, 10);
+  const { data: byModel = [] } = useAIUsageByModel(filters, 20);
+  const { data: byKey = [] } = useAIUsageByKey(filters, 20);
 
   // Costo total estimado (modelo a modelo)
   const totalCostUSD = useMemo(() => {
@@ -168,7 +168,7 @@ export function PlatformAIUsageDashboard() {
           <CardHeader><CardTitle className="text-base">Tokens por día</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <AreaChart fecha={tsData}>
+              <AreaChart data={tsData}>
                 <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                 <XAxis dataKey="day" fontSize={11} />
                 <YAxis fontSize={11} />
@@ -196,7 +196,7 @@ export function PlatformAIUsageDashboard() {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie fecha={donutData} dataKey="value" nameKey="name" innerRadius={55} outerRadius={95} paddingAngle={3}>
+                <Pie data={donutData} dataKey="value" nameKey="name" innerRadius={55} outerRadius={95} paddingAngle={3}>
                   {donutData.map((d: any) => (
                     <Cell key={d.provider} fill={PROVIDER_COLORS[d.provider] ?? '#888'} />
                   ))}
@@ -214,7 +214,7 @@ export function PlatformAIUsageDashboard() {
         <CardHeader><CardTitle className="text-base">Principales empresas por consumo</CardTitle></CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={Math.max(220, byOrg.length * 32)}>
-            <BarChart fecha={byOrg} layout="vertical" margin={{ left: 120 }}>
+            <BarChart data={byOrg} layout="vertical" margin={{ left: 120 }}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
               <XAxis type="number" fontSize={11} />
               <YAxis dataKey="org_name" type="category" fontSize={11} width={140} />

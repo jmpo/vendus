@@ -39,8 +39,8 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
   const [cadenceId, setCadenceId] = useState('');
   const [generating, setGenerating] = useState(false);
 
-  const { fecha: products } = useProducts();
-  const { fecha: agents } = useAllAgents();
+  const { data: products } = useProducts();
+  const { data: agents } = useAllAgents();
   const { cadences } = useCadences();
   const createFunnel = useCreateFunnel();
   const updateFunnel = useUpdateFunnel();
@@ -52,7 +52,7 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
     }
     setGenerating(true);
     try {
-      const { fecha, error } = await supabase.functions.invoke('quiz-generate-ai', {
+      const { data, error } = await supabase.functions.invoke('quiz-generate-ai', {
         body: {
           product_id: productId, name, objective, context,
           tone, result_type: resultType,
@@ -61,22 +61,22 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
         },
       });
       if (error) throw error;
-      if (!fecha?.success) throw new Error(fecha?.error || 'Falha ao gerar quiz');
+      if (!data?.success) throw new Error(data?.error || 'Falha ao gerar quiz');
 
       // Reconstrói blocks com IDs reais e linkagem linear
-      const blocks: FunnelBlock[] = (fecha.blocks || []).map((b: any) => ({
+      const blocks: FunnelBlock[] = (data.blocks || []).map((b: any) => ({
         id: generateBlockId(),
         type: b.type,
         position: { x: 0, y: 0 },
         next_block_id: null,
-        fecha: b.fecha || {},
+        data: b.data || {},
       }));
       for (let i = 0; i < blocks.length - 1; i++) blocks[i].next_block_id = blocks[i + 1].id;
 
       const created = await createFunnel.mutateAsync({
         product_id: productId,
-        name: fecha.suggested_name || name,
-        description: fecha.suggested_description || objective,
+        name: data.suggested_name || name,
+        description: data.suggested_description || objective,
         channel_type: 'quiz',
         flow_blocks: blocks,
         start_block_id: blocks[0]?.id,

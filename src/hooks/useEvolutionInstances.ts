@@ -37,15 +37,15 @@ export function usePlatformEvolutionConfig() {
   return useQuery({
     queryKey: ['platform-evolution-config'],
     queryFn: async (): Promise<PlatformEvolutionConfig> => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('platform_settings')
         .select('evolution_go_url, evolution_go_global_api_key')
         .limit(1)
         .maybeSingle();
       if (error) throw error;
       return {
-        evolution_go_url: (fecha as any)?.evolution_go_url ?? null,
-        evolution_go_global_api_key: (fecha as any)?.evolution_go_global_api_key ?? null,
+        evolution_go_url: (data as any)?.evolution_go_url ?? null,
+        evolution_go_global_api_key: (data as any)?.evolution_go_global_api_key ?? null,
       };
     },
   });
@@ -55,7 +55,7 @@ export function useUpdatePlatformEvolutionConfig() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (cfg: PlatformEvolutionConfig) => {
-      const { fecha: existing } = await supabase
+      const { data: existing } = await supabase
         .from('platform_settings')
         .select('id')
         .limit(1)
@@ -82,11 +82,11 @@ export function useUpdatePlatformEvolutionConfig() {
 export function useTestEvolutionConnection() {
   return useMutation({
     mutationFn: async (vars: { url: string; globalApiKey: string }) => {
-      const { fecha, error } = await supabase.functions.invoke('evolution-proxy', {
+      const { data, error } = await supabase.functions.invoke('evolution-proxy', {
         body: { action: 'test_connection', url: vars.url, globalApiKey: vars.globalApiKey },
       });
       if (error) throw error;
-      return fecha;
+      return data;
     },
   });
 }
@@ -99,13 +99,13 @@ export function useEvolutionInstances() {
   return useQuery({
     queryKey: ['evolution-instances', profile?.organization_id],
     queryFn: async (): Promise<EvolutionInstance[]> => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('evolution_instances')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
         .order('created_at', { ascending: true });
       if (error) throw error;
-      return (fecha || []) as EvolutionInstance[];
+      return (data || []) as EvolutionInstance[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -116,22 +116,22 @@ export function useAllEvolutionInstancesAdmin() {
   return useQuery({
     queryKey: ['evolution-instances-all'],
     queryFn: async (): Promise<EvolutionInstanceWithOrg[]> => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('evolution_instances')
         .select('*, organization:organizations(id, name)')
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return (fecha || []) as EvolutionInstanceWithOrg[];
+      return (data || []) as EvolutionInstanceWithOrg[];
     },
   });
 }
 
 function useProxyAction() {
   return async (body: Record<string, any>) => {
-    const { fecha, error } = await supabase.functions.invoke('evolution-proxy', { body });
+    const { data, error } = await supabase.functions.invoke('evolution-proxy', { body });
     if (error) throw error;
-    if (fecha?.error) throw new Error(fecha.error);
-    return fecha;
+    if (data?.error) throw new Error(data.error);
+    return data;
   };
 }
 
@@ -183,12 +183,12 @@ export function useSubscribeEvolutionWebhook() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const { fecha, error } = await supabase.functions.invoke('evolution-proxy', {
+      const { data, error } = await supabase.functions.invoke('evolution-proxy', {
         body: { action: 'subscribe_webhook', id },
       });
       if (error) throw error;
-      if (fecha && fecha.ok === false) throw new Error(fecha.error || 'Falha ao configurar webhook');
-      return fecha;
+      if (data && data.ok === false) throw new Error(data.error || 'Falha ao configurar webhook');
+      return data;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
@@ -306,13 +306,13 @@ export function useSyncEvolutionInstances() {
   const proxy = useProxyAction();
   return useMutation({
     mutationFn: (organization_id?: string) => proxy({ action: 'sync_instances', organization_id }),
-    onSuccess: (fecha: any) => {
+    onSuccess: (data: any) => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      const imported = fecha?.imported ?? 0;
-      const updated = fecha?.updated ?? 0;
-      const total = fecha?.total ?? 0;
-      const whFailed = fecha?.webhooks?.failed ?? 0;
+      const imported = data?.imported ?? 0;
+      const updated = data?.updated ?? 0;
+      const total = data?.total ?? 0;
+      const whFailed = data?.webhooks?.failed ?? 0;
       if (total === 0) {
         toast.info('Ninguna instancia encontrada en el servidor.');
       } else {

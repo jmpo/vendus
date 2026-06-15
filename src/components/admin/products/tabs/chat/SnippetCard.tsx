@@ -14,13 +14,13 @@ interface SnippetCardProps {
 export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
   const [copied, setCopied] = useState(false);
 
-  const { fecha: currentDomain } = usePublicAppUrl();
+  const { data: currentDomain } = usePublicAppUrl();
 
   const snippet = `<!-- WebChat Widget -->
 <script 
   src="${currentDomain}/webchat-widget.js" 
-  fecha-widget-id="${widgetId}"
-  fecha-product-id="${productId}"
+  data-widget-id="${widgetId}"
+  data-product-id="${productId}"
   async>
 </script>`;
 

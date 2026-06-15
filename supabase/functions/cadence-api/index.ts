@@ -45,15 +45,15 @@ async function authenticate(req: Request): Promise<{ org_id: string; key_id: str
   }
   const hash = await sha256(token);
   const sb = admin();
-  const { fecha, error } = await sb
+  const { data, error } = await sb
     .from("cadence_api_keys")
     .select("id, organization_id, revoked_at")
     .eq("key_hash", hash)
     .maybeSingle();
-  if (error || !fecha) return json({ error: "Invalid API key" }, 401);
-  if (fecha.revoked_at) return json({ error: "API key revoked" }, 401);
-  await sb.from("cadence_api_keys").update({ last_used_at: new Date().toISOString() }).eq("id", fecha.id);
-  return { org_id: fecha.organization_id, key_id: fecha.id };
+  if (error || !data) return json({ error: "Invalid API key" }, 401);
+  if (data.revoked_at) return json({ error: "API key revoked" }, 401);
+  await sb.from("cadence_api_keys").update({ last_used_at: new Date().toISOString() }).eq("id", data.id);
+  return { org_id: data.organization_id, key_id: data.id };
 }
 
 async function invokeInternal(name: string, payload: any) {
@@ -88,30 +88,30 @@ Deno.serve(async (req) => {
   try {
     // GET /cadences
     if (req.method === "GET" && parts[0] === "cadences" && parts.length === 1) {
-      const { fecha } = await sb
+      const { data } = await sb
         .from("cadences")
         .select("id, name, description, objective, status, channel, created_at, last_executed_at")
         .eq("organization_id", org_id)
         .order("created_at", { ascending: false });
-      return json({ fecha: fecha ?? [] });
+      return json({ data: data ?? [] });
     }
 
     // GET /cadences/:id
     if (req.method === "GET" && parts[0] === "cadences" && parts.length === 2) {
       const id = parts[1];
-      const { fecha: cadence } = await sb.from("cadences").select("*").eq("id", id).eq("organization_id", org_id).maybeSingle();
+      const { data: cadence } = await sb.from("cadences").select("*").eq("id", id).eq("organization_id", org_id).maybeSingle();
       if (!cadence) return json({ error: "Not found" }, 404);
-      const { fecha: steps } = await sb.from("cadence_steps").select("*").eq("cadence_id", id).order("order_index");
-      return json({ fecha: { ...cadence, steps: steps ?? [] } });
+      const { data: steps } = await sb.from("cadence_steps").select("*").eq("cadence_id", id).order("order_index");
+      return json({ data: { ...cadence, steps: steps ?? [] } });
     }
 
     // GET /cadences/:id/stats
     if (req.method === "GET" && parts[0] === "cadences" && parts[2] === "stats") {
       const id = parts[1];
-      const { fecha: cadence } = await sb.from("cadences").select("id").eq("id", id).eq("organization_id", org_id).maybeSingle();
+      const { data: cadence } = await sb.from("cadences").select("id").eq("id", id).eq("organization_id", org_id).maybeSingle();
       if (!cadence) return json({ error: "Not found" }, 404);
-      const { fecha: enrollments } = await sb.from("cadence_enrollments").select("status, current_step_index").eq("cadence_id", id);
-      const { fecha: runs } = await sb.from("cadence_step_runs").select("step_id, status").eq("organization_id", org_id);
+      const { data: enrollments } = await sb.from("cadence_enrollments").select("status, current_step_index").eq("cadence_id", id);
+      const { data: runs } = await sb.from("cadence_step_runs").select("step_id, status").eq("organization_id", org_id);
       const totals = { active: 0, completed: 0, stopped: 0, paused: 0, total: 0 };
       (enrollments ?? []).forEach((e: any) => { totals.total++; if ((totals as any)[e.status] !== undefined) (totals as any)[e.status]++; });
       const byStep: Record<string, { sent: number; failed: number; skipped: number }> = {};
@@ -121,13 +121,13 @@ Deno.serve(async (req) => {
         else if (r.status === "failed") byStep[r.step_id].failed++;
         else if (r.status === "skipped") byStep[r.step_id].skipped++;
       });
-      return json({ fecha: { totals, by_step: byStep } });
+      return json({ data: { totals, by_step: byStep } });
     }
 
     // POST /cadences/:id/enroll
     if (req.method === "POST" && parts[0] === "cadences" && parts[2] === "enroll") {
       const id = parts[1];
-      const { fecha: cadence } = await sb.from("cadences").select("id").eq("id", id).eq("organization_id", org_id).maybeSingle();
+      const { data: cadence } = await sb.from("cadences").select("id").eq("id", id).eq("organization_id", org_id).maybeSingle();
       if (!cadence) return json({ error: "Not found" }, 404);
       const body = await req.json().catch(() => ({}));
       const { status, body: out } = await invokeInternal("cadence-enroll", {
@@ -142,7 +142,7 @@ Deno.serve(async (req) => {
     // POST /enrollments/:id/stop
     if (req.method === "POST" && parts[0] === "enrollments" && parts[2] === "stop") {
       const id = parts[1];
-      const { fecha: enr } = await sb.from("cadence_enrollments").select("id").eq("id", id).eq("organization_id", org_id).maybeSingle();
+      const { data: enr } = await sb.from("cadence_enrollments").select("id").eq("id", id).eq("organization_id", org_id).maybeSingle();
       if (!enr) return json({ error: "Not found" }, 404);
       const body = await req.json().catch(() => ({}));
       const { status, body: out } = await invokeInternal("cadence-stop", {
@@ -158,17 +158,17 @@ Deno.serve(async (req) => {
       const cad = url.searchParams.get("cadence_id"); if (cad) q = q.eq("cadence_id", cad);
       const lead = url.searchParams.get("lead_id"); if (lead) q = q.eq("lead_id", lead);
       const st = url.searchParams.get("status"); if (st) q = q.eq("status", st);
-      const { fecha } = await q;
-      return json({ fecha: fecha ?? [] });
+      const { data } = await q;
+      return json({ data: data ?? [] });
     }
 
     // GET /enrollments/:id
     if (req.method === "GET" && parts[0] === "enrollments" && parts.length === 2) {
       const id = parts[1];
-      const { fecha: enr } = await sb.from("cadence_enrollments").select("*").eq("id", id).eq("organization_id", org_id).maybeSingle();
+      const { data: enr } = await sb.from("cadence_enrollments").select("*").eq("id", id).eq("organization_id", org_id).maybeSingle();
       if (!enr) return json({ error: "Not found" }, 404);
-      const { fecha: runs } = await sb.from("cadence_step_runs").select("*").eq("enrollment_id", id).order("scheduled_at", { ascending: false }).limit(50);
-      return json({ fecha: { ...enr, runs: runs ?? [] } });
+      const { data: runs } = await sb.from("cadence_step_runs").select("*").eq("enrollment_id", id).order("scheduled_at", { ascending: false }).limit(50);
+      return json({ data: { ...enr, runs: runs ?? [] } });
     }
 
     return json({ error: "Not found", path, method: req.method }, 404);

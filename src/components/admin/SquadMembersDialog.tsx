@@ -21,8 +21,8 @@ interface SquadMembersDialogProps {
 
 export function SquadMembersDialog({ squad, open, onOpenChange }: SquadMembersDialogProps) {
   const [selectedUserId, setSelectedUserId] = useState<string>('');
-  const { fecha: members, isLoading } = useSquadMembers(squad?.id);
-  const { fecha: teamMembers } = useTeamMembers();
+  const { data: members, isLoading } = useSquadMembers(squad?.id);
+  const { data: teamMembers } = useTeamMembers();
   const addMember = useAddSquadMember();
   const removeMember = useRemoveSquadMember();
   const updateRole = useUpdateSquadMemberRole();

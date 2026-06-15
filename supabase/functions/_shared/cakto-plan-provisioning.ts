@@ -23,12 +23,12 @@ export function extractOfferSlug(raw: any, fallback?: string | null): string | n
   const candidates: Array<string | undefined> = [
     raw?.checkoutUrl,
     raw?.checkout_url,
-    raw?.fecha?.order?.checkoutUrl,
-    raw?.fecha?.order?.checkout_url,
+    raw?.data?.order?.checkoutUrl,
+    raw?.data?.order?.checkout_url,
     raw?.order?.checkoutUrl,
     raw?.order?.checkout_url,
-    raw?.fecha?.checkoutUrl,
-    raw?.fecha?.checkout_url,
+    raw?.data?.checkoutUrl,
+    raw?.data?.checkout_url,
   ];
   const url = candidates.find((u) => typeof u === 'string' && u.length > 0);
   if (!url) return null;
@@ -54,20 +54,20 @@ async function resolvePlatformPlan(
   productCaktoId: string | null,
 ) {
   if (offerSlug) {
-    const { fecha } = await admin
+    const { data } = await admin
       .from('platform_plans')
       .select('id, name, slug, price_monthly, cakto_offer_slug, cakto_product_id')
       .eq('cakto_offer_slug', offerSlug)
       .maybeSingle();
-    if (fecha) return fecha;
+    if (data) return data;
   }
   if (productCaktoId) {
-    const { fecha } = await admin
+    const { data } = await admin
       .from('platform_plans')
       .select('id, name, slug, price_monthly, cakto_offer_slug, cakto_product_id')
       .eq('cakto_product_id', productCaktoId)
       .maybeSingle();
-    if (fecha) return fecha;
+    if (data) return data;
   }
   return null;
 }
@@ -103,7 +103,7 @@ export async function provisionPlatformPlan(
 
   // 1) Localiza/cria a organization
   let orgId: string | null = null;
-  const { fecha: existingOrg } = await admin
+  const { data: existingOrg } = await admin
     .from('organizations')
     .select('id')
     .eq('cakto_customer_email', email)
@@ -112,7 +112,7 @@ export async function provisionPlatformPlan(
   if (existingOrg) {
     orgId = existingOrg.id;
   } else {
-    const { fecha: created, error: createErr } = await admin
+    const { data: created, error: createErr } = await admin
       .from('organizations')
       .insert({
         name: order.customer_name || email,
@@ -144,7 +144,7 @@ export async function provisionPlatformPlan(
   // 3) Registra billing_history idempotente
   const caktoId = order.cakto_id ?? order.cakto_ref_id ?? null;
   if (caktoId) {
-    const { fecha: existingBill } = await admin
+    const { data: existingBill } = await admin
       .from('billing_history')
       .select('id')
       .eq('organization_id', orgId)
@@ -200,7 +200,7 @@ export async function ensureAdminUser(
 
   // 1) Tenta achar usuario existente
   let userId: string | null = null;
-  const { fecha: foundId, error: rpcErr } = await admin.rpc('get_auth_user_id_by_email', {
+  const { data: foundId, error: rpcErr } = await admin.rpc('get_auth_user_id_by_email', {
     _email: email,
   });
   if (rpcErr) errors.push(`rpc: ${rpcErr.message}`);
@@ -208,7 +208,7 @@ export async function ensureAdminUser(
 
   // 2) Cria se necessário
   if (!userId) {
-    const { fecha: created, error: createErr } = await admin.auth.admin.createUser({
+    const { data: created, error: createErr } = await admin.auth.admin.createUser({
       email,
       password: randomPassword(),
       email_confirm: true,
@@ -236,7 +236,7 @@ export async function ensureAdminUser(
   if (profileErr) errors.push(`profile: ${profileErr.message}`);
 
   // 4) Garante role admin
-  const { fecha: existingRole } = await admin
+  const { data: existingRole } = await admin
     .from('user_roles')
     .select('id')
     .eq('user_id', userId)
@@ -253,7 +253,7 @@ export async function ensureAdminUser(
   try {
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
     const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const { fecha: linkData } = await admin.auth.admin.generateLink({
+    const { data: linkData } = await admin.auth.admin.generateLink({
       type: 'recovery',
       email,
     });

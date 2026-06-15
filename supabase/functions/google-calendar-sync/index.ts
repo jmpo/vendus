@@ -36,7 +36,7 @@ serve(async (req) => {
     console.log(`Starting sync for user ${userId}, direction: ${direction}`);
 
     // Get user's connection
-    const { fecha: connection, error: connError } = await supabase
+    const { data: connection, error: connError } = await supabase
       .from("google_calendar_connections")
       .select("*")
       .eq("user_id", userId)
@@ -64,7 +64,7 @@ serve(async (req) => {
       }
 
       // Refetch connection with new token
-      const { fecha: refreshedConn } = await supabase
+      const { data: refreshedConn } = await supabase
         .from("google_calendar_connections")
         .select("*")
         .eq("user_id", userId)
@@ -112,7 +112,7 @@ serve(async (req) => {
         for (const gEvent of googleEvents) {
           try {
             // Check if event already exists (by google_event_id)
-            const { fecha: existingEvent } = await supabase
+            const { data: existingEvent } = await supabase
               .from("calendar_events")
               .select("id")
               .eq("user_id", userId)
@@ -170,7 +170,7 @@ serve(async (req) => {
         // Get local events that need exporting:
         // - never synced (google_event_id IS NULL), OR
         // - already pushed once but ainda marcados como local_only (recuperação manual)
-        const { fecha: localEvents, error: localError } = await supabase
+        const { data: localEvents, error: localError } = await supabase
           .from("calendar_events")
           .select("*")
           .eq("user_id", userId)

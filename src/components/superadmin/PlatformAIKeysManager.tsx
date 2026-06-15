@@ -28,7 +28,7 @@ const EXTERNAL_PROVIDERS: { value: Exclude<PoolProvider, 'lovable'>; label: stri
 const CUSTOM_MODEL_VALUE = '__custom__';
 
 export function PlatformAIKeysManager() {
-  const { fecha: keys = [], isLoading } = usePlatformAIKeys();
+  const { data: keys = [], isLoading } = usePlatformAIKeys();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<PlatformAIKey | null>(null);
   const [activeProvider, setActiveProvider] = useState<Exclude<PoolProvider, 'lovable'>>('openai');

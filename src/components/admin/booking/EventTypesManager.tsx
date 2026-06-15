@@ -63,7 +63,7 @@ export function EventTypesManager() {
   const [editingEventType, setEditingEventType] = useState<BookingEventType | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState<BookingEventType | null>(null);
-  const { fecha: publicAppUrl } = usePublicAppUrl();
+  const { data: publicAppUrl } = usePublicAppUrl();
 
   const filteredEventTypes = eventTypes.filter(et =>
     et.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

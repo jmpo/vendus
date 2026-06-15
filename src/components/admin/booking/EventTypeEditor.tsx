@@ -347,7 +347,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
                 <div className="flex-1">
                   <span className="font-medium">Estándar (Calendario + Formulario)</span>
                   <p className="text-sm text-muted-foreground mt-0.5">
-                    Interfaz tradicional estilo Calendly com passos separados para seleção de fecha e preenchimento de dados.
+                    Interfaz tradicional estilo Calendly com passos separados para seleção de data e preenchimento de dados.
                   </p>
                 </div>
               </label>

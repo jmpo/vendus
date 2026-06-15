@@ -22,7 +22,7 @@ interface Props {
 
 export function TicketDetailDialog({ open, onOpenChange, ticket, scope }: Props) {
   const { user, isSuperAdmin } = useAuth();
-  const { fecha: messages } = useSupportMessages(ticket?.id ?? null);
+  const { data: messages } = useSupportMessages(ticket?.id ?? null);
   const send = useSendTicketMessage();
   const update = useUpdateTicket();
   const markRead = useMarkTicketRead();

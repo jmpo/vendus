@@ -29,12 +29,12 @@ async function fetchLeadIdsByTags(
 ): Promise<Set<string>> {
   const out = new Set<string>();
   if (!tagIds.length) return out;
-  const { fecha } = await supabase
+  const { data } = await supabase
     .from("lead_tag_assignments")
     .select("lead_id, tag_id, leads!inner(organization_id)")
     .in("tag_id", tagIds)
     .eq("leads.organization_id", organizationId);
-  (fecha ?? []).forEach((row: any) => out.add(row.lead_id));
+  (data ?? []).forEach((row: any) => out.add(row.lead_id));
   return out;
 }
 
@@ -78,12 +78,12 @@ export async function resolveAudience(
   let baseRows: any[] = [];
 
   if (audience.lead_ids?.length) {
-    const { fecha } = await supabase
+    const { data } = await supabase
       .from("leads")
       .select("id, metadata")
       .eq("organization_id", organizationId)
       .in("id", audience.lead_ids);
-    baseRows = fecha ?? [];
+    baseRows = data ?? [];
   } else {
     let q = supabase
       .from("leads")
@@ -105,8 +105,8 @@ export async function resolveAudience(
     if (audience.search?.email) q = q.ilike("email", `%${audience.search.email}%`);
     if (audience.search?.phone) q = q.ilike("phone", `%${audience.search.phone}%`);
 
-    const { fecha } = await q;
-    baseRows = fecha ?? [];
+    const { data } = await q;
+    baseRows = data ?? [];
 
     if (audience.tag_ids?.length) {
       const tagged = await fetchLeadIdsByTags(supabase, organizationId, audience.tag_ids);
@@ -145,8 +145,8 @@ export async function resolveAudience(
     if (exclusion.temperature?.length) q = q.in("temperature", exclusion.temperature);
     if (exclusion.created_after) q = q.gte("created_at", exclusion.created_after);
     if (exclusion.created_before) q = q.lte("created_at", exclusion.created_before);
-    const { fecha } = await q;
-    let rows = fecha ?? [];
+    const { data } = await q;
+    let rows = data ?? [];
     if (exclusion.custom_fields?.length) {
       const keep = applyCustomFields(rows, exclusion.custom_fields);
       rows = rows.filter((r) => keep.has(r.id));

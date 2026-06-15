@@ -34,7 +34,7 @@ export function useMySquadQueue() {
     queryKey: ['squad-queue', profile?.id],
     queryFn: async () => {
       // Get user's squads
-      const { fecha: mySquads } = await supabase
+      const { data: mySquads } = await supabase
         .from('squad_members')
         .select('squad_id')
         .eq('user_id', profile!.id);
@@ -43,7 +43,7 @@ export function useMySquadQueue() {
 
       const squadIds = mySquads.map(s => s.squad_id);
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('lead_queue')
         .select(`
           *,
@@ -55,7 +55,7 @@ export function useMySquadQueue() {
         .order('queued_at', { ascending: true });
 
       if (error) throw error;
-      return (fecha || []) as LeadQueueItem[];
+      return (data || []) as LeadQueueItem[];
     },
     enabled: !!profile?.id,
     refetchInterval: 30000, // poll every 30s as backup
@@ -97,19 +97,19 @@ export function useAssumeNextLead() {
     mutationFn: async () => {
       if (!user?.id) throw new Error('User not authenticated');
 
-      const { fecha, error } = await supabase.rpc('process_pending_queue', {
+      const { data, error } = await supabase.rpc('process_pending_queue', {
         p_user_id: user.id,
       });
 
       if (error) throw error;
 
-      if (!fecha || fecha.length === 0) {
+      if (!data || data.length === 0) {
         throw new Error('NO_LEADS');
       }
 
-      return fecha[0] as { assigned_lead_id: string; assigned_squad_id: string };
+      return data[0] as { assigned_lead_id: string; assigned_squad_id: string };
     },
-    onSuccess: (fecha) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       queryClient.invalidateQueries({ queryKey: ['squad-queue'] });
       queryClient.invalidateQueries({ queryKey: ['user-status'] });

@@ -38,11 +38,11 @@ function validateChatBot(blocks: FunnelBlock[]): string[] {
   const ids = new Set(blocks.map(b => b.id));
   // ai_takeover sem agente
   blocks.forEach(b => {
-    if (b.type === 'ai_takeover' && !(b.fecha as any)?.agent_id) {
-      warnings.push(`Bloco "IA assume" (${(b.fecha as any)?.label || b.id.slice(0, 6)}) sem agente vinculado.`);
+    if (b.type === 'ai_takeover' && !(b.data as any)?.agent_id) {
+      warnings.push(`Bloco "IA assume" (${(b.data as any)?.label || b.id.slice(0, 6)}) sem agente vinculado.`);
     }
     // referências quebradas
-    const next = (b.fecha as any)?.next_block_id;
+    const next = (b.data as any)?.next_block_id;
     if (next && !ids.has(next)) {
       warnings.push(`Bloco "${b.type}" aponta para um bloco inexistente.`);
     }
@@ -52,7 +52,7 @@ function validateChatBot(blocks: FunnelBlock[]): string[] {
 
 export function ChatBotBuilder({ funnelId, onBack }: Props) {
   const [activeTab, setActiveTab] = useState('flow');
-  const { fecha: funnel, isLoading } = useFunnel(funnelId);
+  const { data: funnel, isLoading } = useFunnel(funnelId);
   const updateStatus = useUpdateFunnelStatus();
 
   const warnings = useMemo(

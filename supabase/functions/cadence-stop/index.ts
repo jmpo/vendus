@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { fecha: enrs } = await q;
+    const { data: enrs } = await q;
     const ids = (enrs ?? []).map((e: any) => e.id);
     if (!ids.length) {
       return new Response(JSON.stringify({ ok: true, stopped: 0 }), {

@@ -47,9 +47,9 @@ const CHANNEL_OPTIONS = ['whatsapp', 'instagram', 'webchat', 'facebook', 'voice'
 const EVENT_OPTIONS = ['paid', 'abandoned', 'refunded', 'new_message', 'first_contact'];
 
 export function AgentSupervisorPanel() {
-  const { fecha: allAgents = [] } = useAllAgents();
-  const { fecha: specialists = [], isLoading: spLoading } = useAgentSpecialists();
-  const { fecha: rules = [], isLoading: rulesLoading } = useAgentRoutingRules();
+  const { data: allAgents = [] } = useAllAgents();
+  const { data: specialists = [], isLoading: spLoading } = useAgentSpecialists();
+  const { data: rules = [], isLoading: rulesLoading } = useAgentRoutingRules();
   const upsertSpecialist = useUpsertSpecialist();
   const deleteSpecialist = useDeleteSpecialist();
   const upsertRule = useUpsertRoutingRule();

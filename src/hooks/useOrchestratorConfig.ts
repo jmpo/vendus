@@ -23,13 +23,13 @@ export function useOrchestratorConfig() {
     queryKey: ['orchestrator-config', orgId],
     enabled: !!orgId,
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('organization_orchestrator_config')
         .select('*')
         .eq('organization_id', orgId!)
         .maybeSingle();
       if (error) throw error;
-      return fecha as OrchestratorConfig | null;
+      return data as OrchestratorConfig | null;
     },
   });
 }
@@ -49,13 +49,13 @@ export function useUpsertOrchestratorConfig() {
         min_confidence: patch.min_confidence ?? 0.6,
         fallback_to_human_after: patch.fallback_to_human_after ?? 2,
       };
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('organization_orchestrator_config')
         .upsert(payload, { onConflict: 'organization_id' })
         .select()
         .single();
       if (error) throw error;
-      return fecha as OrchestratorConfig;
+      return data as OrchestratorConfig;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orchestrator-config'] });

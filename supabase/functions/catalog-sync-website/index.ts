@@ -64,12 +64,12 @@ Deno.serve(async (req) => {
     let userId: string | null = null;
     const auth = req.headers.get("Authorization");
     if (auth) {
-      const { fecha: { user } } = await supabase.auth.getUser(auth.replace("Bearer ", ""));
+      const { data: { user } } = await supabase.auth.getUser(auth.replace("Bearer ", ""));
       userId = user?.id ?? null;
     }
 
     // Cria log de sync
-    const { fecha: logRow } = await supabase
+    const { data: logRow } = await supabase
       .from("catalog_sync_logs")
       .insert({
         organization_id: body.organization_id,
@@ -123,7 +123,7 @@ Deno.serve(async (req) => {
           failed++;
           continue;
         }
-        const markdown: string = scrapeData.fecha?.markdown || scrapeData.markdown || "";
+        const markdown: string = scrapeData.data?.markdown || scrapeData.markdown || "";
         if (!markdown) { failed++; continue; }
 
         // Extract via Lovable AI (tool calling pra structured output)
@@ -191,7 +191,7 @@ images: array de URLs absolutas das fotos do item.`,
         const thumbnail = Array.isArray(parsed.images) && parsed.images.length > 0 ? parsed.images[0] : null;
 
         // Upsert por (org, product, external_id)
-        const { fecha: existing } = await supabase
+        const { data: existing } = await supabase
           .from("product_catalog_items")
           .select("id")
           .eq("organization_id", body.organization_id)

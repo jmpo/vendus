@@ -78,8 +78,8 @@ export function FormBlockEditor({
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const carouselInputRef = useRef<HTMLInputElement>(null);
-  const { fecha: leadTags } = useLeadTags();
-  const { fecha: pipelineStages } = useProductPipelineStages(form?.product_id);
+  const { data: leadTags } = useLeadTags();
+  const { data: pipelineStages } = useProductPipelineStages(form?.product_id);
 
   useEffect(() => {
     setLocalBlock(block);
@@ -161,8 +161,8 @@ export function FormBlockEditor({
       toast.error('Falha no upload: ' + error.message);
       return null;
     }
-    const { fecha } = supabase.storage.from('form-media').getPublicUrl(path);
-    return fecha.publicUrl;
+    const { data } = supabase.storage.from('form-media').getPublicUrl(path);
+    return data.publicUrl;
   };
 
   const handleSingleUpload = async (file: File) => {

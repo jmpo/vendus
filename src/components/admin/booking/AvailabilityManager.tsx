@@ -451,7 +451,7 @@ export function AvailabilityManager() {
               {selectedDate && format(selectedDate, "dd 'de' MMMM 'de' yyyy", { locale: es })}
             </DialogTitle>
             <DialogDescription>
-              Configure la disponibilidad para esta fecha específica
+              Configure la disponibilidad para esta data específica
             </DialogDescription>
           </DialogHeader>
           

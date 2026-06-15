@@ -28,7 +28,7 @@ interface Props {
 }
 
 export function InstagramConnectionsPanel({ hideHeader, openWizard, onCloseWizard }: Props = {}) {
-  const { fecha: conns = [], isLoading } = useInstagramConnections();
+  const { data: conns = [], isLoading } = useInstagramConnections();
   const test = useTestInstagramConnection();
   const del = useDeleteInstagramConnection();
   const [internalOpen, setInternalOpen] = useState(false);

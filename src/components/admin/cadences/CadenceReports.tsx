@@ -19,7 +19,7 @@ export function CadenceReports({ cadences, stats, orgId }: Props) {
   useEffect(() => {
     if (!orgId) return;
     (async () => {
-      const { fecha: rs } = await supabase
+      const { data: rs } = await supabase
         .from('cadence_step_runs' as any)
         .select('id,status,step_id,scheduled_at,executed_at,error')
         .eq('organization_id', orgId)
@@ -29,7 +29,7 @@ export function CadenceReports({ cadences, stats, orgId }: Props) {
 
       const ids = cadences.map((c) => c.id);
       if (ids.length) {
-        const { fecha: steps } = await supabase
+        const { data: steps } = await supabase
           .from('cadence_steps' as any).select('id,name,cadence_id').in('cadence_id', ids);
         const map: Record<string, { name: string; cadence_id: string }> = {};
         (steps as any[] ?? []).forEach((s) => { map[s.id] = { name: s.name, cadence_id: s.cadence_id }; });

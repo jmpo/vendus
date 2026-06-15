@@ -31,15 +31,15 @@ const formatCurrency = (value: number) => {
 const COLORS = ['hsl(173, 80%, 45%)', 'hsl(190, 80%, 50%)', 'hsl(142, 71%, 45%)', 'hsl(38, 92%, 50%)', 'hsl(280, 70%, 50%)'];
 
 export function ReportsManager() {
-  const { fecha: products, isLoading: productsLoading } = useProducts();
+  const { data: products, isLoading: productsLoading } = useProducts();
   const [selectedProductId, setSelectedProductId] = useState<string>('all');
   const [activeTab, setActiveTab] = useState('overview');
   
-  const { fecha: kpis, isLoading: kpisLoading } = useAdminKPIs();
-  const { fecha: topSellers } = useTopSellers(10);
-  const { fecha: productDistribution } = useProductSalesDistribution();
-  const { fecha: monthlyData } = useMonthlySalesEvolution(12);
-  const { fecha: squadsPerformance } = useAllSquadsPerformance();
+  const { data: kpis, isLoading: kpisLoading } = useAdminKPIs();
+  const { data: topSellers } = useTopSellers(10);
+  const { data: productDistribution } = useProductSalesDistribution();
+  const { data: monthlyData } = useMonthlySalesEvolution(12);
+  const { data: squadsPerformance } = useAllSquadsPerformance();
 
   if (productsLoading || kpisLoading) {
     return (
@@ -49,7 +49,7 @@ export function ReportsManager() {
     );
   }
 
-  // Filter fecha by product if selected (when filtering is possible)
+  // Filter data by product if selected (when filtering is possible)
   const filteredSellers = topSellers;
 
   const filteredDistribution = selectedProductId === 'all'
@@ -195,7 +195,7 @@ export function ReportsManager() {
               <CardContent>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart fecha={monthlyData}>
+                    <LineChart data={monthlyData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                       <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                       <YAxis 
@@ -233,7 +233,7 @@ export function ReportsManager() {
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
-                        fecha={filteredDistribution}
+                        data={filteredDistribution}
                         dataKey="totalValue"
                         nameKey="productName"
                         cx="50%"
@@ -270,7 +270,7 @@ export function ReportsManager() {
             <CardContent>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart fecha={monthlyData}>
+                  <BarChart data={monthlyData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                     <YAxis 
@@ -365,7 +365,7 @@ export function ReportsManager() {
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart 
-                    fecha={squadsPerformance} 
+                    data={squadsPerformance} 
                     layout="vertical"
                     margin={{ left: 100 }}
                   >

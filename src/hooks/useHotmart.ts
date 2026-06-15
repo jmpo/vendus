@@ -46,13 +46,13 @@ export function useHotmartCredentials() {
   return useQuery({
     queryKey: ['hotmart-credentials', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('hotmart_credentials')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
         .maybeSingle();
       if (error && error.code !== 'PGRST116') throw error;
-      return (fecha as HotmartCredentials | null) ?? null;
+      return (data as HotmartCredentials | null) ?? null;
     },
     enabled: !!profile?.organization_id,
   });
@@ -64,7 +64,7 @@ export function useUpsertHotmartCredentials() {
   return useMutation({
     mutationFn: async (input: Partial<HotmartCredentials>) => {
       const orgId = profile!.organization_id!;
-      const { fecha: existing } = await supabase
+      const { data: existing } = await supabase
         .from('hotmart_credentials')
         .select('id')
         .eq('organization_id', orgId)
@@ -93,12 +93,12 @@ export function useUpsertHotmartCredentials() {
 export function useTestHotmartConnection() {
   return useMutation({
     mutationFn: async (creds?: { client_id?: string; client_secret?: string; basic_token?: string }) => {
-      const { fecha, error } = await supabase.functions.invoke('hotmart-test-credentials', {
+      const { data, error } = await supabase.functions.invoke('hotmart-test-credentials', {
         body: creds ?? {},
       });
       if (error) throw error;
-      if (!fecha?.ok) throw new Error(fecha?.error ?? 'Falha no teste');
-      return fecha;
+      if (!data?.ok) throw new Error(data?.error ?? 'Falha no teste');
+      return data;
     },
     onSuccess: () => toast.success('Conexión Hotmart OK'),
     onError: (e: Error) => toast.error('Error: ' + e.message),
@@ -110,14 +110,14 @@ export function useHotmartOrders(limit = 50) {
   return useQuery({
     queryKey: ['hotmart-orders', profile?.organization_id, limit],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('hotmart_orders')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
         .order('created_at_hotmart', { ascending: false, nullsFirst: false })
         .limit(limit);
       if (error) throw error;
-      return (fecha ?? []) as HotmartOrder[];
+      return (data ?? []) as HotmartOrder[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -127,16 +127,16 @@ export function useSyncHotmartOrders() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (days: number = 30) => {
-      const { fecha, error } = await supabase.functions.invoke('hotmart-sync-orders', {
+      const { data, error } = await supabase.functions.invoke('hotmart-sync-orders', {
         body: { days },
       });
       if (error) throw error;
-      return fecha;
+      return data;
     },
-    onSuccess: (fecha) => {
+    onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ['hotmart-orders'] });
       qc.invalidateQueries({ queryKey: ['hotmart-product-mappings'] });
-      toast.success(`Sincronizado: ${fecha?.inserted ?? 0} pedidos`);
+      toast.success(`Sincronizado: ${data?.inserted ?? 0} pedidos`);
     },
     onError: (e: Error) => toast.error('Error en sync: ' + e.message),
   });
@@ -147,13 +147,13 @@ export function useHotmartProductMappings() {
   return useQuery({
     queryKey: ['hotmart-product-mappings', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('hotmart_product_mapping')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
         .order('hotmart_product_name');
       if (error) throw error;
-      return (fecha ?? []) as HotmartProductMapping[];
+      return (data ?? []) as HotmartProductMapping[];
     },
     enabled: !!profile?.organization_id,
   });

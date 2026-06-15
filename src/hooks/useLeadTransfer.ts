@@ -13,7 +13,7 @@ export function useLeadTransferHistory(leadId: string) {
   return useQuery({
     queryKey: ['lead-transfer-history', leadId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('lead_transfer_history')
         .select(`
           *,
@@ -27,7 +27,7 @@ export function useLeadTransferHistory(leadId: string) {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     enabled: !!leadId
   });
@@ -39,8 +39,8 @@ export function useTransferLead() {
 
   return useMutation({
     mutationFn: async ({ leadId, toUserId, toSquadId, reason }: TransferLeadParams) => {
-      // First get current lead fecha
-      const { fecha: currentLead, error: fetchError } = await supabase
+      // First get current lead data
+      const { data: currentLead, error: fetchError } = await supabase
         .from('leads')
         .select('assigned_to, squad_id')
         .eq('id', leadId)
@@ -49,7 +49,7 @@ export function useTransferLead() {
       if (fetchError) throw fetchError;
 
       // Update lead
-      const { fecha: updatedLead, error: updateError } = await supabase
+      const { data: updatedLead, error: updateError } = await supabase
         .from('leads')
         .update({
           assigned_to: toUserId,
@@ -82,10 +82,10 @@ export function useTransferLead() {
 
       return updatedLead;
     },
-    onSuccess: (fecha) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
-      queryClient.invalidateQueries({ queryKey: ['lead', fecha.id] });
-      queryClient.invalidateQueries({ queryKey: ['lead-transfer-history', fecha.id] });
+      queryClient.invalidateQueries({ queryKey: ['lead', data.id] });
+      queryClient.invalidateQueries({ queryKey: ['lead-transfer-history', data.id] });
     }
   });
 }
@@ -108,9 +108,9 @@ export function useUnassignedLeads(squadId?: string) {
         query = query.eq('squad_id', squadId);
       }
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return fecha;
+      return data;
     }
   });
 }

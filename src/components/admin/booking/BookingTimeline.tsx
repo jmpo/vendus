@@ -55,11 +55,11 @@ export function BookingTimeline({ bookingId }: Props) {
       ]);
       if (!mounted) return;
       const merged: Entry[] = [
-        ...(logsRes.fecha || []).map((l: any) => ({
+        ...(logsRes.data || []).map((l: any) => ({
           id: `l-${l.id}`, ts: l.created_at, kind: "log" as const,
           type: l.type, channel: l.channel, payload: l.payload, error: l.error,
         })),
-        ...(histRes.fecha || []).map((h: any) => ({
+        ...(histRes.data || []).map((h: any) => ({
           id: `h-${h.id}`, ts: h.created_at, kind: "status" as const,
           type: "status_changed", status: h.to_status, notes: h.notes,
         })),

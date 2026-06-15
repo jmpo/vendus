@@ -31,7 +31,7 @@ export function useSankhyaConfig() {
   return useQuery({
     queryKey: ['sankhya-config', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('integration_settings')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
@@ -40,11 +40,11 @@ export function useSankhyaConfig() {
 
       if (error && error.code !== 'PGRST116') throw error;
 
-      const settings = fecha?.settings as unknown as SankhyaConfig | undefined;
+      const settings = data?.settings as unknown as SankhyaConfig | undefined;
       
       return {
-        isConfigured: fecha?.is_configured ?? false,
-        lastVerifiedAt: fecha?.last_verified_at,
+        isConfigured: data?.is_configured ?? false,
+        lastVerifiedAt: data?.last_verified_at,
         config: settings ?? {
           client_id: '',
           client_secret: '',
@@ -64,7 +64,7 @@ export function useUpdateSankhyaConfig() {
 
   return useMutation({
     mutationFn: async (config: Partial<SankhyaConfig>) => {
-      const { fecha: existing } = await supabase
+      const { data: existing } = await supabase
         .from('integration_settings')
         .select('id, settings')
         .eq('organization_id', profile!.organization_id!)
@@ -120,7 +120,7 @@ export function useSankhyaSyncLogs() {
   return useQuery({
     queryKey: ['sankhya-sync-logs', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('sankhya_sync_logs')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
@@ -128,7 +128,7 @@ export function useSankhyaSyncLogs() {
         .limit(20);
 
       if (error) throw error;
-      return fecha as SankhyaSyncLog[];
+      return data as SankhyaSyncLog[];
     },
     enabled: !!profile?.organization_id
   });
@@ -137,7 +137,7 @@ export function useSankhyaSyncLogs() {
 export function useTestSankhyaConnection() {
   return useMutation({
     mutationFn: async (config: { client_id: string; client_secret: string; x_token: string }) => {
-      const { fecha, error } = await supabase.functions.invoke('sankhya-auth', {
+      const { data, error } = await supabase.functions.invoke('sankhya-auth', {
         body: { 
           action: 'test',
           credentials: config
@@ -145,9 +145,9 @@ export function useTestSankhyaConnection() {
       });
 
       if (error) throw error;
-      if (fecha?.error) throw new Error(fecha.error);
+      if (data?.error) throw new Error(data.error);
       
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       toast.success('Conexión com Sankhya estabelecida con éxito!');
@@ -166,14 +166,14 @@ export function useSankhyaSync() {
     mutationFn: async ({ entityType }: { entityType: 'clients' | 'products' }) => {
       const functionName = entityType === 'clients' ? 'sankhya-sync-clients' : 'sankhya-sync-products';
       
-      const { fecha, error } = await supabase.functions.invoke(functionName, {
+      const { data, error } = await supabase.functions.invoke(functionName, {
         body: { organization_id: profile!.organization_id }
       });
 
       if (error) throw error;
-      if (fecha?.error) throw new Error(fecha.error);
+      if (data?.error) throw new Error(data.error);
       
-      return fecha;
+      return data;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['sankhya-sync-logs'] });
@@ -192,7 +192,7 @@ export function useLastSyncByType() {
   return useQuery({
     queryKey: ['sankhya-last-sync', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('sankhya_sync_logs')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
@@ -201,8 +201,8 @@ export function useLastSyncByType() {
 
       if (error) throw error;
 
-      const lastClients = fecha?.find(d => d.entity_type === 'clients');
-      const lastProducts = fecha?.find(d => d.entity_type === 'products');
+      const lastClients = data?.find(d => d.entity_type === 'clients');
+      const lastProducts = data?.find(d => d.entity_type === 'products');
 
       return {
         clients: lastClients as SankhyaSyncLog | undefined,

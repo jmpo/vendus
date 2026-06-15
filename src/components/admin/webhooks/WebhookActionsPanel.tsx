@@ -60,7 +60,7 @@ export function WebhookActionsPanel({
 }: WebhookActionsPanelProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingAction, setEditingAction] = useState<WebhookAction | null>(null);
-  const { fecha: leadTags } = useLeadTags();
+  const { data: leadTags } = useLeadTags();
 
   const handleAddAction = (type: WebhookActionType) => {
     const newAction: WebhookAction = {

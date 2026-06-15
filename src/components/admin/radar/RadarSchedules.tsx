@@ -18,7 +18,7 @@ const FREQ_OPTIONS = [
 ];
 
 export function RadarSchedules({ defaultFilters, defaultActions }: { defaultFilters: ScanFilters; defaultActions: ActionsConfig }) {
-  const { fecha: schedules } = useOpportunitySchedules();
+  const { data: schedules } = useOpportunitySchedules();
   const upsert = useUpsertSchedule();
   const del = useDeleteSchedule();
   const [editing, setEditing] = useState<any>(null);

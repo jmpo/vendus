@@ -42,14 +42,14 @@ export function useProductCTAs(productId: string) {
   return useQuery({
     queryKey: ['product-ctas', productId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('product_ctas')
         .select('*')
         .eq('product_id', productId)
         .order('display_order', { ascending: true });
 
       if (error) throw error;
-      return fecha as ProductCTA[];
+      return data as ProductCTA[];
     },
     enabled: !!productId && !!profile?.organization_id,
   });
@@ -63,7 +63,7 @@ export function useCreateProductCTA() {
     mutationFn: async (input: CreateCTAInput) => {
       if (!profile?.organization_id) throw new Error('No organization');
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('product_ctas')
         .insert({
           ...input,
@@ -73,10 +73,10 @@ export function useCreateProductCTA() {
         .single();
 
       if (error) throw error;
-      return fecha as ProductCTA;
+      return data as ProductCTA;
     },
-    onSuccess: (fecha) => {
-      queryClient.invalidateQueries({ queryKey: ['product-ctas', fecha.product_id] });
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['product-ctas', data.product_id] });
       toast.success('CTA creado con éxito!');
     },
     onError: (error) => {
@@ -91,7 +91,7 @@ export function useUpdateProductCTA() {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<ProductCTA> & { id: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('product_ctas')
         .update(updates)
         .eq('id', id)
@@ -99,10 +99,10 @@ export function useUpdateProductCTA() {
         .single();
 
       if (error) throw error;
-      return fecha as ProductCTA;
+      return data as ProductCTA;
     },
-    onSuccess: (fecha) => {
-      queryClient.invalidateQueries({ queryKey: ['product-ctas', fecha.product_id] });
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['product-ctas', data.product_id] });
       toast.success('CTA actualizado!');
     },
     onError: (error) => {

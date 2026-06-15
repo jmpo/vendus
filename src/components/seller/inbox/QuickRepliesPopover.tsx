@@ -41,12 +41,12 @@ export function QuickRepliesPopover({
   const { profile } = useAuth();
   const [search, setSearch] = useState('');
 
-  const { fecha: quickReplies = [], isLoading } = useQuery({
+  const { data: quickReplies = [], isLoading } = useQuery({
     queryKey: ['quick-replies', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('quick_replies')
         .select('*')
         .eq('organization_id', profile.organization_id)
@@ -55,7 +55,7 @@ export function QuickRepliesPopover({
         .order('title', { ascending: true });
 
       if (error) throw error;
-      return fecha as QuickReply[];
+      return data as QuickReply[];
     },
     enabled: !!profile?.organization_id && open,
   });

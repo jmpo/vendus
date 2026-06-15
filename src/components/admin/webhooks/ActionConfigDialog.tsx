@@ -75,15 +75,15 @@ export function ActionConfigDialog({
   const [pipelineStages, setPipelineStages] = useState<PipelineStageRow[]>([]);
   const [loadingStages, setLoadingStages] = useState(false);
   
-  const { fecha: teamMembers } = useTeamMembers();
-  const { fecha: squads } = useSquads();
-  const { fecha: emailTemplates } = useEmailTemplates();
+  const { data: teamMembers } = useTeamMembers();
+  const { data: squads } = useSquads();
+  const { data: emailTemplates } = useEmailTemplates();
   const { fields: customFields } = useCustomFields();
-  const { fecha: funnels } = useFunnels();
-  const { fecha: allAgents } = useAllAgents();
-  const { fecha: evolutionInstances } = useEvolutionInstances();
-  const { fecha: sectors } = useSectors();
-  const { fecha: leadTags } = useLeadTags();
+  const { data: funnels } = useFunnels();
+  const { data: allAgents } = useAllAgents();
+  const { data: evolutionInstances } = useEvolutionInstances();
+  const { data: sectors } = useSectors();
+  const { data: leadTags } = useLeadTags();
 
   useEffect(() => {
     let cancelled = false;
@@ -97,9 +97,9 @@ export function ActionConfigDialog({
       .select('id, name, color, order_index, is_won, is_lost')
       .eq('product_id', productId)
       .order('order_index', { ascending: true })
-      .then(({ fecha }) => {
+      .then(({ data }) => {
         if (cancelled) return;
-        setPipelineStages((fecha as PipelineStageRow[]) || []);
+        setPipelineStages((data as PipelineStageRow[]) || []);
         setLoadingStages(false);
       });
     return () => { cancelled = true; };
@@ -731,12 +731,12 @@ export function ActionConfigDialog({
     
     useEffect(() => {
       const fetchAgents = async () => {
-        const { fecha } = await supabase
+        const { data } = await supabase
           .from('product_agents')
           .select('id, name, agent_type')
           .eq('is_active', true)
           .order('name');
-        if (fecha) setAgents(fecha);
+        if (data) setAgents(data);
       };
       fetchAgents();
     }, []);

@@ -135,8 +135,8 @@ export function AgentEditor({
   const [contextDialogOpen, setContextDialogOpen] = useState(false);
   const [customContext, setCustomContext] = useState('');
   const { isGenerating, generateAgent, optimizeField } = useGenerateAgentAI();
-  const { fecha: products } = useProducts();
-  const { fecha: evolutionInstances } = useEvolutionInstances();
+  const { data: products } = useProducts();
+  const { data: evolutionInstances } = useEvolutionInstances();
 
   // Global agent types are forced to no product
   const GLOBAL_TYPES: AgentType[] = ['admin', 'support', 'financial', 'orchestrator'];
@@ -333,7 +333,7 @@ export function AgentEditor({
     if (!agent?.id) return;
     setIsRetraining(true);
     try {
-      // Save current form fecha first
+      // Save current form data first
       onSave(formData);
       
       // Force the webchat-bot to pick up new config by touching the agent record

@@ -84,15 +84,15 @@ export const AgentCard = memo(function AgentCard({
       return;
     }
     (async () => {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('evolution_instances')
         .select('name, phone_number')
         .eq('id', agent.evolution_instance_id!)
         .maybeSingle();
       if (cancelled) return;
-      if (fecha) {
-        const phone = fecha.phone_number ? ` · ${fecha.phone_number}` : '';
-        setInstanceLabel(`${fecha.name}${phone}`);
+      if (data) {
+        const phone = data.phone_number ? ` · ${data.phone_number}` : '';
+        setInstanceLabel(`${data.name}${phone}`);
       }
     })();
     return () => { cancelled = true; };
@@ -191,7 +191,7 @@ export const AgentCard = memo(function AgentCard({
             <Switch
               checked={agent.is_active}
               onCheckedChange={(checked) => onToggleStatus(agent, checked)}
-              className="fecha-[state=checked]:bg-success"
+              className="data-[state=checked]:bg-success"
             />
             
             <DropdownMenu>

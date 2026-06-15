@@ -26,14 +26,14 @@ interface AnalysisResult {
 export function AISummaryTab({ conversationId }: AISummaryTabProps) {
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const { fecha, isLoading, isFetching, error, refetch } = useQuery({
+  const { data, isLoading, isFetching, error, refetch } = useQuery({
     queryKey: ['conversation-analysis', conversationId, refreshKey],
     queryFn: async (): Promise<AnalysisResult> => {
-      const { fecha, error } = await supabase.functions.invoke('analyze-conversation', {
+      const { data, error } = await supabase.functions.invoke('analyze-conversation', {
         body: { conversationId },
       });
       if (error) throw error;
-      return fecha as AnalysisResult;
+      return data as AnalysisResult;
     },
     enabled: !!conversationId,
     staleTime: 5 * 60_000,
@@ -49,7 +49,7 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
     );
   }
 
-  if (error || !fecha) {
+  if (error || !data) {
     return (
       <div className="text-center py-6 space-y-3">
         <p className="text-xs text-muted-foreground">
@@ -63,7 +63,7 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
     );
   }
 
-  const score = Math.max(0, Math.min(10, fecha.score ?? 0));
+  const score = Math.max(0, Math.min(10, data.score ?? 0));
   const scoreColor =
     score >= 8 ? 'text-emerald-500' : score >= 5 ? 'text-yellow-500' : 'text-destructive';
 
@@ -100,50 +100,50 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
       </div>
 
       {/* Metrics */}
-      {fecha.metrics && (
+      {data.metrics && (
         <div className="flex flex-wrap gap-1.5">
-          {fecha.metrics.tone && (
+          {data.metrics.tone && (
             <Badge variant="outline" className="text-[10px]">
-              Tom: {fecha.metrics.tone}
+              Tom: {data.metrics.tone}
             </Badge>
           )}
-          {fecha.metrics.objectionsHandled !== undefined && (
+          {data.metrics.objectionsHandled !== undefined && (
             <Badge variant="outline" className="text-[10px]">
-              Objeções tratadas: {fecha.metrics.objectionsHandled}
+              Objeções tratadas: {data.metrics.objectionsHandled}
             </Badge>
           )}
-          {fecha.metrics.avgResponseTime && (
+          {data.metrics.avgResponseTime && (
             <Badge variant="outline" className="text-[10px]">
-              Tempo médio: {fecha.metrics.avgResponseTime}
+              Tempo médio: {data.metrics.avgResponseTime}
             </Badge>
           )}
         </div>
       )}
 
       {/* Strengths */}
-      {fecha.strengths?.length > 0 && (
+      {data.strengths?.length > 0 && (
         <Section
           icon={<ThumbsUp className="h-3.5 w-3.5 text-emerald-500" />}
           title="Pontos fortes"
-          items={fecha.strengths}
+          items={data.strengths}
         />
       )}
 
       {/* Weaknesses */}
-      {fecha.weaknesses?.length > 0 && (
+      {data.weaknesses?.length > 0 && (
         <Section
           icon={<AlertTriangle className="h-3.5 w-3.5 text-yellow-500" />}
           title="A melhorar"
-          items={fecha.weaknesses}
+          items={data.weaknesses}
         />
       )}
 
       {/* Suggestions */}
-      {fecha.suggestions?.length > 0 && (
+      {data.suggestions?.length > 0 && (
         <Section
           icon={<Lightbulb className="h-3.5 w-3.5 text-blue-500" />}
           title="Próximas acciones sugeridas"
-          items={fecha.suggestions}
+          items={data.suggestions}
         />
       )}
     </div>

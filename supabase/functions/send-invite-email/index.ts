@@ -44,7 +44,7 @@ const handler = async (req: Request): Promise<Response> => {
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_ANON_KEY")!
     );
-    const { fecha: claims, error: claimsErr } = await supabaseAuth.auth.getClaims(token);
+    const { data: claims, error: claimsErr } = await supabaseAuth.auth.getClaims(token);
     if (claimsErr || !claims?.claims?.sub) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -56,7 +56,7 @@ const handler = async (req: Request): Promise<Response> => {
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
-    const { fecha: rolesRows } = await adminClient
+    const { data: rolesRows } = await adminClient
       .from("user_roles")
       .select("role")
       .eq("user_id", userId);
@@ -80,7 +80,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Busca nombre da plataforma (white-label)
-    const { fecha: platformSettings } = await adminClient
+    const { data: platformSettings } = await adminClient
       .from("platform_settings")
       .select("platform_name")
       .maybeSingle();

@@ -48,14 +48,14 @@ export function FormsManager() {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [createMethod, setCreateMethod] = useState<'manual' | 'template' | 'ai'>('manual');
   
-  const { fecha: forms, isLoading } = useForms();
-  const { fecha: products } = useProducts();
-  const { fecha: templates } = useFormTemplates();
+  const { data: forms, isLoading } = useForms();
+  const { data: products } = useProducts();
+  const { data: templates } = useFormTemplates();
   const createForm = useCreateForm();
   const deleteForm = useDeleteForm();
   const duplicateForm = useDuplicateForm();
   const toggleStatus = useToggleFormStatus();
-  const { fecha: publicAppUrl } = usePublicAppUrl();
+  const { data: publicAppUrl } = usePublicAppUrl();
   
   // Filter forms
   const filteredForms = forms?.filter(form => {

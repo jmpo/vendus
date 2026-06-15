@@ -46,40 +46,40 @@ export function useBookingByToken(token: string | undefined) {
       // Usa SECURITY DEFINER RPC instead of direct table read.
       // The RPC validates the token server-side, preventing any anonymous
       // enumeration of booking PII.
-      const { fecha: rows, error } = await supabase
+      const { data: rows, error } = await supabase
         .rpc('get_booking_by_token', { p_token: token });
 
       if (error) throw error;
-      const fecha = Array.isArray(rows) ? rows[0] : rows;
-      if (!fecha) return null;
+      const data = Array.isArray(rows) ? rows[0] : rows;
+      if (!data) return null;
 
-      // Fetch related fecha
+      // Fetch related data
       const [eventTypeResult, hostResult, calendarEventResult] = await Promise.all([
         supabase
           .from('booking_event_types')
           .select('id, name, description, duration_minutes, color, location_type, thank_you_title, thank_you_message, what_happens, next_steps')
-          .eq('id', fecha.event_type_id)
+          .eq('id', data.event_type_id)
           .maybeSingle(),
         supabase
           .from('profiles')
           .select('id, full_name, avatar_url')
-          .eq('id', fecha.host_user_id)
+          .eq('id', data.host_user_id)
           .maybeSingle(),
-        fecha.calendar_event_id
+        data.calendar_event_id
           ? supabase
               .from('calendar_events')
               .select('id, meet_link')
-              .eq('id', fecha.calendar_event_id)
+              .eq('id', data.calendar_event_id)
               .maybeSingle()
-          : Promise.resolve({ fecha: null, error: null }),
+          : Promise.resolve({ data: null, error: null }),
       ]);
 
       return {
-        ...fecha,
-        additional_info: (fecha.additional_info as Record<string, unknown>) || {},
-        event_type: eventTypeResult.fecha,
-        host_profile: hostResult.fecha,
-        calendar_event: calendarEventResult.fecha,
+        ...data,
+        additional_info: (data.additional_info as Record<string, unknown>) || {},
+        event_type: eventTypeResult.data,
+        host_profile: hostResult.data,
+        calendar_event: calendarEventResult.data,
       };
     },
     enabled: !!token,

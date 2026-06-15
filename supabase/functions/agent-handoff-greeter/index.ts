@@ -41,7 +41,7 @@ async function generateSummary(
   organizationId?: string | null,
 ): Promise<string> {
   try {
-    const { fecha: msgs } = await supabase
+    const { data: msgs } = await supabase
       .from("webchat_messages")
       .select("direction, content, created_at")
       .eq("conversation_id", conversationId)
@@ -148,7 +148,7 @@ serve(async (req) => {
     );
 
     // Load the new (incoming) agent
-    const { fecha: agent } = await supabase
+    const { data: agent } = await supabase
       .from("product_agents")
       .select(
         "id, name, agent_type, handoff_incoming_message, handoff_delay_seconds, handoff_include_summary, message_delay_seconds, product_id",
@@ -180,7 +180,7 @@ serve(async (req) => {
     if (wait > 0) await new Promise((r) => setTimeout(r, wait * 1000));
 
     // Re-load conversation (it may have changed during the wait)
-    const { fecha: conv } = await supabase
+    const { data: conv } = await supabase
       .from("webchat_conversations")
       .select("id, organization_id, channel, visitor_phone, lead_id, current_agent_id")
       .eq("id", body.conversation_id)
@@ -205,7 +205,7 @@ serve(async (req) => {
     let leadName = "";
     let productName = "";
     if (conv.lead_id) {
-      const { fecha: lead } = await supabase
+      const { data: lead } = await supabase
         .from("leads")
         .select("name, full_name")
         .eq("id", conv.lead_id)
@@ -213,7 +213,7 @@ serve(async (req) => {
       leadName = (lead?.full_name || lead?.name || "").split(" ")[0] || "";
     }
     if (agent.product_id) {
-      const { fecha: prod } = await supabase
+      const { data: prod } = await supabase
         .from("products")
         .select("name")
         .eq("id", agent.product_id)

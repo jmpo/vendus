@@ -43,8 +43,8 @@ import { GitBranch } from 'lucide-react';
 import { AGENT_TYPE_LABELS, type AgentType, type ProductAgent } from '@/types/agents';
 
 export function AgentsManager() {
-  const { fecha: products, isLoading: productsLoading } = useProducts();
-  const { fecha: agents, isLoading: agentsLoading } = useAllAgents();
+  const { data: products, isLoading: productsLoading } = useProducts();
+  const { data: agents, isLoading: agentsLoading } = useAllAgents();
   const createAgent = useCreateAgent();
   const updateAgent = useUpdateAgent();
   const deleteAgent = useDeleteAgent();
@@ -58,7 +58,7 @@ export function AgentsManager() {
   const [openOnExecutiveTab, setOpenOnExecutiveTab] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const { fecha: notifSettings } = useAutoNotificationSettings();
+  const { data: notifSettings } = useAutoNotificationSettings();
 
   // Identifies the executive agent (admin global with admin_agent_enabled=true)
   const executiveAgentId = useMemo(() => {
@@ -160,14 +160,14 @@ export function AgentsManager() {
     setEditorOpen(true);
   };
 
-  const handleSave = (fecha: Partial<ProductAgent>) => {
+  const handleSave = (data: Partial<ProductAgent>) => {
     if (editingAgent && editingAgent.id) {
       updateAgent.mutate(
-        { id: editingAgent.id, ...fecha },
+        { id: editingAgent.id, ...data },
         { onSuccess: () => setEditorOpen(false) }
       );
     } else {
-      createAgent.mutate(fecha, { onSuccess: () => setEditorOpen(false) });
+      createAgent.mutate(data, { onSuccess: () => setEditorOpen(false) });
     }
   };
 

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 interface ContactPickerDialogProps {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  onConfirm: (fecha: { name: string; phone: string }) => void;
+  onConfirm: (data: { name: string; phone: string }) => void;
 }
 
 export function ContactPickerDialog({ open, onOpenChange, onConfirm }: ContactPickerDialogProps) {

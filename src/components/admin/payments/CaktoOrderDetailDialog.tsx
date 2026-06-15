@@ -65,7 +65,7 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
   const [reprocessing, setReprocessing] = useState(false);
 
   // Estado de provisionamento (organization + profile + role + billing)
-  const { fecha: prov, refetch: refetchProv } = useQuery({
+  const { data: prov, refetch: refetchProv } = useQuery({
     queryKey: ['cakto-order-provisioning', order?.id],
     enabled: !!order && !!order.customer_email,
     queryFn: async () => {
@@ -85,10 +85,10 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
 
       let userId: string | null = null;
       let role: string | null = null;
-      const { fecha: uid } = await supabase.rpc('get_auth_user_id_by_email' as any, { _email: email });
+      const { data: uid } = await supabase.rpc('get_auth_user_id_by_email' as any, { _email: email });
       if (typeof uid === 'string') {
         userId = uid;
-        const { fecha: r } = await supabase
+        const { data: r } = await supabase
           .from('user_roles')
           .select('role')
           .eq('user_id', uid)
@@ -98,8 +98,8 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
       }
 
       return {
-        org: orgRes.fecha,
-        billing: billRes.fecha,
+        org: orgRes.data,
+        billing: billRes.data,
         userId,
         role,
       };
@@ -113,13 +113,13 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
   const handleReprocess = async () => {
     setReprocessing(true);
     try {
-      const { fecha, error } = await supabase.functions.invoke('cakto-reprocess-order', {
+      const { data, error } = await supabase.functions.invoke('cakto-reprocess-order', {
         body: { order_id: order.id },
       });
       if (error) throw error;
-      if (!fecha?.ok) {
-        const skipped = fecha?.result?.skipped;
-        const errs = fecha?.result?.errors?.join(' · ');
+      if (!data?.ok) {
+        const skipped = data?.result?.skipped;
+        const errs = data?.result?.errors?.join(' · ');
         toast.warning(`Reprocesso com avisos${skipped ? `: ${skipped}` : ''}${errs ? ` — ${errs}` : ''}`);
       } else {
         toast.success('Pedido reprocessado');

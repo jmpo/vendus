@@ -28,14 +28,14 @@ const fmtBRL = (n: number) => n.toLocaleString("pt-BR", { style: "currency", cur
 async function checkHighValueLeads(cfg: OrgCfg) {
   const supabase = getServiceSupabase();
   const since = new Date(Date.now() - 10 * 60 * 1000).toISOString();
-  const { fecha } = await supabase
+  const { data } = await supabase
     .from("deals")
     .select("id, deal_value, lead_id, seller_id, leads(name), profiles!deals_seller_id_fkey(full_name)")
     .eq("organization_id", cfg.organization_id)
     .gte("deal_value", cfg.alert_high_value_threshold)
     .gte("created_at", since);
 
-  for (const d of (fecha ?? []) as any[]) {
+  for (const d of (data ?? []) as any[]) {
     if (await alreadySentByKind(cfg.organization_id, "high_value_lead", d.id, 168)) continue;
     const leadName = d.leads?.name || "Lead";
     const seller = d.profiles?.full_name || "—";
@@ -57,7 +57,7 @@ async function checkHighValueLeads(cfg: OrgCfg) {
 async function checkUnattendedChats(cfg: OrgCfg) {
   const supabase = getServiceSupabase();
   const cutoff = new Date(Date.now() - cfg.alert_unattended_minutes * 60 * 1000).toISOString();
-  const { fecha } = await supabase
+  const { data } = await supabase
     .from("webchat_conversations")
     .select("id, visitor_name, last_message_at, status")
     .eq("organization_id", cfg.organization_id)
@@ -65,7 +65,7 @@ async function checkUnattendedChats(cfg: OrgCfg) {
     .lt("last_message_at", cutoff)
     .limit(20);
 
-  for (const c of (fecha ?? []) as any[]) {
+  for (const c of (data ?? []) as any[]) {
     if (await alreadySentByKind(cfg.organization_id, "unattended_chat", c.id, 6)) continue;
     const msg = `⏰ *Conversación sem atención*\n\n` +
       `👤 ${c.visitor_name || "Visitante"}\n` +
@@ -91,13 +91,13 @@ async function checkOfflineSellers(cfg: OrgCfg) {
   const dow = now.getUTCDay();
   if (dow === 0 || dow === 6) return;
 
-  const { fecha } = await supabase
+  const { data } = await supabase
     .from("user_status")
     .select("user_id, status, status_changed_at, profiles(full_name, organization_id)")
     .eq("status", "offline")
     .lt("status_changed_at", cutoff);
 
-  for (const s of (fecha ?? []) as any[]) {
+  for (const s of (data ?? []) as any[]) {
     if (s.profiles?.organization_id !== cfg.organization_id) continue;
     if (await alreadySentByKind(cfg.organization_id, "seller_offline", s.user_id, 12)) continue;
     const msg = `🚨 *Vendedor offline em horario comercial*\n\n` +
@@ -117,7 +117,7 @@ async function checkOfflineSellers(cfg: OrgCfg) {
 async function checkAgentErrors(cfg: OrgCfg) {
   const supabase = getServiceSupabase();
   const since = new Date(Date.now() - 30 * 60 * 1000).toISOString();
-  const { fecha } = await supabase
+  const { data } = await supabase
     .from("agent_action_logs")
     .select("agent_id, success, created_at")
     .eq("organization_id", cfg.organization_id)
@@ -127,7 +127,7 @@ async function checkAgentErrors(cfg: OrgCfg) {
 
   // Agrupa por agent_id e cuenta falhas consecutivas
   const grouped: Record<string, { fails: number; total: number }> = {};
-  for (const log of (fecha ?? []) as any[]) {
+  for (const log of (data ?? []) as any[]) {
     if (!log.agent_id) continue;
     if (!grouped[log.agent_id]) grouped[log.agent_id] = { fails: 0, total: 0 };
     grouped[log.agent_id].total++;
@@ -137,7 +137,7 @@ async function checkAgentErrors(cfg: OrgCfg) {
   for (const [agentId, stats] of Object.entries(grouped)) {
     if (stats.fails < cfg.alert_agent_error_threshold) continue;
     if (await alreadySentByKind(cfg.organization_id, "agent_errors", agentId, 6)) continue;
-    const { fecha: agent } = await supabase.from("product_agents").select("name").eq("id", agentId).maybeSingle();
+    const { data: agent } = await supabase.from("product_agents").select("name").eq("id", agentId).maybeSingle();
     const msg = `⚠️ *Agente IA com falhas*\n\n` +
       `🤖 ${agent?.name || "Agente"}\n` +
       `❌ *${stats.fails}* erros nos últimos 30min`;
@@ -156,7 +156,7 @@ async function checkMeetingChanges(cfg: OrgCfg) {
   if (!cfg.alert_meeting_changes) return;
   const supabase = getServiceSupabase();
   const since = new Date(Date.now() - 10 * 60 * 1000).toISOString();
-  const { fecha } = await supabase
+  const { data } = await supabase
     .from("calendar_events")
     .select("id, title, start_time, status, updated_at")
     .eq("organization_id", cfg.organization_id)
@@ -164,7 +164,7 @@ async function checkMeetingChanges(cfg: OrgCfg) {
     .in("status", ["confirmed", "cancelled"])
     .limit(20);
 
-  for (const ev of (fecha ?? []) as any[]) {
+  for (const ev of (data ?? []) as any[]) {
     const ref = `${ev.id}-${ev.status}`;
     const refUuid = `00000000-0000-0000-0000-${ev.id.replace(/-/g, "").slice(-12)}`;
     if (await alreadySentByKind(cfg.organization_id, `meeting_${ev.status}`, refUuid, 24)) continue;
@@ -188,7 +188,7 @@ serve(async (req) => {
 
   try {
     const supabase = getServiceSupabase();
-    const { fecha: configs } = await supabase
+    const { data: configs } = await supabase
       .from("auto_notification_settings")
       .select("organization_id, admin_whatsapp_number, realtime_alerts_enabled, alert_high_value_threshold, alert_unattended_minutes, alert_offline_minutes, alert_agent_error_threshold, alert_meeting_changes, alert_goal_achieved")
       .eq("admin_agent_enabled", true)

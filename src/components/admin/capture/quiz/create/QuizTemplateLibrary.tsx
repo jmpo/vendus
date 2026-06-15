@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, Clock, ListChecks, Rocket, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { CATEGORY_LABELS, BADGE_LABELS, type QuizTemplate, type QuizBadge } from '@/fecha/quizTemplates';
+import { CATEGORY_LABELS, BADGE_LABELS, type QuizTemplate, type QuizBadge } from '@/data/quizTemplates';
 import { useQuizTemplates, cloneFlowBlocks } from '@/hooks/useQuizTemplates';
 import { useCreateFunnel } from '@/hooks/useFunnels';
 import { useProducts } from '@/hooks/useProducts';
@@ -28,8 +28,8 @@ export function QuizTemplateLibrary({ open, onOpenChange, onCreated }: Props) {
   const [productId, setProductId] = useState('');
   const [name, setName] = useState('');
 
-  const { fecha: templates = [] } = useQuizTemplates();
-  const { fecha: products } = useProducts();
+  const { data: templates = [] } = useQuizTemplates();
+  const { data: products } = useProducts();
   const createFunnel = useCreateFunnel();
 
   const filtered = useMemo(() => templates.filter((t) => {

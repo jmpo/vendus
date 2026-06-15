@@ -15,9 +15,9 @@ interface Props {
 type Appearance = NonNullable<FunnelBlockData['block_appearance']>;
 
 export function AppearanceTab({ block, onUpdate }: Props) {
-  const ap: Appearance = block.fecha.block_appearance || {};
+  const ap: Appearance = block.data.block_appearance || {};
   const setAp = (patch: Partial<Appearance>) =>
-    onUpdate({ fecha: { ...block.fecha, block_appearance: { ...ap, ...patch } } });
+    onUpdate({ data: { ...block.data, block_appearance: { ...ap, ...patch } } });
 
   return (
     <div className="space-y-4">

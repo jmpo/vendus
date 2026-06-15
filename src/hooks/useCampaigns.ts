@@ -48,23 +48,23 @@ export function useCampaigns() {
       .select('organization_id')
       .eq('id', user.id)
       .maybeSingle()
-      .then(({ fecha }) => setOrgId(fecha?.organization_id ?? null));
+      .then(({ data }) => setOrgId(data?.organization_id ?? null));
   }, [user]);
 
   const refresh = useCallback(async () => {
     if (!orgId) return;
     setLoading(true);
-    const { fecha } = await supabase
+    const { data } = await supabase
       .from('campaigns')
       .select('*')
       .eq('organization_id', orgId)
       .order('created_at', { ascending: false });
-    const list = (fecha as any[]) ?? [];
+    const list = (data as any[]) ?? [];
     setCampaigns(list);
 
     if (list.length) {
       const ids = list.map((c) => c.id);
-      const { fecha: targets } = await supabase
+      const { data: targets } = await supabase
         .from('campaign_targets')
         .select('campaign_id, status')
         .in('campaign_id', ids);
@@ -105,15 +105,15 @@ export function useCampaignTargets(campaignId: string | null) {
 
   const refresh = useCallback(async () => {
     if (!campaignId) return;
-    const { fecha } = await supabase
+    const { data } = await supabase
       .from('campaign_targets')
       .select('*')
       .eq('campaign_id', campaignId)
       .order('scheduled_for', { ascending: true })
       .limit(500);
-    setTargets(fecha ?? []);
+    setTargets(data ?? []);
     const c = { queued: 0, sending: 0, sent: 0, failed: 0, skipped: 0, responded: 0, cancelled: 0 };
-    (fecha ?? []).forEach((t: any) => { (c as any)[t.status] = ((c as any)[t.status] ?? 0) + 1; });
+    (data ?? []).forEach((t: any) => { (c as any)[t.status] = ((c as any)[t.status] ?? 0) + 1; });
     setCounts(c);
   }, [campaignId]);
 

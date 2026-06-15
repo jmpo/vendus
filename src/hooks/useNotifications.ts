@@ -8,7 +8,7 @@ export function useNotifications(userId: string) {
   return useQuery({
     queryKey: ['notifications', userId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('notifications')
         .select('*')
         .eq('user_id', userId)
@@ -16,7 +16,7 @@ export function useNotifications(userId: string) {
         .limit(50);
       
       if (error) throw error;
-      return fecha as Notification[];
+      return data as Notification[];
     },
     enabled: !!userId
   });

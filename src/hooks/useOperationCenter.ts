@@ -184,7 +184,7 @@ export function useTodayAgenda() {
           .limit(6),
       ]);
 
-      const events: AgendaItem[] = (eventsRes.fecha ?? []).map((e: any) => ({
+      const events: AgendaItem[] = (eventsRes.data ?? []).map((e: any) => ({
         id: `evt-${e.id}`,
         type: 'meeting',
         equipo: e.start_time,
@@ -192,7 +192,7 @@ export function useTodayAgenda() {
         subtitle: e.leads?.name ? `Com ${e.leads.name}` : '',
       }));
 
-      const tasks: AgendaItem[] = (tasksRes.fecha ?? [])
+      const tasks: AgendaItem[] = (tasksRes.data ?? [])
         .filter((t: any) => !t.leads || t.leads.organization_id === orgId)
         .map((t: any) => ({
           id: `tsk-${t.id}`,
@@ -218,14 +218,14 @@ export function useRecentLeads() {
     enabled: !!orgId,
     staleTime: 60_000,
     queryFn: async (): Promise<RecentLead[]> => {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('leads')
         .select('id, name, company, source, temperature, assigned_to, created_at, profiles:profiles!leads_assigned_to_fkey(full_name)')
         .eq('organization_id', orgId)
         .order('created_at', { ascending: false })
         .limit(6);
 
-      return (fecha ?? []).map((l: any) => ({
+      return (data ?? []).map((l: any) => ({
         id: l.id,
         name: l.name || 'Sem nombre',
         company: l.company,

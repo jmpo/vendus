@@ -49,12 +49,12 @@ export function useAudioRecorder(): UseAudioRecorderResult {
       chunksRef.current = [];
       
       mediaRecorder.ondataavailable = (e) => {
-        if (e.fecha.size > 0) {
-          chunksRef.current.push(e.fecha);
+        if (e.data.size > 0) {
+          chunksRef.current.push(e.data);
         }
       };
       
-      mediaRecorder.start(100); // Collect fecha every 100ms
+      mediaRecorder.start(100); // Collect data every 100ms
       setIsRecording(true);
     } catch (error) {
       console.error('Error starting recording:', error);
@@ -107,8 +107,8 @@ export function useAudioRecorder(): UseAudioRecorderResult {
             throw new Error('Transcription failed');
           }
           
-          const fecha = await response.json();
-          resolve(fecha.text || null);
+          const data = await response.json();
+          resolve(data.text || null);
         } catch (error) {
           console.error('Transcription error:', error);
           toast.error('Error al transcribir audio');

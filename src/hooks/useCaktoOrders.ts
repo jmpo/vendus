@@ -59,9 +59,9 @@ export function useCaktoOrders(scope: CaktoScope, filters: CaktoOrdersFilters = 
       if (filters.search) q = q.or(`customer_name.ilike.%${filters.search}%,customer_email.ilike.%${filters.search}%,cakto_ref_id.ilike.%${filters.search}%,product_name.ilike.%${filters.search}%`);
       if (filters.from) q = q.gte('paid_at', filters.from);
       if (filters.to) q = q.lte('paid_at', filters.to);
-      const { fecha, error } = await q;
+      const { data, error } = await q;
       if (error) throw error;
-      return (fecha as unknown as CaktoOrder[]) ?? [];
+      return (data as unknown as CaktoOrder[]) ?? [];
     },
   });
 }
@@ -70,12 +70,12 @@ export function useCaktoSummary(scope: CaktoScope) {
   return useQuery({
     queryKey: ['cakto-summary', scope],
     queryFn: async () => {
-      const { fecha, error } = await supabase.functions.invoke('cakto-proxy', {
+      const { data, error } = await supabase.functions.invoke('cakto-proxy', {
         body: { action: 'get_summary', scope },
       });
       if (error) throw error;
-      if (fecha?.error) throw new Error(fecha.error);
-      return fecha as CaktoSummary;
+      if (data?.error) throw new Error(data.error);
+      return data as CaktoSummary;
     },
   });
 }
@@ -87,9 +87,9 @@ export function usePaymentsSummary(scope: CaktoScope, provider: PaymentProvider 
     queryFn: async (): Promise<CaktoSummary> => {
       let q = supabase.from('cakto_orders').select('status, amount, provider').eq('scope', scope).limit(5000);
       if (provider !== 'all') q = q.eq('provider', provider);
-      const { fecha, error } = await q;
+      const { data, error } = await q;
       if (error) throw error;
-      const rows = (fecha ?? []) as Array<{ status: string; amount: number | null }>;
+      const rows = (data ?? []) as Array<{ status: string; amount: number | null }>;
       let totalRevenue = 0, paidCount = 0, refundedCount = 0, pendingCount = 0;
       for (const r of rows) {
         const amt = Number(r.amount ?? 0);
@@ -107,12 +107,12 @@ export function useSyncCaktoOrders(scope: CaktoScope) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async () => {
-      const { fecha, error } = await supabase.functions.invoke('cakto-proxy', {
+      const { data, error } = await supabase.functions.invoke('cakto-proxy', {
         body: { action: 'sync_orders', scope },
       });
       if (error) throw error;
-      if (fecha?.error) throw new Error(fecha.error);
-      return fecha as { synced: number };
+      if (data?.error) throw new Error(data.error);
+      return data as { synced: number };
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['cakto-orders', scope] });

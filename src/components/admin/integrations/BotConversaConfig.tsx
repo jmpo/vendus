@@ -27,15 +27,15 @@ export function BotConversaConfig() {
 
   const loadConfig = async () => {
     try {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('integration_settings')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
         .eq('integration_type', 'whatsapp_provider')
         .maybeSingle();
 
-      if (fecha?.settings) {
-        const settings = fecha.settings as Record<string, unknown>;
+      if (data?.settings) {
+        const settings = data.settings as Record<string, unknown>;
         setApiKey((settings.botconversa_api_key as string) || '');
         setIsActive((settings.provider as string) === 'botconversa');
       }
@@ -56,7 +56,7 @@ export function BotConversaConfig() {
         botconversa_api_key: apiKey,
       };
 
-      const { fecha: existing } = await supabase
+      const { data: existing } = await supabase
         .from('integration_settings')
         .select('id')
         .eq('organization_id', profile.organization_id)

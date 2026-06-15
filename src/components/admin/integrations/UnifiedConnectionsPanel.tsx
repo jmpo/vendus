@@ -17,10 +17,10 @@ import { toast } from 'sonner';
 export function UnifiedConnectionsPanel() {
   const navigate = useNavigate();
   const { profile } = useAuth();
-  const { fecha: instances } = useEvolutionInstances();
-  const { fecha: metaConns } = useMetaWAConnections();
-  const { fecha: igConns } = useInstagramConnections();
-  const { fecha: effectivePlan } = useOrganizationEffectivePlan(profile?.organization_id);
+  const { data: instances } = useEvolutionInstances();
+  const { data: metaConns } = useMetaWAConnections();
+  const { data: igConns } = useInstagramConnections();
+  const { data: effectivePlan } = useOrganizationEffectivePlan(profile?.organization_id);
 
   const [pickerOpen, setPickerOpen] = useState(false);
   const [openEvolutionCreate, setOpenEvolutionCreate] = useState(false);

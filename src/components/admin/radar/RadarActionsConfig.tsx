@@ -19,7 +19,7 @@ const CLASSES: { key: keyof ActionsConfig; label: string; emoji: string; color: 
 ];
 
 export function RadarActionsConfig({ value, onChange }: Props) {
-  const { fecha: tags } = useLeadTags();
+  const { data: tags } = useLeadTags();
 
   function update(key: keyof ActionsConfig, patch: Partial<ActionConfig>) {
     onChange({ ...value, [key]: { ...(value[key] || {}), ...patch } });

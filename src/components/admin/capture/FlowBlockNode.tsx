@@ -109,34 +109,34 @@ interface FlowBlockNodeProps {
 function getBlockPreview(block: FunnelBlock): string {
   switch (block.type) {
     case 'message':
-      return block.fecha.content?.substring(0, 40) || 'Mensaje vacío...';
+      return block.data.content?.substring(0, 40) || 'Mensaje vacío...';
     case 'input':
-      return `${block.fecha.input_type || 'texto'} → $${block.fecha.variable_name || 'var'}`;
+      return `${block.data.input_type || 'texto'} → $${block.data.variable_name || 'var'}`;
     case 'buttons':
-      const btnCount = block.fecha.options?.length || 0;
+      const btnCount = block.data.options?.length || 0;
       return `${btnCount} ${btnCount === 1 ? 'opción' : 'opciones'}`;
     case 'ai_takeover':
-      if (block.fecha.agent_id) {
-        const hasAutoSwitch = block.fecha.auto_switch_enabled && block.fecha.auto_switch_agents?.length;
+      if (block.data.agent_id) {
+        const hasAutoSwitch = block.data.auto_switch_enabled && block.data.auto_switch_agents?.length;
         return hasAutoSwitch ? 'IA + Agente (auto-switch)' : 'IA + Agente seleccionado';
       }
       return 'IA asume (genérico)';
     case 'ai_decide':
-      return block.fecha.ai_objective || 'calificar';
+      return block.data.ai_objective || 'calificar';
     case 'agent_switch':
-      return block.fecha.agent_id ? 'Agente configurado' : 'Seleccionar agente...';
+      return block.data.agent_id ? 'Agente configurado' : 'Seleccionar agente...';
     case 'condition':
-      return block.fecha.condition?.variable || 'Condición';
+      return block.data.condition?.variable || 'Condición';
     case 'delay':
-      return `${(block.fecha.delay_ms || 1000) / 1000}s`;
+      return `${(block.data.delay_ms || 1000) / 1000}s`;
     case 'tag':
-      return block.fecha.apply_tags?.slice(0, 2).join(', ') || 'Etiquetas';
+      return block.data.apply_tags?.slice(0, 2).join(', ') || 'Etiquetas';
     case 'video':
-      return block.fecha.video_type === 'custom_html' ? 'HTML personalizado' : block.fecha.video_url?.substring(0, 30) || 'Video';
+      return block.data.video_type === 'custom_html' ? 'HTML personalizado' : block.data.video_url?.substring(0, 30) || 'Video';
     case 'image':
-      return block.fecha.image_url?.substring(0, 30) || 'Imagen';
+      return block.data.image_url?.substring(0, 30) || 'Imagen';
     case 'link':
-      return block.fecha.link_title || block.fecha.link_url?.substring(0, 30) || 'Enlace';
+      return block.data.link_title || block.data.link_url?.substring(0, 30) || 'Enlace';
     case 'handoff':
       return 'Transferir';
     case 'end':
@@ -166,7 +166,7 @@ export const FlowBlockNode = memo(function FlowBlockNode({
   const Icon = BLOCK_ICONS[block.type] || MessageSquare;
   const hasMultipleOutputs = ['condition', 'ai_decide', 'ab_test'].includes(block.type);
   const isButtonsBlock = block.type === 'buttons';
-  const buttonOptions = isButtonsBlock ? (block.fecha.options || []) : [];
+  const buttonOptions = isButtonsBlock ? (block.data.options || []) : [];
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (e.button === 0 && !e.ctrlKey) {

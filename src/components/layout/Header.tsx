@@ -41,7 +41,7 @@ export function Header({
 }: HeaderProps) {
   const navigate = useNavigate();
   const { profile, signOut } = useAuth();
-  const { fecha: unreadReleases = 0 } = useUnreadReleasesCount();
+  const { data: unreadReleases = 0 } = useUnreadReleasesCount();
 
   const getInitials = (name: string) => {
     return name

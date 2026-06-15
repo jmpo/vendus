@@ -11,7 +11,7 @@ export function QuizPreviewTab({ funnel }: Props) {
   const [device, setDevice] = useState<'mobile' | 'desktop'>('mobile');
   const [reloadKey, setReloadKey] = useState(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const { fecha: baseUrl } = usePublicAppUrl();
+  const { data: baseUrl } = usePublicAppUrl();
 
   const slug = (funnel.channels as any)?.quiz?.slug_override || funnel.slug;
   const quizUrl = `${baseUrl}/q/${slug}?preview=1`;

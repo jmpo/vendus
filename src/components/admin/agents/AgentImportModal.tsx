@@ -223,7 +223,7 @@ function sanitizeAgentJson(raw: unknown): Partial<ProductAgent> {
 }
 
 export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftReady }: AgentImportModalProps) {
-  const { fecha: products } = useProducts();
+  const { data: products } = useProducts();
   const createAgent = useCreateAgent();
 
   const [tab, setTab] = useState<'json' | 'doc'>('json');
@@ -311,7 +311,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
     setBusy(true);
     try {
       const file_base64 = await fileToBase64(docFile);
-      const { fecha, error } = await supabase.functions.invoke('import-agent-from-document', {
+      const { data, error } = await supabase.functions.invoke('import-agent-from-document', {
         body: {
           filename: docFile.name,
           mime_type: docFile.type,
@@ -320,11 +320,11 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
         },
       });
       if (error) throw error;
-      if (!fecha?.agent) throw new Error('Resposta inválida da IA');
+      if (!data?.agent) throw new Error('Resposta inválida da IA');
 
       const finalProductId = (fixedProductId ?? null) || (productId === '__global__' ? null : productId);
       const draft: Partial<ProductAgent> = {
-        ...fecha.agent,
+        ...data.agent,
         agent_type: docAgentType as ProductAgent['agent_type'],
         product_id: finalProductId,
       };

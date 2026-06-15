@@ -38,8 +38,8 @@ export function SubscriptionsManager() {
   const [statusFilter, setEstadoFilter] = useState<string>('all');
   const [planFilter, setPlanFilter] = useState<string>('all');
 
-  const { fecha: subscriptions, isLoading } = useAllSubscriptions();
-  const { fecha: stats } = useSuperAdminStats();
+  const { data: subscriptions, isLoading } = useAllSubscriptions();
+  const { data: stats } = useSuperAdminStats();
   const updateSubscription = useUpdateSubscription();
 
   const formatCurrency = (value: number) => {

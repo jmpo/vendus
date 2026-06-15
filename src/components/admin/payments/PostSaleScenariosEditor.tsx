@@ -63,7 +63,7 @@ const TEMPLATES: Record<PostSaleEvent, { name: string; instruction: string; link
     {
       name: 'Convite pro webinário',
       instruction:
-        'Convide o cliente pro próximo webinário gratuito. Mencione fecha, horario e o que ele vai aprender. Pergunte se ele consegue participar ao vivo.',
+        'Convide o cliente pro próximo webinário gratuito. Mencione data, horario e o que ele vai aprender. Pergunte se ele consegue participar ao vivo.',
       links: [
         { label: 'Webinário', url: 'https://...', when_to_offer: 'siempre' },
       ],
@@ -91,7 +91,7 @@ const TEMPLATES: Record<PostSaleEvent, { name: string; instruction: string; link
 };
 
 export function PostSaleScenariosEditor() {
-  const { fecha: scenarios, isLoading } = usePostSaleScenarios();
+  const { data: scenarios, isLoading } = usePostSaleScenarios();
   const [editing, setEditing] = useState<Partial<PostSaleScenario> | null>(null);
 
   const openNew = (event: PostSaleEvent) =>

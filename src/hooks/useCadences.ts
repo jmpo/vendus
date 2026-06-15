@@ -53,23 +53,23 @@ export function useCadences() {
   useEffect(() => {
     if (!user) return;
     supabase.from('profiles').select('organization_id').eq('id', user.id).maybeSingle()
-      .then(({ fecha }) => setOrgId((fecha as any)?.organization_id ?? null));
+      .then(({ data }) => setOrgId((data as any)?.organization_id ?? null));
   }, [user]);
 
   const refresh = useCallback(async () => {
     if (!orgId) return;
     setLoading(true);
-    const { fecha } = await supabase
+    const { data } = await supabase
       .from('cadences' as any)
       .select('*')
       .eq('organization_id', orgId)
       .order('created_at', { ascending: false });
-    const list = (fecha as any[]) ?? [];
+    const list = (data as any[]) ?? [];
     setCadences(list as Cadence[]);
 
     if (list.length) {
       const ids = list.map((c) => c.id);
-      const { fecha: enrollments } = await supabase
+      const { data: enrollments } = await supabase
         .from('cadence_enrollments' as any)
         .select('cadence_id, status')
         .in('cadence_id', ids);
@@ -107,12 +107,12 @@ export function useCadenceSteps(cadenceId: string | null) {
 
   const refresh = useCallback(async () => {
     if (!cadenceId) { setSteps([]); return; }
-    const { fecha } = await supabase
+    const { data } = await supabase
       .from('cadence_steps' as any)
       .select('*')
       .eq('cadence_id', cadenceId)
       .order('order_index', { ascending: true });
-    setSteps((fecha as any[]) ?? [] as CadenceStep[]);
+    setSteps((data as any[]) ?? [] as CadenceStep[]);
   }, [cadenceId]);
 
   useEffect(() => { refresh(); }, [refresh]);

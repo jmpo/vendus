@@ -13,10 +13,10 @@ import { Save, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function StageValueManager() {
-  const { fecha: products } = useProducts();
+  const { data: products } = useProducts();
   const [selectedProductId, setSelectedProductId] = useState<string>('');
-  const { fecha: stages } = usePipelineStages(selectedProductId);
-  const { fecha: stageValues } = useStageValues(selectedProductId);
+  const { data: stages } = usePipelineStages(selectedProductId);
+  const { data: stageValues } = useStageValues(selectedProductId);
   const upsertStageValue = useUpsertStageValue();
 
   const [localValues, setLocalValues] = useState<Record<string, { expected_value: number; probability_percent: number }>>({});

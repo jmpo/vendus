@@ -15,14 +15,14 @@ export function useWebhooks() {
   return useQuery({
     queryKey: ['webhooks'],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('webhooks')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       
-      return (fecha || []).map(w => ({
+      return (data || []).map(w => ({
         ...w,
         actions: parseActions(w.actions),
         identification_config: w.identification_config || {}
@@ -38,7 +38,7 @@ export function useWebhook(id: string | null) {
     queryFn: async () => {
       if (!id) return null;
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('webhooks')
         .select('*')
         .eq('id', id)
@@ -47,9 +47,9 @@ export function useWebhook(id: string | null) {
       if (error) throw error;
       
       return {
-        ...fecha,
-        actions: parseActions(fecha.actions),
-        identification_config: fecha.identification_config || {}
+        ...data,
+        actions: parseActions(data.actions),
+        identification_config: data.identification_config || {}
       } as Webhook;
     },
     enabled: !!id
@@ -61,15 +61,15 @@ export function useCreateWebhook() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (fecha: { name: string; description?: string; product_id?: string }) => {
+    mutationFn: async (data: { name: string; description?: string; product_id?: string }) => {
       // Get current user
-      const { fecha: { user } } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('Usuario no autenticado');
       }
 
       // Get current user's organization
-      const { fecha: profile } = await supabase
+      const { data: profile } = await supabase
         .from('profiles')
         .select('organization_id')
         .eq('id', user.id)
@@ -80,21 +80,21 @@ export function useCreateWebhook() {
       }
 
       // Generate slug from name
-      const slug = fecha.name
+      const slug = data.name
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
 
-      const { fecha: webhook, error } = await supabase
+      const { data: webhook, error } = await supabase
         .from('webhooks')
         .insert({
           organization_id: profile.organization_id,
-          name: fecha.name,
+          name: data.name,
           slug: `${slug}-${Date.now().toString(36)}`,
-          description: fecha.description,
-          product_id: fecha.product_id,
+          description: data.description,
+          product_id: data.product_id,
           is_active: false,
           is_test_mode: true,
           actions: [],
@@ -121,9 +121,9 @@ export function useUpdateWebhook() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, actions, ...fecha }: Partial<Webhook> & { id: string }) => {
+    mutationFn: async ({ id, actions, ...data }: Partial<Webhook> & { id: string }) => {
       const updateData: Record<string, unknown> = {
-        ...fecha,
+        ...data,
         updated_at: new Date().toISOString()
       };
       
@@ -179,7 +179,7 @@ export function useWebhookLogs(webhookId: string | null) {
     queryFn: async () => {
       if (!webhookId) return [];
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('webhook_logs')
         .select('*')
         .eq('webhook_id', webhookId)
@@ -187,7 +187,7 @@ export function useWebhookLogs(webhookId: string | null) {
         .limit(100);
 
       if (error) throw error;
-      return (fecha || []) as WebhookLog[];
+      return (data || []) as WebhookLog[];
     },
     enabled: !!webhookId
   });
@@ -200,14 +200,14 @@ export function useWebhookSamples(webhookId: string | null) {
     queryFn: async () => {
       if (!webhookId) return [];
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('webhook_sample_requests')
         .select('*')
         .eq('webhook_id', webhookId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return (fecha || []) as WebhookSampleRequest[];
+      return (data || []) as WebhookSampleRequest[];
     },
     enabled: !!webhookId
   });

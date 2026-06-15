@@ -27,7 +27,7 @@ interface Message {
 }
 
 export function AITrainingWidget({ productId }: AITrainingWidgetProps) {
-  const { fecha: trainings, isLoading } = useKnowledgeSourcesByType(productId, 'training');
+  const { data: trainings, isLoading } = useKnowledgeSourcesByType(productId, 'training');
   const createTraining = useCreateKnowledgeSource();
   const deleteTraining = useDeleteKnowledgeSource();
   

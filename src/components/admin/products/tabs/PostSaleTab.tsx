@@ -45,14 +45,14 @@ interface Props {
 }
 
 export function PostSaleTab({ productId }: Props) {
-  const { fecha: actions, isLoading } = usePostSaleEventActions(productId);
-  const { fecha: agents } = useProductAgents(productId);
-  const { fecha: templates } = useEmailTemplates();
-  const { fecha: tags } = useLeadTags();
-  const { fecha: flows } = useChatFlows(productId);
-  const { fecha: sectors } = useSectors();
+  const { data: actions, isLoading } = usePostSaleEventActions(productId);
+  const { data: agents } = useProductAgents(productId);
+  const { data: templates } = useEmailTemplates();
+  const { data: tags } = useLeadTags();
+  const { data: flows } = useChatFlows(productId);
+  const { data: sectors } = useSectors();
   const { profile } = useAuth();
-  const { fecha: team } = useTeamMembers(profile?.organization_id);
+  const { data: team } = useTeamMembers(profile?.organization_id);
   const upsert = useUpsertPostSaleEventAction();
   const remove = useDeletePostSaleEventAction(productId);
   const [packageOpen, setPackageOpen] = useState(false);
@@ -60,13 +60,13 @@ export function PostSaleTab({ productId }: Props) {
   const stagesQuery = useQuery({
     queryKey: ['pipeline-stages', productId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('pipeline_stages')
         .select('id, name, order_index')
         .eq('product_id', productId)
         .order('order_index', { ascending: true });
       if (error) throw error;
-      return (fecha || []) as Array<{ id: string; name: string }>;
+      return (data || []) as Array<{ id: string; name: string }>;
     },
     enabled: !!productId,
   });
@@ -116,7 +116,7 @@ export function PostSaleTab({ productId }: Props) {
             existing={byEvent.get(evt.value)}
             agents={agents || []}
             templates={templates || []}
-            stages={stagesQuery.fecha || []}
+            stages={stagesQuery.data || []}
             tags={tags || []}
             flows={flows || []}
             sectors={sectors || []}
@@ -165,7 +165,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
   const [inlineMessage, setInlineMessage] = useState<string>((existing as any)?.inline_message ?? '');
   const [messageChannel, setMessageChannel] = useState<'whatsapp' | 'email'>((existing as any)?.message_channel ?? 'whatsapp');
   const [evolutionInstanceId, setEvolutionInstanceId] = useState<string | null>((existing as any)?.evolution_instance_id ?? null);
-  const { fecha: evolutionInstances } = useEvolutionInstances();
+  const { data: evolutionInstances } = useEvolutionInstances();
   const [targetStageId, setTargetStageId] = useState<string | null>(existing?.target_stage_id ?? null);
   const [dealOutcome, setDealOutcome] = useState<'none' | 'won' | 'lost'>((existing as any)?.deal_outcome ?? 'none');
   const [dealValueSource, setDealValueSource] = useState<'none' | 'webhook' | 'manual'>((existing as any)?.deal_value_source ?? 'none');
@@ -641,7 +641,7 @@ function TagMultiSelect({
 }
 
 function RecentLogs({ productId }: { productId: string }) {
-  const { fecha: logs, isLoading } = usePostSaleEventLogs(productId, 15);
+  const { data: logs, isLoading } = usePostSaleEventLogs(productId, 15);
 
   return (
     <Card>

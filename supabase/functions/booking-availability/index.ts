@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
     console.log(`Calculating availability for event ${eventTypeId} on ${date}`);
 
     // 1. Fetch event type
-    const { fecha: eventType, error: eventError } = await supabase
+    const { data: eventType, error: eventError } = await supabase
       .from('booking_event_types')
       .select('*')
       .eq('id', eventTypeId)
@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
     const dayOfWeek = dateObj.getDay();
 
     // 2. Fetch weekly availability for this day
-    const { fecha: weeklyAvailability } = await supabase
+    const { data: weeklyAvailability } = await supabase
       .from('user_availability')
       .select('*')
       .eq('user_id', userId)
@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
       .eq('is_available', true);
 
     // 3. Check for date override
-    const { fecha: override } = await supabase
+    const { data: override } = await supabase
       .from('availability_overrides')
       .select('*')
       .eq('user_id', userId)
@@ -110,7 +110,7 @@ Deno.serve(async (req) => {
     const startOfDay = `${date}T00:00:00`;
     const endOfDay = `${date}T23:59:59`;
     
-    const { fecha: existingEvents } = await supabase
+    const { data: existingEvents } = await supabase
       .from('calendar_events')
       .select('start_time, end_time')
       .eq('user_id', userId)

@@ -29,7 +29,7 @@ interface MetaWhatsAppConnectionsPanelProps {
 }
 
 export function MetaWhatsAppConnectionsPanel({ hideHeader, openWizard, onCloseWizard }: MetaWhatsAppConnectionsPanelProps = {}) {
-  const { fecha: conns = [], isLoading } = useMetaWAConnections();
+  const { data: conns = [], isLoading } = useMetaWAConnections();
   const test = useTestMetaWAConnection();
   const sync = useSyncMetaWATemplates();
   const del = useDeleteMetaWAConnection();

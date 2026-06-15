@@ -144,7 +144,7 @@ export function PlanFormBody({
   const [form, setForm] = useState<PlatformPlanInput>(plan ? { ...(plan as any) } : emptyPlan);
   const createPlan = useCreatePlan();
   const updatePlan = useUpdatePlan();
-  const { fecha: poolKeys = [] } = usePlatformAIKeys();
+  const { data: poolKeys = [] } = usePlatformAIKeys();
 
 
   useEffect(() => {

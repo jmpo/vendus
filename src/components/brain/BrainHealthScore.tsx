@@ -16,7 +16,7 @@ interface BrainHealthScoreProps {
     website: number;
     youtube: number;
     faq: number;
-    fecha: number;
+    data: number;
     training: number;
     total: number;
     completed: number;

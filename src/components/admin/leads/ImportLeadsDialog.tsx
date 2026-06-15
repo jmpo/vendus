@@ -116,7 +116,7 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
     const BATCH = 50;
     for (let i = 0; i < mapped.length; i += BATCH) {
       const slice = mapped.slice(i, i + BATCH);
-      const { fecha, error } = await supabase.from('leads').insert(slice as any).select('id');
+      const { data, error } = await supabase.from('leads').insert(slice as any).select('id');
       if (error) {
         // try one-by-one to count duplicates
         for (const row of slice) {
@@ -126,7 +126,7 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
           else errors++;
         }
       } else {
-        created += (fecha?.length || slice.length);
+        created += (data?.length || slice.length);
       }
       setProgress(Math.round(((i + slice.length) / mapped.length) * 100));
     }

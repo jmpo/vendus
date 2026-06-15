@@ -38,17 +38,17 @@ export function StartConversationDialog({
   const [isCreating, setIsCreating] = useState(false);
 
   // Search leads
-  const { fecha: leads = [] } = useQuery({
+  const { data: leads = [] } = useQuery({
     queryKey: ['leads-search', search, profile?.organization_id],
     queryFn: async () => {
       if (!search || search.length < 2 || !profile?.organization_id) return [];
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('leads')
         .select('id, name, phone, email, company')
         .eq('organization_id', profile.organization_id)
         .or(`name.ilike.%${search}%,phone.ilike.%${search}%,email.ilike.%${search}%`)
         .limit(10);
-      return fecha || [];
+      return data || [];
     },
     enabled: open && search.length >= 2,
   });
@@ -70,7 +70,7 @@ export function StartConversationDialog({
 
     setIsCreating(true);
     try {
-      const { fecha, error } = await supabase.functions.invoke('start-whatsapp-conversation', {
+      const { data, error } = await supabase.functions.invoke('start-whatsapp-conversation', {
         body: {
           phone: targetPhone,
           lead_id: selectedLead?.id || null,
@@ -82,13 +82,13 @@ export function StartConversationDialog({
       if (error) throw error;
 
       toast({
-        title: fecha.is_new ? 'Conversación creada' : 'Conversación encontrada',
-        description: fecha.is_new
+        title: data.is_new ? 'Conversación creada' : 'Conversación encontrada',
+        description: data.is_new
           ? 'Nueva conversación de WhatsApp iniciada.'
           : 'Conversación existente seleccionada.',
       });
 
-      onConversationCreated(fecha.conversation_id);
+      onConversationCreated(data.conversation_id);
       handleClose();
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });

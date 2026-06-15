@@ -33,7 +33,7 @@ export function SendFlowDialog({
   const [selectedFlowId, setSelectedFlowId] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
 
-  const { fecha: flows, isLoading } = useQuery({
+  const { data: flows, isLoading } = useQuery({
     queryKey: ['chat-flows-active', profile?.organization_id, widgetProductId],
     queryFn: async () => {
       let query = supabase
@@ -47,8 +47,8 @@ export function SendFlowDialog({
         query = query.or(`product_id.eq.${widgetProductId},product_id.is.null`);
       }
 
-      const { fecha } = await query;
-      return fecha || [];
+      const { data } = await query;
+      return data || [];
     },
     enabled: open && !!profile?.organization_id,
   });

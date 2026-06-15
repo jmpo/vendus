@@ -16,7 +16,7 @@ import { es } from 'date-fns/locale';
 
 export function AuditLogs() {
   const [search, setSearch] = useState('');
-  const { fecha: logs, isLoading } = useAuditLogs(100);
+  const { data: logs, isLoading } = useAuditLogs(100);
 
   const filteredLogs = logs?.filter((log: any) => {
     return log.action?.toLowerCase().includes(search.toLowerCase()) ||

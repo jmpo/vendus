@@ -90,7 +90,7 @@ export function CampaignWizard({
   const [saving, setSaving] = useState(false);
   const [starting, setStarting] = useState(false);
   const { contexts: libraryContexts } = useContextLibrary(orgId);
-  const { fecha: tags = [] } = useLeadTags();
+  const { data: tags = [] } = useLeadTags();
   const { fields: customFields = [] } = useCustomFields();
 
   const [agents, setAgents] = useState<any[]>([]);
@@ -140,11 +140,11 @@ export function CampaignWizard({
         sb.from('products').select('id, name, status').eq('organization_id', orgId).order('name'),
         sb.from('evolution_instances').select('id, name, phone_number, status').eq('organization_id', orgId),
       ]);
-      setAgents(a.fecha ?? []);
-      setProducts(p.fecha ?? []);
-      setInstances(i.fecha ?? []);
-      if ((p.fecha ?? []).length && !productId) {
-        setProductId(p.fecha[0].id);
+      setAgents(a.data ?? []);
+      setProducts(p.data ?? []);
+      setInstances(i.data ?? []);
+      if ((p.data ?? []).length && !productId) {
+        setProductId(p.data[0].id);
       }
     })();
   }, [orgId]);
@@ -153,47 +153,47 @@ export function CampaignWizard({
   useEffect(() => {
     if (!productId) { setStages([]); return; }
     (async () => {
-      const { fecha } = await (supabase as any)
+      const { data } = await (supabase as any)
         .from('pipeline_stages')
         .select('id, name, order_index, product_id')
         .eq('product_id', productId)
         .order('order_index');
-      setStages(fecha ?? []);
+      setStages(data ?? []);
     })();
   }, [productId]);
 
   // Carregar campaña existente
   useEffect(() => {
     if (!campaignId) return;
-    supabase.from('campaigns').select('*').eq('id', campaignId).maybeSingle().then(({ fecha }) => {
-      if (fecha) {
+    supabase.from('campaigns').select('*').eq('id', campaignId).maybeSingle().then(({ data }) => {
+      if (data) {
         setForm({
-          name: fecha.name ?? '',
-          description: fecha.description ?? '',
-          status: fecha.status,
-          agent_id: fecha.agent_id ?? '',
-          audience_filters: (fecha.audience_filters as Filters) ?? {},
-          exclusion_filters: (fecha.exclusion_filters as Filters) ?? {},
-          contexts: (fecha.contexts as any) ?? [],
+          name: data.name ?? '',
+          description: data.description ?? '',
+          status: data.status,
+          agent_id: data.agent_id ?? '',
+          audience_filters: (data.audience_filters as Filters) ?? {},
+          exclusion_filters: (data.exclusion_filters as Filters) ?? {},
+          contexts: (data.contexts as any) ?? [],
           inline_context: '',
-          context_distribution: fecha.context_distribution,
-          instance_strategy: fecha.instance_strategy,
-          instance_distribution: (fecha.instance_distribution as any) ?? [],
-          speed_preset: fecha.speed_preset,
-          schedule_type: fecha.schedule_type,
-          scheduled_at: fecha.scheduled_at ?? '',
-          recurrence: (fecha.recurrence as any) ?? { days: [1, 2, 3, 4, 5], start: '09:00', end: '18:00' },
+          context_distribution: data.context_distribution,
+          instance_strategy: data.instance_strategy,
+          instance_distribution: (data.instance_distribution as any) ?? [],
+          speed_preset: data.speed_preset,
+          schedule_type: data.schedule_type,
+          scheduled_at: data.scheduled_at ?? '',
+          recurrence: (data.recurrence as any) ?? { days: [1, 2, 3, 4, 5], start: '09:00', end: '18:00' },
           post_response_actions: {
             stop: true,
             take_over: false,
             stage_id: '',
             temperature: '',
             note: '',
-            tags_add: (fecha as any).tags_on_response ?? [],
+            tags_add: (data as any).tags_on_response ?? [],
             tags_remove: [],
-            ...((fecha.post_response_actions as any) ?? {}),
+            ...((data.post_response_actions as any) ?? {}),
           },
-          post_cadence_id: (fecha as any).post_cadence_id ?? null,
+          post_cadence_id: (data as any).post_cadence_id ?? null,
         });
       }
       setLoading(false);
@@ -205,15 +205,15 @@ export function CampaignWizard({
     if (!orgId) return;
     setPreviewLoading(true);
     const handle = setTimeout(async () => {
-      const { fecha, error } = await supabase.functions.invoke('campaign-preview', {
+      const { data, error } = await supabase.functions.invoke('campaign-preview', {
         body: {
           organization_id: orgId,
           audience_filters: form.audience_filters,
           exclusion_filters: form.exclusion_filters,
         },
       });
-      if (!error && fecha) {
-        setPreview({ total: fecha.total_audience, will: fecha.will_receive, excluded: fecha.excluded });
+      if (!error && data) {
+        setPreview({ total: data.total_audience, will: data.will_receive, excluded: data.excluded });
       }
       setPreviewLoading(false);
     }, 600);
@@ -291,12 +291,12 @@ export function CampaignWizard({
     setSaving(true);
     try {
       const payload = buildPayload();
-      const { fecha, error } = campaignId
+      const { data, error } = campaignId
         ? await supabase.from('campaigns').update(payload).eq('id', campaignId).select('id').single()
         : await supabase.from('campaigns').insert(payload).select('id').single();
       if (error) { toast.error(error.message); return null; }
       toast.success('Rascunho guardado');
-      return fecha?.id ?? null;
+      return data?.id ?? null;
     } finally {
       setSaving(false);
     }
@@ -309,10 +309,10 @@ export function CampaignWizard({
     const id = await saveDraft();
     if (!id) return;
     setStarting(true);
-    const { fecha, error } = await supabase.functions.invoke('campaign-start', { body: { campaign_id: id } });
+    const { data, error } = await supabase.functions.invoke('campaign-start', { body: { campaign_id: id } });
     setStarting(false);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Campaña iniciada · ${fecha?.scheduled ?? 0} envios programados`);
+    toast.success(`Campaña iniciada · ${data?.scheduled ?? 0} envios programados`);
     onClose();
   };
 

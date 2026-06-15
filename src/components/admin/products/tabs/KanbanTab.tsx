@@ -19,25 +19,25 @@ interface KanbanTabProps {
 }
 
 export function KanbanTab({ productId }: KanbanTabProps) {
-  const { fecha: leads } = useLeads(productId);
-  const { fecha: teamMembers } = useTeamMembers();
+  const { data: leads } = useLeads(productId);
+  const { data: teamMembers } = useTeamMembers();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterSeller, setFilterSeller] = useState<string>('all');
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
 
   // Fetch pipeline stages for this product
-  const { fecha: stages } = useQuery({
+  const { data: stages } = useQuery({
     queryKey: ['pipeline-stages', productId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('pipeline_stages')
         .select('*')
         .eq('product_id', productId)
         .order('order_index');
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     enabled: !!productId,
   });

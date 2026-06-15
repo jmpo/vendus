@@ -29,7 +29,7 @@ export const aplicarEtiquetaTool: ToolDefinition = {
     if (!tagName) return { success: false, error: 'tag_name vazio' };
 
     // 1) Procura a tag na organização (case-insensitive).
-    const { fecha: existing } = await ctx.supabase
+    const { data: existing } = await ctx.supabase
       .from('lead_tags')
       .select('id, name')
       .eq('organization_id', ctx.organizationId)
@@ -40,7 +40,7 @@ export const aplicarEtiquetaTool: ToolDefinition = {
 
     // 2) Cria a tag se no existir.
     if (!tagId) {
-      const { fecha: created, error: createErr } = await ctx.supabase
+      const { data: created, error: createErr } = await ctx.supabase
         .from('lead_tags')
         .insert({
           organization_id: ctx.organizationId,
@@ -73,7 +73,7 @@ export const aplicarEtiquetaTool: ToolDefinition = {
 
     return {
       success: true,
-      fecha: { tag_id: tagId, tag_name: tagName },
+      data: { tag_id: tagId, tag_name: tagName },
       user_message: `Etiqueta "${tagName}" aplicada al lead.`,
     };
   },

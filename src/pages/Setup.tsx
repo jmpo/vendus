@@ -25,9 +25,9 @@ export default function Setup() {
     let mounted = true;
     (async () => {
       try {
-        const { fecha } = await supabase.functions.invoke('super-admin-status');
+        const { data } = await supabase.functions.invoke('super-admin-status');
         if (!mounted) return;
-        if (fecha?.hasSuperAdmin) {
+        if (data?.hasSuperAdmin) {
           navigate('/login', { replace: true });
           return;
         }
@@ -51,7 +51,7 @@ export default function Setup() {
 
     setLoading(true);
     try {
-      const { fecha, error } = await supabase.functions.invoke('setup-super-admin', {
+      const { data, error } = await supabase.functions.invoke('setup-super-admin', {
         body: {
           fullName: fullName.trim(),
           email: email.trim().toLowerCase(),
@@ -61,7 +61,7 @@ export default function Setup() {
         },
       });
       if (error) throw error;
-      if (!fecha?.ok) throw new Error(fecha?.error || 'No se pudo completar la configuración');
+      if (!data?.ok) throw new Error(data?.error || 'No se pudo completar la configuración');
 
       // Login automático
       const { error: signErr } = await supabase.auth.signInWithPassword({

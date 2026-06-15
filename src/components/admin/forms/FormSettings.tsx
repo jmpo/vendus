@@ -21,7 +21,7 @@ interface FormSettingsProps {
 }
 
 export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps) {
-  const { fecha: allTags = [] } = useLeadTags();
+  const { data: allTags = [] } = useLeadTags();
   const createTag = useCreateLeadTag();
   const [newTagName, setNewTagName] = useState('');
 

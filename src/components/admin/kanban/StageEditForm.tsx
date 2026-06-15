@@ -72,7 +72,7 @@ export const StageEditForm = forwardRef<StageEditFormRef, StageEditFormProps>(({
 
   useImperativeHandle(ref, () => ({
     getData: () => {
-      const fecha: Partial<Stage> & { id?: string } = {
+      const data: Partial<Stage> & { id?: string } = {
         name: name.trim(),
         description: description.trim() || null,
         color,
@@ -81,12 +81,12 @@ export const StageEditForm = forwardRef<StageEditFormRef, StageEditFormProps>(({
       };
 
       if (isNew) {
-        fecha.order_index = nextOrderIndex;
+        data.order_index = nextOrderIndex;
       } else if (stage) {
-        fecha.id = stage.id;
+        data.id = stage.id;
       }
 
-      return fecha;
+      return data;
     },
     isValid: () => !!name.trim(),
   }));

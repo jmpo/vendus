@@ -11,9 +11,9 @@ export function useReleases(opts?: { published?: boolean }) {
     queryFn: async () => {
       let q = supabase.from('platform_releases').select('*').order('published_at', { ascending: false, nullsFirst: false }).order('created_at', { ascending: false });
       if (opts?.published !== undefined) q = q.eq('is_published', opts.published);
-      const { fecha, error } = await q;
+      const { data, error } = await q;
       if (error) throw error;
-      return fecha as PlatformRelease[];
+      return data as PlatformRelease[];
     },
   });
 }
@@ -23,9 +23,9 @@ export function useRelease(id: string | undefined) {
     queryKey: ['platform-release', id],
     queryFn: async () => {
       if (!id) return null;
-      const { fecha, error } = await supabase.from('platform_releases').select('*').eq('id', id).maybeSingle();
+      const { data, error } = await supabase.from('platform_releases').select('*').eq('id', id).maybeSingle();
       if (error) throw error;
-      return fecha as PlatformRelease | null;
+      return data as PlatformRelease | null;
     },
     enabled: !!id,
   });
@@ -37,8 +37,8 @@ export function useUnreadReleasesCount() {
     queryKey: ['unread-releases-count', user?.id],
     queryFn: async () => {
       if (!user) return 0;
-      const { fecha: releases } = await supabase.from('platform_releases').select('id').eq('is_published', true);
-      const { fecha: reads } = await supabase.from('platform_release_reads').select('release_id').eq('user_id', user.id);
+      const { data: releases } = await supabase.from('platform_releases').select('id').eq('is_published', true);
+      const { data: reads } = await supabase.from('platform_release_reads').select('release_id').eq('user_id', user.id);
       const readSet = new Set((reads || []).map(r => r.release_id));
       return (releases || []).filter(r => !readSet.has(r.id)).length;
     },
@@ -72,18 +72,18 @@ export function useUpsertRelease() {
       const { publish_as_article, article_category_id, id, ...rest } = input;
       let release: PlatformRelease;
       if (id) {
-        const { fecha, error } = await supabase.from('platform_releases').update(rest as TablesUpdate<'platform_releases'>).eq('id', id).select().single();
+        const { data, error } = await supabase.from('platform_releases').update(rest as TablesUpdate<'platform_releases'>).eq('id', id).select().single();
         if (error) throw error;
-        release = fecha as PlatformRelease;
+        release = data as PlatformRelease;
       } else {
-        const { fecha, error } = await supabase.from('platform_releases').insert(rest).select().single();
+        const { data, error } = await supabase.from('platform_releases').insert(rest).select().single();
         if (error) throw error;
-        release = fecha as PlatformRelease;
+        release = data as PlatformRelease;
       }
 
       if (publish_as_article && release.is_published) {
         // Verifica se ya existe artigo vinculado
-        const { fecha: existing } = await supabase.from('help_articles').select('id').eq('related_release_id', release.id).maybeSingle();
+        const { data: existing } = await supabase.from('help_articles').select('id').eq('related_release_id', release.id).maybeSingle();
         const slug = `release-${(release.version || release.id).toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${release.id.slice(0, 6)}`;
         const articlePayload = {
           title: release.title,

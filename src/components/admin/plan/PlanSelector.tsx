@@ -84,8 +84,8 @@ function PlanCardSkeleton() {
 
 export function PlanSelector() {
   const { profile } = useAuth();
-  const { fecha: plans, isLoading } = useActivePlans();
-  const { fecha: effective } = useOrganizationEffectivePlan(profile?.organization_id);
+  const { data: plans, isLoading } = useActivePlans();
+  const { data: effective } = useOrganizationEffectivePlan(profile?.organization_id);
   const [cycle, setCycle] = useState<BillingCycle>('monthly');
 
   const visiblePlans = useMemo(

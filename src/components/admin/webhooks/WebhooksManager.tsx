@@ -63,8 +63,8 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export function WebhooksManager() {
-  const { fecha: webhooks, isLoading } = useWebhooks();
-  const { fecha: products } = useProducts();
+  const { data: webhooks, isLoading } = useWebhooks();
+  const { data: products } = useProducts();
   const createWebhook = useCreateWebhook();
   const deleteWebhook = useDeleteWebhook();
 

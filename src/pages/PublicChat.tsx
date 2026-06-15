@@ -26,7 +26,7 @@ interface PublicChatProps {
 
 export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
   const { slug } = useParams<{ slug: string }>();
-  const { fecha: funnel, isLoading, error } = useFunnelBySlug(slug, channel as any);
+  const { data: funnel, isLoading, error } = useFunnelBySlug(slug, channel as any);
   
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentBlockIndex, setCurrentBlockIndex] = useState(0);
@@ -86,10 +86,10 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       const targetedIds = new Set(
         blocks.flatMap(b => [
           b.next_block_id,
-          b.fecha.true_next_block_id,
-          b.fecha.false_next_block_id,
-          ...(b.fecha.options?.map(o => o.next_block_id) || []),
-          ...(b.fecha.ai_outputs?.map(o => o.next_block_id) || []),
+          b.data.true_next_block_id,
+          b.data.false_next_block_id,
+          ...(b.data.options?.map(o => o.next_block_id) || []),
+          ...(b.data.ai_outputs?.map(o => o.next_block_id) || []),
         ].filter(Boolean))
       );
       startBlock = blocks.find(b => !targetedIds.has(b.id));
@@ -145,7 +145,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
   const processBlock = async (block: FunnelBlock) => {
     setIsTyping(true);
     
-    await new Promise(resolve => setTimeout(resolve, block.fecha.delay_ms || 500));
+    await new Promise(resolve => setTimeout(resolve, block.data.delay_ms || 500));
     
     setIsTyping(false);
 
@@ -153,7 +153,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       setMessages(prev => [...prev, {
         id: block.id,
         type: 'bot',
-        content: block.fecha.content || '',
+        content: block.data.content || '',
         block,
       }]);
       
@@ -166,7 +166,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       setMessages(prev => [...prev, {
         id: block.id,
         type: 'bot',
-        content: block.fecha.content || block.fecha.placeholder || 'Escriba su respuesta',
+        content: block.data.content || block.data.placeholder || 'Escriba su respuesta',
         block,
       }]);
       
@@ -175,17 +175,17 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       setMessages(prev => [...prev, {
         id: block.id,
         type: 'bot',
-        content: block.fecha.content || 'Elija una opción:',
+        content: block.data.content || 'Elija una opción:',
         block,
-        options: block.fecha.options,
+        options: block.data.options,
       }]);
     } else if (block.type === 'end') {
-      const subtype = (block.fecha as any)?.quiz_subtype;
-      const isResult = subtype === 'result' || subtype === 'result_ai' || (block.fecha as any)?.result_ai_enabled;
+      const subtype = (block.data as any)?.quiz_subtype;
+      const isResult = subtype === 'result' || subtype === 'result_ai' || (block.data as any)?.result_ai_enabled;
       setMessages(prev => [...prev, {
         id: block.id,
         type: 'bot',
-        content: block.fecha.success_message || '¡Gracias!',
+        content: block.data.success_message || '¡Gracias!',
         block,
         resultPayload: isResult
           ? { scoreTotal: scoreRef.current, tags: Array.from(tagsRef.current) }
@@ -197,24 +197,24 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       await submitLead();
 
       // Redirect if configured
-      if (block.fecha.redirect_url) {
+      if (block.data.redirect_url) {
         setTimeout(() => {
-          window.location.href = block.fecha.redirect_url!;
+          window.location.href = block.data.redirect_url!;
         }, 2000);
       }
     } else if (block.type === 'score') {
       // Fase 3: bloco de score apenas acumula e avança
-      const inc = Number((block.fecha as any)?.score_value || 0);
+      const inc = Number((block.data as any)?.score_value || 0);
       scoreRef.current += inc;
       const nextIndex = orderedBlocks.findIndex(b => b.id === block.id) + 1;
       if (nextIndex < orderedBlocks.length) processBlock(orderedBlocks[nextIndex]);
     } else if (block.type === 'tag') {
-      const tags = (block.fecha as any)?.apply_tags as string[] | undefined;
+      const tags = (block.data as any)?.apply_tags as string[] | undefined;
       tags?.forEach(t => tagsRef.current.add(t));
       const nextIndex = orderedBlocks.findIndex(b => b.id === block.id) + 1;
       if (nextIndex < orderedBlocks.length) processBlock(orderedBlocks[nextIndex]);
     } else if (block.type === 'delay') {
-      await new Promise(resolve => setTimeout(resolve, block.fecha.delay_ms || 1000));
+      await new Promise(resolve => setTimeout(resolve, block.data.delay_ms || 1000));
       
       const nextIndex = orderedBlocks.findIndex(b => b.id === block.id) + 1;
       if (nextIndex < orderedBlocks.length) {
@@ -222,7 +222,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       }
     } else if (block.type === 'webhook') {
       // Fire webhook silently then advance
-      const cfg = block.fecha.webhook_config;
+      const cfg = block.data.webhook_config;
       const isOnBlock = !cfg?.trigger || cfg.trigger === 'on_block';
       if (cfg?.url && isOnBlock && funnel?.id) {
         try {
@@ -268,7 +268,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       await startAgentTakeover(block);
     } else if (block.type === 'condition') {
       // Avalia condición contra responsesRef e ramifica
-      const cond = block.fecha.condition;
+      const cond = block.data.condition;
       let matched = false;
       if (cond?.variable) {
         const raw = responsesRef.current[cond.variable];
@@ -284,7 +284,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
           case 'less_than': matched = !isNaN(ln) && !isNaN(rn) && ln < rn; break;
         }
       }
-      const targetId = matched ? block.fecha.true_next_block_id : block.fecha.false_next_block_id;
+      const targetId = matched ? block.data.true_next_block_id : block.data.false_next_block_id;
       const target = targetId ? orderedBlocks.find(b => b.id === targetId) : undefined;
       if (target) {
         setTimeout(() => processBlock(target), 100);
@@ -315,7 +315,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
 
     setIsTyping(true);
     try {
-      const { fecha, error: startErr } = await supabase.functions.invoke('funnel-chatbot-start', {
+      const { data, error: startErr } = await supabase.functions.invoke('funnel-chatbot-start', {
         body: {
           funnel_id: funnel.id,
           visitor_id: visitorIdRef.current,
@@ -323,11 +323,11 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
           visitor_email: visitorEmail,
           visitor_phone: visitorPhone,
           flow_variables: collected,
-          agent_id: (block.fecha as any).agent_id || null,
-          ai_context: (block.fecha as any).ai_context_prompt || null,
-          override_can_do: (block.fecha as any).override_can_do || [],
-          override_cannot_do: (block.fecha as any).override_cannot_do || [],
-          override_handoff_triggers: (block.fecha as any).override_handoff_triggers || [],
+          agent_id: (block.data as any).agent_id || null,
+          ai_context: (block.data as any).ai_context_prompt || null,
+          override_can_do: (block.data as any).override_can_do || [],
+          override_cannot_do: (block.data as any).override_cannot_do || [],
+          override_handoff_triggers: (block.data as any).override_handoff_triggers || [],
           current_page_url: window.location.href,
           referrer_url: document.referrer || undefined,
           utm_source: urlParams.get('utm_source') || undefined,
@@ -337,7 +337,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
           utm_term: urlParams.get('utm_term') || undefined,
         },
       });
-      if (startErr || !fecha?.conversation_id) {
+      if (startErr || !data?.conversation_id) {
         console.error('[chat] failed to start agent conversation:', startErr);
         setIsTyping(false);
         setAiError(true);
@@ -351,9 +351,9 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       }
       setAiError(false);
       const newMode = {
-        conversationId: fecha.conversation_id as string,
-        agentId: (block.fecha as any).agent_id || null,
-        productId: fecha.product_id || null,
+        conversationId: data.conversation_id as string,
+        agentId: (block.data as any).agent_id || null,
+        productId: data.product_id || null,
       };
       setAiMode(newMode);
       aiModeRef.current = newMode;
@@ -386,7 +386,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
     }
     setIsTyping(true);
     try {
-      const { fecha, error: botErr } = await supabase.functions.invoke('webchat-bot', {
+      const { data, error: botErr } = await supabase.functions.invoke('webchat-bot', {
         body: {
           conversation_id: mode.conversationId,
           message,
@@ -398,9 +398,9 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       if (botErr) {
         console.error('[chat] webchat-bot error:', botErr);
       }
-      const content = fecha?.message?.content
-        || (Array.isArray(fecha?.chunks) ? fecha.chunks.join('\n\n') : '')
-        || fecha?.response
+      const content = data?.message?.content
+        || (Array.isArray(data?.chunks) ? data.chunks.join('\n\n') : '')
+        || data?.response
         || '';
       if (content) {
         setMessages(prev => [...prev, {
@@ -471,7 +471,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
     }]);
 
     // Store response
-    const variableName = currentBlock.fecha.variable_name || currentBlock.id;
+    const variableName = currentBlock.data.variable_name || currentBlock.id;
     const nextResponses = { ...responsesRef.current, [variableName]: text };
     setResponses(nextResponses);
     responsesRef.current = nextResponses;
@@ -496,13 +496,13 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
     }]);
 
     // Store response
-    const variableName = currentBlock.fecha.variable_name || currentBlock.id;
+    const variableName = currentBlock.data.variable_name || currentBlock.id;
     const nextResponses = { ...responsesRef.current, [variableName]: option.label };
     setResponses(nextResponses);
     responsesRef.current = nextResponses;
 
     // Find next block (could be option-specific or default)
-    const selectedOption = currentBlock.fecha.options?.find(o => o.id === option.id);
+    const selectedOption = currentBlock.data.options?.find(o => o.id === option.id);
     // Fase 3: acumula score e tag da opción
     if (selectedOption?.score) scoreRef.current += Number(selectedOption.score) || 0;
     if (selectedOption?.tag) tagsRef.current.add(String(selectedOption.tag));
@@ -810,10 +810,10 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
             >
               <input
                 ref={inputRef}
-                type={!aiMode && currentMessage?.block?.fecha.input_type === 'email' ? 'email' : 'text'}
+                type={!aiMode && currentMessage?.block?.data.input_type === 'email' ? 'email' : 'text'}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder={aiMode ? (chatOpts.input_placeholder || 'Escriba su mensaje...') : (currentMessage?.block?.fecha.placeholder || chatOpts.input_placeholder || 'Escriba aquí...')}
+                placeholder={aiMode ? (chatOpts.input_placeholder || 'Escriba su mensaje...') : (currentMessage?.block?.data.placeholder || chatOpts.input_placeholder || 'Escriba aquí...')}
 
                 className="flex-1 px-4 py-3 outline-none"
                 style={{

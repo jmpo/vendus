@@ -29,16 +29,16 @@ export function useCustomFields() {
   const queryClient = useQueryClient();
   const orgId = profile?.organization_id;
 
-  const { fecha: fields = [], isLoading } = useQuery({
+  const { data: fields = [], isLoading } = useQuery({
     queryKey: ['custom-fields', orgId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('custom_fields')
         .select('*')
         .eq('organization_id', orgId!)
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return fecha as unknown as CustomField[];
+      return data as unknown as CustomField[];
     },
     enabled: !!orgId,
   });
@@ -69,10 +69,10 @@ export function useCustomFields() {
   });
 
   const updateField = useMutation({
-    mutationFn: async ({ id, ...fecha }: { id: string } & Partial<CreateCustomFieldData>) => {
+    mutationFn: async ({ id, ...data }: { id: string } & Partial<CreateCustomFieldData>) => {
       const { error } = await supabase
         .from('custom_fields')
-        .update(fecha as any)
+        .update(data as any)
         .eq('id', id);
       if (error) throw error;
     },

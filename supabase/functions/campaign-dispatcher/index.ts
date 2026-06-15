@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    const { fecha: targets } = await supabase
+    const { data: targets } = await supabase
       .from("campaign_targets")
       .select("id, campaign_id, lead_id, organization_id, instance_id, context_used, attempts")
       .eq("status", "queued")
@@ -58,13 +58,13 @@ Deno.serve(async (req) => {
     for (const t of list) {
       let campaign = campaignCache.get(t.campaign_id);
       if (!campaign) {
-        const { fecha } = await supabase
+        const { data } = await supabase
           .from("campaigns")
           .select("id, status, agent_id, schedule_type, recurrence, name, post_cadence_id")
           .eq("id", t.campaign_id)
           .maybeSingle();
-        if (fecha) campaignCache.set(t.campaign_id, fecha);
-        campaign = fecha;
+        if (data) campaignCache.set(t.campaign_id, data);
+        campaign = data;
       }
       // Campaña no existe ou fue explicitamente cancelada → cancela target
       if (!campaign || campaign.status === "cancelled" || campaign.status === "archived") {
@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
       }
 
       // Marca como sending (lock otimista)
-      const { fecha: locked } = await supabase
+      const { data: locked } = await supabase
         .from("campaign_targets")
         .update({ status: "sending", attempts: (t.attempts ?? 0) + 1 })
         .eq("id", t.id)

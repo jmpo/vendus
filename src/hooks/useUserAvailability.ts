@@ -39,12 +39,12 @@ export function useUserAvailability(userId?: string) {
   const queryClient = useQueryClient();
   const targetUserId = userId || user?.id;
 
-  const { fecha: availability, isLoading: loadingAvailability } = useQuery({
+  const { data: availability, isLoading: loadingAvailability } = useQuery({
     queryKey: ['user-availability', targetUserId, profile?.organization_id],
     queryFn: async () => {
       if (!targetUserId || !profile?.organization_id) return [];
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_availability')
         .select('*')
         .eq('user_id', targetUserId)
@@ -53,17 +53,17 @@ export function useUserAvailability(userId?: string) {
         .order('start_time');
 
       if (error) throw error;
-      return (fecha || []) as UserAvailability[];
+      return (data || []) as UserAvailability[];
     },
     enabled: !!targetUserId && !!profile?.organization_id,
   });
 
-  const { fecha: overrides, isLoading: loadingOverrides } = useQuery({
+  const { data: overrides, isLoading: loadingOverrides } = useQuery({
     queryKey: ['availability-overrides', targetUserId, profile?.organization_id],
     queryFn: async () => {
       if (!targetUserId || !profile?.organization_id) return [];
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('availability_overrides')
         .select('*')
         .eq('user_id', targetUserId)
@@ -72,7 +72,7 @@ export function useUserAvailability(userId?: string) {
         .order('date');
 
       if (error) throw error;
-      return (fecha || []) as AvailabilityOverride[];
+      return (data || []) as AvailabilityOverride[];
     },
     enabled: !!targetUserId && !!profile?.organization_id,
   });
@@ -87,7 +87,7 @@ export function useUserAvailability(userId?: string) {
         throw new Error('User not authenticated');
       }
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_availability')
         .insert({
           user_id: user.id,
@@ -101,7 +101,7 @@ export function useUserAvailability(userId?: string) {
         .single();
 
       if (error) throw error;
-      return fecha as UserAvailability;
+      return data as UserAvailability;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-availability'] });
@@ -138,7 +138,7 @@ export function useUserAvailability(userId?: string) {
       start_time: string; 
       end_time: string;
     }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_availability')
         .update({ start_time, end_time })
         .eq('id', id)
@@ -146,7 +146,7 @@ export function useUserAvailability(userId?: string) {
         .single();
 
       if (error) throw error;
-      return fecha as UserAvailability;
+      return data as UserAvailability;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-availability'] });
@@ -164,7 +164,7 @@ export function useUserAvailability(userId?: string) {
         throw new Error('User not authenticated');
       }
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('availability_overrides')
         .upsert({
           user_id: user.id,
@@ -175,7 +175,7 @@ export function useUserAvailability(userId?: string) {
         .single();
 
       if (error) throw error;
-      return fecha as AvailabilityOverride;
+      return data as AvailabilityOverride;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['availability-overrides'] });

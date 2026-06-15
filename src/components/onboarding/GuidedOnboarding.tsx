@@ -194,7 +194,7 @@ function WelcomeStep({ onNext, onSkipAll }: { onNext: () => void; onSkipAll: () 
 /* ---------------- IDENTIDADE ---------------- */
 function IdentityStep({ onNext, onSkip, onBack }: { onNext: () => void; onSkip: () => void; onBack: () => void }) {
   const { profile } = useAuth();
-  const { fecha: company } = useCompanySettings();
+  const { data: company } = useCompanySettings();
   const updateCompany = useUpdateCompanySettings();
   const [logoUrl, setLogoUrl] = useState(company?.logo_url || '');
   const [color, setColor] = useState<string>('#3b82f6');
@@ -221,7 +221,7 @@ function IdentityStep({ onNext, onSkip, onBack }: { onNext: () => void; onSkip: 
       if (logoUrl && logoUrl !== company?.logo_url) {
         await updateCompany.mutateAsync({ logo_url: logoUrl });
       }
-      const { fecha: org } = await supabase
+      const { data: org } = await supabase
         .from('organizations')
         .select('settings')
         .eq('id', profile.organization_id)
@@ -354,16 +354,16 @@ function ProductStep({
         formats: ['markdown'],
         onlyMainContent: true,
       });
-      if (!result.success || !result.fecha?.markdown) {
+      if (!result.success || !result.data?.markdown) {
         throw new Error(result.error || 'No conseguimos ler o site');
       }
-      const meta = result.fecha.metadata;
-      const content = result.fecha.markdown.slice(0, 4000);
+      const meta = result.data.metadata;
+      const content = result.data.markdown.slice(0, 4000);
 
-      const { fecha: descData } = await supabase.functions.invoke('optimize-product-field', {
+      const { data: descData } = await supabase.functions.invoke('optimize-product-field', {
         body: { field: 'description', value: content, productContext: { name: meta?.title || '' } },
       });
-      const { fecha: icpData } = await supabase.functions.invoke('optimize-product-field', {
+      const { data: icpData } = await supabase.functions.invoke('optimize-product-field', {
         body: { field: 'icp', value: content, productContext: { name: meta?.title || '' } },
       });
 
@@ -597,16 +597,16 @@ function WhatsAppStep({
   useEffect(() => {
     if (!instanceId || status === 'connected' || status === 'paired') return;
     const interval = setInterval(async () => {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('evolution_instances')
         .select('status, qr_code, phone_number')
         .eq('id', instanceId)
         .maybeSingle();
-      if (fecha) {
-        if (fecha.qr_code && fecha.qr_code !== qr) setQr(fecha.qr_code);
-        if (fecha.status !== status) setStatus(fecha.status);
-        if (fecha.phone_number) setPhoneNumber(fecha.phone_number);
-        if (fecha.status === 'connected' || fecha.status === 'paired') {
+      if (data) {
+        if (data.qr_code && data.qr_code !== qr) setQr(data.qr_code);
+        if (data.status !== status) setStatus(data.status);
+        if (data.phone_number) setPhoneNumber(data.phone_number);
+        if (data.status === 'connected' || data.status === 'paired') {
           toast.success('WhatsApp conectado!');
           // Vincula a conexão ao admin que está haciendo o onboarding
           if (profile?.id) {
@@ -620,7 +620,7 @@ function WhatsAppStep({
           update({
             instanceId,
             instanceName: sanitized,
-            instancePhone: fecha.phone_number,
+            instancePhone: data.phone_number,
           });
         }
       }
@@ -643,7 +643,7 @@ function WhatsAppStep({
     }
   };
 
-  const isQrBase64 = qr?.startsWith('fecha:image') || qr?.startsWith('iVBOR');
+  const isQrBase64 = qr?.startsWith('data:image') || qr?.startsWith('iVBOR');
   const isConnected = status === 'connected' || status === 'paired';
 
   return (
@@ -707,8 +707,8 @@ function WhatsAppStep({
                   <img
                     src={
                       isQrBase64
-                        ? (qr.startsWith('fecha:') ? qr : `fecha:image/png;base64,${qr}`)
-                        : `https://api.qrserver.com/v1/create-qr-code/?size=240x240&fecha=${encodeURIComponent(qr)}`
+                        ? (qr.startsWith('data:') ? qr : `data:image/png;base64,${qr}`)
+                        : `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(qr)}`
                     }
                     alt="QR Code"
                     className="w-56 h-56"

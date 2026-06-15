@@ -19,9 +19,9 @@ export function useAIKnowledgeBase(productId?: string) {
         query = query.eq('product_id', productId);
       }
       
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return fecha as AIKnowledge[];
+      return data as AIKnowledge[];
     },
     enabled: true,
   });
@@ -32,14 +32,14 @@ export function useCreateAIKnowledge() {
   
   return useMutation({
     mutationFn: async (knowledge: AIKnowledgeInsert) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('ai_knowledge_base')
         .insert(knowledge)
         .select()
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ai-knowledge-base'] });
@@ -52,7 +52,7 @@ export function useUpdateAIKnowledge() {
   
   return useMutation({
     mutationFn: async ({ id, ...updates }: AIKnowledgeUpdate & { id: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('ai_knowledge_base')
         .update(updates)
         .eq('id', id)
@@ -60,7 +60,7 @@ export function useUpdateAIKnowledge() {
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ai-knowledge-base'] });

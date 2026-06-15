@@ -31,9 +31,9 @@ const notificationTypes = [
 
 export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificationDialogProps) {
   const { profile } = useAuth();
-  const { fecha: products = [] } = useProducts();
-  const { fecha: squads = [] } = useSquads();
-  const { fecha: members = [] } = useTeamMembers(profile?.organization_id);
+  const { data: products = [] } = useProducts();
+  const { data: squads = [] } = useSquads();
+  const { data: members = [] } = useTeamMembers(profile?.organization_id);
   const createNotification = useCreateAdminNotification();
   
   // Form state
@@ -56,7 +56,7 @@ export function CreateNotificationDialog({ open, onOpenChange }: CreateNotificat
   };
   
   // Get recipient count
-  const { fecha: recipientCount = 0 } = useRecipientCount(
+  const { data: recipientCount = 0 } = useRecipientCount(
     profile?.organization_id,
     scope,
     scopeFilters

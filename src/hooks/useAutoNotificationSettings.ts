@@ -48,14 +48,14 @@ export function useAutoNotificationSettings() {
     queryFn: async () => {
       if (!profile?.organization_id) return null;
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('auto_notification_settings')
         .select('*')
         .eq('organization_id', profile.organization_id)
         .maybeSingle();
       
       if (error) throw error;
-      return fecha as AutoNotificationSettings | null;
+      return data as AutoNotificationSettings | null;
     },
     enabled: !!profile?.organization_id,
   });
@@ -69,7 +69,7 @@ export function useCreateAutoNotificationSettings() {
     mutationFn: async (settings: Partial<AutoNotificationSettings>) => {
       if (!profile?.organization_id) throw new Error('No organization');
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('auto_notification_settings')
         .insert({
           organization_id: profile.organization_id,
@@ -79,7 +79,7 @@ export function useCreateAutoNotificationSettings() {
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auto-notification-settings'] });
@@ -100,7 +100,7 @@ export function useUpdateAutoNotificationSettings() {
     mutationFn: async (settings: Partial<AutoNotificationSettings>) => {
       if (!profile?.organization_id) throw new Error('No organization');
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('auto_notification_settings')
         .update(settings)
         .eq('organization_id', profile.organization_id)
@@ -108,7 +108,7 @@ export function useUpdateAutoNotificationSettings() {
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auto-notification-settings'] });
@@ -122,7 +122,7 @@ export function useUpdateAutoNotificationSettings() {
 }
 
 export function useSaveAutoNotificationSettings() {
-  const { fecha: existingSettings } = useAutoNotificationSettings();
+  const { data: existingSettings } = useAutoNotificationSettings();
   const createSettings = useCreateAutoNotificationSettings();
   const updateSettings = useUpdateAutoNotificationSettings();
   

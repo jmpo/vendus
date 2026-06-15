@@ -45,9 +45,9 @@ export function useSalesGoals(userId?: string, productId?: string) {
         query = query.eq('product_id', productId);
       }
       
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return fecha as SalesGoal[];
+      return data as SalesGoal[];
     }
   });
 }
@@ -70,9 +70,9 @@ export function useCurrentGoal(userId: string, productId?: string) {
         query = query.eq('product_id', productId);
       }
       
-      const { fecha, error } = await query.limit(1).single();
+      const { data, error } = await query.limit(1).single();
       if (error && error.code !== 'PGRST116') throw error;
-      return fecha as SalesGoal | null;
+      return data as SalesGoal | null;
     },
     enabled: !!userId
   });
@@ -83,14 +83,14 @@ export function useCreateSalesGoal() {
   
   return useMutation({
     mutationFn: async (goal: Omit<SalesGoal, 'id' | 'created_at' | 'updated_at' | 'achieved_value' | 'achieved_deals'>) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('sales_goals')
         .insert(goal)
         .select()
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sales-goals'] });
@@ -104,7 +104,7 @@ export function useUpdateSalesGoal() {
   
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<SalesGoal> & { id: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('sales_goals')
         .update(updates)
         .eq('id', id)
@@ -112,7 +112,7 @@ export function useUpdateSalesGoal() {
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sales-goals'] });
@@ -125,14 +125,14 @@ export function useUserBadges(userId: string) {
   return useQuery({
     queryKey: ['user-badges', userId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_badges')
         .select('*')
         .eq('user_id', userId)
         .order('earned_at', { ascending: false });
       
       if (error) throw error;
-      return fecha as UserBadge[];
+      return data as UserBadge[];
     },
     enabled: !!userId
   });
@@ -163,7 +163,7 @@ export function useLeaderboard(productId?: string, period?: { start: string; end
           .lte('closed_at', period.end);
       }
       
-      const { fecha: deals, error: dealsError } = await dealsQuery;
+      const { data: deals, error: dealsError } = await dealsQuery;
       if (dealsError) throw dealsError;
 
       // Aggregate by seller
@@ -181,7 +181,7 @@ export function useLeaderboard(productId?: string, period?: { start: string; end
       const sellerIds = Object.keys(sellerStats);
       if (sellerIds.length === 0) return [];
 
-      const { fecha: profiles, error: profilesError } = await supabase
+      const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('id, full_name, avatar_url')
         .in('id', sellerIds);

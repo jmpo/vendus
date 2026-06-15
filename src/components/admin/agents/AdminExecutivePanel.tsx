@@ -62,21 +62,21 @@ interface AdminExecutivePanelProps {
 
 export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProps) {
   const { profile } = useAuth();
-  const { fecha: settings, isLoading } = useAutoNotificationSettings();
-  const { fecha: products } = useProducts();
+  const { data: settings, isLoading } = useAutoNotificationSettings();
+  const { data: products } = useProducts();
   const saveSettings = useSaveAutoNotificationSettings();
 
-  const { fecha: admins } = useQuery({
+  const { data: admins } = useQuery({
     queryKey: ['org-admins', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { fecha: roles } = await supabase
+      const { data: roles } = await supabase
         .from('user_roles')
         .select('user_id')
         .eq('role', 'admin');
       const ids = (roles ?? []).map((r) => r.user_id);
       if (!ids.length) return [];
-      const { fecha: profs } = await supabase
+      const { data: profs } = await supabase
         .from('profiles')
         .select('id, full_name, email')
         .eq('organization_id', profile.organization_id)
@@ -87,45 +87,45 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
   });
 
   // Recent admin messages (drawer)
-  const { fecha: recentMessages, refetch: refetchMessages } = useQuery({
+  const { data: recentMessages, refetch: refetchMessages } = useQuery({
     queryKey: ['admin-agent-recent-messages', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('admin_agent_messages')
         .select('id, direction, message_type, content, created_at, alert_kind')
         .eq('organization_id', profile.organization_id)
         .order('created_at', { ascending: false })
         .limit(20);
-      return fecha ?? [];
+      return data ?? [];
     },
     enabled: !!profile?.organization_id,
   });
 
   // WhatsApp connections (Evolution instances) for this org
-  const { fecha: instances } = useQuery({
+  const { data: instances } = useQuery({
     queryKey: ['evolution-instances-for-admin', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('evolution_instances')
         .select('id, name, status, is_default, phone_number')
         .eq('organization_id', profile.organization_id)
         .order('is_default', { ascending: false });
-      return fecha ?? [];
+      return data ?? [];
     },
     enabled: !!profile?.organization_id,
   });
 
   const queryClient = useQueryClient();
 
-  // Default global admin agent for this org — used to persist fecha-source toggles
+  // Default global admin agent for this org — used to persist data-source toggles
   // in its `tool_configs.allowed_sources` (no schema change needed).
-  const { fecha: adminAgent } = useQuery({
+  const { data: adminAgent } = useQuery({
     queryKey: ['default-admin-agent', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return null;
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('product_agents')
         .select('id, tool_configs')
         .eq('organization_id', profile.organization_id)
@@ -135,7 +135,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
         .order('is_default', { ascending: false })
         .limit(1)
         .maybeSingle();
-      return fecha;
+      return data;
     },
     enabled: !!profile?.organization_id,
   });

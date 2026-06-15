@@ -52,14 +52,14 @@ function ConnectDialog({ instance, onClose }: { instance: EvolutionInstance; onC
     setQr(null);
     setElapsed(0);
     connectMut.mutate(instance.id, {
-      onSuccess: (fecha: any) => {
-        if (fecha?.already_connected) {
+      onSuccess: (data: any) => {
+        if (data?.already_connected) {
           setStatus('connected');
           toast.success('Ya conectado!');
           setTimeout(onClose, 1200);
           return;
         }
-        if (fecha?.qr_code) setQr(fecha.qr_code);
+        if (data?.qr_code) setQr(data.qr_code);
       },
     });
   };
@@ -73,16 +73,16 @@ function ConnectDialog({ instance, onClose }: { instance: EvolutionInstance; onC
   useEffect(() => {
     if (status === 'connected') return;
     const interval = setInterval(async () => {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('evolution_instances')
         .select('status, qr_code')
         .eq('id', instance.id)
         .maybeSingle();
-      if (fecha) {
-        if (fecha.qr_code && fecha.qr_code !== qr) setQr(fecha.qr_code);
-        if (fecha.status !== status) {
-          setStatus(fecha.status);
-          if (fecha.status === 'connected') {
+      if (data) {
+        if (data.qr_code && data.qr_code !== qr) setQr(data.qr_code);
+        if (data.status !== status) {
+          setStatus(data.status);
+          if (data.status === 'connected') {
             toast.success('WhatsApp conectado com éxito!');
             setTimeout(onClose, 1500);
           }
@@ -99,7 +99,7 @@ function ConnectDialog({ instance, onClose }: { instance: EvolutionInstance; onC
     return () => clearInterval(t);
   }, [qr, status]);
 
-  const isQrBase64 = qr?.startsWith('fecha:image') || qr?.startsWith('iVBOR');
+  const isQrBase64 = qr?.startsWith('data:image') || qr?.startsWith('iVBOR');
   const showError = !qr && status !== 'connected' && elapsed >= 45;
   const showLoading = !qr && status !== 'connected' && !showError;
 
@@ -122,7 +122,7 @@ function ConnectDialog({ instance, onClose }: { instance: EvolutionInstance; onC
           ) : qr ? (
             <div className="bg-white p-3 rounded-lg">
               <img
-                src={isQrBase64 ? (qr.startsWith('fecha:') ? qr : `fecha:image/png;base64,${qr}`) : `https://api.qrserver.com/v1/create-qr-code/?size=240x240&fecha=${encodeURIComponent(qr)}`}
+                src={isQrBase64 ? (qr.startsWith('data:') ? qr : `data:image/png;base64,${qr}`) : `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(qr)}`}
                 alt="QR Code"
                 className="w-60 h-60"
               />
@@ -276,8 +276,8 @@ interface EvolutionInstancesPanelProps {
 export function EvolutionInstancesPanel({ hideHeader, openCreate, onCloseCreate }: EvolutionInstancesPanelProps = {}) {
   const navigate = useNavigate();
   const { profile } = useAuth();
-  const { fecha: instances, isLoading } = useEvolutionInstances();
-  const { fecha: effectivePlan } = useOrganizationEffectivePlan(profile?.organization_id);
+  const { data: instances, isLoading } = useEvolutionInstances();
+  const { data: effectivePlan } = useOrganizationEffectivePlan(profile?.organization_id);
   const setDefaultMut = useSetDefaultEvolutionInstance();
   const disconnectMut = useDisconnectEvolutionInstance();
   const logoutMut = useLogoutEvolutionInstance();

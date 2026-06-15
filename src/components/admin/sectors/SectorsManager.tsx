@@ -19,7 +19,7 @@ const SECTOR_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
 };
 
 export function SectorsManager() {
-  const { fecha: sectors, isLoading } = useSectors();
+  const { data: sectors, isLoading } = useSectors();
   const deleteSector = useDeleteSector();
 
   const [editing, setEditing] = useState<Sector | null>(null);

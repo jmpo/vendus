@@ -57,7 +57,7 @@ export function AgentTestChat({ agentId, agentName, productId, agentType }: Agen
     setIsLoading(true);
 
     try {
-      const { fecha, error } = await supabase.functions.invoke('webchat-bot', {
+      const { data, error } = await supabase.functions.invoke('webchat-bot', {
         body: {
           conversation_id: `agent-test-${agentId}-${sessionId}`,
           message: text,
@@ -80,7 +80,7 @@ export function AgentTestChat({ agentId, agentName, productId, agentType }: Agen
 
       if (error) throw error;
 
-      const botContent = fecha?.message?.content || fecha?.response || fecha?.reply || 'Sin respuesta del agente.';
+      const botContent = data?.message?.content || data?.response || data?.reply || 'Sin respuesta del agente.';
       const botMsg: Message = { id: crypto.randomUUID(), role: 'bot', content: botContent };
       setMessages(prev => [...prev, botMsg]);
     } catch (err) {

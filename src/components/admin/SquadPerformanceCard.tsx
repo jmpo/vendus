@@ -23,7 +23,7 @@ const formatCurrency = (value: number) => {
 };
 
 export function SquadPerformanceCard({ squad, onViewDetails, onManageMembers }: SquadPerformanceCardProps) {
-  const { fecha: performance, isLoading } = useSquadPerformance(squad.id);
+  const { data: performance, isLoading } = useSquadPerformance(squad.id);
 
   return (
     <Card className="gradient-card border-border overflow-hidden hover:border-primary/50 transition-colors">

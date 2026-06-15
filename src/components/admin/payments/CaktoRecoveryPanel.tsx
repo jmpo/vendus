@@ -31,10 +31,10 @@ import { ptBR } from 'date-fns/locale';
 import { PostSaleScenariosEditor } from './PostSaleScenariosEditor';
 
 export function CaktoRecoveryPanel() {
-  const { fecha: config, isLoading } = useCaktoRecoveryConfig();
-  const { fecha: agents } = useAllAgents();
+  const { data: config, isLoading } = useCaktoRecoveryConfig();
+  const { data: agents } = useAllAgents();
   const save = useSaveCaktoRecoveryConfig();
-  const { fecha: dispatches } = useCaktoRecoveryDispatches(20);
+  const { data: dispatches } = useCaktoRecoveryDispatches(20);
 
   const [draft, setDraft] = useState<CaktoRecoveryConfig | null>(null);
 

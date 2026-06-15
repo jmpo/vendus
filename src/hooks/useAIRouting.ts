@@ -45,12 +45,12 @@ export function useAICredentials() {
   return useQuery({
     queryKey: ['org-ai-credentials', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('org_ai_credentials')
         .select('provider, api_key_masked, model_default, last_verified_at, last_error')
         .eq('organization_id', profile!.organization_id!);
       if (error) throw error;
-      return (fecha ?? []) as AICredentialRow[];
+      return (data ?? []) as AICredentialRow[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -60,10 +60,10 @@ export function useSaveAICredential() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: { provider: 'openai' | 'anthropic' | 'gemini'; api_key: string; model_default?: string }) => {
-      const { fecha, error } = await supabase.functions.invoke('save-ai-credential', { body: input });
+      const { data, error } = await supabase.functions.invoke('save-ai-credential', { body: input });
       if (error) throw error;
-      if ((fecha as any)?.error) throw new Error((fecha as any).error);
-      return fecha;
+      if ((data as any)?.error) throw new Error((data as any).error);
+      return data;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['org-ai-credentials'] });
@@ -78,11 +78,11 @@ export function useDeleteAICredential() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (provider: 'openai' | 'anthropic' | 'gemini') => {
-      const { fecha, error } = await supabase.functions.invoke('save-ai-credential', {
+      const { data, error } = await supabase.functions.invoke('save-ai-credential', {
         body: { provider, action: 'delete' },
       });
       if (error) throw error;
-      if ((fecha as any)?.error) throw new Error((fecha as any).error);
+      if ((data as any)?.error) throw new Error((data as any).error);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['org-ai-credentials'] });
@@ -96,12 +96,12 @@ export function useAIRouting() {
   return useQuery({
     queryKey: ['org-ai-routing', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('org_ai_routing')
         .select('id, capability, provider, model, fallback_to_lovable')
         .eq('organization_id', profile!.organization_id!);
       if (error) throw error;
-      return (fecha ?? []) as AIRoutingRow[];
+      return (data ?? []) as AIRoutingRow[];
     },
     enabled: !!profile?.organization_id,
   });

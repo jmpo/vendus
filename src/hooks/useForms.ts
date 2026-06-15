@@ -6,13 +6,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { Json } from '@/integrations/supabase/types';
 
 // Parse form from database - use any to handle JSONB fields
-function parseForm(fecha: any): Form {
+function parseForm(data: any): Form {
   return {
-    ...fecha,
-    theme: fecha.theme || {},
-    settings: fecha.settings || {},
-    round_robin_config: fecha.round_robin_config || { users: [], current_index: 0 },
-    custom_scripts: fecha.custom_scripts || { header: '', footer: '' },
+    ...data,
+    theme: data.theme || {},
+    settings: data.settings || {},
+    round_robin_config: data.round_robin_config || { users: [], current_index: 0 },
+    custom_scripts: data.custom_scripts || { header: '', footer: '' },
   };
 }
 
@@ -32,10 +32,10 @@ export function useForms(productId?: string) {
         query = query.eq('product_id', productId);
       }
       
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       
       if (error) throw error;
-      return (fecha || []).map(parseForm) as Form[];
+      return (data || []).map(parseForm) as Form[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -48,14 +48,14 @@ export function useForm(formId?: string) {
     queryFn: async () => {
       if (!formId) return null;
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('forms')
         .select('*, products(name)')
         .eq('id', formId)
         .single();
       
       if (error) throw error;
-      return parseForm(fecha) as Form;
+      return parseForm(data) as Form;
     },
     enabled: !!formId,
   });
@@ -68,7 +68,7 @@ export function useFormBlocks(formId?: string) {
     queryFn: async () => {
       if (!formId) return [] as FormBlock[];
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('form_blocks')
         .select('*')
         .eq('form_id', formId)
@@ -76,7 +76,7 @@ export function useFormBlocks(formId?: string) {
       
       if (error) throw error;
       // Cast through unknown to handle JSONB fields
-      return (fecha || []) as unknown as FormBlock[];
+      return (data || []) as unknown as FormBlock[];
     },
     enabled: !!formId,
   });
@@ -89,7 +89,7 @@ export function useFormSubmissions(formId?: string) {
     queryFn: async () => {
       if (!formId) return [];
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('form_submissions')
         .select('*, leads(name, email, phone)')
         .eq('form_id', formId)
@@ -97,7 +97,7 @@ export function useFormSubmissions(formId?: string) {
       
       if (error) throw error;
       // Cast through unknown to handle JSONB fields
-      return (fecha || []) as unknown as FormSubmission[];
+      return (data || []) as unknown as FormSubmission[];
     },
     enabled: !!formId,
   });
@@ -108,13 +108,13 @@ export function useFormTemplates() {
   return useQuery({
     queryKey: ['form-templates'],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('form_templates')
         .select('*')
         .order('usage_count', { ascending: false });
       
       if (error) throw error;
-      return (fecha || []) as FormTemplate[];
+      return (data || []) as FormTemplate[];
     },
   });
 }
@@ -147,7 +147,7 @@ export function useCreateForm() {
       const slug = generateSlug(params.name);
       
       // Check if slug is unique
-      const { fecha: existing } = await supabase
+      const { data: existing } = await supabase
         .from('forms')
         .select('id')
         .eq('organization_id', profile.organization_id)
@@ -159,7 +159,7 @@ export function useCreateForm() {
       // If using template, fetch it
       let templateData: Record<string, unknown> = {};
       if (params.templateId) {
-        const { fecha: template } = await supabase
+        const { data: template } = await supabase
           .from('form_templates')
           .select('*')
           .eq('id', params.templateId)
@@ -191,7 +191,7 @@ export function useCreateForm() {
         ...templateData,
       };
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('forms')
         .insert(insertData)
         .select('*, products(name)')
@@ -201,7 +201,7 @@ export function useCreateForm() {
       
       // If using template, copy blocks
       if (params.templateId) {
-        const { fecha: template } = await supabase
+        const { data: template } = await supabase
           .from('form_templates')
           .select('blocks')
           .eq('id', params.templateId)
@@ -209,7 +209,7 @@ export function useCreateForm() {
         
         if (template?.blocks && Array.isArray(template.blocks)) {
           const blocks = template.blocks.map((block: any, index: number) => ({
-            form_id: fecha.id,
+            form_id: data.id,
             order_index: index,
             block_type: block.block_type,
             label: block.label || 'Pergunta',
@@ -235,7 +235,7 @@ export function useCreateForm() {
       // If AI-generated blocks, save them
       if (params.aiBlocks && params.aiBlocks.length > 0) {
         const blocks = params.aiBlocks.map((block, index) => ({
-          form_id: fecha.id,
+          form_id: data.id,
           order_index: index,
           block_type: block.block_type,
           label: block.label || 'Pergunta',
@@ -256,7 +256,7 @@ export function useCreateForm() {
         await supabase.from('form_blocks').insert(blocks);
       }
       
-      return parseForm(fecha) as Form;
+      return parseForm(data) as Form;
     },
     onSuccess: (_, params) => {
       queryClient.invalidateQueries({ queryKey: ['forms'] });
@@ -293,7 +293,7 @@ export function useUpdateForm() {
         settings: Partial<FormSettings>;
       }>;
     }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('forms')
         .update({
           ...params.updates,
@@ -304,12 +304,12 @@ export function useUpdateForm() {
         .single();
       
       if (error) throw error;
-      return parseForm(fecha) as Form;
+      return parseForm(data) as Form;
     },
-    onSuccess: (fecha) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['forms'] });
-      queryClient.invalidateQueries({ queryKey: ['forms', fecha.product_id] });
-      queryClient.invalidateQueries({ queryKey: ['form', fecha.id] });
+      queryClient.invalidateQueries({ queryKey: ['forms', data.product_id] });
+      queryClient.invalidateQueries({ queryKey: ['form', data.id] });
     },
     onError: (error: Error) => {
       toast.error('Error al actualizar formulario: ' + error.message);
@@ -417,7 +417,7 @@ export function useDuplicateForm() {
       if (!profile?.organization_id) throw new Error('Organización no encontrada');
       
       // Fetch original form
-      const { fecha: original, error: fetchError } = await supabase
+      const { data: original, error: fetchError } = await supabase
         .from('forms')
         .select('*')
         .eq('id', formId)
@@ -428,7 +428,7 @@ export function useDuplicateForm() {
       const slug = `${original.slug}-copia-${Date.now()}`;
       
       // Create copy
-      const { fecha: newForm, error } = await supabase
+      const { data: newForm, error } = await supabase
         .from('forms')
         .insert({
           organization_id: original.organization_id,
@@ -456,7 +456,7 @@ export function useDuplicateForm() {
       if (error) throw error;
       
       // Copy blocks
-      const { fecha: blocks } = await supabase
+      const { data: blocks } = await supabase
         .from('form_blocks')
         .select('*')
         .eq('form_id', formId)
@@ -486,9 +486,9 @@ export function useDuplicateForm() {
       
       return parseForm(newForm) as Form;
     },
-    onSuccess: (fecha) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['forms'] });
-      queryClient.invalidateQueries({ queryKey: ['forms', fecha.product_id] });
+      queryClient.invalidateQueries({ queryKey: ['forms', data.product_id] });
       toast.success('Formulario duplicado!');
     },
     onError: (error: Error) => {
@@ -503,7 +503,7 @@ export function useToggleFormStatus() {
   
   return useMutation({
     mutationFn: async (params: { formId: string; status: FormStatus }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('forms')
         .update({ 
           status: params.status,
@@ -514,12 +514,12 @@ export function useToggleFormStatus() {
         .single();
       
       if (error) throw error;
-      return parseForm(fecha) as Form;
+      return parseForm(data) as Form;
     },
-    onSuccess: (fecha) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['forms'] });
-      queryClient.invalidateQueries({ queryKey: ['forms', fecha.product_id] });
-      queryClient.invalidateQueries({ queryKey: ['form', fecha.id] });
+      queryClient.invalidateQueries({ queryKey: ['forms', data.product_id] });
+      queryClient.invalidateQueries({ queryKey: ['form', data.id] });
       
       const statusMessages: Record<FormStatus, string> = {
         active: 'Formulario ativado!',
@@ -527,7 +527,7 @@ export function useToggleFormStatus() {
         draft: 'Formulario movido para rascunho!',
         archived: 'Formulario arquivado!',
       };
-      toast.success(statusMessages[fecha.status]);
+      toast.success(statusMessages[data.status]);
     },
     onError: (error: Error) => {
       toast.error('Error al cambiar status: ' + error.message);

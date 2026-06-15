@@ -38,7 +38,7 @@ const channelLabels: Record<string, string> = {
 };
 
 export function LeadTimeline({ leadId, maxHeight = "400px" }: LeadTimelineProps) {
-  const { fecha: timeline, isLoading } = useLeadTimeline(leadId);
+  const { data: timeline, isLoading } = useLeadTimeline(leadId);
 
   if (isLoading) {
     return (

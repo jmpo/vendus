@@ -64,7 +64,7 @@ const SOURCE_TYPES = [
     color: 'text-purple-500'
   },
   { 
-    id: 'fecha', 
+    id: 'data', 
     label: 'Datos', 
     icon: Database, 
     description: 'Tablas y comparativas',
@@ -80,10 +80,10 @@ const SOURCE_TYPES = [
 ];
 
 export function ProductBrainHub({ productId, onProductChange }: ProductBrainHubProps) {
-  const { fecha: product, isLoading: productLoading } = useProduct(productId);
-  const { fecha: products } = useProducts();
-  const { fecha: sources, isLoading: sourcesLoading } = useKnowledgeSources(productId);
-  const { fecha: stats } = useKnowledgeSourceStats(productId);
+  const { data: product, isLoading: productLoading } = useProduct(productId);
+  const { data: products } = useProducts();
+  const { data: sources, isLoading: sourcesLoading } = useKnowledgeSources(productId);
+  const { data: stats } = useKnowledgeSourceStats(productId);
   const [activeTab, setActiveTab] = useState('overview');
   const [activeSource, setActiveSource] = useState<string | null>(null);
 

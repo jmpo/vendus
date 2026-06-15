@@ -44,11 +44,11 @@ export function ConversationAnalysisPanel({
   const runAnalysis = async () => {
     setIsLoading(true);
     try {
-      const { fecha, error } = await supabase.functions.invoke('analyze-conversation', {
+      const { data, error } = await supabase.functions.invoke('analyze-conversation', {
         body: { conversationId },
       });
       if (error) throw error;
-      setAnalysis(fecha);
+      setAnalysis(data);
     } catch {
       toast({ title: 'Error al analisar conversación', variant: 'destructive' });
     } finally {

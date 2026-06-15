@@ -64,22 +64,22 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
   const [previewMaterial, setPreviewMaterial] = useState<TrainingMaterial | null>(null);
 
   // Fetch training materials - FILTERED BY AGENT
-  const { fecha: materials, isLoading } = useQuery({
+  const { data: materials, isLoading } = useQuery({
     queryKey: ['agent-training-materials', agentId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('agent_training_materials')
         .select('*')
         .eq('agent_id', agentId)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return fecha as TrainingMaterial[];
+      return data as TrainingMaterial[];
     },
     enabled: !!agentId,
     refetchInterval: (query) => {
-      const fecha = query.state.fecha;
-      const hasProcessing = fecha?.some(m => m.processing_status === 'processing' || m.processing_status === 'pending');
+      const data = query.state.data;
+      const hasProcessing = data?.some(m => m.processing_status === 'processing' || m.processing_status === 'pending');
       return hasProcessing ? 5000 : false;
     },
   });
@@ -87,7 +87,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
   // Process material mutation
   const processMaterial = useMutation({
     mutationFn: async ({ materialId, fileUrl, filePath }: { materialId: string; fileUrl: string; filePath: string }) => {
-      const { fecha, error } = await supabase.functions.invoke('process-training-material', {
+      const { data, error } = await supabase.functions.invoke('process-training-material', {
         body: { 
           material_id: materialId, 
           file_url: fileUrl,
@@ -98,7 +98,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
       });
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['agent-training-materials', agentId] });
@@ -164,11 +164,11 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
 
       if (uploadError) throw uploadError;
 
-      const { fecha: urlData } = supabase.storage
+      const { data: urlData } = supabase.storage
         .from('product-documents')
         .getPublicUrl(filePath);
 
-      const { fecha: insertData, error: insertError } = await supabase
+      const { data: insertData, error: insertError } = await supabase
         .from('agent_training_materials')
         .insert({
           organization_id: profile.organization_id,

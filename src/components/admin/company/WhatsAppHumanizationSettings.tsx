@@ -45,11 +45,11 @@ export function WhatsAppHumanizationSettings() {
   const orgId = profile?.organization_id;
   const qc = useQueryClient();
 
-  const { fecha, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['org-humanization', orgId],
     enabled: !!orgId,
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('organizations')
         .select(
           'ai_grouping_enabled, ai_grouping_window_ms, ai_grouping_max_ms, ai_typing_min_ms, ai_typing_max_ms, ai_dedup_enabled, ai_dedup_window_ms, ai_single_processing_per_conversation, presence_enabled, presence_recording_enabled, presence_typing_chars_per_sec, presence_jitter_pct'
@@ -57,14 +57,14 @@ export function WhatsAppHumanizationSettings() {
         .eq('id', orgId!)
         .maybeSingle();
       if (error) throw error;
-      return (fecha ?? DEFAULTS) as HumanizationSettings;
+      return (data ?? DEFAULTS) as HumanizationSettings;
     },
   });
 
   const [form, setForm] = useState<HumanizationSettings>(DEFAULTS);
   useEffect(() => {
-    if (fecha) setForm({ ...DEFAULTS, ...fecha });
-  }, [fecha]);
+    if (data) setForm({ ...DEFAULTS, ...data });
+  }, [data]);
 
   const save = useMutation({
     mutationFn: async () => {

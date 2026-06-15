@@ -65,7 +65,7 @@ export function FirstAccessSuperAdminModal() {
     if (shouldForceSetup && !opened) setOpened(true);
   }, [shouldForceSetup, opened]);
 
-  const { fecha: state } = useQuery({
+  const { data: state } = useQuery({
     queryKey: ['first-access-wizard-state'],
     enabled: opened,
     queryFn: async () => {
@@ -81,13 +81,13 @@ export function FirstAccessSuperAdminModal() {
         supabase.from('organizations').select('id', { count: 'exact', head: true }),
       ]);
       return {
-        passwordChanged: !!(settings.fecha as any)?.default_password_changed,
+        passwordChanged: !!(settings.data as any)?.default_password_changed,
         nameSet: !!profile?.full_name && profile.full_name !== 'Super Admin',
         hasPlan: (plans.count ?? 0) > 0,
-        hasEvolution: !!(settings.fecha as any)?.evolution_go_url,
-        hasEmail: !!(settings.fecha as any)?.support_email,
+        hasEvolution: !!(settings.data as any)?.evolution_go_url,
+        hasEmail: !!(settings.data as any)?.support_email,
         hasOrg: (orgs.count ?? 0) > 0,
-        completed: !!(settings.fecha as any)?.remix_setup_completed,
+        completed: !!(settings.data as any)?.remix_setup_completed,
       };
     },
   });
@@ -104,7 +104,7 @@ export function FirstAccessSuperAdminModal() {
   };
 
   const finish = async () => {
-    const { fecha: existing } = await supabase
+    const { data: existing } = await supabase
       .from('platform_settings')
       .select('id')
       .maybeSingle();
@@ -308,7 +308,7 @@ function StepPlan({ onDone, alreadyDone }: { onDone: () => void; alreadyDone?: b
 }
 
 function StepEvolution({ onDone, alreadyDone }: { onDone: () => void; alreadyDone?: boolean }) {
-  const { fecha: config, isLoading: cfgLoading } = usePlatformEvolutionConfig();
+  const { data: config, isLoading: cfgLoading } = usePlatformEvolutionConfig();
   const updateCfg = useUpdatePlatformEvolutionConfig();
   const testMut = useTestEvolutionConnection();
 
@@ -333,8 +333,8 @@ function StepEvolution({ onDone, alreadyDone }: { onDone: () => void; alreadyDon
     testMut.mutate(
       { url: cleanUrl, globalApiKey },
       {
-        onSuccess: (fecha: any) =>
-          setTestResult({ ok: !!fecha?.ok, msg: fecha?.message || 'OK' }),
+        onSuccess: (data: any) =>
+          setTestResult({ ok: !!data?.ok, msg: data?.message || 'OK' }),
         onError: (e: any) => setTestResult({ ok: false, msg: e.message }),
       }
     );

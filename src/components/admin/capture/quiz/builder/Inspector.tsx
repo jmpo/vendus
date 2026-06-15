@@ -34,19 +34,19 @@ export function Inspector({ block, blocks, startBlockId, onUpdate, onConnect }: 
       <TabsList className="w-full grid grid-cols-3 h-9 shrink-0 rounded-none bg-transparent border-b p-0">
         <TabsTrigger
           value="component"
-          className="text-xs rounded-none fecha-[state=active]:bg-transparent fecha-[state=active]:shadow-none fecha-[state=active]:border-b-2 fecha-[state=active]:border-primary"
+          className="text-xs rounded-none data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
         >
           Componente
         </TabsTrigger>
         <TabsTrigger
           value="appearance"
-          className="text-xs rounded-none fecha-[state=active]:bg-transparent fecha-[state=active]:shadow-none fecha-[state=active]:border-b-2 fecha-[state=active]:border-primary"
+          className="text-xs rounded-none data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
         >
           Aparência
         </TabsTrigger>
         <TabsTrigger
           value="display"
-          className="text-xs rounded-none fecha-[state=active]:bg-transparent fecha-[state=active]:shadow-none fecha-[state=active]:border-b-2 fecha-[state=active]:border-primary"
+          className="text-xs rounded-none data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
         >
           Exibição
         </TabsTrigger>

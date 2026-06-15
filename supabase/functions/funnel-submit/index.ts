@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
     }
 
     // 1. Fetch funnel with product
-    const { fecha: funnel, error: funnelError } = await supabase
+    const { data: funnel, error: funnelError } = await supabase
       .from('capture_funnels')
       .select('*, products(*)')
       .eq('id', funnel_id)
@@ -89,7 +89,7 @@ Deno.serve(async (req) => {
     const flowBlocks = (funnel.flow_blocks || []) as Array<{
       id: string;
       type: string;
-      fecha: {
+      data: {
         score_value?: number;
         apply_tags?: string[];
         variable_name?: string;
@@ -101,11 +101,11 @@ Deno.serve(async (req) => {
 
     // Calculate scores and collect tags from blocks (fallback)
     for (const block of flowBlocks) {
-      if (block.fecha?.score_value) {
-        totalScore += block.fecha.score_value;
+      if (block.data?.score_value) {
+        totalScore += block.data.score_value;
       }
-      if (block.fecha?.apply_tags) {
-        tags.push(...block.fecha.apply_tags);
+      if (block.data?.apply_tags) {
+        tags.push(...block.data.apply_tags);
       }
     }
 
@@ -176,7 +176,7 @@ Deno.serve(async (req) => {
     }
 
     // 5. Get first pipeline stage for the product
-    const { fecha: firstStage } = await supabase
+    const { data: firstStage } = await supabase
       .from('pipeline_stages')
       .select('id')
       .eq('product_id', funnel.product_id)
@@ -185,7 +185,7 @@ Deno.serve(async (req) => {
       .single();
 
     // 6. Create lead in CRM
-    const { fecha: lead, error: leadError } = await supabase
+    const { data: lead, error: leadError } = await supabase
       .from('leads')
       .insert({
         organization_id: funnel.organization_id,
@@ -258,7 +258,7 @@ Deno.serve(async (req) => {
       // Resolver tags por nombre (cria se necessário)
       const resolvedTagIds = new Set<string>(applyTagIds);
       if (runtimeTagNames.length) {
-        const { fecha: existingTags } = await supabase
+        const { data: existingTags } = await supabase
           .from('lead_tags')
           .select('id, name')
           .eq('organization_id', funnel.organization_id)
@@ -270,7 +270,7 @@ Deno.serve(async (req) => {
           if (existingByName.has(key)) {
             resolvedTagIds.add(existingByName.get(key)!);
           } else {
-            const { fecha: created } = await supabase
+            const { data: created } = await supabase
               .from('lead_tags')
               .insert({
                 organization_id: funnel.organization_id,
@@ -364,8 +364,8 @@ Deno.serve(async (req) => {
     try {
       const webhookBlocks = flowBlocks.filter((b: any) => 
         b.type === 'webhook' && 
-        b?.fecha?.webhook_config?.url &&
-        (b?.fecha?.webhook_config?.trigger === 'on_complete')
+        b?.data?.webhook_config?.url &&
+        (b?.data?.webhook_config?.trigger === 'on_complete')
       );
       
       for (const wb of webhookBlocks) {

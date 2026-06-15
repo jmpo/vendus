@@ -25,7 +25,7 @@ export default function PublicQuizRunner() {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get('preview') === '1';
-  const { fecha: funnel, isLoading, error } = useFunnelBySlug(slug, 'quiz');
+  const { data: funnel, isLoading, error } = useFunnelBySlug(slug, 'quiz');
 
   const [stepIndex, setStepIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, string>>({});
@@ -51,9 +51,9 @@ export default function PublicQuizRunner() {
       const targeted = new Set(
         blocks.flatMap((b) => [
           b.next_block_id,
-          b.fecha.true_next_block_id,
-          b.fecha.false_next_block_id,
-          ...(b.fecha.options?.map((o) => o.next_block_id) || []),
+          b.data.true_next_block_id,
+          b.data.false_next_block_id,
+          ...(b.data.options?.map((o) => o.next_block_id) || []),
         ].filter(Boolean)),
       );
       start = blocks.find((b) => !targeted.has(b.id));
@@ -110,15 +110,15 @@ export default function PublicQuizRunner() {
     while (i < orderedBlocks.length) {
       const b = orderedBlocks[i];
       if (b.type === 'score') {
-        scoreRef.current += Number((b.fecha as any)?.score_value || 0);
+        scoreRef.current += Number((b.data as any)?.score_value || 0);
         i++; continue;
       }
       if (b.type === 'tag') {
-        ((b.fecha as any)?.apply_tags as string[] | undefined)?.forEach((t) => tagsRef.current.add(t));
+        ((b.data as any)?.apply_tags as string[] | undefined)?.forEach((t) => tagsRef.current.add(t));
         i++; continue;
       }
       if (b.type === 'condition') {
-        const cond = b.fecha.condition;
+        const cond = b.data.condition;
         let matched = false;
         if (cond?.variable) {
           const left = String(responsesRef.current[cond.variable] ?? '').trim().toLowerCase();
@@ -132,7 +132,7 @@ export default function PublicQuizRunner() {
             case 'less_than': matched = !isNaN(ln) && !isNaN(rn) && ln < rn; break;
           }
         }
-        const targetId = matched ? b.fecha.true_next_block_id : b.fecha.false_next_block_id;
+        const targetId = matched ? b.data.true_next_block_id : b.data.false_next_block_id;
         if (targetId) {
           const idx = orderedBlocks.findIndex((x) => x.id === targetId);
           if (idx >= 0) { i = idx; continue; }
@@ -141,7 +141,7 @@ export default function PublicQuizRunner() {
       }
       if (b.type === 'delay') { i++; continue; }
       // Regra de exibição (device + condicionais sobre respuestas)
-      if (!evaluateDisplay(b.fecha.block_display, { responses: responsesRef.current, isMobile })) {
+      if (!evaluateDisplay(b.data.block_display, { responses: responsesRef.current, isMobile })) {
         i++; continue;
       }
       // bloco renderizável
@@ -240,9 +240,9 @@ export default function PublicQuizRunner() {
 
   const handleConfirmOption = () => {
     if (!currentBlock || currentBlock.type !== 'buttons' || !selectedOptionId) return;
-    const opt = currentBlock.fecha.options?.find((o) => o.id === selectedOptionId);
+    const opt = currentBlock.data.options?.find((o) => o.id === selectedOptionId);
     if (!opt) return;
-    const variable = currentBlock.fecha.variable_name || currentBlock.id;
+    const variable = currentBlock.data.variable_name || currentBlock.id;
     const next = { ...responsesRef.current, [variable]: opt.label };
     setResponses(next);
     responsesRef.current = next;
@@ -254,8 +254,8 @@ export default function PublicQuizRunner() {
   const handleSubmitInput = () => {
     if (!currentBlock || currentBlock.type !== 'input') return;
     const text = inputValue.trim();
-    if (currentBlock.fecha.required && !text) return;
-    const variable = currentBlock.fecha.variable_name || currentBlock.id;
+    if (currentBlock.data.required && !text) return;
+    const variable = currentBlock.data.variable_name || currentBlock.id;
     const next = { ...responsesRef.current, [variable]: text };
     setResponses(next);
     responsesRef.current = next;
@@ -266,9 +266,9 @@ export default function PublicQuizRunner() {
   useEffect(() => {
     if (currentBlock?.type === 'end' && !submitted) submitLead();
     // redirect_url opcional
-    if (currentBlock?.type === 'end' && currentBlock.fecha.redirect_url && !isPreview) {
+    if (currentBlock?.type === 'end' && currentBlock.data.redirect_url && !isPreview) {
       const t = setTimeout(() => {
-        window.location.href = currentBlock.fecha.redirect_url!;
+        window.location.href = currentBlock.data.redirect_url!;
       }, 2500);
       return () => clearTimeout(t);
     }
@@ -302,9 +302,9 @@ export default function PublicQuizRunner() {
   const mutedText = isDarkBg ? 'rgba(255,255,255,0.65)' : 'rgba(15,23,42,0.55)';
   const primaryFg = pickContrast(a.primary_color);
 
-  const showLogo = a.logo_url && (currentBlock?.fecha.show_logo !== false);
-  const ctaLabel = currentBlock?.fecha.cta_label || 'Continuar';
-  const ctaEmoji = currentBlock?.fecha.cta_emoji || '👉';
+  const showLogo = a.logo_url && (currentBlock?.data.show_logo !== false);
+  const ctaLabel = currentBlock?.data.cta_label || 'Continuar';
+  const ctaEmoji = currentBlock?.data.cta_emoji || '👉';
 
   return (
     <div
@@ -381,28 +381,28 @@ export default function PublicQuizRunner() {
                         letterSpacing: '-0.02em',
                       }}
                     >
-                      {currentBlock.fecha.content || 'Pregunta'}
+                      {currentBlock.data.content || 'Pregunta'}
                     </h1>
-                    {currentBlock.fecha.subtitle && (
+                    {currentBlock.data.subtitle && (
                       <p
                         className="mb-3 leading-snug"
                         style={{ color: mutedText, fontSize: a.font_size_base * 1.05 }}
                       >
-                        {currentBlock.fecha.subtitle}
+                        {currentBlock.data.subtitle}
                       </p>
                     )}
-                    {currentBlock.fecha.show_duration && (
+                    {currentBlock.data.show_duration && (
                       <p className="mb-5 text-xs font-medium" style={{ color: mutedText }}>
-                        ⏳ {currentBlock.fecha.duration_label || 'Duración de 2min para responder'}
+                        ⏳ {currentBlock.data.duration_label || 'Duración de 2min para responder'}
                       </p>
                     )}
                   </>
                 )}
 
                 {/* Imagen opcional */}
-                {currentBlock.fecha.image_url && currentBlock.type !== 'end' && (
+                {currentBlock.data.image_url && currentBlock.type !== 'end' && (
                   <img
-                    src={currentBlock.fecha.image_url}
+                    src={currentBlock.data.image_url}
                     alt=""
                     className="w-full rounded-xl mb-5 object-cover max-h-[240px]"
                     style={{ borderRadius: a.border_radius }}
@@ -416,7 +416,7 @@ export default function PublicQuizRunner() {
 
                 {currentBlock.type === 'buttons' && (
                   <div className="space-y-3 mb-2">
-                    {(currentBlock.fecha.options || []).map((opt) => {
+                    {(currentBlock.data.options || []).map((opt) => {
                       const selected = selectedOptionId === opt.id;
                       return (
                         <button
@@ -453,11 +453,11 @@ export default function PublicQuizRunner() {
                   <div className="mb-2">
                     <input
                       autoFocus
-                      type={currentBlock.fecha.input_type === 'email' ? 'email' : currentBlock.fecha.input_type === 'phone' ? 'tel' : 'text'}
+                      type={currentBlock.data.input_type === 'email' ? 'email' : currentBlock.data.input_type === 'phone' ? 'tel' : 'text'}
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleSubmitInput()}
-                      placeholder={currentBlock.fecha.placeholder || 'Su respuesta...'}
+                      placeholder={currentBlock.data.placeholder || 'Su respuesta...'}
                       className="w-full px-4 py-4 outline-none text-base"
                       style={{
                         background: subtleBg,
@@ -472,8 +472,8 @@ export default function PublicQuizRunner() {
                 {currentBlock.type === 'end' && (
                   <div className="mt-2">
                     {(() => {
-                      const subtype = (currentBlock.fecha as any)?.quiz_subtype;
-                      const isResult = subtype === 'result' || subtype === 'result_ai' || (currentBlock.fecha as any)?.result_ai_enabled;
+                      const subtype = (currentBlock.data as any)?.quiz_subtype;
+                      const isResult = subtype === 'result' || subtype === 'result_ai' || (currentBlock.data as any)?.result_ai_enabled;
                       if (isResult && funnel) {
                         return (
                           <QuizResultView
@@ -495,11 +495,11 @@ export default function PublicQuizRunner() {
                             <Check className="h-7 w-7" style={{ color: primaryFg }} />
                           </div>
                           <h2 className="text-2xl font-bold mb-2" style={{ letterSpacing: '-0.01em' }}>
-                            {currentBlock.fecha.content || 'Gracias!'}
+                            {currentBlock.data.content || 'Gracias!'}
                           </h2>
-                          {currentBlock.fecha.success_message && (
+                          {currentBlock.data.success_message && (
                             <p className="text-sm" style={{ color: mutedText }}>
-                              {currentBlock.fecha.success_message}
+                              {currentBlock.data.success_message}
                             </p>
                           )}
                         </div>
@@ -521,7 +521,7 @@ export default function PublicQuizRunner() {
                     }
                     disabled={
                       (currentBlock.type === 'buttons' && !selectedOptionId) ||
-                      (currentBlock.type === 'input' && currentBlock.fecha.required && !inputValue.trim())
+                      (currentBlock.type === 'input' && currentBlock.data.required && !inputValue.trim())
                     }
                     className="w-full py-4 mt-5 font-semibold text-base flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
                     style={{

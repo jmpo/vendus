@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function CaktoSummaryCards({ scope, provider = 'all' }: Props) {
-  const { fecha: summary } = usePaymentsSummary(scope, provider);
+  const { data: summary } = usePaymentsSummary(scope, provider);
   const fmtBRL = (v: number) => new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG' }).format(v);
 
   const items = [

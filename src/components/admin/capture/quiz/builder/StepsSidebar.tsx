@@ -21,7 +21,7 @@ interface Props {
 }
 
 function stepLabel(b: FunnelBlock, fallback: number): string {
-  const d: any = b.fecha || {};
+  const d: any = b.data || {};
   return (d.step_label || d.content || d.placeholder || d.success_message || `Etapa ${fallback}`)
     .toString()
     .slice(0, 28);

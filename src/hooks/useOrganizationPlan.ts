@@ -22,11 +22,11 @@ export function useOrganizationEffectivePlan(orgId?: string | null) {
     queryKey: ['org-effective-plan', orgId],
     queryFn: async () => {
       if (!orgId) return null;
-      const { fecha, error } = await supabase.rpc('get_organization_effective_limits', {
+      const { data, error } = await supabase.rpc('get_organization_effective_limits', {
         p_org_id: orgId,
       });
       if (error) throw error;
-      return fecha as unknown as EffectivePlan | null;
+      return data as unknown as EffectivePlan | null;
     },
     enabled: !!orgId,
   });

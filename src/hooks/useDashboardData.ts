@@ -33,9 +33,9 @@ export function useDashboardData(productId: string, userId?: string) {
         query = query.eq('assigned_to', userId);
       }
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return fecha;
+      return data;
     },
     enabled: !!productId,
   });
@@ -44,14 +44,14 @@ export function useDashboardData(productId: string, userId?: string) {
   const stagesQuery = useQuery({
     queryKey: ['dashboard-stages', productId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('pipeline_stages')
         .select('*')
         .eq('product_id', productId)
         .order('order_index');
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     enabled: !!productId,
   });
@@ -69,9 +69,9 @@ export function useDashboardData(productId: string, userId?: string) {
         query = query.eq('user_id', userId);
       }
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return fecha;
+      return data;
     },
     enabled: !!productId,
   });
@@ -89,21 +89,21 @@ export function useDashboardData(productId: string, userId?: string) {
         query = query.eq('seller_id', userId);
       }
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return fecha;
+      return data;
     },
     enabled: !!productId,
   });
 
-  // Process funnel fecha
+  // Process funnel data
   const funnelData = () => {
-    if (!stagesQuery.fecha || !leadsQuery.fecha) return [];
+    if (!stagesQuery.data || !leadsQuery.data) return [];
 
-    const activeStages = stagesQuery.fecha.filter(s => !s.is_won && !s.is_lost);
+    const activeStages = stagesQuery.data.filter(s => !s.is_won && !s.is_lost);
     
     return activeStages.map(stage => {
-      const count = leadsQuery.fecha.filter(l => l.current_stage_id === stage.id).length;
+      const count = leadsQuery.data.filter(l => l.current_stage_id === stage.id).length;
       return {
         name: stage.name,
         count,
@@ -112,25 +112,25 @@ export function useDashboardData(productId: string, userId?: string) {
     });
   };
 
-  // Process conversion fecha
+  // Process conversion data
   const conversionData = () => {
-    if (!leadsQuery.fecha || !stagesQuery.fecha) {
+    if (!leadsQuery.data || !stagesQuery.data) {
       return { totalLeads: 0, wonLeads: 0, lostLeads: 0, activeLeads: 0 };
     }
 
-    const wonStageIds = stagesQuery.fecha.filter(s => s.is_won).map(s => s.id);
-    const lostStageIds = stagesQuery.fecha.filter(s => s.is_lost).map(s => s.id);
+    const wonStageIds = stagesQuery.data.filter(s => s.is_won).map(s => s.id);
+    const lostStageIds = stagesQuery.data.filter(s => s.is_lost).map(s => s.id);
 
-    const wonLeads = leadsQuery.fecha.filter(l => wonStageIds.includes(l.current_stage_id || '')).length;
-    const lostLeads = leadsQuery.fecha.filter(l => lostStageIds.includes(l.current_stage_id || '')).length;
-    const activeLeads = leadsQuery.fecha.filter(l => 
+    const wonLeads = leadsQuery.data.filter(l => wonStageIds.includes(l.current_stage_id || '')).length;
+    const lostLeads = leadsQuery.data.filter(l => lostStageIds.includes(l.current_stage_id || '')).length;
+    const activeLeads = leadsQuery.data.filter(l => 
       l.current_stage_id && 
       !wonStageIds.includes(l.current_stage_id) && 
       !lostStageIds.includes(l.current_stage_id)
     ).length;
 
     return {
-      totalLeads: leadsQuery.fecha.length,
+      totalLeads: leadsQuery.data.length,
       wonLeads,
       lostLeads,
       activeLeads,
@@ -139,10 +139,10 @@ export function useDashboardData(productId: string, userId?: string) {
 
   // Stats calculations
   const stats = () => {
-    const leads = leadsQuery.fecha || [];
-    const deals = dealsQuery.fecha || [];
-    const commissions = commissionsQuery.fecha || [];
-    const stages = stagesQuery.fecha || [];
+    const leads = leadsQuery.data || [];
+    const deals = dealsQuery.data || [];
+    const commissions = commissionsQuery.data || [];
+    const stages = stagesQuery.data || [];
 
     const activeLeadsCount = leads.filter(l => {
       const stage = stages.find(s => s.id === l.current_stage_id);
@@ -190,10 +190,10 @@ export function useDashboardData(productId: string, userId?: string) {
 
   // Calculate trends (comparing to last month)
   const trends = () => {
-    const deals = dealsQuery.fecha || [];
-    const leads = leadsQuery.fecha || [];
+    const deals = dealsQuery.data || [];
+    const leads = leadsQuery.data || [];
     
-    // Current month fecha
+    // Current month data
     const currentMonthDeals = deals.filter(d => {
       if (!d.closed_at) return false;
       const date = new Date(d.closed_at);
@@ -222,10 +222,10 @@ export function useDashboardData(productId: string, userId?: string) {
     };
   };
 
-  // Weekly fecha for chart
+  // Weekly data for chart
   const weeklyData = () => {
-    const deals = dealsQuery.fecha || [];
-    const fecha: { date: string; deals: number; value: number }[] = [];
+    const deals = dealsQuery.data || [];
+    const data: { date: string; deals: number; value: number }[] = [];
     
     for (let i = 0; i < 7; i++) {
       const date = addDays(weekStart, i);
@@ -236,32 +236,32 @@ export function useDashboardData(productId: string, userId?: string) {
         return format(new Date(d.closed_at), 'yyyy-MM-dd') === dateStr && d.status === 'won';
       });
       
-      fecha.push({
+      data.push({
         date: dateStr,
         deals: dayDeals.length,
         value: dayDeals.reduce((sum, d) => sum + d.deal_value, 0),
       });
     }
     
-    return fecha;
+    return data;
   };
 
-  // Generate sparkline fecha for stats
+  // Generate sparkline data for stats
   const generateSparklineData = (baseValue: number, trend: 'up' | 'down' | 'neutral' = 'neutral') => {
-    const fecha: number[] = [];
+    const data: number[] = [];
     let value = baseValue * 0.7;
     
     for (let i = 0; i < 7; i++) {
       const change = (Math.random() - 0.5) * (baseValue * 0.1);
       const trendBias = trend === 'up' ? baseValue * 0.03 : trend === 'down' ? -baseValue * 0.03 : 0;
       value = Math.max(1, value + change + trendBias);
-      fecha.push(Math.round(value));
+      data.push(Math.round(value));
     }
     
     // Ensure last value is closer to current
-    fecha[6] = baseValue;
+    data[6] = baseValue;
     
-    return fecha;
+    return data;
   };
 
   const currentStats = stats();
@@ -270,7 +270,7 @@ export function useDashboardData(productId: string, userId?: string) {
   return {
     funnelData: funnelData(),
     conversionData: conversionData(),
-    commissions: commissionsQuery.fecha || [],
+    commissions: commissionsQuery.data || [],
     stats: currentStats,
     trends: currentTrends,
     weeklyData: weeklyData(),

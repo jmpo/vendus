@@ -61,9 +61,9 @@ interface OrganizationDetailPageProps {
 }
 
 export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPageProps) {
-  const { fecha: org, isLoading } = useOrganizationDetails(orgId);
-  const { fecha: billingHistory } = useBillingHistory(orgId);
-  const { fecha: pendingInvitations } = useOrganizationInvitations(orgId);
+  const { data: org, isLoading } = useOrganizationDetails(orgId);
+  const { data: billingHistory } = useBillingHistory(orgId);
+  const { data: pendingInvitations } = useOrganizationInvitations(orgId);
   const updateOrganization = useUpdateOrganization();
   const createInvitation = useCreateOrganizationInvitation();
   const deleteInvitation = useDeleteOrganizationInvitation();
@@ -197,7 +197,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
       if (manageAction === 'set_password') payload.password = manageInput;
       if (manageAction === 'change_email') payload.email = manageInput.trim().toLowerCase();
 
-      const { fecha, error } = await supabase.functions.invoke('super-admin-manage-user', { body: payload });
+      const { data, error } = await supabase.functions.invoke('super-admin-manage-user', { body: payload });
       // Tenta extrair mensaje amigável do corpo de error (FunctionsHttpError)
       let bodyError: string | null = null;
       if (error && (error as any).context?.json) {
@@ -214,7 +214,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
       }
       if (bodyError) throw new Error(bodyError);
       if (error) throw error;
-      if (fecha?.error) throw new Error(fecha.error);
+      if (data?.error) throw new Error(data.error);
 
       const msgs: Record<string, string> = {
         confirm_email: '¡Correo electrónico confirmado con éxito!',

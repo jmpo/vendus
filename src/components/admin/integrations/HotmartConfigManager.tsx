@@ -42,14 +42,14 @@ const HOTMART_EVENTS = [
 ];
 
 export function HotmartConfigManager() {
-  const { fecha: cred, isLoading } = useHotmartCredentials();
+  const { data: cred, isLoading } = useHotmartCredentials();
   const upsert = useUpsertHotmartCredentials();
   const test = useTestHotmartConnection();
-  const { fecha: mappings = [] } = useHotmartProductMappings();
+  const { data: mappings = [] } = useHotmartProductMappings();
   const updateMapping = useUpdateHotmartProductMapping();
   const sync = useSyncHotmartOrders();
-  const { fecha: orders = [] } = useHotmartOrders(20);
-  const { fecha: products = [] } = useProducts();
+  const { data: orders = [] } = useHotmartOrders(20);
+  const { data: products = [] } = useProducts();
 
   const [clientId, setClientId] = useState('');
   const [clientSecret, setClientSecret] = useState('');

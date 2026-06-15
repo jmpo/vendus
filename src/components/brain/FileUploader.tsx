@@ -36,7 +36,7 @@ const ACCEPTED_TYPES = {
 };
 
 export function FileUploader({ productId }: FileUploaderProps) {
-  const { fecha: files, isLoading } = useKnowledgeSourcesByType(productId, 'file');
+  const { data: files, isLoading } = useKnowledgeSourcesByType(productId, 'file');
   const uploadDocument = useUploadKnowledgeDocument();
   const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
 

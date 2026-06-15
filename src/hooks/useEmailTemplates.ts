@@ -151,7 +151,7 @@ export function useEmailTemplates() {
   return useQuery({
     queryKey: ['email-templates', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('email_templates')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
@@ -160,7 +160,7 @@ export function useEmailTemplates() {
       if (error) throw error;
 
       // If no templates exist, return defaults
-      if (!fecha || fecha.length === 0) {
+      if (!data || data.length === 0) {
         return DEFAULT_TEMPLATES.map((t, i) => ({
           id: `default-${i}`,
           organization_id: profile!.organization_id!,
@@ -171,7 +171,7 @@ export function useEmailTemplates() {
         })) as EmailTemplate[];
       }
 
-      return fecha as EmailTemplate[];
+      return data as EmailTemplate[];
     },
     enabled: !!profile?.organization_id
   });

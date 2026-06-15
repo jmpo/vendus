@@ -196,14 +196,14 @@ export function useLeadsManager() {
   const [activeTab, setActiveTab] = useState('all');
 
   // Main leads query
-  const { fecha: leadsData, isLoading, refetch } = useQuery({
+  const { data: leadsData, isLoading, refetch } = useQuery({
     queryKey: ['admin-leads', filters, sort, page, pageSize, activeTab],
     queryFn: async () => {
       // Pré-filtro por etiquetas (inclusão)
       let restrictToIds: string[] | null = null;
       let excludeLeadIds: string[] = [];
       if (filters.tagIds.length > 0) {
-        const { fecha: assigns } = await supabase
+        const { data: assigns } = await supabase
           .from('lead_tag_assignments')
           .select('lead_id, tag_id')
           .in('tag_id', filters.tagIds);
@@ -230,7 +230,7 @@ export function useLeadsManager() {
 
       // Pré-filtro por etiquetas a eliminar (lista independente)
       if (filters.excludeTagIds.length > 0) {
-        const { fecha: assigns } = await supabase
+        const { data: assigns } = await supabase
           .from('lead_tag_assignments')
           .select('lead_id')
           .in('tag_id', filters.excludeTagIds);
@@ -330,10 +330,10 @@ export function useLeadsManager() {
         query = query.range(from, to);
       }
 
-      const { fecha, error, count } = await query;
+      const { data, error, count } = await query;
       if (error) throw error;
 
-      let rows = (fecha || []) as unknown as Lead[];
+      let rows = (data || []) as unknown as Lead[];
       let totalCount = count || 0;
 
       if (hasClientRules) {
@@ -358,7 +358,7 @@ export function useLeadsManager() {
 
 
   // Stats query
-  const { fecha: stats } = useQuery({
+  const { data: stats } = useQuery({
     queryKey: ['leads-stats', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return null;
@@ -394,7 +394,7 @@ export function useLeadsManager() {
   // Create lead mutation
   const createLead = useMutation({
     mutationFn: async (lead: TablesInsert<'leads'>) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('leads')
         .insert({
           ...lead,
@@ -404,7 +404,7 @@ export function useLeadsManager() {
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-leads'] });

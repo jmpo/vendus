@@ -4,7 +4,7 @@ import { BarChart3, MessageSquare, Clock, Users, TrendingUp } from 'lucide-react
 import { Skeleton } from '@/components/ui/skeleton';
 
 export function WebChatReportsTab() {
-  const { fecha: allConversations, isLoading } = useWebChatConversations({ tab: 'all', limit: 200 });
+  const { data: allConversations, isLoading } = useWebChatConversations({ tab: 'all', limit: 200 });
 
   if (isLoading) {
     return (

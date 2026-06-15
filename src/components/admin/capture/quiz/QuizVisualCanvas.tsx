@@ -36,7 +36,7 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
 };
 
 function blockTitle(b: FunnelBlock): string {
-  const d: any = b.fecha || {};
+  const d: any = b.data || {};
   return (
     d.content ||
     d.label ||
@@ -56,7 +56,7 @@ function blockTitle(b: FunnelBlock): string {
 }
 
 function blockKindLabel(b: FunnelBlock): string {
-  const sub = (b.fecha as any)?.quiz_subtype as string | undefined;
+  const sub = (b.data as any)?.quiz_subtype as string | undefined;
   if (sub) {
     const map: Record<string, string> = {
       single: 'Elegí única', multiple: 'Múltipla escolha', yesno: 'Sí/No',
@@ -67,7 +67,7 @@ function blockKindLabel(b: FunnelBlock): string {
     if (map[sub]) return map[sub];
   }
   if (b.type === 'input') {
-    const t = (b.fecha as any)?.input_type;
+    const t = (b.data as any)?.input_type;
     return ({ text: 'Texto corto', textarea: 'Texto largo', email: 'Email', phone: 'Teléfono',
       number: 'Número', cpf: 'CPF/CNPJ', name: 'Nombre' } as Record<string, string>)[t] || 'Pergunta';
   }
@@ -92,7 +92,7 @@ export function QuizVisualCanvas({
     while (cur && !visited.has(cur.id)) {
       visited.add(cur.id);
       result.push(cur);
-      const nextId = cur.next_block_id || (cur.fecha as any)?.true_next_block_id;
+      const nextId = cur.next_block_id || (cur.data as any)?.true_next_block_id;
       cur = nextId ? byId.get(nextId) : undefined;
     }
     blocks.forEach(b => { if (!visited.has(b.id)) result.push(b); });
@@ -156,7 +156,7 @@ export function QuizVisualCanvas({
           const isStart = block.id === startBlockId;
           const isSelected = block.id === selectedBlockId;
           const Icon = TYPE_ICONS[block.type];
-          const opts = (block.fecha as any)?.options as Array<any> | undefined;
+          const opts = (block.data as any)?.options as Array<any> | undefined;
 
           return (
             <div key={block.id}>
@@ -203,9 +203,9 @@ export function QuizVisualCanvas({
                       {isStart && (
                         <Badge variant="secondary" className="text-[9px] h-4 px-1.5">INÍCIO</Badge>
                       )}
-                      {(block.fecha as any)?.variable_name && (
+                      {(block.data as any)?.variable_name && (
                         <Badge variant="outline" className="text-[9px] h-4 px-1.5 font-mono">
-                          {`{{${(block.fecha as any).variable_name}}}`}
+                          {`{{${(block.data as any).variable_name}}}`}
                         </Badge>
                       )}
                     </div>
@@ -215,10 +215,10 @@ export function QuizVisualCanvas({
                     </p>
 
                     {/* Mídia thumb */}
-                    {(block.fecha as any)?.image_url && (
+                    {(block.data as any)?.image_url && (
                       <div className="mb-2 rounded-lg overflow-hidden border bg-muted aspect-[3/1] max-h-24">
                         <img
-                          src={(block.fecha as any).image_url}
+                          src={(block.data as any).image_url}
                           alt=""
                           className="w-full h-full object-cover"
                           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -263,9 +263,9 @@ export function QuizVisualCanvas({
 
                     {/* Condição: 2 caminhos */}
                     {block.type === 'condition' && (() => {
-                      const cond = (block.fecha as any)?.condition;
-                      const tId = (block.fecha as any)?.true_next_block_id;
-                      const fId = (block.fecha as any)?.false_next_block_id;
+                      const cond = (block.data as any)?.condition;
+                      const tId = (block.data as any)?.true_next_block_id;
+                      const fId = (block.data as any)?.false_next_block_id;
                       const tIdx = tId ? ordered.findIndex(b => b.id === tId) + 1 : 0;
                       const fIdx = fId ? ordered.findIndex(b => b.id === fId) + 1 : 0;
                       return (

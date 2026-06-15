@@ -110,12 +110,12 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
     if (!open || step !== 3 || !connectionId || webhookSubscribedAt) return;
 
     pollRef.current = window.setInterval(async () => {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('whatsapp_meta_connections' as any)
         .select('webhook_subscribed_at')
         .eq('id', connectionId)
         .maybeSingle();
-      const ts = (fecha as any)?.webhook_subscribed_at ?? null;
+      const ts = (data as any)?.webhook_subscribed_at ?? null;
       if (ts) {
         setWebhookSubscribedAt(ts);
         if (pollRef.current) {
@@ -137,15 +137,15 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
     if (!profile?.organization_id) return;
     const name = form.display_name.trim() || 'WhatsApp Oficial';
     try {
-      const fecha = await draft.mutateAsync({
+      const data = await draft.mutateAsync({
         organization_id: profile.organization_id,
         display_name: name,
         connection_id: connectionId ?? undefined,
       });
-      setConnectionId(fecha.connection_id);
-      setVerifyToken(fecha.verify_token);
-      setWebhookUrl(fecha.webhook_url);
-      setWebhookSubscribedAt(fecha.webhook_subscribed_at ?? null);
+      setConnectionId(data.connection_id);
+      setVerifyToken(data.verify_token);
+      setWebhookUrl(data.webhook_url);
+      setWebhookSubscribedAt(data.webhook_subscribed_at ?? null);
       if (!form.display_name) setForm((f) => ({ ...f, display_name: name }));
       setStep(3);
     } catch {

@@ -53,18 +53,18 @@ function useOrganizations() {
   return useQuery({
     queryKey: ['superadmin-organizations-list'],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('organizations')
         .select('id, name')
         .order('name', { ascending: true });
       if (error) throw error;
-      return fecha || [];
+      return data || [];
     },
   });
 }
 
 export function EvolutionManager() {
-  const { fecha: config, isLoading: cfgLoading } = usePlatformEvolutionConfig();
+  const { data: config, isLoading: cfgLoading } = usePlatformEvolutionConfig();
   const updateCfg = useUpdatePlatformEvolutionConfig();
   const testMut = useTestEvolutionConnection();
 
@@ -86,7 +86,7 @@ export function EvolutionManager() {
   const handleTest = () => {
     setTestResult(null);
     testMut.mutate({ url: cleanUrl, globalApiKey }, {
-      onSuccess: (fecha: any) => setTestResult({ ok: !!fecha?.ok, msg: fecha?.message || 'OK' }),
+      onSuccess: (data: any) => setTestResult({ ok: !!data?.ok, msg: data?.message || 'OK' }),
       onError: (e: any) => setTestResult({ ok: false, msg: e.message }),
     });
   };
@@ -224,8 +224,8 @@ export function EvolutionManager() {
 }
 
 function InstancesTable() {
-  const { fecha: instances, isLoading } = useAllEvolutionInstancesAdmin();
-  const { fecha: orgs } = useOrganizations();
+  const { data: instances, isLoading } = useAllEvolutionInstancesAdmin();
+  const { data: orgs } = useOrganizations();
   const createMut = useCreateEvolutionInstance();
   const deleteMut = useDeleteEvolutionInstance();
   const syncMut = useSyncEvolutionInstances();

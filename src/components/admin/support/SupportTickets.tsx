@@ -24,7 +24,7 @@ interface Props {
 }
 
 export function SupportTickets({ scope = 'admin' }: Props) {
-  const { fecha: tickets, isLoading } = useSupportTickets(scope);
+  const { data: tickets, isLoading } = useSupportTickets(scope);
   const [newOpen, setNewOpen] = useState(false);
   const [selected, setSelected] = useState<SupportTicket | null>(null);
 

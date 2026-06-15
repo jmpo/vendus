@@ -51,10 +51,10 @@ interface AIResult {
 export function QuizResultView({
   block, scoreTotal, tags, responses, funnelId, primaryColor,
 }: QuizResultViewProps) {
-  const fecha: any = block.fecha || {};
-  const tiers: ResultTier[] = (fecha.result_tiers as ResultTier[]) || DEFAULT_TIERS;
-  const metrics: ResultMetric[] = (fecha.result_metrics as ResultMetric[]) || [];
-  const isAI = fecha.quiz_subtype === 'result_ai' || !!fecha.result_ai_enabled;
+  const data: any = block.data || {};
+  const tiers: ResultTier[] = (data.result_tiers as ResultTier[]) || DEFAULT_TIERS;
+  const metrics: ResultMetric[] = (data.result_metrics as ResultMetric[]) || [];
+  const isAI = data.quiz_subtype === 'result_ai' || !!data.result_ai_enabled;
 
   const tier = pickTier(scoreTotal, tiers);
   const accent = tier.color || primaryColor;
@@ -75,9 +75,9 @@ export function QuizResultView({
         score_total: scoreTotal,
         score_tier: tier.label,
         tags,
-        custom_prompt: fecha.result_ai_prompt || undefined,
+        custom_prompt: data.result_ai_prompt || undefined,
       },
-    }).then(({ fecha: out, error }) => {
+    }).then(({ data: out, error }) => {
       if (cancelled) return;
       if (error || (out as any)?.error) {
         setAiError((out as any)?.error || error?.message || 'Error al generar el resultado');
@@ -128,7 +128,7 @@ export function QuizResultView({
             </span>
           </div>
           <h3 className="text-lg font-bold leading-tight">
-            {fecha.success_message || 'Tu resultado'}
+            {data.success_message || 'Tu resultado'}
           </h3>
           {tier.message && (
             <p className="text-sm text-muted-foreground mt-1">{tier.message}</p>

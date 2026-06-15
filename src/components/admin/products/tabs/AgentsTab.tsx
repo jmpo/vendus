@@ -31,7 +31,7 @@ interface AgentsTabProps {
 }
 
 export function AgentsTab({ productId }: AgentsTabProps) {
-  const { fecha: agents, isLoading } = useProductAgents(productId);
+  const { data: agents, isLoading } = useProductAgents(productId);
   const createAgent = useCreateAgent();
   const updateAgent = useUpdateAgent();
   const deleteAgent = useDeleteAgent();

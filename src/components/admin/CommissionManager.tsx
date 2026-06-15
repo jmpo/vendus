@@ -17,9 +17,9 @@ import { toast } from 'sonner';
 
 export function CommissionManager() {
   const { user } = useAuth();
-  const { fecha: products } = useProducts();
-  const { fecha: teamMembers } = useTeamMembers();
-  const { fecha: commissionRules, isLoading } = useCommissionRules();
+  const { data: products } = useProducts();
+  const { data: teamMembers } = useTeamMembers();
+  const { data: commissionRules, isLoading } = useCommissionRules();
   const createRule = useCreateCommissionRule();
   const updateRule = useUpdateCommissionRule();
   const deleteRule = useDeleteCommissionRule();

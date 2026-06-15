@@ -19,8 +19,8 @@ interface MobileLeadsListProps {
 }
 
 export function MobileLeadsList({ productId, productName, organizationId }: MobileLeadsListProps) {
-  const { fecha: leadsData, isLoading: loadingLeads } = useLeads(productId);
-  const { fecha: stages = [], isLoading: loadingStages } = usePipelineStages(productId);
+  const { data: leadsData, isLoading: loadingLeads } = useLeads(productId);
+  const { data: stages = [], isLoading: loadingStages } = usePipelineStages(productId);
   const [selectedStage, setSelectedStage] = useState<string>('all');
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
   const leads = leadsData || [];
@@ -66,7 +66,7 @@ export function MobileLeadsList({ productId, productName, organizationId }: Mobi
           <TabsList className="h-9 p-1 bg-muted/50 w-auto inline-flex gap-1">
             <TabsTrigger 
               value="all" 
-              className="text-xs px-3 h-7 fecha-[state=active]:bg-primary fecha-[state=active]:text-primary-foreground"
+              className="text-xs px-3 h-7 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               Todos ({leads.length})
             </TabsTrigger>
@@ -76,7 +76,7 @@ export function MobileLeadsList({ productId, productName, organizationId }: Mobi
                 <TabsTrigger 
                   key={stage.id} 
                   value={stage.id}
-                  className="text-xs px-3 h-7 fecha-[state=active]:bg-primary fecha-[state=active]:text-primary-foreground whitespace-nowrap"
+                  className="text-xs px-3 h-7 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground whitespace-nowrap"
                 >
                   {stage.name} ({count})
                 </TabsTrigger>

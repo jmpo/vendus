@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Get all organizations with auto notification settings
-    const { fecha: allSettings, error: settingsError } = await supabase
+    const { data: allSettings, error: settingsError } = await supabase
       .from('auto_notification_settings')
       .select('*');
 
@@ -85,7 +85,7 @@ async function processStalledLeads(supabase: any, settings: AutoNotificationSett
   daysAgo.setDate(daysAgo.getDate() - settings.stalled_lead_days);
 
   // Find leads without contact for X days
-  const { fecha: stalledLeads, error } = await supabase
+  const { data: stalledLeads, error } = await supabase
     .from('leads')
     .select(`
       id,
@@ -114,7 +114,7 @@ async function processStalledLeads(supabase: any, settings: AutoNotificationSett
     if (lead.pipeline_stages?.is_won || lead.pipeline_stages?.is_lost) continue;
 
     // Check if already notified today
-    const { fecha: existingLog } = await supabase
+    const { data: existingLog } = await supabase
       .from('notification_logs')
       .select('id')
       .eq('user_id', lead.assigned_to)
@@ -161,7 +161,7 @@ async function processStalledLeads(supabase: any, settings: AutoNotificationSett
 async function processAchievedGoals(supabase: any, settings: AutoNotificationSettings): Promise<number> {
   // Find goals that were just achieved (achieved_value >= target_value)
   const today = new Date();
-  const { fecha: achievedGoals, error } = await supabase
+  const { data: achievedGoals, error } = await supabase
     .from('sales_goals')
     .select(`
       id,
@@ -188,7 +188,7 @@ async function processAchievedGoals(supabase: any, settings: AutoNotificationSet
 
   for (const goal of achievedGoals || []) {
     // Check if already notified
-    const { fecha: existingLog } = await supabase
+    const { data: existingLog } = await supabase
       .from('notification_logs')
       .select('id')
       .eq('user_id', goal.user_id)
@@ -236,7 +236,7 @@ async function processApprovedCommissions(supabase: any, settings: AutoNotificat
   // Find recently approved commissions (within last hour, to catch recent approvals)
   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
 
-  const { fecha: approvedCommissions, error } = await supabase
+  const { data: approvedCommissions, error } = await supabase
     .from('commissions')
     .select(`
       id,
@@ -263,7 +263,7 @@ async function processApprovedCommissions(supabase: any, settings: AutoNotificat
 
   for (const commission of approvedCommissions || []) {
     // Check if already notified
-    const { fecha: existingLog } = await supabase
+    const { data: existingLog } = await supabase
       .from('notification_logs')
       .select('id')
       .eq('user_id', commission.user_id)

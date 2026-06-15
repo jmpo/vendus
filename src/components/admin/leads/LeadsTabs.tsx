@@ -31,7 +31,7 @@ export function LeadsTabs({ activeTab, onTabChange, stats }: LeadsTabsProps) {
             <TabsTrigger
               key={tab.id}
               value={tab.id}
-              className="flex items-center gap-2 fecha-[state=active]:bg-background fecha-[state=active]:shadow-sm px-4 py-2"
+              className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm px-4 py-2"
             >
               <Icon className="h-4 w-4" />
               <span className="hidden sm:inline">{tab.label}</span>

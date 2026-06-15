@@ -31,7 +31,7 @@ const roleConfig = {
 };
 
 export function EditMemberPermissionsDialog({ member, open, onOpenChange }: EditMemberPermissionsDialogProps) {
-  const { fecha: permissions, isLoading } = useUserPermissions(member?.id);
+  const { data: permissions, isLoading } = useUserPermissions(member?.id);
   const updatePermissions = useUpdateUserPermissions();
   const initPermissions = useInitializePermissions();
   const [localPerms, setLocalPerms] = useState<Partial<UserPermissions>>({});

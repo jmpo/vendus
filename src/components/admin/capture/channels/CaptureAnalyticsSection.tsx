@@ -29,17 +29,17 @@ const TIER_COLORS: Record<string, string> = {
 
 export function CaptureAnalyticsSection() {
   const { profile } = useAuth();
-  const { fecha: funnels } = useFunnels({ channelType: 'quiz' } as any);
+  const { data: funnels } = useFunnels({ channelType: 'quiz' } as any);
   const [days, setDays] = useState('30');
   const [funnelId, setFunnelId] = useState('all');
 
-  const { fecha, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['quiz-analytics', profile?.organization_id, days, funnelId],
     enabled: !!profile?.organization_id,
     queryFn: async () => {
       const since = new Date();
       since.setDate(since.getDate() - Number(days));
-      const { fecha: leads, error } = await supabase
+      const { data: leads, error } = await supabase
         .from('leads')
         .select('id, temperature, created_at, metadata')
         .eq('organization_id', profile!.organization_id)
@@ -64,7 +64,7 @@ export function CaptureAnalyticsSection() {
   }, [funnels, funnelId]);
 
   const stats = useMemo(() => {
-    const rows = fecha || [];
+    const rows = data || [];
     const total = rows.length;
     const tempCount = { hot: 0, warm: 0, cold: 0 };
     const scores: number[] = [];
@@ -111,7 +111,7 @@ export function CaptureAnalyticsSection() {
       .map(([date, count]) => ({ date: date.slice(5), count }));
 
     return { total, avgScore, conversionRate, tempCount, topTags, scoreDist, temperatureData, daily };
-  }, [fecha, totalViews]);
+  }, [data, totalViews]);
 
   return (
     <div className="max-w-7xl mx-auto py-6 space-y-6">
@@ -171,7 +171,7 @@ export function CaptureAnalyticsSection() {
                   <EmptyState />
                 ) : (
                   <ResponsiveContainer width="100%" height={240}>
-                    <BarChart fecha={stats.daily}>
+                    <BarChart data={stats.daily}>
                       <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={11} />
                       <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} allowDecimals={false} />
                       <Tooltip contentStyle={{ background: 'hsl(var(--popover))', border: '1px solid hsl(var(--border))' }} />
@@ -195,7 +195,7 @@ export function CaptureAnalyticsSection() {
                 ) : (
                   <ResponsiveContainer width="100%" height={240}>
                     <PieChart>
-                      <Pie fecha={stats.temperatureData} dataKey="value" nameKey="name" innerRadius={50} outerRadius={80} paddingAngle={3}>
+                      <Pie data={stats.temperatureData} dataKey="value" nameKey="name" innerRadius={50} outerRadius={80} paddingAngle={3}>
                         {stats.temperatureData.map((d, i) => <Cell key={i} fill={d.color} />)}
                       </Pie>
                       <Tooltip contentStyle={{ background: 'hsl(var(--popover))', border: '1px solid hsl(var(--border))' }} />
@@ -225,7 +225,7 @@ export function CaptureAnalyticsSection() {
                   <EmptyState />
                 ) : (
                   <ResponsiveContainer width="100%" height={220}>
-                    <BarChart fecha={stats.scoreDist}>
+                    <BarChart data={stats.scoreDist}>
                       <XAxis dataKey="range" stroke="hsl(var(--muted-foreground))" fontSize={11} />
                       <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} allowDecimals={false} />
                       <Tooltip contentStyle={{ background: 'hsl(var(--popover))', border: '1px solid hsl(var(--border))' }} />

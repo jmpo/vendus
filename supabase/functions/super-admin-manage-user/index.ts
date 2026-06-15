@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
     const userClient = createClient(SUPABASE_URL, ANON_KEY, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { fecha: { user: caller } } = await userClient.auth.getUser();
+    const { data: { user: caller } } = await userClient.auth.getUser();
     if (!caller) {
       return new Response(JSON.stringify({ error: "Sessão inválida" }), {
         status: 401,
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     });
 
     // Apenas super_admin
-    const { fecha: isSuper } = await admin.rpc("is_super_admin", {
+    const { data: isSuper } = await admin.rpc("is_super_admin", {
       _user_id: caller.id,
     });
     if (!isSuper) {
@@ -71,11 +71,11 @@ Deno.serve(async (req) => {
     let auditDetail = "";
 
     if (action === "confirm_email") {
-      const { fecha, error } = await admin.auth.admin.updateUserById(user_id, {
+      const { data, error } = await admin.auth.admin.updateUserById(user_id, {
         email_confirm: true,
       });
       if (error) throw error;
-      updateResult = fecha;
+      updateResult = data;
       auditDetail = "Email confirmado manualmente";
     } else if (action === "set_password") {
       const password = (body.password || "").trim();
@@ -85,9 +85,9 @@ Deno.serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { fecha, error } = await admin.auth.admin.updateUserById(user_id, { password });
+      const { data, error } = await admin.auth.admin.updateUserById(user_id, { password });
       if (error) throw error;
-      updateResult = fecha;
+      updateResult = data;
       auditDetail = "Contraseña redefinida pelo super admin";
     } else if (action === "change_email") {
       const email = (body.email || "").trim().toLowerCase();
@@ -97,14 +97,14 @@ Deno.serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const { fecha, error } = await admin.auth.admin.updateUserById(user_id, {
+      const { data, error } = await admin.auth.admin.updateUserById(user_id, {
         email,
         email_confirm: true,
       });
       if (error) throw error;
       // Atualiza profile.email também
       await admin.from("profiles").update({ email }).eq("id", user_id);
-      updateResult = fecha;
+      updateResult = data;
       auditDetail = `Email alterado para ${email}`;
     } else {
       return new Response(JSON.stringify({ error: "Acción inválida" }), {

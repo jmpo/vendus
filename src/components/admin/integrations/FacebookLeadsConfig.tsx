@@ -70,11 +70,11 @@ export function FacebookLeadsConfig() {
   const [assignedSquadId, setAssignedSquadId] = useState('');
   const [defaultTemperature, setDefaultTemperature] = useState('hot');
   
-  const { fecha: integrations, isLoading } = useFacebookLeadIntegrations();
-  const { fecha: logs } = useFacebookLeadLogs(selectedIntegration?.id);
-  const { fecha: products } = useProducts();
-  const { fecha: teamMembers } = useTeamMembers();
-  const { fecha: squads } = useSquads();
+  const { data: integrations, isLoading } = useFacebookLeadIntegrations();
+  const { data: logs } = useFacebookLeadLogs(selectedIntegration?.id);
+  const { data: products } = useProducts();
+  const { data: teamMembers } = useTeamMembers();
+  const { data: squads } = useSquads();
   
   const createMutation = useCreateFacebookIntegration();
   const updateMutation = useUpdateFacebookIntegration();

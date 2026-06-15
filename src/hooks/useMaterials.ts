@@ -60,9 +60,9 @@ export function useMaterials(productId?: string) {
         query = query.eq('product_id', productId);
       }
       
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return transformMaterials(fecha || []);
+      return transformMaterials(data || []);
     },
   });
 }
@@ -75,14 +75,14 @@ export function useCreateMaterial() {
   
   return useMutation({
     mutationFn: async (material: MaterialInsert) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('materials')
         .insert(material)
         .select()
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['materials'] });
@@ -96,7 +96,7 @@ export function useUpdateMaterial() {
   
   return useMutation({
     mutationFn: async ({ id, ...updates }: MaterialUpdate & { id: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('materials')
         .update(updates)
         .eq('id', id)
@@ -104,7 +104,7 @@ export function useUpdateMaterial() {
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['materials'] });

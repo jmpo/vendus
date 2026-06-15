@@ -49,7 +49,7 @@ interface QrModalState {
 export function TeamBookingLinks() {
   const { profile } = useAuth();
   const queryClient = useQueryClient();
-  const { fecha: members, isLoading } = useTeamMembers(profile?.organization_id);
+  const { data: members, isLoading } = useTeamMembers(profile?.organization_id);
   const [search, setSearch] = useState('');
   const [generatingFor, setGeneratingFor] = useState<string | null>(null);
   const [qrModal, setQrModal] = useState<QrModalState>({
@@ -60,7 +60,7 @@ export function TeamBookingLinks() {
   });
   const qrRef = useRef<HTMLDivElement>(null);
 
-  const { fecha: baseUrl } = usePublicAppUrl();
+  const { data: baseUrl } = usePublicAppUrl();
 
   const filteredMembers = useMemo(() => {
     if (!members) return [];
@@ -112,7 +112,7 @@ export function TeamBookingLinks() {
     try {
       const baseSlug = generateBookingSlug(fullName);
       // Verifica unicidade
-      const { fecha: existing } = await supabase
+      const { data: existing } = await supabase
         .from('profiles')
         .select('id')
         .eq('booking_slug', baseSlug)
@@ -156,7 +156,7 @@ export function TeamBookingLinks() {
       link.href = canvas.toDataURL('image/png');
       link.click();
     };
-    img.src = 'fecha:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
   };
 
   return (

@@ -203,7 +203,7 @@ export function ChatArea({
   const { summarize: summarizeReactions, react: reactToMessage } = useMessageReactions(conversationId);
 
   // Etiquetas del lead (carregadas só cuando há lead vinculado)
-  const { fecha: leadTagAssignments = [] } = useLeadTagsForLead(leadId || undefined);
+  const { data: leadTagAssignments = [] } = useLeadTagsForLead(leadId || undefined);
 
   // Group messages by date
   const groupedMessages = useMemo(() => {
@@ -269,14 +269,14 @@ export function ChatArea({
   // Auto-scroll suave: dispara só cuando muda o nº de mensajes o estado de digitação
   useEffect(() => {
     if (scrollRef.current) {
-      const scrollElement = scrollRef.current.querySelector('[fecha-radix-scroll-area-viewport]');
+      const scrollElement = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
       if (scrollElement) {
         scrollElement.scrollTo({ top: scrollElement.scrollHeight, behavior: 'smooth' });
       }
     }
   }, [messages.length, isTyping]);
 
-  // Helper: formata o label do separador de día (Hoy, Ayer, día da semana, o fecha completa)
+  // Helper: formata o label do separador de día (Hoy, Ayer, día da semana, o data completa)
   const formatDayLabel = (dateStr: string) => {
     const d = new Date(dateStr);
     if (isToday(d)) return 'Hoy';

@@ -23,7 +23,7 @@ interface BulkTransferDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   selectedCount: number;
-  onTransfer: (fecha: { assignedTo: string | null; squadId: string | null; reason?: string }) => void;
+  onTransfer: (data: { assignedTo: string | null; squadId: string | null; reason?: string }) => void;
   isLoading?: boolean;
   teamMembers: { id: string; full_name: string }[];
   squads: { id: string; name: string }[];

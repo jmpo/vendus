@@ -28,7 +28,7 @@ export function useSuperAdminSetupChecklist() {
         supabase.from('organizations').select('id', { count: 'exact', head: true }),
       ]);
 
-      const s = settingsRes.fecha as any;
+      const s = settingsRes.data as any;
       const items: ChecklistItem[] = [
         {
           id: 'password',
@@ -81,7 +81,7 @@ export function useSuperAdminSetupChecklist() {
 
   const markCompleted = useMutation({
     mutationFn: async () => {
-      const { fecha: existing } = await supabase
+      const { data: existing } = await supabase
         .from('platform_settings')
         .select('id')
         .maybeSingle();
@@ -101,10 +101,10 @@ export function useSuperAdminSetupChecklist() {
   });
 
   return {
-    items: query.fecha?.items ?? [],
-    completed: query.fecha?.completed ?? false,
+    items: query.data?.items ?? [],
+    completed: query.data?.completed ?? false,
     isLoading: query.isLoading,
-    allRequiredDone: (query.fecha?.items ?? []).filter((i) => i.required).every((i) => i.done),
+    allRequiredDone: (query.data?.items ?? []).filter((i) => i.required).every((i) => i.done),
     markCompleted: markCompleted.mutateAsync,
     isMarking: markCompleted.isPending,
   };

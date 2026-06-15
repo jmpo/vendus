@@ -52,7 +52,7 @@ export function RadarPanel({ onOpenConversation }: { onOpenConversation?: (id: s
   const [tab, setTab] = useState('run');
 
   const runScan = useRunOpportunityScan();
-  const { fecha: scans } = useOpportunityScans();
+  const { data: scans } = useOpportunityScans();
 
   const lastRunning = useMemo(() => scans?.find((s) => s.status === 'running' || s.status === 'pending'), [scans]);
   const latestId = lastRunning?.id || scans?.[0]?.id || null;

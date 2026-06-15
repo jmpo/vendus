@@ -31,7 +31,7 @@ export function ConversationHistoryList({
   visitorPhone,
   onSelectConversation,
 }: ConversationHistoryListProps) {
-  const { fecha, isLoading } = useVisitorHistory({
+  const { data, isLoading } = useVisitorHistory({
     currentConversationId,
     leadId,
     visitorPhone,
@@ -45,7 +45,7 @@ export function ConversationHistoryList({
     );
   }
 
-  if (!fecha?.length) {
+  if (!data?.length) {
     return (
       <p className="text-xs text-muted-foreground text-center py-4">
         Ninguno atención anterior deste contacto.
@@ -55,7 +55,7 @@ export function ConversationHistoryList({
 
   return (
     <ul className="space-y-2">
-      {fecha.map((c) => {
+      {data.map((c) => {
         const Icon = channelIcon[c.channel] || Globe;
         return (
           <li key={c.id}>

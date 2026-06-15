@@ -57,7 +57,7 @@ async function sendViaEvolutionSend(
   preferredInstanceId?: string
 ): Promise<{ ok: boolean; messageId: string | null; error?: string; diagnostics?: Record<string, any> }> {
   // Pick best instance: connected first, then default
-  const { fecha: instances, error: instErr } = await supabase
+  const { data: instances, error: instErr } = await supabase
     .from("evolution_instances")
     .select("id, name, status, is_default")
     .eq("organization_id", organizationId);
@@ -108,7 +108,7 @@ async function sendViaEvolutionSend(
   }
 
   // Invoke the deployed edge function (no need to import its code)
-  const { fecha, error } = await supabase.functions.invoke("evolution-send", {
+  const { data, error } = await supabase.functions.invoke("evolution-send", {
     body: {
       organization_id: organizationId,
       instance_id: chosen.id,
@@ -129,19 +129,19 @@ async function sendViaEvolutionSend(
   }
 
   // evolution-send returns { ok, status, body }
-  const innerOk = (fecha as any)?.ok === true;
+  const innerOk = (data as any)?.ok === true;
   if (!innerOk) {
-    const innerBody = (fecha as any)?.body;
+    const innerBody = (data as any)?.body;
     const detail = typeof innerBody === "string" ? innerBody.slice(0, 300) : JSON.stringify(innerBody).slice(0, 300);
     return {
       ok: false,
       messageId: null,
-      error: `evolution-send returned not ok (status=${(fecha as any)?.status}): ${detail}`,
-      diagnostics: { instance_id: chosen.id, instance_name: chosen.name, response: fecha },
+      error: `evolution-send returned not ok (status=${(data as any)?.status}): ${detail}`,
+      diagnostics: { instance_id: chosen.id, instance_name: chosen.name, response: data },
     };
   }
 
-  const innerBody = (fecha as any)?.body ?? {};
+  const innerBody = (data as any)?.body ?? {};
   const messageId =
     innerBody?.key?.id ||
     innerBody?.id ||
@@ -221,7 +221,7 @@ export async function alreadySent(
 ): Promise<boolean> {
   const supabase = getServiceSupabase();
   const since = new Date(Date.now() - withinHours * 3600 * 1000).toISOString();
-  const { fecha } = await supabase
+  const { data } = await supabase
     .from("admin_agent_messages")
     .select("id")
     .eq("organization_id", organizationId)
@@ -229,7 +229,7 @@ export async function alreadySent(
     .eq("reference_id", referenceId)
     .gte("created_at", since)
     .limit(1);
-  return !!(fecha && fecha.length > 0);
+  return !!(data && data.length > 0);
 }
 
 export async function alreadySentByKind(
@@ -240,7 +240,7 @@ export async function alreadySentByKind(
 ): Promise<boolean> {
   const supabase = getServiceSupabase();
   const since = new Date(Date.now() - withinHours * 3600 * 1000).toISOString();
-  const { fecha } = await supabase
+  const { data } = await supabase
     .from("admin_agent_messages")
     .select("id")
     .eq("organization_id", organizationId)
@@ -248,5 +248,5 @@ export async function alreadySentByKind(
     .eq("reference_id", referenceId)
     .gte("created_at", since)
     .limit(1);
-  return !!(fecha && fecha.length > 0);
+  return !!(data && data.length > 0);
 }

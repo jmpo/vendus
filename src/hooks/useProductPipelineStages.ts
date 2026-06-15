@@ -14,13 +14,13 @@ export function useProductPipelineStages(productId?: string) {
     queryKey: ['pipeline-stages', productId],
     enabled: !!productId,
     queryFn: async (): Promise<PipelineStage[]> => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('pipeline_stages')
         .select('id, product_id, name, color, order_index')
         .eq('product_id', productId!)
         .order('order_index');
       if (error) throw error;
-      return (fecha as PipelineStage[]) || [];
+      return (data as PipelineStage[]) || [];
     },
   });
 }

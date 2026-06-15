@@ -163,13 +163,13 @@ const Index = () => {
 
   const productsQuery = useProducts();
   const assignedQuery = useAssignedProducts(user?.id || '');
-  const allProducts = productsQuery.fecha;
-  const assignedProducts = assignedQuery.fecha;
+  const allProducts = productsQuery.data;
+  const assignedProducts = assignedQuery.data;
 
-  // Fetch fecha based on selected product
-  const { fecha: cadence = [], isLoading: loadingCadence } = useCadence(selectedProduct?.id);
-  const { fecha: objections = [], isLoading: loadingObjections } = useObjections(selectedProduct?.id);
-  const { fecha: materials = [], isLoading: loadingMaterials } = useMaterials(selectedProduct?.id);
+  // Fetch data based on selected product
+  const { data: cadence = [], isLoading: loadingCadence } = useCadence(selectedProduct?.id);
+  const { data: objections = [], isLoading: loadingObjections } = useObjections(selectedProduct?.id);
+  const { data: materials = [], isLoading: loadingMaterials } = useMaterials(selectedProduct?.id);
 
   // As queries usam `placeholderData: []`, o que zera `isLoading` imediatamente
   // mismo durante o primeiro fetch. Sem considerar `isFetching && !isFetched`,
@@ -239,14 +239,14 @@ const Index = () => {
 
   const handleWhatsApp = useCallback(async (phone: string, leadId: string, leadName: string) => {
     try {
-      const { fecha, error } = await supabase.functions.invoke('start-whatsapp-conversation', {
+      const { data, error } = await supabase.functions.invoke('start-whatsapp-conversation', {
         body: { phone, lead_id: leadId, lead_name: leadName },
       });
       if (error) throw error;
-      setPendingConversationId(fecha.conversation_id);
+      setPendingConversationId(data.conversation_id);
       setActiveTab('inbox');
       toast({
-        title: fecha.is_new ? 'Conversación creada' : 'Conversación encontrada',
+        title: data.is_new ? 'Conversación creada' : 'Conversación encontrada',
         description: 'Abrindo no inbox...',
       });
     } catch (err: any) {

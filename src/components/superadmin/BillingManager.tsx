@@ -36,8 +36,8 @@ export function BillingManager() {
   const [search, setSearch] = useState('');
   const [statusFilter, setEstadoFilter] = useState<string>('all');
 
-  const { fecha: billingHistory, isLoading } = useBillingHistory();
-  const { fecha: stats } = useSuperAdminStats();
+  const { data: billingHistory, isLoading } = useBillingHistory();
+  const { data: stats } = useSuperAdminStats();
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat( 'es' , {

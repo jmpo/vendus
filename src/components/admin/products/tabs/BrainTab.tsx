@@ -60,7 +60,7 @@ const SOURCE_TYPES = [
     color: 'text-purple-500'
   },
   { 
-    id: 'fecha', 
+    id: 'data', 
     label: 'Dados', 
     icon: Database, 
     description: 'Tablas y comparativos',
@@ -83,8 +83,8 @@ const SOURCE_TYPES = [
 ];
 
 export function BrainTab({ productId }: BrainTabProps) {
-  const { fecha: sources, isLoading: sourcesLoading } = useKnowledgeSources(productId);
-  const { fecha: stats } = useKnowledgeSourceStats(productId);
+  const { data: sources, isLoading: sourcesLoading } = useKnowledgeSources(productId);
+  const { data: stats } = useKnowledgeSourceStats(productId);
   const [activeTab, setActiveTab] = useState('overview');
   const [activeSource, setActiveSource] = useState<string | null>(null);
 

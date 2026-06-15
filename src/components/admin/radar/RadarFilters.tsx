@@ -44,11 +44,11 @@ const TEMPERATURES = [
 
 export function RadarFilters({ value, onChange }: Props) {
   const { user, profile } = useAuth();
-  const { fecha: products } = useProducts();
-  const { fecha: tags } = useLeadTags();
-  const { fecha: sectors } = useSectors();
-  const { fecha: members } = useTeamMembers(profile?.organization_id || (user as any)?.organization_id);
-  const { fecha: squads } = useSquads();
+  const { data: products } = useProducts();
+  const { data: tags } = useLeadTags();
+  const { data: sectors } = useSectors();
+  const { data: members } = useTeamMembers(profile?.organization_id || (user as any)?.organization_id);
+  const { data: squads } = useSquads();
 
   function toggle<T extends keyof ScanFilters>(key: T, val: string) {
     const arr = (value[key] as unknown as string[]) || [];

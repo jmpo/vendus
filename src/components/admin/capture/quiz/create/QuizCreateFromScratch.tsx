@@ -20,7 +20,7 @@ export function QuizCreateFromScratch({ open, onOpenChange, onCreated }: Props) 
   const [productId, setProductId] = useState('');
   const [name, setName] = useState('');
   const [objective, setObjective] = useState('');
-  const { fecha: products } = useProducts();
+  const { data: products } = useProducts();
   const createFunnel = useCreateFunnel();
 
   const handleSubmit = async () => {
@@ -30,14 +30,14 @@ export function QuizCreateFromScratch({ open, onOpenChange, onCreated }: Props) 
       type: 'message' as any,
       position: { x: 0, y: 0 },
       next_block_id: null,
-      fecha: { content: '👋 Bienvenido ao quiz!' },
+      data: { content: '👋 Bienvenido ao quiz!' },
     };
     const end: FunnelBlock = {
       id: generateBlockId(),
       type: 'end' as any,
       position: { x: 0, y: 0 },
       next_block_id: null,
-      fecha: { content: 'Gracias por participar!' },
+      data: { content: 'Gracias por participar!' },
     };
     welcome.next_block_id = end.id;
     const res = await createFunnel.mutateAsync({

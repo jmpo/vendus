@@ -17,16 +17,16 @@ export function CadencePicker({ value, onChange, placeholder = 'Seleccionar secu
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { fecha: prof } = await supabase.from('profiles').select('organization_id').eq('id', user.id).maybeSingle();
+      const { data: prof } = await supabase.from('profiles').select('organization_id').eq('id', user.id).maybeSingle();
       const orgId = (prof as any)?.organization_id;
       if (!orgId) return;
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('cadences' as any)
         .select('id, name, status')
         .eq('organization_id', orgId)
         .in('status', ['active', 'draft'])
         .order('name');
-      setList(((fecha as any[]) ?? []).map((c) => ({ id: c.id, name: `${c.name}${c.status === 'draft' ? ' (borrador)' : ''}` })));
+      setList(((data as any[]) ?? []).map((c) => ({ id: c.id, name: `${c.name}${c.status === 'draft' ? ' (borrador)' : ''}` })));
     })();
   }, [user]);
 

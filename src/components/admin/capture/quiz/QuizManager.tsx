@@ -48,8 +48,8 @@ export function QuizManager() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const { fecha: funnels, isLoading } = useFunnels({ channelType: 'quiz' });
-  const { fecha: products } = useProducts();
+  const { data: funnels, isLoading } = useFunnels({ channelType: 'quiz' });
+  const { data: products } = useProducts();
   const deleteFunnel = useDeleteFunnel();
   const duplicateFunnel = useDuplicateFunnel();
   const updateStatus = useUpdateFunnelStatus();

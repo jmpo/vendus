@@ -39,7 +39,7 @@ Deno.serve(async (req: Request) => {
 
   if (!connection_id || !to) return json({ error: 'missing connection_id or to' }, 400);
 
-  const { fecha: conn, error: connErr } = await sbAdmin
+  const { data: conn, error: connErr } = await sbAdmin
     .from('whatsapp_meta_connections')
     .select('*')
     .eq('id', connection_id)
@@ -50,7 +50,7 @@ Deno.serve(async (req: Request) => {
 
   // janela 24h
   if (conversation_id && type !== 'template') {
-    const { fecha: ok } = await sbAdmin.rpc('is_within_24h_window', { _conversation_id: conversation_id });
+    const { data: ok } = await sbAdmin.rpc('is_within_24h_window', { _conversation_id: conversation_id });
     if (!ok) {
       return json({ error: 'OUT_OF_WINDOW', message: 'Fora da janela 24h — envie um template HSM aprovado.' }, 422);
     }

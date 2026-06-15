@@ -81,12 +81,12 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
     if (pollRef.current) { window.clearInterval(pollRef.current); pollRef.current = null; }
     if (step !== 3 || !draftId || webhookOk) return;
     pollRef.current = window.setInterval(async () => {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('instagram_connections' as any)
         .select('webhook_subscribed_at')
         .eq('id', draftId)
         .maybeSingle();
-      if ((fecha as any)?.webhook_subscribed_at) {
+      if ((data as any)?.webhook_subscribed_at) {
         setWebhookOk(true);
         if (pollRef.current) { window.clearInterval(pollRef.current); pollRef.current = null; }
       }

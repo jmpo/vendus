@@ -50,16 +50,16 @@ export function RadarLeadActions({ item, compact, onOpenConversation }: Props) {
       toast.error('Lead no encontrado');
       return;
     }
-    const { fecha, error } = await supabase
+    const { data, error } = await supabase
       .from('leads')
       .select('id, name, assigned_to, squad_id, product_id, organization_id')
       .eq('id', item.lead_id)
       .maybeSingle();
-    if (error || !fecha) {
+    if (error || !data) {
       toast.error('No fue possível cargar o lead');
       return;
     }
-    setTransferLead(fecha);
+    setTransferLead(data);
     setTransferOpen(true);
   }
 

@@ -14,7 +14,7 @@ export interface AIFeedback {
   created_at: string;
   applied_to_training: boolean;
   applied_at: string | null;
-  // Joined fecha
+  // Joined data
   webchat_conversations?: {
     visitor_name: string | null;
     visitor_email: string | null;
@@ -32,7 +32,7 @@ export function useAIFeedback() {
     queryFn: async () => {
       if (!profile?.organization_id) return [];
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('ai_response_feedback')
         .select(`
           *,
@@ -43,7 +43,7 @@ export function useAIFeedback() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return fecha as AIFeedback[];
+      return data as AIFeedback[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -63,7 +63,7 @@ export function useCreateAIFeedback() {
     }) => {
       if (!profile?.organization_id) throw new Error('No organization');
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('ai_response_feedback')
         .insert({
           message_id: feedback.messageId,
@@ -78,7 +78,7 @@ export function useCreateAIFeedback() {
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ai-feedback'] });
@@ -91,7 +91,7 @@ export function useApplyAIFeedback() {
 
   return useMutation({
     mutationFn: async (feedbackId: string) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('ai_response_feedback')
         .update({
           applied_to_training: true,
@@ -102,7 +102,7 @@ export function useApplyAIFeedback() {
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ai-feedback'] });

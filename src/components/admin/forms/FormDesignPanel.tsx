@@ -63,7 +63,7 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
         .upload(path, file, { cacheControl: '3600', upsert: true });
       if (error) throw error;
       // Bucket é privado — usar URL assinada de larga duración (10 anos)
-      const { fecha: signed, error: signErr } = await supabase.storage
+      const { data: signed, error: signErr } = await supabase.storage
         .from('form-media')
         .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
       if (signErr || !signed?.signedUrl) throw signErr || new Error('Falha ao gerar URL');

@@ -49,8 +49,8 @@ export function ChatBotManager() {
   const [description, setDescription] = useState('');
   const [productId, setProductId] = useState('');
 
-  const { fecha: funnels, isLoading } = useFunnels({ channelType: 'chatbot' });
-  const { fecha: products } = useProducts();
+  const { data: funnels, isLoading } = useFunnels({ channelType: 'chatbot' });
+  const { data: products } = useProducts();
   const createFunnel = useCreateFunnel();
   const deleteFunnel = useDeleteFunnel();
   const duplicateFunnel = useDuplicateFunnel();

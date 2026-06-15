@@ -18,7 +18,7 @@ export function useLeadNotes(leadId: string) {
   return useQuery({
     queryKey: ['lead-notes', leadId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('lead_notes')
         .select(`
           *,
@@ -28,7 +28,7 @@ export function useLeadNotes(leadId: string) {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return fecha as LeadNote[];
+      return data as LeadNote[];
     },
     enabled: !!leadId
   });
@@ -45,10 +45,10 @@ export function useCreateLeadNote() {
 
   return useMutation({
     mutationFn: async (params: CreateLeadNoteParams) => {
-      const { fecha: { user } } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('lead_notes')
         .insert({
           lead_id: params.lead_id,
@@ -60,7 +60,7 @@ export function useCreateLeadNote() {
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: (_, vars) => {
       queryClient.invalidateQueries({ queryKey: ['lead-notes', vars.lead_id] });

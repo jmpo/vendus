@@ -36,7 +36,7 @@ interface SectorFormDialogProps {
 
 export function SectorFormDialog({ sector, open, onOpenChange }: SectorFormDialogProps) {
   const upsert = useUpsertSector();
-  const { fecha: members } = useTeamMembers();
+  const { data: members } = useTeamMembers();
 
   const [form, setForm] = useState({
     name: '',

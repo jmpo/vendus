@@ -19,7 +19,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Fetch messages
-    const { fecha: messages, error: msgError } = await supabase
+    const { data: messages, error: msgError } = await supabase
       .from("webchat_messages")
       .select("content, sender_type, created_at, direction")
       .eq("conversation_id", conversationId)
@@ -38,7 +38,7 @@ serve(async (req) => {
     }
 
     // Fetch conversation details
-    const { fecha: conv } = await supabase
+    const { data: conv } = await supabase
       .from("webchat_conversations")
       .select("*, webchat_widgets(products(name, description))")
       .eq("id", conversationId)

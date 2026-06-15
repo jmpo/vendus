@@ -37,13 +37,13 @@ export function useMessageReactions(conversationId: string | null | undefined) {
     }
     let cancelled = false;
     (async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('message_reactions')
         .select('*')
         .eq('conversation_id', conversationId);
-      if (cancelled || error || !fecha) return;
+      if (cancelled || error || !data) return;
       const map = new Map<string, MessageReaction[]>();
-      for (const r of fecha as MessageReaction[]) {
+      for (const r of data as MessageReaction[]) {
         const arr = map.get(r.message_id) ?? [];
         arr.push(r);
         map.set(r.message_id, arr);

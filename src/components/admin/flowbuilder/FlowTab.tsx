@@ -13,7 +13,7 @@ interface FlowTabProps {
 
 export function FlowTab({ productId }: FlowTabProps) {
   const [selectedFlowId, setSelectedFlowId] = useState<string | null>(null);
-  const { fecha: selectedFlow, isLoading } = useChatFlow(selectedFlowId || undefined);
+  const { data: selectedFlow, isLoading } = useChatFlow(selectedFlowId || undefined);
 
   if (selectedFlowId) {
     if (isLoading) {

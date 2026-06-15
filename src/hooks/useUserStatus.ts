@@ -35,7 +35,7 @@ export function useUserStatus(): UserStatusData {
     }
 
     const fetchStatus = async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_status')
         .select('*')
         .eq('user_id', user.id)
@@ -47,9 +47,9 @@ export function useUserStatus(): UserStatusData {
         return;
       }
 
-      if (fecha) {
-        setStatusState(fecha.status as UserStatusType);
-        setActiveLeadsCount(fecha.active_leads_count);
+      if (data) {
+        setStatusState(data.status as UserStatusType);
+        setActiveLeadsCount(data.active_leads_count);
       } else {
         // Create initial status record using upsert to avoid race conditions
         await supabase.from('user_status').upsert({
@@ -70,13 +70,13 @@ export function useUserStatus(): UserStatusData {
     if (!profile?.organization_id) return;
 
     const fetchTeam = async () => {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('user_status')
         .select('user_id, status, active_leads_count, updated_at')
         .eq('organization_id', profile.organization_id);
 
-      if (fecha) {
-        setTeamStatuses(fecha as TeamMemberStatus[]);
+      if (data) {
+        setTeamStatuses(data as TeamMemberStatus[]);
       }
     };
 
@@ -150,8 +150,8 @@ export function useUserStatus(): UserStatusData {
     // If going online, process pending queue
     if (newStatus === 'online') {
       try {
-        const { fecha } = await supabase.rpc('process_pending_queue', { p_user_id: user.id });
-        if (fecha && fecha.length > 0) {
+        const { data } = await supabase.rpc('process_pending_queue', { p_user_id: user.id });
+        if (data && data.length > 0) {
           toast.success('🎯 ¡Lead pendiente asignado a vos!', {
             description: 'Um lead da fila fue atribuído automaticamente.',
           });

@@ -24,21 +24,21 @@ function normalizePhoneInput(raw: string): string {
 
 export function AdminExecutiveAgentSettings() {
   const { profile } = useAuth();
-  const { fecha: settings, isLoading } = useAutoNotificationSettings();
+  const { data: settings, isLoading } = useAutoNotificationSettings();
   const saveSettings = useSaveAutoNotificationSettings();
 
   // Lista de admins da org
-  const { fecha: admins } = useQuery({
+  const { data: admins } = useQuery({
     queryKey: ['org-admins', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { fecha: roles } = await supabase
+      const { data: roles } = await supabase
         .from('user_roles')
         .select('user_id')
         .eq('role', 'admin');
       const ids = (roles ?? []).map((r) => r.user_id);
       if (!ids.length) return [];
-      const { fecha: profs } = await supabase
+      const { data: profs } = await supabase
         .from('profiles')
         .select('id, full_name, email')
         .eq('organization_id', profile.organization_id)

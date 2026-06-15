@@ -56,7 +56,7 @@ export function MobileSellerCalendar({ userId, productId }: MobileSellerCalendar
   }, [currentDate]);
 
   // Fetch events
-  const { fecha: events = [], isLoading } = useCalendarEvents({
+  const { data: events = [], isLoading } = useCalendarEvents({
     ...monthRange,
     userId,
     productId,

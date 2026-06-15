@@ -16,7 +16,7 @@ export function useGoogleCalendarConnection() {
     queryFn: async () => {
       if (!user?.id) return null;
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('google_calendar_connections')
         .select('*')
         .eq('user_id', user.id)
@@ -24,7 +24,7 @@ export function useGoogleCalendarConnection() {
         .maybeSingle();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     enabled: !!user?.id,
   });
@@ -35,7 +35,7 @@ export function useGoogleCalendarConnection() {
     queryFn: async () => {
       if (!profile?.organization_id) return null;
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('integration_settings')
         .select('is_configured, settings')
         .eq('organization_id', profile.organization_id)
@@ -44,9 +44,9 @@ export function useGoogleCalendarConnection() {
 
       if (error && error.code !== 'PGRST116') throw error;
       
-      const settings = fecha?.settings as { clientId?: string } | null;
+      const settings = data?.settings as { clientId?: string } | null;
       return {
-        isConfigured: fecha?.is_configured && !!settings?.clientId,
+        isConfigured: data?.is_configured && !!settings?.clientId,
       };
     },
     enabled: !!profile?.organization_id,
@@ -61,7 +61,7 @@ export function useGoogleCalendarConnection() {
 
       const redirectUrl = `${window.location.origin}${window.location.pathname}`;
 
-      const { fecha, error } = await supabase.functions.invoke('google-calendar-auth', {
+      const { data, error } = await supabase.functions.invoke('google-calendar-auth', {
         body: {
           userId: user.id,
           organizationId: profile.organization_id,
@@ -70,10 +70,10 @@ export function useGoogleCalendarConnection() {
       });
 
       if (error) throw error;
-      if (!fecha?.authUrl) throw new Error('Error al generar URL de autorización');
+      if (!data?.authUrl) throw new Error('Error al generar URL de autorización');
 
       // Redirect to Google OAuth
-      window.location.href = fecha.authUrl;
+      window.location.href = data.authUrl;
     },
     onError: (error) => {
       toast.error('Error al conectar: ' + error.message);
@@ -106,23 +106,23 @@ export function useGoogleCalendarConnection() {
     mutationFn: async (direction?: 'import' | 'export' | 'both') => {
       if (!user?.id) throw new Error('Usuario no autenticado');
 
-      const { fecha, error } = await supabase.functions.invoke('google-calendar-sync', {
+      const { data, error } = await supabase.functions.invoke('google-calendar-sync', {
         body: {
           userId: user.id,
-          direction: direction || connectionQuery.fecha?.sync_direction || 'both',
+          direction: direction || connectionQuery.data?.sync_direction || 'both',
         },
       });
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
-    onSuccess: (fecha) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
       queryClient.invalidateQueries({ queryKey: ['google-calendar-connection'] });
       
       const messages = [];
-      if (fecha.imported > 0) messages.push(`${fecha.imported} eventos importados`);
-      if (fecha.exported > 0) messages.push(`${fecha.exported} eventos exportados`);
+      if (data.imported > 0) messages.push(`${data.imported} eventos importados`);
+      if (data.exported > 0) messages.push(`${data.exported} eventos exportados`);
       
       if (messages.length > 0) {
         toast.success(`Sincronización completada: ${messages.join(', ')}`);
@@ -130,8 +130,8 @@ export function useGoogleCalendarConnection() {
         toast.info('No hay eventos nuevos para sincronizar');
       }
 
-      if (fecha.errors?.length > 0) {
-        console.warn('Sync errors:', fecha.errors);
+      if (data.errors?.length > 0) {
+        console.warn('Sync errors:', data.errors);
       }
     },
     onError: (error) => {
@@ -165,10 +165,10 @@ export function useGoogleCalendarConnection() {
   });
 
   return {
-    connection: connectionQuery.fecha,
-    isConnected: !!connectionQuery.fecha?.is_active,
+    connection: connectionQuery.data,
+    isConnected: !!connectionQuery.data?.is_active,
     isLoading: connectionQuery.isLoading,
-    isOAuthConfigured: oauthConfigQuery.fecha?.isConfigured ?? false,
+    isOAuthConfigured: oauthConfigQuery.data?.isConfigured ?? false,
     isCheckingConfig: oauthConfigQuery.isLoading,
     
     connect: connectMutation.mutate,

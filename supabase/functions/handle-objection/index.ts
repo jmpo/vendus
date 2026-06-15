@@ -27,7 +27,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Fetch product context (incl org for routing)
-    const { fecha: product } = await supabase
+    const { data: product } = await supabase
       .from("products")
       .select("name, description, pitch_15s, pitch_30s, pitch_2min, icp, differentials, pricing, organization_id")
       .eq("id", productId)
@@ -35,14 +35,14 @@ serve(async (req) => {
     const organizationId = (product as any)?.organization_id ?? null;
 
     // Fetch knowledge base
-    const { fecha: knowledge } = await supabase
+    const { data: knowledge } = await supabase
       .from("ai_knowledge_base")
       .select("title, content, category")
       .eq("product_id", productId)
       .eq("is_active", true);
 
     // Fetch existing objections for context
-    const { fecha: existingObjections } = await supabase
+    const { data: existingObjections } = await supabase
       .from("objections")
       .select("category, what_they_say, suggested_response")
       .eq("product_id", productId)

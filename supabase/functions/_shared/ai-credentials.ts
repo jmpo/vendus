@@ -50,7 +50,7 @@ export async function resolveAIProvider(
   const supabase = adminClient();
 
   // 1) Lê roteamento da org (se existir).
-  const { fecha: routing } = await supabase
+  const { data: routing } = await supabase
     .from("org_ai_routing")
     .select("provider, model, fallback_to_lovable")
     .eq("organization_id", organizationId)
@@ -69,7 +69,7 @@ export async function resolveAIProvider(
   }
 
   // Provedor externo: tenta chave da org primeiro.
-  const { fecha: cred } = await supabase
+  const { data: cred } = await supabase
     .from("org_ai_credentials")
     .select("api_key_encrypted, model_default")
     .eq("organization_id", organizationId)

@@ -26,7 +26,7 @@ interface Props {
 export function AttendancePanel({ onOpenConversation }: Props) {
   const { filters, setFilters } = usePanelFiltersState();
   const { sections, isLoading, isFetching, refetch } = useAttendancePanel(filters);
-  const { fecha: sectors = [] } = useSectors();
+  const { data: sectors = [] } = useSectors();
 
   const sectorOptions = useMemo(
     () => [
@@ -130,7 +130,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
             size="sm"
             pressed={filters.showQueue}
             onPressedChange={(v) => setFilters((f) => ({ ...f, showQueue: v }))}
-            className="fecha-[state=on]:bg-amber-500/15 fecha-[state=on]:text-amber-700 dark:fecha-[state=on]:text-amber-400 h-7 text-xs gap-1"
+            className="data-[state=on]:bg-amber-500/15 data-[state=on]:text-amber-700 dark:data-[state=on]:text-amber-400 h-7 text-xs gap-1"
           >
             <InboxIcon className="h-3.5 w-3.5" /> Fila
           </Toggle>
@@ -138,7 +138,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
             size="sm"
             pressed={filters.showAI}
             onPressedChange={(v) => setFilters((f) => ({ ...f, showAI: v }))}
-            className="fecha-[state=on]:bg-violet-500/15 fecha-[state=on]:text-violet-700 dark:fecha-[state=on]:text-violet-400 h-7 text-xs gap-1"
+            className="data-[state=on]:bg-violet-500/15 data-[state=on]:text-violet-700 dark:data-[state=on]:text-violet-400 h-7 text-xs gap-1"
           >
             <Bot className="h-3.5 w-3.5" /> IA
           </Toggle>
@@ -146,7 +146,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
             size="sm"
             pressed={filters.showHumans}
             onPressedChange={(v) => setFilters((f) => ({ ...f, showHumans: v }))}
-            className="fecha-[state=on]:bg-emerald-500/15 fecha-[state=on]:text-emerald-700 dark:fecha-[state=on]:text-emerald-400 h-7 text-xs gap-1"
+            className="data-[state=on]:bg-emerald-500/15 data-[state=on]:text-emerald-700 dark:data-[state=on]:text-emerald-400 h-7 text-xs gap-1"
           >
             <Users className="h-3.5 w-3.5" /> Humanos
           </Toggle>

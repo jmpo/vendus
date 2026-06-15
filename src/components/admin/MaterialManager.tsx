@@ -30,18 +30,18 @@ const typeConfig = {
 
 export function MaterialManager() {
   const { profile } = useAuth();
-  const { fecha: products } = useProducts();
+  const { data: products } = useProducts();
   
-  // Usa raw DB query for admin to get full material fecha
-  const { fecha: materials, isLoading } = useQuery({
+  // Usa raw DB query for admin to get full material data
+  const { data: materials, isLoading } = useQuery({
     queryKey: ['materials-admin'],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('materials')
         .select('*')
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return fecha as Material[];
+      return data as Material[];
     },
   });
   

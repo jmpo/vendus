@@ -46,8 +46,8 @@ export function SquadManager() {
     icon_url: undefined
   });
 
-  const { fecha: squads, isLoading } = useSquads();
-  const { fecha: products } = useProducts();
+  const { data: squads, isLoading } = useSquads();
+  const { data: products } = useProducts();
   const { profile } = useAuth();
   const createSquad = useCreateSquad();
   const updateSquad = useUpdateSquad();

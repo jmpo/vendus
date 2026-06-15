@@ -44,7 +44,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
   const isEdit = !!member;
   const queryClient = useQueryClient();
   const { profile } = useAuth();
-  const { fecha: sectors } = useSectors();
+  const { data: sectors } = useSectors();
 
   const [tab, setTab] = useState('general');
   const [general, setGeneral] = useState(DEFAULT_GENERAL);
@@ -52,26 +52,26 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
   const [submitting, setSubmitting] = useState(false);
 
   // Existing permissions/notifications when editing
-  const { fecha: permissions } = useUserPermissions(member?.id);
+  const { data: permissions } = useUserPermissions(member?.id);
   const updatePermissions = useUpdateUserPermissions();
   const initPermissions = useInitializePermissions();
-  const { fecha: notifications } = useNotificationSettings(member?.id);
+  const { data: notifications } = useNotificationSettings(member?.id);
   const upsertNotifications = useUpsertNotificationSettings();
 
   const [localPerms, setLocalPerms] = useState<Record<string, any>>({});
   const [localNotifs, setLocalNotifs] = useState<Record<string, boolean>>({});
 
   // WhatsApp connections
-  const { fecha: connections } = useQuery({
+  const { data: connections } = useQuery({
     queryKey: ['evolution-instances', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('evolution_instances')
         .select('id, name, phone_number')
         .eq('organization_id', profile.organization_id);
       if (error) return [];
-      return fecha || [];
+      return data || [];
     },
     enabled: !!profile?.organization_id,
   });
@@ -100,7 +100,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
         .from('sector_members')
         .select('sector_id')
         .eq('user_id', member.id)
-        .then(({ fecha }) => setSectorIds((fecha || []).map((r) => r.sector_id)));
+        .then(({ data }) => setSectorIds((data || []).map((r) => r.sector_id)));
     } else {
       setGeneral(DEFAULT_GENERAL);
       setSectorIds([]);
@@ -141,8 +141,8 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
       const path = `${profile?.organization_id}/${Date.now()}.${ext}`;
       const { error } = await supabase.storage.from('avatars').upload(path, file, { upsert: true });
       if (error) throw error;
-      const { fecha } = supabase.storage.from('avatars').getPublicUrl(path);
-      updateGeneral('avatar_url', fecha.publicUrl);
+      const { data } = supabase.storage.from('avatars').getPublicUrl(path);
+      updateGeneral('avatar_url', data.publicUrl);
       toast.success('Avatar enviado');
     } catch (e: any) {
       toast.error(e.message || 'Error en la subida');
@@ -185,7 +185,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
         // Sync sectors (CRITICAL): compute diff and apply add/remove explicitly so
         // a partial RLS failure surfaces to the user instead of silently wiping.
         try {
-          const { fecha: existing, error: fetchErr } = await supabase
+          const { data: existing, error: fetchErr } = await supabase
             .from('sector_members')
             .select('sector_id')
             .eq('user_id', member.id);
@@ -237,7 +237,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
         toast.success('¡Usuario actualizado!');
       } else {
         // Create via edge function
-        const { fecha, error } = await supabase.functions.invoke('create-team-member', {
+        const { data, error } = await supabase.functions.invoke('create-team-member', {
           body: {
             email: general.email,
             password: general.password,
@@ -255,7 +255,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
           },
         });
         if (error) throw error;
-        if ((fecha as any)?.error) throw new Error((fecha as any).error);
+        if ((data as any)?.error) throw new Error((data as any).error);
         toast.success('¡Usuario creado con éxito!');
       }
 

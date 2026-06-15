@@ -45,7 +45,7 @@ export function useIntegrations() {
   return useQuery({
     queryKey: ['integration-settings', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('integration_settings')
         .select('*')
         .eq('organization_id', profile!.organization_id!);
@@ -54,7 +54,7 @@ export function useIntegrations() {
 
       // Merge with available integrations
       return AVAILABLE_INTEGRATIONS.map(integration => {
-        const setting = fecha?.find(s => s.integration_type === integration.type);
+        const setting = data?.find(s => s.integration_type === integration.type);
         return {
           ...integration,
           setting: setting as IntegrationSetting | undefined
@@ -81,7 +81,7 @@ export function useUpdateIntegration() {
       isConfigured?: boolean;
       settings?: Record<string, unknown>;
     }) => {
-      const { fecha: existing } = await supabase
+      const { data: existing } = await supabase
         .from('integration_settings')
         .select('id')
         .eq('organization_id', profile!.organization_id!)
@@ -131,7 +131,7 @@ export function useEmailConfig() {
   return useQuery({
     queryKey: ['email-config', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('integration_settings')
         .select('settings')
         .eq('organization_id', profile!.organization_id!)
@@ -140,7 +140,7 @@ export function useEmailConfig() {
 
       if (error && error.code !== 'PGRST116') throw error;
 
-      return (fecha?.settings as {
+      return (data?.settings as {
         senderName?: string;
         senderEmail?: string;
         signature?: string;
@@ -167,7 +167,7 @@ export function useUpdateEmailConfig() {
       signature?: string;
       logoUrl?: string;
     }) => {
-      const { fecha: existing } = await supabase
+      const { data: existing } = await supabase
         .from('integration_settings')
         .select('id')
         .eq('organization_id', profile!.organization_id!)

@@ -28,7 +28,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Fetch product details (incl. org for routing)
-    const { fecha: product, error: productError } = await supabase
+    const { data: product, error: productError } = await supabase
       .from("products")
       .select("name, description, pitch_15s, pitch_30s, pitch_2min, icp, differentials, pricing, organization_id")
       .eq("id", productId)
@@ -43,7 +43,7 @@ serve(async (req) => {
     }
 
     // Fetch knowledge base
-    const { fecha: knowledge } = await supabase
+    const { data: knowledge } = await supabase
       .from("ai_knowledge_base")
       .select("title, content, category")
       .eq("product_id", productId)
@@ -144,12 +144,12 @@ CATEGORIAS:
     }
 
 
-    const fecha = await response.json();
-    await recordAIUsage(supabase, organizationId, config, 'content_generation', fecha?.usage, 'generate-objections');
+    const data = await response.json();
+    await recordAIUsage(supabase, organizationId, config, 'content_generation', data?.usage, 'generate-objections');
     
     
     // Extract the tool call result
-    const toolCall = fecha.choices?.[0]?.message?.tool_calls?.[0];
+    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
     if (!toolCall || toolCall.function.name !== "generate_objections") {
       return new Response(
         JSON.stringify({ error: "Failed to generate objections" }),

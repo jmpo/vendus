@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
   }
 
   // 1) Carrega o pedido
-  const { fecha: order, error: orderErr } = await supabase
+  const { data: order, error: orderErr } = await supabase
     .from('cakto_orders')
     .select(
       'id, organization_id, cakto_id, status, amount, product_id, product_name, customer_name, customer_email, customer_phone, payment_method, pix_code, checkout_url, items',
@@ -108,7 +108,7 @@ Deno.serve(async (req) => {
   }
 
   // 2) Config da org
-  const { fecha: config } = await supabase
+  const { data: config } = await supabase
     .from('cakto_recovery_config')
     .select('*')
     .eq('organization_id', organization_id)
@@ -151,7 +151,7 @@ Deno.serve(async (req) => {
   // 3) Localiza lead pelo teléfono ou email (cria se no existir)
   let leadId: string | null = null;
   {
-    const { fecha: existing } = await supabase
+    const { data: existing } = await supabase
       .from('leads')
       .select('id')
       .eq('organization_id', organization_id)
@@ -168,7 +168,7 @@ Deno.serve(async (req) => {
   }
 
   if (!leadId) {
-    const { fecha: created } = await supabase
+    const { data: created } = await supabase
       .from('leads')
       .insert({
         organization_id,
@@ -191,7 +191,7 @@ Deno.serve(async (req) => {
 
   // 4) Cooldown: já disparou esse evento pra esse lead recentemente?
   const cooldownAt = new Date(Date.now() - config.cooldown_minutes * 60_000).toISOString();
-  const { fecha: recent } = await supabase
+  const { data: recent } = await supabase
     .from('cakto_recovery_dispatches')
     .select('id')
     .eq('lead_id', leadId)
@@ -214,7 +214,7 @@ Deno.serve(async (req) => {
   }
 
   // 5) Agente
-  const { fecha: agent } = await supabase
+  const { data: agent } = await supabase
     .from('product_agents')
     .select('*')
     .eq('id', config.recovery_agent_id)
@@ -225,7 +225,7 @@ Deno.serve(async (req) => {
   }
 
   // Conhecimento (limitado pra no estourar contexto)
-  const { fecha: knowledgeSources } = await supabase
+  const { data: knowledgeSources } = await supabase
     .from('ai_knowledge_base')
     .select('title, content, category')
     .eq('product_id', agent.product_id)
@@ -237,7 +237,7 @@ Deno.serve(async (req) => {
     .join('\n\n');
 
   // 5b) Carrega cenários pós-venta configurados pra esse evento
-  const { fecha: scenariosRaw } = await supabase
+  const { data: scenariosRaw } = await supabase
     .from('agent_post_sale_scenarios')
     .select('name, instruction, links, tags_to_apply, filters, priority')
     .eq('organization_id', organization_id)
@@ -388,7 +388,7 @@ REGRAS DA MENSAGEM INICIAL:
   let sent = false;
   let sendError: string | null = null;
   try {
-    const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+    const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
       body: {
         organization_id,
         type: 'text',
@@ -421,7 +421,7 @@ REGRAS DA MENSAGEM INICIAL:
 
   // 9) Cria/garante a conversación para o webchat-bot continuar conduzindo
   let conversationId: string | null = null;
-  const { fecha: existingConv } = await supabase
+  const { data: existingConv } = await supabase
     .from('webchat_conversations')
     .select('id')
     .eq('lead_id', leadId)
@@ -441,7 +441,7 @@ REGRAS DA MENSAGEM INICIAL:
       })
       .eq('id', conversationId);
   } else {
-    const { fecha: created } = await supabase
+    const { data: created } = await supabase
       .from('webchat_conversations')
       .insert({
         organization_id,
@@ -477,7 +477,7 @@ REGRAS DA MENSAGEM INICIAL:
     try {
       for (const tagName of scenarioTagsToApply) {
         // Garante que a tag exista (busca ou cria)
-        const { fecha: existingTag } = await supabase
+        const { data: existingTag } = await supabase
           .from('lead_tags')
           .select('id')
           .eq('organization_id', organization_id)
@@ -486,7 +486,7 @@ REGRAS DA MENSAGEM INICIAL:
 
         let tagId = existingTag?.id;
         if (!tagId) {
-          const { fecha: createdTag } = await supabase
+          const { data: createdTag } = await supabase
             .from('lead_tags')
             .insert({ organization_id, name: tagName, color: '#3b82f6' })
             .select('id')

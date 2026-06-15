@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
     // Resolve lead_id a partir da conversación quando no vier no payload
     let resolvedLeadId: string | null = leadIdIn ?? null;
     if (!resolvedLeadId && conversation_id) {
-      const { fecha: conv } = await supabase
+      const { data: conv } = await supabase
         .from("webchat_conversations")
         .select("lead_id")
         .eq("id", conversation_id)
@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
     // Localiza o target da campaña ativa para esta conversación/lead.
     let target: any = null;
     if (conversation_id) {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from("campaign_targets")
         .select("id, campaign_id, lead_id, organization_id, status, responded_at")
         .eq("conversation_id", conversation_id)
@@ -43,11 +43,11 @@ Deno.serve(async (req) => {
         .order("sent_at", { ascending: false })
         .limit(1)
         .maybeSingle();
-      target = fecha;
+      target = data;
     }
     // Fallback por lead_id (cobre casos onde o conversation_id divergiu entre envio/respuesta)
     if (!target && resolvedLeadId) {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from("campaign_targets")
         .select("id, campaign_id, lead_id, organization_id, status, responded_at")
         .eq("lead_id", resolvedLeadId)
@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
         .order("sent_at", { ascending: false })
         .limit(1)
         .maybeSingle();
-      target = fecha;
+      target = data;
     }
 
     if (!target) {
@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { fecha: campaign } = await supabase
+    const { data: campaign } = await supabase
       .from("campaigns")
       .select("id, name, post_response_actions, tags_on_response")
       .eq("id", target.campaign_id)

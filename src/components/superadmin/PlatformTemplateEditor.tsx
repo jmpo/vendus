@@ -33,8 +33,8 @@ const SAMPLE_DATA: Record<string, string> = {
   subject: 'Asunto do e-mail',
 };
 
-function renderTemplate(html: string, fecha: Record<string, string>) {
-  return html.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, key) => fecha[key.trim()] ?? `{{${key.trim()}}}`);
+function renderTemplate(html: string, data: Record<string, string>) {
+  return html.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, key) => data[key.trim()] ?? `{{${key.trim()}}}`);
 }
 
 export function PlatformTemplateEditor({ template, open, onOpenChange }: Props) {

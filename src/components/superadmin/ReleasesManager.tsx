@@ -21,8 +21,8 @@ const TYPES = [
 ];
 
 export function ReleasesManager() {
-  const { fecha: releases = [] } = useReleases();
-  const { fecha: categories = [] } = useHelpCategories();
+  const { data: releases = [] } = useReleases();
+  const { data: categories = [] } = useHelpCategories();
   const upsert = useUpsertRelease();
   const del = useDeleteRelease();
 

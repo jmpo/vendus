@@ -42,7 +42,7 @@ const SOURCE_ICONS: Record<string, React.ElementType> = {
   website: Globe,
   youtube: Youtube,
   faq: MessageSquare,
-  fecha: Database,
+  data: Database,
   training: Sparkles,
 };
 
@@ -51,7 +51,7 @@ const SOURCE_COLORS: Record<string, string> = {
   website: 'text-green-500 bg-green-500/10',
   youtube: 'text-red-500 bg-red-500/10',
   faq: 'text-purple-500 bg-purple-500/10',
-  fecha: 'text-orange-500 bg-orange-500/10',
+  data: 'text-orange-500 bg-orange-500/10',
   training: 'text-primary bg-primary/10',
 };
 

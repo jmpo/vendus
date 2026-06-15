@@ -7,7 +7,7 @@ import { ptBR } from 'date-fns/locale';
 import { Eye, Clock, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 
 export function RadarHistory({ onSelect }: { onSelect: (id: string) => void }) {
-  const { fecha: scans, isLoading } = useOpportunityScans();
+  const { data: scans, isLoading } = useOpportunityScans();
 
   if (isLoading) {
     return (

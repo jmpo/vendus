@@ -74,9 +74,9 @@ export function useCommissionRules(productId?: string) {
         query = query.eq('product_id', productId);
       }
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return fecha as unknown as CommissionRule[];
+      return data as unknown as CommissionRule[];
     }
   });
 }
@@ -86,14 +86,14 @@ export function useCreateCommissionRule() {
 
   return useMutation({
     mutationFn: async (rule: Omit<CommissionRule, 'id' | 'created_at' | 'updated_at' | 'profiles' | 'products'>) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('commission_rules')
         .insert(rule)
         .select()
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['commission-rules'] });
@@ -106,7 +106,7 @@ export function useUpdateCommissionRule() {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<CommissionRule> & { id: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('commission_rules')
         .update(updates)
         .eq('id', id)
@@ -114,7 +114,7 @@ export function useUpdateCommissionRule() {
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['commission-rules'] });
@@ -163,9 +163,9 @@ export function useCommissions(filters?: { userId?: string; productId?: string; 
         query = query.eq('status', filters.status);
       }
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return fecha as unknown as Commission[];
+      return data as unknown as Commission[];
     }
   });
 }
@@ -185,7 +185,7 @@ export function useCommissionsSummary(userId?: string, productId?: string) {
         query = query.eq('product_id', productId);
       }
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
 
       const summary = {
@@ -195,7 +195,7 @@ export function useCommissionsSummary(userId?: string, productId?: string) {
         total: 0
       };
 
-      fecha?.forEach(c => {
+      data?.forEach(c => {
         summary[c.status as keyof typeof summary] += Number(c.amount);
         summary.total += Number(c.amount);
       });
@@ -211,7 +211,7 @@ export function useApproveCommission() {
 
   return useMutation({
     mutationFn: async (commissionId: string) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('commissions')
         .update({
           status: 'approved',
@@ -223,7 +223,7 @@ export function useApproveCommission() {
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['commissions'] });
@@ -238,7 +238,7 @@ export function useMarkCommissionPaid() {
 
   return useMutation({
     mutationFn: async (commissionId: string) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('commissions')
         .update({
           status: 'paid',
@@ -250,7 +250,7 @@ export function useMarkCommissionPaid() {
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['commissions'] });

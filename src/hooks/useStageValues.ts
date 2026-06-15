@@ -23,7 +23,7 @@ export function useStageValues(productId: string) {
   return useQuery({
     queryKey: ['stage-values', productId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('stage_values')
         .select(`
           *,
@@ -33,7 +33,7 @@ export function useStageValues(productId: string) {
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      return fecha as StageValue[];
+      return data as StageValue[];
     },
     enabled: !!productId
   });
@@ -44,14 +44,14 @@ export function useUpsertStageValue() {
 
   return useMutation({
     mutationFn: async (stageValue: Omit<StageValue, 'id' | 'created_at' | 'updated_at' | 'pipeline_stages'> & { id?: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('stage_values')
         .upsert(stageValue, { onConflict: 'stage_id' })
         .select()
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['stage-values', variables.product_id] });
@@ -65,7 +65,7 @@ export function usePipelineFinancialSummary(productId: string, sellerId?: string
     queryKey: ['pipeline-financial-summary', productId, sellerId],
     queryFn: async () => {
       // Buscar stages com valores
-      const { fecha: stageValues, error: stageError } = await supabase
+      const { data: stageValues, error: stageError } = await supabase
         .from('stage_values')
         .select(`
           *,
@@ -85,7 +85,7 @@ export function usePipelineFinancialSummary(productId: string, sellerId?: string
         leadsQuery = leadsQuery.eq('assigned_to', sellerId);
       }
 
-      const { fecha: leads, error: leadsError } = await leadsQuery;
+      const { data: leads, error: leadsError } = await leadsQuery;
       if (leadsError) throw leadsError;
 
       // Calcular resumen por etapa

@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    const { fecha, error } = await admin
+    const { data, error } = await admin
       .from("user_roles")
       .select("user_id")
       .eq("role", "super_admin")
@@ -25,7 +25,7 @@ Deno.serve(async (req) => {
     if (error) throw error;
 
     return new Response(
-      JSON.stringify({ hasSuperAdmin: (fecha?.length ?? 0) > 0 }),
+      JSON.stringify({ hasSuperAdmin: (data?.length ?? 0) > 0 }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (err) {

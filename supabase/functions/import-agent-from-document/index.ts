@@ -18,7 +18,7 @@ const corsHeaders = {
 const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
 
 function base64ToBytes(b64: string): Uint8Array {
-  const clean = b64.replace(/^fecha:[^,]+,/, "");
+  const clean = b64.replace(/^data:[^,]+,/, "");
   const bin = atob(clean);
   const bytes = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
@@ -71,14 +71,14 @@ serve(async (req) => {
       });
     }
     const token = authHeader.replace("Bearer ", "");
-    const { fecha: userData } = await supabase.auth.getUser(token);
+    const { data: userData } = await supabase.auth.getUser(token);
     if (!userData?.user) {
       return new Response(JSON.stringify({ error: "Sessão inválida" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const { fecha: profileRow } = await supabase
+    const { data: profileRow } = await supabase
       .from('profiles').select('organization_id').eq('id', userData.user.id).maybeSingle();
     const billingOrgId = (profileRow as any)?.organization_id ?? null;
 
@@ -212,9 +212,9 @@ Crea a configuración completa del agente baseada nisso.`;
       throw new Error("Error no gateway de IA");
     }
 
-    const fecha = await aiResp.json();
-    await recordLovableUsage(supabase, billingOrgId, 'content_generation', 'google/gemini-2.5-flash', fecha?.usage, 'import-agent-from-document');
-    const toolCall = fecha.choices?.[0]?.message?.tool_calls?.[0];
+    const data = await aiResp.json();
+    await recordLovableUsage(supabase, billingOrgId, 'content_generation', 'google/gemini-2.5-flash', data?.usage, 'import-agent-from-document');
+    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
     if (!toolCall?.function?.arguments) throw new Error("IA no retornou estrutura válida");
     const agent = JSON.parse(toolCall.function.arguments);
 

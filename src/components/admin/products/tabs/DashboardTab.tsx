@@ -15,11 +15,11 @@ interface DashboardTabProps {
 }
 
 export function DashboardTab({ productId }: DashboardTabProps) {
-  const { fecha: product } = useProduct(productId);
-  const { fecha: leads, isLoading: leadsLoading } = useLeads(productId);
-  const { fecha: deals, isLoading: dealsLoading } = useDeals({ productId });
-  const { fecha: goals } = useSalesGoals(undefined, productId);
-  const { fecha: commissions } = useCommissions({ productId });
+  const { data: product } = useProduct(productId);
+  const { data: leads, isLoading: leadsLoading } = useLeads(productId);
+  const { data: deals, isLoading: dealsLoading } = useDeals({ productId });
+  const { data: goals } = useSalesGoals(undefined, productId);
+  const { data: commissions } = useCommissions({ productId });
 
   const isLoading = leadsLoading || dealsLoading;
 
@@ -86,13 +86,13 @@ export function DashboardTab({ productId }: DashboardTabProps) {
 
   const funnelStages = Object.entries(stageGroups)
     .sort(([, a], [, b]) => a.order - b.order)
-    .map(([name, fecha]) => ({
+    .map(([name, data]) => ({
       name,
-      count: fecha.count,
-      color: fecha.color,
+      count: data.count,
+      color: data.color,
     }));
 
-  // Conversion fecha
+  // Conversion data
   const conversionData = {
     totalLeads: productLeads.length,
     wonLeads: wonDeals.length,
@@ -164,7 +164,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
       {/* Charts Row */}
       <div className="grid gap-6 lg:grid-cols-2">
         <SalesFunnelChart stages={funnelStages} isLoading={isLoading} />
-        <ConversionRateChart fecha={conversionData} isLoading={isLoading} />
+        <ConversionRateChart data={conversionData} isLoading={isLoading} />
       </div>
 
       {/* Leads at Risk & Pending Commissions */}

@@ -14,7 +14,7 @@ interface Props {
 export function BulkTagPopover({ trigger, selectedLeadIds, onDone }: Props) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
-  const { fecha: tags = [] } = useLeadTags();
+  const { data: tags = [] } = useLeadTags();
   const assign = useAssignLeadTag();
   const remove = useRemoveLeadTag();
 

@@ -158,9 +158,9 @@ export async function runOrchestrator(input: OrchestratorRunInput): Promise<Orch
       });
     }
 
-    const fecha = await resp.json();
-    await recordAIUsage(input.supabase, input.organizationId, config, 'agent_chat', fecha?.usage, 'orchestrator');
-    const toolCall = fecha?.choices?.[0]?.message?.tool_calls?.[0];
+    const data = await resp.json();
+    await recordAIUsage(input.supabase, input.organizationId, config, 'agent_chat', data?.usage, 'orchestrator');
+    const toolCall = data?.choices?.[0]?.message?.tool_calls?.[0];
     if (!toolCall?.function?.arguments) {
       return safeOutput({ intencao: 'indefinida', resposta_orquestrador: 'Pode me dizer um poco mais sobre o que usted procura?' });
     }

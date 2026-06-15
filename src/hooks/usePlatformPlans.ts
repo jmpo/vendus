@@ -66,12 +66,12 @@ export function useAllPlans() {
   return useQuery({
     queryKey: ['platform-plans'],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('platform_plans')
         .select('*')
         .order('display_order', { ascending: true });
       if (error) throw error;
-      return (fecha || []) as PlatformPlan[];
+      return (data || []) as PlatformPlan[];
     },
   });
 }
@@ -80,13 +80,13 @@ export function useActivePlans() {
   return useQuery({
     queryKey: ['platform-plans', 'active'],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('platform_plans')
         .select('*')
         .eq('is_active', true)
         .order('display_order', { ascending: true });
       if (error) throw error;
-      return (fecha || []) as PlatformPlan[];
+      return (data || []) as PlatformPlan[];
     },
   });
 }
@@ -96,13 +96,13 @@ export function usePlan(id?: string | null) {
     queryKey: ['platform-plan', id],
     queryFn: async () => {
       if (!id) return null;
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('platform_plans')
         .select('*')
         .eq('id', id)
         .maybeSingle();
       if (error) throw error;
-      return fecha as PlatformPlan | null;
+      return data as PlatformPlan | null;
     },
     enabled: !!id,
   });
@@ -112,12 +112,12 @@ export function usePlanUsageCounts() {
   return useQuery({
     queryKey: ['platform-plans', 'usage'],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('organizations')
         .select('plan_id');
       if (error) throw error;
       const counts: Record<string, number> = {};
-      (fecha || []).forEach((row: any) => {
+      (data || []).forEach((row: any) => {
         if (row.plan_id) counts[row.plan_id] = (counts[row.plan_id] || 0) + 1;
       });
       return counts;
@@ -129,13 +129,13 @@ export function useCreatePlan() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (plan: PlatformPlanInput) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('platform_plans')
         .insert(plan as any)
         .select()
         .single();
       if (error) throw error;
-      return fecha as PlatformPlan;
+      return data as PlatformPlan;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['platform-plans'] });
@@ -147,14 +147,14 @@ export function useUpdatePlan() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, ...updates }: PlatformPlanInput & { id: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('platform_plans')
         .update(updates as any)
         .eq('id', id)
         .select()
         .single();
       if (error) throw error;
-      return fecha as PlatformPlan;
+      return data as PlatformPlan;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['platform-plans'] });

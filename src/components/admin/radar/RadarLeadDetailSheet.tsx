@@ -24,31 +24,31 @@ interface Props {
 }
 
 export function RadarLeadDetailSheet({ item, open, onOpenChange, onOpenConversation }: Props) {
-  const { fecha: messages, isLoading: loadingMsgs } = useQuery({
+  const { data: messages, isLoading: loadingMsgs } = useQuery({
     queryKey: ['radar-conv-preview', item?.conversation_id],
     queryFn: async () => {
       if (!item?.conversation_id) return [];
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('webchat_messages')
         .select('id, direction, content, created_at')
         .eq('conversation_id', item.conversation_id)
         .order('created_at', { ascending: false })
         .limit(10);
-      return (fecha || []).reverse();
+      return (data || []).reverse();
     },
     enabled: !!item?.conversation_id && open,
   });
 
-  const { fecha: lead } = useQuery({
+  const { data: lead } = useQuery({
     queryKey: ['radar-lead-extra', item?.lead_id],
     queryFn: async () => {
       if (!item?.lead_id) return null;
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('leads')
         .select('id, name, phone, email, temperature, deal_value, assigned_to, sector_id, product_id, created_at')
         .eq('id', item.lead_id)
         .maybeSingle();
-      return fecha;
+      return data;
     },
     enabled: !!item?.lead_id && open,
   });

@@ -48,9 +48,9 @@ export function useObjections(productId?: string) {
         query = query.eq('product_id', productId);
       }
       
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return transformObjections(fecha || []);
+      return transformObjections(data || []);
     },
   });
 }

@@ -27,14 +27,14 @@ export function useSuperAdminFirstAccess() {
       ]);
       if (settingsRes.error) throw settingsRes.error;
       return {
-        settings: settingsRes.fecha as { default_password_changed?: boolean; remix_setup_completed?: boolean } | null,
+        settings: settingsRes.data as { default_password_changed?: boolean; remix_setup_completed?: boolean } | null,
         orgCount: orgsRes.count ?? 0,
       };
     },
   });
 
   const usingDefaultEmail = !!user?.email && DEFAULT_EMAILS.includes(user.email.toLowerCase());
-  const settings = query.fecha?.settings ?? null;
+  const settings = query.data?.settings ?? null;
   // Se a query terminou e no há registro em platform_settings, força o wizard
   // (cenário de remix novo dónde a tabela aún está vazia).
   const noSettingsRow = !query.isLoading && !query.isError && settings == null;
@@ -45,7 +45,7 @@ export function useSuperAdminFirstAccess() {
   // Gatilho extra: sem ninguna organización cadastrada, a plataforma aún
   // no fue configurada — força o wizard mismo que platform_settings esteja "completo".
   const noOrganizations =
-    !query.isLoading && !query.isError && (query.fecha?.orgCount ?? 0) === 0;
+    !query.isLoading && !query.isError && (query.data?.orgCount ?? 0) === 0;
 
   // Wizard abre enquanto a configuración inicial (contraseña + obligatorios) no estiver concluída.
   const shouldForceSetup =

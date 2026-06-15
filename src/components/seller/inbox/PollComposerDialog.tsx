@@ -8,7 +8,7 @@ import { Plus, X } from 'lucide-react';
 interface PollComposerDialogProps {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  onConfirm: (fecha: { question: string; options: string[] }) => void;
+  onConfirm: (data: { question: string; options: string[] }) => void;
 }
 
 export function PollComposerDialog({ open, onOpenChange, onConfirm }: PollComposerDialogProps) {

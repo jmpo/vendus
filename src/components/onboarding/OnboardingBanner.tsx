@@ -27,7 +27,7 @@ export function OnboardingBanner() {
             setOpenWizard(false);
           }}
           onSkipAll={() => {
-            // No marca como pulado permanentemente — apenas fecha o wizard.
+            // No marca como pulado permanentemente — apenas data o wizard.
             // A tarja continuará aparecendo até a conclusão definitiva.
             setOpenWizard(false);
           }}

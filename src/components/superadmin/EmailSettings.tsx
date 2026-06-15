@@ -33,8 +33,8 @@ const CATEGORY_META: Record<string, { label: string; icon: React.ComponentType<a
 };
 
 export function EmailSettings() {
-  const { fecha: settings, isLoading } = usePlatformEmailSettings();
-  const { fecha: templates, isLoading: loadingTemplates } = usePlatformTemplates();
+  const { data: settings, isLoading } = usePlatformEmailSettings();
+  const { data: templates, isLoading: loadingTemplates } = usePlatformTemplates();
   const updateSettings = useUpdatePlatformEmailSettings();
   const createAuditLog = useCreateAuditLog();
 

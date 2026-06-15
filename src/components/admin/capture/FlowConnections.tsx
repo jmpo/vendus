@@ -66,7 +66,7 @@ function calculateBezierPath(
 
 // Calculate the Y position of the nth option dot on a buttons block
 function getOptionDotY(block: FunnelBlock, optionIndex: number): number {
-  const totalOptions = block.fecha.options?.length || 1;
+  const totalOptions = block.data.options?.length || 1;
   const dotSpacing = 22; // matches gap-1.5 + h-4
   const totalHeight = (totalOptions - 1) * dotSpacing;
   const centerY = block.position.y + NODE_HEIGHT / 2;
@@ -131,8 +131,8 @@ export const FlowConnections = memo(function FlowConnections({
       
       // Condition true/false branches
       if (block.type === 'condition') {
-        if (block.fecha.true_next_block_id) {
-          const trueTarget = blocks.find(b => b.id === block.fecha.true_next_block_id);
+        if (block.data.true_next_block_id) {
+          const trueTarget = blocks.find(b => b.id === block.data.true_next_block_id);
           if (trueTarget) {
             result.push({
               sourceId: block.id,
@@ -153,8 +153,8 @@ export const FlowConnections = memo(function FlowConnections({
             });
           }
         }
-        if (block.fecha.false_next_block_id) {
-          const falseTarget = blocks.find(b => b.id === block.fecha.false_next_block_id);
+        if (block.data.false_next_block_id) {
+          const falseTarget = blocks.find(b => b.id === block.data.false_next_block_id);
           if (falseTarget) {
             result.push({
               sourceId: block.id,
@@ -178,8 +178,8 @@ export const FlowConnections = memo(function FlowConnections({
       }
       
       // AI Decide outputs
-      if (block.type === 'ai_decide' && block.fecha.ai_outputs) {
-        block.fecha.ai_outputs.forEach((output, index) => {
+      if (block.type === 'ai_decide' && block.data.ai_outputs) {
+        block.data.ai_outputs.forEach((output, index) => {
           if (output.next_block_id) {
             const target = blocks.find(b => b.id === output.next_block_id);
             if (target) {
@@ -207,8 +207,8 @@ export const FlowConnections = memo(function FlowConnections({
       }
       
       // Button options
-      if (block.type === 'buttons' && block.fecha.options) {
-        block.fecha.options.forEach((option, index) => {
+      if (block.type === 'buttons' && block.data.options) {
+        block.data.options.forEach((option, index) => {
           if (option.next_block_id) {
             const target = blocks.find(b => b.id === option.next_block_id);
             if (target) {

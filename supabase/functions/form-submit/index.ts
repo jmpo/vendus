@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
       v === undefined || v === null || v === '' || (Array.isArray(v) && v.length === 0);
 
     // 1. Fetch form with product
-    const { fecha: form, error: formError } = await supabase
+    const { data: form, error: formError } = await supabase
       .from('forms')
       .select('*, products(*)')
       .eq('id', form_id)
@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
     }
 
     // 2. Fetch form blocks for scoring and mapping
-    const { fecha: blocks } = await supabase
+    const { data: blocks } = await supabase
       .from('form_blocks')
       .select('*')
       .eq('form_id', form_id)
@@ -258,7 +258,7 @@ Deno.serve(async (req) => {
     // Resolve legacy tag names → IDs (lookup or create within org)
     if (legacyTagNames.length > 0) {
       const uniq = Array.from(new Set(legacyTagNames.map((t) => t.trim()).filter(Boolean)));
-      const { fecha: existing } = await supabase
+      const { data: existing } = await supabase
         .from('lead_tags')
         .select('id, name')
         .eq('organization_id', form.organization_id)
@@ -269,7 +269,7 @@ Deno.serve(async (req) => {
         if (id) {
           addTagIds.add(id);
         } else {
-          const { fecha: created } = await supabase
+          const { data: created } = await supabase
             .from('lead_tags')
             .insert({ organization_id: form.organization_id, name, color: '#6B7280' })
             .select('id')
@@ -360,14 +360,14 @@ Deno.serve(async (req) => {
 
     // Resolve open_calendar -> /agendar/<userSlug>/<eventSlug>?name=...&email=...&phone=...
     if (openCalendarAction) {
-      const { fecha: et } = await supabase
+      const { data: et } = await supabase
         .from('booking_event_types')
         .select('id, slug, user_id, organization_id')
         .eq('id', openCalendarAction.event_type_id)
         .eq('organization_id', form.organization_id)
         .maybeSingle();
       if (et?.user_id) {
-        const { fecha: prof } = await supabase
+        const { data: prof } = await supabase
           .from('profiles')
           .select('booking_slug')
           .eq('id', et.user_id)
@@ -434,7 +434,7 @@ Deno.serve(async (req) => {
     }
 
     // 5. Get first pipeline stage as fallback
-    const { fecha: firstStage } = await supabase
+    const { data: firstStage } = await supabase
       .from('pipeline_stages')
       .select('id')
       .eq('product_id', form.product_id)
@@ -471,7 +471,7 @@ Deno.serve(async (req) => {
         if (phoneSuffix) orClauses.push(`phone.ilike.%${phoneSuffix}%`);
         query = query.or(orClauses.join(','));
 
-        const { fecha: found } = await query;
+        const { data: found } = await query;
         // Confirm phone match by comparing digit-only strings
         existingLead = (found || []).find((l: any) => {
           if (leadData.email && l.email && l.email.toLowerCase() === leadData.email.toLowerCase()) return true;
@@ -511,7 +511,7 @@ Deno.serve(async (req) => {
         if (actionCloserId) patch.closer_id = actionCloserId;
         if (actionSectorId) patch.sector_id = actionSectorId;
 
-        const { fecha: updated, error: updateError } = await supabase
+        const { data: updated, error: updateError } = await supabase
           .from('leads')
           .update(patch)
           .eq('id', existingLead.id)
@@ -520,7 +520,7 @@ Deno.serve(async (req) => {
         if (updateError) console.error('Error updating lead:', updateError);
         leadId = (updated?.id as string) || existingLead.id;
       } else {
-        const { fecha: lead, error: leadError } = await supabase
+        const { data: lead, error: leadError } = await supabase
           .from('leads')
           .insert({
             organization_id: form.organization_id,
@@ -567,7 +567,7 @@ Deno.serve(async (req) => {
             await supabase.rpc('jsonb_merge_lead_metadata', { p_lead_id: leadId, p_patch: { assigned_agent_id: actionAgentId } });
           } catch {
             // Fallback: read-modify-write
-            const { fecha: cur } = await supabase.from('leads').select('metadata').eq('id', leadId).maybeSingle();
+            const { data: cur } = await supabase.from('leads').select('metadata').eq('id', leadId).maybeSingle();
             const md = (cur?.metadata as Record<string, unknown>) || {};
             await supabase.from('leads').update({ metadata: { ...md, assigned_agent_id: actionAgentId } }).eq('id', leadId);
           }
@@ -596,7 +596,7 @@ Deno.serve(async (req) => {
         // Auto Dispatch only on brand-new leads without assignee
         if (!existingLead && useAutoDispatch && squad_id) {
           try {
-            const { fecha: assignedUserId } = await supabase.rpc('distribute_lead', {
+            const { data: assignedUserId } = await supabase.rpc('distribute_lead', {
               p_lead_id: leadId,
               p_squad_id: squad_id,
               p_organization_id: form.organization_id,
@@ -707,7 +707,7 @@ Deno.serve(async (req) => {
       ...responsesWithLabels,
       __meta: { selected_options },
     };
-    const { fecha: submission, error: submissionError } = await supabase
+    const { data: submission, error: submissionError } = await supabase
       .from('form_submissions')
       .insert({
         form_id,

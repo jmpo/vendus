@@ -292,7 +292,7 @@ interface FlowBlock {
   id: string;
   type: 'message' | 'input' | 'buttons' | 'ai_takeover' | 'handoff' | 'tag' | 'video' | 'delay' | 'agent_switch';
   position: { x: number; y: number };
-  fecha: {
+  data: {
     content?: string;
     delay_ms?: number;
     input_type?: string;
@@ -465,7 +465,7 @@ serve(async (req) => {
     // simulator, social channels), so we MUST guard here as well.
     // ============================================================
     try {
-      const { fecha: convStatus } = await supabase
+      const { data: convStatus } = await supabase
         .from('webchat_conversations')
         .select('status')
         .eq('id', body.conversation_id)
@@ -505,7 +505,7 @@ serve(async (req) => {
     // ============================================================
     if (body.is_test === true && body.test_mode === 'orchestrator' && body.agent_id) {
       try {
-        const { fecha: orchAgent } = await supabase
+        const { data: orchAgent } = await supabase
           .from('product_agents')
           .select('id, name, agent_type, organization_id, welcome_enabled, welcome_message, quick_menu_mode, quick_menu_intro, quick_menu_options, quick_menu_invalid_message')
           .eq('id', body.agent_id)
@@ -532,7 +532,7 @@ serve(async (req) => {
         // Resolve {{vars}} for greeting
         let orgName = '';
         if ((orchAgent as any).organization_id) {
-          const { fecha: orgRow } = await supabase
+          const { data: orgRow } = await supabase
             .from('organizations')
             .select('name')
             .eq('id', (orchAgent as any).organization_id)
@@ -577,7 +577,7 @@ serve(async (req) => {
           }
 
           if (opt.action === 'transfer_to_agent' && opt.target_agent_id) {
-            const { fecha: targetAgent } = await supabase
+            const { data: targetAgent } = await supabase
               .from('product_agents')
               .select('id, name, agent_type')
               .eq('id', opt.target_agent_id)
@@ -720,7 +720,7 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    const { fecha: messages } = await supabase
+    const { data: messages } = await supabase
       .from('webchat_messages')
       .select('*')
       .eq('conversation_id', body.conversation_id)
@@ -746,7 +746,7 @@ serve(async (req) => {
     // Fetch product CTAs if product_id is available
     let productCTAs: ProductCTA[] = [];
     if (body.product_id) {
-      const { fecha: ctas } = await supabase
+      const { data: ctas } = await supabase
         .from('product_ctas')
         .select('*')
         .eq('product_id', body.product_id)
@@ -771,7 +771,7 @@ serve(async (req) => {
       try {
         // Check 1: explicit body.agent_id pointing to an admin agent
         if (body.agent_id) {
-          const { fecha: explicitAdmin } = await supabase
+          const { data: explicitAdmin } = await supabase
             .from('product_agents')
             .select('*')
             .eq('id', body.agent_id)
@@ -790,7 +790,7 @@ serve(async (req) => {
 
         // Check 2: conversation.current_agent_id pointing to admin (no explicit agent_id)
         if (!adminTakeoverActive && !body.agent_id) {
-          const { fecha: convAdmin } = await supabase
+          const { data: convAdmin } = await supabase
             .from('webchat_conversations')
             .select('current_agent_id, product_agents:current_agent_id(*)')
             .eq('id', body.conversation_id)
@@ -815,7 +815,7 @@ serve(async (req) => {
     // Running it through the generic webchat-bot pipeline produces "Desculpe, no entendi".
     if (adminTakeoverActive && activeAgent && body.conversation_id) {
       try {
-        const { fecha: convForAdmin } = await supabase
+        const { data: convForAdmin } = await supabase
           .from('webchat_conversations')
           .select('organization_id, channel, visitor_phone, evolution_instance_id, lead_id')
           .eq('id', body.conversation_id)
@@ -922,14 +922,14 @@ serve(async (req) => {
     // The orchestrator classifies product+intent and routes to a specialist.
     // Only runs when org has orchestration enabled AND conversation is in 'triagem' state (or null).
     try {
-      const { fecha: convInit } = await supabase
+      const { data: convInit } = await supabase
         .from('webchat_conversations')
         .select('id, organization_id, channel, visitor_phone, lead_id, current_agent_id, orchestrator_state, orchestrator_context, orchestrator_question_count')
         .eq('id', body.conversation_id)
         .maybeSingle();
 
       if (convInit?.organization_id) {
-        const { fecha: orchConfig } = await supabase
+        const { data: orchConfig } = await supabase
           .from('organization_orchestrator_config')
           .select('*')
           .eq('organization_id', convInit.organization_id)
@@ -947,7 +947,7 @@ serve(async (req) => {
         // the orchestrator's greeting flow before any specialist agent answers.
         if (orchEnabled && !body.agent_id && !adminTakeoverActive) {
           try {
-            const { fecha: lastOutbound } = await supabase
+            const { data: lastOutbound } = await supabase
               .from('webchat_messages')
               .select('created_at')
               .eq('conversation_id', body.conversation_id)
@@ -994,7 +994,7 @@ serve(async (req) => {
         // before any AI classification runs. Configured per-agent in the admin.
         if (orchEnabled && !body.agent_id && !adminTakeoverActive) {
           try {
-            const { fecha: orchAgentFull } = await supabase
+            const { data: orchAgentFull } = await supabase
               .from('product_agents')
               .select('id, name, welcome_enabled, welcome_message, quick_menu_mode, quick_menu_intro, quick_menu_options, quick_menu_invalid_message')
               .eq('id', orchConfig.orchestrator_agent_id)
@@ -1057,7 +1057,7 @@ serve(async (req) => {
                     needsHuman: true,
                   };
                 } else if (opt.action === 'transfer_to_agent' && opt.target_agent_id) {
-                  const { fecha: targetAgent } = await supabase
+                  const { data: targetAgent } = await supabase
                     .from('product_agents')
                     .select('*')
                     .eq('id', opt.target_agent_id)
@@ -1122,7 +1122,7 @@ serve(async (req) => {
               const greetingWanted = greetingEnabled || (menuMode === 'always' && menuOptions.length > 0);
               let isFirstInteraction = false;
               if (greetingWanted) {
-                const { fecha: lockRow } = await supabase
+                const { data: lockRow } = await supabase
                   .from('webchat_conversations')
                   .update({ welcome_sent_at: new Date().toISOString() })
                   .eq('id', body.conversation_id)
@@ -1137,7 +1137,7 @@ serve(async (req) => {
 
               if (isFirstInteraction && greetingWanted) {
                 // Resolve {{variables}} in greeting
-                const { fecha: orgRowG } = await supabase
+                const { data: orgRowG } = await supabase
                   .from('organizations')
                   .select('name')
                   .eq('id', convInit.organization_id)
@@ -1191,20 +1191,20 @@ serve(async (req) => {
         if (orchEnabled && inTriage && !body.agent_id && !adminTakeoverActive && !orchestratorEarlyResponse && !activeAgent) {
           console.log('[webchat-bot] 🧭 Orchestrator enabled, running triage...');
 
-          const { fecha: orgRow } = await supabase
+          const { data: orgRow } = await supabase
             .from('organizations')
             .select('name')
             .eq('id', convInit.organization_id)
             .maybeSingle();
 
-          const { fecha: orgProducts } = await supabase
+          const { data: orgProducts } = await supabase
             .from('products')
             .select('id, name, description')
             .eq('organization_id', convInit.organization_id)
             .eq('is_active', true)
             .limit(20);
 
-          const { fecha: orchAgent } = await supabase
+          const { data: orchAgent } = await supabase
             .from('product_agents')
             .select('additional_prompt, quick_menu_mode, quick_menu_intro, quick_menu_options, quick_menu_invalid_message')
             .eq('id', orchConfig.orchestrator_agent_id)
@@ -1295,7 +1295,7 @@ serve(async (req) => {
 
             // Try each preferred role for this product
             for (const role of preferredRoles) {
-              const { fecha: candidate } = await supabase
+              const { data: candidate } = await supabase
                 .from('product_agents')
                 .select('*')
                 .eq('product_id', result.produto_id)
@@ -1313,7 +1313,7 @@ serve(async (req) => {
 
             // Fallback 1: any default agent of the product
             if (!routedAgent) {
-              const { fecha: defaultAgent } = await supabase
+              const { data: defaultAgent } = await supabase
                 .from('product_agents')
                 .select('*')
                 .eq('product_id', result.produto_id)
@@ -1328,7 +1328,7 @@ serve(async (req) => {
 
             // Fallback 2: orchestrator itself assumes the conversation with product context
             if (!routedAgent) {
-              const { fecha: orchAsAgent } = await supabase
+              const { data: orchAsAgent } = await supabase
                 .from('product_agents')
                 .select('*')
                 .eq('id', orchConfig.orchestrator_agent_id)
@@ -1371,7 +1371,7 @@ serve(async (req) => {
           }
         } else if (currentState === 'em_atendimento' && convInit.current_agent_id) {
           // Already in active conversation — load the assigned specialist
-          const { fecha: assigned } = await supabase
+          const { data: assigned } = await supabase
             .from('product_agents')
             .select('*')
             .eq('id', convInit.current_agent_id)
@@ -1419,7 +1419,7 @@ serve(async (req) => {
     if (body.product_id && body.message && !body.agent_id && !adminTakeoverActive) {
       try {
         // Resolve channel for scope filtering
-        const { fecha: convForChannel } = await supabase
+        const { data: convForChannel } = await supabase
           .from('webchat_conversations')
           .select('channel, current_agent_id')
           .eq('id', body.conversation_id)
@@ -1431,7 +1431,7 @@ serve(async (req) => {
           rawChannel === 'inbox' ? 'inbox' :
           rawChannel === 'funnel' ? 'funnel' : 'chat';
 
-        const { fecha: candidateAgents } = await supabase
+        const { data: candidateAgents } = await supabase
           .from('product_agents')
           .select('id, name, is_active, activation_keywords, activation_phrases, activation_priority, activation_scope, takeover_on_match, updated_at')
           .eq('product_id', body.product_id)
@@ -1439,7 +1439,7 @@ serve(async (req) => {
 
         const match = matchAgentByMessage(body.message, candidateAgents || [], channel);
         if (match) {
-          const { fecha: full } = await supabase
+          const { data: full } = await supabase
             .from('product_agents')
             .select('*')
             .eq('id', match.agent.id)
@@ -1465,7 +1465,7 @@ serve(async (req) => {
 
             // Audit log (best-effort)
             try {
-              const { fecha: convInfo } = await supabase
+              const { data: convInfo } = await supabase
                 .from('webchat_conversations')
                 .select('organization_id, lead_id')
                 .eq('id', body.conversation_id)
@@ -1495,7 +1495,7 @@ serve(async (req) => {
 
     // First check if agent_id is provided directly (only if no keyword match)
     if (!activeAgent && body.agent_id) {
-      const { fecha: agent } = await supabase
+      const { data: agent } = await supabase
         .from('product_agents')
         .select('*')
         .eq('id', body.agent_id)
@@ -1510,7 +1510,7 @@ serve(async (req) => {
     // points to an active Admin agent, that override wins over instance-bound rules.
     // This protects manual transfers made by gestores via the Inbox UI.
     if (!activeAgent && !body.agent_id) {
-      const { fecha: convAdminCheck } = await supabase
+      const { data: convAdminCheck } = await supabase
         .from('webchat_conversations')
         .select('current_agent_id, product_agents:current_agent_id(*)')
         .eq('id', body.conversation_id)
@@ -1530,7 +1530,7 @@ serve(async (req) => {
     // Orchestrator (states: null / 'triagem' / 'aguardando_menu'). Otherwise an
     // instance-bound SDR (e.g., Natan) would answer before the welcome flow runs.
     if (!activeAgent && !body.agent_id) {
-      const { fecha: convInst } = await supabase
+      const { data: convInst } = await supabase
         .from('webchat_conversations')
         .select('evolution_instance_id, orchestrator_state, organization_id')
         .eq('id', body.conversation_id)
@@ -1538,7 +1538,7 @@ serve(async (req) => {
 
       let orchOwnsThis = false;
       if (convInst?.organization_id) {
-        const { fecha: orchCfgFb } = await supabase
+        const { data: orchCfgFb } = await supabase
           .from('organization_orchestrator_config')
           .select('is_enabled, orchestrator_agent_id')
           .eq('organization_id', convInst.organization_id)
@@ -1551,7 +1551,7 @@ serve(async (req) => {
       if (orchOwnsThis) {
         console.log('[webchat-bot] 📱 Skipping instance-bound fallback — orchestrator owns conversation');
       } else if (convInst?.evolution_instance_id) {
-        const { fecha: boundAgent } = await supabase
+        const { data: boundAgent } = await supabase
           .from('product_agents')
           .select('*')
           .eq('evolution_instance_id', convInst.evolution_instance_id)
@@ -1570,7 +1570,7 @@ serve(async (req) => {
     let flowVariables: Record<string, string> = {};
     
     if (!body.agent_id) {
-      const { fecha: conversation } = await supabase
+      const { data: conversation } = await supabase
         .from('webchat_conversations')
         .select('current_agent_id, flow_variables')
         .eq('id', body.conversation_id)
@@ -1583,7 +1583,7 @@ serve(async (req) => {
       
       // Only fall back to conversation's current_agent_id if no keyword match already set activeAgent
       if (!activeAgent && conversation?.current_agent_id) {
-        const { fecha: agent } = await supabase
+        const { data: agent } = await supabase
           .from('product_agents')
           .select('*')
           .eq('id', conversation.current_agent_id)
@@ -1596,7 +1596,7 @@ serve(async (req) => {
     }
     // Finally, try to get default agent for product
     if (!activeAgent && body.product_id) {
-      const { fecha: defaultAgent } = await supabase
+      const { data: defaultAgent } = await supabase
         .from('product_agents')
         .select('*')
         .eq('product_id', body.product_id)
@@ -1612,7 +1612,7 @@ serve(async (req) => {
 
     // Fallback: first active agent for product (when no default is set)
     if (!activeAgent && body.product_id) {
-      const { fecha: firstActiveAgent } = await supabase
+      const { data: firstActiveAgent } = await supabase
         .from('product_agents')
         .select('*')
         .eq('product_id', body.product_id)
@@ -1664,7 +1664,7 @@ serve(async (req) => {
         // Find the previous interaction timestamp (any message before now in this conv)
         let lastInteractionAt: string | null = null;
         try {
-          const { fecha: prevMsg } = await supabase
+          const { data: prevMsg } = await supabase
             .from('webchat_messages')
             .select('created_at')
             .eq('conversation_id', body.conversation_id)
@@ -1762,7 +1762,7 @@ serve(async (req) => {
       // injeta um bloco de contexto pra ele NÃO recomeçar do zero.
       try {
         if (activeAgent?.id) {
-          const { fecha: lastHandoff } = await supabase
+          const { data: lastHandoff } = await supabase
             .from('agent_activation_logs')
             .select('from_agent_id, created_at')
             .eq('conversation_id', body.conversation_id)
@@ -1779,7 +1779,7 @@ serve(async (req) => {
           if (lastHandoff && handoffAgeMs < 30 * 60 * 1000) {
             let prevAgentName = '';
             if (lastHandoff.from_agent_id) {
-              const { fecha: prev } = await supabase
+              const { data: prev } = await supabase
                 .from('product_agents')
                 .select('name')
                 .eq('id', lastHandoff.from_agent_id)
@@ -1812,7 +1812,7 @@ serve(async (req) => {
 
 
       try {
-        const { fecha: convRow } = await supabase
+        const { data: convRow } = await supabase
           .from('webchat_conversations')
           .select('metadata')
           .eq('id', body.conversation_id)
@@ -1882,7 +1882,7 @@ serve(async (req) => {
       // FIX 1 — Auto-capture email/phone/name from latest user message.
       // Detects contact info in the visitor's message and persists it
       // to webchat_conversations + leads BEFORE leadContext is built,
-      // so the same turn already sees the new fecha and the AI never
+      // so the same turn already sees the new data and the AI never
       // re-asks for what it just received.
       // ============================================================
       const capturedFromMessage: { email?: string; phone?: string; name?: string } = {};
@@ -1895,7 +1895,7 @@ serve(async (req) => {
           if (emailMatch) capturedFromMessage.email = emailMatch[0].toLowerCase();
           if (phoneMatch) capturedFromMessage.phone = phoneMatch;
 
-          const { fecha: convRow } = await supabase
+          const { data: convRow } = await supabase
             .from('webchat_conversations')
             .select('id, organization_id, lead_id, visitor_email, visitor_phone, visitor_name')
             .eq('id', body.conversation_id)
@@ -1911,7 +1911,7 @@ serve(async (req) => {
             }
 
             if (convRow.lead_id && (capturedFromMessage.email || capturedFromMessage.phone)) {
-              const { fecha: leadRow } = await supabase
+              const { data: leadRow } = await supabase
                 .from('leads')
                 .select('id, email, phone')
                 .eq('id', convRow.lead_id)
@@ -1949,7 +1949,7 @@ serve(async (req) => {
       let leadContext: any = null;
       let leadId: string | null = null;
       if (body.conversation_id) {
-        const { fecha: convLead } = await supabase
+        const { data: convLead } = await supabase
           .from('webchat_conversations')
           .select('lead_id')
           .eq('id', body.conversation_id)
@@ -1957,7 +1957,7 @@ serve(async (req) => {
         
         if (convLead?.lead_id) {
           leadId = convLead.lead_id;
-          const { fecha: lead } = await supabase
+          const { data: lead } = await supabase
             .from('leads')
             .select('id, name, email, phone, temperature, tags, deal_value, company, source, custom_fields, current_stage_id, assigned_to, product_id')
             .eq('id', convLead.lead_id)
@@ -1968,7 +1968,7 @@ serve(async (req) => {
             // Detect if lead is already a customer (won stage OR "Cliente" tag OR has won deal)
             let isCustomer = false;
             if (lead.current_stage_id) {
-              const { fecha: stage } = await supabase
+              const { data: stage } = await supabase
                 .from('pipeline_stages')
                 .select('name, is_won')
                 .eq('id', lead.current_stage_id)
@@ -1983,7 +1983,7 @@ serve(async (req) => {
             if (tagsLower.some((t) => t.includes('cliente'))) isCustomer = true;
             // Won deal detection
             if (!isCustomer) {
-              const { fecha: wonDeal } = await supabase
+              const { data: wonDeal } = await supabase
                 .from('deals')
                 .select('id')
                 .eq('lead_id', lead.id)
@@ -2019,7 +2019,7 @@ Este contato JÁ COMPROU e é um CLIENTE ATIVO. Por isso:
         }
       }
 
-      // Reflect captured-from-message fecha into leadContext immediately
+      // Reflect captured-from-message data into leadContext immediately
       // so this turn's prompt already knows the email/phone we just saved.
       if (capturedFromMessage.email || capturedFromMessage.phone) {
         if (!leadContext) leadContext = {};
@@ -2074,7 +2074,7 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
       // Se vazio, IA no puede agendar. Se 1+, IA usa esses tipos (e só esses).
       let allowedEventTypes: any[] = [];
       if (body.product_id) {
-        const { fecha: convData } = await supabase
+        const { data: convData } = await supabase
           .from('webchat_conversations')
           .select('assigned_user_id, widget_id, organization_id')
           .eq('id', body.conversation_id)
@@ -2087,7 +2087,7 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
         let checkUserId: string | null = agentHostId || convData?.assigned_user_id || null;
 
         if (!checkUserId && convData?.organization_id) {
-          const { fecha: eventOwner } = await supabase
+          const { data: eventOwner } = await supabase
             .from('booking_event_types')
             .select('user_id')
             .eq('organization_id', convData.organization_id)
@@ -2112,7 +2112,7 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
           // Se o agente tiene allowlist, filtra por ela.
           if (allowedIds.length > 0) {
             etQuery = etQuery.in('id', allowedIds);
-            const { fecha: ets } = await etQuery.order('created_at', { ascending: true });
+            const { data: ets } = await etQuery.order('created_at', { ascending: true });
             allowedEventTypes = ets || [];
           } else if (agentHostId) {
             // host definido mas SEM allowlist => tentar fallback automático
@@ -2122,7 +2122,7 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
 
             if (productIdForFallback && orgIdForFallback) {
               try {
-                const { fecha: prodRow } = await supabase
+                const { data: prodRow } = await supabase
                   .from('products')
                   .select('id, name')
                   .eq('id', productIdForFallback)
@@ -2141,7 +2141,7 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
                   const fallbackName = `Apresentação ${productName}`.slice(0, 120);
 
                   // Idempotência: tenta achar event type já existente para esse host+slug
-                  const { fecha: existing } = await supabase
+                  const { data: existing } = await supabase
                     .from('booking_event_types')
                     .select('id, name, description, duration_minutes, location_type, location_details, buffer_before, buffer_after, min_notice_hours, create_meet, user_id')
                     .eq('user_id', checkUserId)
@@ -2151,7 +2151,7 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
                   let fallbackEvent: any = existing || null;
 
                   if (!fallbackEvent) {
-                    const { fecha: created, error: createErr } = await supabase
+                    const { data: created, error: createErr } = await supabase
                       .from('booking_event_types')
                       .insert({
                         organization_id: orgIdForFallback,
@@ -2199,7 +2199,7 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
             }
           } else {
             // Sem host explícito del agente => comportamento legado (host = assigned/owner)
-            const { fecha: ets } = await etQuery.order('created_at', { ascending: true });
+            const { data: ets } = await etQuery.order('created_at', { ascending: true });
             allowedEventTypes = ets || [];
           }
 
@@ -2254,7 +2254,7 @@ Exemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
       }
 
       if (canSchedule && scheduleUserId) {
-        // Inject lead fecha into scheduling prompt if available
+        // Inject lead data into scheduling prompt if available
         let leadDataPrompt = '';
         if (leadContext) {
           const knownData: string[] = [];
@@ -2287,7 +2287,7 @@ Usted possui 2 ferramentas para reserva inteligente:
 
 🛑 REGRAS ABSOLUTAS — VIOLAR QUEBRA O SISTEMA:
 
-A) **NUNCA invente fechas ou horários.** Se usted ainda NÃO chamou check_available_slots nesta conversación, é PROIBIDO mencionar qualquer fecha/hora específica (ex: "quinta às 15:30", "mañana 10h"). Diga apenas: "Deixa eu ver minha agenda rapidinho" e CHAME check_available_slots.
+A) **NUNCA invente fechas ou horários.** Se usted ainda NÃO chamou check_available_slots nesta conversación, é PROIBIDO mencionar qualquer data/hora específica (ex: "quinta às 15:30", "mañana 10h"). Diga apenas: "Deixa eu ver minha agenda rapidinho" e CHAME check_available_slots.
 
 B) **NUNCA chame schedule_meeting sem email real del cliente.** Se faltar email, PARE e pergunte: "Pra eu travar esse horario, qual é o melhor email pra eu mandar a confirmação?"
 
@@ -2302,7 +2302,7 @@ F) Se o cliente pedir um horario DIFERENTE dos oferecidos OU um día específico
 FLUXO OBRIGATÓRIO:
 1. Detectar interesse → (se faltar email, perguntar email primeiro) → chamar check_available_slots
 2. Apresentar horários reais retornados pela tool
-3. Cliente confirma horario → chamar schedule_meeting com (nombre, email REAL, fecha, hora)
+3. Cliente confirma horario → chamar schedule_meeting com (nombre, email REAL, data, hora)
 4. Sistema responde éxito → texto de confirmação aparece automaticamente${emailEnforcementPrompt}
 ${leadDataPrompt}
 
@@ -2354,7 +2354,7 @@ ${leadDataPrompt}
           // Fetch pipeline stages for context
           let stagesList = '';
           if (body.product_id) {
-            const { fecha: stages } = await supabase
+            const { data: stages } = await supabase
               .from('pipeline_stages')
               .select('id, name')
               .eq('product_id', body.product_id)
@@ -2516,7 +2516,7 @@ ${leadDataPrompt}
               agentsQuery = agentsQuery.neq('agent_type', 'admin');
             }
 
-            const { fecha: agents } = await agentsQuery;
+            const { data: agents } = await agentsQuery;
             allowedAgents = agents || [];
           }
 
@@ -2656,7 +2656,7 @@ ${leadDataPrompt}
       // === CATALOG TOOLS (search + send) — habilita SEMPRE que org tiver itens ativos
       // (no trava no product_id; busca prioriza producto atual mas faz fallback org-wide)
       try {
-        const { fecha: convForCatalog } = await supabase
+        const { data: convForCatalog } = await supabase
           .from('webchat_conversations')
           .select('organization_id')
           .eq('id', body.conversation_id)
@@ -2783,7 +2783,7 @@ REGRAS DE USO:
       // MEMÓRIA DE AGENDAMENTO — evita reagendar reunión confirmada
       // ============================================
       try {
-        const { fecha: convMeeting } = await supabase
+        const { data: convMeeting } = await supabase
           .from('webchat_conversations')
           .select('meeting_scheduled_at, meeting_metadata')
           .eq('id', body.conversation_id)
@@ -2822,8 +2822,8 @@ REGRAS DE USO:
           .select('lead_id, organization_id')
           .eq('id', body.conversation_id)
           .maybeSingle();
-        const leadId = convInfo?.fecha?.lead_id;
-        const orgId = convInfo?.fecha?.organization_id;
+        const leadId = convInfo?.data?.lead_id;
+        const orgId = convInfo?.data?.organization_id;
 
         if (leadId && orgId) {
           // 1) Retrieval: busca memórias relevantes
@@ -2894,8 +2894,8 @@ REGRAS DE USO:
           .select('lead_id, organization_id')
           .eq('id', body.conversation_id)
           .maybeSingle();
-        const orgId2 = convInfo2?.fecha?.organization_id;
-        const seed = convInfo2?.fecha?.lead_id || body.conversation_id;
+        const orgId2 = convInfo2?.data?.organization_id;
+        const seed = convInfo2?.data?.lead_id || body.conversation_id;
 
         if (orgId2 && seed) {
           const pickResp = await fetch(
@@ -2941,7 +2941,7 @@ REGRAS DE USO:
         // gastar créditos Lovable.
         let orgIdForRouting = (activeAgent as any)?.organization_id || null;
         if (!orgIdForRouting && body.conversation_id) {
-          const { fecha: convForRouting } = await supabase
+          const { data: convForRouting } = await supabase
             .from('webchat_conversations')
             .select('organization_id')
             .eq('id', body.conversation_id)
@@ -2949,7 +2949,7 @@ REGRAS DE USO:
           orgIdForRouting = convForRouting?.organization_id || null;
         }
         if (!orgIdForRouting && body.product_id) {
-          const { fecha: productForRouting } = await supabase
+          const { data: productForRouting } = await supabase
             .from('products')
             .select('organization_id')
             .eq('id', body.product_id)
@@ -3074,7 +3074,7 @@ REGRAS DE USO:
             } else if (toolCall.function.name === 'search_catalog') {
               try {
                 const args = JSON.parse(toolCall.function.arguments || '{}');
-                const { fecha: convForCat } = await supabase
+                const { data: convForCat } = await supabase
                   .from('webchat_conversations')
                   .select('organization_id')
                   .eq('id', body.conversation_id)
@@ -3089,7 +3089,7 @@ REGRAS DE USO:
                 const limitPayload = Math.min(args.limit || 3, 5);
 
                 // 1ª tentativa: priorizar producto atual (se houver)
-                let { fecha: searchData, error: searchErr } = await supabase.functions.invoke('catalog-search', {
+                let { data: searchData, error: searchErr } = await supabase.functions.invoke('catalog-search', {
                   body: {
                     organization_id: convForCat?.organization_id,
                     product_id: body.product_id || null,
@@ -3104,7 +3104,7 @@ REGRAS DE USO:
 
                 // 2ª tentativa: fallback org-wide se o producto atual no trouxe nada
                 if (items.length === 0 && body.product_id) {
-                  const { fecha: orgSearchData } = await supabase.functions.invoke('catalog-search', {
+                  const { data: orgSearchData } = await supabase.functions.invoke('catalog-search', {
                     body: {
                       organization_id: convForCat?.organization_id,
                       product_id: null,
@@ -3176,7 +3176,7 @@ REGRAS DE USO:
                       if (explicitMediaRequest && wantsVideo) sendArgs.include_videos = true;
                       if (explicitMediaRequest && wantsDoc) sendArgs.include_documents = true;
 
-                      const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('send-catalog-item', {
+                      const { data: sendData, error: sendErr } = await supabase.functions.invoke('send-catalog-item', {
                         body: {
                           conversation_id: body.conversation_id,
                           item_id: sendArgs.item_id,
@@ -3221,7 +3221,7 @@ REGRAS DE USO:
                       console.log('[webchat-bot] ⚠️ Model ignored forced tool_choice — falling back to direct send');
                       try {
                         const topItem = items[0];
-                        const { fecha: sendData } = await supabase.functions.invoke('send-catalog-item', {
+                        const { data: sendData } = await supabase.functions.invoke('send-catalog-item', {
                           body: {
                             conversation_id: body.conversation_id,
                             item_id: topItem.id,
@@ -3259,7 +3259,7 @@ REGRAS DE USO:
                 if (!args.item_id) {
                   responseContent = choice.message?.content || 'Posso te enviar mais detalhes? Confirma qual te interessa?';
                 } else {
-                  const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('send-catalog-item', {
+                  const { data: sendData, error: sendErr } = await supabase.functions.invoke('send-catalog-item', {
                     body: {
                       conversation_id: body.conversation_id,
                       item_id: args.item_id,
@@ -3301,7 +3301,7 @@ REGRAS DE USO:
                 // already offered slots in the last 60 minutes. Force the
                 // model to use schedule_meeting instead.
                 // ============================================================
-                const { fecha: recentMsgs } = await supabase
+                const { data: recentMsgs } = await supabase
                   .from('webchat_messages')
                   .select('metadata, created_at')
                   .eq('conversation_id', body.conversation_id)
@@ -3378,7 +3378,7 @@ REGRAS DE USO:
                 if (allowedEventTypes.length > 0) {
                   eventType = allowedEventTypes[0];
                 } else {
-                  const { fecha: et } = await supabase
+                  const { data: et } = await supabase
                     .from('booking_event_types')
                     .select('*')
                     .eq('user_id', scheduleUserId)
@@ -3405,7 +3405,7 @@ REGRAS DE USO:
                     if (d === 0 && today.getHours() >= 18) continue;
 
                     // Fetch weekly availability
-                    const { fecha: weeklyAvail } = await supabase
+                    const { data: weeklyAvail } = await supabase
                       .from('user_availability')
                       .select('*')
                       .eq('user_id', scheduleUserId)
@@ -3413,7 +3413,7 @@ REGRAS DE USO:
                       .eq('is_available', true);
 
                     // Check overrides
-                    const { fecha: override } = await supabase
+                    const { data: override } = await supabase
                       .from('availability_overrides')
                       .select('*')
                       .eq('user_id', scheduleUserId)
@@ -3432,7 +3432,7 @@ REGRAS DE USO:
                     if (timeRanges.length === 0) continue;
 
                     // Fetch existing events
-                    const { fecha: existingEvents } = await supabase
+                    const { data: existingEvents } = await supabase
                       .from('calendar_events')
                       .select('start_time, end_time')
                       .eq('user_id', scheduleUserId)
@@ -3529,9 +3529,9 @@ REGRAS DE USO:
                     // Build a natural response for the AI to relay
                     let slotsInfo = '📅 HORÁRIOS DISPONÍVEIS ENCONTRADOS:\n';
                     suggestions.forEach((s, i) => {
-                      slotsInfo += `\nOpção ${i + 1}: ${s.dateLabel} às ${s.time} (${s.period === 'morning' ? 'manhã' : 'tarde'}) [fecha: ${s.date}]`;
+                      slotsInfo += `\nOpção ${i + 1}: ${s.dateLabel} às ${s.time} (${s.period === 'morning' ? 'manhã' : 'tarde'}) [data: ${s.date}]`;
                     });
-                    slotsInfo += '\n\nApresente esses horários al cliente de forma natural e estratégica. NÃO mostre o formato de fecha técnico (YYYY-MM-DD).';
+                    slotsInfo += '\n\nApresente esses horários al cliente de forma natural e estratégica. NÃO mostre o formato de data técnico (YYYY-MM-DD).';
 
                     // FIX 3: slim follow-up prompt — drop emailEnforcement, anti-CTAs etc.
                     // We only want a clean "present these slots and ask which one" reply.
@@ -3592,7 +3592,7 @@ REGRAS DE USO:
                   eventType = allowedEventTypes[0];
                 }
                 if (!eventType) {
-                  const { fecha: et } = await supabase
+                  const { data: et } = await supabase
                     .from('booking_event_types')
                     .select('*')
                     .eq('user_id', scheduleUserId)
@@ -3610,7 +3610,7 @@ REGRAS DE USO:
                   const endTime = new Date(startTime.getTime() + eventType.duration_minutes * 60000);
                   
                   // Get user's org
-                   const { fecha: hostProfile } = await supabase
+                   const { data: hostProfile } = await supabase
                     .from('profiles')
                     .select('organization_id, full_name')
                     .eq('id', scheduleUserId)
@@ -3634,7 +3634,7 @@ REGRAS DE USO:
                     // Resolve product_id del lead (para que o evento apareça quando o vendedor filtra por producto)
                     let resolvedProductId: string | null = body.product_id || null;
                     if (!resolvedProductId && leadId) {
-                      const { fecha: leadRow } = await supabase
+                      const { data: leadRow } = await supabase
                         .from('leads')
                         .select('product_id')
                         .eq('id', leadId)
@@ -3642,7 +3642,7 @@ REGRAS DE USO:
                       resolvedProductId = leadRow?.product_id || null;
                     }
 
-                    const { fecha: calendarEvent, error: calendarInsertError } = await supabase
+                    const { data: calendarEvent, error: calendarInsertError } = await supabase
                       .from('calendar_events')
                       .insert({
                         title: `${eventType.name} - ${args.guest_name}`,
@@ -3752,7 +3752,7 @@ REGRAS DE USO:
 
                     // === Fire-and-forget: push to host's Google Calendar if connected ===
                     try {
-                      const { fecha: gconn } = await supabase
+                      const { data: gconn } = await supabase
                         .from('google_calendar_connections')
                         .select('id')
                         .eq('user_id', scheduleUserId)
@@ -3810,7 +3810,7 @@ REGRAS DE USO:
 
                       // Notificar todos os admins da org se a flag estiver ativa
                       if ((activeAgent as any)?.booking_notify_org_admins) {
-                        const { fecha: admins } = await supabase
+                        const { data: admins } = await supabase
                           .from('user_roles')
                           .select('user_id, profiles!inner(organization_id)')
                           .eq('role', 'admin')
@@ -3892,7 +3892,7 @@ REGRAS DE USO:
                 // Helper to log action
                 const logAction = async (success: boolean, result: any = {}, errorMsg?: string) => {
                   if (!activeAgent || !body.product_id) return;
-                  const { fecha: conv } = await supabase.from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
+                  const { data: conv } = await supabase.from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
                   if (conv) {
                     await supabase.from('agent_action_logs').insert({
                       organization_id: conv.organization_id,
@@ -3950,14 +3950,14 @@ REGRAS DE USO:
                   await logAction(true, { stage_id: args.stage_id });
                   responseContent = choice.message?.content || 'Lead movido no pipeline com éxito.';
                 } else if (toolName === 'apply_tags' && leadId) {
-                  const { fecha: currentLead } = await supabase.from('leads').select('tags').eq('id', leadId).maybeSingle();
+                  const { data: currentLead } = await supabase.from('leads').select('tags').eq('id', leadId).maybeSingle();
                   const currentTags = currentLead?.tags || [];
                   const newTags = [...new Set([...currentTags, ...(args.tags || [])])];
                   await supabase.from('leads').update({ tags: newTags }).eq('id', leadId);
                   await logAction(true, { tags: args.tags });
                   responseContent = choice.message?.content || '';
                 } else if (toolName === 'remove_tags' && leadId) {
-                  const { fecha: currentLead } = await supabase.from('leads').select('tags').eq('id', leadId).maybeSingle();
+                  const { data: currentLead } = await supabase.from('leads').select('tags').eq('id', leadId).maybeSingle();
                   const currentTags = currentLead?.tags || [];
                   const filtered = currentTags.filter((t: string) => !(args.tags || []).includes(t));
                   await supabase.from('leads').update({ tags: filtered }).eq('id', leadId);
@@ -3975,7 +3975,7 @@ REGRAS DE USO:
                   }
                   responseContent = choice.message?.content || '';
                 } else if (toolName === 'create_task' && leadId) {
-                  const { fecha: conv } = await supabase.from('webchat_conversations').select('organization_id, assigned_user_id').eq('id', body.conversation_id).maybeSingle();
+                  const { data: conv } = await supabase.from('webchat_conversations').select('organization_id, assigned_user_id').eq('id', body.conversation_id).maybeSingle();
                   if (conv) {
                     await supabase.from('tasks').insert({
                       title: args.title,
@@ -4008,7 +4008,7 @@ REGRAS DE USO:
                     await logAction(true, { target_agent: targetAgentId, reason: 'already_on_target', noop: true });
                     responseContent = choice.message?.content || 'Pode seguir comigo, já estou aqui.';
                   } else {
-                  const { fecha: targetAgent } = await supabase
+                  const { data: targetAgent } = await supabase
                     .from('product_agents')
                     .select('id, name, agent_type, product_id, organization_id, handoff_incoming_message')
                     .eq('id', targetAgentId)
@@ -4060,7 +4060,7 @@ REGRAS DE USO:
                     // Registra em agent_activation_logs pra que o próximo turno do
                     // novo agente detecte "handoff recibido" e injete o contexto.
                     try {
-                      const { fecha: convOrg } = await supabase
+                      const { data: convOrg } = await supabase
                         .from('webchat_conversations')
                         .select('organization_id, lead_id')
                         .eq('id', body.conversation_id)
@@ -4112,13 +4112,13 @@ REGRAS DE USO:
                     // Resolve nombre del lead pra renderização das vars.
                     let nomeLead = '';
                     try {
-                      const { fecha: convL } = await supabase
+                      const { data: convL } = await supabase
                         .from('webchat_conversations')
                         .select('lead_id')
                         .eq('id', body.conversation_id)
                         .maybeSingle();
                       if (convL?.lead_id) {
-                        const { fecha: lead } = await supabase
+                        const { data: lead } = await supabase
                           .from('leads')
                           .select('name, full_name')
                           .eq('id', convL.lead_id)
@@ -4147,7 +4147,7 @@ REGRAS DE USO:
                   await logAction(true, { reason: args.reason });
                   responseContent = choice.message?.content || 'Vou transferir usted para um agente. Aguarde um momento!';
                 } else if (toolName === 'notify_team') {
-                  const { fecha: conv } = await supabase.from('webchat_conversations').select('organization_id, assigned_user_id').eq('id', body.conversation_id).maybeSingle();
+                  const { data: conv } = await supabase.from('webchat_conversations').select('organization_id, assigned_user_id').eq('id', body.conversation_id).maybeSingle();
                   if (conv) {
                     await supabase.from('notifications').insert({
                       organization_id: conv.organization_id,
@@ -4161,7 +4161,7 @@ REGRAS DE USO:
                   }
                   responseContent = choice.message?.content || '';
                 } else if (toolName === 'add_lead_note' && leadId) {
-                  const { fecha: conv } = await supabase.from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
+                  const { data: conv } = await supabase.from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
                   if (conv) {
                     await supabase.from('lead_notes').insert({
                       lead_id: leadId,
@@ -4172,7 +4172,7 @@ REGRAS DE USO:
                   }
                   responseContent = choice.message?.content || '';
                 } else if (toolName === 'start_cadence' && leadId) {
-                  const { fecha: conv } = await supabase.from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
+                  const { data: conv } = await supabase.from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
                   if (conv) {
                     await supabase.from('ai_outreach_queue').insert({
                       lead_id: leadId,
@@ -4191,7 +4191,7 @@ REGRAS DE USO:
                   responseContent = choice.message?.content || '';
                 } else if (toolName === 'qualify_lead' && leadId) {
                   const qualification = { budget: args.budget, authority: args.authority, need: args.need, timeline: args.timeline };
-                  const { fecha: currentLead } = await supabase.from('leads').select('custom_fields').eq('id', leadId).maybeSingle();
+                  const { data: currentLead } = await supabase.from('leads').select('custom_fields').eq('id', leadId).maybeSingle();
                   const customFields = (currentLead?.custom_fields || {}) as Record<string, any>;
                   customFields['bant_qualification'] = qualification;
                   await supabase.from('leads').update({ custom_fields: customFields }).eq('id', leadId);
@@ -4238,7 +4238,7 @@ REGRAS DE USO:
                     });
                     console.log('[webchat-bot] 🧰 Registry tool result:', toolName, registryResult.success ? 'OK' : 'FAIL', registryResult.error || '');
                     // Mantém logAction legado também, pra retrocompatibilidade do painel antigo
-                    await logAction(registryResult.success, registryResult.fecha || {}, registryResult.error);
+                    await logAction(registryResult.success, registryResult.data || {}, registryResult.error);
                     responseContent =
                       choice.message?.content ||
                       registryResult.user_message ||
@@ -4339,7 +4339,7 @@ REGRAS DE USO:
               
               // Log attempt for audit
               try {
-                const { fecha: convForLog } = await supabase
+                const { data: convForLog } = await supabase
                   .from('webchat_conversations')
                   .select('organization_id')
                   .eq('id', body.conversation_id)
@@ -4370,7 +4370,7 @@ REGRAS DE USO:
               
               if (hasConfirmation) {
                 try {
-                  const { fecha: convForLog } = await supabase
+                  const { data: convForLog } = await supabase
                     .from('webchat_conversations')
                     .select('organization_id')
                     .eq('id', body.conversation_id)
@@ -4403,7 +4403,7 @@ REGRAS DE USO:
           // ============================================================
           if (responseContent && responseContent.length > 30) {
             try {
-              const { fecha: recentAssistantMsgs } = await supabase
+              const { data: recentAssistantMsgs } = await supabase
                 .from('webchat_messages')
                 .select('content')
                 .eq('conversation_id', body.conversation_id)
@@ -4464,7 +4464,7 @@ REGRAS DE USO:
                     console.log('[webchat-bot] ✓ Rewritten response used');
                     // Log the repetition event for audit
                     try {
-                      const { fecha: convForLog } = await supabase
+                      const { data: convForLog } = await supabase
                         .from('webchat_conversations')
                         .select('organization_id')
                         .eq('id', body.conversation_id)
@@ -4541,7 +4541,7 @@ REGRAS DE USO:
           console.log('[webchat-bot] 🔀 HANDOFF detected →', target, 'rawTag:', parsedHandoff.rawTag);
 
           // Get conversation org for logging + lead/product names for variable rendering
-          const { fecha: convForHandoff } = await supabase
+          const { data: convForHandoff } = await supabase
             .from('webchat_conversations')
             .select('organization_id, lead_id, channel, visitor_phone')
             .eq('id', body.conversation_id)
@@ -4551,7 +4551,7 @@ REGRAS DE USO:
           let leadFirstName = '';
           let productName = '';
           if (convForHandoff?.lead_id) {
-            const { fecha: lead } = await supabase
+            const { data: lead } = await supabase
               .from('leads')
               .select('name, full_name')
               .eq('id', convForHandoff.lead_id)
@@ -4559,7 +4559,7 @@ REGRAS DE USO:
             leadFirstName = ((lead as any)?.full_name || (lead as any)?.name || '').split(' ')[0] || '';
           }
           if (body.product_id) {
-            const { fecha: prod } = await supabase
+            const { data: prod } = await supabase
               .from('products')
               .select('name')
               .eq('id', body.product_id)
@@ -4609,7 +4609,7 @@ REGRAS DE USO:
             }
           } else if (targetRole) {
             // Find specialist agent of the requested role for the same product
-            const { fecha: nextAgent } = await supabase
+            const { data: nextAgent } = await supabase
               .from('product_agents')
               .select('id, name, agent_type, handoff_incoming_message, handoff_delay_seconds')
               .eq('product_id', body.product_id)
@@ -4740,7 +4740,7 @@ REGRAS DE USO:
 
     let botMessage: any = null;
     if (!skipFullPersist) {
-      const { fecha: saved, error: msgError } = await supabase
+      const { data: saved, error: msgError } = await supabase
         .from('webchat_messages')
         .insert({
           conversation_id: body.conversation_id,
@@ -5112,23 +5112,23 @@ NUNCA AJA COMO SUPORTE (a menos que su agent_type seja explicitamente "support")
 // Fetch product brain knowledge
 async function fetchProductBrain(supabase: any, productId: string): Promise<string | null> {
   try {
-    const { fecha: product } = await supabase
+    const { data: product } = await supabase
       .from('products')
       .select('name, description, pitch_15s, pitch_30s, pitch_2min, icp, differentials')
       .eq('id', productId)
-      .single() as { fecha: Product | null };
+      .single() as { data: Product | null };
 
-    const { fecha: sources } = await supabase
+    const { data: sources } = await supabase
       .from('product_knowledge_sources')
       .select('source_type, title, extracted_content, transcript, question, answer')
       .eq('product_id', productId)
       .eq('is_active', true)
-      .eq('processing_status', 'completed') as { fecha: KnowledgeSource[] | null };
+      .eq('processing_status', 'completed') as { data: KnowledgeSource[] | null };
 
-    const { fecha: objections } = await supabase
+    const { data: objections } = await supabase
       .from('objections')
       .select('what_they_say, suggested_response')
-      .eq('product_id', productId) as { fecha: Objection[] | null };
+      .eq('product_id', productId) as { data: Objection[] | null };
 
     if (!product && !sources?.length && !objections?.length) {
       return null;
@@ -5192,27 +5192,27 @@ async function fetchTrainingMaterials(
 ): Promise<string | null> {
   try {
     // 1. Fetch product-level materials (agent_id is NULL) - used by all agents
-    const { fecha: productMaterials } = await supabase
+    const { data: productMaterials } = await supabase
       .from('agent_training_materials')
       .select('title, category, extracted_content')
       .eq('product_id', productId)
       .is('agent_id', null)
       .eq('is_active', true)
       .eq('processing_status', 'completed')
-      .limit(10) as { fecha: TrainingMaterial[] | null };
+      .limit(10) as { data: TrainingMaterial[] | null };
 
     // 2. Fetch agent-specific materials if agentId is provided
     let agentMaterials: TrainingMaterial[] = [];
     if (agentId) {
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('agent_training_materials')
         .select('title, category, extracted_content')
         .eq('agent_id', agentId)
         .eq('is_active', true)
         .eq('processing_status', 'completed')
-        .limit(10) as { fecha: TrainingMaterial[] | null };
+        .limit(10) as { data: TrainingMaterial[] | null };
       
-      agentMaterials = fecha || [];
+      agentMaterials = data || [];
       console.log('[webchat-bot] Agent-specific materials found:', agentMaterials.length);
     }
 
@@ -5286,7 +5286,7 @@ async function syncFlowVarsToLead(
   options?: { onlyKeys?: string[] }
 ): Promise<void> {
   try {
-    const { fecha: conv } = await supabase
+    const { data: conv } = await supabase
       .from('webchat_conversations')
       .select('lead_id, organization_id')
       .eq('id', conversationId)
@@ -5328,7 +5328,7 @@ async function syncFlowVarsToLead(
     if (Object.keys(update).length === 0 && !hasCustom) return;
 
     if (hasCustom) {
-      const { fecha: leadRow } = await supabase
+      const { data: leadRow } = await supabase
         .from('leads')
         .select('custom_fields')
         .eq('id', conv.lead_id)
@@ -5392,7 +5392,7 @@ async function executeFlowBlock(
 }> {
   try {
     // Fetch the flow
-    const { fecha: flowData, error: flowError } = await supabase
+    const { data: flowData, error: flowError } = await supabase
       .from('chat_flows')
       .select('*')
       .eq('id', flowContext.current_flow_id)
@@ -5427,17 +5427,17 @@ async function executeFlowBlock(
 
     switch (currentBlock.type) {
       case 'message':
-        responseContent = currentBlock.fecha.content || '';
+        responseContent = currentBlock.data.content || '';
         break;
 
       case 'input':
         // User's message is the input value - save it to flow variables
-        if (currentBlock.fecha.variable_name) {
-          flowVariables[currentBlock.fecha.variable_name] = userMessage;
-          console.log('[executeFlowBlock] Saved variable:', currentBlock.fecha.variable_name, '=', userMessage);
+        if (currentBlock.data.variable_name) {
+          flowVariables[currentBlock.data.variable_name] = userMessage;
+          console.log('[executeFlowBlock] Saved variable:', currentBlock.data.variable_name, '=', userMessage);
           // Sincroniza imediatamente no lead vinculado (name/phone/email/...)
           await syncFlowVarsToLead(supabase, conversationId, flowVariables, {
-            onlyKeys: [currentBlock.fecha.variable_name],
+            onlyKeys: [currentBlock.data.variable_name],
           });
         }
         
@@ -5453,7 +5453,7 @@ async function executeFlowBlock(
 
       case 'buttons':
         // Check if user clicked a button (message matches button label or ID)
-        const clickedButton = currentBlock.fecha.buttons?.find(
+        const clickedButton = currentBlock.data.buttons?.find(
           (btn: FlowBlockButton) => btn.label.toLowerCase() === userMessage.toLowerCase() || btn.id === userMessage
         );
         
@@ -5554,7 +5554,7 @@ async function executeFlowBlock(
                 .eq('id', conversationId);
               
               // Save message
-              const { fecha: handoffMsg } = await supabase
+              const { data: handoffMsg } = await supabase
                 .from('webchat_messages')
                 .insert({
                   conversation_id: conversationId,
@@ -5577,9 +5577,9 @@ async function executeFlowBlock(
           }
         } else {
           // Show buttons again
-          responseContent = currentBlock.fecha.content || 'Escolha uma opción:';
+          responseContent = currentBlock.data.content || 'Escolha uma opción:';
           messageType = 'buttons';
-          responseButtons = currentBlock.fecha.buttons?.map((btn: FlowBlockButton, index: number) => ({
+          responseButtons = currentBlock.data.buttons?.map((btn: FlowBlockButton, index: number) => ({
             id: btn.id,
             label: `${btn.emoji || ''} ${btn.label}`.trim(),
             type: btn.action_type === 'url' ? 'url' : 
@@ -5600,40 +5600,40 @@ async function executeFlowBlock(
         flowCompleted = true;
         
         // Se o bloco tiene agente específico, usar ele
-        if (currentBlock.fecha.agent_id) {
+        if (currentBlock.data.agent_id) {
           await supabase
             .from('webchat_conversations')
-            .update({ current_agent_id: currentBlock.fecha.agent_id })
+            .update({ current_agent_id: currentBlock.data.agent_id })
             .eq('id', conversationId);
           
-          flowVariables['__current_agent_id'] = currentBlock.fecha.agent_id;
-          console.log('[executeFlowBlock] AI takeover with agent:', currentBlock.fecha.agent_id);
+          flowVariables['__current_agent_id'] = currentBlock.data.agent_id;
+          console.log('[executeFlowBlock] AI takeover with agent:', currentBlock.data.agent_id);
         }
         
         // Armazenar overrides de permisos
-        if (currentBlock.fecha.override_can_do?.length) {
-          flowVariables['__override_can_do'] = JSON.stringify(currentBlock.fecha.override_can_do);
+        if (currentBlock.data.override_can_do?.length) {
+          flowVariables['__override_can_do'] = JSON.stringify(currentBlock.data.override_can_do);
         }
-        if (currentBlock.fecha.override_cannot_do?.length) {
-          flowVariables['__override_cannot_do'] = JSON.stringify(currentBlock.fecha.override_cannot_do);
+        if (currentBlock.data.override_cannot_do?.length) {
+          flowVariables['__override_cannot_do'] = JSON.stringify(currentBlock.data.override_cannot_do);
         }
-        if (currentBlock.fecha.override_handoff_triggers?.length) {
-          flowVariables['__override_handoff_triggers'] = JSON.stringify(currentBlock.fecha.override_handoff_triggers);
+        if (currentBlock.data.override_handoff_triggers?.length) {
+          flowVariables['__override_handoff_triggers'] = JSON.stringify(currentBlock.data.override_handoff_triggers);
         }
         
         // Armazenar config de auto-switch
-        if (currentBlock.fecha.auto_switch_enabled && currentBlock.fecha.auto_switch_agents?.length) {
-          flowVariables['__auto_switch_config'] = JSON.stringify(currentBlock.fecha.auto_switch_agents);
-          console.log('[executeFlowBlock] Auto-switch enabled with', currentBlock.fecha.auto_switch_agents.length, 'agents');
+        if (currentBlock.data.auto_switch_enabled && currentBlock.data.auto_switch_agents?.length) {
+          flowVariables['__auto_switch_config'] = JSON.stringify(currentBlock.data.auto_switch_agents);
+          console.log('[executeFlowBlock] Auto-switch enabled with', currentBlock.data.auto_switch_agents.length, 'agents');
         }
         
         // Contexto adicional
-        if (currentBlock.fecha.ai_context_prompt) {
-          flowVariables['__ai_context'] = currentBlock.fecha.ai_context_prompt;
+        if (currentBlock.data.ai_context_prompt) {
+          flowVariables['__ai_context'] = currentBlock.data.ai_context_prompt;
         }
         
-        responseContent = currentBlock.fecha.ai_context_prompt 
-          ? `[Contexto para IA: ${currentBlock.fecha.ai_context_prompt}]`
+        responseContent = currentBlock.data.ai_context_prompt 
+          ? `[Contexto para IA: ${currentBlock.data.ai_context_prompt}]`
           : '';
         console.log('[executeFlowBlock] AI takeover with variables:', Object.keys(flowVariables));
         break;
@@ -5641,7 +5641,7 @@ async function executeFlowBlock(
       case 'handoff':
         // Transfer to human agent
         flowCompleted = true;
-        responseContent = currentBlock.fecha.handoff_message || 'Vou transferir usted para um agente.';
+        responseContent = currentBlock.data.handoff_message || 'Vou transferir usted para um agente.';
         
         // Update conversation status — IA larga o lead, vai para fila do sector
         await supabase
@@ -5657,7 +5657,7 @@ async function executeFlowBlock(
 
       case 'tag':
         // Add tag to lead (implementation would connect to leads table)
-        console.log('[executeFlowBlock] Tag applied:', currentBlock.fecha.tag_name, '=', currentBlock.fecha.tag_value);
+        console.log('[executeFlowBlock] Tag applied:', currentBlock.data.tag_name, '=', currentBlock.data.tag_value);
         
         // Move to next block immediately
         if (nextBlockId) {
@@ -5669,8 +5669,8 @@ async function executeFlowBlock(
         break;
 
       case 'video':
-        responseContent = currentBlock.fecha.video_title || 'Assista a este vídeo:';
-        responseVideoUrl = currentBlock.fecha.video_url;
+        responseContent = currentBlock.data.video_title || 'Assista a este vídeo:';
+        responseVideoUrl = currentBlock.data.video_url;
         messageType = 'video';
         break;
 
@@ -5687,7 +5687,7 @@ async function executeFlowBlock(
       
       case 'agent_switch':
         // Switch to a different agent
-        const newAgentId = currentBlock.fecha.agent_id;
+        const newAgentId = currentBlock.data.agent_id;
         
         if (newAgentId) {
           // Update conversation with new agent
@@ -5722,15 +5722,15 @@ async function executeFlowBlock(
         break;
 
       case 'score': {
-        const inc = Number(currentBlock.fecha.score_value || 0);
+        const inc = Number(currentBlock.data.score_value || 0);
         if (inc) {
-          const { fecha: convRow } = await supabase
+          const { data: convRow } = await supabase
             .from('webchat_conversations')
             .select('lead_id')
             .eq('id', conversationId)
             .maybeSingle();
           if (convRow?.lead_id) {
-            const { fecha: leadRow } = await supabase
+            const { data: leadRow } = await supabase
               .from('leads')
               .select('score')
               .eq('id', convRow.lead_id)
@@ -5748,16 +5748,16 @@ async function executeFlowBlock(
       }
 
       case 'tag': {
-        const tagsToAdd: string[] = currentBlock.fecha.apply_tags
-          || (currentBlock.fecha.tag_name ? [currentBlock.fecha.tag_name] : []);
+        const tagsToAdd: string[] = currentBlock.data.apply_tags
+          || (currentBlock.data.tag_name ? [currentBlock.data.tag_name] : []);
         if (tagsToAdd.length) {
-          const { fecha: convRow } = await supabase
+          const { data: convRow } = await supabase
             .from('webchat_conversations')
             .select('lead_id')
             .eq('id', conversationId)
             .maybeSingle();
           if (convRow?.lead_id) {
-            const { fecha: leadRow } = await supabase
+            const { data: leadRow } = await supabase
               .from('leads')
               .select('tags')
               .eq('id', convRow.lead_id)
@@ -5775,10 +5775,10 @@ async function executeFlowBlock(
       }
 
       case 'condition': {
-        const branch = evaluateCondition(currentBlock.fecha.condition, flowVariables);
+        const branch = evaluateCondition(currentBlock.data.condition, flowVariables);
         const target = branch
-          ? currentBlock.fecha.true_next_block_id
-          : currentBlock.fecha.false_next_block_id;
+          ? currentBlock.data.true_next_block_id
+          : currentBlock.data.false_next_block_id;
         console.log('[executeFlowBlock] condition →', branch ? 'true' : 'false', target);
         if (target) {
           const nb = flow.blocks.find((b: FlowBlock) => b.id === target);
@@ -5789,8 +5789,8 @@ async function executeFlowBlock(
       }
 
       case 'create_task': {
-        const cfg = currentBlock.fecha.task_config;
-        const { fecha: convRow } = await supabase
+        const cfg = currentBlock.data.task_config;
+        const { data: convRow } = await supabase
           .from('webchat_conversations')
           .select('lead_id, organization_id')
           .eq('id', conversationId)
@@ -5826,7 +5826,7 @@ async function executeFlowBlock(
     // Save bot response message if we have content
     let botMessage = null;
     if (responseContent) {
-      const { fecha: msg, error: msgError } = await supabase
+      const { data: msg, error: msgError } = await supabase
         .from('webchat_messages')
         .insert({
           conversation_id: conversationId,
@@ -5906,7 +5906,7 @@ async function executeNextBlock(
 
   switch (block.type) {
     case 'message':
-      responseContent = block.fecha.content || '';
+      responseContent = block.data.content || '';
       // Replace variables in content
       Object.entries(flowVariables).forEach(([key, value]) => {
         responseContent = responseContent.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
@@ -5914,17 +5914,17 @@ async function executeNextBlock(
       break;
 
     case 'input':
-      responseContent = block.fecha.placeholder || 'Digite su respuesta...';
+      responseContent = block.data.placeholder || 'Digite su respuesta...';
       break;
 
     case 'buttons':
-      responseContent = block.fecha.content || 'Escolha uma opción:';
+      responseContent = block.data.content || 'Escolha uma opción:';
       // Replace variables in content
       Object.entries(flowVariables).forEach(([key, value]) => {
         responseContent = responseContent.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
       });
       messageType = 'buttons';
-      responseButtons = block.fecha.buttons?.map((btn: FlowBlockButton, index: number) => ({
+      responseButtons = block.data.buttons?.map((btn: FlowBlockButton, index: number) => ({
         id: btn.id,
         label: `${btn.emoji || ''} ${btn.label}`.trim(),
         type: btn.action_type === 'url' ? 'url' : 
@@ -5945,7 +5945,7 @@ async function executeNextBlock(
 
     case 'handoff':
       flowCompleted = true;
-      responseContent = block.fecha.handoff_message || 'Vou transferir usted para um agente.';
+      responseContent = block.data.handoff_message || 'Vou transferir usted para um agente.';
       await supabase
         .from('webchat_conversations')
         .update({
@@ -5958,21 +5958,21 @@ async function executeNextBlock(
       break;
 
     case 'video':
-      responseContent = block.fecha.video_title || 'Assista a este vídeo:';
-      responseVideoUrl = block.fecha.video_url;
+      responseContent = block.data.video_title || 'Assista a este vídeo:';
+      responseVideoUrl = block.data.video_url;
       messageType = 'video';
       break;
     
     case 'agent_switch':
       // Switch agent and continue to next block
-      if (block.fecha.agent_id) {
+      if (block.data.agent_id) {
         await supabase
           .from('webchat_conversations')
-          .update({ current_agent_id: block.fecha.agent_id })
+          .update({ current_agent_id: block.data.agent_id })
           .eq('id', conversationId);
         
-        flowVariables['__current_agent_id'] = block.fecha.agent_id;
-        console.log('[executeNextBlock] Switched to agent:', block.fecha.agent_id);
+        flowVariables['__current_agent_id'] = block.data.agent_id;
+        console.log('[executeNextBlock] Switched to agent:', block.data.agent_id);
       }
       
       // Continue to next block
@@ -5994,15 +5994,15 @@ async function executeNextBlock(
       break;
 
     case 'score': {
-      const inc = Number(block.fecha.score_value || 0);
+      const inc = Number(block.data.score_value || 0);
       if (inc) {
-        const { fecha: convRow } = await supabase
+        const { data: convRow } = await supabase
           .from('webchat_conversations')
           .select('lead_id')
           .eq('id', conversationId)
           .maybeSingle();
         if (convRow?.lead_id) {
-          const { fecha: leadRow } = await supabase
+          const { data: leadRow } = await supabase
             .from('leads').select('score').eq('id', convRow.lead_id).maybeSingle();
           await supabase.from('leads')
             .update({ score: Number(leadRow?.score || 0) + inc })
@@ -6017,13 +6017,13 @@ async function executeNextBlock(
     }
 
     case 'tag': {
-      const tagsToAdd: string[] = block.fecha.apply_tags
-        || (block.fecha.tag_name ? [block.fecha.tag_name] : []);
+      const tagsToAdd: string[] = block.data.apply_tags
+        || (block.data.tag_name ? [block.data.tag_name] : []);
       if (tagsToAdd.length) {
-        const { fecha: convRow } = await supabase
+        const { data: convRow } = await supabase
           .from('webchat_conversations').select('lead_id').eq('id', conversationId).maybeSingle();
         if (convRow?.lead_id) {
-          const { fecha: leadRow } = await supabase
+          const { data: leadRow } = await supabase
             .from('leads').select('tags').eq('id', convRow.lead_id).maybeSingle();
           const merged = Array.from(new Set([...(leadRow?.tags || []), ...tagsToAdd]));
           await supabase.from('leads').update({ tags: merged }).eq('id', convRow.lead_id);
@@ -6037,8 +6037,8 @@ async function executeNextBlock(
     }
 
     case 'condition': {
-      const branch = evaluateCondition(block.fecha.condition, flowVariables);
-      const target = branch ? block.fecha.true_next_block_id : block.fecha.false_next_block_id;
+      const branch = evaluateCondition(block.data.condition, flowVariables);
+      const target = branch ? block.data.true_next_block_id : block.data.false_next_block_id;
       if (target) {
         const nb = flow.blocks.find((b: FlowBlock) => b.id === target);
         if (nb) return executeNextBlock(supabase, conversationId, flow, nb, flowVariables);
@@ -6060,7 +6060,7 @@ async function executeNextBlock(
   // Save message if we have content
   let botMessage = null;
   if (responseContent) {
-    const { fecha: msg } = await supabase
+    const { data: msg } = await supabase
       .from('webchat_messages')
       .insert({
         conversation_id: conversationId,

@@ -363,7 +363,7 @@ export function ConversationalBooking({
                           </div>
                         ) : slots.filter(s => s.available).length === 0 ? (
                           <p className="text-sm text-muted-foreground py-4">
-                            No hay horarios disponibles en esta fecha.
+                            No hay horarios disponibles en esta data.
                           </p>
                         ) : (
                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-64 overflow-y-auto pr-2">

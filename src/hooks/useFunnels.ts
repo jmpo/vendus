@@ -114,10 +114,10 @@ export function useFunnels(arg?: string | UseFunnelsOptions) {
       if (productId) query = query.eq('product_id', productId);
       if (channelType) query = query.eq('channel_type', channelType);
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
 
       if (error) throw error;
-      return (fecha || []).map(parseFunnel);
+      return (data || []).map(parseFunnel);
     },
     enabled: !!profile?.organization_id,
   });
@@ -133,7 +133,7 @@ export function useFunnel(funnelId?: string) {
     queryFn: async () => {
       if (!funnelId) return null;
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('capture_funnels')
         .select(`
           *,
@@ -144,7 +144,7 @@ export function useFunnel(funnelId?: string) {
         .maybeSingle();
 
       if (error) throw error;
-      return fecha ? parseFunnel(fecha) : null;
+      return data ? parseFunnel(data) : null;
     },
     enabled: !!funnelId,
   });
@@ -174,11 +174,11 @@ export function useFunnelBySlug(slug?: string, channel?: 'chat' | 'form' | 'land
         ? query.or(`slug.eq.${slug},channels->${channel}->>slug_override.eq.${slug}`)
         : query.eq('slug', slug);
 
-      const { fecha, error } = await query.limit(10);
+      const { data, error } = await query.limit(10);
 
       if (error) throw error;
 
-      const match = (fecha || []).find((raw: any) => {
+      const match = (data || []).find((raw: any) => {
         if (!channel) return raw.slug === slug;
         if (channel === 'capture') {
           const form = raw.channels?.form;
@@ -217,7 +217,7 @@ export function useCreateFunnel() {
 
       // Verificar se slug ya existe
       while (true) {
-        const { fecha: existing } = await supabase
+        const { data: existing } = await supabase
           .from('capture_funnels')
           .select('id')
           .eq('organization_id', profile.organization_id)
@@ -258,14 +258,14 @@ export function useCreateFunnel() {
       if (input.theme) insertPayload.theme = input.theme;
       if (input.appearance) insertPayload.appearance = input.appearance;
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('capture_funnels')
         .insert(insertPayload)
         .select()
         .single();
 
       if (error) throw error;
-      return parseFunnel(fecha);
+      return parseFunnel(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['funnels'] });
@@ -323,7 +323,7 @@ export function useUpdateFunnel() {
         dbUpdates.round_robin_config = updates.round_robin_config as unknown as Json;
       }
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('capture_funnels')
         .update(dbUpdates)
         .eq('id', id)
@@ -331,11 +331,11 @@ export function useUpdateFunnel() {
         .single();
 
       if (error) throw error;
-      return parseFunnel(fecha);
+      return parseFunnel(data);
     },
-    onSuccess: (fecha) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['funnels'] });
-      queryClient.invalidateQueries({ queryKey: ['funnel', fecha.id] });
+      queryClient.invalidateQueries({ queryKey: ['funnel', data.id] });
     },
     onError: (error: Error) => {
       toast.error('Error al actualizar embudo: ' + error.message);
@@ -382,7 +382,7 @@ export function useDuplicateFunnel() {
       if (!profile?.organization_id) throw new Error('Organización no encontrada');
 
       // Buscar embudo original
-      const { fecha: original, error: fetchError } = await supabase
+      const { data: original, error: fetchError } = await supabase
         .from('capture_funnels')
         .select('*')
         .eq('id', funnelId)
@@ -396,7 +396,7 @@ export function useDuplicateFunnel() {
       let counter = 1;
 
       while (true) {
-        const { fecha: existing } = await supabase
+        const { data: existing } = await supabase
           .from('capture_funnels')
           .select('id')
           .eq('organization_id', profile.organization_id)
@@ -409,7 +409,7 @@ export function useDuplicateFunnel() {
       }
 
       // Criar cópia
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('capture_funnels')
         .insert({
           organization_id: original.organization_id,
@@ -437,7 +437,7 @@ export function useDuplicateFunnel() {
         .single();
 
       if (error) throw error;
-      return parseFunnel(fecha);
+      return parseFunnel(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['funnels'] });
@@ -462,7 +462,7 @@ export function useFunnelAnalytics(funnelId?: string, days = 30) {
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('funnel_analytics')
         .select('*')
         .eq('funnel_id', funnelId)
@@ -470,7 +470,7 @@ export function useFunnelAnalytics(funnelId?: string, days = 30) {
         .order('date', { ascending: true });
 
       if (error) throw error;
-      return (fecha || []) as FunnelAnalytics[];
+      return (data || []) as FunnelAnalytics[];
     },
     enabled: !!funnelId,
   });
@@ -485,7 +485,7 @@ export function useUpdateFunnelStatus() {
 
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: Funnel['status'] }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('capture_funnels')
         .update({ status })
         .eq('id', id)
@@ -493,11 +493,11 @@ export function useUpdateFunnelStatus() {
         .single();
 
       if (error) throw error;
-      return parseFunnel(fecha);
+      return parseFunnel(data);
     },
-    onSuccess: (fecha) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['funnels'] });
-      queryClient.invalidateQueries({ queryKey: ['funnel', fecha.id] });
+      queryClient.invalidateQueries({ queryKey: ['funnel', data.id] });
       
       const statusLabels: Record<string, string> = {
         draft: 'Rascunho',
@@ -505,7 +505,7 @@ export function useUpdateFunnelStatus() {
         paused: 'Pausado',
         archived: 'Arquivado',
       };
-      toast.success(`Embudo cambiado para ${statusLabels[fecha.status]}`);
+      toast.success(`Embudo cambiado para ${statusLabels[data.status]}`);
     },
     onError: (error: Error) => {
       toast.error('Error al cambiar status: ' + error.message);
@@ -530,7 +530,7 @@ export function useSaveFlowBlocks() {
       flow_blocks: FunnelBlock[]; 
       start_block_id: string | null;
     }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('capture_funnels')
         .update({ 
           flow_blocks: flow_blocks as unknown as Json,
@@ -541,10 +541,10 @@ export function useSaveFlowBlocks() {
         .single();
 
       if (error) throw error;
-      return parseFunnel(fecha);
+      return parseFunnel(data);
     },
-    onSuccess: (fecha) => {
-      queryClient.invalidateQueries({ queryKey: ['funnel', fecha.id] });
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['funnel', data.id] });
       toast.success('Flujo guardado con éxito!');
     },
     onError: (error: Error) => {

@@ -56,7 +56,7 @@ const channelOptions = [
 
 export function LeadDetailModal({ isOpen, onClose, leadId }: LeadDetailModalProps) {
   const { user } = useAuth();
-  const { fecha: lead, isLoading } = useLead(leadId);
+  const { data: lead, isLoading } = useLead(leadId);
   const updateLead = useUpdateLead();
   const createInteraction = useCreateInteraction();
   

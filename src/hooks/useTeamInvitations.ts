@@ -31,7 +31,7 @@ export function useTeamInvitations() {
     queryKey: ['team-invitations', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [] as TeamInvitation[];
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('team_invitations')
         .select(`
           *,
@@ -43,7 +43,7 @@ export function useTeamInvitations() {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return fecha as TeamInvitation[];
+      return data as TeamInvitation[];
     },
     enabled: !!profile?.organization_id,
   });
@@ -57,12 +57,12 @@ export function useInvitationByToken(token: string | null) {
 
       // SECURITY: usa RPC SECURITY DEFINER que só retorna o convite cujo
       // token bate exatamente — evita enumeração de convites pendentes.
-      const { fecha, error } = await supabase.rpc('get_invitation_by_token' as any, {
+      const { data, error } = await supabase.rpc('get_invitation_by_token' as any, {
         p_token: token,
       });
 
       if (error) return null;
-      return (fecha as any) || null;
+      return (data as any) || null;
     },
     enabled: !!token,
   });
@@ -113,7 +113,7 @@ export function useCreateInvitation() {
       if (!profile?.organization_id) throw new Error('Organización no encontrada');
       
       // Check if invitation already exists
-      const { fecha: existing } = await supabase
+      const { data: existing } = await supabase
         .from('team_invitations')
         .select('id')
         .eq('email', email.toLowerCase())
@@ -128,7 +128,7 @@ export function useCreateInvitation() {
       // Get squad name if squadId is provided
       let squadName: string | undefined;
       if (squadId) {
-        const { fecha: squad } = await supabase
+        const { data: squad } = await supabase
           .from('sales_squads')
           .select('name')
           .eq('id', squadId)
@@ -138,14 +138,14 @@ export function useCreateInvitation() {
 
       // Get organization name
       let organizationName: string | undefined;
-      const { fecha: org } = await supabase
+      const { data: org } = await supabase
         .from('organizations')
         .select('name')
         .eq('id', profile.organization_id)
         .single();
       organizationName = org?.name;
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('team_invitations')
         .insert({
           email: email.toLowerCase(),
@@ -162,14 +162,14 @@ export function useCreateInvitation() {
       // Send invitation email
       await sendInviteEmail({
         email: email.toLowerCase(),
-        token: fecha.token,
+        token: data.token,
         role,
         squadName,
         invitedByName: profile.full_name,
         organizationName,
       });
       
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['team-invitations'] });
@@ -201,7 +201,7 @@ export function useResendInvitation() {
   return useMutation({
     mutationFn: async (invitation: TeamInvitation) => {
       // Reset expiration date
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('team_invitations')
         .update({ 
           expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() 
@@ -215,13 +215,13 @@ export function useResendInvitation() {
       // Resend email
       await sendInviteEmail({
         email: invitation.email,
-        token: fecha.token,
+        token: data.token,
         role: invitation.role,
         squadName: invitation.squad?.name,
         invitedByName: invitation.inviter?.full_name,
       });
       
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['team-invitations'] });
@@ -232,16 +232,16 @@ export function useResendInvitation() {
 export function useAcceptInvitation() {
   return useMutation({
     mutationFn: async ({ token, userId }: { token: string; userId: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .rpc('accept_invitation', { 
           invitation_token: token, 
           user_id: userId 
         });
       
       if (error) throw error;
-      if (!fecha) throw new Error('Convite inválido ou expirado');
+      if (!data) throw new Error('Convite inválido ou expirado');
       
-      return fecha;
+      return data;
     },
   });
 }

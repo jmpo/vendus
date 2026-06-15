@@ -119,7 +119,7 @@ export function useMediaUpload(): UseMediaUploadReturn {
       if (upErr) throw upErr;
 
       setProgress(80);
-      const { fecha: pub } = supabase.storage.from(BUCKET).getPublicUrl(path);
+      const { data: pub } = supabase.storage.from(BUCKET).getPublicUrl(path);
       const url = pub.publicUrl;
 
       // Probes leves de metadados (best effort)

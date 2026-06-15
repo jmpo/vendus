@@ -33,8 +33,8 @@ export function ImageUploadField({ value, onChange, label, helper, folder = 'gen
       const path = `${profile.organization_id}/${folder}/${Date.now()}.${ext}`;
       const { error } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: true, cacheControl: '3600' });
       if (error) throw error;
-      const { fecha } = supabase.storage.from(BUCKET).getPublicUrl(path);
-      onChange(fecha.publicUrl);
+      const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
+      onChange(data.publicUrl);
       toast.success('Imagen enviada');
     } catch (e: any) {
       toast.error(e.message || 'Falha no upload');

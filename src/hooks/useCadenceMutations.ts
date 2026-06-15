@@ -23,7 +23,7 @@ export function useCreateCadenceDay() {
 
   return useMutation({
     mutationFn: async (input: CreateCadenceDayInput) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('cadence_templates')
         .insert([{
           product_id: input.productId,
@@ -36,7 +36,7 @@ export function useCreateCadenceDay() {
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['cadence', variables.productId] });
@@ -59,7 +59,7 @@ export function useUpdateCadenceDay() {
       if (updates.trigger !== undefined) updateData.trigger = updates.trigger;
       if (updates.blocks !== undefined) updateData.blocks = JSON.parse(JSON.stringify(updates.blocks));
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('cadence_templates')
         .update(updateData)
         .eq('id', id)
@@ -67,7 +67,7 @@ export function useUpdateCadenceDay() {
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cadence'] });
@@ -116,11 +116,11 @@ export function useUploadCadenceMedia() {
 
       if (uploadError) throw uploadError;
 
-      const { fecha } = supabase.storage
+      const { data } = supabase.storage
         .from('cadence-media')
         .getPublicUrl(fileName);
 
-      return fecha.publicUrl;
+      return data.publicUrl;
     },
     onError: (error) => {
       console.error('Error uploading media:', error);

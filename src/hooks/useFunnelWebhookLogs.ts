@@ -14,9 +14,9 @@ export function useFunnelWebhookLogs(funnelId?: string, blockId?: string, limit 
         .order('created_at', { ascending: false })
         .limit(limit);
       if (blockId) q = q.eq('block_id', blockId);
-      const { fecha, error } = await q;
+      const { data, error } = await q;
       if (error) throw error;
-      return (fecha || []) as FunnelWebhookLog[];
+      return (data || []) as FunnelWebhookLog[];
     },
     enabled: !!funnelId,
     refetchInterval: 30000,

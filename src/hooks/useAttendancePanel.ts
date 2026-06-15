@@ -38,13 +38,13 @@ export interface PanelFilters {
 const PAGE = 200;
 
 async function loadTab(userId: string, tab: 'waiting' | 'attending'): Promise<PanelConversation[]> {
-  const { fecha, error } = await supabase.rpc('inbox_list_conversations', {
+  const { data, error } = await supabase.rpc('inbox_list_conversations', {
     p_user_id: userId,
     p_tab: tab,
     p_limit: PAGE,
   });
   if (error) throw error;
-  return (fecha || []) as unknown as PanelConversation[];
+  return (data || []) as unknown as PanelConversation[];
 }
 
 export function useAttendancePanel(filters: PanelFilters) {
@@ -105,8 +105,8 @@ export function useAttendancePanel(filters: PanelFilters) {
   };
 
   const sections = useMemo(() => {
-    const waiting = queryWaiting.fecha || [];
-    const attending = queryAttending.fecha || [];
+    const waiting = queryWaiting.data || [];
+    const attending = queryAttending.data || [];
 
     const queueRaw = waiting.filter((c) => !c.current_agent_id);
     const aiRaw = waiting.filter((c) => !!c.current_agent_id);
@@ -170,7 +170,7 @@ export function useAttendancePanel(filters: PanelFilters) {
         humans: humans.length,
       },
     };
-  }, [queryWaiting.fecha, queryAttending.fecha, filters]);
+  }, [queryWaiting.data, queryAttending.data, filters]);
 
   return {
     sections,

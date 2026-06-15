@@ -15,8 +15,8 @@ function cleanMarkdown(markdown: string): string {
   // 2. Remove inline JSON objects that look like player configs
   cleaned = cleaned.replace(/\{\s*"(?:callActions|smartAutoPlay|playerInit|conversion|fakeBar)"[\s\S]*?\n\s*\}/g, '');
   
-  // 3. Remove large base64 fecha URIs (images embedded as base64)
-  cleaned = cleaned.replace(/!\[.*?\]\(fecha:image\/[^)]{200,}\)/g, '[imagen]');
+  // 3. Remove large base64 data URIs (images embedded as base64)
+  cleaned = cleaned.replace(/!\[.*?\]\(data:image\/[^)]{200,}\)/g, '[imagen]');
   
   // 4. Remove standalone true/false lines (common in JSON dumps)
   cleaned = cleaned.replace(/^\s*(true|false)\s*$/gm, '');
@@ -93,12 +93,12 @@ Deno.serve(async (req) => {
       }),
     });
 
-    const fecha = await response.json();
+    const data = await response.json();
 
     if (!response.ok) {
-      console.error('Firecrawl API error:', fecha);
+      console.error('Firecrawl API error:', data);
       return new Response(
-        JSON.stringify({ success: false, error: fecha.error || `Request failed with status ${response.status}` }),
+        JSON.stringify({ success: false, error: data.error || `Request failed with status ${response.status}` }),
         { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -106,14 +106,14 @@ Deno.serve(async (req) => {
     console.log('Scrape successful');
     
     // Clean the markdown content if present
-    if (fecha.fecha?.markdown) {
-      fecha.fecha.markdown = cleanMarkdown(fecha.fecha.markdown);
-    } else if (fecha.markdown) {
-      fecha.markdown = cleanMarkdown(fecha.markdown);
+    if (data.data?.markdown) {
+      data.data.markdown = cleanMarkdown(data.data.markdown);
+    } else if (data.markdown) {
+      data.markdown = cleanMarkdown(data.markdown);
     }
     
     return new Response(
-      JSON.stringify(fecha),
+      JSON.stringify(data),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {

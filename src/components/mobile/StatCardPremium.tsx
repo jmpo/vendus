@@ -101,7 +101,7 @@ export function StatCardPremium({
             
             {sparklineData && sparklineData.length > 1 && (
               <Sparkline 
-                fecha={sparklineData} 
+                data={sparklineData} 
                 width={50} 
                 height={24}
               />

@@ -47,9 +47,9 @@ export function useDeals(filters?: { productId?: string; sellerId?: string; stat
         query = query.eq('status', filters.status);
       }
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
-      return fecha as unknown as Deal[];
+      return data as unknown as Deal[];
     }
   });
 }
@@ -69,7 +69,7 @@ export function useDealsSummary(productId?: string, sellerId?: string) {
         query = query.eq('seller_id', sellerId);
       }
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
 
       const now = new Date();
@@ -83,7 +83,7 @@ export function useDealsSummary(productId?: string, sellerId?: string) {
         monthlyDealsCount: 0
       };
 
-      fecha?.forEach(deal => {
+      data?.forEach(deal => {
         if (deal.status === 'won') {
           summary.totalWon += Number(deal.deal_value);
           summary.dealsCount++;
@@ -110,7 +110,7 @@ export function useCreateDeal() {
     mutationFn: async (deal: Omit<Deal, 'id' | 'created_at' | 'updated_at' | 'leads' | 'profiles' | 'products'>) => {
       // Criar o deal
       const { plan_name, ...dealData } = deal;
-      const { fecha: newDeal, error: dealError } = await supabase
+      const { data: newDeal, error: dealError } = await supabase
         .from('deals')
         .insert({ ...dealData, plan_name } as any)
         .select()
@@ -147,7 +147,7 @@ export function useUpdateDeal() {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<Deal> & { id: string }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('deals')
         .update(updates)
         .eq('id', id)
@@ -155,7 +155,7 @@ export function useUpdateDeal() {
         .single();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['deals'] });

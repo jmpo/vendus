@@ -22,10 +22,10 @@ function findBestStartBlock(blocks: FunnelBlock[], currentStartId: string | null
   const targetedIds = new Set(
     blocks.flatMap(b => [
       b.next_block_id,
-      b.fecha.true_next_block_id,
-      b.fecha.false_next_block_id,
-      ...(b.fecha.options?.map(o => o.next_block_id) || []),
-      ...(b.fecha.ai_outputs?.map(o => o.next_block_id) || []),
+      b.data.true_next_block_id,
+      b.data.false_next_block_id,
+      ...(b.data.options?.map(o => o.next_block_id) || []),
+      ...(b.data.ai_outputs?.map(o => o.next_block_id) || []),
     ].filter(Boolean))
   );
   const orphans = blocks.filter(b => !targetedIds.has(b.id));
@@ -41,7 +41,7 @@ function relinkSequence(ordered: FunnelBlock[], all: FunnelBlock[]): FunnelBlock
     if (idx === -1) return b; // bloco fora da cadeia principal — preserva
     const next = ordered[idx + 1];
     // Só sobrescreve next_block_id se NÃO há ramificações de opción definidas
-    const hasBranching = (b.fecha.options || []).some(o => o.next_block_id);
+    const hasBranching = (b.data.options || []).some(o => o.next_block_id);
     if (hasBranching) return b;
     return { ...b, next_block_id: next?.id || null };
   });
@@ -90,7 +90,7 @@ export function QuizFlowTab({ funnel }: Props) {
   /** Cria um novo bloco a partir de um item da paleta visual. */
   const createFromPalette = useCallback((item: QuizPaletteItem): FunnelBlock => {
     const base = createDefaultBlock(item.blockType as FunnelBlockType, { x: 0, y: 0 });
-    base.fecha = applyPresetToBlockData(item.preset, base.fecha) as any;
+    base.data = applyPresetToBlockData(item.preset, base.data) as any;
     return base;
   }, []);
 
@@ -182,7 +182,7 @@ export function QuizFlowTab({ funnel }: Props) {
     const block = blocks.find(b => b.id === blockId);
     if (!block) return;
     const nb = createDefaultBlock(block.type, { x: 0, y: 0 });
-    nb.fecha = { ...block.fecha };
+    nb.data = { ...block.data };
     setBlocks(prev => [...prev, nb]);
     setSelectedBlockId(nb.id);
     setIsDirty(true);

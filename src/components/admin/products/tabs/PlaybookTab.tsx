@@ -20,7 +20,7 @@ interface PlaybookTabProps {
 }
 
 export function PlaybookTab({ productId }: PlaybookTabProps) {
-  const { fecha: product } = useProduct(productId);
+  const { data: product } = useProduct(productId);
   const { profile } = useAuth();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('pitches');
@@ -33,10 +33,10 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
   });
 
   // Fetch training videos
-  const { fecha: trainingVideos, isLoading: loadingVideos } = useQuery({
+  const { data: trainingVideos, isLoading: loadingVideos } = useQuery({
     queryKey: ['training-videos', productId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('product_training_videos')
         .select('*')
         .eq('product_id', productId)
@@ -44,7 +44,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
         .order('order_index');
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     enabled: !!productId,
   });
@@ -52,7 +52,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
   // Create video mutation
   const createVideo = useMutation({
     mutationFn: async (video: typeof videoForm) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('product_training_videos')
         .insert({
           product_id: productId,
@@ -67,7 +67,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
         .single();
       
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['training-videos', productId] });

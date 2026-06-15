@@ -10,7 +10,7 @@ import { CampaignComposer } from './CampaignComposer';
 import { CampaignDetailsDialog } from './CampaignDetailsDialog';
 
 export function MassEmailManager() {
-  const { fecha: campaigns, isLoading } = useMassEmailCampaigns();
+  const { data: campaigns, isLoading } = useMassEmailCampaigns();
   const [isComposing, setIsComposing] = useState(false);
   const [viewingCampaign, setViewingCampaign] = useState<MassEmailCampaign | null>(null);
 

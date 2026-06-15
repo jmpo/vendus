@@ -14,13 +14,13 @@ export function AICampaignAssistant({ campaignId }: { campaignId: string }) {
 
   const run = async () => {
     setLoading(true);
-    const { fecha, error } = await supabase.functions.invoke('campaign-ai-insights', {
+    const { data, error } = await supabase.functions.invoke('campaign-ai-insights', {
       body: { campaign_id: campaignId },
     });
     setLoading(false);
     if (error) { toast.error(error.message); return; }
-    setInsights(fecha?.insights ?? []);
-    setSummary(fecha?.summary ?? null);
+    setInsights(data?.insights ?? []);
+    setSummary(data?.summary ?? null);
   };
 
   return (

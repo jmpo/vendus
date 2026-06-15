@@ -18,7 +18,7 @@ const statusVariant: Record<string, string> = {
 };
 
 export function MetaWhatsAppTemplatesPanel({ connection, onClose }: { connection: MetaWAConnection; onClose: () => void }) {
-  const { fecha: templates = [], isLoading } = useMetaWATemplates(connection.id);
+  const { data: templates = [], isLoading } = useMetaWATemplates(connection.id);
   const sync = useSyncMetaWATemplates();
   const submit = useSubmitMetaWATemplate();
   const [creating, setCreating] = useState(false);

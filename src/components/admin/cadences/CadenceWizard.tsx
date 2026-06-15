@@ -101,16 +101,16 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
   useEffect(() => {
     if (!orgId) return;
     supabase.from('webchat_agent_configs').select('id, agent_name').eq('organization_id', orgId).eq('is_active', true)
-      .then(({ fecha }) => setAgents((fecha as any) ?? []));
+      .then(({ data }) => setAgents((data as any) ?? []));
     supabase.from('lead_tags').select('id, name, color').eq('organization_id', orgId).order('name')
-      .then(({ fecha }) => setTags((fecha as any) ?? []));
+      .then(({ data }) => setTags((data as any) ?? []));
   }, [orgId]);
 
   useEffect(() => {
     if (!cadenceId) return;
     setLoading(true);
     (async () => {
-      const { fecha: c } = await supabase.from('cadences' as any).select('*').eq('id', cadenceId).maybeSingle();
+      const { data: c } = await supabase.from('cadences' as any).select('*').eq('id', cadenceId).maybeSingle();
       if (c) {
         const cd = c as any;
         setName(cd.name);
@@ -132,7 +132,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
         setMoveStageId(acts.move_stage_id ?? null);
         setInternalNote(acts.internal_note ?? '');
       }
-      const { fecha: st } = await supabase.from('cadence_steps' as any).select('*').eq('cadence_id', cadenceId).order('order_index');
+      const { data: st } = await supabase.from('cadence_steps' as any).select('*').eq('cadence_id', cadenceId).order('order_index');
       setSteps(((st as any[]) ?? []).map((s) => ({
         id: s.id, order_index: s.order_index, name: s.name, objective: s.objective ?? '',
         execute_immediately: s.execute_immediately, delay_value: s.delay_value, delay_unit: s.delay_unit,
@@ -202,9 +202,9 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
       // Replace steps
       await supabase.from('cadence_steps' as any).delete().eq('cadence_id', id);
     } else {
-      const { fecha, error } = await supabase.from('cadences' as any).insert(payload).select('id').single();
-      if (error || !fecha) { toast.error(error?.message ?? 'Error al crear'); setSaving(false); return; }
-      id = (fecha as any).id;
+      const { data, error } = await supabase.from('cadences' as any).insert(payload).select('id').single();
+      if (error || !data) { toast.error(error?.message ?? 'Error al crear'); setSaving(false); return; }
+      id = (data as any).id;
     }
 
     if (steps.length) {

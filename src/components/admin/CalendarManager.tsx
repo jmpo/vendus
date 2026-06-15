@@ -63,8 +63,8 @@ function AgendaCalendarView() {
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [clickedDate, setClickedDate] = useState<Date | undefined>();
 
-  const { fecha: products } = useProducts();
-  const { fecha: teamMembers } = useTeamMembers();
+  const { data: products } = useProducts();
+  const { data: teamMembers } = useTeamMembers();
 
   const dateRange = useMemo(() => {
     switch (viewMode) {
@@ -94,7 +94,7 @@ function AgendaCalendarView() {
     }
   }, [currentDate, viewMode]);
 
-  const { fecha: events, isLoading } = useCalendarEvents({
+  const { data: events, isLoading } = useCalendarEvents({
     ...dateRange,
     userId: selectedUserId || undefined,
     productId: selectedProductId || undefined,

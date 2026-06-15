@@ -49,14 +49,14 @@ export function useMyPermissions() {
     queryKey: ['user-permissions', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_permissions')
         .select('*')
         .eq('user_id', user.id)
         .maybeSingle();
       
       if (error) throw error;
-      return fecha as UserPermissions | null;
+      return data as UserPermissions | null;
     },
     enabled: !!user?.id,
   });
@@ -67,14 +67,14 @@ export function useUserPermissions(userId: string | undefined) {
     queryKey: ['user-permissions', userId],
     queryFn: async () => {
       if (!userId) return null;
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_permissions')
         .select('*')
         .eq('user_id', userId)
         .maybeSingle();
       
       if (error) throw error;
-      return fecha as UserPermissions | null;
+      return data as UserPermissions | null;
     },
     enabled: !!userId,
   });
@@ -89,7 +89,7 @@ export function useUpdateUserPermissions() {
       const { id, user_id, organization_id, ...updates } = permissions as any;
 
       // Upsert so it works whether the row exists or not (e.g. legacy users)
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_permissions')
         .upsert(
           {
@@ -103,7 +103,7 @@ export function useUpdateUserPermissions() {
         .maybeSingle();
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['user-permissions', variables.userId] });

@@ -21,15 +21,15 @@ export default function Updates() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [filter, setFilter] = useState<string | null>(null);
-  const { fecha: releases = [] } = useReleases({ published: true });
+  const { data: releases = [] } = useReleases({ published: true });
   const markRead = useMarkReleaseRead();
 
-  const { fecha: reads } = useQuery({
+  const { data: reads } = useQuery({
     queryKey: ['my-release-reads', user?.id],
     queryFn: async () => {
       if (!user) return [] as string[];
-      const { fecha } = await supabase.from('platform_release_reads').select('release_id').eq('user_id', user.id);
-      return (fecha || []).map(r => r.release_id);
+      const { data } = await supabase.from('platform_release_reads').select('release_id').eq('user_id', user.id);
+      return (data || []).map(r => r.release_id);
     },
     enabled: !!user,
   });

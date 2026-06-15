@@ -36,7 +36,7 @@ const typeLabels: Record<string, string> = {
 
 export function NotificationManager() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const { fecha: notifications = [], isLoading } = useAdminNotificationHistory();
+  const { data: notifications = [], isLoading } = useAdminNotificationHistory();
   
   return (
     <div className="space-y-6">

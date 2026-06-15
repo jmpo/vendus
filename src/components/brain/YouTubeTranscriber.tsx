@@ -30,7 +30,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
     author: string;
   } | null>(null);
   
-  const { fecha: videos, isLoading } = useKnowledgeSourcesByType(productId, 'youtube');
+  const { data: videos, isLoading } = useKnowledgeSourcesByType(productId, 'youtube');
   const createSource = useCreateKnowledgeSource();
   const deleteSource = useDeleteKnowledgeSource();
   const updateSource = useUpdateKnowledgeSource();
@@ -45,14 +45,14 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
     setPreview(null);
 
     try {
-      const { fecha, error } = await supabase.functions.invoke('process-knowledge-source', {
+      const { data, error } = await supabase.functions.invoke('process-knowledge-source', {
         body: { sourceType: 'youtube', url: url.trim(), productId },
       });
 
       if (error) throw error;
-      if (!fecha.success) throw new Error(fecha.error);
+      if (!data.success) throw new Error(data.error);
 
-      setPreview(fecha.fecha);
+      setPreview(data.data);
       toast({ title: '¡Video procesado!' });
     } catch (error) {
       console.error('Error processing YouTube video:', error);

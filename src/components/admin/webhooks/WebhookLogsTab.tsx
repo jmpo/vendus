@@ -37,7 +37,7 @@ interface WebhookLogsTabProps {
 }
 
 export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
-  const { fecha: logs, isLoading, refetch } = useWebhookLogs(webhookId);
+  const { data: logs, isLoading, refetch } = useWebhookLogs(webhookId);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedLog, setSelectedLog] = useState<WebhookLog | null>(null);
   const [reprocessingId, setReprocessingId] = useState<string | null>(null);

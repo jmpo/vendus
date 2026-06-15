@@ -11,7 +11,7 @@ export function WidgetPreviewTab({ funnel }: Props) {
   const [device, setDevice] = useState<'mobile' | 'desktop'>('desktop');
   const [reloadKey, setReloadKey] = useState(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const { fecha: baseUrl } = usePublicAppUrl();
+  const { data: baseUrl } = usePublicAppUrl();
   const isActive = funnel.status === 'active';
 
   // Página fake hospedando o widget para simular como ficaria em um site externo.
@@ -41,7 +41,7 @@ export function WidgetPreviewTab({ funnel }: Props) {
     <div class="card"><div class="placeholder"></div></div>
     <div class="card"><div class="placeholder"></div></div>
   </main>
-  <script src="${baseUrl}/funnel-widget.js" fecha-funnel-id="${funnel.id}" async></script>
+  <script src="${baseUrl}/funnel-widget.js" data-funnel-id="${funnel.id}" async></script>
 </body></html>`, [baseUrl, funnel.id, reloadKey]);
 
   const deviceClass = device === 'mobile'

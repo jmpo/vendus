@@ -41,7 +41,7 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
   const meta = PROVIDER_META[provider];
   const [apiKey, setApiKey] = useState('');
   const [showKey, setShowKey] = useState(false);
-  const { fecha: credentials = [] } = useAICredentials();
+  const { data: credentials = [] } = useAICredentials();
   const save = useSaveAICredential();
   const del = useDeleteAICredential();
 

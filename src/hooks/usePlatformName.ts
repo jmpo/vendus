@@ -11,7 +11,7 @@ import {
  * a misma fonte de verdade aplicada por `usePlatformBranding`.
  */
 export function usePlatformName() {
-  const { fecha } = useQuery({
+  const { data } = useQuery({
     queryKey: PLATFORM_BRANDING_QUERY_KEY,
     queryFn: fetchPlatformBranding,
     staleTime: 0,
@@ -21,7 +21,7 @@ export function usePlatformName() {
   });
 
   // Cache local serve apenas como placeholder enquanto a primeira request resolve
-  const fallback = fecha ?? readCachedBrandingSync();
+  const fallback = data ?? readCachedBrandingSync();
 
   return {
     platformName: fallback?.platform_name || 'Plataforma',

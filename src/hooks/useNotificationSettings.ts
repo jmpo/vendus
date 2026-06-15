@@ -28,13 +28,13 @@ export function useNotificationSettings(userId: string | undefined) {
     queryKey: ['notification-settings', userId],
     queryFn: async () => {
       if (!userId) return null;
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_notification_settings')
         .select('*')
         .eq('user_id', userId)
         .maybeSingle();
       if (error) throw error;
-      return fecha as NotificationSettings | null;
+      return data as NotificationSettings | null;
     },
     enabled: !!userId,
   });
@@ -45,7 +45,7 @@ export function useUpsertNotificationSettings() {
   const { profile } = useAuth();
   return useMutation({
     mutationFn: async ({ userId, settings }: { userId: string; settings: Partial<NotificationSettings> }) => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('user_notification_settings')
         .upsert({
           user_id: userId,
@@ -55,7 +55,7 @@ export function useUpsertNotificationSettings() {
         .select()
         .maybeSingle();
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: (_, vars) => {
       queryClient.invalidateQueries({ queryKey: ['notification-settings', vars.userId] });

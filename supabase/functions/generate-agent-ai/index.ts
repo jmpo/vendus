@@ -62,9 +62,9 @@ serve(async (req) => {
     let adminName: string | null = null;
     if (authHeader) {
       const token = authHeader.replace("Bearer ", "");
-      const { fecha: userData } = await supabase.auth.getUser(token);
+      const { data: userData } = await supabase.auth.getUser(token);
       if (userData?.user) {
-        const { fecha: profile } = await supabase
+        const { data: profile } = await supabase
           .from("profiles")
           .select("organization_id, full_name")
           .eq("id", userData.user.id)
@@ -82,13 +82,13 @@ serve(async (req) => {
     let refundPolicy = '';
     let paymentPolicy = '';
     if (organizationId) {
-      const { fecha: org } = await supabase
+      const { data: org } = await supabase
         .from("organizations")
         .select("name")
         .eq("id", organizationId)
         .maybeSingle();
       if (org?.name) orgName = org.name;
-      const { fecha: settings } = await supabase
+      const { data: settings } = await supabase
         .from("auto_notification_settings")
         .select("alert_critical_product_idle_hours")
         .eq("organization_id", organizationId)
@@ -101,7 +101,7 @@ serve(async (req) => {
     let productCtx: any = null;
     let supportKnowledge = '';
     if (product_id) {
-      const { fecha: product } = await supabase
+      const { data: product } = await supabase
         .from("products")
         .select("name, description, icp, pitch_15s, pitch_30s, organization_id, pricing")
         .eq("id", product_id)
@@ -111,7 +111,7 @@ serve(async (req) => {
         productCtx = product;
       }
       // Pull product knowledge sources (objections, benefits, etc.)
-      const { fecha: sources } = await supabase
+      const { data: sources } = await supabase
         .from("product_knowledge_sources")
         .select("title, source_type, extracted_content, question, answer")
         .eq("product_id", product_id)
@@ -129,7 +129,7 @@ serve(async (req) => {
           .join('\n\n');
       }
       // Objections
-      const { fecha: objections } = await supabase
+      const { data: objections } = await supabase
         .from('objections')
         .select('what_they_say, suggested_response')
         .eq('product_id', product_id)
@@ -149,13 +149,13 @@ serve(async (req) => {
     let routingMatrix = '';
     let monitoredCount = 0;
     if (organizationId && (isOrgScope || agent_type === 'orchestrator' || agent_type === 'admin')) {
-      const { fecha: products } = await supabase
+      const { data: products } = await supabase
         .from("products")
         .select("id, name, description")
         .eq("organization_id", organizationId)
         .eq("is_active", true)
         .limit(20);
-      const { fecha: existingAgents } = await supabase
+      const { data: existingAgents } = await supabase
         .from("product_agents")
         .select("id, name, agent_type, product_id")
         .eq("organization_id", organizationId)
@@ -185,7 +185,7 @@ serve(async (req) => {
 
       // Admin monitored products
       if (agent_type === 'admin') {
-        const { fecha: notif } = await supabase
+        const { data: notif } = await supabase
           .from('auto_notification_settings')
           .select('monitored_product_ids')
           .eq('organization_id', organizationId)
@@ -199,7 +199,7 @@ serve(async (req) => {
     // ============= Org-wide support materials (for support agent) =============
     let orgSupportMaterials = '';
     if (agent_type === 'support' && organizationId) {
-      const { fecha: mats } = await supabase
+      const { data: mats } = await supabase
         .from('agent_training_materials')
         .select('title, extracted_content')
         .eq('organization_id', organizationId)
@@ -322,9 +322,9 @@ Devuelve una versão otimizada que respeite o tipo del agente e o contexto real.
         throw new Error("AI gateway error");
       }
 
-      const fecha = await response.json();
-      await recordLovableUsage(supabase, organizationId, 'content_generation', 'google/gemini-2.5-flash', fecha?.usage, 'generate-agent-ai');
-      const toolCall = fecha.choices?.[0]?.message?.tool_calls?.[0];
+      const data = await response.json();
+      await recordLovableUsage(supabase, organizationId, 'content_generation', 'google/gemini-2.5-flash', data?.usage, 'generate-agent-ai');
+      const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
       if (toolCall?.function?.arguments) {
         const result = JSON.parse(toolCall.function.arguments);
         return new Response(JSON.stringify({ field: optimize_field, ...result }), {
@@ -348,8 +348,8 @@ Devuelve una versão otimizada que respeite o tipo del agente e o contexto real.
 ${isAdmin ? '- Admin: Chief of Staff INTERNO. NUNCA tenta vender, agendar reunión com o admin, ou tratá-lo como lead.' : ''}
 ${isOrchestrator ? '- Orquestrador: APENAS classifica e roteia. NUNCA explica producto, NUNCA dá preço, NUNCA negocia.' : ''}
 ${isSupport ? '- Suporte: Resolve dudas técnicas. NUNCA vende producto adicional. Usa APENAS materiais cadastrados.' : ''}
-${agent_type === 'sdr' ? '- SDR: Qualifica e identifica intenção. NUNCA dá preço fechado, NUNCA fecha venta — passa para Closer. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que el cliente pedir material visual — esse é o canal oficial. NUNCA invente bloqueios como "no posso enviar por aqui", "off-market", "restrição de segurança".' : ''}
-${agent_type === 'closer' ? '- Closer: Apresenta oferta e fecha. NUNCA dá descuento sem política autorizada. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO direto no WhatsApp quando o cliente pedir — no desvia, no inventa restrição.' : ''}
+${agent_type === 'sdr' ? '- SDR: Qualifica e identifica intenção. NUNCA dá preço fechado, NUNCA data venta — passa para Closer. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que el cliente pedir material visual — esse é o canal oficial. NUNCA invente bloqueios como "no posso enviar por aqui", "off-market", "restrição de segurança".' : ''}
+${agent_type === 'closer' ? '- Closer: Apresenta oferta e data. NUNCA dá descuento sem política autorizada. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO direto no WhatsApp quando o cliente pedir — no desvia, no inventa restrição.' : ''}
 ${agent_type === 'financial' ? '- Financeiro: Lida com boletos/NF/cobrança. NUNCA negocia dívida sem autorização.' : ''}
 ${agent_type === 'custom' ? '- Custom: Se for foco comercial, ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que pedido — canal oficial de mídia.' : ''}
 
@@ -540,9 +540,9 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (j�
       throw new Error("AI gateway error");
     }
 
-    const fecha = await response.json();
-    await recordLovableUsage(supabase, organizationId, 'content_generation', 'google/gemini-2.5-flash', fecha?.usage, 'generate-agent-ai');
-    const toolCall = fecha.choices?.[0]?.message?.tool_calls?.[0];
+    const data = await response.json();
+    await recordLovableUsage(supabase, organizationId, 'content_generation', 'google/gemini-2.5-flash', data?.usage, 'generate-agent-ai');
+    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
 
     if (toolCall?.function?.arguments) {
       const result = JSON.parse(toolCall.function.arguments);

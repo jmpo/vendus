@@ -51,7 +51,7 @@ function replaceVariables(template: string, variables: Record<string, string>): 
   return result;
 }
 
-// Build smart variable map from lead fecha + template variables
+// Build smart variable map from lead data + template variables
 function buildTemplateVariables(
   lead: { name?: string; email?: string; phone?: string },
   templateVars?: Array<{ name: string; description?: string }>,
@@ -247,7 +247,7 @@ Deno.serve(async (req) => {
     const contentType = (req.headers.get('content-type') || '').toLowerCase();
 
     try {
-      if (contentType.includes('multipart/form-fecha')) {
+      if (contentType.includes('multipart/form-data')) {
         const formData = await req.formData();
         formData.forEach((value, key) => {
           if (value instanceof File) {
@@ -309,7 +309,7 @@ Deno.serve(async (req) => {
     console.log(`[Webhook] Payload:`, JSON.stringify(payload).slice(0, 500));
 
     // Fetch webhook configuration
-    const { fecha: webhook, error: webhookError } = await supabase
+    const { data: webhook, error: webhookError } = await supabase
       .from('webhooks')
       .select('*')
       .eq('id', webhookId)
@@ -362,7 +362,7 @@ Deno.serve(async (req) => {
     const flatFields = flattenObject(payload);
 
     // Create log entry
-    const { fecha: log, error: logError } = await supabase
+    const { data: log, error: logError } = await supabase
       .from('webhook_logs')
       .insert({
         webhook_id: webhookId,
@@ -521,7 +521,7 @@ async function executeAction(
       let existingLead: { id: string; name: string | null; email: string | null } | null = null;
 
       if (phoneNormalized) {
-        const { fecha: byPhone } = await supabase
+        const { data: byPhone } = await supabase
           .from('leads')
           .select('id, name, email')
           .eq('organization_id', webhook.organization_id)
@@ -532,7 +532,7 @@ async function executeAction(
       }
 
       if (!existingLead && incomingEmail) {
-        const { fecha: byEmail } = await supabase
+        const { data: byEmail } = await supabase
           .from('leads')
           .select('id, name, email')
           .eq('organization_id', webhook.organization_id)
@@ -581,7 +581,7 @@ async function executeAction(
       }
 
       if (webhook.product_id) {
-        const { fecha: firstStage } = await supabase
+        const { data: firstStage } = await supabase
           .from('pipeline_stages')
           .select('id')
           .eq('product_id', webhook.product_id)
@@ -600,7 +600,7 @@ async function executeAction(
       if (incomingPhone) leadData.phone = incomingPhone;
       if (incomingCompany) leadData.company = incomingCompany;
 
-      const { fecha: lead, error } = await supabase
+      const { data: lead, error } = await supabase
         .from('leads')
         .insert(leadData)
         .select()
@@ -610,7 +610,7 @@ async function executeAction(
       // fall back to reusing whichever lead now exists.
       if (error) {
         if ((error as any).code === '23505' && phoneNormalized) {
-          const { fecha: raceLead } = await supabase
+          const { data: raceLead } = await supabase
             .from('leads')
             .select('id')
             .eq('organization_id', webhook.organization_id)
@@ -634,7 +634,7 @@ async function executeAction(
 
       if (lead && webhook.squad_id) {
         try {
-          const { fecha: assignedUserId } = await supabase.rpc('distribute_lead', {
+          const { data: assignedUserId } = await supabase.rpc('distribute_lead', {
             p_lead_id: lead.id,
             p_squad_id: webhook.squad_id,
             p_organization_id: webhook.organization_id,
@@ -727,7 +727,7 @@ async function executeAction(
       if (!existingLeadId) throw new Error('No lead to tag');
 
       // Resolver organization_id del lead (necessário para resolver tags por nombre)
-      const { fecha: leadRow } = await supabase
+      const { data: leadRow } = await supabase
         .from('leads')
         .select('organization_id')
         .eq('id', existingLeadId)
@@ -740,7 +740,7 @@ async function executeAction(
       if ((!tagIds || tagIds.length === 0) && Array.isArray(config.tags) && config.tags.length > 0 && orgId) {
         const names = config.tags.map((s: string) => String(s).trim()).filter(Boolean);
         if (names.length > 0) {
-          const { fecha: matched } = await supabase
+          const { data: matched } = await supabase
             .from('lead_tags')
             .select('id, name')
             .eq('organization_id', orgId);
@@ -803,8 +803,8 @@ async function executeAction(
     case 'send_email': {
       if (!existingLeadId) throw new Error('No lead for email');
 
-      // Get lead fecha
-      const { fecha: lead } = await supabase
+      // Get lead data
+      const { data: lead } = await supabase
         .from('leads')
         .select('name, email, phone, organization_id')
         .eq('id', existingLeadId)
@@ -816,7 +816,7 @@ async function executeAction(
 
       // Get organization name for sender and variables
       let orgName = 'Notificación';
-      const { fecha: org } = await supabase
+      const { data: org } = await supabase
         .from('organizations')
         .select('name')
         .eq('id', lead.organization_id || webhook.organization_id)
@@ -828,7 +828,7 @@ async function executeAction(
       let html = generateWelcomeHtml(lead.name || 'Cliente');
 
       if (config.email_template_id) {
-        const { fecha: template } = await supabase
+        const { data: template } = await supabase
           .from('email_templates')
           .select('subject, html_content, variables')
           .eq('id', config.email_template_id)
@@ -883,8 +883,8 @@ async function executeAction(
     case 'send_email_to_seller': {
       if (!existingLeadId) throw new Error('No lead for seller notification');
 
-      // Get lead fecha with assigned seller
-      const { fecha: lead } = await supabase
+      // Get lead data with assigned seller
+      const { data: lead } = await supabase
         .from('leads')
         .select('name, email, phone, assigned_to')
         .eq('id', existingLeadId)
@@ -895,7 +895,7 @@ async function executeAction(
       }
 
       // Get seller email and org name in parallel
-      const [{ fecha: seller }, { fecha: org }] = await Promise.all([
+      const [{ data: seller }, { data: org }] = await Promise.all([
         supabase.from('profiles').select('email, full_name').eq('id', lead.assigned_to).single(),
         supabase.from('organizations').select('name').eq('id', webhook.organization_id).single()
       ]);
@@ -964,7 +964,7 @@ async function executeAction(
       }
 
       // Get lead's assigned user
-      const { fecha: lead } = await supabase
+      const { data: lead } = await supabase
         .from('leads')
         .select('assigned_to, name')
         .eq('id', existingLeadId)
@@ -998,7 +998,7 @@ async function executeAction(
       if (!config.value_field) throw new Error('No value field specified');
 
       // Get custom field info
-      const { fecha: customField } = await supabase
+      const { data: customField } = await supabase
         .from('custom_fields')
         .select('field_key, name')
         .eq('id', config.custom_field_id)
@@ -1010,7 +1010,7 @@ async function executeAction(
       const fieldValue = getFieldValue(fields, config.value_field);
 
       // Get current lead metadata
-      const { fecha: lead } = await supabase
+      const { data: lead } = await supabase
         .from('leads')
         .select('metadata')
         .eq('id', existingLeadId)
@@ -1040,7 +1040,7 @@ async function executeAction(
       if (!existingLeadId) throw new Error('No lead to notify about');
 
       // Determine provider
-      const { fecha: wpSetting } = await supabase
+      const { data: wpSetting } = await supabase
         .from('integration_settings')
         .select('settings')
         .eq('organization_id', webhook.organization_id)
@@ -1056,8 +1056,8 @@ async function executeAction(
         return { lead_id: existingLeadId, skipped: true, reason: 'No WhatsApp provider configured' };
       }
 
-      // Get lead fecha for variable substitution
-      const { fecha: lead } = await supabase
+      // Get lead data for variable substitution
+      const { data: lead } = await supabase
         .from('leads')
         .select('name, email, phone')
         .eq('id', existingLeadId)
@@ -1080,7 +1080,7 @@ async function executeAction(
         }
       } else if (whatsappTarget === 'specific_user') {
         if (config.whatsapp_user_id) {
-          const { fecha: profile } = await supabase
+          const { data: profile } = await supabase
             .from('profiles')
             .select('phone')
             .eq('id', config.whatsapp_user_id)
@@ -1091,7 +1091,7 @@ async function executeAction(
         }
       } else {
         // all_team — fetch all profiles in organization with phone
-        const { fecha: profiles } = await supabase
+        const { data: profiles } = await supabase
           .from('profiles')
           .select('phone')
           .eq('organization_id', webhook.organization_id)
@@ -1176,8 +1176,8 @@ async function executeAction(
 
       // Removed duplicate lovableApiKey check - already checked above
 
-      // 1. Get lead fecha
-      const { fecha: lead } = await supabase
+      // 1. Get lead data
+      const { data: lead } = await supabase
         .from('leads')
         .select('name, email, phone, metadata, temperature, deal_value')
         .eq('id', existingLeadId)
@@ -1196,7 +1196,7 @@ async function executeAction(
       const agentId = config.ai_agent_id;
       if (!agentId) throw new Error('No AI agent specified');
 
-      const { fecha: agent } = await supabase
+      const { data: agent } = await supabase
         .from('product_agents')
         .select('*')
         .eq('id', agentId)
@@ -1212,10 +1212,10 @@ async function executeAction(
         .eq('is_active', true)
         .order('created_at', { ascending: true })
         .limit(1)
-        .maybeSingle()).fecha;
+        .maybeSingle()).data;
 
       if (!outreachWidget?.id) {
-        const { fecha: createdWidget, error: createWidgetError } = await supabase
+        const { data: createdWidget, error: createWidgetError } = await supabase
           .from('webchat_widgets')
           .insert({
             organization_id: webhook.organization_id,
@@ -1231,7 +1231,7 @@ async function executeAction(
       }
 
       // 3. Get product knowledge (brain)
-      const { fecha: knowledgeSources } = await supabase
+      const { data: knowledgeSources } = await supabase
         .from('ai_knowledge_base')
         .select('title, content, category')
         .eq('product_id', agent.product_id)
@@ -1314,7 +1314,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       console.log(`[Webhook/AIOutreach] Generated message for ${lead?.name}: ${generatedMessage.slice(0, 100)}...`);
 
       // 7. Determine WhatsApp provider
-      const { fecha: providerSetting } = await supabase
+      const { data: providerSetting } = await supabase
         .from('integration_settings')
         .select('settings')
         .eq('organization_id', webhook.organization_id)
@@ -1340,7 +1340,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           instanceQuery = instanceQuery.eq('status', 'connected').order('updated_at', { ascending: false }).limit(1);
         }
 
-        const { fecha: instances, error: instErr } = await instanceQuery;
+        const { data: instances, error: instErr } = await instanceQuery;
         const instance = instances?.[0];
 
         if (instErr || !instance) {
@@ -1349,7 +1349,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
 
         console.log(`[Webhook/AIOutreach] Sending via Evolution Go instance ${instance.name} (${instance.id}) to ${leadPhone}`);
 
-        const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+        const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
           body: {
             organization_id: webhook.organization_id,
             instance_id: instance.id,
@@ -1376,7 +1376,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           if (lookupResp.status === 404) {
             console.warn(`[Webhook/AIOutreach] BotConversa subscriber not found for ${leadPhone} — skipping WhatsApp send`);
             // Still create conversation and outreach queue but mark as skipped
-            const { fecha: conversation } = await supabase
+            const { data: conversation } = await supabase
               .from('webchat_conversations')
               .insert({
                 organization_id: webhook.organization_id,
@@ -1444,7 +1444,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       }
 
       // 8. Create conversation in inbox
-      const { fecha: conversation } = await supabase
+      const { data: conversation } = await supabase
         .from('webchat_conversations')
         .insert({
           organization_id: webhook.organization_id,
@@ -1546,13 +1546,13 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       if (!flowId) throw new Error('flow_id is required');
 
       // 1. Carrega lead, embudo e (opcionalmente) agente
-      const { fecha: lead } = await supabase
+      const { data: lead } = await supabase
         .from('leads')
         .select('name, email, phone')
         .eq('id', existingLeadId)
         .single();
 
-      const { fecha: funnel } = await supabase
+      const { data: funnel } = await supabase
         .from('capture_funnels')
         .select('id, name, status, flow_blocks, start_block_id, organization_id')
         .eq('id', flowId)
@@ -1563,7 +1563,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       }
 
       if (agentId) {
-        const { fecha: agent } = await supabase
+        const { data: agent } = await supabase
           .from('product_agents')
           .select('id, name, organization_id')
           .eq('id', agentId)
@@ -1595,10 +1595,10 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
         .eq('is_active', true)
         .order('created_at', { ascending: true })
         .limit(1)
-        .maybeSingle()).fecha;
+        .maybeSingle()).data;
 
       if (!widgetRow?.id) {
-        const { fecha: createdWidget, error: createWidgetError } = await supabase
+        const { data: createdWidget, error: createWidgetError } = await supabase
           .from('webchat_widgets')
           .insert({
             organization_id: webhook.organization_id,
@@ -1647,7 +1647,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
         },
       };
 
-      const { fecha: conversation, error: convErr } = await supabase
+      const { data: conversation, error: convErr } = await supabase
         .from('webchat_conversations')
         .insert(conversationPayload)
         .select()
@@ -1665,7 +1665,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       // 5. Se canal WhatsApp e bloco inicial é mensaje, envia primeira mensaje via Evolution Go
       let firstMessageSent: string | null = null;
       if (channel === 'whatsapp' && startBlock) {
-        const blockData = startBlock.fecha || {};
+        const blockData = startBlock.data || {};
         let messageText: string =
           blockData.content ||
           blockData.message ||
@@ -1695,13 +1695,13 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
               .order('updated_at', { ascending: false })
               .limit(1);
           }
-          const { fecha: instances } = await instanceQuery;
+          const { data: instances } = await instanceQuery;
           const instance = instances?.[0];
           if (!instance) {
             throw new Error('Nenhuma instância WhatsApp conectada para a organização');
           }
 
-          const { fecha: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+          const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
             body: {
               organization_id: webhook.organization_id,
               instance_id: instance.id,

@@ -19,14 +19,14 @@ export function useGuidedOnboarding() {
         setChecked(true);
         return;
       }
-      const { fecha } = await supabase
+      const { data } = await supabase
         .from('profiles')
         .select('guided_onboarding_completed_at, guided_onboarding_skipped_at')
         .eq('id', user.id)
         .maybeSingle();
       if (!active) return;
-      const completed = (fecha as any)?.guided_onboarding_completed_at;
-      const skipped = (fecha as any)?.guided_onboarding_skipped_at;
+      const completed = (data as any)?.guided_onboarding_completed_at;
+      const skipped = (data as any)?.guided_onboarding_skipped_at;
       setShouldShow(!completed && !skipped);
       setChecked(true);
     }

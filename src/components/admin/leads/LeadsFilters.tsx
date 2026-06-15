@@ -116,7 +116,7 @@ function CustomFieldRuleRow({
   const { fields } = useCustomFields();
   const field = fields.find((f) => f.field_key === rule.fieldKey);
   const operators = OPERATORS_BY_TYPE[rule.fieldType] || OPERATORS_BY_TYPE.text;
-  const { fecha: distinctValues } = useCustomFieldValues(
+  const { data: distinctValues } = useCustomFieldValues(
     rule.fieldType === 'text' && (!field?.options || field.options.length === 0)
       ? rule.fieldKey
       : null
@@ -289,7 +289,7 @@ export function LeadsFilters({
   const [dateFromOpen, setDateFromOpen] = useState(false);
   const [dateToOpen, setDateToOpen] = useState(false);
   const [tagSearch, setTagSearch] = useState('');
-  const { fecha: leadTags } = useLeadTags();
+  const { data: leadTags } = useLeadTags();
   const { fields: customFields } = useCustomFields();
 
   const activeFiltersCount = [

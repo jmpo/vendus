@@ -31,11 +31,11 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
   const orgId = profile?.organization_id;
 
   // Load all candidate agents (excluding the orchestrator itself) so we can route to them.
-  const { fecha: agentsData } = useQuery({
+  const { data: agentsData } = useQuery({
     queryKey: ['quick-menu-target-agents', orgId, formData.id],
     enabled: !!orgId,
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('product_agents')
         .select('id, name, agent_type, product_id, products:product_id(name)')
         .eq('organization_id', orgId!)
@@ -43,7 +43,7 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
         .neq('agent_type', 'orchestrator')
         .order('name');
       if (error) throw error;
-      return fecha || [];
+      return data || [];
     },
   });
 

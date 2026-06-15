@@ -28,14 +28,14 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const { fecha: { user } } = await supabase.auth.getUser(auth.replace("Bearer ", ""));
+    const { data: { user } } = await supabase.auth.getUser(auth.replace("Bearer ", ""));
     if (!user) {
       return new Response(JSON.stringify({ error: "unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const { fecha: profile } = await supabase
+    const { data: profile } = await supabase
       .from("profiles").select("organization_id").eq("id", user.id).single();
     const organization_id = profile?.organization_id;
     if (!organization_id) {
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
     }
 
     // Confirma que a instância pertence à org
-    const { fecha: inst } = await supabase
+    const { data: inst } = await supabase
       .from("evolution_instances")
       .select("id, organization_id")
       .eq("id", instance_id)

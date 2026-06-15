@@ -14,16 +14,16 @@ export function useUpdateProfile() {
   const { user } = useAuth();
 
   return useMutation({
-    mutationFn: async (fecha: UpdateProfileData) => {
+    mutationFn: async (data: UpdateProfileData) => {
       if (!user?.id) throw new Error('Usuario no autenticado');
 
       const { error } = await supabase
         .from('profiles')
-        .update(fecha)
+        .update(data)
         .eq('id', user.id);
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -54,7 +54,7 @@ export function useUploadAvatar() {
       if (uploadError) throw uploadError;
 
       // Get public URL
-      const { fecha: { publicUrl } } = supabase.storage
+      const { data: { publicUrl } } = supabase.storage
         .from('avatars')
         .getPublicUrl(fileName);
 
@@ -76,7 +76,7 @@ export function useUpdatePassword() {
   return useMutation({
     mutationFn: async ({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }) => {
       // First verify current password by trying to sign in
-      const { fecha: { user } } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user?.email) throw new Error('Usuario no autenticado');
 
       // Update password

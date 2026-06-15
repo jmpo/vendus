@@ -35,7 +35,7 @@ export function AssignProductDialog({
   open, 
   onOpenChange 
 }: AssignProductDialogProps) {
-  const { fecha: products, isLoading: productsLoading } = useProducts();
+  const { data: products, isLoading: productsLoading } = useProducts();
   const assignProduct = useAssignProduct();
   const unassignProduct = useUnassignProduct();
   const { user } = useAuth();

@@ -16,9 +16,9 @@ import { toast } from 'sonner';
 
 export function AssignmentManager() {
   const { user } = useAuth();
-  const { fecha: products, isLoading: loadingProducts } = useProducts();
-  const { fecha: members, isLoading: loadingMembers } = useTeamMembers();
-  const { fecha: assignments, isLoading: loadingAssignments } = useProductAssignments();
+  const { data: products, isLoading: loadingProducts } = useProducts();
+  const { data: members, isLoading: loadingMembers } = useTeamMembers();
+  const { data: assignments, isLoading: loadingAssignments } = useProductAssignments();
   
   const assignProduct = useAssignProduct();
   const unassignProduct = useUnassignProduct();

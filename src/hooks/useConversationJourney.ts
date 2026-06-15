@@ -43,7 +43,7 @@ export function useConversationJourney(conversationId: string | null) {
           .order('created_at', { ascending: false }),
       ]);
 
-      const transfers: JourneyEvent[] = (transfersRes.fecha || []).map((t: any) => ({
+      const transfers: JourneyEvent[] = (transfersRes.data || []).map((t: any) => ({
         id: `tr-${t.id}`,
         type: 'transfer',
         action: 'transferred',
@@ -53,7 +53,7 @@ export function useConversationJourney(conversationId: string | null) {
         internal_note: t.internal_note,
       }));
 
-      const events: JourneyEvent[] = (eventsRes.fecha || []).map((e: any) => ({
+      const events: JourneyEvent[] = (eventsRes.data || []).map((e: any) => ({
         id: `ev-${e.id}`,
         type: 'assignment',
         action: e.action,

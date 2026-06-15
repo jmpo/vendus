@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
       auth: { persistSession: false },
     });
-    const { fecha: userData } = await userClient.auth.getUser();
+    const { data: userData } = await userClient.auth.getUser();
     if (!userData?.user) return json({ error: "not authenticated" }, 401);
     const userId = userData.user.id;
 
@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
     });
 
     // Resolve org + role
-    const { fecha: profile } = await adminClient
+    const { data: profile } = await adminClient
       .from("profiles")
       .select("organization_id")
       .eq("id", userId)
@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
     if (!profile?.organization_id) return json({ error: "user has no organization" }, 400);
     const orgId = profile.organization_id;
 
-    const { fecha: roles } = await adminClient
+    const { data: roles } = await adminClient
       .from("user_roles")
       .select("role")
       .eq("user_id", userId);

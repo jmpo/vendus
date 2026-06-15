@@ -30,7 +30,7 @@ function formatCEP(v: string) {
 }
 
 export function CompanySettings() {
-  const { fecha: company } = useCompanySettings();
+  const { data: company } = useCompanySettings();
   const { profile } = useAuth();
   const update = useUpdateCompanySettings();
   const fileInput = useRef<HTMLInputElement>(null);

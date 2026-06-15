@@ -39,9 +39,9 @@ const DEFAULT_ACTIONS: PostQuizActions = {
 
 export function QuizIntegrationsTab({ funnel }: Props) {
   const updateFunnel = useUpdateFunnel();
-  const { fecha: agents } = useAllAgents();
+  const { data: agents } = useAllAgents();
   const { cadences } = useCadences();
-  const { fecha: tags } = useLeadTags();
+  const { data: tags } = useLeadTags();
 
   const initialActions: PostQuizActions = {
     ...DEFAULT_ACTIONS,

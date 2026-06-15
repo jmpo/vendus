@@ -45,7 +45,7 @@ export function GlobalSearch({ onSelectLead, onSelectProduct }: GlobalSearchProp
   }, []);
 
   // Search query
-  const { fecha: results, isLoading } = useQuery({
+  const { data: results, isLoading } = useQuery({
     queryKey: ['global-search', searchQuery, profile?.organization_id],
     queryFn: async () => {
       if (!searchQuery.trim() || searchQuery.length < 2) {
@@ -83,11 +83,11 @@ export function GlobalSearch({ onSelectLead, onSelectProduct }: GlobalSearchProp
       ]);
 
       return {
-        leads: leadsResult.fecha || [],
-        products: productsResult.fecha || [],
-        materials: materialsResult.fecha || [],
-        objections: objectionsResult.fecha || [],
-        knowledge: knowledgeResult.fecha || []
+        leads: leadsResult.data || [],
+        products: productsResult.data || [],
+        materials: materialsResult.data || [],
+        objections: objectionsResult.data || [],
+        knowledge: knowledgeResult.data || []
       };
     },
     enabled: searchQuery.length >= 2

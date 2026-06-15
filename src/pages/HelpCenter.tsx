@@ -17,9 +17,9 @@ function CategoryIcon({ name, className }: { name?: string | null; className?: s
 export default function HelpCenter() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
-  const { fecha: rawCategories = [] } = useHelpCategories();
-  const { fecha: articles = [] } = useHelpArticles({ published: true, search: search || undefined });
-  const { fecha: isSuperAdmin = false } = useIsSuperAdmin();
+  const { data: rawCategories = [] } = useHelpCategories();
+  const { data: articles = [] } = useHelpArticles({ published: true, search: search || undefined });
+  const { data: isSuperAdmin = false } = useIsSuperAdmin();
 
   const categories = useMemo(
     () => rawCategories.filter((c: any) => c.visibility !== 'super_admin_only' || isSuperAdmin),

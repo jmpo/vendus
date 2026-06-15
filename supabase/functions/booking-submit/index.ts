@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
     console.log(`Processing booking for ${guestEmail} at ${startTime}`);
 
     // 1. Fetch event type
-    const { fecha: eventType, error: eventError } = await supabase
+    const { data: eventType, error: eventError } = await supabase
       .from('booking_event_types')
       .select('*')
       .eq('id', eventTypeId)
@@ -73,7 +73,7 @@ Deno.serve(async (req) => {
     const endTime = endDate.toISOString();
 
     // 3. Check for conflicts (double-booking protection)
-    const { fecha: conflicts } = await supabase
+    const { data: conflicts } = await supabase
       .from('calendar_events')
       .select('id')
       .eq('user_id', eventType.user_id)
@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
     // 4. Create calendar event
     let meetLink: string | undefined;
     
-    const { fecha: calendarEvent, error: calendarError } = await supabase
+    const { data: calendarEvent, error: calendarError } = await supabase
       .from('calendar_events')
       .insert({
         user_id: eventType.user_id,
@@ -127,7 +127,7 @@ Deno.serve(async (req) => {
     // 5. Create booking request
     const confirmationToken = crypto.randomUUID().replace(/-/g, '').substring(0, 32);
 
-    const { fecha: booking, error: bookingError } = await supabase
+    const { data: booking, error: bookingError } = await supabase
       .from('booking_requests')
       .insert({
         organization_id: eventType.organization_id,
@@ -161,7 +161,7 @@ Deno.serve(async (req) => {
     // 6. If host has Google Calendar connected, trigger fire-and-forget sync
     //    (always — we want the booking pushed to the host calendar even without Meet).
     try {
-      const { fecha: googleConnection } = await supabase
+      const { data: googleConnection } = await supabase
         .from('google_calendar_connections')
         .select('id')
         .eq('user_id', eventType.user_id)
@@ -187,13 +187,13 @@ Deno.serve(async (req) => {
     // ============= ENQUEUE AUTOMATION JOBS =============
     // Read notification settings + reminders for this event type and enqueue jobs.
     try {
-      const { fecha: settings } = await supabase
+      const { data: settings } = await supabase
         .from('booking_notification_settings')
         .select('*')
         .eq('event_type_id', eventType.id)
         .maybeSingle();
 
-      const { fecha: reminders } = await supabase
+      const { data: reminders } = await supabase
         .from('booking_reminders')
         .select('*')
         .eq('event_type_id', eventType.id)
@@ -290,7 +290,7 @@ Deno.serve(async (req) => {
     // Send confirmation email
     const siteUrl = Deno.env.get('SITE_URL') || 'https://salesflow1.lovable.app';
     try {
-      const { fecha: hostProfile } = await supabase
+      const { data: hostProfile } = await supabase
         .from('profiles')
         .select('full_name')
         .eq('id', eventType.user_id)

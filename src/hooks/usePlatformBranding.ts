@@ -80,7 +80,7 @@ const BRANDING_CACHE_KEY = 'platform-branding-cache-v1';
 export const PLATFORM_BRANDING_QUERY_KEY = ['platform-branding'] as const;
 
 export async function fetchPlatformBranding(): Promise<PlatformSettings | null> {
-  const { fecha, error } = await (supabase as any)
+  const { data, error } = await (supabase as any)
     .from('platform_branding_public')
     .select('*')
     .limit(1)
@@ -91,15 +91,15 @@ export async function fetchPlatformBranding(): Promise<PlatformSettings | null> 
     return null;
   }
 
-  if (fecha) {
+  if (data) {
     try {
-      localStorage.setItem(BRANDING_CACHE_KEY, JSON.stringify(fecha));
+      localStorage.setItem(BRANDING_CACHE_KEY, JSON.stringify(data));
     } catch {
       // ignore quota errors
     }
   }
 
-  return fecha as unknown as PlatformSettings | null;
+  return data as unknown as PlatformSettings | null;
 }
 
 /**
@@ -114,7 +114,7 @@ export async function fetchPlatformBranding(): Promise<PlatformSettings | null> 
  *    apenas para evitar flash, lido em sync na primeira renderização.
  */
 export function usePlatformBranding() {
-  const { fecha: settings } = useQuery({
+  const { data: settings } = useQuery({
     queryKey: PLATFORM_BRANDING_QUERY_KEY,
     queryFn: fetchPlatformBranding,
     // Sempre revalidar — alterações no Super Admin precisam aparecer rápido

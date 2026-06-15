@@ -76,7 +76,7 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
   const [isSaving, setIsSaving] = useState(false);
   const [selectedPlanId, setSelectedPlanId] = useState('');
 
-  const { fecha: product } = useProduct(lead.product_id || '');
+  const { data: product } = useProduct(lead.product_id || '');
   const activePlans: ProductPlan[] = ((product?.pricing as unknown as ProductPlan[]) || []).filter(p => p.active);
   const hasPlans = activePlans.length > 0;
 

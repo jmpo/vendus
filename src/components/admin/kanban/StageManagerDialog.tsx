@@ -62,10 +62,10 @@ export function StageManagerDialog({
   const deleteStage = useDeletePipelineStage();
 
   // Fetch lead counts per stage
-  const { fecha: leadCounts = {} } = useQuery({
+  const { data: leadCounts = {} } = useQuery({
     queryKey: ['lead-counts-by-stage', productId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('leads')
         .select('current_stage_id')
         .eq('product_id', productId);
@@ -73,7 +73,7 @@ export function StageManagerDialog({
       if (error) throw error;
 
       const counts: Record<string, number> = {};
-      fecha?.forEach((lead) => {
+      data?.forEach((lead) => {
         if (lead.current_stage_id) {
           counts[lead.current_stage_id] = (counts[lead.current_stage_id] || 0) + 1;
         }
@@ -155,29 +155,29 @@ export function StageManagerDialog({
     }
   };
 
-  const handleSaveStage = async (fecha: Partial<Stage> & { id?: string }) => {
+  const handleSaveStage = async (data: Partial<Stage> & { id?: string }) => {
     try {
-      if (fecha.id) {
+      if (data.id) {
         // Update existing
         await updateStage.mutateAsync({
-          id: fecha.id,
-          name: fecha.name,
-          description: fecha.description,
-          color: fecha.color,
-          is_won: fecha.is_won,
-          is_lost: fecha.is_lost,
+          id: data.id,
+          name: data.name,
+          description: data.description,
+          color: data.color,
+          is_won: data.is_won,
+          is_lost: data.is_lost,
         });
         toast.success('Etapa actualizada!');
       } else {
         // Create new
         await createStage.mutateAsync({
           product_id: productId,
-          name: fecha.name!,
-          description: fecha.description || null,
-          color: fecha.color || '#6b7280',
-          order_index: fecha.order_index || localStages.length + 1,
-          is_won: fecha.is_won || false,
-          is_lost: fecha.is_lost || false,
+          name: data.name!,
+          description: data.description || null,
+          color: data.color || '#6b7280',
+          order_index: data.order_index || localStages.length + 1,
+          is_won: data.is_won || false,
+          is_lost: data.is_lost || false,
         });
         toast.success('Etapa creada!');
       }
@@ -207,8 +207,8 @@ export function StageManagerDialog({
       toast.error('Preencha o nombre da etapa');
       return;
     }
-    const fecha = formRef.current.getData();
-    await handleSaveStage(fecha);
+    const data = formRef.current.getData();
+    await handleSaveStage(data);
   };
 
   const nextOrderIndex = localStages.length + 1;

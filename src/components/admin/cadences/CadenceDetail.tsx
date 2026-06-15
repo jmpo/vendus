@@ -18,7 +18,7 @@ export function CadenceDetail({ cadenceId, onBack, onEdit }: Props) {
 
   useEffect(() => {
     supabase.from('cadences' as any).select('*').eq('id', cadenceId).maybeSingle()
-      .then(({ fecha }) => setCadence(fecha));
+      .then(({ data }) => setCadence(data));
   }, [cadenceId]);
 
   if (!cadence) return <div className="p-6">Cargando…</div>;

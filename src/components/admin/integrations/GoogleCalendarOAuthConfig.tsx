@@ -33,10 +33,10 @@ export function GoogleCalendarOAuthConfig() {
   const [isSaving, setIsSaving] = useState(false);
 
   // Get current configuration
-  const { fecha: config, isLoading } = useQuery({
+  const { data: config, isLoading } = useQuery({
     queryKey: ['google-calendar-oauth', profile?.organization_id],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('integration_settings')
         .select('*')
         .eq('organization_id', profile!.organization_id!)
@@ -44,7 +44,7 @@ export function GoogleCalendarOAuthConfig() {
         .maybeSingle();
 
       if (error && error.code !== 'PGRST116') throw error;
-      return fecha;
+      return data;
     },
     enabled: !!profile?.organization_id,
   });

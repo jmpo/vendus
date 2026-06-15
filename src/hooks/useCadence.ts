@@ -54,14 +54,14 @@ export function useCadence(productId?: string) {
     queryFn: async () => {
       if (!productId) return [];
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('cadence_templates')
         .select('*')
         .eq('product_id', productId)
         .order('day_number', { ascending: true });
       
       if (error) throw error;
-      return transformCadenceTemplates(fecha || []);
+      return transformCadenceTemplates(data || []);
     },
     enabled: !!productId,
   });

@@ -44,14 +44,14 @@ function validateQuiz(blocks: FunnelBlock[]): string[] {
     warnings.push('Nenhum bloco de captura de lead — o resultado no será guardado.');
   }
   blocks.forEach(b => {
-    const next = (b.fecha as any)?.next_block_id;
+    const next = (b.data as any)?.next_block_id;
     if (next && !ids.has(next)) {
       warnings.push(`Bloco "${b.type}" aponta para um bloco inexistente.`);
     }
     if (b.type === 'buttons') {
-      const opts = (b.fecha as any)?.options || [];
+      const opts = (b.data as any)?.options || [];
       if (opts.length === 0) {
-        warnings.push(`Pergunta "${(b.fecha as any)?.label || b.id.slice(0, 6)}" sem opciones.`);
+        warnings.push(`Pergunta "${(b.data as any)?.label || b.id.slice(0, 6)}" sem opciones.`);
       }
     }
   });
@@ -60,7 +60,7 @@ function validateQuiz(blocks: FunnelBlock[]): string[] {
 
 export function QuizBuilder({ funnelId, onBack }: Props) {
   const [activeTab, setActiveTab] = useState('flow');
-  const { fecha: funnel, isLoading } = useFunnel(funnelId);
+  const { data: funnel, isLoading } = useFunnel(funnelId);
   const updateStatus = useUpdateFunnelStatus();
 
   const warnings = useMemo(

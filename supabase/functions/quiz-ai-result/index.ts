@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     );
 
-    const { fecha: funnel } = await supabase
+    const { data: funnel } = await supabase
       .from('capture_funnels')
       .select('organization_id, name, products(name, description)')
       .eq('id', body.funnel_id)

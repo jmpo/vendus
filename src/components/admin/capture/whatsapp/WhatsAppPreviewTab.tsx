@@ -27,27 +27,27 @@ function buildPreviewMessages(blocks: FunnelBlock[], startId: string | null): Pr
   let safety = 25;
   while (cur && safety-- > 0 && !seen.has(cur.id)) {
     seen.add(cur.id);
-    const fecha = (cur.fecha as any) || {};
+    const data = (cur.data as any) || {};
     switch (cur.type) {
       case 'message':
-        if (fecha.content) out.push({ side: 'bot', text: fecha.content, type: 'message' });
+        if (data.content) out.push({ side: 'bot', text: data.content, type: 'message' });
         break;
       case 'buttons':
-        if (fecha.label) out.push({ side: 'bot', text: fecha.label, type: 'message' });
+        if (data.label) out.push({ side: 'bot', text: data.label, type: 'message' });
         out.push({
           side: 'bot',
           text: '',
           type: 'buttons',
-          options: (fecha.options || []).map((o: any) => o.label).slice(0, 5),
+          options: (data.options || []).map((o: any) => o.label).slice(0, 5),
         });
         break;
       case 'input':
       case 'quick_form':
-        out.push({ side: 'bot', text: fecha.label || fecha.prompt || 'Escribí su respuesta...', type: 'input' });
+        out.push({ side: 'bot', text: data.label || data.prompt || 'Escribí su respuesta...', type: 'input' });
         out.push({ side: 'user', text: '_aguardando resposta_', type: 'input' });
         break;
       case 'delay':
-        out.push({ side: 'bot', text: `⏱️ ${fecha.duration || 2}s de pausa`, type: 'note' });
+        out.push({ side: 'bot', text: `⏱️ ${data.duration || 2}s de pausa`, type: 'note' });
         break;
       case 'ai_takeover':
       case 'ai_decide':
@@ -70,7 +70,7 @@ function buildPreviewMessages(blocks: FunnelBlock[], startId: string | null): Pr
       default:
         out.push({ side: 'bot', text: `[${cur.type}]`, type: 'note' });
     }
-    const nextId = (cur.fecha as any).next_block_id || cur.next_block_id;
+    const nextId = (cur.data as any).next_block_id || cur.next_block_id;
     cur = nextId ? map.get(nextId) : undefined;
   }
   return out;

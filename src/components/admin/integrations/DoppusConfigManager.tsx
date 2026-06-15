@@ -58,20 +58,20 @@ export function DoppusConfigManager() {
   const orgId = profile?.organization_id ?? null;
   const supaUrl = import.meta.env.VITE_SUPABASE_URL as string;
   const qc = useQueryClient();
-  const { fecha: products = [] } = useProducts();
+  const { data: products = [] } = useProducts();
 
-  const { fecha: settingsRow, isLoading } = useQuery({
+  const { data: settingsRow, isLoading } = useQuery({
     queryKey: ['doppus-settings', orgId],
     enabled: !!orgId,
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('integration_settings')
         .select('settings, is_configured, last_verified_at')
         .eq('organization_id', orgId!)
         .eq('integration_type', 'doppus')
         .maybeSingle();
       if (error) throw error;
-      return fecha;
+      return data;
     },
   });
 
@@ -486,7 +486,7 @@ const EVENT_LABEL: Record<string, string> = {
 function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: DoppusProduct[] }) {
   const [filterInternalId, setFilterInternalId] = useState<string>('all');
   const internalFilter = filterInternalId === 'all' ? null : filterInternalId;
-  const { fecha: logs = [], isLoading, refetch, isFetching } = useDoppusWebhookLogs(orgId, internalFilter);
+  const { data: logs = [], isLoading, refetch, isFetching } = useDoppusWebhookLogs(orgId, internalFilter);
   const [selected, setSelected] = useState<DoppusWebhookLog | null>(null);
 
   return (

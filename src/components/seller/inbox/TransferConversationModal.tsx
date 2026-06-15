@@ -63,12 +63,12 @@ export function TransferConversationModal({
   const [isTransferring, setIsTransferring] = useState(false);
 
   // Fetch team members
-  const { fecha: teamMembers = [], isLoading: loadingTeam } = useQuery({
+  const { data: teamMembers = [], isLoading: loadingTeam } = useQuery({
     queryKey: ['team-members-transfer', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
       
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('profiles')
         .select('id, full_name, email, avatar_url')
         .eq('organization_id', profile.organization_id)
@@ -77,18 +77,18 @@ export function TransferConversationModal({
         .order('full_name', { ascending: true });
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     enabled: !!profile?.organization_id && open,
   });
 
   // Fetch sectors (atención usa setores, no squads de venta)
-  const { fecha: sectors = [], isLoading: loadingSectors } = useQuery({
+  const { data: sectors = [], isLoading: loadingSectors } = useQuery({
     queryKey: ['sectors-transfer', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('sectors')
         .select('id, name, color, icon')
         .eq('organization_id', profile.organization_id)
@@ -97,19 +97,19 @@ export function TransferConversationModal({
         .order('name', { ascending: true });
 
       if (error) throw error;
-      return fecha;
+      return data;
     },
     enabled: !!profile?.organization_id && open,
   });
 
   // Verifica se o usuario puede transferir para Agente Admin (privado)
-  const { fecha: canTransferToAdmin = false } = useQuery({
+  const { data: canTransferToAdmin = false } = useQuery({
     queryKey: ['can-transfer-admin', profile?.organization_id, user?.id],
     queryFn: async () => {
       if (!profile?.organization_id || !user?.id) return false;
 
       // Match #1: usuario cadastrado como admin_user_id em auto_notification_settings
-      const { fecha: settings } = await supabase
+      const { data: settings } = await supabase
         .from('auto_notification_settings')
         .select('admin_user_id')
         .eq('organization_id', profile.organization_id)
@@ -118,7 +118,7 @@ export function TransferConversationModal({
       if (settings?.admin_user_id === user.id) return true;
 
       // Match #2: usuario tiene role 'admin' (fallback)
-      const { fecha: roles } = await supabase
+      const { data: roles } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', user.id);
@@ -129,12 +129,12 @@ export function TransferConversationModal({
   });
 
   // Fetch AI agents (filtra admin no client conforme permiso)
-  const { fecha: aiAgents = [], isLoading: loadingAgents } = useQuery({
+  const { data: aiAgents = [], isLoading: loadingAgents } = useQuery({
     queryKey: ['ai-agents-transfer', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
 
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('product_agents')
         .select('id, name, description, agent_type, avatar_url, is_active, is_default, product_id, product:products(id, name)')
         .eq('organization_id', profile.organization_id)
@@ -143,7 +143,7 @@ export function TransferConversationModal({
         .order('name', { ascending: true });
 
       if (error) throw error;
-      return fecha as Array<{
+      return data as Array<{
         id: string;
         name: string;
         description: string | null;
@@ -160,18 +160,18 @@ export function TransferConversationModal({
 
   // Fetch Evolution instances (somente para conversaciones WhatsApp)
   const isWhatsApp = (currentChannel || '').toLowerCase() === 'whatsapp';
-  const { fecha: evolutionInstances = [] } = useQuery({
+  const { data: evolutionInstances = [] } = useQuery({
     queryKey: ['evolution-instances-transfer', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('evolution_instances')
         .select('id, name, phone_number, status')
         .eq('organization_id', profile.organization_id)
         .order('is_default', { ascending: false })
         .order('name', { ascending: true });
       if (error) throw error;
-      return (fecha || []) as Array<{
+      return (data || []) as Array<{
         id: string;
         name: string;
         phone_number: string | null;
@@ -275,7 +275,7 @@ export function TransferConversationModal({
 
       // Read existing metadata to merge admin takeover flag
       if (adminTargetAgent) {
-        const { fecha: existingConv } = await supabase
+        const { data: existingConv } = await supabase
           .from('webchat_conversations')
           .select('metadata')
           .eq('id', conversationId)

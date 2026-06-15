@@ -17,7 +17,7 @@ export function useLeadTracking(leadId: string) {
   return useQuery({
     queryKey: ['lead-tracking', leadId],
     queryFn: async () => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('leads')
         .select(`
           utm_source,
@@ -35,7 +35,7 @@ export function useLeadTracking(leadId: string) {
         .single();
 
       if (error) throw error;
-      return fecha as LeadTrackingData & { created_at: string };
+      return data as LeadTrackingData & { created_at: string };
     },
     enabled: !!leadId
   });
@@ -53,11 +53,11 @@ export function useLeadsByOrigin(productId?: string) {
         query = query.eq('product_id', productId);
       }
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
 
       // Group by origin
-      const grouped = fecha.reduce((acc, lead) => {
+      const grouped = data.reduce((acc, lead) => {
         const origin = lead.lead_origin || 'No informado';
         acc[origin] = (acc[origin] || 0) + 1;
         return acc;
@@ -80,11 +80,11 @@ export function useLeadsByCampaign(productId?: string) {
         query = query.eq('product_id', productId);
       }
 
-      const { fecha, error } = await query;
+      const { data, error } = await query;
       if (error) throw error;
 
       // Group by campaign
-      const grouped = fecha.reduce((acc, lead) => {
+      const grouped = data.reduce((acc, lead) => {
         const campaign = lead.utm_campaign || 'Sem campaña';
         acc[campaign] = (acc[campaign] || 0) + 1;
         return acc;

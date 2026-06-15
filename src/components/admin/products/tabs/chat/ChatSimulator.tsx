@@ -40,8 +40,8 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   
-  const { fecha: knowledgeSources } = useKnowledgeSources(productId);
-  const { fecha: product } = useProduct(productId);
+  const { data: knowledgeSources } = useKnowledgeSources(productId);
+  const { data: product } = useProduct(productId);
 
   const activeSources = knowledgeSources?.filter(s => s.is_active && s.processing_status === 'completed') || [];
   
@@ -98,7 +98,7 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
         throw new Error(response.error.message);
       }
 
-      const responseData = response.fecha;
+      const responseData = response.data;
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',

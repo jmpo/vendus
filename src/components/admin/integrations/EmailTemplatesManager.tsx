@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/alert-dialog';
 
 export function EmailTemplatesManager() {
-  const { fecha: templates, isLoading } = useEmailTemplates();
+  const { data: templates, isLoading } = useEmailTemplates();
   const deleteTemplate = useDeleteEmailTemplate();
   
   const [editingTemplate, setEditingTemplate] = useState<EmailTemplate | null>(null);

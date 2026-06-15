@@ -100,7 +100,7 @@ export function FlowCanvas({
     
     // For buttons block per-option dots, calculate the correct Y
     if (outputType === 'option' && block.type === 'buttons' && optionIndex != null) {
-      const totalOptions = block.fecha.options?.length || 1;
+      const totalOptions = block.data.options?.length || 1;
       const dotSpacing = 22;
       const totalHeight = (totalOptions - 1) * dotSpacing;
       const centerY = block.position.y + NODE_HEIGHT / 2;
@@ -142,36 +142,36 @@ export function FlowCanvas({
         break;
       case 'condition_true':
         onUpdateBlock(connectingFrom.blockId, {
-          fecha: { ...sourceBlock.fecha, true_next_block_id: targetBlockId }
+          data: { ...sourceBlock.data, true_next_block_id: targetBlockId }
         });
         break;
       case 'condition_false':
         onUpdateBlock(connectingFrom.blockId, {
-          fecha: { ...sourceBlock.fecha, false_next_block_id: targetBlockId }
+          data: { ...sourceBlock.data, false_next_block_id: targetBlockId }
         });
         break;
       case 'option':
         // Handle button/ai_decide option connections
-        if (sourceBlock.type === 'buttons' && sourceBlock.fecha.options && connectingFrom.optionIndex !== undefined) {
-          const options = [...sourceBlock.fecha.options];
+        if (sourceBlock.type === 'buttons' && sourceBlock.data.options && connectingFrom.optionIndex !== undefined) {
+          const options = [...sourceBlock.data.options];
           if (options[connectingFrom.optionIndex]) {
             options[connectingFrom.optionIndex] = {
               ...options[connectingFrom.optionIndex],
               next_block_id: targetBlockId
             };
             onUpdateBlock(connectingFrom.blockId, {
-              fecha: { ...sourceBlock.fecha, options }
+              data: { ...sourceBlock.data, options }
             });
           }
-        } else if (sourceBlock.type === 'ai_decide' && sourceBlock.fecha.ai_outputs && connectingFrom.optionIndex !== undefined) {
-          const outputs = [...sourceBlock.fecha.ai_outputs];
+        } else if (sourceBlock.type === 'ai_decide' && sourceBlock.data.ai_outputs && connectingFrom.optionIndex !== undefined) {
+          const outputs = [...sourceBlock.data.ai_outputs];
           if (outputs[connectingFrom.optionIndex]) {
             outputs[connectingFrom.optionIndex] = {
               ...outputs[connectingFrom.optionIndex],
               next_block_id: targetBlockId
             };
             onUpdateBlock(connectingFrom.blockId, {
-              fecha: { ...sourceBlock.fecha, ai_outputs: outputs }
+              data: { ...sourceBlock.data, ai_outputs: outputs }
             });
           }
         }

@@ -16,7 +16,7 @@ import {
 export function TagsManager() {
   const [editingTag, setEditingTag] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const { fecha: tags, isLoading } = useLeadTags();
+  const { data: tags, isLoading } = useLeadTags();
   const deleteMut = useDeleteLeadTag();
 
   return (

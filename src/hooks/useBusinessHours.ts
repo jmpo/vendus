@@ -60,13 +60,13 @@ export function useBusinessHours() {
     queryKey: ['business-hours', orgId],
     enabled: !!orgId,
     queryFn: async (): Promise<BusinessHours | null> => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('business_hours')
         .select('*')
         .eq('organization_id', orgId!)
         .maybeSingle();
       if (error) throw error;
-      return fecha as any;
+      return data as any;
     },
   });
 }
@@ -84,13 +84,13 @@ export function useUpsertBusinessHours() {
         out_of_hours_message: input.out_of_hours_message ?? '',
         out_of_hours_enabled: input.out_of_hours_enabled ?? false,
       };
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('business_hours')
         .upsert(payload, { onConflict: 'organization_id' })
         .select()
         .single();
       if (error) throw error;
-      return fecha;
+      return data;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['business-hours'] });
@@ -107,13 +107,13 @@ export function useBusinessHolidays() {
     queryKey: ['business-holidays', orgId],
     enabled: !!orgId,
     queryFn: async (): Promise<BusinessHoliday[]> => {
-      const { fecha, error } = await supabase
+      const { data, error } = await supabase
         .from('business_holidays')
         .select('*')
         .eq('organization_id', orgId!)
         .order('date');
       if (error) throw error;
-      return (fecha ?? []) as any;
+      return (data ?? []) as any;
     },
   });
 }

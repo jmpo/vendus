@@ -53,8 +53,8 @@ const TemperatureIcon = ({ temp }: { temp: string | null }) => {
 
 export function MobileKanban({ productId, productName, organizationId }: MobileKanbanProps) {
   const { user, profile } = useAuth();
-  const { fecha: leads, isLoading: leadsLoading } = useLeads(productId);
-  const { fecha: stages, isLoading: stagesLoading } = usePipelineStages(productId);
+  const { data: leads, isLoading: leadsLoading } = useLeads(productId);
+  const { data: stages, isLoading: stagesLoading } = usePipelineStages(productId);
   const moveLead = useMoveLead();
   const createLead = useCreateLead();
 

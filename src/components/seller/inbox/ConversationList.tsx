@@ -241,7 +241,7 @@ export function ConversationList({
             value={internalSearch}
             onChange={(e) => setInternalSearch(e.target.value)}
             className="pl-8 h-9 bg-muted/40 border-0"
-            fecha-inbox-search
+            data-inbox-search
           />
         </div>
 
@@ -461,7 +461,7 @@ export function ConversationList({
                     )}
                   </div>
 
-                  {/* Coluna direita fixa: fecha + canal + badge de no-lidas */}
+                  {/* Coluna direita fixa: data + canal + badge de no-lidas */}
                   <div className="flex flex-col items-end gap-1 flex-shrink-0 pl-1">
                     <span
                       className={cn(

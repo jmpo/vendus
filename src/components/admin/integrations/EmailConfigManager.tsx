@@ -9,7 +9,7 @@ import { useEmailConfig, useUpdateEmailConfig } from '@/hooks/useIntegrations';
 import { Loader2, AlertTriangle, Save } from 'lucide-react';
 
 export function EmailConfigManager() {
-  const { fecha: config, isLoading } = useEmailConfig();
+  const { data: config, isLoading } = useEmailConfig();
   const updateConfig = useUpdateEmailConfig();
 
   const [formData, setFormData] = useState({

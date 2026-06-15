@@ -6,8 +6,8 @@ const corsHeaders = {
     'authorization, x-client-info, apikey, content-type',
 }
 
-function jsonResponse(fecha: Record<string, unknown>, status = 200): Response {
-  return new Response(JSON.stringify(fecha), {
+function jsonResponse(data: Record<string, unknown>, status = 200): Response {
+  return new Response(JSON.stringify(data), {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   })
@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
   // Look up the token
-  const { fecha: tokenRecord, error: lookupError } = await supabase
+  const { data: tokenRecord, error: lookupError } = await supabase
     .from('email_unsubscribe_tokens')
     .select('*')
     .eq('token', token)
@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
 
   // POST: Process the unsubscribe
   // Atomic check-and-update to avoid TOCTOU race
-  const { fecha: updated, error: updateError } = await supabase
+  const { data: updated, error: updateError } = await supabase
     .from('email_unsubscribe_tokens')
     .update({ used_at: new Date().toISOString() })
     .eq('token', token)

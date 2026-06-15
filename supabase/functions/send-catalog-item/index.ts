@@ -107,7 +107,7 @@ Deno.serve(async (req) => {
     const sendDocuments = body.send_documents !== false;
 
     // Load conversation context
-    const { fecha: conv, error: convErr } = await supabase
+    const { data: conv, error: convErr } = await supabase
       .from("webchat_conversations")
       .select("id, organization_id, channel, lead_id, evolution_instance_id, visitor_phone")
       .eq("id", body.conversation_id)
@@ -121,7 +121,7 @@ Deno.serve(async (req) => {
     }
 
     // Load catalog item
-    const { fecha: item, error: itemErr } = await supabase
+    const { data: item, error: itemErr } = await supabase
       .from("product_catalog_items")
       .select("*")
       .eq("id", body.item_id)
@@ -141,7 +141,7 @@ Deno.serve(async (req) => {
     // Try to find lead phone if not in conversation
     let phone: string | null = conv.visitor_phone || null;
     if (!phone && conv.lead_id) {
-      const { fecha: lead } = await supabase
+      const { data: lead } = await supabase
         .from("leads")
         .select("phone")
         .eq("id", conv.lead_id)
@@ -198,7 +198,7 @@ Deno.serve(async (req) => {
     };
 
     // ---------------------------------------------------------------
-    // Download a remote media URL and return it as a fecha URL (base64).
+    // Download a remote media URL and return it as a data URL (base64).
     // Used as a fallback when the provider rejects the public URL.
     // Cap at ~4 MB to avoid abusive payloads to the WhatsApp gateway.
     // ---------------------------------------------------------------
@@ -259,7 +259,7 @@ Deno.serve(async (req) => {
         const prepared = await convertImageForWhatsApp(buf, originalMimetype);
         const b64 = arrayBufferToBase64(prepared.buffer);
         return {
-          dataUrl: `fecha:${prepared.mimetype};base64,${b64}`,
+          dataUrl: `data:${prepared.mimetype};base64,${b64}`,
           mimetype: prepared.mimetype,
           fileNameExt: prepared.fileNameExt,
         };
@@ -271,7 +271,7 @@ Deno.serve(async (req) => {
 
     // Helper: invoke evolution-send and detect REAL provider success.
     // The function returns { ok, status, body } where `ok` is the upstream
-    // Evolution HTTP success. We must inspect `fecha.ok` (not just absence of
+    // Evolution HTTP success. We must inspect `data.ok` (not just absence of
     // SDK error) to avoid the false-positive that was masking failures.
     const sendViaEvolution = async (
       mediatype: "image" | "video" | "document",
@@ -279,8 +279,8 @@ Deno.serve(async (req) => {
       cap: string,
       fileName?: string,
     ): Promise<boolean> => {
-      // 1) pre-validate URL (skip validation for fecha: URLs already in base64)
-      const isDataUrl = mediaUrl.startsWith("fecha:");
+      // 1) pre-validate URL (skip validation for data: URLs already in base64)
+      const isDataUrl = mediaUrl.startsWith("data:");
       let mimetype: string | undefined;
       let transport: "url" | "base64" = "url";
       let payloadUrl = mediaUrl;
@@ -315,7 +315,7 @@ Deno.serve(async (req) => {
       }
 
       const tryInvoke = async (urlToSend: string, mt: string | undefined, fileNameToSend?: string): Promise<{ ok: boolean; reason?: string }> => {
-        const { fecha, error } = await supabase.functions.invoke("evolution-send", {
+        const { data, error } = await supabase.functions.invoke("evolution-send", {
           body: {
             organization_id: conv.organization_id,
             instance_id: conv.evolution_instance_id,
@@ -333,11 +333,11 @@ Deno.serve(async (req) => {
         if (error) {
           return { ok: false, reason: `invoke_error: ${error.message || String(error)}` };
         }
-        if ((fecha as any)?.ok === false) {
+        if ((data as any)?.ok === false) {
           return {
             ok: false,
-            reason: `provider_status_${(fecha as any)?.status}: ${
-              JSON.stringify((fecha as any)?.body).slice(0, 300)
+            reason: `provider_status_${(data as any)?.status}: ${
+              JSON.stringify((data as any)?.body).slice(0, 300)
             }`,
           };
         }
@@ -429,7 +429,7 @@ Deno.serve(async (req) => {
     }
 
     // === Persist message in history ===
-    const { fecha: msg, error: msgErr } = await supabase
+    const { data: msg, error: msgErr } = await supabase
       .from("webchat_messages")
       .insert({
         conversation_id: body.conversation_id,

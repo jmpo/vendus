@@ -21,8 +21,8 @@ interface DashboardProps {
 export function Dashboard({ products, onSelectProduct }: DashboardProps) {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { fecha: todaysTasks } = useTodaysTasks(user?.id || '');
-  const { fecha: taskStats } = useTaskStats(user?.id);
+  const { data: todaysTasks } = useTodaysTasks(user?.id || '');
+  const { data: taskStats } = useTaskStats(user?.id);
 
   const pendingTasks = todaysTasks?.filter(t => t.status === 'pending' || t.status === 'in_progress') || [];
   const overdueCount = taskStats?.overdueCount || 0;

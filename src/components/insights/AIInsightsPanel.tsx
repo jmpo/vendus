@@ -35,7 +35,7 @@ export function AIInsightsPanel({
   maxHeight = "400px"
 }: AIInsightsPanelProps) {
   const { user, profile } = useAuth();
-  const { fecha: insights, isLoading } = useAIInsights(user?.id, productId);
+  const { data: insights, isLoading } = useAIInsights(user?.id, productId);
   const dismissInsight = useDismissInsight();
   const generateInsights = useGenerateInsights();
   const [isGenerating, setIsGenerating] = useState(false);
