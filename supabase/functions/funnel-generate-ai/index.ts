@@ -91,9 +91,9 @@ Problemas que resolve: ${product.problems_solved || 'N/A'}
     }
 
     const toneDescriptions: Record<string, string> = {
-      formal: 'Usa linguagem formal e profissional. Evita gírias.',
-      informal: 'Usa linguagem amigável e descontraída, como una conversación casual. Emojis son bem-vindos.',
-      technical: 'Usa termos técnicos relevantes. Sé preciso e objetivo.',
+      formal: 'Usá lenguaje formal y profesional. Evitá modismos.',
+      informal: 'Usá lenguaje amigable y distendido, como una conversación casual. Los emojis son bienvenidos.',
+      technical: 'Usá términos técnicos relevantes. Sé preciso y objetivo.',
     };
 
     const systemPrompt = `Usted é um especialista em crear funis de captação de leads de alta conversão.
