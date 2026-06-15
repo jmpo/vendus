@@ -170,30 +170,30 @@ function buildSystemPrompt(args: {
     availableUsers,
   });
 
-  // Modificadores opcionais do banco — entram DEPOIS do kernel e jamais o sobrescriben
+  // Modificadores opcionales del banco — entran DESPUÉS del kernel y jamás lo sobrescriben
   const modifiers: string[] = [];
-  if (agent?.tone_style) modifiers.push(`Tom: ${agent.tone_style}.`);
+  if (agent?.tone_style) modifiers.push(`Tono: ${agent.tone_style}.`);
   if (agent?.message_style) modifiers.push(`Estilo: ${agent.message_style}.`);
-  if (agent?.primary_objective) modifiers.push(`Foco/ênfase: ${agent.primary_objective}`);
-  if (agent?.additional_prompt) modifiers.push(`Observações do gestor: ${agent.additional_prompt}`);
+  if (agent?.primary_objective) modifiers.push(`Foco/énfasis: ${agent.primary_objective}`);
+  if (agent?.additional_prompt) modifiers.push(`Observaciones del gestor: ${agent.additional_prompt}`);
 
   let prompt = kernel;
   if (modifiers.length) {
-    prompt += `\n\n## MODIFICADORES DE TOM (solo ajuste fino — NUNCA alteram as regras do kernel acima)\n${modifiers.join("\n")}`;
+    prompt += `\n\n## MODIFICADORES DE TONO (solo ajuste fino — NUNCA alteran las reglas del kernel de arriba)\n${modifiers.join("\n")}`;
   }
   return prompt;
 }
 
 const TOOLS = [
-  { type: "function", function: { name: "get_today_briefing", description: "ATALHO PRIORITÁRIO: resumen executivo de hoy agregando pipeline, inbox, agenda, tareas e financiero num único call. Usa SEMPRE cuando o admin pedir 'resumen', 'briefing', 'cómo está hoy', 'situación', 'panorama'.", parameters: { type: "object", properties: {}, additionalProperties: false } } },
-  { type: "function", function: { name: "get_pipeline_summary", description: "Resumen de deals abertos por estágio e valores", parameters: { type: "object", properties: {}, additionalProperties: false } } },
-  { type: "function", function: { name: "get_inbox_status", description: "Conversas ativas no inbox e sin atención", parameters: { type: "object", properties: {}, additionalProperties: false } } },
-  { type: "function", function: { name: "get_team_status", description: "Status de cada vendedor (online/ausente/offline) e número de leads ativos", parameters: { type: "object", properties: {}, additionalProperties: false } } },
-  { type: "function", function: { name: "get_tasks_overview", description: "Tareas pendentes e em atraso", parameters: { type: "object", properties: {}, additionalProperties: false } } },
-  { type: "function", function: { name: "get_bookings", description: "Reuniones/reservas da equipo no período (today/week/next). NÃO es agendar reunión — solo consulta.", parameters: { type: "object", properties: { range: { type: "string", enum: ["today", "week", "next"] } }, required: ["range"], additionalProperties: false } } },
-  { type: "function", function: { name: "get_financial_summary", description: "Comissões pendentes, ingresos fechada e previsão", parameters: { type: "object", properties: {}, additionalProperties: false } } },
-  { type: "function", function: { name: "get_goals_progress", description: "Progresso das metas no período atual", parameters: { type: "object", properties: {}, additionalProperties: false } } },
-  { type: "function", function: { name: "get_agent_logs", description: "Status e errores recentes dos agentes IA", parameters: { type: "object", properties: { hours: { type: "number" } }, additionalProperties: false } } },
+  { type: "function", function: { name: "get_today_briefing", description: "ATAJO PRIORITARIO: resumen ejecutivo de hoy agregando pipeline, inbox, agenda, tareas y financiero en un único call. Usá SIEMPRE cuando el admin pida 'resumen', 'briefing', 'cómo está hoy', 'situación', 'panorama'.", parameters: { type: "object", properties: {}, additionalProperties: false } } },
+  { type: "function", function: { name: "get_pipeline_summary", description: "Resumen de deals abiertos por etapa y valores", parameters: { type: "object", properties: {}, additionalProperties: false } } },
+  { type: "function", function: { name: "get_inbox_status", description: "Conversaciones activas en el inbox y sin atención", parameters: { type: "object", properties: {}, additionalProperties: false } } },
+  { type: "function", function: { name: "get_team_status", description: "Estado de cada vendedor (online/ausente/offline) y número de leads activos", parameters: { type: "object", properties: {}, additionalProperties: false } } },
+  { type: "function", function: { name: "get_tasks_overview", description: "Tareas pendientes y vencidas", parameters: { type: "object", properties: {}, additionalProperties: false } } },
+  { type: "function", function: { name: "get_bookings", description: "Reuniones/reservas del equipo en el período (today/week/next). NO es agendar reunión — solo consulta.", parameters: { type: "object", properties: { range: { type: "string", enum: ["today", "week", "next"] } }, required: ["range"], additionalProperties: false } } },
+  { type: "function", function: { name: "get_financial_summary", description: "Comisiones pendientes, ingresos cerrados y previsión", parameters: { type: "object", properties: {}, additionalProperties: false } } },
+  { type: "function", function: { name: "get_goals_progress", description: "Progreso de las metas en el período actual", parameters: { type: "object", properties: {}, additionalProperties: false } } },
+  { type: "function", function: { name: "get_agent_logs", description: "Estado y errores recientes de los agentes IA", parameters: { type: "object", properties: { hours: { type: "number" } }, additionalProperties: false } } },
 ];
 
 async function runTool(
