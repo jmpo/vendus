@@ -58,7 +58,7 @@ export function useAudioRecorder(): UseAudioRecorderResult {
       setIsRecording(true);
     } catch (error) {
       console.error('Error starting recording:', error);
-      toast.error('Não foi possível acessar o microfone');
+      toast.error('No fue posible acessar o microfone');
     }
   }, []);
 
@@ -111,7 +111,7 @@ export function useAudioRecorder(): UseAudioRecorderResult {
           resolve(data.text || null);
         } catch (error) {
           console.error('Transcription error:', error);
-          toast.error('Erro ao transcrever áudio');
+          toast.error('Error al transcribir audio');
           resolve(null);
         } finally {
           setIsTranscribing(false);

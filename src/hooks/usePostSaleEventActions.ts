@@ -8,12 +8,12 @@ export type PostSaleEventAction = Tables<'post_sale_event_actions'>;
 export type PostSaleEventLog = Tables<'post_sale_event_logs'>;
 
 export const POST_SALE_EVENT_TYPES = [
-  { value: 'compra_aprovada', label: 'Compra Aprovada', description: 'Pagamento confirmado, entregar acesso' },
+  { value: 'compra_aprovada', label: 'Compra Aprovada', description: 'Pago confirmado, entregar acceso' },
   { value: 'pix_gerado', label: 'PIX Gerado', description: 'Lembrar e converter PIX pendente' },
   { value: 'boleto_gerado', label: 'Boleto Gerado', description: 'Lembrar do boleto antes do vencimento' },
-  { value: 'carrinho_abandonado', label: 'Carrinho Abandonado', description: 'Recuperar checkout não finalizado' },
-  { value: 'reembolso', label: 'Reembolso / Estorno', description: 'Lidar com cancelamento e tentativa de retenção' },
-  { value: 'chargeback', label: 'Chargeback', description: 'Disputa de pagamento iniciada' },
+  { value: 'carrinho_abandonado', label: 'Carrinho Abandonado', description: 'Recuperar checkout no finalizado' },
+  { value: 'reembolso', label: 'Reembolso / Estorno', description: 'Gestionar cancelación e intento de retención' },
+  { value: 'chargeback', label: 'Chargeback', description: 'Disputa de pago iniciada' },
   { value: 'assinatura_cancelada', label: 'Assinatura Cancelada', description: 'Recuperar assinante perdido' },
 ] as const;
 
@@ -64,9 +64,9 @@ export function useUpsertPostSaleEventAction() {
     },
     onSuccess: (_id, vars) => {
       qc.invalidateQueries({ queryKey: ['post-sale-event-actions', vars.product_id] });
-      toast.success('Ação salva');
+      toast.success('Acción guardada');
     },
-    onError: (e: any) => toast.error('Erro ao salvar: ' + e.message),
+    onError: (e: any) => toast.error('Erro ao guardadar: ' + e.message),
   });
 }
 
@@ -79,9 +79,9 @@ export function useDeletePostSaleEventAction(productId: string) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['post-sale-event-actions', productId] });
-      toast.success('Ação removida');
+      toast.success('Acción eliminada');
     },
-    onError: (e: any) => toast.error('Erro ao remover: ' + e.message),
+    onError: (e: any) => toast.error('Error al eliminar: ' + e.message),
   });
 }
 

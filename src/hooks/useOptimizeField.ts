@@ -46,7 +46,7 @@ export function useOptimizeField() {
       return optimizeResult;
     } catch (error) {
       console.error('Error optimizing field:', error);
-      toast.error('Erro ao otimizar com IA');
+      toast.error('Error al optimizar con IA');
       return null;
     } finally {
       setIsOptimizing(false);

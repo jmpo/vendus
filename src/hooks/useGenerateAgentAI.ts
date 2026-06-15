@@ -51,14 +51,14 @@ export function useGenerateAgentAI() {
 
       if (data?.agent) {
         setGeneratedAgent(data.agent);
-        toast.success('Agente gerado com sucesso!');
+        toast.success('Agente generado con éxito!');
         return data.agent;
       }
 
       throw new Error('Failed to generate agent');
     } catch (error) {
       console.error('Error generating agent:', error);
-      toast.error('Erro ao gerar agente com IA');
+      toast.error('Error al generar agente com IA');
       return null;
     } finally {
       setIsGenerating(false);
@@ -90,7 +90,7 @@ export function useGenerateAgentAI() {
       throw new Error('Failed to optimize field');
     } catch (error) {
       console.error('Error optimizing field:', error);
-      toast.error('Erro ao otimizar com IA');
+      toast.error('Error al optimizar con IA');
       return null;
     }
   }, []);

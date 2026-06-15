@@ -57,13 +57,13 @@ export function useCustomFields() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['custom-fields'] });
-      toast.success('Campo criado com sucesso');
+      toast.success('Campo creado con éxito');
     },
     onError: (err: any) => {
       if (err.message?.includes('duplicate')) {
-        toast.error('Já existe um campo com essa chave');
+        toast.error('Ya existe un campo con esa clave');
       } else {
-        toast.error('Erro ao criar campo');
+        toast.error('Error al crear campo');
       }
     },
   });
@@ -78,9 +78,9 @@ export function useCustomFields() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['custom-fields'] });
-      toast.success('Campo atualizado');
+      toast.success('Campo actualizado');
     },
-    onError: () => toast.error('Erro ao atualizar campo'),
+    onError: () => toast.error('Error al actualizar campo'),
   });
 
   const deleteField = useMutation({
@@ -90,9 +90,9 @@ export function useCustomFields() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['custom-fields'] });
-      toast.success('Campo removido');
+      toast.success('Campo eliminado');
     },
-    onError: () => toast.error('Erro ao remover campo'),
+    onError: () => toast.error('Error al eliminar campo'),
   });
 
   return { fields, isLoading, createField, updateField, deleteField };

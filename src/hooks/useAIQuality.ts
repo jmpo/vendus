@@ -138,7 +138,7 @@ export function useUpsertExperiment() {
   return useMutation({
     mutationFn: async (input: Partial<PromptExperiment> & { id?: string }) => {
       const orgId = profile?.organization_id;
-      if (!orgId) throw new Error('sem organização');
+      if (!orgId) throw new Error('sin organización');
       const payload = { ...input, organization_id: orgId };
       const { data, error } = await (supabase as any)
         .from('ai_prompt_experiments')
@@ -150,7 +150,7 @@ export function useUpsertExperiment() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['prompt-experiments'] });
-      toast.success('Experimento salvo');
+      toast.success('Experimento guardado');
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -168,7 +168,7 @@ export function useDeleteExperiment() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['prompt-experiments'] });
-      toast.success('Experimento removido');
+      toast.success('Experimento eliminado');
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -180,7 +180,7 @@ export function useUpsertVariant() {
   return useMutation({
     mutationFn: async (input: Partial<PromptVariant> & { id?: string; experiment_id: string }) => {
       const orgId = profile?.organization_id;
-      if (!orgId) throw new Error('sem organização');
+      if (!orgId) throw new Error('sin organización');
       const payload = { ...input, organization_id: orgId };
       const { data, error } = await (supabase as any)
         .from('ai_prompt_variants')
@@ -192,7 +192,7 @@ export function useUpsertVariant() {
     },
     onSuccess: (_d, vars) => {
       qc.invalidateQueries({ queryKey: ['prompt-variants', vars.experiment_id] });
-      toast.success('Variante salva');
+      toast.success('Variante guardada');
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -210,7 +210,7 @@ export function useDeleteVariant() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['prompt-variants'] });
-      toast.success('Variante removida');
+      toast.success('Variante eliminada');
     },
     onError: (e: any) => toast.error(e.message),
   });

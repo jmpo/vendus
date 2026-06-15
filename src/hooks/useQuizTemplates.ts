@@ -17,7 +17,7 @@ export interface DbQuizTemplate extends Omit<QuizTemplate, 'flow_blocks'> {
 }
 
 /**
- * Une os templates oficiais (seed em código) com os templates salvos pela organização.
+ * Une os templates oficiais (seed em código) com os templates guardados pela organização.
  */
 export function useQuizTemplates() {
   const { profile } = useAuth();
@@ -81,7 +81,7 @@ export function useCreateQuizTemplate() {
   const { profile } = useAuth();
   return useMutation({
     mutationFn: async (input: CreateQuizTemplateInput) => {
-      if (!profile?.organization_id) throw new Error('Organização não encontrada');
+      if (!profile?.organization_id) throw new Error('Organización no encontrada');
       const { data, error } = await (supabase as any).from('quiz_templates').insert({
         organization_id: profile.organization_id,
         created_by: profile.id,
@@ -105,9 +105,9 @@ export function useCreateQuizTemplate() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['quiz-templates'] });
-      toast.success('Template salvo!');
+      toast.success('Template guardado!');
     },
-    onError: (e: Error) => toast.error('Erro: ' + e.message),
+    onError: (e: Error) => toast.error('Error: ' + e.message),
   });
 }
 

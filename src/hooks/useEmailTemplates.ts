@@ -60,7 +60,7 @@ const DEFAULT_TEMPLATES = [
       { name: 'role', description: 'Papel do convidado (Vendedor, Gestor, Admin)' },
       { name: 'squadName', description: 'Nome do squad (se aplicável)' },
       { name: 'inviteLink', description: 'Link para aceitar o convite' },
-      { name: 'organizationName', description: 'Nome da organização' }
+      { name: 'organizationName', description: 'Nombre de la organización' }
     ],
     is_system: true
   },
@@ -87,7 +87,7 @@ const DEFAULT_TEMPLATES = [
     </div>
     <div class="content">
       <p>Olá <strong>{{userName}}</strong>,</p>
-      <p>É um prazer ter você no time! Sua conta foi criada com sucesso na <strong>{{organizationName}}</strong>.</p>
+      <p>É um prazer ter você no time! Sua conta foi creada con éxito na <strong>{{organizationName}}</strong>.</p>
       <p>Acesse a plataforma e comece a vender!</p>
     </div>
     <div class="footer">
@@ -97,8 +97,8 @@ const DEFAULT_TEMPLATES = [
 </body>
 </html>`,
     variables: [
-      { name: 'userName', description: 'Nome do usuário' },
-      { name: 'organizationName', description: 'Nome da organização' }
+      { name: 'userName', description: 'Nombre del usuario' },
+      { name: 'organizationName', description: 'Nombre de la organización' }
     ],
     is_system: true
   },
@@ -135,11 +135,11 @@ const DEFAULT_TEMPLATES = [
 </body>
 </html>`,
     variables: [
-      { name: 'title', description: 'Título do comunicado' },
+      { name: 'title', description: 'Título del comunicado' },
       { name: 'userName', description: 'Nome do destinatário' },
-      { name: 'message', description: 'Conteúdo da mensagem' },
+      { name: 'message', description: 'Contenido del mensaje' },
       { name: 'senderName', description: 'Nome do remetente' },
-      { name: 'organizationName', description: 'Nome da organização' }
+      { name: 'organizationName', description: 'Nombre de la organización' }
     ],
     is_system: true
   }
@@ -194,10 +194,10 @@ export function useCreateEmailTemplate() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['email-templates'] });
-      toast.success('Template criado');
+      toast.success('Template creado');
     },
     onError: (error) => {
-      toast.error('Erro ao criar template: ' + error.message);
+      toast.error('Error al crear template: ' + error.message);
     }
   });
 }
@@ -236,10 +236,10 @@ export function useUpdateEmailTemplate() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['email-templates'] });
-      toast.success('Template atualizado');
+      toast.success('Template actualizado');
     },
     onError: (error) => {
-      toast.error('Erro ao atualizar template: ' + error.message);
+      toast.error('Error al actualizar template: ' + error.message);
     }
   });
 }
@@ -258,10 +258,10 @@ export function useDeleteEmailTemplate() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['email-templates'] });
-      toast.success('Template excluído');
+      toast.success('Template eliminado');
     },
     onError: (error) => {
-      toast.error('Erro ao excluir template: ' + error.message);
+      toast.error('Error al eliminar template: ' + error.message);
     }
   });
 }

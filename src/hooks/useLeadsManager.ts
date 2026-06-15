@@ -156,7 +156,7 @@ function evaluateClientRule(value: any, rule: CustomFieldRule): boolean {
     }
   }
 
-  // Texto: tenta comparação numérica quando faz sentido (ex: "tempo assistido" salvo como string).
+  // Texto: tenta comparação numérica quando faz sentido (ex: "tempo assistido" guardado como string).
   const numericOps: CustomFieldRule['operator'][] = ['gt', 'gte', 'lt', 'lte', 'between'];
   if (rule.fieldType === 'text' && numericOps.includes(rule.operator)) {
     const n = Number(String(value).replace(',', '.'));
@@ -409,14 +409,14 @@ export function useLeadsManager() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-leads'] });
       queryClient.invalidateQueries({ queryKey: ['leads-stats'] });
-      toast.success('Lead criado com sucesso');
+      toast.success('Lead creado con éxito');
     },
     onError: (error: any) => {
       // 23505 = violação de unique constraint (telefone duplicado na organização)
       if (error?.code === '23505' && String(error?.message || '').includes('leads_org_phone_unique')) {
-        toast.error('Já existe um contato com este telefone nesta organização.');
+        toast.error('Ya existe un contacto con este teléfono en esta organización.');
       } else {
-        toast.error('Erro ao criar lead: ' + (error?.message || 'desconhecido'));
+        toast.error('Error al crear lead: ' + (error?.message || 'desconhecido'));
       }
     },
   });
@@ -453,7 +453,7 @@ export function useLeadsManager() {
       queryClient.invalidateQueries({ queryKey: ['admin-leads'] });
       queryClient.invalidateQueries({ queryKey: ['leads-stats'] });
       setSelectedLeads([]);
-      toast.success('Leads transferidos com sucesso');
+      toast.success('Leads transferidos con éxito');
     },
     onError: (error) => {
       toast.error('Erro ao transferir leads: ' + error.message);
@@ -473,10 +473,10 @@ export function useLeadsManager() {
       queryClient.invalidateQueries({ queryKey: ['admin-leads'] });
       queryClient.invalidateQueries({ queryKey: ['leads-stats'] });
       setSelectedLeads([]);
-      toast.success('Leads excluídos com sucesso');
+      toast.success('Leads eliminados con éxito');
     },
     onError: (error) => {
-      toast.error('Erro ao excluir leads: ' + error.message);
+      toast.error('Error al eliminar leads: ' + error.message);
     },
   });
 

@@ -141,7 +141,7 @@ export function useUserStatus(): UserStatusData {
 
     if (error) {
       console.error('Error updating status:', error);
-      toast.error('Erro ao atualizar status');
+      toast.error('Error al actualizar status');
       return;
     }
 
@@ -152,7 +152,7 @@ export function useUserStatus(): UserStatusData {
       try {
         const { data } = await supabase.rpc('process_pending_queue', { p_user_id: user.id });
         if (data && data.length > 0) {
-          toast.success('🎯 Lead pendente atribuído a você!', {
+          toast.success('🎯 ¡Lead pendiente asignado a vos!', {
             description: 'Um lead da fila foi atribuído automaticamente.',
           });
         }

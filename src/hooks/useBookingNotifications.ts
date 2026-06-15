@@ -150,9 +150,9 @@ export function useBookingNotifications(eventTypeId: string | null | undefined) 
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['booking-notification-settings', eventTypeId] });
-      toast.success('Notificações salvas');
+      toast.success('Notificaciones guardadas');
     },
-    onError: (e: any) => toast.error(e.message || 'Erro ao salvar'),
+    onError: (e: any) => toast.error(e.message || 'Erro ao guardadar'),
   });
 
   const createReminder = useMutation({

@@ -118,7 +118,7 @@ export function useCreateDeal() {
 
       if (dealError) throw dealError;
 
-      // Calcular comissão usando a função do banco
+      // Calcular comissão usando a rol do banco
       const { error: commissionError } = await supabase.rpc('calculate_commission', {
         p_deal_id: newDeal.id,
         p_deal_value: deal.deal_value,

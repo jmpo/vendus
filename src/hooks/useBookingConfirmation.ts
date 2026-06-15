@@ -109,11 +109,11 @@ export function useRescheduleBooking() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['booking-by-token', variables.token] });
-      toast.success('Agendamento reagendado com sucesso!');
+      toast.success('Reserva reprogramada con éxito!');
     },
     onError: (error: Error) => {
       console.error('Error rescheduling:', error);
-      toast.error('Erro ao reagendar');
+      toast.error('Error al reagendar');
     },
   });
 }
@@ -132,7 +132,7 @@ export function useCancelBookingByToken() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['booking-by-token', variables.token] });
-      toast.success('Agendamento cancelado');
+      toast.success('Reserva cancelada');
     },
     onError: (error: Error) => {
       console.error('Error cancelling:', error);

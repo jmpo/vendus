@@ -58,9 +58,9 @@ export function useSavePlatformAIKey() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['platform-ai-keys'] });
-      toast.success('Chave salva e verificada');
+      toast.success('Chave guardada e verificada');
     },
-    onError: (e: Error) => toast.error(`Falha: ${e.message}`),
+    onError: (e: Error) => toast.error(`Error: ${e.message}`),
   });
 }
 
@@ -75,9 +75,9 @@ export function usePlatformAIKeyAction() {
     },
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: ['platform-ai-keys'] });
-      if (vars.action === 'test') toast.success('Chave verificada com sucesso');
-      if (vars.action === 'delete') toast.success('Chave removida');
+      if (vars.action === 'test') toast.success('Chave verificada con éxito');
+      if (vars.action === 'delete') toast.success('Chave eliminada');
     },
-    onError: (e: Error) => toast.error(`Falha: ${e.message}`),
+    onError: (e: Error) => toast.error(`Error: ${e.message}`),
   });
 }

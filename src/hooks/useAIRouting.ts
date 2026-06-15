@@ -35,7 +35,7 @@ export const CAPABILITY_LABELS: Record<AICapability, { title: string; desc: stri
   sales_copilot:        { title: 'Copiloto de vendas',      desc: 'Sugestões para vendedores no painel' },
   audio_transcription:  { title: 'Transcrição de áudio',    desc: 'Conversão de áudios em texto (Whisper)' },
   image_vision:         { title: 'Leitura de imagens',      desc: 'Análise de fotos e prints recebidos' },
-  content_generation:   { title: 'Geração de conteúdo',     desc: 'Criação de funis, formulários, agentes, objeções' },
+  content_generation:   { title: 'Geração de conteúdo',     desc: 'Criação de funis, formularios, agentes, objeções' },
   analysis_insights:    { title: 'Análise e insights',      desc: 'Avaliação de conversas, supervisão e relatórios' },
   embeddings:           { title: 'Memória semântica',       desc: 'Embeddings para busca contextual em conversas' },
 };
@@ -68,9 +68,9 @@ export function useSaveAICredential() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['org-ai-credentials'] });
       qc.invalidateQueries({ queryKey: ['integration-settings'] });
-      toast.success('Chave verificada e salva');
+      toast.success('Chave verificada e guardada');
     },
-    onError: (e: Error) => toast.error(`Falha ao salvar: ${e.message}`),
+    onError: (e: Error) => toast.error(`Error al guardar: ${e.message}`),
   });
 }
 
@@ -86,7 +86,7 @@ export function useDeleteAICredential() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['org-ai-credentials'] });
-      toast.success('Chave removida');
+      toast.success('Chave eliminada');
     },
   });
 }
@@ -129,6 +129,6 @@ export function useSaveAIRouting() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['org-ai-routing'] });
     },
-    onError: (e: Error) => toast.error(`Falha ao salvar roteamento: ${e.message}`),
+    onError: (e: Error) => toast.error(`Error al guardar roteamento: ${e.message}`),
   });
 }

@@ -124,7 +124,7 @@ export function useFunnels(arg?: string | UseFunnelsOptions) {
 }
 
 // =====================================================
-// Hook: Funil individual
+// Hook: Embudo individual
 // =====================================================
 
 export function useFunnel(funnelId?: string) {
@@ -151,7 +151,7 @@ export function useFunnel(funnelId?: string) {
 }
 
 // =====================================================
-// Hook: Funil por slug (público)
+// Hook: Embudo por slug (público)
 // =====================================================
 
 export function useFunnelBySlug(slug?: string, channel?: 'chat' | 'form' | 'landing' | 'capture' | 'quiz' | 'widget') {
@@ -199,7 +199,7 @@ export function useFunnelBySlug(slug?: string, channel?: 'chat' | 'form' | 'land
 }
 
 // =====================================================
-// Hook: Criar funil
+// Hook: Criar embudo
 // =====================================================
 
 export function useCreateFunnel() {
@@ -208,7 +208,7 @@ export function useCreateFunnel() {
 
   return useMutation({
     mutationFn: async (input: CreateFunnelInput) => {
-      if (!profile?.organization_id) throw new Error('Organização não encontrada');
+      if (!profile?.organization_id) throw new Error('Organización no encontrada');
 
       // Gerar slug único se não fornecido
       const baseSlug = input.slug || generateSlug(input.name);
@@ -269,16 +269,16 @@ export function useCreateFunnel() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['funnels'] });
-      toast.success('Funil criado com sucesso!');
+      toast.success('Embudo creado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao criar funil: ' + error.message);
+      toast.error('Error al crear embudo: ' + error.message);
     },
   });
 }
 
 // =====================================================
-// Hook: Atualizar funil
+// Hook: Atualizar embudo
 // =====================================================
 
 export function useUpdateFunnel() {
@@ -338,13 +338,13 @@ export function useUpdateFunnel() {
       queryClient.invalidateQueries({ queryKey: ['funnel', data.id] });
     },
     onError: (error: Error) => {
-      toast.error('Erro ao atualizar funil: ' + error.message);
+      toast.error('Error al actualizar embudo: ' + error.message);
     },
   });
 }
 
 // =====================================================
-// Hook: Excluir funil
+// Hook: Excluir embudo
 // =====================================================
 
 export function useDeleteFunnel() {
@@ -361,16 +361,16 @@ export function useDeleteFunnel() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['funnels'] });
-      toast.success('Funil excluído com sucesso!');
+      toast.success('Embudo eliminado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao excluir funil: ' + error.message);
+      toast.error('Error al eliminar embudo: ' + error.message);
     },
   });
 }
 
 // =====================================================
-// Hook: Duplicar funil
+// Hook: Duplicar embudo
 // =====================================================
 
 export function useDuplicateFunnel() {
@@ -379,16 +379,16 @@ export function useDuplicateFunnel() {
 
   return useMutation({
     mutationFn: async (funnelId: string) => {
-      if (!profile?.organization_id) throw new Error('Organização não encontrada');
+      if (!profile?.organization_id) throw new Error('Organización no encontrada');
 
-      // Buscar funil original
+      // Buscar embudo original
       const { data: original, error: fetchError } = await supabase
         .from('capture_funnels')
         .select('*')
         .eq('id', funnelId)
         .single();
 
-      if (fetchError || !original) throw fetchError || new Error('Funil não encontrado');
+      if (fetchError || !original) throw fetchError || new Error('Embudo não encontrado');
 
       // Gerar novo slug
       const baseSlug = `${original.slug}-copia`;
@@ -441,16 +441,16 @@ export function useDuplicateFunnel() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['funnels'] });
-      toast.success('Funil duplicado com sucesso!');
+      toast.success('Embudo duplicado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao duplicar funil: ' + error.message);
+      toast.error('Error al duplicar embudo: ' + error.message);
     },
   });
 }
 
 // =====================================================
-// Hook: Analytics do funil
+// Hook: Analytics do embudo
 // =====================================================
 
 export function useFunnelAnalytics(funnelId?: string, days = 30) {
@@ -477,7 +477,7 @@ export function useFunnelAnalytics(funnelId?: string, days = 30) {
 }
 
 // =====================================================
-// Hook: Alterar status do funil
+// Hook: Alterar status do embudo
 // =====================================================
 
 export function useUpdateFunnelStatus() {
@@ -505,10 +505,10 @@ export function useUpdateFunnelStatus() {
         paused: 'Pausado',
         archived: 'Arquivado',
       };
-      toast.success(`Funil alterado para ${statusLabels[data.status]}`);
+      toast.success(`Embudo cambiado para ${statusLabels[data.status]}`);
     },
     onError: (error: Error) => {
-      toast.error('Erro ao alterar status: ' + error.message);
+      toast.error('Error al cambiar status: ' + error.message);
     },
   });
 }
@@ -545,10 +545,10 @@ export function useSaveFlowBlocks() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['funnel', data.id] });
-      toast.success('Fluxo salvo com sucesso!');
+      toast.success('Flujo guardado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao salvar fluxo: ' + error.message);
+      toast.error('Error al guardar flujo: ' + error.message);
     },
   });
 }

@@ -663,7 +663,7 @@ export function useCreateOrganizationInvitation() {
         .maybeSingle();
       
       if (existing) {
-        throw new Error('Já existe um convite pendente para este email');
+        throw new Error('Ya existe una invitación pendente para este email');
       }
       
       // Criar convite

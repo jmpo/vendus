@@ -136,7 +136,7 @@ export function useAvailableSlots(eventTypeId: string | undefined, date: string 
   });
 }
 
-// Submeter agendamento
+// Submeter reserva
 export function useSubmitBooking() {
   return useMutation({
     mutationFn: async (input: BookingSubmitInput) => {
@@ -156,7 +156,7 @@ export function useSubmitBooking() {
       };
     },
     onSuccess: () => {
-      toast.success('Agendamento confirmado!');
+      toast.success('¡Reserva confirmada!');
     },
     onError: (error: Error) => {
       console.error('Error submitting booking:', error);
@@ -192,11 +192,11 @@ export function useCancelBookingPublic() {
       return data;
     },
     onSuccess: () => {
-      toast.success('Agendamento cancelado com sucesso!');
+      toast.success('Reserva cancelada con éxito!');
     },
     onError: (error: Error) => {
       console.error('Error cancelling booking:', error);
-      toast.error('Erro ao cancelar agendamento');
+      toast.error('Error al cancelar la reserva');
     },
   });
 }

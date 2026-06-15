@@ -77,11 +77,11 @@ export function useCreateProductCTA() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['product-ctas', data.product_id] });
-      toast.success('CTA criado com sucesso!');
+      toast.success('CTA creado con éxito!');
     },
     onError: (error) => {
       console.error('Error creating CTA:', error);
-      toast.error('Erro ao criar CTA');
+      toast.error('Error al crear CTA');
     },
   });
 }
@@ -103,11 +103,11 @@ export function useUpdateProductCTA() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['product-ctas', data.product_id] });
-      toast.success('CTA atualizado!');
+      toast.success('CTA actualizado!');
     },
     onError: (error) => {
       console.error('Error updating CTA:', error);
-      toast.error('Erro ao atualizar CTA');
+      toast.error('Error al actualizar CTA');
     },
   });
 }
@@ -127,11 +127,11 @@ export function useDeleteProductCTA() {
     },
     onSuccess: (productId) => {
       queryClient.invalidateQueries({ queryKey: ['product-ctas', productId] });
-      toast.success('CTA removido!');
+      toast.success('CTA eliminado!');
     },
     onError: (error) => {
       console.error('Error deleting CTA:', error);
-      toast.error('Erro ao remover CTA');
+      toast.error('Error al eliminar CTA');
     },
   });
 }

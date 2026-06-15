@@ -86,7 +86,7 @@ export function useCreateLeadTag() {
   const { profile, user } = useAuth();
   return useMutation({
     mutationFn: async (input: { name: string; color: string; description?: string; is_automatic?: boolean }) => {
-      if (!profile?.organization_id) throw new Error('Sem organização');
+      if (!profile?.organization_id) throw new Error('Sin organización');
       const { data, error } = await supabase
         .from('lead_tags')
         .insert({
@@ -104,9 +104,9 @@ export function useCreateLeadTag() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['lead-tags'] });
-      toast({ title: 'Etiqueta criada' });
+      toast({ title: 'Etiqueta creada' });
     },
-    onError: (e: any) => toast({ title: 'Erro ao criar etiqueta', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error al crear etiqueta', description: e.message, variant: 'destructive' }),
   });
 }
 
@@ -125,7 +125,7 @@ export function useUpdateLeadTag() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['lead-tags'] });
-      toast({ title: 'Etiqueta atualizada' });
+      toast({ title: 'Etiqueta actualizada' });
     },
     onError: (e: any) => toast({ title: 'Erro ao atualizar', description: e.message, variant: 'destructive' }),
   });
@@ -141,9 +141,9 @@ export function useDeleteLeadTag() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['lead-tags'] });
       qc.invalidateQueries({ queryKey: ['lead-tag-assignments'] });
-      toast({ title: 'Etiqueta removida' });
+      toast({ title: 'Etiqueta eliminada' });
     },
-    onError: (e: any) => toast({ title: 'Erro ao remover', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error al eliminar', description: e.message, variant: 'destructive' }),
   });
 }
 
@@ -161,7 +161,7 @@ export function useAssignLeadTag() {
       qc.invalidateQueries({ queryKey: ['lead-tag-assignments', vars.leadId] });
       qc.invalidateQueries({ queryKey: ['lead-tags'] });
     },
-    onError: (e: any) => toast({ title: 'Erro ao aplicar etiqueta', description: e.message, variant: 'destructive' }),
+    onError: (e: any) => toast({ title: 'Error al aplicar etiqueta', description: e.message, variant: 'destructive' }),
   });
 }
 
@@ -183,7 +183,7 @@ export function useRemoveLeadTag() {
   });
 }
 
-// ============ Automações ============
+// ============ Automatizaciones ============
 
 export interface TagAutomation {
   id: string;
@@ -231,7 +231,7 @@ export function useUpsertTagAutomation() {
   const { profile, user } = useAuth();
   return useMutation({
     mutationFn: async (input: Partial<TagAutomation> & { event_type: TagAutomation['event_type']; tag_id_to_add: string }) => {
-      if (!profile?.organization_id) throw new Error('Sem organização');
+      if (!profile?.organization_id) throw new Error('Sin organización');
       const payload = {
         organization_id: profile.organization_id,
         product_id: input.product_id ?? null,
@@ -261,7 +261,7 @@ export function useUpsertTagAutomation() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['tag-automations'] });
-      toast({ title: 'Automação salva' });
+      toast({ title: 'Automatización guardada' });
     },
     onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
   });
@@ -276,7 +276,7 @@ export function useDeleteTagAutomation() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['tag-automations'] });
-      toast({ title: 'Automação removida' });
+      toast({ title: 'Automatización eliminada' });
     },
   });
 }

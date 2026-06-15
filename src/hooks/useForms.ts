@@ -142,7 +142,7 @@ export function useCreateForm() {
         order_index: number;
       }>;
     }) => {
-      if (!profile?.organization_id) throw new Error('Organização não encontrada');
+      if (!profile?.organization_id) throw new Error('Organización no encontrada');
       
       const slug = generateSlug(params.name);
       
@@ -261,10 +261,10 @@ export function useCreateForm() {
     onSuccess: (_, params) => {
       queryClient.invalidateQueries({ queryKey: ['forms'] });
       queryClient.invalidateQueries({ queryKey: ['forms', params.productId] });
-      toast.success('Formulário criado com sucesso!');
+      toast.success('Formulario creado con éxito!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao criar formulário: ' + error.message);
+      toast.error('Error al crear formulario: ' + error.message);
     },
   });
 }
@@ -312,7 +312,7 @@ export function useUpdateForm() {
       queryClient.invalidateQueries({ queryKey: ['form', data.id] });
     },
     onError: (error: Error) => {
-      toast.error('Erro ao atualizar formulário: ' + error.message);
+      toast.error('Error al actualizar formulario: ' + error.message);
     },
   });
 }
@@ -327,7 +327,7 @@ export function useSaveFormBlocks() {
       blocks: FormBlock[];
     }) => {
       if (params.blocks.length === 0) {
-        throw new Error('Não é possível salvar um formulário sem blocos. Adicione pelo menos uma tela ou pergunta.');
+        throw new Error('No es posible guardadar um formulario sem blocos. Adicione pelo menos uma tela ou pergunta.');
       }
       
       const blocksToUpsert = params.blocks.map((block, index) => ({
@@ -375,10 +375,10 @@ export function useSaveFormBlocks() {
     },
     onSuccess: (_, params) => {
       queryClient.invalidateQueries({ queryKey: ['form-blocks', params.formId] });
-      toast.success('Formulário salvo!');
+      toast.success('Formulario guardado!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao salvar formulário: ' + error.message);
+      toast.error('Error al guardar formulario: ' + error.message);
     },
   });
 }
@@ -399,10 +399,10 @@ export function useDeleteForm() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['forms'] });
-      toast.success('Formulário excluído!');
+      toast.success('Formulario eliminado!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao excluir formulário: ' + error.message);
+      toast.error('Error al eliminar formulario: ' + error.message);
     },
   });
 }
@@ -414,7 +414,7 @@ export function useDuplicateForm() {
   
   return useMutation({
     mutationFn: async (formId: string) => {
-      if (!profile?.organization_id) throw new Error('Organização não encontrada');
+      if (!profile?.organization_id) throw new Error('Organización no encontrada');
       
       // Fetch original form
       const { data: original, error: fetchError } = await supabase
@@ -489,10 +489,10 @@ export function useDuplicateForm() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['forms'] });
       queryClient.invalidateQueries({ queryKey: ['forms', data.product_id] });
-      toast.success('Formulário duplicado!');
+      toast.success('Formulario duplicado!');
     },
     onError: (error: Error) => {
-      toast.error('Erro ao duplicar formulário: ' + error.message);
+      toast.error('Error al duplicar formulario: ' + error.message);
     },
   });
 }
@@ -522,15 +522,15 @@ export function useToggleFormStatus() {
       queryClient.invalidateQueries({ queryKey: ['form', data.id] });
       
       const statusMessages: Record<FormStatus, string> = {
-        active: 'Formulário ativado!',
-        paused: 'Formulário pausado!',
-        draft: 'Formulário movido para rascunho!',
-        archived: 'Formulário arquivado!',
+        active: 'Formulario ativado!',
+        paused: 'Formulario pausado!',
+        draft: 'Formulario movido para rascunho!',
+        archived: 'Formulario arquivado!',
       };
       toast.success(statusMessages[data.status]);
     },
     onError: (error: Error) => {
-      toast.error('Erro ao alterar status: ' + error.message);
+      toast.error('Error al cambiar status: ' + error.message);
     },
   });
 }

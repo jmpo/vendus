@@ -85,9 +85,9 @@ export function useSaveMetaWAConnection() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['meta-wa-connections'] });
-      toast.success('Conexão salva');
+      toast.success('Conexión guardada');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao salvar'),
+    onError: (e: any) => toast.error(e?.message ?? 'Error al guardar'),
   });
 }
 
@@ -124,7 +124,7 @@ export function useTestMetaWAConnection() {
     onSuccess: (data: any) => {
       qc.invalidateQueries({ queryKey: ['meta-wa-connections'] });
       qc.invalidateQueries({ queryKey: ['meta-wa-templates'] });
-      if (data?.ok) toast.success('Conexão validada');
+      if (data?.ok) toast.success('Conexión validada');
       else toast.error(data?.error ?? 'Falha no teste');
     },
     onError: (e: any) => toast.error(e?.message ?? 'Falha no teste'),
@@ -158,7 +158,7 @@ export function useSubmitMetaWATemplate() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['meta-wa-templates'] });
-      toast.success('Template enviado para aprovação');
+      toast.success('Plantilla enviada para aprobación');
     },
     onError: (e: any) => toast.error(e?.message ?? 'Falha ao enviar template'),
   });
@@ -173,7 +173,7 @@ export function useDeleteMetaWAConnection() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['meta-wa-connections'] });
-      toast.success('Conexão removida');
+      toast.success('Conexión eliminada');
     },
     onError: (e: any) => toast.error(e?.message ?? 'Falha ao remover'),
   });

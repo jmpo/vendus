@@ -76,7 +76,7 @@ export function useUpsertBusinessHours() {
   const { profile } = useAuth();
   return useMutation({
     mutationFn: async (input: Partial<BusinessHours>) => {
-      if (!profile?.organization_id) throw new Error('Sem organização');
+      if (!profile?.organization_id) throw new Error('Sin organización');
       const payload = {
         organization_id: profile.organization_id,
         timezone: input.timezone ?? 'America/Sao_Paulo',
@@ -94,7 +94,7 @@ export function useUpsertBusinessHours() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['business-hours'] });
-      toast({ title: 'Horários salvos' });
+      toast({ title: 'Horários guardados' });
     },
     onError: (e: any) => toast({ title: 'Erro', description: e.message, variant: 'destructive' }),
   });
@@ -123,7 +123,7 @@ export function useAddHoliday() {
   const { profile } = useAuth();
   return useMutation({
     mutationFn: async (input: { date: string; description?: string }) => {
-      if (!profile?.organization_id) throw new Error('Sem organização');
+      if (!profile?.organization_id) throw new Error('Sin organización');
       const { error } = await supabase
         .from('business_holidays')
         .insert({

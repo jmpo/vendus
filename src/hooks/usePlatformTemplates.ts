@@ -64,9 +64,9 @@ export function useUpdatePlatformTemplate() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['platform_email_templates'] });
       qc.invalidateQueries({ queryKey: ['platform_email_template'] });
-      toast.success('Template salvo com sucesso');
+      toast.success('Template guardado con éxito');
     },
-    onError: (e: any) => toast.error(e.message ?? 'Erro ao salvar template'),
+    onError: (e: any) => toast.error(e.message ?? 'Error al guardar template'),
   });
 }
 
@@ -81,9 +81,9 @@ export function useCreatePlatformTemplate() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['platform_email_templates'] });
-      toast.success('Template criado');
+      toast.success('Template creado');
     },
-    onError: (e: any) => toast.error(e.message ?? 'Erro ao criar template'),
+    onError: (e: any) => toast.error(e.message ?? 'Error al crear template'),
   });
 }
 
@@ -99,8 +99,8 @@ export function useDeletePlatformTemplate() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['platform_email_templates'] });
-      toast.success('Template removido');
+      toast.success('Template eliminado');
     },
-    onError: (e: any) => toast.error(e.message ?? 'Erro ao remover'),
+    onError: (e: any) => toast.error(e.message ?? 'Error al eliminar'),
   });
 }

@@ -86,7 +86,7 @@ export function useUpsertSector() {
 
   return useMutation({
     mutationFn: async (payload: UpsertSectorPayload) => {
-      if (!profile?.organization_id) throw new Error('Sem organização');
+      if (!profile?.organization_id) throw new Error('Sin organización');
 
       const { id, member_ids, ...fields } = payload;
       let sectorId = id;

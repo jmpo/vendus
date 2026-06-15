@@ -84,9 +84,9 @@ export function useUpsertHotmartCredentials() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['hotmart-credentials'] });
-      toast.success('Credenciais Hotmart salvas');
+      toast.success('Credenciais Hotmart guardadas');
     },
-    onError: (e: Error) => toast.error('Erro ao salvar: ' + e.message),
+    onError: (e: Error) => toast.error('Erro ao guardadar: ' + e.message),
   });
 }
 
@@ -100,8 +100,8 @@ export function useTestHotmartConnection() {
       if (!data?.ok) throw new Error(data?.error ?? 'Falha no teste');
       return data;
     },
-    onSuccess: () => toast.success('Conexão Hotmart OK'),
-    onError: (e: Error) => toast.error('Falha: ' + e.message),
+    onSuccess: () => toast.success('Conexión Hotmart OK'),
+    onError: (e: Error) => toast.error('Error: ' + e.message),
   });
 }
 
@@ -138,7 +138,7 @@ export function useSyncHotmartOrders() {
       qc.invalidateQueries({ queryKey: ['hotmart-product-mappings'] });
       toast.success(`Sincronizado: ${data?.inserted ?? 0} pedidos`);
     },
-    onError: (e: Error) => toast.error('Erro na sync: ' + e.message),
+    onError: (e: Error) => toast.error('Error en sync: ' + e.message),
   });
 }
 
@@ -171,8 +171,8 @@ export function useUpdateHotmartProductMapping() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['hotmart-product-mappings'] });
-      toast.success('Mapeamento atualizado');
+      toast.success('Mapeo actualizado');
     },
-    onError: (e: Error) => toast.error('Erro: ' + e.message),
+    onError: (e: Error) => toast.error('Error: ' + e.message),
   });
 }

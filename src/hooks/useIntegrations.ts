@@ -33,7 +33,7 @@ const AVAILABLE_INTEGRATIONS = [
   {
     type: 'zapier',
     name: 'Zapier',
-    description: 'Automações e webhooks',
+    description: 'Automatizaciones e webhooks',
     icon: 'Zap',
     docsUrl: 'https://zapier.com/developer'
   }
@@ -117,10 +117,10 @@ export function useUpdateIntegration() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['integration-settings'] });
-      toast.success('Integração atualizada');
+      toast.success('Integración actualizada');
     },
     onError: (error) => {
-      toast.error('Erro ao atualizar integração: ' + error.message);
+      toast.error('Error al actualizar integración: ' + error.message);
     }
   });
 }
@@ -199,10 +199,10 @@ export function useUpdateEmailConfig() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['email-config'] });
-      toast.success('Configurações de email salvas');
+      toast.success('Ajustes de email guardadas');
     },
     onError: (error) => {
-      toast.error('Erro ao salvar configurações: ' + error.message);
+      toast.error('Error al guardar configurações: ' + error.message);
     }
   });
 }

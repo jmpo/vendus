@@ -56,7 +56,7 @@ export function useGoogleCalendarConnection() {
   const connectMutation = useMutation({
     mutationFn: async () => {
       if (!user?.id || !profile?.organization_id) {
-        throw new Error('Usuário não autenticado');
+        throw new Error('Usuario no autenticado');
       }
 
       const redirectUrl = `${window.location.origin}${window.location.pathname}`;
@@ -70,20 +70,20 @@ export function useGoogleCalendarConnection() {
       });
 
       if (error) throw error;
-      if (!data?.authUrl) throw new Error('Falha ao gerar URL de autorização');
+      if (!data?.authUrl) throw new Error('Error al generar URL de autorización');
 
       // Redirect to Google OAuth
       window.location.href = data.authUrl;
     },
     onError: (error) => {
-      toast.error('Erro ao conectar: ' + error.message);
+      toast.error('Error al conectar: ' + error.message);
     },
   });
 
   // Disconnect Google Calendar
   const disconnectMutation = useMutation({
     mutationFn: async () => {
-      if (!user?.id) throw new Error('Usuário não autenticado');
+      if (!user?.id) throw new Error('Usuario no autenticado');
 
       const { error } = await supabase
         .from('google_calendar_connections')
@@ -97,14 +97,14 @@ export function useGoogleCalendarConnection() {
       toast.success('Google Calendar desconectado');
     },
     onError: (error) => {
-      toast.error('Erro ao desconectar: ' + error.message);
+      toast.error('Error al desconectar: ' + error.message);
     },
   });
 
   // Sync events
   const syncMutation = useMutation({
     mutationFn: async (direction?: 'import' | 'export' | 'both') => {
-      if (!user?.id) throw new Error('Usuário não autenticado');
+      if (!user?.id) throw new Error('Usuario no autenticado');
 
       const { data, error } = await supabase.functions.invoke('google-calendar-sync', {
         body: {
@@ -125,9 +125,9 @@ export function useGoogleCalendarConnection() {
       if (data.exported > 0) messages.push(`${data.exported} eventos exportados`);
       
       if (messages.length > 0) {
-        toast.success(`Sincronização concluída: ${messages.join(', ')}`);
+        toast.success(`Sincronización completada: ${messages.join(', ')}`);
       } else {
-        toast.info('Nenhum evento novo para sincronizar');
+        toast.info('No hay eventos nuevos para sincronizar');
       }
 
       if (data.errors?.length > 0) {
@@ -135,7 +135,7 @@ export function useGoogleCalendarConnection() {
       }
     },
     onError: (error) => {
-      toast.error('Erro na sincronização: ' + error.message);
+      toast.error('Error en la sincronización: ' + error.message);
     },
   });
 
@@ -146,7 +146,7 @@ export function useGoogleCalendarConnection() {
       sync_direction?: string;
       selected_calendar_id?: string;
     }) => {
-      if (!user?.id) throw new Error('Usuário não autenticado');
+      if (!user?.id) throw new Error('Usuario no autenticado');
 
       const { error } = await supabase
         .from('google_calendar_connections')
@@ -157,7 +157,7 @@ export function useGoogleCalendarConnection() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['google-calendar-connection'] });
-      toast.success('Configurações atualizadas');
+      toast.success('Ajustes actualizadas');
     },
     onError: (error) => {
       toast.error('Erro ao atualizar: ' + error.message);

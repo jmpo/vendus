@@ -53,7 +53,7 @@ export function useSaveCaktoRecoveryConfig() {
 
   return useMutation({
     mutationFn: async (cfg: Partial<CaktoRecoveryConfig>) => {
-      if (!orgId) throw new Error('sem organização');
+      if (!orgId) throw new Error('sin organización');
       const payload = { ...DEFAULT_CONFIG(orgId), ...cfg, organization_id: orgId };
       const { data, error } = await supabase
         .from('cakto_recovery_config')
@@ -65,9 +65,9 @@ export function useSaveCaktoRecoveryConfig() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['cakto-recovery-config', orgId] });
-      toast.success('Configuração salva');
+      toast.success('Configuración guardada');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Erro ao salvar'),
+    onError: (e: any) => toast.error(e?.message ?? 'Erro ao guardadar'),
   });
 }
 
