@@ -204,7 +204,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <ListTodo className="h-5 w-5 text-primary" />
-                Tarefas do Dia
+                Tareas del Día
               </CardTitle>
               <Button variant="ghost" size="sm" onClick={() => onNavigate('tasks')}>
                 Ver central
@@ -233,7 +233,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
           <Users className="h-5 w-5 mr-3 text-primary" />
           <div className="text-left">
             <div className="font-medium">Pipeline de Leads</div>
-            <div className="text-xs text-muted-foreground">Gerenciar oportunidades</div>
+            <div className="text-xs text-muted-foreground">Gestionar oportunidades</div>
           </div>
         </Button>
         <Button 
@@ -243,8 +243,8 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
         >
           <Calendar className="h-5 w-5 mr-3 text-primary" />
           <div className="text-left">
-            <div className="font-medium">Cadência</div>
-            <div className="text-xs text-muted-foreground">Roteiro de follow-up</div>
+            <div className="font-medium">Cadencia</div>
+            <div className="text-xs text-muted-foreground">Guion de follow-up</div>
           </div>
         </Button>
         <Button 
@@ -255,7 +255,7 @@ export function ProductDashboard({ product, onNavigate }: ProductDashboardProps)
           <MessageSquare className="h-5 w-5 mr-3 text-primary" />
           <div className="text-left">
             <div className="font-medium">IA Copiloto</div>
-            <div className="text-xs text-muted-foreground">Assistente de vendas</div>
+            <div className="text-xs text-muted-foreground">Asistente de ventas</div>
           </div>
         </Button>
       </div>
