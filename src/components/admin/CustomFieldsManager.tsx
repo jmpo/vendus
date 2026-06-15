@@ -31,9 +31,9 @@ import { Textarea } from '@/components/ui/textarea';
 const FIELD_TYPE_LABELS: Record<string, string> = {
   text: 'Texto',
   number: 'Número',
-  select: 'Seleção',
-  boolean: 'Sim/Não',
-  date: 'Data',
+  select: 'Selección',
+  boolean: 'Sí/No',
+  date: 'Fecha',
 };
 
 export function CustomFieldsManager() {
@@ -100,10 +100,10 @@ export function CustomFieldsManager() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Campos Personalizados</h2>
-          <p className="text-muted-foreground">Crie campos extras para armazenar dados nos leads</p>
+          <p className="text-muted-foreground">Crea campos adicionales para almacenar datos en los leads</p>
         </div>
         <Button onClick={handleOpenCreate} className="gap-2">
-          <Plus className="h-4 w-4" /> Criar Campo
+          <Plus className="h-4 w-4" /> Crear Campo
         </Button>
       </div>
 
@@ -118,12 +118,12 @@ export function CustomFieldsManager() {
       </div>
 
       {isLoading ? (
-        <p className="text-muted-foreground">Carregando...</p>
+        <p className="text-muted-foreground">Cargando...</p>
       ) : filteredFields.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
             <FileText className="h-12 w-12 mx-auto text-muted-foreground/40 mb-3" />
-            <p className="text-muted-foreground">Nenhum campo personalizado criado</p>
+            <p className="text-muted-foreground">Ningún campo personalizado creado</p>
           </CardContent>
         </Card>
       ) : (
@@ -137,7 +137,7 @@ export function CustomFieldsManager() {
                     <p className="text-sm text-muted-foreground">{field.description || field.field_key}</p>
                   </div>
                   <Badge variant="secondary">{FIELD_TYPE_LABELS[field.field_type] || field.field_type}</Badge>
-                  {!field.is_active && <Badge variant="outline">Inativo</Badge>}
+                  {!field.is_active && <Badge variant="outline">Inactivo</Badge>}
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -166,9 +166,9 @@ export function CustomFieldsManager() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Nome do Campo</Label>
+              <Label>Nombre del Campo</Label>
               <Input
-                placeholder="Ex: Renda Mensal"
+                placeholder="Ej: Ingreso Mensual"
                 value={form.name}
                 onChange={e => {
                   const name = e.target.value;
@@ -181,7 +181,7 @@ export function CustomFieldsManager() {
               />
             </div>
             <div className="space-y-2">
-              <Label>Chave (slug)</Label>
+              <Label>Clave (slug)</Label>
               <Input
                 value={form.field_key}
                 onChange={e => setForm(prev => ({ ...prev, field_key: e.target.value }))}
@@ -204,10 +204,10 @@ export function CustomFieldsManager() {
             </div>
             {form.field_type === 'select' && (
               <div className="space-y-2">
-                <Label>Opções</Label>
+                <Label>Opciones</Label>
                 <div className="flex gap-2">
                   <Input
-                    placeholder="Adicionar opção..."
+                    placeholder="Agregar opción..."
                     value={optionInput}
                     onChange={e => setOptionInput(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addOption())}
@@ -227,9 +227,9 @@ export function CustomFieldsManager() {
               </div>
             )}
             <div className="space-y-2">
-              <Label>Descrição (opcional)</Label>
+              <Label>Descripción (opcional)</Label>
               <Textarea
-                placeholder="Para que serve este campo?"
+                placeholder="¿Para qué sirve este campo?"
                 value={form.description}
                 onChange={e => setForm(prev => ({ ...prev, description: e.target.value }))}
                 rows={2}

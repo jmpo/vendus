@@ -50,7 +50,7 @@ export function TagFormDialog({ open, onOpenChange, tag }: Props) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{tag ? 'Editar etiqueta' : 'Nova etiqueta'}</DialogTitle>
+          <DialogTitle>{tag ? 'Editar etiqueta' : 'Nueva etiqueta'}</DialogTitle>
           <DialogDescription>
             Etiquetas ajudam a categorizar leads. Ex.: "Quente", "Comprou Curso X", "Abandonou checkout".
           </DialogDescription>
@@ -58,12 +58,12 @@ export function TagFormDialog({ open, onOpenChange, tag }: Props) {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Nome</Label>
+            <Label>Nombre</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex.: Comprou Produto X" />
           </div>
 
           <div className="space-y-2">
-            <Label>Cor</Label>
+            <Label>Color</Label>
             <div className="flex flex-wrap gap-2">
               {PRESET_COLORS.map((c) => (
                 <button
@@ -88,11 +88,11 @@ export function TagFormDialog({ open, onOpenChange, tag }: Props) {
           </div>
 
           <div className="space-y-2">
-            <Label>Descrição (opcional)</Label>
+            <Label>Descripción (opcional)</Label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Para que serve esta etiqueta?"
+              placeholder="¿Para qué sirve esta etiqueta?"
               rows={3}
             />
           </div>

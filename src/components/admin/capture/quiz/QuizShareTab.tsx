@@ -45,7 +45,7 @@ export function QuizShareTab({ funnel }: Props) {
       <div>
         <h2 className="text-lg font-semibold mb-2 flex items-center gap-2">
           <ListChecks className="h-5 w-5 text-primary" />
-          Compartilhar Quiz
+          Compartir Quiz
         </h2>
         <p className="text-muted-foreground text-sm">
           Use o link, o QR Code ou incorpore em qualquer site.

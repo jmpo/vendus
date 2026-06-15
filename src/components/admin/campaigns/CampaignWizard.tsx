@@ -333,32 +333,32 @@ export function CampaignWizard({
           <ArrowLeft className="h-4 w-4 mr-2" />Voltar
         </Button>
         <h1 className="font-semibold flex-1 truncate">
-          {campaignId ? 'Editar campanha' : 'Nova campanha inteligente'}
+          {campaignId ? 'Editar campaña' : 'Nueva campaña inteligente'}
         </h1>
         <Button variant="outline" onClick={saveDraft} disabled={saving}>
           {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-          Salvar rascunho
+          Guardar borrador
         </Button>
         <Button onClick={start} disabled={starting || saving}>
           {starting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Rocket className="h-4 w-4 mr-2" />}
-          Iniciar campanha
+          Iniciar campaña
         </Button>
       </div>
 
-      {/* 1. Configuração */}
+      {/* 1. Configuración */}
       <Card>
-        <CardHeader><CardTitle className="text-base">1. Configuração</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">1. Configuración</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           <div>
-            <Label>Nome da campanha *</Label>
+            <Label>Nombre de la campaña *</Label>
             <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ex: Reativação Live Vendus" />
           </div>
           <div>
-            <Label>Descrição</Label>
+            <Label>Descripción</Label>
             <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </div>
           <div>
-            <Label>Produto (define as etapas do pipeline)</Label>
+            <Label>Producto (define las etapas del pipeline)</Label>
             <Select value={productId} onValueChange={setProductId}>
               <SelectTrigger><SelectValue placeholder="Selecione um produto" /></SelectTrigger>
               <SelectContent>
@@ -371,7 +371,7 @@ export function CampaignWizard({
 
       {/* 2. Público */}
       <Card>
-        <CardHeader><CardTitle className="text-base">2. Quem deve receber?</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">2. ¿Quién debe recibir?</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <FilterBlock
             title="Origens"
@@ -393,7 +393,7 @@ export function CampaignWizard({
             emptyHint={productId ? 'Este produto não tem etapas.' : 'Selecione um produto acima.'}
           />
           <TagFilterBlock
-            title="Etiquetas (possui ao menos uma)"
+            title="Etiquetas (tiene al menos una)"
             tags={tags}
             selected={form.audience_filters.tag_ids ?? []}
             onToggle={(v) => toggleArr('audience_filters', 'tag_ids', v)}
@@ -412,7 +412,7 @@ export function CampaignWizard({
         <CardHeader><CardTitle className="text-base">Buscar leads específicos</CardTitle></CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <Label>Nome contém</Label>
+            <Label>Nombre contiene</Label>
             <Input
               value={form.audience_filters.search?.name ?? ''}
               onChange={(e) => setSearchField('name', e.target.value)}
@@ -420,7 +420,7 @@ export function CampaignWizard({
             />
           </div>
           <div>
-            <Label>E-mail contém</Label>
+            <Label>E-mail contiene</Label>
             <Input
               value={form.audience_filters.search?.email ?? ''}
               onChange={(e) => setSearchField('email', e.target.value)}
@@ -428,7 +428,7 @@ export function CampaignWizard({
             />
           </div>
           <div>
-            <Label>Telefone contém</Label>
+            <Label>Teléfono contiene</Label>
             <Input
               value={form.audience_filters.search?.phone ?? ''}
               onChange={(e) => setSearchField('phone', e.target.value)}
@@ -437,7 +437,7 @@ export function CampaignWizard({
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <Label>Inscrito a partir de</Label>
+              <Label>Suscrito a partir de</Label>
               <Input
                 type="date"
                 value={form.audience_filters.created_after?.slice(0, 10) ?? ''}

@@ -31,10 +31,10 @@ import { QuizTemplateLibrary } from './create/QuizTemplateLibrary';
 
 
 const statusConfig: Record<FunnelStatus, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-  draft: { label: 'Rascunho', variant: 'secondary' },
-  active: { label: 'Ativo', variant: 'default' },
+  draft: { label: 'Borrador', variant: 'secondary' },
+  active: { label: 'Activo', variant: 'default' },
   paused: { label: 'Pausado', variant: 'outline' },
-  archived: { label: 'Arquivado', variant: 'destructive' },
+  archived: { label: 'Archivado', variant: 'destructive' },
 };
 
 export function QuizManager() {
@@ -62,7 +62,7 @@ export function QuizManager() {
   });
 
   const openLauncher = () => {
-    if (!products?.length) { toast.error('Crie um produto primeiro'); return; }
+    if (!products?.length) { toast.error('Crea un producto primero'); return; }
     setLauncherOpen(true);
   };
 
@@ -84,12 +84,12 @@ export function QuizManager() {
             Quiz
           </h1>
           <p className="text-muted-foreground mt-1">
-            Quizzes públicos com pontuação, segmentação e resultado personalizado.
+            Quizzes públicos con puntuación, segmentación y resultado personalizado.
           </p>
         </div>
         <Button onClick={openLauncher} className="gap-2">
           <Plus className="h-4 w-4" />
-          Novo Quiz
+          Nuevo Quiz
         </Button>
 
       </div>
@@ -104,7 +104,7 @@ export function QuizManager() {
         <Select value={productFilter} onValueChange={setProductFilter}>
           <SelectTrigger className="w-full sm:w-[200px]"><SelectValue placeholder="Produto" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os produtos</SelectItem>
+            <SelectItem value="all">Todos los productos</SelectItem>
             {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
           </SelectContent>
         </Select>
@@ -112,10 +112,10 @@ export function QuizManager() {
           <SelectTrigger className="w-full sm:w-[160px]"><SelectValue placeholder="Status" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos</SelectItem>
-            <SelectItem value="draft">Rascunho</SelectItem>
-            <SelectItem value="active">Ativo</SelectItem>
+            <SelectItem value="draft">Borrador</SelectItem>
+            <SelectItem value="active">Activo</SelectItem>
             <SelectItem value="paused">Pausado</SelectItem>
-            <SelectItem value="archived">Arquivado</SelectItem>
+            <SelectItem value="archived">Archivado</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -131,15 +131,15 @@ export function QuizManager() {
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <ListChecks className="h-8 w-8 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Nenhum Quiz encontrado</h3>
+            <h3 className="text-lg font-semibold mb-2">No se encontraron Quizzes</h3>
             <p className="text-muted-foreground text-center mb-4 max-w-md">
               {searchQuery || statusFilter !== 'all' || productFilter !== 'all'
-                ? 'Nenhum quiz corresponde aos filtros.'
-                : 'Crie seu primeiro quiz para segmentar e qualificar leads com perguntas pontuadas.'}
+                ? 'Ningún quiz coincide con los filtros.'
+                : 'Crea tu primer quiz para segmentar y calificar leads con preguntas puntuadas.'}
             </p>
             {!searchQuery && statusFilter === 'all' && productFilter === 'all' && (
               <Button onClick={openLauncher} className="gap-2">
-                <Plus className="h-4 w-4" /> Criar primeiro Quiz
+                <Plus className="h-4 w-4" /> Crear primer Quiz
               </Button>
             )}
           </CardContent>
@@ -157,17 +157,17 @@ export function QuizManager() {
                       <Badge variant={statusConfig[f.status].variant}>{statusConfig[f.status].label}</Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mb-3">
-                      {f.products?.name || 'Produto não definido'}
+                      {f.products?.name || 'Producto no definido'}
                     </p>
                     <div className="flex items-center gap-6 text-sm">
                       <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <Eye className="h-4 w-4" /><span>{formatViews(f.total_views)} sessões</span>
+                        <Eye className="h-4 w-4" /><span>{formatViews(f.total_views)} sesiones</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground">
                         <Users className="h-4 w-4" /><span>{f.total_leads} leads</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <TrendingUp className="h-4 w-4" /><span>{rate(f)} conversão</span>
+                        <TrendingUp className="h-4 w-4" /><span>{rate(f)} conversión</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground">
                         <Clock className="h-4 w-4" />
@@ -243,9 +243,9 @@ export function QuizManager() {
       <AlertDialog open={!!deleteId} onOpenChange={(o) => !o && setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir Quiz?</AlertDialogTitle>
+            <AlertDialogTitle>¿Eliminar Quiz?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Todos os dados do quiz serão perdidos.
+              Esta ação não pode ser desfeita. Todos los datos del quiz se perderán.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

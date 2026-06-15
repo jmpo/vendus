@@ -17,23 +17,23 @@ interface Props {
 }
 
 const STATUS_LABEL: Record<string, { label: string; variant: any }> = {
-  draft: { label: 'Rascunho', variant: 'secondary' },
-  active: { label: 'Ativa', variant: 'default' },
+  draft: { label: 'Borrador', variant: 'secondary' },
+  active: { label: 'Activa', variant: 'default' },
   paused: { label: 'Pausada', variant: 'outline' },
-  archived: { label: 'Arquivada', variant: 'secondary' },
+  archived: { label: 'Archivada', variant: 'secondary' },
 };
 
 export function CadencesList({ cadences, stats, onNew, onOpen, onRefresh }: Props) {
   const toggleStatus = async (c: Cadence) => {
     const next = c.status === 'active' ? 'paused' : 'active';
     const { error } = await supabase.from('cadences' as any).update({ status: next }).eq('id', c.id);
-    if (error) toast.error(error.message); else { toast.success(next === 'active' ? 'Cadência ativada' : 'Cadência pausada'); onRefresh(); }
+    if (error) toast.error(error.message); else { toast.success(next === 'active' ? 'Secuencia activada' : 'Secuencia pausada'); onRefresh(); }
   };
 
   const remove = async (c: Cadence) => {
-    if (!confirm(`Excluir a cadência "${c.name}"? Esta ação removerá também as inscrições e execuções.`)) return;
+    if (!confirm(`¿Eliminar la secuencia "${c.name}"? Esta acción también eliminará las inscripciones y ejecuciones.`)) return;
     const { error } = await supabase.from('cadences' as any).delete().eq('id', c.id);
-    if (error) toast.error(error.message); else { toast.success('Cadência excluída'); onRefresh(); }
+    if (error) toast.error(error.message); else { toast.success('Secuencia eliminada'); onRefresh(); }
   };
 
   if (!cadences.length) {
@@ -44,12 +44,12 @@ export function CadencesList({ cadences, stats, onNew, onOpen, onRefresh }: Prop
             <Bot className="h-7 w-7 text-primary" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-lg font-medium">Nenhuma cadência ainda</h3>
+            <h3 className="text-lg font-medium">No hay secuencias aún</h3>
             <p className="text-sm text-muted-foreground max-w-md mx-auto">
-              Crie sua primeira jornada inteligente. A IA fará tentativas progressivas de contato com cada lead, sempre baseadas em contexto.
+              Crea tu primera jornada inteligente. La IA realizará intentos progresivos de contacto con cada lead, siempre basados en el contexto.
             </p>
           </div>
-          <Button onClick={onNew}><Plus className="h-4 w-4 mr-2" /> Nova Cadência</Button>
+          <Button onClick={onNew}><Plus className="h-4 w-4 mr-2" /> Nueva Secuencia</Button>
         </CardContent>
       </Card>
     );
@@ -58,7 +58,7 @@ export function CadencesList({ cadences, stats, onNew, onOpen, onRefresh }: Prop
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Button onClick={onNew}><Plus className="h-4 w-4 mr-2" /> Nova Cadência</Button>
+        <Button onClick={onNew}><Plus className="h-4 w-4 mr-2" /> Nueva Secuencia</Button>
       </div>
 
       <div className="grid gap-4">
@@ -81,20 +81,20 @@ export function CadencesList({ cadences, stats, onNew, onOpen, onRefresh }: Prop
                   </div>
 
                   <div className="flex items-center gap-1 shrink-0">
-                    <Button size="sm" variant="ghost" onClick={() => toggleStatus(c)} title={c.status === 'active' ? 'Pausar' : 'Ativar'}>
+                    <Button size="sm" variant="ghost" onClick={() => toggleStatus(c)} title={c.status === 'active' ? 'Pausar' : 'Activar'}>
                       {c.status === 'active' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                     </Button>
-                    <Button size="sm" variant="ghost" onClick={() => remove(c)} title="Excluir">
+                    <Button size="sm" variant="ghost" onClick={() => remove(c)} title="Eliminar">
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 border-t">
-                  <Stat icon={Users} label="Leads ativos" value={s.active} />
-                  <Stat icon={TrendingUp} label="Concluídos" value={s.completed} hint={s.total ? `${respondedRate}%` : undefined} />
-                  <Stat icon={Pause} label="Interrompidos" value={s.stopped} />
-                  <Stat icon={Clock} label="Última execução" value={c.last_executed_at ? formatDistanceToNow(new Date(c.last_executed_at), { locale: ptBR, addSuffix: true }) : '—'} small />
+                  <Stat icon={Users} label="Leads activos" value={s.active} />
+                  <Stat icon={TrendingUp} label="Completados" value={s.completed} hint={s.total ? `${respondedRate}%` : undefined} />
+                  <Stat icon={Pause} label="Interrumpidos" value={s.stopped} />
+                  <Stat icon={Clock} label="Última ejecución" value={c.last_executed_at ? formatDistanceToNow(new Date(c.last_executed_at), { locale: undefined, addSuffix: true }) : '—'} small />
                 </div>
 
                 <div className="flex justify-end pt-1">

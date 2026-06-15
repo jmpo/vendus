@@ -24,8 +24,8 @@ interface ProductManagerProps {
 }
 
 const statusOptions = [
-  { value: 'draft', label: 'Rascunho', color: 'bg-muted text-muted-foreground' },
-  { value: 'review', label: 'Em Revisão', color: 'bg-amber-500/10 text-amber-600' },
+  { value: 'draft', label: 'Borrador', color: 'bg-muted text-muted-foreground' },
+  { value: 'review', label: 'En Revisión', color: 'bg-amber-500/10 text-amber-600' },
   { value: 'published', label: 'Publicado', color: 'bg-emerald-500/10 text-emerald-600' },
 ];
 
@@ -97,13 +97,13 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
     const result = await optimize(field, value, formData);
     if (result?.optimized) {
       setFormData(prev => ({ ...prev, [field]: result.optimized }));
-      toast.success('Campo otimizado com IA!');
+      toast.success('¡Campo optimizado con IA!');
     }
   };
 
   const handleSubmit = async () => {
     if (!formData.name.trim()) {
-      toast.error('Nome do produto é obrigatório');
+      toast.error('El nombre del producto es obligatorio');
       return;
     }
 
@@ -123,20 +123,20 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
 
     try {
       await updateProduct.mutateAsync({ id: editingProduct.id, ...productData });
-      toast.success('Produto atualizado!');
+      toast.success('¡Producto actualizado!');
       setIsDialogOpen(false);
       resetForm();
     } catch (error) {
-      toast.error('Erro ao salvar produto');
+      toast.error('Error al guardar el producto');
     }
   };
 
   const handleDelete = async (id: string) => {
     try {
       await deleteProduct.mutateAsync(id);
-      toast.success('Produto excluído!');
+      toast.success('¡Producto eliminado!');
     } catch (error) {
-      toast.error('Erro ao excluir produto');
+      toast.error('Error al eliminar el producto');
     }
   };
 
@@ -162,11 +162,11 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-foreground">Produtos</h2>
-          <p className="text-sm text-muted-foreground">Gerencie os produtos da sua organização</p>
+          <p className="text-sm text-muted-foreground">Gestiona los productos de tu organización</p>
         </div>
         <Button onClick={openCreateDialog}>
           <Plus className="mr-2 h-4 w-4" />
-          Novo Produto
+          Nuevo Producto
         </Button>
       </div>
 
@@ -174,13 +174,13 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Editar Produto</DialogTitle>
+            <DialogTitle>Editar Producto</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name">Nome *</Label>
+                <Label htmlFor="name">Nombre *</Label>
                 <Input
                   id="name"
                   value={formData.name}
@@ -189,7 +189,7 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status">Estado</Label>
                 <Select
                   value={formData.status}
                   onValueChange={(value: 'draft' | 'review' | 'published') => 
@@ -212,7 +212,7 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="description">Descrição</Label>
+                <Label htmlFor="description">Descripción</Label>
                 <AIOptimizeButton
                   onOptimize={() => handleOptimizeField('description')}
                   isOptimizing={isOptimizing}
@@ -223,7 +223,7 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
                 id="description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Descreva o produto brevemente..."
+                placeholder="Describe el producto brevemente..."
                 rows={2}
               />
             </div>
@@ -241,7 +241,7 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
                 id="pitch_15s"
                 value={formData.pitch_15s}
                 onChange={(e) => setFormData({ ...formData, pitch_15s: e.target.value })}
-                placeholder="Elevator pitch curto..."
+                placeholder="Elevator pitch corto..."
                 rows={2}
               />
             </div>
@@ -259,7 +259,7 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
                 id="pitch_30s"
                 value={formData.pitch_30s}
                 onChange={(e) => setFormData({ ...formData, pitch_30s: e.target.value })}
-                placeholder="Pitch mais elaborado..."
+                placeholder="Pitch más elaborado..."
                 rows={3}
               />
             </div>
@@ -277,7 +277,7 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
                 id="pitch_2min"
                 value={formData.pitch_2min}
                 onChange={(e) => setFormData({ ...formData, pitch_2min: e.target.value })}
-                placeholder="Apresentação completa..."
+                placeholder="Presentación completa..."
                 rows={4}
               />
             </div>
@@ -295,13 +295,13 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
                 id="icp"
                 value={formData.icp}
                 onChange={(e) => setFormData({ ...formData, icp: e.target.value })}
-                placeholder="Descreva o cliente ideal..."
+                placeholder="Describe al cliente ideal..."
                 rows={3}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="differentials">Diferenciais (um por linha)</Label>
+              <Label htmlFor="differentials">Diferenciales (uno por línea)</Label>
               <Textarea
                 id="differentials"
                 value={formData.differentials}
@@ -386,7 +386,7 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Excluir produto?</AlertDialogTitle>
+                        <AlertDialogTitle>¿Eliminar producto?</AlertDialogTitle>
                         <AlertDialogDescription>
                           Esta ação não pode ser desfeita. Isso excluirá permanentemente 
                           o produto "{product.name}" e todos os dados associados.
@@ -413,8 +413,8 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
           <Card className="col-span-full bg-card">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <Package className="h-12 w-12 text-muted-foreground/50 mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-1">Nenhum produto</h3>
-              <p className="text-sm text-muted-foreground mb-4">Crie seu primeiro produto para começar</p>
+              <h3 className="text-lg font-medium text-foreground mb-1">Ningún producto</h3>
+              <p className="text-sm text-muted-foreground mb-4">Crea tu primer producto para comenzar</p>
               <Button onClick={openCreateDialog}>
                 <Sparkles className="mr-2 h-4 w-4" />
                 Criar Produto

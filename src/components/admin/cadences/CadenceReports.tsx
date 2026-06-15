@@ -72,24 +72,24 @@ export function CadenceReports({ cadences, stats, orgId }: Props) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-4">
-        <Kpi icon={Users} label="Leads ativos" value={totals.active} />
-        <Kpi icon={CheckCircle2} label="Concluídos" value={totals.completed} hint={`${respRate}% taxa`} />
-        <Kpi icon={XCircle} label="Interrompidos" value={totals.stopped} hint={`${stopRate}% taxa`} />
-        <Kpi icon={BarChart3} label="Cadências" value={cadences.length} />
+        <Kpi icon={Users} label="Leads activos" value={totals.active} />
+        <Kpi icon={CheckCircle2} label="Completados" value={totals.completed} hint={`${respRate}% tasa`} />
+        <Kpi icon={XCircle} label="Interrumpidos" value={totals.stopped} hint={`${stopRate}% tasa`} />
+        <Kpi icon={BarChart3} label="Secuencias" value={cadences.length} />
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <Kpi icon={Send} label="Mensagens enviadas" value={runStats.sent} />
-        <Kpi icon={Clock} label="Agendadas" value={runStats.scheduled} />
-        <Kpi icon={AlertTriangle} label="Falhas" value={runStats.failed} hint={runStats.total ? `${Math.round(runStats.failed / runStats.total * 100)}%` : undefined} />
-        <Kpi icon={XCircle} label="Puladas (condições)" value={runStats.skipped} />
+        <Kpi icon={Send} label="Mensajes enviados" value={runStats.sent} />
+        <Kpi icon={Clock} label="Programados" value={runStats.scheduled} />
+        <Kpi icon={AlertTriangle} label="Fallos" value={runStats.failed} hint={runStats.total ? `${Math.round(runStats.failed / runStats.total * 100)}%` : undefined} />
+        <Kpi icon={XCircle} label="Omitidos (condiciones)" value={runStats.skipped} />
       </div>
 
       <Card>
-        <CardHeader><CardTitle className="text-base">Desempenho por cadência</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Rendimiento por secuencia</CardTitle></CardHeader>
         <CardContent>
           {cadences.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-8 text-center">Nenhuma cadência criada ainda.</p>
+            <p className="text-sm text-muted-foreground py-8 text-center">No se ha creado ninguna secuencia aún.</p>
           ) : (
             <div className="space-y-3">
               {cadences.map((c) => {
@@ -102,10 +102,10 @@ export function CadenceReports({ cadences, stats, orgId }: Props) {
                       <div className="text-xs text-muted-foreground">{c.objective ?? '—'}</div>
                     </div>
                     <div className="flex gap-6 text-sm shrink-0">
-                      <Cell label="Ativos" value={s.active} />
-                      <Cell label="Concluídos" value={s.completed} />
-                      <Cell label="Interrompidos" value={s.stopped} />
-                      <Cell label="Taxa" value={`${rate}%`} />
+                      <Cell label="Activos" value={s.active} />
+                      <Cell label="Completados" value={s.completed} />
+                      <Cell label="Interrumpidos" value={s.stopped} />
+                      <Cell label="Tasa" value={`${rate}%`} />
                     </div>
                   </div>
                 );
@@ -116,10 +116,10 @@ export function CadenceReports({ cadences, stats, orgId }: Props) {
       </Card>
 
       <Card>
-        <CardHeader><CardTitle className="text-base">Desempenho por etapa</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Rendimiento por etapa</CardTitle></CardHeader>
         <CardContent>
           {Object.keys(byStep).length === 0 ? (
-            <p className="text-sm text-muted-foreground py-8 text-center">Sem execuções registradas ainda.</p>
+            <p className="text-sm text-muted-foreground py-8 text-center">Sin ejecuciones registradas aún.</p>
           ) : (
             <div className="space-y-2">
               {Object.entries(byStep).map(([stepId, s]) => {
@@ -130,14 +130,14 @@ export function CadenceReports({ cadences, stats, orgId }: Props) {
                 return (
                   <div key={stepId} className="flex items-center justify-between border rounded-lg p-3 text-sm">
                     <div className="min-w-0">
-                      <div className="font-medium truncate">{meta?.name ?? 'Etapa removida'}</div>
+                      <div className="font-medium truncate">{meta?.name ?? 'Etapa eliminada'}</div>
                       <div className="text-xs text-muted-foreground">{cadence?.name ?? '—'}</div>
                     </div>
                     <div className="flex gap-6 shrink-0">
-                      <Cell label="Enviadas" value={s.sent} />
-                      <Cell label="Falhas" value={s.failed} />
-                      <Cell label="Puladas" value={s.skipped} />
-                      <Cell label="Sucesso" value={`${success}%`} />
+                      <Cell label="Enviados" value={s.sent} />
+                      <Cell label="Fallos" value={s.failed} />
+                      <Cell label="Omitidos" value={s.skipped} />
+                      <Cell label="Éxito" value={`${success}%`} />
                     </div>
                   </div>
                 );
@@ -148,21 +148,21 @@ export function CadenceReports({ cadences, stats, orgId }: Props) {
       </Card>
 
       <Card>
-        <CardHeader><CardTitle className="text-base">Últimas execuções</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Últimas ejecuciones</CardTitle></CardHeader>
         <CardContent>
           {runs.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-8 text-center">Nenhuma execução ainda.</p>
+            <p className="text-sm text-muted-foreground py-8 text-center">Ninguna ejecución aún.</p>
           ) : (
             <div className="max-h-96 overflow-auto divide-y text-sm">
               {runs.slice(0, 50).map((r) => (
                 <div key={r.id} className="py-2 flex items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <div className="truncate">{stepMap[r.step_id]?.name ?? 'Etapa removida'}</div>
+                    <div className="truncate">{stepMap[r.step_id]?.name ?? 'Etapa eliminada'}</div>
                     {r.error && <div className="text-xs text-destructive truncate">{r.error}</div>}
                   </div>
                   <div className="flex items-center gap-3 shrink-0 text-xs text-muted-foreground">
                     <span className="uppercase font-medium">{r.status}</span>
-                    <span>{new Date(r.executed_at ?? r.scheduled_at).toLocaleString('pt-BR')}</span>
+                    <span>{new Date(r.executed_at ?? r.scheduled_at).toLocaleString('es-ES')}</span>
                   </div>
                 </div>
               ))}

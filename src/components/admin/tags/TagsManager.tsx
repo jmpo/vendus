@@ -25,7 +25,7 @@ export function TagsManager() {
         <div>
           <h1 className="text-2xl font-bold">Etiquetas</h1>
           <p className="text-sm text-muted-foreground">
-            Organize seus leads com etiquetas manuais ou automáticas baseadas em eventos.
+            Organiza tus leads con etiquetas manuales o automáticas basadas en eventos.
           </p>
         </div>
       </div>
@@ -49,8 +49,8 @@ export function TagsManager() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Suas etiquetas</CardTitle>
-              <CardDescription>Aplicadas manualmente, por fluxos, por agentes IA ou por automações.</CardDescription>
+              <CardTitle className="text-base">Tus etiquetas</CardTitle>
+              <CardDescription>Aplicadas manualmente, por flujos, por agentes IA o por automatizaciones.</CardDescription>
             </CardHeader>
             <CardContent>
               {isLoading ? (
@@ -60,9 +60,9 @@ export function TagsManager() {
               ) : !tags || tags.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
                   <TagIcon className="h-10 w-10 mx-auto mb-3 opacity-40" />
-                  <p>Nenhuma etiqueta criada ainda.</p>
+                  <p>Ninguna etiqueta creada todavía.</p>
                   <Button variant="link" onClick={() => { setEditingTag(null); setDialogOpen(true); }}>
-                    Criar a primeira
+                    Crear la primera
                   </Button>
                 </div>
               ) : (
@@ -100,7 +100,7 @@ export function TagsManager() {
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Remover etiqueta?</AlertDialogTitle>
+                            <AlertDialogTitle>¿Eliminar etiqueta?</AlertDialogTitle>
                             <AlertDialogDescription>
                               A etiqueta "{tag.name}" será removida de todos os leads. Esta ação não pode ser desfeita.
                             </AlertDialogDescription>

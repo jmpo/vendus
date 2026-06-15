@@ -16,10 +16,10 @@ import { format, formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 const STATUS_LABEL: Record<string, { label: string; variant: any }> = {
-  draft: { label: 'Rascunho', variant: 'secondary' },
-  active: { label: 'Ativa', variant: 'default' },
+  draft: { label: 'Borrador', variant: 'secondary' },
+  active: { label: 'Activa', variant: 'default' },
   paused: { label: 'Pausada', variant: 'outline' },
-  completed: { label: 'Concluída', variant: 'secondary' },
+  completed: { label: 'Completada', variant: 'secondary' },
   cancelled: { label: 'Cancelada', variant: 'destructive' },
 };
 
@@ -44,14 +44,14 @@ export function CampaignsList({
     const next = c.status === 'paused' ? 'active' : 'paused';
     const { error } = await supabase.from('campaigns').update({ status: next }).eq('id', c.id);
     if (error) toast.error(error.message);
-    else { toast.success(next === 'active' ? 'Campanha retomada' : 'Campanha pausada'); onRefresh(); }
+    else { toast.success(next === 'active' ? 'Campaña reanudada' : 'Campaña pausada'); onRefresh(); }
   };
 
   const remove = async (c: Campaign) => {
     if (!confirm(`Excluir a campanha "${c.name}"? Esta ação não pode ser desfeita.`)) return;
     const { error } = await supabase.from('campaigns').delete().eq('id', c.id);
     if (error) toast.error(error.message);
-    else { toast.success('Campanha excluída'); onRefresh(); }
+    else { toast.success('Campaña eliminada'); onRefresh(); }
   };
 
   if (!campaigns.length) {
@@ -62,12 +62,12 @@ export function CampaignsList({
             <Megaphone className="h-8 w-8 text-primary" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-semibold">Nenhuma campanha ainda</h3>
+            <h3 className="font-semibold">Aún no hay campañas</h3>
             <p className="text-sm text-muted-foreground max-w-md">
-              Crie sua primeira campanha inteligente. Selecione público, contexto e deixe o agente IA iniciar conversas personalizadas com cada lead.
+              Crea tu primera campaña inteligente. Selecciona público, contexto y deja que el agente IA inicie conversaciones personalizadas con cada lead.
             </p>
           </div>
-          <Button onClick={onNew}><Plus className="h-4 w-4 mr-2" />Nova Campanha</Button>
+          <Button onClick={onNew}><Plus className="h-4 w-4 mr-2" />Nueva Campaña</Button>
         </CardContent>
       </Card>
     );
@@ -76,7 +76,7 @@ export function CampaignsList({
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Button onClick={onNew}><Plus className="h-4 w-4 mr-2" />Nova Campanha</Button>
+        <Button onClick={onNew}><Plus className="h-4 w-4 mr-2" />Nueva Campaña</Button>
       </div>
       <div className="grid gap-3">
         {campaigns.map((c) => {
@@ -105,7 +105,7 @@ export function CampaignsList({
                   </button>
                   <div className="flex items-center gap-1 shrink-0">
                     {(c.status === 'active' || c.status === 'paused') && (
-                      <Button variant="ghost" size="icon" onClick={() => togglePause(c)} title={c.status === 'paused' ? 'Retomar' : 'Pausar'}>
+                      <Button variant="ghost" size="icon" onClick={() => togglePause(c)} title={c.status === 'paused' ? 'Reanudar' : 'Pausar'}>
                         {c.status === 'paused' ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
                       </Button>
                     )}
@@ -134,7 +134,7 @@ export function CampaignsList({
                   {s.total > 0 && (c.status === 'active' || c.status === 'paused' || c.status === 'completed') && (
                     <div className="space-y-1">
                       <div className="flex justify-between text-[10px] text-muted-foreground">
-                        <span>Progresso</span>
+                        <span>Progreso</span>
                         <span>{progress}%</span>
                       </div>
                       <Progress value={progress} className="h-1.5" />
@@ -144,20 +144,20 @@ export function CampaignsList({
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground pt-1">
                     <span className="inline-flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
-                      Criada em {format(new Date(c.created_at), "dd 'de' MMM yyyy, HH:mm", { locale: ptBR })}
+                      Creada el {format(new Date(c.created_at), "dd 'de' MMM yyyy, HH:mm", { locale: ptBR })}
                     </span>
                     {startDate && (
                       <span className="inline-flex items-center gap-1">
                         <Clock className="h-3 w-3" />
-                        {c.started_at ? 'Iniciada' : 'Agendada para'} {format(new Date(startDate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                        {c.started_at ? 'Iniciada' : 'Programada para'} {format(new Date(startDate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                       </span>
                     )}
                     {c.completed_at && (
                       <span className="inline-flex items-center gap-1 text-emerald-600">
-                        Concluída {formatDistanceToNow(new Date(c.completed_at), { locale: ptBR, addSuffix: true })}
+                        Completada {formatDistanceToNow(new Date(c.completed_at), { locale: ptBR, addSuffix: true })}
                       </span>
                     )}
-                    {(totals.excluded ?? 0) > 0 && <span>Excluídos: {totals.excluded}</span>}
+                    {(totals.excluded ?? 0) > 0 && <span>Excluidos: {totals.excluded}</span>}
                   </div>
                 </button>
               </CardContent>

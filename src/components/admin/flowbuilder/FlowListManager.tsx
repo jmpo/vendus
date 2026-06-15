@@ -56,12 +56,12 @@ export function FlowListManager({ productId, onSelectFlow }: FlowListManagerProp
 
   const handleCreateFlow = async () => {
     if (!newFlowName.trim()) {
-      toast.error('Digite um nome para o fluxo');
+      toast.error('Ingresa un nombre para el flujo');
       return;
     }
 
     if (!profile?.organization_id) {
-      toast.error('Organização não encontrada');
+      toast.error('Organización no encontrada');
       return;
     }
 
@@ -120,7 +120,7 @@ export function FlowListManager({ productId, onSelectFlow }: FlowListManagerProp
     return (
       <Card>
         <CardContent className="py-8 text-center text-muted-foreground">
-          Carregando fluxos...
+          Cargando flujos...
         </CardContent>
       </Card>
     );
@@ -133,16 +133,16 @@ export function FlowListManager({ productId, onSelectFlow }: FlowListManagerProp
         <div>
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <GitBranch className="h-5 w-5 text-primary" />
-            Fluxos de Qualificação
+            Flujos de Calificación
           </h3>
           <p className="text-sm text-muted-foreground">
-            Crie jornadas de atendimento com IA híbrida
+            Crea jornadas de atención con IA híbrida
           </p>
         </div>
         {!isCreating && (
           <Button onClick={() => setIsCreating(true)}>
             <Plus className="h-4 w-4 mr-2" />
-            Novo Fluxo
+            Nuevo Flujo
           </Button>
         )}
       </div>
@@ -153,7 +153,7 @@ export function FlowListManager({ productId, onSelectFlow }: FlowListManagerProp
           <CardContent className="py-4">
             <div className="flex gap-2">
               <Input
-                placeholder="Nome do novo fluxo..."
+                placeholder="Nombre del nuevo flujo..."
                 value={newFlowName}
                 onChange={(e) => setNewFlowName(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleCreateFlow()}
@@ -188,7 +188,7 @@ export function FlowListManager({ productId, onSelectFlow }: FlowListManagerProp
                     <div>
                       <h4 className="font-medium">{flow.name}</h4>
                       <p className="text-xs text-muted-foreground">
-                        {flow.blocks.length} blocos • Atualizado {format(new Date(flow.updated_at), "dd/MM 'às' HH:mm", { locale: ptBR })}
+                        {flow.blocks.length} bloques • Actualizado {format(new Date(flow.updated_at), "dd/MM 'às' HH:mm", { locale: ptBR })}
                       </p>
                     </div>
                   </div>
@@ -239,13 +239,13 @@ export function FlowListManager({ productId, onSelectFlow }: FlowListManagerProp
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
               <GitBranch className="h-8 w-8 text-primary" />
             </div>
-            <h3 className="font-semibold mb-2">Nenhum fluxo criado</h3>
+            <h3 className="font-semibold mb-2">Ningún flujo creado</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Crie um fluxo visual para qualificar leads antes da IA assumir
+              Crea un flujo visual para calificar leads antes de que la IA tome el control
             </p>
             <Button onClick={() => setIsCreating(true)}>
               <Plus className="h-4 w-4 mr-2" />
-              Criar Primeiro Fluxo
+              Crear Primer Flujo
             </Button>
           </CardContent>
         </Card>
@@ -255,9 +255,9 @@ export function FlowListManager({ productId, onSelectFlow }: FlowListManagerProp
       <AlertDialog open={!!flowToDelete} onOpenChange={() => setFlowToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir fluxo?</AlertDialogTitle>
+            <AlertDialogTitle>¿Eliminar flujo?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. O fluxo será permanentemente removido.
+              Esta acción no se puede deshacer. El flujo será eliminado permanentemente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

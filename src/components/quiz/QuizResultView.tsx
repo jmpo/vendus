@@ -22,9 +22,9 @@ export interface ResultMetric {
 }
 
 export const DEFAULT_TIERS: ResultTier[] = [
-  { id: 't1', label: 'Iniciante', min: 0, max: 20, color: '#f97316', message: 'Há muito espaço para crescer.' },
-  { id: 't2', label: 'Intermediário', min: 21, max: 50, color: '#3b82f6', message: 'Bom caminho — vamos acelerar.' },
-  { id: 't3', label: 'Avançado', min: 51, max: 100, color: '#10b981', message: 'Excelente! Pronto para o próximo nível.' },
+  { id: 't1', label: 'Principiante', min: 0, max: 20, color: '#f97316', message: 'Hay mucho espacio para crecer.' },
+  { id: 't2', label: 'Intermedio', min: 21, max: 50, color: '#3b82f6', message: 'Buen camino — vamos a acelerar.' },
+  { id: 't3', label: 'Avanzado', min: 51, max: 100, color: '#10b981', message: '¡Excelente! Listo para el siguiente nivel.' },
 ];
 
 export function pickTier(score: number, tiers: ResultTier[] = DEFAULT_TIERS): ResultTier {
@@ -80,7 +80,7 @@ export function QuizResultView({
     }).then(({ data: out, error }) => {
       if (cancelled) return;
       if (error || (out as any)?.error) {
-        setAiError((out as any)?.error || error?.message || 'Falha ao gerar resultado');
+        setAiError((out as any)?.error || error?.message || 'Error al generar el resultado');
       } else {
         setAiResult(out as AIResult);
       }
@@ -114,7 +114,7 @@ export function QuizResultView({
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-2xl font-bold tabular-nums" style={{ color: accent }}>{Math.round(scoreTotal)}</span>
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">pontos</span>
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">puntos</span>
           </div>
         </div>
 
@@ -128,7 +128,7 @@ export function QuizResultView({
             </span>
           </div>
           <h3 className="text-lg font-bold leading-tight">
-            {data.success_message || 'Seu resultado'}
+            {data.success_message || 'Tu resultado'}
           </h3>
           {tier.message && (
             <p className="text-sm text-muted-foreground mt-1">{tier.message}</p>
@@ -185,12 +185,12 @@ export function QuizResultView({
         <div className="space-y-3 pt-2 border-t">
           <div className="flex items-center gap-2 text-xs font-semibold" style={{ color: accent }}>
             <Sparkles className="h-3.5 w-3.5" />
-            <span className="uppercase tracking-wider">Análise IA</span>
+            <span className="uppercase tracking-wider">Análisis IA</span>
           </div>
 
           {aiLoading && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground py-2">
-              <Loader2 className="h-4 w-4 animate-spin" /> Gerando seu diagnóstico...
+              <Loader2 className="h-4 w-4 animate-spin" /> Generando tu diagnóstico...
             </div>
           )}
 

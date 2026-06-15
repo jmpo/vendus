@@ -31,10 +31,10 @@ import { ptBR } from 'date-fns/locale';
 import { WhatsAppBuilder } from './WhatsAppBuilder';
 
 const statusConfig: Record<FunnelStatus, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-  draft: { label: 'Rascunho', variant: 'secondary' },
-  active: { label: 'Ativo', variant: 'default' },
+  draft: { label: 'Borrador', variant: 'secondary' },
+  active: { label: 'Activo', variant: 'default' },
   paused: { label: 'Pausado', variant: 'outline' },
-  archived: { label: 'Arquivado', variant: 'destructive' },
+  archived: { label: 'Archivado', variant: 'destructive' },
 };
 
 export function WhatsAppManager() {
@@ -91,15 +91,15 @@ export function WhatsAppManager() {
             WhatsApp
           </h1>
           <p className="text-muted-foreground mt-1">
-            Fluxos disparados quando o lead envia a primeira mensagem para sua instância Evolution.
+            Flujos disparados cuando el lead envía el primer mensaje a tu instancia Evolution.
           </p>
         </div>
         <Button onClick={() => {
-          if (!products?.length) { toast.error('Crie um produto primeiro'); return; }
+          if (!products?.length) { toast.error('Crea un producto primero'); return; }
           setIsCreateOpen(true);
         }} className="gap-2">
           <Plus className="h-4 w-4" />
-          Novo Fluxo
+          Nuevo Flujo
         </Button>
       </div>
 
@@ -112,7 +112,7 @@ export function WhatsAppManager() {
         <Select value={productFilter} onValueChange={setProductFilter}>
           <SelectTrigger className="w-full sm:w-[200px]"><SelectValue placeholder="Produto" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os produtos</SelectItem>
+            <SelectItem value="all">Todos los productos</SelectItem>
             {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
           </SelectContent>
         </Select>
@@ -120,10 +120,10 @@ export function WhatsAppManager() {
           <SelectTrigger className="w-full sm:w-[160px]"><SelectValue placeholder="Status" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos</SelectItem>
-            <SelectItem value="draft">Rascunho</SelectItem>
-            <SelectItem value="active">Ativo</SelectItem>
+            <SelectItem value="draft">Borrador</SelectItem>
+            <SelectItem value="active">Activo</SelectItem>
             <SelectItem value="paused">Pausado</SelectItem>
-            <SelectItem value="archived">Arquivado</SelectItem>
+            <SelectItem value="archived">Archivado</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -138,15 +138,15 @@ export function WhatsAppManager() {
             <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
               <MessageSquare className="h-8 w-8 text-emerald-600" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Nenhum fluxo WhatsApp</h3>
+            <h3 className="text-lg font-semibold mb-2">Ningún flujo de WhatsApp</h3>
             <p className="text-muted-foreground text-center mb-4 max-w-md">
               {searchQuery || statusFilter !== 'all' || productFilter !== 'all'
-                ? 'Nenhum fluxo corresponde aos filtros.'
-                : 'Crie um fluxo automático para qualificar leads e agendar reuniões assim que chegarem pelo WhatsApp.'}
+                ? 'Ningún flujo coincide con los filtros.'
+                : 'Crea un flujo automático para calificar leads y programar reuniones tan pronto como lleguen por WhatsApp.'}
             </p>
             {!searchQuery && statusFilter === 'all' && productFilter === 'all' && (
               <Button onClick={() => setIsCreateOpen(true)} className="gap-2">
-                <Plus className="h-4 w-4" /> Criar primeiro fluxo
+                <Plus className="h-4 w-4" /> Crear primer flujo
               </Button>
             )}
           </CardContent>
@@ -165,22 +165,22 @@ export function WhatsAppManager() {
                         <h3 className="font-semibold text-foreground truncate">{f.name}</h3>
                         <Badge variant={statusConfig[f.status].variant}>{statusConfig[f.status].label}</Badge>
                         {wa?.enabled === false && (
-                          <Badge variant="outline" className="text-amber-600 border-amber-500">Canal desabilitado</Badge>
+                          <Badge variant="outline" className="text-amber-600 border-amber-500">Canal deshabilitado</Badge>
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground mb-3">
-                        {f.products?.name || 'Produto não definido'}
-                        {wa?.evolution_instance_id ? ' · Instância específica' : ' · Qualquer instância'}
+                        {f.products?.name || 'Producto no definido'}
+                        {wa?.evolution_instance_id ? ' · Instancia específica' : ' · Cualquier instancia'}
                       </p>
                       <div className="flex items-center gap-6 text-sm">
                         <div className="flex items-center gap-1.5 text-muted-foreground">
-                          <MessageSquare className="h-4 w-4" /><span>{f.total_views} conversas</span>
+                          <MessageSquare className="h-4 w-4" /><span>{f.total_views} conversaciones</span>
                         </div>
                         <div className="flex items-center gap-1.5 text-muted-foreground">
                           <Users className="h-4 w-4" /><span>{f.total_leads} leads</span>
                         </div>
                         <div className="flex items-center gap-1.5 text-muted-foreground">
-                          <TrendingUp className="h-4 w-4" /><span>{rate(f)} conversão</span>
+                          <TrendingUp className="h-4 w-4" /><span>{rate(f)} conversión</span>
                         </div>
                         <div className="flex items-center gap-1.5 text-muted-foreground">
                           <Clock className="h-4 w-4" />
@@ -244,18 +244,18 @@ export function WhatsAppManager() {
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Novo fluxo WhatsApp</DialogTitle>
+            <DialogTitle>Nuevo flujo de WhatsApp</DialogTitle>
             <DialogDescription>
-              Dispara automaticamente na primeira mensagem do lead.
+              Se dispara automáticamente con el primer mensaje del lead.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-2">
-              <Label>Nome interno</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Atendimento Pré-Venda" />
+              <Label>Nombre interno</Label>
+              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej: Atención Pre-Venta" />
             </div>
             <div className="space-y-2">
-              <Label>Produto</Label>
+              <Label>Producto</Label>
               <Select value={productId} onValueChange={setProductId}>
                 <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
                 <SelectContent>
@@ -264,7 +264,7 @@ export function WhatsAppManager() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Descrição (opcional)</Label>
+              <Label>Descripción (opcional)</Label>
               <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} />
             </div>
           </div>
@@ -281,9 +281,9 @@ export function WhatsAppManager() {
       <AlertDialog open={!!deleteId} onOpenChange={(o) => !o && setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir fluxo?</AlertDialogTitle>
+            <AlertDialogTitle>¿Eliminar flujo?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. As conversas existentes não serão afetadas.
+              Esta ação não pode ser desfeita. Las conversaciones existentes no se verán afectadas.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

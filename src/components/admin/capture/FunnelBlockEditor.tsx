@@ -70,11 +70,11 @@ const CHANNEL_CONFIG: { key: FunnelChannel; label: string; icon: React.ReactNode
 
 // Objetivos da IA
 const AI_OBJECTIVES: { value: AIObjective; label: string; description: string }[] = [
-  { value: 'qualify', label: 'Qualificar', description: 'Avaliar interesse e fit do lead' },
-  { value: 'sell', label: 'Vender', description: 'Conduzir para fechamento' },
-  { value: 'schedule', label: 'Agendar', description: 'Marcar reunião ou demo' },
-  { value: 'support', label: 'Soporte', description: 'Tirar dúvidas e ajudar' },
-  { value: 'custom', label: 'Personalizado', description: 'Definir objetivo próprio' },
+  { value: 'qualify', label: 'Calificar', description: 'Evaluar interés y fit del lead' },
+  { value: 'sell', label: 'Vender', description: 'Conducir al cierre' },
+  { value: 'schedule', label: 'Agendar', description: 'Programar reunión o demo' },
+  { value: 'support', label: 'Soporte', description: 'Resolver dudas y ayudar' },
+  { value: 'custom', label: 'Personalizado', description: 'Definir objetivo propio' },
 ];
 
 export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnect, chatOnly = false }: FunnelBlockEditorProps) {
@@ -132,7 +132,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
     const options = block.data.options || [];
     const newOption: FunnelBlockOption = {
       id: generateBlockId(),
-      label: `Opção ${options.length + 1}`,
+      label: `Opción ${options.length + 1}`,
     };
     updateData('options', [...options, newOption]);
   };
@@ -228,7 +228,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
         {!chatOnly && (
           <>
             <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Exibir em</Label>
+              <Label className="text-xs text-muted-foreground">Mostrar en</Label>
               <div className="flex gap-2">
                 {CHANNEL_CONFIG.map(({ key, label, icon }) => (
                   <Button
@@ -253,7 +253,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
         {block.type === 'message' && (
           <>
             <div className="space-y-2">
-              <Label>Mensagem</Label>
+              <Label>Mensaje</Label>
               <Textarea
                 value={block.data.content || ''}
                 onChange={(e) => updateData('content', e.target.value)}
@@ -262,7 +262,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
               />
             </div>
             <div className="space-y-2">
-              <Label>Delay (ms)</Label>
+              <Label>Retraso (ms)</Label>
               <Input
                 type="number"
                 value={block.data.delay_ms || 500}
@@ -276,7 +276,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
         {block.type === 'input' && (
           <>
             <div className="space-y-2">
-              <Label>Pergunta</Label>
+              <Label>Pregunta</Label>
               <Textarea
                 value={block.data.content || ''}
                 onChange={(e) => updateData('content', e.target.value)}
@@ -294,25 +294,25 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="name">Nome</SelectItem>
+                  <SelectItem value="name">Nombre</SelectItem>
                   <SelectItem value="email">E-mail</SelectItem>
-                  <SelectItem value="phone">Telefone</SelectItem>
-                  <SelectItem value="text">Texto livre</SelectItem>
+                  <SelectItem value="phone">Teléfono</SelectItem>
+                  <SelectItem value="text">Texto libre</SelectItem>
                   <SelectItem value="number">Número</SelectItem>
-                  <SelectItem value="cpf">CPF</SelectItem>
-                  <SelectItem value="textarea">Texto longo</SelectItem>
+                  <SelectItem value="cpf">Documento</SelectItem>
+                  <SelectItem value="textarea">Texto largo</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Nome da Variável</Label>
+              <Label>Nombre de la Variable</Label>
               <Input
                 value={block.data.variable_name || ''}
                 onChange={(e) => updateData('variable_name', e.target.value)}
                 placeholder="nome, email, telefone..."
               />
               <p className="text-xs text-muted-foreground">
-                Usado para mapear ao campo do lead
+                Usado para mapear al campo del lead
               </p>
             </div>
             <div className="space-y-2">
@@ -328,7 +328,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                 checked={block.data.required !== false}
                 onCheckedChange={(v) => updateData('required', v)}
               />
-              <Label>Obrigatório</Label>
+              <Label>Obligatorio</Label>
             </div>
           </>
         )}
@@ -347,7 +347,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label>Opções</Label>
+                <Label>Opciones</Label>
                 <Button size="sm" variant="ghost" onClick={addOption}>
                   <Plus className="h-3 w-3 mr-1" />
                   Adicionar
@@ -359,7 +359,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                     <Input
                       value={option.label}
                       onChange={(e) => updateOption(option.id, { label: e.target.value })}
-                      placeholder={`Opção ${idx + 1}`}
+                      placeholder={`Opción ${idx + 1}`}
                       className="flex-1"
                     />
                     <Button
@@ -380,7 +380,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
         {/* Delay Block */}
         {block.type === 'delay' && (
           <div className="space-y-2">
-            <Label>Tempo de espera (ms)</Label>
+            <Label>Tiempo de espera (ms)</Label>
             <Input
               type="number"
               value={block.data.delay_ms || 1000}
@@ -395,7 +395,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
         {/* Score Block */}
         {block.type === 'score' && (
           <div className="space-y-2">
-            <Label>Pontuação a adicionar</Label>
+            <Label>Puntuación a agregar</Label>
             <Input
               type="number"
               value={block.data.score_value || 0}
@@ -407,15 +407,15 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
         {/* Etiqueta Block (interno: type='tag') */}
         {block.type === 'tag' && (
           <div className="space-y-2">
-            <Label>{chatOnly ? 'Etiquetas (separadas por vírgula)' : 'Tags (separadas por vírgula)'}</Label>
+            <Label>{chatOnly ? 'Etiquetas (separadas por coma)' : 'Tags (separadas por coma)'}</Label>
             <Input
               value={(block.data.apply_tags || []).join(', ')}
               onChange={(e) => updateData('apply_tags', e.target.value.split(',').map(t => t.trim()).filter(Boolean))}
-              placeholder={chatOnly ? 'vip, qualificado, quente' : 'tag1, tag2, tag3'}
+              placeholder={chatOnly ? 'vip, calificado, caliente' : 'etiqueta1, etiqueta2, etiqueta3'}
             />
             {chatOnly && (
               <p className="text-xs text-muted-foreground">
-                Aplica etiquetas ao lead capturado por este ChatBot.
+                Aplica etiquetas al lead capturado por este ChatBot.
               </p>
             )}
           </div>
@@ -428,7 +428,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
             <div className="space-y-3">
               <Label className="flex items-center gap-2">
                 <Bot className="h-4 w-4" />
-                Agente que Assume
+                Agente que asume
               </Label>
               <AgentSwitchEditor 
                 productId={productId}
@@ -441,15 +441,15 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
             
             {/* Seção 2: Contexto Adicional */}
             <div className="space-y-2">
-              <Label>Contexto Específico para este Ponto</Label>
+              <Label>Contexto específico para este punto</Label>
               <Textarea
                 value={block.data.ai_context_prompt || ''}
                 onChange={(e) => updateData('ai_context_prompt', e.target.value)}
-                placeholder="Instruções adicionais além das regras do agente..."
+                placeholder="Instrucciones adicionales además de las reglas del agente..."
                 rows={3}
               />
               <p className="text-xs text-muted-foreground">
-                A IA usará as informações do Cérebro do Produto + Agente + este contexto
+                La IA usará la información del Cerebro del Producto + Agente + este contexto
               </p>
             </div>
             
@@ -459,14 +459,14 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
             <Collapsible>
               <CollapsibleTrigger className="flex items-center gap-2 w-full p-2 rounded-lg hover:bg-muted/50 transition-colors">
                 <Settings2 className="h-4 w-4" />
-                <span className="flex-1 text-left font-medium text-sm">Ajustar Permissões</span>
-                <Badge variant="outline" className="text-[10px]">Avançado</Badge>
+                <span className="flex-1 text-left font-medium text-sm">Ajustar Permisos</span>
+                <Badge variant="outline" className="text-[10px]">Avanzado</Badge>
                 <ChevronDown className="h-4 w-4" />
               </CollapsibleTrigger>
               <CollapsibleContent className="space-y-4 pt-4">
                 {/* Pode fazer (adicional) */}
                 <div className="space-y-2">
-                  <Label className="text-xs text-muted-foreground">✅ Pode fazer (adicional)</Label>
+                  <Label className="text-xs text-muted-foreground">✅ Puede hacer (adicional)</Label>
                   <div className="space-y-1">
                     {(block.data.override_can_do || []).map((item, idx) => (
                       <div key={idx} className="flex items-center gap-2">

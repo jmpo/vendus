@@ -53,7 +53,7 @@ function ChatPreview({ a }: { a: ChannelAppearance }) {
     : a.primary_color;
 
   const [messages, setMessages] = useState<ChatMsg[]>([
-    { id: 'm1', side: 'bot', text: `Olá! Sou o ${a.bot_name || 'assistente'}. Como posso ajudar você hoje?` },
+    { id: 'm1', side: 'bot', text: `¡Hola! Soy ${a.bot_name || 'assistente'}. ¿Cómo puedo ayudarte hoy?` },
   ]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
@@ -144,7 +144,7 @@ function ChatPreview({ a }: { a: ChannelAppearance }) {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={opts.input_placeholder || 'Mensagem'}
+            placeholder={opts.input_placeholder || 'Mensaje'}
             className="flex-1 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
             style={{ color: a.text_color }}
           />
@@ -211,10 +211,10 @@ function FormPreview({ a }: { a: ChannelAppearance }) {
         )}
 
         <div className="w-full" style={{ background: 'rgba(255,255,255,0.7)', borderRadius: a.border_radius, boxShadow: shadowToCss(a.shadow), padding: 'var(--fa-padding)' }}>
-          <h2 className="font-bold mb-1" style={{ fontSize: a.font_size_base * 1.5 }}>Vamos começar</h2>
-          <p className="text-sm opacity-70 mb-5">Pergunta 2 de 5</p>
+          <h2 className="font-bold mb-1" style={{ fontSize: a.font_size_base * 1.5 }}>Vamos a empezar</h2>
+          <p className="text-sm opacity-70 mb-5">Pregunta 2 de 5</p>
 
-          <label className="text-sm font-medium block mb-1.5">Qual seu nome?</label>
+          <label className="text-sm font-medium block mb-1.5">¿Cuál es tu nombre?</label>
           <input
             className={cn('w-full px-3 py-2.5 mb-4 outline-none', inputCls)}
             style={{ borderRadius: opts.input_style === 'underline' ? 0 : a.border_radius * 0.6, borderColor: a.primary_color }}
@@ -222,7 +222,7 @@ function FormPreview({ a }: { a: ChannelAppearance }) {
             readOnly
           />
 
-          <label className="text-sm font-medium block mb-1.5">Seu e-mail</label>
+          <label className="text-sm font-medium block mb-1.5">Tu e-mail</label>
           <input
             className={cn('w-full px-3 py-2.5 mb-5 outline-none', inputCls)}
             style={{ borderRadius: opts.input_style === 'underline' ? 0 : a.border_radius * 0.6, borderColor: a.primary_color }}
@@ -346,7 +346,7 @@ function QuizPreview({ a }: { a: ChannelAppearance }) {
           Qual é o seu maior <span style={{ color: a.primary_color }}>desafio</span> hoje?
         </h2>
         <p className="text-sm mb-6" style={{ color: mutedText }}>
-          Selecione a opção que mais se aproxima da sua realidade.
+          Selecciona la opción que más se acerca a tu realidad.
         </p>
 
         <div
@@ -355,7 +355,7 @@ function QuizPreview({ a }: { a: ChannelAppearance }) {
             opts.option_columns === 1 ? 'grid-cols-1' : opts.option_columns === 3 ? 'grid-cols-3' : 'grid-cols-2'
           )}
         >
-          {['Aumentar vendas', 'Gerar mais leads', 'Reter clientes', 'Automatizar processos'].map((opt, i) => {
+          {['Aumentar ventas', 'Generar más leads', 'Retener clientes', 'Automatizar procesos'].map((opt, i) => {
             const selected = i === 1;
             return (
               <button

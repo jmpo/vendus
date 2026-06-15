@@ -98,9 +98,9 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
         blocks: blocks.map((b, i) => ({ ...b, order_index: i })),
       });
       setHasChanges(false);
-      toast.success('Formulário salvo!');
+      toast.success('¡Formulario guardado!');
     } catch (error) {
-      toast.error('Erro ao salvar formulário');
+      toast.error('Error al guardar el formulario');
     }
   };
   
@@ -110,7 +110,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
       formId,
       updates: { status: 'active' },
     });
-    toast.success('Formulário publicado!');
+    toast.success('¡Formulario publicado!');
   };
   
   if (isLoadingForm || isLoadingBlocks) {
@@ -124,7 +124,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
   if (!form) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Formulário não encontrado</p>
+        <p className="text-muted-foreground">Formulario no encontrado</p>
         <Button variant="link" onClick={onClose}>Voltar</Button>
       </div>
     );
@@ -141,10 +141,10 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
           <div className="min-w-0 flex-1">
             <h1 className="text-sm md:text-lg font-bold truncate">{form.name}</h1>
             <p className="text-xs md:text-sm text-muted-foreground truncate hidden md:block">
-              {form.products?.name} • {blocks.length} {blocks.length === 1 ? 'bloco' : 'blocos'}
+              {form.products?.name} • {blocks.length} {blocks.length === 1 ? 'bloque' : 'bloques'}
             </p>
             <p className="text-[11px] text-muted-foreground truncate md:hidden">
-              {blocks.length} {blocks.length === 1 ? 'bloco' : 'blocos'}
+              {blocks.length} {blocks.length === 1 ? 'bloque' : 'bloques'}
             </p>
           </div>
         </div>
@@ -163,7 +163,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
             className="h-9 px-2 md:px-3"
           >
             <Save className="h-4 w-4 md:mr-2" />
-            <span className="hidden md:inline">{saveBlocks.isPending ? 'Salvando...' : 'Salvar'}</span>
+            <span className="hidden md:inline">{saveBlocks.isPending ? 'Guardando...' : 'Salvar'}</span>
           </Button>
           <Button
             size="sm"
@@ -386,7 +386,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
       <Sheet open={editorOpen} onOpenChange={setEditorOpen}>
         <SheetContent side="right" className="p-0 w-[92vw] max-w-md flex flex-col">
           <SheetHeader className="px-4 py-3 border-b">
-            <SheetTitle>Editar bloco</SheetTitle>
+            <SheetTitle>Editar bloque</SheetTitle>
           </SheetHeader>
           <div className="flex-1 min-h-0 overflow-hidden">
             <FormBlockEditor

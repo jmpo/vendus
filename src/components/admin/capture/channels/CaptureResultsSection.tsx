@@ -84,9 +84,9 @@ export function CaptureResultsSection() {
           <Target className="h-6 w-6" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold">Resultados de Quiz</h1>
+          <h1 className="text-2xl font-semibold">Resultados del Quiz</h1>
           <p className="text-sm text-muted-foreground">
-            Todas as respostas, score e tags dos leads que concluíram seus quizzes.
+            Todas las respuestas, puntuación y etiquetas de los leads que completaron sus quizzes.
           </p>
         </div>
       </div>
@@ -97,7 +97,7 @@ export function CaptureResultsSection() {
             <Select value={funnelId} onValueChange={setFunnelId}>
               <SelectTrigger className="sm:w-64"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos os quizzes</SelectItem>
+                <SelectItem value="all">Todos los quizzes</SelectItem>
                 {(funnels || []).map((f: any) => (
                   <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>
                 ))}
@@ -106,13 +106,13 @@ export function CaptureResultsSection() {
             <div className="relative flex-1">
               <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nome, e-mail ou telefone..."
+                placeholder="Buscar por nombre, e-mail o teléfono..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-9"
               />
             </div>
-            <Badge variant="secondary">{filtered.length} respostas</Badge>
+            <Badge variant="secondary">{filtered.length} respuestas</Badge>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -120,7 +120,7 @@ export function CaptureResultsSection() {
             <div className="py-12 flex justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>
           ) : filtered.length === 0 ? (
             <div className="py-12 text-center text-sm text-muted-foreground">
-              Nenhum resultado ainda. Compartilhe seu quiz para começar a coletar respostas.
+              Aún no hay resultados. Comparte tu quiz para comenzar a recopilar respuestas.
             </div>
           ) : (
             <Table>
@@ -128,10 +128,10 @@ export function CaptureResultsSection() {
                 <TableRow>
                   <TableHead>Lead</TableHead>
                   <TableHead>Quiz</TableHead>
-                  <TableHead>Score</TableHead>
+                  <TableHead>Puntuación</TableHead>
                   <TableHead>Temperatura</TableHead>
-                  <TableHead>Tags</TableHead>
-                  <TableHead>Quando</TableHead>
+                  <TableHead>Etiquetas</TableHead>
+                  <TableHead>Cuándo</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -164,7 +164,7 @@ export function CaptureResultsSection() {
                         </div>
                       </TableCell>
                       <TableCell className="text-xs text-muted-foreground">
-                        {format(new Date(l.created_at), "dd/MM 'às' HH:mm", { locale: ptBR })}
+                        {format(new Date(l.created_at), "dd/MM 'a las' HH:mm", { locale: ptBR })}
                       </TableCell>
                       <TableCell>
                         <Button size="sm" variant="ghost" onClick={() => setSelected(l)} className="gap-1">
@@ -189,14 +189,14 @@ export function CaptureResultsSection() {
                 <DialogTitle>{selected.name}</DialogTitle>
                 <DialogDescription>
                   {selected.email || '—'} · {selected.phone || '—'} ·{' '}
-                  {format(new Date(selected.created_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                  {format(new Date(selected.created_at), "dd/MM/yyyy 'a las' HH:mm", { locale: ptBR })}
                 </DialogDescription>
               </DialogHeader>
 
               <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-3">
                   <div className="rounded-lg border p-3">
-                    <div className="text-xs text-muted-foreground">Score</div>
+                    <div className="text-xs text-muted-foreground">Puntuación</div>
                     <div className="text-2xl font-bold">{(selected.metadata as any)?.score ?? 0}</div>
                   </div>
                   <div className="rounded-lg border p-3">
@@ -214,7 +214,7 @@ export function CaptureResultsSection() {
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-semibold mb-2">Respostas</h4>
+                  <h4 className="text-sm font-semibold mb-2">Respuestas</h4>
                   <div className="space-y-2">
                     {Object.entries(((selected.metadata as any)?.responses || {})).map(([k, v]) => (
                       <div key={k} className="rounded border p-2 text-sm">
@@ -227,7 +227,7 @@ export function CaptureResultsSection() {
 
                 {((selected.metadata as any)?.tags || []).length > 0 && (
                   <div>
-                    <h4 className="text-sm font-semibold mb-2">Tags aplicadas</h4>
+                    <h4 className="text-sm font-semibold mb-2">Etiquetas aplicadas</h4>
                     <div className="flex flex-wrap gap-1.5">
                       {((selected.metadata as any).tags as string[]).map((t, i) => (
                         <Badge key={i} variant="secondary">{t}</Badge>

@@ -10,7 +10,7 @@ interface CadencePickerProps {
 }
 
 /** Reusable selector listing active cadences of the current organization. */
-export function CadencePicker({ value, onChange, placeholder = 'Selecionar cadência...' }: CadencePickerProps) {
+export function CadencePicker({ value, onChange, placeholder = 'Seleccionar secuencia...' }: CadencePickerProps) {
   const { user } = useAuth();
   const [list, setList] = useState<{ id: string; name: string }[]>([]);
 
@@ -26,7 +26,7 @@ export function CadencePicker({ value, onChange, placeholder = 'Selecionar cadê
         .eq('organization_id', orgId)
         .in('status', ['active', 'draft'])
         .order('name');
-      setList(((data as any[]) ?? []).map((c) => ({ id: c.id, name: `${c.name}${c.status === 'draft' ? ' (rascunho)' : ''}` })));
+      setList(((data as any[]) ?? []).map((c) => ({ id: c.id, name: `${c.name}${c.status === 'draft' ? ' (borrador)' : ''}` })));
     })();
   }, [user]);
 
@@ -34,7 +34,7 @@ export function CadencePicker({ value, onChange, placeholder = 'Selecionar cadê
     <Select value={value ?? 'none'} onValueChange={(v) => onChange(v === 'none' ? null : v)}>
       <SelectTrigger><SelectValue placeholder={placeholder} /></SelectTrigger>
       <SelectContent>
-        <SelectItem value="none">Nenhuma — não inscrever</SelectItem>
+        <SelectItem value="none">Ninguna — no inscribir</SelectItem>
         {list.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
       </SelectContent>
     </Select>

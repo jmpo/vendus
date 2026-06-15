@@ -84,27 +84,27 @@ export function CadenceApiKeys({ orgId }: Props) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="text-base flex items-center gap-2"><KeyRound className="h-4 w-4" /> Chaves de API</CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">Use estas chaves para integrar a Cadência ao seu sistema via REST.</p>
+            <CardTitle className="text-base flex items-center gap-2"><KeyRound className="h-4 w-4" /> Claves de API</CardTitle>
+            <p className="text-sm text-muted-foreground mt-1">Usa estas claves para integrar la Secuencia a tu sistema vía REST.</p>
           </div>
           <Button size="sm" onClick={() => { setGenerated(null); setShowNew(true); }}>
-            <Plus className="h-4 w-4 mr-1" /> Nova chave
+            <Plus className="h-4 w-4 mr-1" /> Nueva clave
           </Button>
         </CardHeader>
         <CardContent>
-          {loading ? <p className="text-sm text-muted-foreground">Carregando…</p> :
-            keys.length === 0 ? <p className="text-sm text-muted-foreground py-4 text-center">Nenhuma chave criada.</p> : (
+          {loading ? <p className="text-sm text-muted-foreground">Cargando…</p> :
+            keys.length === 0 ? <p className="text-sm text-muted-foreground py-4 text-center">No hay claves creadas.</p> : (
             <div className="space-y-2">
               {keys.map((k) => (
                 <div key={k.id} className="flex items-center justify-between border rounded-lg p-3">
                   <div className="min-w-0">
                     <div className="font-medium flex items-center gap-2">
                       {k.name}
-                      {k.revoked_at && <Badge variant="destructive">Revogada</Badge>}
+                      {k.revoked_at && <Badge variant="destructive">Revocada</Badge>}
                     </div>
                     <div className="text-xs text-muted-foreground font-mono">{k.key_prefix}…</div>
                     <div className="text-xs text-muted-foreground">
-                      {k.last_used_at ? `Último uso: ${new Date(k.last_used_at).toLocaleString('pt-BR')}` : 'Nunca utilizada'}
+                      {k.last_used_at ? `Último uso: ${new Date(k.last_used_at).toLocaleString('es-ES')}` : 'Nunca utilizada'}
                     </div>
                   </div>
                   {!k.revoked_at && (
@@ -127,13 +127,13 @@ export function CadenceApiKeys({ orgId }: Props) {
             Header: <code>Authorization: Bearer cdn_…</code>
           </div>
           {[
-            ['GET', '/cadences', 'Lista cadências'],
-            ['GET', '/cadences/:id', 'Detalhe + steps'],
-            ['GET', '/cadences/:id/stats', 'Métricas + breakdown por step'],
-            ['POST', '/cadences/:id/enroll', 'Inscreve leads'],
-            ['GET', '/enrollments?cadence_id=…&status=…', 'Lista inscrições'],
+            ['GET', '/cadences', 'Lista de secuencias'],
+            ['GET', '/cadences/:id', 'Detalle + pasos'],
+            ['GET', '/cadences/:id/stats', 'Métricas + desglose por paso'],
+            ['POST', '/cadences/:id/enroll', 'Inscribe leads'],
+            ['GET', '/enrollments?cadence_id=…&status=…', 'Lista de inscripciones'],
             ['GET', '/enrollments/:id', 'Detalhe + runs'],
-            ['POST', '/enrollments/:id/stop', 'Interrompe inscrição'],
+            ['POST', '/enrollments/:id/stop', 'Interrumpe inscripción'],
           ].map(([m, p, d]) => (
             <div key={p} className="flex gap-3 items-baseline border-b pb-1">
               <Badge variant="outline" className="font-mono">{m}</Badge>
@@ -147,17 +147,17 @@ export function CadenceApiKeys({ orgId }: Props) {
       <Dialog open={showNew} onOpenChange={(o) => { setShowNew(o); if (!o) setGenerated(null); }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{generated ? 'Chave criada' : 'Nova chave de API'}</DialogTitle>
+            <DialogTitle>{generated ? 'Clave creada' : 'Nueva clave de API'}</DialogTitle>
           </DialogHeader>
           {!generated ? (
             <div className="space-y-3">
-              <Label>Nome da chave</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="ex: Integração CRM externo" />
+              <Label>Nombre de la clave</Label>
+              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="ej: Integración CRM externo" />
             </div>
           ) : (
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">
-                Copie a chave agora — ela não poderá ser visualizada novamente.
+                Copia la clave ahora — no podrá volver a visualizarse.
               </p>
               <div className="flex items-center gap-2 p-3 bg-muted rounded-md font-mono text-sm break-all">
                 {generated}
@@ -171,7 +171,7 @@ export function CadenceApiKeys({ orgId }: Props) {
             {!generated ? (
               <>
                 <Button variant="outline" onClick={() => setShowNew(false)}>Cancelar</Button>
-                <Button onClick={create} disabled={!name.trim()}>Gerar chave</Button>
+                <Button onClick={create} disabled={!name.trim()}>Generar clave</Button>
               </>
             ) : (
               <Button onClick={() => setShowNew(false)}>Concluir</Button>

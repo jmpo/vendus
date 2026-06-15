@@ -43,7 +43,7 @@ export function QuizSettingsTab({ funnel }: Props) {
       assigned_user_id: formData.assigned_user_id || null,
     };
     await updateFunnel.mutateAsync({ id: funnel.id, ...updates });
-    toast.success('Configurações do Quiz salvas');
+    toast.success('Configuraciones del Quiz salvas');
   };
 
   return (
@@ -52,7 +52,7 @@ export function QuizSettingsTab({ funnel }: Props) {
         <div>
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <ListChecks className="h-5 w-5 text-primary" />
-            Configurações do Quiz
+            Configuraciones del Quiz
           </h2>
           <p className="text-muted-foreground text-sm">
             Identidade, distribuição e qualificação inicial dos leads do quiz.

@@ -31,10 +31,10 @@ import { ptBR } from 'date-fns/locale';
 import { ChatBotBuilder } from './ChatBotBuilder';
 
 const statusConfig: Record<FunnelStatus, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-  draft: { label: 'Rascunho', variant: 'secondary' },
-  active: { label: 'Ativo', variant: 'default' },
+  draft: { label: 'Borrador', variant: 'secondary' },
+  active: { label: 'Activo', variant: 'default' },
   paused: { label: 'Pausado', variant: 'outline' },
-  archived: { label: 'Arquivado', variant: 'destructive' },
+  archived: { label: 'Archivado', variant: 'destructive' },
 };
 
 export function ChatBotManager() {
@@ -93,15 +93,15 @@ export function ChatBotManager() {
             ChatBot
           </h1>
           <p className="text-muted-foreground mt-1">
-            Fluxos conversacionais para capturar leads via chat público.
+            Flujos conversacionales para capturar leads vía chat público.
           </p>
         </div>
         <Button onClick={() => {
-          if (!products?.length) { toast.error('Crie um produto primeiro'); return; }
+          if (!products?.length) { toast.error('Crea un producto primero'); return; }
           setIsCreateOpen(true);
         }} className="gap-2">
           <Plus className="h-4 w-4" />
-          Novo ChatBot
+          Nuevo ChatBot
         </Button>
       </div>
 
@@ -115,7 +115,7 @@ export function ChatBotManager() {
         <Select value={productFilter} onValueChange={setProductFilter}>
           <SelectTrigger className="w-full sm:w-[200px]"><SelectValue placeholder="Produto" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os produtos</SelectItem>
+            <SelectItem value="all">Todos los productos</SelectItem>
             {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
           </SelectContent>
         </Select>
@@ -123,10 +123,10 @@ export function ChatBotManager() {
           <SelectTrigger className="w-full sm:w-[160px]"><SelectValue placeholder="Status" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos</SelectItem>
-            <SelectItem value="draft">Rascunho</SelectItem>
-            <SelectItem value="active">Ativo</SelectItem>
+            <SelectItem value="draft">Borrador</SelectItem>
+            <SelectItem value="active">Activo</SelectItem>
             <SelectItem value="paused">Pausado</SelectItem>
-            <SelectItem value="archived">Arquivado</SelectItem>
+            <SelectItem value="archived">Archivado</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -142,15 +142,15 @@ export function ChatBotManager() {
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <MessageCircle className="h-8 w-8 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Nenhum ChatBot encontrado</h3>
+            <h3 className="text-lg font-semibold mb-2">No se encontraron ChatBots</h3>
             <p className="text-muted-foreground text-center mb-4 max-w-md">
               {searchQuery || statusFilter !== 'all' || productFilter !== 'all'
-                ? 'Nenhum chatbot corresponde aos filtros.'
-                : 'Crie seu primeiro fluxo conversacional para começar a capturar leads.'}
+                ? 'Ningún chatbot coincide con los filtros.'
+                : 'Crea tu primer flujo conversacional para comenzar a captar leads.'}
             </p>
             {!searchQuery && statusFilter === 'all' && productFilter === 'all' && (
               <Button onClick={() => setIsCreateOpen(true)} className="gap-2">
-                <Plus className="h-4 w-4" /> Criar primeiro ChatBot
+                <Plus className="h-4 w-4" /> Crear primer ChatBot
               </Button>
             )}
           </CardContent>
@@ -168,17 +168,17 @@ export function ChatBotManager() {
                       <Badge variant={statusConfig[f.status].variant}>{statusConfig[f.status].label}</Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mb-3">
-                      {f.products?.name || 'Produto não definido'}
+                      {f.products?.name || 'Producto no definido'}
                     </p>
                     <div className="flex items-center gap-6 text-sm">
                       <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <Eye className="h-4 w-4" /><span>{formatViews(f.total_views)} sessões</span>
+                        <Eye className="h-4 w-4" /><span>{formatViews(f.total_views)} sesiones</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground">
                         <Users className="h-4 w-4" /><span>{f.total_leads} leads</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <TrendingUp className="h-4 w-4" /><span>{rate(f)} conversão</span>
+                        <TrendingUp className="h-4 w-4" /><span>{rate(f)} conversión</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground">
                         <Clock className="h-4 w-4" />
@@ -225,28 +225,28 @@ export function ChatBotManager() {
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Novo ChatBot</DialogTitle>
+            <DialogTitle>Nuevo ChatBot</DialogTitle>
             <DialogDescription>
-              Crie um fluxo conversacional. O canal Chat será ativado automaticamente.
+              Crea un flujo conversacional. El canal de Chat se activará automáticamente.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Produto *</Label>
+              <Label>Producto *</Label>
               <Select value={productId} onValueChange={setProductId}>
-                <SelectTrigger><SelectValue placeholder="Selecione o produto" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Selecciona el producto" /></SelectTrigger>
                 <SelectContent>
                   {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Nome do ChatBot *</Label>
-              <Input placeholder="Ex: Qualificação de Leads" value={name} onChange={(e) => setName(e.target.value)} />
+              <Label>Nombre del ChatBot *</Label>
+              <Input placeholder="Ej: Calificación de Leads" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label>Descrição (opcional)</Label>
-              <Textarea placeholder="Descreva o objetivo..." value={description}
+              <Label>Descripción (opcional)</Label>
+              <Textarea placeholder="Describe el objetivo..." value={description}
                 onChange={(e) => setDescription(e.target.value)} rows={3} />
             </div>
           </div>
@@ -255,7 +255,7 @@ export function ChatBotManager() {
             <Button onClick={handleCreate}
               disabled={!name.trim() || !productId || createFunnel.isPending}>
               {createFunnel.isPending
-                ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Criando...</>
+                ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Creando...</>
                 : 'Criar ChatBot'}
             </Button>
           </DialogFooter>
@@ -266,9 +266,9 @@ export function ChatBotManager() {
       <AlertDialog open={!!deleteId} onOpenChange={(o) => !o && setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir ChatBot?</AlertDialogTitle>
+            <AlertDialogTitle>¿Eliminar ChatBot?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Todos os dados do fluxo serão perdidos.
+              Esta ação não pode ser desfeita. Todos los datos del flujo se perderán.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
