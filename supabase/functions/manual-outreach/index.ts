@@ -133,7 +133,7 @@ Deno.serve(async (req) => {
           const lastAt = existingOutreach.last_outreach_at ? new Date(existingOutreach.last_outreach_at).getTime() : 0;
           const hoursSince = (Date.now() - lastAt) / 3600000;
           if (hoursSince < 24) {
-            console.log(`[ManualOutreach] Dedupe: lead ${leadId} já tiene outreach del agente ${agent_id} há ${hoursSince.toFixed(1)}h — pulando.`);
+            console.log(`[ManualOutreach] Dedupe: lead ${leadId} ya tiene outreach del agente ${agent_id} há ${hoursSince.toFixed(1)}h — pulando.`);
             results.push({ leadId, skipped: true, reason: "Outreach ativo recente para este agente" });
             continue;
           }
@@ -234,9 +234,9 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
 
         console.log(`[ManualOutreach] (${mode}) -> ${lead?.name} (${leadPhone}): ${generatedMessage.slice(0, 80)}...`);
 
-        // Quebra em até 2 bolhas curtas (regra padrão WhatsApp do projeto)
+        // Quebra em hasta 2 bolhas curtas (regra padrão WhatsApp do projeto)
         const bubbles = mode === 'conversational'
-          ? [generatedMessage] // já forçamos corto no prompt
+          ? [generatedMessage] // ya forçamos corto no prompt
           : splitIntoBubbles(generatedMessage, { maxChunks: 2, targetCharsPerChunk: 280 });
 
         let sent = false;
@@ -307,7 +307,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
           }
           conversation = newConv;
         } else if (mode === 'conversational' && convMetadata.pending_payment_data) {
-          // Mescla payload pendente em conversación já existente
+          // Mescla payload pendente em conversación ya existente
           const { data: convRow } = await supabase
             .from('webchat_conversations')
             .select('metadata')

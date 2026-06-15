@@ -83,7 +83,7 @@ serve(async (req: Request): Promise<Response> => {
     const { organization_id, deal_id, lead_id, product_id, deal_value }: CreateOrderRequest = await req.json();
 
     if (!organization_id || !deal_id || !lead_id) {
-      throw new Error("Parâmetros obrigatórios: organization_id, deal_id, lead_id");
+      throw new Error("Parâmetros obligatorios: organization_id, deal_id, lead_id");
     }
 
     // Check if Sankhya integration is configured

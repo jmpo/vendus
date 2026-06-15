@@ -67,7 +67,7 @@ Deno.serve(async (req: Request) => {
       console.log('[verify] reject', { has_path_id: !!pathConnectionId });
       return new Response('forbidden', { status: 403 });
     }
-    // Marca que a Meta validou o webhook desta conexão.
+    // Marca que a Meta validou o webhook de esta conexão.
     await sb
       .from('whatsapp_meta_connections')
       .update({ webhook_subscribed_at: new Date().toISOString() })
@@ -84,7 +84,7 @@ Deno.serve(async (req: Request) => {
 
   const sb = supa();
 
-  // Quando a URL carrega o connection_id, resolve uma vez e usa o mismo
+  // Cuando a URL carrega o connection_id, resolve uma vez e usa o mismo
   // App Secret para validar a assinatura de TODO o payload (preferido).
   let pinnedConn: any = null;
   if (pathConnectionId) {
@@ -150,7 +150,7 @@ Deno.serve(async (req: Request) => {
       }
 
 
-      // valida assinatura HMAC (apenas no caminho fallback — pinnedConn já validou).
+      // valida assinatura HMAC (solo no caminho fallback — pinnedConn ya validou).
       if (!pinnedConn) {
         try {
           const sig = req.headers.get('x-hub-signature-256') ?? '';

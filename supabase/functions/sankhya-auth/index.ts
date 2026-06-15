@@ -62,7 +62,7 @@ serve(async (req: Request): Promise<Response> => {
       clientSecret = config.client_secret;
       xToken = config.x_token;
     } else {
-      throw new Error("Credenciais ou organization_id son obrigatórios");
+      throw new Error("Credenciais ou organization_id son obligatorios");
     }
 
     if (!clientId || !clientSecret || !xToken) {

@@ -47,7 +47,7 @@ async function extractPdfText(bytes: Uint8Array): Promise<string> {
     return Array.isArray(text) ? text.join("\n") : String(text || "");
   } catch (err) {
     console.error("[import-agent-from-document] PDF parse error", err);
-    throw new Error("No fue possível extrair texto do PDF.");
+    throw new Error("No fue posible extrair texto do PDF.");
   }
 }
 
@@ -124,7 +124,7 @@ serve(async (req) => {
     extracted = extracted.replace(/\n{3,}/g, "\n\n").trim();
     if (!extracted || extracted.length < 30) {
       return new Response(
-        JSON.stringify({ error: "No fue possível extrair conteúdo legível do archivo." }),
+        JSON.stringify({ error: "No fue posible extrair conteúdo legível do archivo." }),
         { status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }

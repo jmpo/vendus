@@ -1,4 +1,4 @@
-// Cron a cada 5min: alertas em tempo real para o admin.
+// Cron a cada 5min: alertas em tempo real para el admin.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import {
   getServiceSupabase,

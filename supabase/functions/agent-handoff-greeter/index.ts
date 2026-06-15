@@ -68,7 +68,7 @@ async function generateSummary(
           {
             role: "system",
             content:
-              "Resuma em UMA frase corta (máx 15 palavras) o assunto principal da conversación abaixo. Responde solo o tema, sem rodeios. Ex: 'sobre o plano premium', 'sobre agendar uma reunión'.",
+              "Resuma em UMA frase corta (máx 15 palavras) o assunto principal de lla conversación abaixo. Responde solo o tema, sem rodeios. Ex: 'sobre o plano premium', 'sobre agendar uma reunión'.",
           },
           { role: "user", content: history },
         ],

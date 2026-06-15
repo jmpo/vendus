@@ -3,7 +3,7 @@
 // Este endpoint:
 //   1. Sempre responde 2xx (Doppus exige isso para aceitar a URL).
 //   2. Identifica a empresa pelo producto Doppus (items[0].code) ou pelo token.
-//   3. Mapeia status reais da Doppus para a engine unificada de pós-venta.
+//   3. Mapeia status reais da Doppus para la engine unificada de pós-venta.
 //
 // URL aceita:
 //   .../functions/v1/doppus-webhook
@@ -125,7 +125,7 @@ Deno.serve(async (req) => {
     url.searchParams.get('secret') ??
     null;
 
-  // Considera "evento real" apenas se houver dados úteis no payload.
+  // Considera "evento real" solo se houver dados úteis no payload.
   const looksLikeRealEvent =
     !!payload &&
     typeof payload === 'object' &&
@@ -179,9 +179,9 @@ Deno.serve(async (req) => {
 
     // ====== Resolve a organização e o producto interno ======
     // Estratégia (em ordem):
-    //   A) ?org=... + producto Doppus mapeado nessa org
-    //   B) qualquer org cuja config tenha esse producto Doppus mapeado
-    //   C) qualquer org cuja config tenha o token recibido
+    //   A) ?org=... + producto Doppus mapeado en esa org
+    //   B) qualquer org cuja config tenga esse producto Doppus mapeado
+    //   C) qualquer org cuja config tenga o token recibido
     //   D) compat legado: webhook_secret + product_mapping
     let resolvedOrgId: string | null = orgParam;
     let cred: any = null;
@@ -304,12 +304,12 @@ Deno.serve(async (req) => {
     const orgId = resolvedOrgId;
     const internalProductId = matchedProduct.internal_product_id;
 
-    // Validação opcional de token: se há token cadastrado e veio um token diferente, registra mas segue.
+    // Validação opcional de token: se há token registrado e veio um token diferente, registra mas segue.
     if (matchedProduct.token && tokenReceived && matchedProduct.token !== tokenReceived) {
       await logEvent(admin, {
         orgId, productId: internalProductId, eventType: 'invalid_token', leadId: null, payload,
         extra: {
-          reason: 'token recibido no bate com o cadastrado para este producto',
+          reason: 'token recibido no bate com o registrado para este producto',
           token_fingerprint: tokenFingerprint(tokenReceived),
         },
       });

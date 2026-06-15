@@ -44,7 +44,7 @@ async function verifyKey(provider: string, apiKey: string): Promise<{ ok: boolea
       });
       if (!r.ok && r.status !== 200) {
         const txt = await r.text();
-        // 400 com error de modelo já indica que a auth funcionou
+        // 400 com error de modelo ya indica que a auth funcionou
         if (txt.includes("model") || r.status === 400) return { ok: true };
         return { ok: false, error: `Anthropic respondeu ${r.status}: ${txt.slice(0, 200)}` };
       }

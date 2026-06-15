@@ -40,7 +40,7 @@ Deno.serve(async (req: Request) => {
     const mode = url.searchParams.get('hub.mode');
     const token = url.searchParams.get('hub.verify_token');
     const challenge = url.searchParams.get('hub.challenge');
-    // Compat: aceitar ?conn= como fallback caso o usuario tenha colado a URL antiga.
+    // Compat: aceitar ?conn= como fallback caso o usuario tenga colado a URL antiga.
     const connId = pathConnectionId ?? url.searchParams.get('conn');
     if (mode !== 'subscribe' || !token || !challenge || !connId) {
       return new Response('bad request', { status: 400 });

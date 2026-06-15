@@ -9,7 +9,7 @@ export interface ToolContext {
   leadId?: string | null;
   conversationId?: string | null;
   channel?: string | null;
-  // Cliente Supabase com SERVICE ROLE (já autenticado pelo caller).
+  // Cliente Supabase com SERVICE ROLE (ya autenticado pelo caller).
   supabase: any;
 }
 

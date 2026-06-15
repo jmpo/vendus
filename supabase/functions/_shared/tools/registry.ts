@@ -33,7 +33,7 @@ export function listTools(filter?: {
   });
 }
 
-// Converte uma lista de ferramentas para o formato esperado pelo Lovable AI Gateway / OpenAI.
+// Converte uma lista de ferramentas para el formato esperado pelo Lovable AI Gateway / OpenAI.
 export function toolsToOpenAISchema(tools: ToolDefinition[]): ToolCallSchema[] {
   return tools.map((t) => ({
     type: 'function' as const,
@@ -113,7 +113,7 @@ async function logExecution(
   }
 }
 
-// Verifica se a organização ultrapassou limites de segurança (ex: muitas execuções/día).
+// Verifica se a organização ultrapassou limites de segurança (ex: muchas execuções/día).
 // Retorna { allowed, reason } — chamar antes de executeTool em loops del agente.
 export async function checkSafetyLimits(
   ctx: ToolContext,

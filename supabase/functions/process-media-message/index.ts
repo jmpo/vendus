@@ -121,9 +121,9 @@ async function describeImage(
     {
       type: "text",
       text:
-        "Descreva objetivamente o conteúdo desta imagen en español, " +
+        "Descreva objetivamente o conteúdo de esta imagen en español, " +
         "em no máximo 3 frases. Se for um comprovante (Pix, boleto, tarjeta), " +
-        "extraia valor, data, chave/destino e nombre quando possíveis. " +
+        "extraia valor, data, chave/destino e nombre cuando possíveis. " +
         "Se for um documento, identifique o tipo. " +
         "Se contiver texto legível, transcreva o trecho mais importante. " +
         "No invente información.",
@@ -150,7 +150,7 @@ async function describeImage(
           role: "system",
           content:
             "Usted é um analisador visual de mensajes de WhatsApp em um CRM de ventas. " +
-            "Su respuesta vira o conteúdo textual da mensaje que um agente IA vai ler. " +
+            "Su respuesta vira o conteúdo textual da mensaje que um agente IA va ler. " +
             "Sé factual, objetivo e direto.",
         },
         { role: "user", content: userContent },
@@ -181,7 +181,7 @@ Deno.serve(async (req) => {
     }
 
     // Resolve a chave da OpenAI: prioriza chave da organização (white-label),
-    // cai para a secret global como fallback.
+    // cai para la secret global como fallback.
     let apiKey = Deno.env.get("OPENAI_API_KEY") || "";
     const orgId: string | undefined = body?.organization_id;
     if (orgId) {

@@ -165,7 +165,7 @@ function generateSellerNotificationHtml(
         lead_phone: leadPhone || 'No informado',
         lead_url: leadUrl
       })
-    : `Um novo lead fue recibido via webhook e atribuído a usted.`;
+    : `Um novel lead fue recibido via webhook e atribuído a usted.`;
 
   return `
     <!DOCTYPE html>
@@ -543,7 +543,7 @@ async function executeAction(
       }
 
       if (existingLead) {
-        // Reuse existing lead — refresh origin and update name with the latest cadastro
+        // Reuse existing lead — refresh origin and update name with the latest registro
         // (keep phone untouched; email only fills if missing)
         const updateData: Record<string, any> = {
           lead_origin: `webhook:${webhook.name} (recompra)`,
@@ -651,7 +651,7 @@ async function executeAction(
 
     case 'update_lead': {
       if (!existingLeadId) {
-        throw new Error('No lead to update');
+        throw new Error('Nel lead to update');
       }
 
       const mappings = config.field_mappings || {};
@@ -672,7 +672,7 @@ async function executeAction(
     }
 
     case 'transfer_user': {
-      if (!existingLeadId) throw new Error('No lead to transfer');
+      if (!existingLeadId) throw new Error('Nel lead to transfer');
       if (!config.target_user_id) throw new Error('No target user specified');
 
       const { error } = await supabase
@@ -685,7 +685,7 @@ async function executeAction(
     }
 
     case 'transfer_squad': {
-      if (!existingLeadId) throw new Error('No lead to transfer');
+      if (!existingLeadId) throw new Error('Nel lead to transfer');
       if (!config.target_squad_id) throw new Error('No target squad specified');
 
       const { error } = await supabase
@@ -698,7 +698,7 @@ async function executeAction(
     }
 
     case 'transfer_sector': {
-      if (!existingLeadId) throw new Error('No lead to transfer');
+      if (!existingLeadId) throw new Error('Nel lead to transfer');
       if (!config.target_sector_id) throw new Error('No target sector specified');
 
       const { error } = await supabase
@@ -711,7 +711,7 @@ async function executeAction(
     }
 
     case 'move_stage': {
-      if (!existingLeadId) throw new Error('No lead to move');
+      if (!existingLeadId) throw new Error('Nel lead to move');
       if (!config.target_stage_id) throw new Error('No target stage specified');
 
       const { error } = await supabase
@@ -724,7 +724,7 @@ async function executeAction(
     }
 
     case 'apply_tags': {
-      if (!existingLeadId) throw new Error('No lead to tag');
+      if (!existingLeadId) throw new Error('Nel lead to tag');
 
       // Resolver organization_id del lead (necessário para resolver tags por nombre)
       const { data: leadRow } = await supabase
@@ -773,7 +773,7 @@ async function executeAction(
     }
 
     case 'set_temperature': {
-      if (!existingLeadId) throw new Error('No lead to update');
+      if (!existingLeadId) throw new Error('Nel lead to update');
       if (!config.temperature) throw new Error('No temperature specified');
 
       const { error } = await supabase
@@ -786,7 +786,7 @@ async function executeAction(
     }
 
     case 'set_deal_value': {
-      if (!existingLeadId) throw new Error('No lead to update');
+      if (!existingLeadId) throw new Error('Nel lead to update');
       if (!config.value_field) throw new Error('No value field specified');
 
       const value = parseFloat(getFieldValue(fields, config.value_field)) || 0;
@@ -801,7 +801,7 @@ async function executeAction(
     }
 
     case 'send_email': {
-      if (!existingLeadId) throw new Error('No lead for email');
+      if (!existingLeadId) throw new Error('Nel lead for email');
 
       // Get lead data
       const { data: lead } = await supabase
@@ -872,7 +872,7 @@ async function executeAction(
           html
         });
 
-        console.log(`[Webhook] Email sent to lead: ${lead.email}`);
+        console.log(`[Webhook] Email sent tel lead: ${lead.email}`);
         return { lead_id: existingLeadId, email_sent_to: lead.email };
       } catch (emailError: any) {
         console.error('[Webhook] Email send error:', emailError);
@@ -881,7 +881,7 @@ async function executeAction(
     }
 
     case 'send_email_to_seller': {
-      if (!existingLeadId) throw new Error('No lead for seller notification');
+      if (!existingLeadId) throw new Error('Nel lead for seller notification');
 
       // Get lead data with assigned seller
       const { data: lead } = await supabase
@@ -922,7 +922,7 @@ async function executeAction(
       
       const subject = config.email_subject 
         ? replaceVariables(config.email_subject, vars)
-        : `Novo lead recibido: ${lead.name || 'Lead'}`;
+        : `Novel lead recibido: ${lead.name || 'Lead'}`;
 
       const html = generateSellerNotificationHtml(
         lead.name || 'Lead',
@@ -959,8 +959,8 @@ async function executeAction(
 
     case 'notify_user': {
       if (!existingLeadId) {
-        console.log('[Webhook] No lead for notification, skipping');
-        return { skipped: true, reason: 'No lead for notification' };
+        console.log('[Webhook] Nel lead for notification, skipping');
+        return { skipped: true, reason: 'Nel lead for notification' };
       }
 
       // Get lead's assigned user
@@ -979,7 +979,7 @@ async function executeAction(
         .from('notifications')
         .insert({
           user_id: lead.assigned_to,
-          title: 'Novo lead via Webhook',
+          title: 'Novel lead via Webhook',
           message: config.notification_message || `Lead ${lead.name} recibido via webhook`,
           type: 'info',
           action_url: `/leads/${existingLeadId}`
@@ -993,7 +993,7 @@ async function executeAction(
     }
 
     case 'update_field': {
-      if (!existingLeadId) throw new Error('No lead to update field');
+      if (!existingLeadId) throw new Error('Nel lead to update field');
       if (!config.custom_field_id) throw new Error('No custom field specified');
       if (!config.value_field) throw new Error('No value field specified');
 
@@ -1037,7 +1037,7 @@ async function executeAction(
     }
 
     case 'notify_whatsapp': {
-      if (!existingLeadId) throw new Error('No lead to notify about');
+      if (!existingLeadId) throw new Error('Nel lead to notify about');
 
       // Determine provider
       const { data: wpSetting } = await supabase
@@ -1063,7 +1063,7 @@ async function executeAction(
         .eq('id', existingLeadId)
         .single();
 
-      const messageTemplate = config.whatsapp_message || 'Novo lead recibido: {{lead_name}}';
+      const messageTemplate = config.whatsapp_message || 'Novel lead recibido: {{lead_name}}';
       const message = replaceVariables(messageTemplate, {
         lead_name: lead?.name || 'Lead',
         lead_phone: lead?.phone || 'No informado',
@@ -1167,7 +1167,7 @@ async function executeAction(
     }
 
     case 'ai_agent_outreach': {
-      if (!existingLeadId) throw new Error('No lead for AI outreach');
+      if (!existingLeadId) throw new Error('Nel lead for AI outreach');
 
       const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
       if (!lovableApiKey) {
@@ -1262,7 +1262,7 @@ ${agent.cannot_do?.length ? `O QUE VOCÊ NÃO PODE FAZER:\n${agent.cannot_do.map
 
 ${knowledgeContext ? `CONHECIMENTO DO PRODUTO:\n${knowledgeContext}` : ''}
 
-OBJETIVO DESTA ABORDAGEM: ${config.ai_objective || 'Abordar o lead de forma estratégica'}
+OBJETIVO DESTA ABORDAGEM: ${config.ai_objective || 'Abordar el lead de forma estratégica'}
 ${config.ai_extra_context ? `CONTEXTO ADICIONAL: ${config.ai_extra_context}` : ''}
 
 REGRAS:
@@ -1537,7 +1537,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
     }
 
     case 'trigger_flow': {
-      if (!existingLeadId) throw new Error('No lead to trigger flow for');
+      if (!existingLeadId) throw new Error('Nel lead to trigger flow for');
       const flowId = config.flow_id;
       const agentId = config.flow_agent_id || null;
       const channel = (config.flow_channel as 'whatsapp' | 'webchat') || 'whatsapp';
@@ -1615,14 +1615,14 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
 
       // 5. Determina status inicial conforme atribuição
       // - com agente IA  -> bot_active
-      // - com vendedor   -> human_active (já aceito)
+      // - com vendedor   -> human_active (ya aceito)
       // - sem nada       -> waiting_human (entra na fila do sector)
       let initialStatus: 'bot_active' | 'human_active' | 'waiting_human';
       if (agentId) initialStatus = 'bot_active';
       else if (assignedUserId) initialStatus = 'human_active';
       else initialStatus = 'waiting_human';
 
-      // 6. Cria/atualiza conversación com contexto do flujo
+      // 6. Cria/atualizla conversación com contexto del flujo
       const conversationPayload: Record<string, any> = {
         organization_id: webhook.organization_id,
         widget_id: widgetRow.id,
@@ -1654,7 +1654,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
         .single();
       if (convErr) throw new Error(`Falha ao crear conversación: ${convErr.message}`);
 
-      // Se vendedor fue atribuído, refletir no lead também (Single Attendant trigger cuida do resto)
+      // Se vendedor fue atribuído, refletir nel lead también (Single Attendant trigger cuida do resto)
       if (assignedUserId) {
         await supabase
           .from('leads')
@@ -1698,7 +1698,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           const { data: instances } = await instanceQuery;
           const instance = instances?.[0];
           if (!instance) {
-            throw new Error('Nenhuma instância WhatsApp conectada para a organização');
+            throw new Error('Nenhuma instância WhatsApp conectada para la organização');
           }
 
           const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {

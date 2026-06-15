@@ -45,8 +45,8 @@ serve(async (req: Request): Promise<Response> => {
               recipientEmail,
               idempotencyKey: `test-${Date.now()}`,
               templateData: {
-                __subject: "Teste de envio — Lovable Emails",
-                __html: `<div style="font-family:Arial,sans-serif;padding:24px"><h2>Teste bem-sucedido</h2><p>Este é um e-mail de teste enviado pelo painel do Super Admin.</p><p style="color:#666;font-size:12px">Se usted recebeu, su infraestrutura de e-mail está operando corretamente.</p></div>`,
+                __subject: "Prueba de envio — Lovable Emails",
+                __html: `<div style="font-family:Arial,sans-serif;padding:24px"><h2>Prueba bem-sucedido</h2><p>Este é um e-mail de prueba enviado pelo painel do Super Admin.</p><p style="color:#666;font-size:12px">Se usted recebeu, su infraestrutura de e-mail está operando corretamente.</p></div>`,
               },
             }),
           });
@@ -55,7 +55,7 @@ serve(async (req: Request): Promise<Response> => {
             throw new Error(`Falha al enviar e-mail: ${err}`);
           }
           return new Response(
-            JSON.stringify({ success: true, message: `E-mail de teste enviado para ${recipientEmail}` }),
+            JSON.stringify({ success: true, message: `E-mail de prueba enviado para ${recipientEmail}` }),
             { headers: { ...corsHeaders, "Content-Type": "application/json" } }
           );
         }

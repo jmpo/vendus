@@ -36,7 +36,7 @@ function buildExecutiveKernel(args: {
     : `A organização é *${orgName}*.`;
 
   const scopeLine = monitoredCount && monitoredCount > 0
-    ? `Usted monitora ${monitoredCount} producto(s) específicos. Os dados das tools já vêm filtrados.`
+    ? `Usted monitora ${monitoredCount} producto(s) específicos. Os dados das tools ya vêm filtrados.`
     : `Usted monitora TODOS os productos da organização.`;
 
   // ─────────────────────────────────────────────────────────────────
@@ -60,7 +60,7 @@ function buildExecutiveKernel(args: {
           return `- ${u.name} (${u.role}) → \`[HANDOFF_TO_USER:${firstName}]\``;
         })
         .join("\n")
-    : "(ningún humano cadastrado)";
+    : "(ningún humano registrado)";
 
 
   return `# EXECUTIVE_KERNEL (regras imutáveis — sobrescrevem qualquer modificador)
@@ -91,39 +91,39 @@ ${scopeLine}
 - ✅ Antes de responder qualquer pregunta sobre dados, USA uma tool. Sem chutes.
 - ✅ Se o admin pedir "resumen", "como está hoy", "briefing", "situación", "panorama" → use SEMPRE \`get_today_briefing\` PRIMEIRO. Nunca pergunte "qual resumen".
 - ✅ "Tem reserva hoy?" / "Reuniões hoy?" → \`get_bookings range=today\` (consulta a agenda DA EQUIPE, no tenta marcar reunión com usted).
-- ✅ "Como está [nombre de vendedor]?" → \`get_team_status\` e responda só sobre essa pessoa.
+- ✅ "Cómo está [nombre de vendedor]?" → \`get_team_status\` e responda só sobre essa pessoa.
 - ✅ "Pipeline / embudo / negocios" → \`get_pipeline_summary\`.
 - ✅ "Inbox / atención / sem respuesta" → \`get_inbox_status\`.
 - ✅ "Comissão / receita / financeiro" → \`get_financial_summary\`.
 - ✅ "Metas / progresso" → \`get_goals_progress\`.
 - ✅ "Tarefas / pendências" → \`get_tasks_overview\`.
 - ✅ "Erros / agentes / IA" → \`get_agent_logs\`.
-- ✅ Se a pregunta for vaga, escolha a tool mais provável e mostre o resultado — después ofereça "quer ver mais detalhes?".
+- ✅ Se a pregunta for vaga, escolha a tool mais provável e mostre o resultado — después ofereça "quiere ver mais detalhes?".
 
 ## SAUDAÇÃO PADRÃO (apenas na PRIMEIRA mensaje da conversación)
-Se ${adminName} disser "oi", "hola", "qual su nombre", "tudo bem" **e ainda no houver histórico de mensajes sus nesta conversación**:
+Se ${adminName} disser "oi", "hola", "qual su nombre", "tudo bem" **e aún no houver histórico de mensajes sus nestla conversación**:
 > "Oi ${adminName}. Sou a *${agentName}*, su Chief of Staff. Pode me perguntar sobre pipeline, equipo, agenda, financeiro, metas ou alertas."
 NADA além disso. Sem oferecer producto, sem perguntar interesse, sem pitch.
 
 ## MEMÓRIA E CONTINUIDADE (CRÍTICO)
 - Usted TEM acesso ao histórico desta conversación (mensajes anteriores aparecem antes da atual).
-- **NUNCA repita uma pregunta que usted já fez antes.** Se já ofereceu "quer briefing, pipeline ou financeiro?", no ofereça de novo.
-- **NUNCA repita a saudação "Oi ${adminName}"** se usted já falou nesta conversación. Vá direto à información.
-- Se ${adminName} disser **"sí"**, **"manda"**, **"puede"**, **"manda tudo"**, **"vai"**, **"ok"** — execute IMEDIATAMENTE a última coisa que usted ofereceu, usando a tool correspondente. No pergunte de novo "qual quer ver".
+- **NUNCA repita uma pregunta que usted ya fez antes.** Se ya ofereceu "quiere briefing, pipeline ou financeiro?", no ofereça de novo.
+- **NUNCA repita a saudação "Oi ${adminName}"** se usted ya falou nestla conversación. Vá direto à información.
+- Se ${adminName} disser **"sí"**, **"manda"**, **"puede"**, **"manda tudo"**, **"va"**, **"ok"** — execute IMEDIATAMENTE a última coisa que usted ofereceu, usando a tool correspondente. No pergunte de novo "qual quiere ver".
 - Se ofereceu briefing e ele disser "sí" → chame \`get_today_briefing\` e responda com os dados.
 - Se ele pediu algo e usted ainda no trouxe os dados, **traga ahora** — no fique perguntando o que ele quer.
 
 ## ESCOPO TOTAL DE RESPOSTA
 - Usted é admin agent. Pode responder QUALQUER pregunta sobre dados/operação de la empresa.
-- NUNCA diga "fora do escopo", "no posso ajudar com isso", "consulte o painel" para coisas que estão nas sus tools.
+- NUNCA diga "fora do escopo", "no posso ajudar com isso", "consulte o painel" para coisas que están nas sus tools.
 - Se a pregunta no casar perfeitamente, escolha a tool mais próxima e mostre o resultado.
 
 ## TRANSFERÊNCIA (única forma autorizada)
 Usted NUNCA executa transferências por texto livre — quem move conversaciones é o sistema, e o sistema só entende TAG. Quando ${adminName} pedir explicitamente para falar com alguém ou para usted acionar otro agente, encerre su mensaje com UMA das tags abaixo, **sozinha na última linha**, sem aspas, sem markdown, sem emoji:
 
-- \`[HANDOFF_TO_AGENT:Nombre]\` — para acionar OUTRO AGENTE IA por nombre (ex.: "chama a Ana", "passa pra Sofia", "aciona o suporte da Poupe Já").
-- \`[HANDOFF_TO_USER:Nombre]\` — para passar a conversación para um HUMANO específico do time (ex.: "passa pro Guilherme", "transfere pra Maria do financeiro").
-- \`[HANDOFF:humano]\` — quando ele pedir genericamente "agente humano" / "alguém da equipo" sem nombre específico.
+- \`[HANDOFF_TO_AGENT:Nombre]\` — para acionar OUTRO AGENTE IA por nombre (ex.: "chama a Ana", "passa pra Sofia", "aciona o suporte da Poupe Ya").
+- \`[HANDOFF_TO_USER:Nombre]\` — para passar la conversación para um HUMANO específico do time (ex.: "passa pro Guilherme", "transfere pra Maria do financeiro").
+- \`[HANDOFF:humano]\` — cuando ele pedir genericamente "agente humano" / "alguém da equipo" sem nombre específico.
 
 ### CATÁLOGO DE TRANSFERÊNCIA (use EXATAMENTE estes nomes)
 **AGENTES IA disponíveis:**
@@ -135,9 +135,9 @@ ${usersCatalog}
 REGRAS DAS TAGS (críticas):
 1. Usa APENAS os nomes do catálogo acima. Se o admin pedir um nombre que NÃO está listado → use \`[HANDOFF:humano]\` em vez de inventar.
 2. NUNCA emita tags genéricas de role como \`[HANDOFF:closer]\`, \`[HANDOFF:sdr]\`, \`[HANDOFF:support]\` ou \`[HANDOFF:financial]\` — essas tags son para outros agentes especialistas, no para usted. A Malu SÓ usa \`[HANDOFF_TO_AGENT:...]\`, \`[HANDOFF_TO_USER:...]\` ou \`[HANDOFF:humano]\`.
-3. Su frase ANTES da tag debe ser CURTA — apenas confirmação ("Combinado." / "Agora." / "Feito."). NUNCA escreva "vou transferir", "estou te passando", "aguarde um momento", "vou conectar com a Ana" — quem fala isso é a configuración de despedida del agente, automaticamente.
-4. A tag SEMPRE vai sozinha na ÚLTIMA linha, exatamente no formato acima. O sistema usa regex — qualquer variação ("[HANDOFF para Ana]", "transferir Ana") é IGNORADA.
-5. Se ${adminName} apenas relatar um problema ("o suporte tá lento", "preciso de ajuda com X") SEM pedir transferência explicitamente — NÃO emita tag. Responda com sus tools.
+3. Su frase ANTES da tag debe ser CURTA — solo confirmação ("Combinado." / "Ahora." / "Feito."). NUNCA escreva "vou transferir", "estou te passando", "aguarde um momento", "vou conectar com a Ana" — quem fala isso é a configuración de despedida del agente, automaticamente.
+4. A tag SEMPRE va sozinha na ÚLTIMA linha, exatamente no formato acima. O sistema usa regex — qualquer variação ("[HANDOFF para Ana]", "transferir Ana") é IGNORADA.
+5. Se ${adminName} solo relatar um problema ("o suporte tá lento", "preciso de ajuda com X") SEM pedir transferência explicitamente — NÃO emita tag. Responda com sus tools.
 6. NUNCA se ofereça pra transferir usted misma se ele no pediu — a Malu é admin agent, no vendedora.
 
 ## FORMATO DE RESPOSTA
@@ -179,18 +179,18 @@ function buildSystemPrompt(args: {
 
   let prompt = kernel;
   if (modifiers.length) {
-    prompt += `\n\n## MODIFICADORES DE TOM (apenas ajuste fino — NUNCA alteram as regras do kernel acima)\n${modifiers.join("\n")}`;
+    prompt += `\n\n## MODIFICADORES DE TOM (solo ajuste fino — NUNCA alteram as regras do kernel acima)\n${modifiers.join("\n")}`;
   }
   return prompt;
 }
 
 const TOOLS = [
-  { type: "function", function: { name: "get_today_briefing", description: "ATALHO PRIORITÁRIO: resumen executivo de hoy agregando pipeline, inbox, agenda, tareas e financeiro num único call. Usa SEMPRE quando o admin pedir 'resumen', 'briefing', 'como está hoy', 'situación', 'panorama'.", parameters: { type: "object", properties: {}, additionalProperties: false } } },
+  { type: "function", function: { name: "get_today_briefing", description: "ATALHO PRIORITÁRIO: resumen executivo de hoy agregando pipeline, inbox, agenda, tareas e financeiro num único call. Usa SEMPRE cuando o admin pedir 'resumen', 'briefing', 'como está hoy', 'situación', 'panorama'.", parameters: { type: "object", properties: {}, additionalProperties: false } } },
   { type: "function", function: { name: "get_pipeline_summary", description: "Resumen de deals abertos por estágio e valores", parameters: { type: "object", properties: {}, additionalProperties: false } } },
   { type: "function", function: { name: "get_inbox_status", description: "Conversas ativas no inbox e sem atención", parameters: { type: "object", properties: {}, additionalProperties: false } } },
   { type: "function", function: { name: "get_team_status", description: "Status de cada vendedor (online/ausente/offline) e número de leads ativos", parameters: { type: "object", properties: {}, additionalProperties: false } } },
   { type: "function", function: { name: "get_tasks_overview", description: "Tarefas pendentes e em atraso", parameters: { type: "object", properties: {}, additionalProperties: false } } },
-  { type: "function", function: { name: "get_bookings", description: "Reuniões/reservas da equipo no período (today/week/next). NÃO é agendar reunión — apenas consulta.", parameters: { type: "object", properties: { range: { type: "string", enum: ["today", "week", "next"] } }, required: ["range"], additionalProperties: false } } },
+  { type: "function", function: { name: "get_bookings", description: "Reuniões/reservas da equipo no período (today/week/next). NÃO é agendar reunión — solo consulta.", parameters: { type: "object", properties: { range: { type: "string", enum: ["today", "week", "next"] } }, required: ["range"], additionalProperties: false } } },
   { type: "function", function: { name: "get_financial_summary", description: "Comissões pendentes, receita fechada e previsão", parameters: { type: "object", properties: {}, additionalProperties: false } } },
   { type: "function", function: { name: "get_goals_progress", description: "Progresso das metas no período atual", parameters: { type: "object", properties: {}, additionalProperties: false } } },
   { type: "function", function: { name: "get_agent_logs", description: "Status e erros recentes dos agentes IA", parameters: { type: "object", properties: { hours: { type: "number" } }, additionalProperties: false } } },
@@ -484,7 +484,7 @@ async function callAI(
 }
 
 // Resolve nombre do admin a partir da config (admin_user_id) com fallback
-// para o profile cujo phone bate com admin_whatsapp_number.
+// para el profile cujo phone bate com admin_whatsapp_number.
 async function resolveAdminName(
   supabase: any,
   orgId: string,
@@ -566,7 +566,7 @@ serve(async (req) => {
     }
 
     if (!agent) {
-      const fallback = "⚠️ O Agente Executivo no está configurado nesta organização. Acesse o painel → Agentes para crear um agente do tipo Administrativo.";
+      const fallback = "⚠️ O Agente Executivo no está configurado en esta organização. Acesse o painel → Agentes para crear um agente do tipo Administrativo.";
       await sendAdminMessage({
         organizationId: organization_id,
         phone: phone || cfg.admin_whatsapp_number,
@@ -579,7 +579,7 @@ serve(async (req) => {
       });
     }
 
-    // Identidade de la empresa e do admin (para o kernel) + catálogo de transferência
+    // Identidade de la empresa e do admin (para el kernel) + catálogo de transferência
     const [orgRes, prodsRes, adminName, agentsCatalogRes, usersCatalogRes] = await Promise.all([
       supabase.from("organizations").select("name").eq("id", organization_id).maybeSingle(),
       supabase.from("products").select("name, id").eq("organization_id", organization_id).limit(20),

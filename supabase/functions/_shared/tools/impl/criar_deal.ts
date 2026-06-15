@@ -4,7 +4,7 @@ import type { ToolDefinition } from '../types.ts';
 export const criarDealTool: ToolDefinition = {
   name: 'criar_deal',
   description:
-    'Cria uma oportunidad de venta (deal) no pipeline para el lead atual. Usa quando o lead demonstrar intenção clara de compra ou solicitar uma proposta. No use para preguntas informativas.',
+    'Cria uma oportunidad de venta (deal) no pipeline para el lead atual. Usa cuando el lead demonstrar intenção clara de compra ou solicitar uma proposta. No use para preguntas informativas.',
   categories: ['crm'],
   estimated_cost_cents: 0,
   parameters: {
@@ -20,7 +20,7 @@ export const criarDealTool: ToolDefinition = {
       },
       plan_name: {
         type: 'string',
-        description: 'Nombre do plano/oferta escolhido pelo lead, se aplicável.',
+        description: 'Nombre do plano/oferta escolhido pelel lead, se aplicável.',
       },
       notes: {
         type: 'string',
@@ -35,7 +35,7 @@ export const criarDealTool: ToolDefinition = {
       return { success: false, error: 'leadId é obligatorio no contexto' };
     }
 
-    // Busca o vendedor responsável pelo lead (se houver)
+    // Busca o vendedor responsável pelel lead (se houver)
     const { data: lead } = await ctx.supabase
       .from('leads')
       .select('assigned_to, organization_id')
@@ -52,7 +52,7 @@ export const criarDealTool: ToolDefinition = {
     if (!sellerId) {
       return {
         success: false,
-        error: 'Lead ainda no tiene vendedor atribuído. Atribua antes de crear o deal.',
+        error: 'Lead aún no tiene vendedor atribuído. Atribua antes de crear o deal.',
       };
     }
 

@@ -79,7 +79,7 @@ CATEGORIAS:
 - trust: Falta de confiança
 - thinking: "Vou pensar"
 - partner: "Preciso falar com sócio"
-- competitor: "Já uso otra solução"
+- competitor: "Ya uso otra solução"
 
 ⚠️ REGRAS CRÍTICAS - RESPOSTAS PARA WHATSAPP:
 1. SIGNIFICADO: Máximo 1 linha (20-30 palavras)

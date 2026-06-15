@@ -86,7 +86,7 @@ export async function provisionPlatformPlan(
   const email = (order.customer_email || '').trim().toLowerCase();
   if (!email) return { ok: false, skipped: 'missing customer_email' };
 
-  // Só provisiona quando o pedido está aprovado/pago
+  // Só provisiona cuando o pedido está aprovado/pago
   const status = (order.status || '').toLowerCase();
   if (status !== 'paid' && status !== 'approved') {
     return { ok: false, skipped: `status=${status}` };

@@ -23,7 +23,7 @@ interface SendBody {
   conversation_id: string;
   item_id: string;
   caption_override?: string | null;
-  send_extra_images?: boolean; // default true (até 2 fotos extras)
+  send_extra_images?: boolean; // default true (hasta 2 fotos extras)
   send_videos?: boolean;       // default true
   send_documents?: boolean;    // default true
 }
@@ -381,7 +381,7 @@ Deno.serve(async (req) => {
         deliveryChannel = "evolution";
         sentCounts.images++;
 
-        // 2. Fotos extras (até 2)
+        // 2. Fotos extras (hasta 2)
         if (sendExtraImages) {
           const extras = imageList.slice(1, 3);
           for (const img of extras) {

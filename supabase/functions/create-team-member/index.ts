@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
 
     const body = (await req.json()) as CreateMemberPayload;
     if (!body.email || !body.password || !body.full_name || !body.role) {
-      return new Response(JSON.stringify({ error: 'Campos obrigatórios ausentes' }), {
+      return new Response(JSON.stringify({ error: 'Campos obligatorios ausentes' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });

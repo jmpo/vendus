@@ -215,7 +215,7 @@ REGRAS ABSOLUTAS:
           content: [
             {
               type: 'text',
-              text: 'Extraia TODO o texto deste documento de forma fiel e completa:'
+              text: 'Extraia TODO o texto de este documento de forma fiel e completa:'
             },
             {
               type: 'file',

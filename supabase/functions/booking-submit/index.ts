@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
     if (conflicts && conflicts.length > 0) {
       console.log('Time slot is no longer available');
       return new Response(
-        JSON.stringify({ error: 'Este horario no está mais disponível' }),
+        JSON.stringify({ error: 'Este horario no está mais disponible' }),
         { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

@@ -123,7 +123,7 @@ Deno.serve(async (req) => {
 
           if (!funnel_id || !agent_id) {
             return new Response(
-              JSON.stringify({ error: 'funnel_id e agent_id son obrigatórios' }),
+              JSON.stringify({ error: 'funnel_id e agent_id son obligatorios' }),
               { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
             );
           }
@@ -176,7 +176,7 @@ Deno.serve(async (req) => {
             can ? `Pode hacer: ${can}` : '',
             cannot ? `No debe hacer: ${cannot}` : '',
             agent.additional_prompt || '',
-            ai_context_prompt ? `\n## Contexto do flujo\n${ai_context_prompt}` : '',
+            ai_context_prompt ? `\n## Contexto del flujo\n${ai_context_prompt}` : '',
             brainContext,
             `\n## Diretrizes\n- Responda siempre en español do Brasil.\n- Máximo 2 linhas curtas por bloco e UMA pregunta por mensaje.\n- Tom profissional, sem clichês ("ótimo", "perfeito", "fico feliz").\n- Foque em entender a necessidade e conduzir para próximo passo (call/reserva).`,
           ].filter(Boolean).join('\n');
@@ -284,7 +284,7 @@ Deno.serve(async (req) => {
             });
           }
 
-          // --- Variable to lead field mapping (aligned with funnel-submit) ---
+          // --- Variable tel lead field mapping (aligned with funnel-submit) ---
           const VARIABLE_TO_LEAD_FIELD: Record<string, string> = {
             'name': 'name', 'nombre': 'name', 'nome_completo': 'name', 'full_name': 'name', 'primeiro_nome': 'name',
             'email': 'email', 'e-mail': 'email', 'e_mail': 'email',

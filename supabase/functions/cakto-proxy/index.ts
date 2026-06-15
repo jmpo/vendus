@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
     let organizationId: string | null = null;
 
     if (body.scope === 'platform' || (isSuper && !body.scope)) {
-      if (!isSuper) return json({ error: 'Apenas super admin puede acessar o escopo platform' }, 403);
+      if (!isSuper) return json({ error: 'Solo super admin puede acessar o escopo platform' }, 403);
       scope = 'platform';
     } else {
       scope = 'organization';
@@ -121,7 +121,7 @@ Deno.serve(async (req) => {
 
         if (error) return json({ error: error.message }, 500);
 
-        // Auto-test após guardar para já refletir o status real (connected/error)
+        // Auto-test após guardar para ya refletir o status real (connected/error)
         let testResult: { ok: boolean; error?: string; scope?: string } = { ok: false };
         if (upserted) {
           try {

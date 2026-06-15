@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Filtra leads já com enrollment ativo
+    // Filtra leads ya com enrollment ativo
     const { data: existing } = await supabase
       .from("cadence_enrollments")
       .select("lead_id")

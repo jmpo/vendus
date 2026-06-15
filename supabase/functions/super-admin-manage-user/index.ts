@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    // Apenas super_admin
+    // Solo super_admin
     const { data: isSuper } = await admin.rpc("is_super_admin", {
       _user_id: caller.id,
     });
@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
     const body = (await req.json()) as Payload;
     const { action, user_id } = body;
     if (!action || !user_id) {
-      return new Response(JSON.stringify({ error: "Parâmetros obrigatórios ausentes" }), {
+      return new Response(JSON.stringify({ error: "Parâmetros obligatorios ausentes" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -102,7 +102,7 @@ Deno.serve(async (req) => {
         email_confirm: true,
       });
       if (error) throw error;
-      // Atualiza profile.email também
+      // Atualiza profile.email también
       await admin.from("profiles").update({ email }).eq("id", user_id);
       updateResult = data;
       auditDetail = `Email alterado para ${email}`;

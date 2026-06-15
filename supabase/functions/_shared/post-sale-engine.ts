@@ -95,8 +95,8 @@ export async function runPostSaleActions(
 ): Promise<{ executed: ActionResult[]; matched: boolean }> {
   const results: ActionResult[] = [];
 
-  // 0) Cancela disparos pendentes de eventos transitórios quando chega um evento "final".
-  // Evita situación onde o lead pagou mas a régua de "Pix pendente" ainda dispara.
+  // 0) Cancela disparos pendentes de eventos transitórios cuando chega um evento "final".
+  // Evita situación donde el lead pagou mas a régua de "Pix pendente" aún dispara.
   if (CLOSING_EVENTS.has(ctx.eventType)) {
     try {
       const { data: cancelled, error: cancelErr } = await supabase
@@ -262,7 +262,7 @@ export async function runPostSaleActions(
       results.push({ action: 'send_inline_message', success: false, error: (err as Error).message });
     }
   } else if (!isDelayed && action.send_mode === 'flow' && action.flow_id) {
-    // Flow execution: por ora apenas registramos o disparo no metadata del lead
+    // Flow execution: por ora solo registramos o disparo no metadata del lead
     // (motor de execução de chat_flows é acionado em otro contexto).
     try {
       await supabase.from('lead_notes').insert({

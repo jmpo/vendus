@@ -64,7 +64,7 @@ Deno.serve(async (req: Request) => {
   if (type === 'text') {
     payload.text = { body: text ?? '', preview_url: true };
   } else if (type === 'template') {
-    if (!template?.name || !template?.language) return json({ error: 'template.name e template.language obrigatórios' }, 400);
+    if (!template?.name || !template?.language) return json({ error: 'template.name e template.language obligatorios' }, 400);
     payload.template = {
       name: template.name,
       language: { code: template.language },

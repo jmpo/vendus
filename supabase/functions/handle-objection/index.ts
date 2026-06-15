@@ -97,7 +97,7 @@ FORMATO DE RESPOSTA:
 [Mensaje pronta para WhatsApp - 3-4 linhas curtas com emoji]
 
 **PERGUNTA DE RETORNO:**
-[1 pregunta direta de até 15 palavras]`;
+[1 pregunta direta de hasta 15 palavras]`;
 
     const { response, config } = await aiChat({
       organizationId,

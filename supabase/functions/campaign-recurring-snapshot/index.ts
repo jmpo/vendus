@@ -1,5 +1,5 @@
 // Cron: para cada campaña recorrente ativa, refaz snapshot da audiência
-// e enfileira novos targets (UNIQUE constraint evita duplicar leads que já receberam).
+// e enfileira novos targets (UNIQUE constraint evita duplicar leads que ya receberam).
 // Roda 1x a cada 15 minutos.
 
 import { resolveAudience, createServiceClient, type CampaignFilters } from "../_shared/campaign-audience.ts";
@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
         );
         if (!leadIds.length) { results.push({ campaign: campaign.id, new: 0 }); continue; }
 
-        // Filtra leads que já têm target nessa campaña
+        // Filtra leads que ya têm target en esa campaña
         const { data: existing } = await supabase
           .from("campaign_targets")
           .select("lead_id")

@@ -1,4 +1,4 @@
-// Salva/valida uma chave de IA do pool da plataforma (apenas super_admin).
+// Salva/valida uma chave de IA do pool da plataforma (solo super_admin).
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
@@ -26,7 +26,7 @@ async function verifyKey(provider: string, apiKey: string): Promise<{ ok: boolea
         headers: { "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "platform-pool" },
       });
       if (!r.ok && r.status !== 200) {
-        // se 404 nesse endpoint, tenta um POST mínimo
+        // se 404 en ese endpoint, tenta um POST mínimo
         const r2 = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
           method: "POST",
           headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },

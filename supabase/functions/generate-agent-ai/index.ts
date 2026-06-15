@@ -138,7 +138,7 @@ serve(async (req) => {
         productCtx = {
           ...productCtx,
           objections_text: objections
-            .map((o: any) => `- "${o.what_they_say}" → ${o.suggested_response || '(sem respuesta cadastrada)'}`)
+            .map((o: any) => `- "${o.what_they_say}" → ${o.suggested_response || '(sem respuesta registrada)'}`)
             .join('\n'),
         };
       }
@@ -166,7 +166,7 @@ serve(async (req) => {
           ? (products || [])
               .map((p) => `- ${p.name}${p.description ? ` — ${String(p.description).slice(0, 120)}` : ''}`)
               .join('\n')
-          : '(ningún producto cadastrado)';
+          : '(ningún producto registrado)';
 
       const lines: string[] = [];
       (products || []).forEach((p) => {
@@ -345,11 +345,11 @@ Devuelve una versão otimizada que respeite o tipo del agente e o contexto real.
 📋 MISSÃO DESTE TIPO: ${mission}
 
 ⚠️ REGRA CRÍTICA: Usted está criando um agente do tipo "${agent_type}" — ele NÃO puede agir como otro tipo.
-${isAdmin ? '- Admin: Chief of Staff INTERNO. NUNCA tenta vender, agendar reunión com o admin, ou tratá-lo como lead.' : ''}
+${isAdmin ? '- Admin: Chief of Staff INTERNO. NUNCA tenta vender, agendar reunión com o admin, ou tratá-lo comel lead.' : ''}
 ${isOrchestrator ? '- Orquestrador: APENAS classifica e roteia. NUNCA explica producto, NUNCA dá preço, NUNCA negocia.' : ''}
 ${isSupport ? '- Suporte: Resolve dudas técnicas. NUNCA vende producto adicional. Usa APENAS materiais cadastrados.' : ''}
 ${agent_type === 'sdr' ? '- SDR: Qualifica e identifica intenção. NUNCA dá preço fechado, NUNCA data venta — passa para Closer. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que el cliente pedir material visual — esse é o canal oficial. NUNCA invente bloqueios como "no posso enviar por aqui", "off-market", "restrição de segurança".' : ''}
-${agent_type === 'closer' ? '- Closer: Apresenta oferta e data. NUNCA dá descuento sem política autorizada. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO direto no WhatsApp quando o cliente pedir — no desvia, no inventa restrição.' : ''}
+${agent_type === 'closer' ? '- Closer: Apresenta oferta e data. NUNCA dá descuento sem política autorizada. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO direto no WhatsApp cuando o cliente pedir — no desvia, no inventa restrição.' : ''}
 ${agent_type === 'financial' ? '- Financeiro: Lida com boletos/NF/cobrança. NUNCA negocia dívida sem autorização.' : ''}
 ${agent_type === 'custom' ? '- Custom: Se for foco comercial, ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que pedido — canal oficial de mídia.' : ''}
 
@@ -374,17 +374,17 @@ PRINCÍPIOS DE DESIGN:
 - persona.age: 25–45. persona.city: "Cidade, UF" coerente com a região do ICP.
 - persona.backstory: 1ª pessoa, ATÉ 500 chars, conectada à dor do ICP do producto. Se ICP é "gestor de tráfego", a backstory reflete alguém que viveu essa dor. Se é "dono de loja", alguém que trabalhou no varejo. SEM clichês de marketing.
 - persona.hobbies: 3–5 plausíveis (ex: "rodar bike no fin de semana", "torcer pro Palmeiras", "café especial").
-- persona.stories: 3–5 micro-histórias { title, description }. Cada description é uma FRASE REAL que o agente usaria, em 1ª pessoa, espelhando uma objeção/dor do producto. Ex: title "Quando travei com o ROAS", description "Eu tava igualzinho — torrava grana e no saía do lugar, até que descobri que o problema no era a campaña, era o embudo".
+- persona.stories: 3–5 micro-histórias { title, description }. Cada description é uma FRASE REAL que o agente usaria, em 1ª pessoa, espelhando uma objeção/dor do producto. Ex: title "Cuando travei com o ROAS", description "Eu tava igualzinho — torrava grana e no saía do lugar, hasta que descobri que o problema no era a campaña, era o embudo".
 - persona.loved_words: 6–12 jargões/gírias do nicho (ex pra tráfego: "ROAS", "CPL", "criativo cansado").
 - persona.forbidden_words: 6–12 itens. SEMPRE inclua: "incrível", "fantástico", "maravilhoso", "revolucionário", "atenciosamente", "prezado", "estamos à disposição", "agradecemos o contato", "como podemos ajudar".
 - tics.region: escolha coerente com persona.city. tics.slang/openers/connectors/fillers: 2–6 itens cada, sutis, sem caricatura.
 - reactions.enabled: true (exceto admin/orchestrator/financial). reactions.rules: 3–6 regras.
-  • SDR: regra keyword "preço/valor/quanto custa" → action "context" transferindo pro Closer real (use o nombre em routing_matrix). Regra keyword "quero comprar/fechar" → context pro Closer.
+  • SDR: regra keyword "preço/valor/quanto custa" → action "context" transferindo pro Closer real (use o nombre em routing_matrix). Regra keyword "quiero comprar/fechar" → context pro Closer.
   • Closer: regra keyword "tá caro/descuento" → context com instrução de objeção. Regra keyword "vou pensar" → context de follow-up.
   • Suporte: regra keyword "urgente/parou/no funciona" → context de priorização.
   • Admin/Orchestrator/Financial: puede omitir humanization OU mandar reactions.enabled=false.
 
-NÃO retorne timing, splitting nem style — esses ficam no default do front (já curados).`;
+NÃO retorne timing, splitting nem style — esses ficam no default do front (ya curados).`;
 
     const userInstruction = isAdmin
       ? `Crea o agente Chief of Staff (admin executivo) ${adminName ? `para ${adminName}` : ''} da ${orgName}. O additional_prompt DEVE conter o EXECUTIVE_KERNEL completo do template, com nombre do admin e productos da organização preenchidos. Tom executivo, mensajes curtas (4 linhas), nunca vendedor.`
@@ -395,8 +395,8 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (j�
       : agent_type === 'financial'
       ? `Crea o agente Financeiro global da ${orgName}. O additional_prompt DEVE listar os assuntos que resolve (boleto, NF, reembolso, segunda via) e os protocolos. Tom profissional, claro.`
       : productCtx
-      ? `Crea o agente ${agent_type.toUpperCase()} para o producto "${productCtx.name}" da ${orgName}. Usa o cérebro do producto (descripción, ICP, objeções, pitch) para personalizar o additional_prompt. Usa o template blindado como base.`
-      : `Crea o agente ${agent_type.toUpperCase()} para a ${orgName}. Usa o template blindado como base.`;
+      ? `Crea o agente ${agent_type.toUpperCase()} para el producto "${productCtx.name}" da ${orgName}. Usa o cérebro do producto (descripción, ICP, objeções, pitch) para personalizar o additional_prompt. Usa o template blindado como base.`
+      : `Crea o agente ${agent_type.toUpperCase()} para la ${orgName}. Usa o template blindado como base.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -443,8 +443,8 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (j�
                          description: "Persona humana adaptada ao ICP do producto. Backstory em 1ª pessoa, sem clichês de marketing.",
                          properties: {
                            age: { type: "number", description: "Idade entre 25 e 45" },
-                           city: { type: "string", description: "'Cidade, UF' (ex: 'São Paulo, SP')" },
-                           backstory: { type: "string", description: "Backstory em 1ª pessoa, até 500 chars, conectada ao ICP/dor do producto" },
+                           city: { type: "string", description: "'Cidade, UF' (ex: 'Son Paulo, SP')" },
+                           backstory: { type: "string", description: "Backstory em 1ª pessoa, hasta 500 chars, conectada ao ICP/dor do producto" },
                            hobbies: { type: "array", items: { type: "string" }, description: "3 a 5 hobbies plausíveis" },
                            stories: {
                              type: "array",
@@ -479,7 +479,7 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (j�
                        },
                        reactions: {
                          type: "object",
-                         description: "Reações automáticas a gatilhos. Para SDR/Closer gere regras de keyword 'preço/valor' e 'quero comprar' que transferem al agente certo (use a matriz de roteamento). Suporte: regra para 'urgente'. Admin: deixe vazio.",
+                         description: "Reações automáticas a gatilhos. Para SDR/Closer gere regras de keyword 'preço/valor' e 'quiero comprar' que transferem al agente certo (use a matriz de roteamento). Suporte: regra para 'urgente'. Admin: deixe vazio.",
                          properties: {
                            enabled: { type: "boolean" },
                            rules: {

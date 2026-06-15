@@ -1,4 +1,4 @@
-// Reprocessa um pedido Cakto já guardado em `cakto_orders`, rodando novamente o
+// Reprocessa um pedido Cakto ya guardado em `cakto_orders`, rodando novamente o
 // pipeline de provisionamento (plano + usuario admin). Idempotente.
 
 import { buildAdminClient, provisionFromOrder } from '../_shared/cakto-plan-provisioning.ts';
@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
   try {
     const admin = buildAdminClient();
 
-    // Autoriza apenas super_admin
+    // Autoriza solo super_admin
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) return json({ error: 'unauthorized' }, 401);
 

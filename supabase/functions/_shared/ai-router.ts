@@ -212,7 +212,7 @@ export async function resolveAIConfig(
       return { ...envLovableConfig, model: preferredModel || routedModel || DEFAULT_MODEL };
     }
     const err: any = new Error(
-      `Pool da plataforma sem chaves ativas para "${plan.provider}". Peça ao Super Admin para cadastrar uma chave em Super Admin → IA da Plataforma.`,
+      `Pool da plataforma sem chaves ativas para "${plan.provider}". Peça ao Super Admin para registrar uma chave em Super Admin → IA da Plataforma.`,
     );
     err.code = 'AI_POOL_EMPTY';
     throw err;

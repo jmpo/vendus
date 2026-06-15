@@ -1,4 +1,4 @@
-// Sprint 3 — LLM-as-Judge: avalia uma conversación e persiste métricas
+// Sprint 3 — LLM-as-Judge: avalia umla conversación e persiste métricas
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { recordLovableUsage } from "../_shared/ai-router.ts";
 
@@ -27,7 +27,7 @@ async function judgeConversation(
 ): Promise<any | null> {
   const systemPrompt =
     `Usted é um avaliador especialista de conversaciones de ventas. ` +
-    `Analiza a conversación e pontue de 0 a 100 cada dimensão. ` +
+    `Analiza la conversación e pontue de 0 a 100 cada dimensão. ` +
     `Sé crítico e objetivo. Responda APENAS via tool call.`;
 
   const userPrompt = `${
@@ -53,7 +53,7 @@ async function judgeConversation(
             type: "function",
             function: {
               name: "evaluate_conversation",
-              description: "Pontua a conversación em múltiplas dimensões.",
+              description: "Pontua la conversación em múltiplas dimensões.",
               parameters: {
                 type: "object",
                 properties: {
@@ -190,7 +190,7 @@ async function evaluateOne(
 
   if (iErr) return { ok: false, reason: iErr.message };
 
-  // Se a conversación estava num experimento, propaga score na variante
+  // Se la conversación estava num experimento, propaga score na variante
   try {
     const lastWithVariant = [...messages]
       .reverse()
@@ -254,7 +254,7 @@ Deno.serve(async (req) => {
 
     const results: any[] = [];
     for (const c of convs ?? []) {
-      // pula se já fue avaliada nas últimas N horas
+      // pula se ya fue avaliada nas últimas N horas
       const { data: existing } = await supabase
         .from("ai_quality_evaluations")
         .select("id")

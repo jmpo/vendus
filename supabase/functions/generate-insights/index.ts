@@ -236,7 +236,7 @@ Responda APENAS no formato JSON abaixo, sem texto adicional:
       insights = [
         {
           title: "Análise em andamento",
-          insight: "No fue possível gerar insights automáticos no momento. Tente novamente.",
+          insight: "No fue posible gerar insights automáticos no momento. Tente novamente.",
           type: "tip",
           priority: "low"
         }

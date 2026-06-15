@@ -1,5 +1,5 @@
 // booking-reply-ai
-// Quando o lead responde texto livre a uma confirmação/lembrete de booking,
+// Cuando el lead responde texto livre a uma confirmação/lembrete de booking,
 // a IA interpreta a intenção e executa: confirm | reschedule | cancel | followup.
 //
 // Entrada: { booking_id, organization_id, message_text, instance_id?, phone? }
@@ -18,7 +18,7 @@ const TOOLS = [
     type: "function",
     function: {
       name: "confirm_booking",
-      description: "Confirma a reunión quando o lead aceita o horario atual.",
+      description: "Confirma a reunión cuando el lead aceita o horario atual.",
       parameters: { type: "object", properties: {}, additionalProperties: false },
     },
   },
@@ -26,7 +26,7 @@ const TOOLS = [
     type: "function",
     function: {
       name: "reschedule_booking",
-      description: "Reagenda a reunión para um novo horario proposto pelo lead.",
+      description: "Reagenda a reunión para um novo horario proposto pelel lead.",
       parameters: {
         type: "object",
         properties: {
@@ -44,7 +44,7 @@ const TOOLS = [
     type: "function",
     function: {
       name: "cancel_booking",
-      description: "Cancela a reunión quando o lead no puede mais e no quer reagendar ahora.",
+      description: "Cancela a reunión cuando el lead no puede mais e no quiere reagendar ahora.",
       parameters: {
         type: "object",
         properties: { reason: { type: "string" } },
@@ -56,11 +56,11 @@ const TOOLS = [
     type: "function",
     function: {
       name: "propose_followup",
-      description: "Cria um follow-up futuro quando o lead pede para ser chamado después (ex: semana que vem).",
+      description: "Cria um follow-up futuro cuando el lead pede para ser chamado después (ex: semana que vem).",
       parameters: {
         type: "object",
         properties: {
-          when_iso: { type: "string", description: "Quando hacer o follow-up (ISO 8601)." },
+          when_iso: { type: "string", description: "Cuando hacer o follow-up (ISO 8601)." },
           reason: { type: "string" },
         },
         required: ["when_iso"],

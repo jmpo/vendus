@@ -317,7 +317,7 @@ async function classifyConversation(supabase: any, orgId: string, conv: any, api
       return {
         conversation_id: conv.id, lead_id: conv.lead_id,
         classification: 'cold', score: 10,
-        reason: 'Nenhuma mensaje del cliente — apenas mensajes iniciais sem engajamento.',
+        reason: 'Nenhuma mensaje del cliente — solo mensajes iniciais sem engajamento.',
         signals: ['sem_resposta_cliente'],
         suggested_action: 'Considerar arquivar ou tentar abordagem nova.',
         followup_message: '',
@@ -331,7 +331,7 @@ async function classifyConversation(supabase: any, orgId: string, conv: any, api
 
     const transcript = msgs.map((m: any) => `${m.role === 'user' ? 'CLIENTE' : 'EMPRESA'}: ${m.content?.slice(0, 300) || ''}`).join('\n');
 
-    const prompt = `Usted é um especialista em ventas analisando uma conversación para classificar o potencial del lead.
+    const prompt = `Usted é um especialista em ventas analisando umla conversación para classificar o potencial del lead.
 
 DADOS DO LEAD:
 ${JSON.stringify(leadSnap, null, 2)}
@@ -430,7 +430,7 @@ async function applyActions(supabase: any, orgId: string, item: any, actions: Ac
         organization_id: orgId,
         lead_id: item.lead_id,
         title: `🎯 Radar IA — ${item.classification.toUpperCase()}`,
-        description: `${item.reason}\n\nSugestão: ${item.suggested_action}\n\nFollow-up sugerido:\n${item.followup_message}`,
+        description: `${item.reason}\n\nSugestán: ${item.suggested_action}\n\nFollow-up sugerido:\n${item.followup_message}`,
         due_date: dueAt,
         assigned_to: lead?.assigned_to,
         status: 'pending',

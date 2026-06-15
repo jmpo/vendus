@@ -74,7 +74,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (!email || !inviteLink) {
       return new Response(
-        JSON.stringify({ error: "Email e link de convite son obrigatórios" }),
+        JSON.stringify({ error: "Email e link de convite son obligatorios" }),
         { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }

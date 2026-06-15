@@ -53,7 +53,7 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const prompt = `Analiza a seguinte conversación de atención comercial para o producto "${productName}".
+    const prompt = `Analiza a seguinte conversación de atención comercial para el producto "${productName}".
 
 Transcrição:
 ${transcript}

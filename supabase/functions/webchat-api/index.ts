@@ -126,7 +126,7 @@ serve(async (req) => {
         // New conversations always start fresh in the orchestrator triage —
         // we no longer auto-reassign to a previous agent, otherwise the
         // orchestrator would be skipped for returning visitors.
-        // NOTE: status fica `bot_active` para o bot responder; a UI da inbox
+        // NOTE: status fica `bot_active` para el bot responder; a UI da inbox
         // exibe `bot_active` na aba "Aguardando" enquanto ningún humano aceitar.
         const autoAssignUserId: string | null = null;
         const autoStatus = 'bot_active';
@@ -164,8 +164,8 @@ serve(async (req) => {
         conversation = newConv;
 
         // ===== AUTO-CREATE LEAD =====
-        // Toda conversación nova vira um lead imediatamente — sem vinculação manual.
-        // Se já existir lead pelo email/teléfono, reaproveita.
+        // Tode lla conversación nova vira um lead imediatamente — sem vinculação manual.
+        // Se ya existir lead pelo email/teléfono, reaproveita.
         try {
           let existingLeadId: string | null = null;
           if (body.visitor_email || body.visitor_phone) {
@@ -397,7 +397,7 @@ serve(async (req) => {
             if (profiles) {
               const notifications = profiles.map((p: { id: string }) => ({
                 user_id: p.id,
-                title: 'Nova conversación aguardando atención',
+                title: 'Novla conversación aguardando atención',
                 message: `Visitante ${conversation.visitor_name || 'anônimo'} solicitou atención humano`,
                 type: 'opportunity',
                 action_url: '/admin?section=webchat',
@@ -599,7 +599,7 @@ serve(async (req) => {
       if (profiles) {
         const notifications = profiles.map((p: { id: string }) => ({
           user_id: p.id,
-          title: 'Nova conversación aguardando atención',
+          title: 'Novla conversación aguardando atención',
           message: `Visitante ${conversation.visitor_name || 'anônimo'} solicitou atención humano`,
           type: 'opportunity',
           action_url: '/admin?section=webchat',
@@ -689,7 +689,7 @@ async function executeInitialFlowBlock(
         break;
 
       case 'buttons':
-        responseContent = block.data.content || 'Escolha uma opción:';
+        responseContent = block.data.content || 'Escolha umla opción:';
         messageType = 'buttons';
         responseButtons = block.data.buttons?.map((btn: any, index: number) => ({
           id: btn.id,

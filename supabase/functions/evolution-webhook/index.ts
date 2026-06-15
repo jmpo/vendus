@@ -35,7 +35,7 @@ async function isDuplicateInboundMessage(
     message_id: messageId,
   });
   if (!error) return false;
-  // 23505 = unique violation → já processado
+  // 23505 = unique violation → ya processado
   if ((error as any).code === "23505") return true;
   // Em outros erros, deixa passar (fail-open) para no travar o webhook.
   console.warn("[anti-spam] processed_messages insert non-unique error:", (error as any).message);
@@ -68,7 +68,7 @@ async function releaseConversationLock(supabase: any, conversationId: string): P
   } catch (_) { /* best-effort */ }
 }
 
-/** Verifica se já enviamos uma respuesta com mismo hash nos últimos windowMs. */
+/** Verifica se ya enviamos uma respuesta com mismo hash nos últimos windowMs. */
 async function isDuplicateResponse(
   supabase: any,
   conversationId: string,
@@ -333,7 +333,7 @@ function normalizePayload(payload: any): Normalized | null {
     const rawRemoteJid: string = info.Chat || info.RemoteJid || sender || "";
     const fromMe: boolean = !!(info.IsFromMe ?? info.isFromMe ?? event === "SendMessage");
 
-    // Resolver JID @lid → JID @s.whatsapp.net (teléfono real) quando whatsmeow envia o "Alt".
+    // Resolver JID @lid → JID @s.whatsapp.net (teléfono real) cuando whatsmeow envia o "Alt".
     // Em fromMe, o destino real (teléfono) vem em RecipientAlt/RecipientPn/ChatAlt.
     // Em inbound, o sender real vem em SenderAlt/SenderPn.
     const altJidCandidates = fromMe
@@ -939,7 +939,7 @@ Deno.serve(async (req) => {
             });
           }
 
-          // Dedupe 1: external_id idêntico (mensaje já gravada anteriormente por nós)
+          // Dedupe 1: external_id idêntico (mensaje ya gravada anteriormente por nós)
           if (norm.messageId) {
             const { data: existingMsg } = await supabase
               .from("webchat_messages")
@@ -955,7 +955,7 @@ Deno.serve(async (req) => {
             }
           }
 
-          // Localiza conversación: por teléfono real OU por LID já registrado em metadata.
+          // Localizla conversación: por teléfono real OU por LID ya registrado em metadata.
           const targetPhone = remotePhoneCanonical;
           let convOut: { id: string; status?: string } | null = null;
 
@@ -973,7 +973,7 @@ Deno.serve(async (req) => {
             convOut = existingConvOut as any;
           }
 
-          // Fallback: só temos LID — tenta achar conversación que já tenha esse LID guardado.
+          // Fallback: só temos LID — tenta achar conversación que ya tenga esse LID guardado.
           if (!convOut?.id && lidId) {
             const { data: convByLid } = await supabase
               .from("webchat_conversations")
@@ -987,7 +987,7 @@ Deno.serve(async (req) => {
             convOut = convByLid as any;
           }
 
-          // Dedupe 2 (após localizar conv): mismo conteúdo outbound nos últimos 60s nesta conv
+          // Dedupe 2 (após localizar conv): mismo conteúdo outbound nos últimos 60s en esta conv
           if (convOut?.id && norm.content) {
             const since = new Date(Date.now() - 60_000).toISOString();
             const { data: recentSameContent } = await supabase
@@ -1014,7 +1014,7 @@ Deno.serve(async (req) => {
               .eq("id", convOut.id);
           }
 
-          // Persiste o LID na conversación achada por teléfono (pra próximos eventos só com @lid casarem).
+          // Persiste o LID en lla conversación achada por teléfono (pra próximos eventos só com @lid casarem).
           if (convOut?.id && lidId) {
             const { data: convRow } = await supabase
               .from("webchat_conversations")
@@ -1190,15 +1190,15 @@ Deno.serve(async (req) => {
       //   1) Tenta achar conversación aberta com a MESMA instância.
       //   2) Se no achar, busca qualquer conversación aberta do mismo (org, teléfono, whatsapp)
       //      sem filtrar instância — assim PRESERVAMOS o histórico do contato mismo
-      //      quando o número é reconectado/migrado para otra instância.
+      //      cuando o número é reconectado/migrado para otra instância.
       // NÃO fechamos conversaciones duplicadas automaticamente: o histórico del agente
       // nunca puede sumir por trás dele. Se houver duplicatas, o agente encerra
-      // manualmente quando quiser.
+      // manualmente cuando quiser.
       let conversationId: string | null = null;
       let existing: { id: string } | null = null;
 
       // Busca por teléfono NORMALIZADO (canonical BR), tolerante a 55/+55/9 móvel.
-      // Aceita também conversación FECHADA do mismo número e reabre — assim nunca duplicamos.
+      // Aceita también conversación FECHADA do mismo número e reabre — assim nunca duplicamos.
       const { data: existingByPhone } = await supabase
         .from("webchat_conversations")
         .select("id, status")
@@ -1216,7 +1216,7 @@ Deno.serve(async (req) => {
       if (existingByPhone?.id) {
         existing = { id: existingByPhone.id };
         if ((existingByPhone as any).status === "closed") {
-          // Reabre a misma conversación em vez de crear uma nova: preserva histórico
+          // Reabre a mismla conversación em vez de crear uma nova: preserva histórico
           await supabase
             .from("webchat_conversations")
             .update({ status: "waiting_human", closed_at: null })
@@ -1225,7 +1225,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Telemetria: se houver mais de uma conversación aberta, apenas logamos.
+      // Telemetria: se houver mais de umla conversación aberta, solo logamos.
       try {
         const { count: openCount } = await supabase
           .from("webchat_conversations")
@@ -1373,7 +1373,7 @@ Deno.serve(async (req) => {
               .select("id, name")
               .single();
             if (createLeadErr) {
-              // 23505 → otro flujo criou simultaneamente; recupera o existente
+              // 23505 → otrel flujo criou simultaneamente; recupera o existente
               if ((createLeadErr as any).code === "23505") {
                 const { data: race } = await supabase
                   .from("leads")
@@ -1574,7 +1574,7 @@ Deno.serve(async (req) => {
 
         if (convErr) {
           if ((convErr as any).code === "23505") {
-            // Race com otro flujo — reusar conversación existente do mismo teléfono
+            // Race com otrel flujo — reusar conversación existente do mismo teléfono
             const { data: race } = await supabase
               .from("webchat_conversations")
               .select("id")
@@ -1663,7 +1663,7 @@ Deno.serve(async (req) => {
           console.warn("[evolution-webhook] profile pic lookup failed (non-fatal):", picErr);
         }
 
-        // Safety net: data qualquer otra conversación aberta do mismo teléfono normalizado
+        // Safety net: data qualquer otrla conversación aberta do mismo teléfono normalizado
         const { error: closeErr } = await supabase
           .from("webchat_conversations")
           .update({ status: "closed", closed_at: new Date().toISOString() })
@@ -1986,7 +1986,7 @@ Deno.serve(async (req) => {
           .single();
 
         if (insertErr) {
-          // Race: otra invocação concorrente já gravou esta misma msg
+          // Race: otra invocação concorrente ya gravou esta misma msg
           // (índice único parcial garante unicidade no banco).
           if ((insertErr as any).code === "23505") {
             console.log("[evolution-webhook] skip: inbound duplicate (unique index)", norm.messageId);
@@ -2018,7 +2018,7 @@ Deno.serve(async (req) => {
 
         // Broadcast realtime → o painel (SellerInbox) escuta `conversation:{id}`
         // e adiciona a mensaje na cache instantaneamente. Sem isso, a janela
-        // de chat fica congelada até o usuario recarregar / trocar de conversación.
+        // de chat fica congelada hasta o usuario recarregar / trocar de conversación.
         if (inserted) {
           try {
             const ch = supabase.channel(`conversation:${conversationId}`);
@@ -2034,7 +2034,7 @@ Deno.serve(async (req) => {
         }
 
         // Campaign response hook (fire-and-forget): aplica post_response_actions
-        // se esta conversación pertencer a um target ativo de uma campaña.
+        // se estla conversación pertencer a um target ativo de uma campaña.
         try {
           const supabaseUrlEnv = Deno.env.get("SUPABASE_URL");
           const serviceKeyEnv = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -2133,7 +2133,7 @@ Deno.serve(async (req) => {
       // Lê configuraciones de humanização da org. Janela padrão = 3s.
       // Teto absoluto = 8s desde a 1ª msg do burst — nunca mais que isso.
       // Loop: dorme em fatias de 1s; se chegou nova msg do visitor, deferimos
-      // para a invocação dessa nova msg (que vai re-medir o teto).
+      // para la invocação dessa nova msg (que va re-medir o teto).
       let groupingEnabled = true;
       let groupingWindowMs = 3000;
       let groupingMaxMs = 8000;
@@ -2168,7 +2168,7 @@ Deno.serve(async (req) => {
         let extensions = 0;
         console.log("[evolution-webhook] grouping start", JSON.stringify({ window: groupingWindowMs, max: groupingMaxMs }));
 
-        // Rolling window: a cada msg nova do visitor, estende a espera até o teto absoluto (max).
+        // Rolling window: a cada msg nova do visitor, estende a espera hasta o teto absoluto (max).
         // Se otra invocação posterior assumir o turno, abortamos esta.
         while ((Date.now() - startedAt) < groupingMaxMs) {
           const remainingToWindow = groupingWindowMs - (Date.now() - startedAt) + extensions * groupingWindowMs;
@@ -2324,7 +2324,7 @@ Deno.serve(async (req) => {
               }
               case "buttons": {
                 const opts: any[] = b.data?.options || [];
-                const header = replaceVars(b.data?.content || "Escolha uma opción:");
+                const header = replaceVars(b.data?.content || "Escolha umla opción:");
                 chunksToSend.push(header + "\n\n" + opts.map((o: any, i: number) => `${i + 1}) ${o.emoji ? o.emoji + ' ' : ''}${o.label}`).join("\n"));
                 nextBlockId = b.id; // wait here for next user message
                 currentBlock = null;
@@ -2467,7 +2467,7 @@ Deno.serve(async (req) => {
           if (instanceLockAgent?.id) {
             agentId = instanceLockAgent.id;
             if (instanceLockAgent.product_id) resolvedProductId = instanceLockAgent.product_id;
-            // Se a conversación já está com OUTRO agente ATIVO da misma org (típico
+            // Se la conversación ya está com OUTRO agente ATIVO da misma org (típico
             // após handoff Maria→Sonia), respeite — NÃO force voltar pro instance lock.
             // Só sobrescreve se current_agent_id for null/inválido.
             const currentAgentId = (conv as any).current_agent_id || null;
@@ -2586,7 +2586,7 @@ Deno.serve(async (req) => {
             const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
             // ============================================================
-            // LOCK POR CONVERSA — impede 2 jobs paralelos para o mismo lead
+            // LOCK POR CONVERSA — impede 2 jobs paralelos para el mismel lead
             // ============================================================
             let singleProc = true;
             let dedupEnabled = true;
@@ -2617,7 +2617,7 @@ Deno.serve(async (req) => {
               }
             }
 
-            // Disponibiliza p/ o restante deste bloco (resp dedup + release)
+            // Disponibiliza p/ o restante de este bloco (resp dedup + release)
             (globalThis as any).__convDedup = { enabled: dedupEnabled, windowMs: dedupWindowMs };
 
             console.log("[evolution-webhook] bot_call: invoking", JSON.stringify({
@@ -2713,7 +2713,7 @@ Deno.serve(async (req) => {
               const sharedMetadata = botData?.metadata || null;
 
               // ============================================================
-              // CAP de bolhas (defesa em profundidade) — apenas teto absoluto
+              // CAP de bolhas (defesa em profundidade) — solo teto absoluto
               // de 4 bolhas para WhatsApp. No colapsa a decisão del agente.
               // ============================================================
               if (chunks.length > 0) {
