@@ -78,12 +78,12 @@ export function Header({
           )}
 
           {/* Help */}
-          <Button variant="ghost" size="icon" onClick={() => navigate('/ajuda')} title="Central de Ajuda">
+          <Button variant="ghost" size="icon" onClick={() => navigate('/ajuda')} title="Centro de Ayuda">
             <HelpCircle className="h-5 w-5" />
           </Button>
 
           {/* Updates */}
-          <Button variant="ghost" size="icon" onClick={() => navigate('/novidades')} title="Novidades" className="relative">
+          <Button variant="ghost" size="icon" onClick={() => navigate('/novidades')} title="Novedades" className="relative">
             <Sparkles className="h-5 w-5" />
             {unreadReleases > 0 && (
               <Badge variant="default" className="absolute -top-1 -right-1 h-4 min-w-[1rem] px-1 text-[10px] flex items-center justify-center">
