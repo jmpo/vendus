@@ -13,8 +13,8 @@ interface State {
 }
 
 /**
- * Captura erros de carregamento de chunk lazy (comum após deploy cuando o
- * browser tiene hash antigo no cache) e mostra botão para recarregar a página.
+ * Captura errores de carga de chunks lazy (común tras deploy cuando el
+ * navegador tiene hash antiguo en caché) y muestra botón para recargar la página.
  */
 export class SectionErrorBoundary extends Component<Props, State> {
   state: State = { hasError: false, error: null };
@@ -29,7 +29,6 @@ export class SectionErrorBoundary extends Component<Props, State> {
   }
 
   handleReload = () => {
-    // Chunk velho no cache → reload limpo
     window.location.reload();
   };
 
@@ -44,16 +43,16 @@ export class SectionErrorBoundary extends Component<Props, State> {
             <AlertTriangle className="h-7 w-7 text-destructive" />
           </div>
           <h2 className="text-lg font-semibold mb-2">
-            No fue possível cargar esta seção
+            No se pudo cargar esta sección
           </h2>
           <p className="text-sm text-muted-foreground max-w-md mb-4">
             {isChunkError
-              ? 'A versão da aplicación fue actualizada. Recarregue a página para continuar.'
-              : 'Ocorreu um error ao abrir esta seção. Tente recarregar.'}
+              ? 'La versión de la aplicación fue actualizada. Recargá la página para continuar.'
+              : 'Ocurrió un error al abrir esta sección. Intentá recargar.'}
           </p>
           <Button onClick={this.handleReload}>
             <RefreshCw className="h-4 w-4 mr-2" />
-            Recarregar
+            Recargar
           </Button>
         </div>
       );
