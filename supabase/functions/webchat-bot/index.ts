@@ -4136,8 +4136,7 @@ REGRAS DE USO:
                       }
                     } catch { /* non-fatal */ }
 
-                    const outTpl = ((activeAgent as any)?.handoff_outgoing_message || '').trim() || DEFAULT_HANDOFF_OUTGOING;
-                    responseContent = renderHandoffTpl(outTpl, {
+                    responseContent = renderOutgoingHandoffMessage(activeAgent, {
                       nombre: nomeLead,
                       producto: '',
                       proximo_agente: targetAgent.name || 'minha colega',
@@ -4590,8 +4589,7 @@ REGRAS DE USO:
               .eq('id', body.conversation_id);
 
             // Replace AI reply with the configured outgoing message OR default farewell
-            const outTpl = ((activeAgent as any).handoff_outgoing_message || '').trim() || DEFAULT_HANDOFF_OUTGOING;
-            responseContent = renderTpl(outTpl, {
+            responseContent = renderOutgoingHandoffMessage(activeAgent, {
               nombre: leadFirstName,
               producto: productName,
               proximo_agente: 'um especialista humano',
@@ -4637,8 +4635,7 @@ REGRAS DE USO:
               console.log('[webchat-bot] ✅ Switched current_agent_id →', nextAgent.name);
 
               // Replace the AI's reply with the configured outgoing (farewell) message OR default
-              const outTpl = ((activeAgent as any).handoff_outgoing_message || '').trim() || DEFAULT_HANDOFF_OUTGOING;
-              responseContent = renderTpl(outTpl, {
+              responseContent = renderOutgoingHandoffMessage(activeAgent, {
                 nombre: leadFirstName,
                 producto: productName,
                 proximo_agente: nextAgent.name || 'la próxima agente',
