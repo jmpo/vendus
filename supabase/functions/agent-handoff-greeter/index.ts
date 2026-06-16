@@ -163,12 +163,19 @@ serve(async (req) => {
       });
     }
 
-    // Usa template configurado, ou um defecto amigable se vazio.
-    // Garantiza que el nuevo agente SIEMPRE se presenta después del handoff,
-    // evitando que a primeira fala de él seja uma respuesta robótica.
+    // Si el agente tiene handoff_incoming_message explícitamente vacío,
+    // hacemos transición SILENCIOSA (persona unificada — el cliente no debe
+    // notar que cambió de agente). No se envía mensaje de presentación.
+    const rawTemplate = agent.handoff_incoming_message;
+    if (rawTemplate !== null && rawTemplate !== undefined && String(rawTemplate).trim() === "") {
+      console.log("[handoff-greeter] silent handoff (empty template) →", agent.name);
+      return new Response(JSON.stringify({ ok: true, skipped: "silent_handoff" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const DEFAULT_TEMPLATE =
       "Oi {{nombre}}, aquí es a {{agent_name}} do time. Voy a continuar de aquí — me cuenta um poco mais do que vos sostá pensando? 😊";
-    const template = (agent.handoff_incoming_message || "").trim() || DEFAULT_TEMPLATE;
+    const template = (rawTemplate || "").trim() || DEFAULT_TEMPLATE;
 
     const delaySec =
       typeof body.delay_seconds === "number"
