@@ -33,6 +33,49 @@ function mapIntentToRoles(intent: Intent): string[] {
   }
 }
 
+// Resolve the best specialist agent for a given product + intent, applying the
+// same fallback chain used by orchestrator triage:
+//   1) preferred role (by intent) for the product
+//   2) the product's default agent
+//   3) the first active agent of the product
+// Returns null if the product has no usable agent.
+async function findSpecialistForProduct(
+  supabase: any,
+  productId: string,
+  intent: Intent,
+): Promise<any | null> {
+  const preferredRoles = mapIntentToRoles(intent);
+  for (const role of preferredRoles) {
+    const { data: candidate } = await supabase
+      .from('product_agents')
+      .select('*')
+      .eq('product_id', productId)
+      .eq('agent_type', role)
+      .eq('is_active', true)
+      .order('is_default', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (candidate) return candidate;
+  }
+  const { data: defaultAgent } = await supabase
+    .from('product_agents')
+    .select('*')
+    .eq('product_id', productId)
+    .eq('is_default', true)
+    .eq('is_active', true)
+    .maybeSingle();
+  if (defaultAgent) return defaultAgent;
+  const { data: firstActive } = await supabase
+    .from('product_agents')
+    .select('*')
+    .eq('product_id', productId)
+    .eq('is_active', true)
+    .order('is_default', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return firstActive || null;
+}
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -1390,6 +1433,111 @@ serve(async (req) => {
             activeAgent = assigned;
             if (assigned.product_id) body.product_id = assigned.product_id;
             console.log('[webchat-bot] 🧭 Continuing with assigned specialist:', assigned.name);
+
+            // === Cross-product re-triage ===
+            // Mid-conversation, the orchestrator no longer runs. If the lead now asks
+            // about a DIFFERENT product (e.g. switched from C3 to Aircross), the
+            // current product-bound specialist would answer about the wrong vehicle.
+            // Here we do a lightweight re-classification and, when the lead clearly
+            // switched products, re-route to the right specialist IN THE SAME TURN —
+            // the new agent answers directly (no greeter, no extra round-trip), and
+            // detects the handoff via agent_activation_logs so it doesn't restart.
+            // Gated: orchestration on, current agent is product-bound, org has 2+
+            // active products, and not explicitly disabled in config.
+            const reclassifyEnabled =
+              orchEnabled &&
+              !!assigned.product_id &&
+              (orchConfig as any)?.reclassify_in_conversation !== false;
+            if (reclassifyEnabled) {
+              try {
+                const { count: productCount } = await supabase
+                  .from('products')
+                  .select('id', { count: 'exact', head: true })
+                  .eq('organization_id', convInit.organization_id)
+                  .eq('is_active', true);
+
+                if ((productCount || 0) >= 2) {
+                  const { data: orgRowRt } = await supabase
+                    .from('organizations')
+                    .select('name')
+                    .eq('id', convInit.organization_id)
+                    .maybeSingle();
+                  const { data: orgProductsRt } = await supabase
+                    .from('products')
+                    .select('id, name, description')
+                    .eq('organization_id', convInit.organization_id)
+                    .eq('is_active', true)
+                    .limit(20);
+
+                  const reResult = await runOrchestrator({
+                    supabase,
+                    organizationId: convInit.organization_id,
+                    organizationName: orgRowRt?.name || 'a empresa',
+                    channel: convInit.channel || 'chat',
+                    channelIdentifier: convInit.visitor_phone || null,
+                    products: (orgProductsRt || []).map((p: any) => ({ id: p.id, name: p.name, description: p.description })),
+                    orchestratorContext: convInit.orchestrator_context || '',
+                    questionCount: 0,
+                    maxTriageQuestions: 0,
+                    message: body.message,
+                  });
+
+                  // Higher bar than initial triage (0.6): switching agents mid-chat
+                  // is more disruptive, so demand strong confidence.
+                  const switchThreshold = (orchConfig as any)?.reclassify_min_confidence ?? 0.75;
+                  const detectedProduct = reResult.produto_id;
+
+                  if (
+                    detectedProduct &&
+                    detectedProduct !== assigned.product_id &&
+                    reResult.confianca >= switchThreshold &&
+                    reResult.intencao !== 'humano'
+                  ) {
+                    const newAgent = await findSpecialistForProduct(
+                      supabase,
+                      detectedProduct,
+                      reResult.intencao,
+                    );
+
+                    if (newAgent && newAgent.id !== assigned.id) {
+                      activeAgent = newAgent;
+                      body.product_id = newAgent.product_id || detectedProduct;
+                      await supabase
+                        .from('webchat_conversations')
+                        .update({
+                          current_agent_id: newAgent.id,
+                          product_id: detectedProduct,
+                          orchestrator_context: reResult.contexto_extraido,
+                          detected_intent: reResult.intencao,
+                        })
+                        .eq('id', body.conversation_id);
+                      console.log('[webchat-bot] 🔀 Cross-product re-route →', newAgent.name,
+                        'product:', detectedProduct, 'conf:', reResult.confianca);
+
+                      // Activation log so the new agent's prompt detects "handoff
+                      // recebido" (line ~1770) and reads history instead of restarting.
+                      try {
+                        await supabase.from('agent_activation_logs').insert({
+                          organization_id: convInit.organization_id,
+                          product_id: detectedProduct,
+                          conversation_id: body.conversation_id,
+                          lead_id: convInit.lead_id || null,
+                          from_agent_id: assigned.id,
+                          to_agent_id: newAgent.id,
+                          matched_term: 'cross_product_retriage',
+                          match_type: 'retriage',
+                          channel: null,
+                        });
+                      } catch (logErr) {
+                        console.warn('[webchat-bot] re-triage log failed (non-fatal):', logErr);
+                      }
+                    }
+                  }
+                }
+              } catch (reErr) {
+                console.warn('[webchat-bot] cross-product re-triage failed (non-fatal):', reErr);
+              }
+            }
           }
         }
       }
@@ -2664,12 +2812,21 @@ ${leadDataPrompt}
 
       // === CATALOG TOOLS (search + send) — habilita SIEMPRE que org tiver ítems ativos
       // (no traba no product_id; busca prioriza producto atual mas faz fallback org-wide)
+      // EXCEÇÃO: agentes 'admin' (Chief of Staff, solo lectura interna) e
+      // 'orchestrator' (apenas classifica/roteia, não vende) NÃO precisam dessas
+      // tools — anexá-las só gasta tokens sem utilidade.
+      const catalogEligibleAgent =
+        activeAgent &&
+        activeAgent.agent_type !== 'admin' &&
+        activeAgent.agent_type !== 'orchestrator';
       try {
-        const { data: convForCatalog } = await supabase
-          .from('webchat_conversations')
-          .select('organization_id')
-          .eq('id', body.conversation_id)
-          .maybeSingle();
+        const { data: convForCatalog } = catalogEligibleAgent
+          ? await supabase
+              .from('webchat_conversations')
+              .select('organization_id')
+              .eq('id', body.conversation_id)
+              .maybeSingle()
+          : { data: null };
         const orgId = convForCatalog?.organization_id;
 
         if (orgId) {
