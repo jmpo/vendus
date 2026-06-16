@@ -40,7 +40,7 @@ const corsHeaders = {
 
 // ─── Handoff helpers ────────────────────────────────────────────────────────
 const DEFAULT_HANDOFF_OUTGOING =
-  'Beleza, {{nombre}}! Voy a te passar pra {{proximo_agente}}, que segue de aquí contigo. Ya te chama em instantes.';
+  'Perfecto, {{nombre}}. Voy a continuar con tu consulta para ayudarte mejor.';
 
 const KNOWN_PLACEHOLDERS = new Set([
   'nombre', 'producto', 'agente_anterior', 'agent_name', 'resumen', 'proximo_agente',
@@ -51,6 +51,15 @@ function renderHandoffTpl(tpl: string, vars: Record<string, string>): string {
     .replace(/\{\{\s*(\w+)\s*\}\}/g, (_m, k) => vars[k] ?? '')
     .replace(/\s{2,}/g, ' ')
     .trim();
+}
+
+function renderOutgoingHandoffMessage(agent: any, vars: Record<string, string>): string {
+  const raw = agent?.handoff_outgoing_message;
+  if (typeof raw === 'string') {
+    const trimmed = raw.trim();
+    return trimmed ? renderHandoffTpl(trimmed, vars) : '';
+  }
+  return renderHandoffTpl(DEFAULT_HANDOFF_OUTGOING, vars);
 }
 
 /**
