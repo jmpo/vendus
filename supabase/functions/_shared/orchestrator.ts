@@ -42,7 +42,7 @@ Conexión: {{channel_identifier}}
 
 PRODUTOS DISPONÍVEIS NESTA ORGANIZAÇÃO
 {{products_list}}
-Formato de cada producto: NOME (id: UUID) — descripción corta
+La descripción de cada producto incluye los MODELOS que abarca. Si el cliente menciona un modelo (ej.: "C3", "Aircross", "C4 Cactus", "Basalt", "2008", "208", "3008", "5008"), identificá a qué producto pertenece según las descripciones y devolvé ese produto_id con confianza alta.
 
 INTENÇÕES QUE VOS DEVE IDENTIFICAR
 - informacao → lead quer entender o producto, tirar duda
@@ -62,7 +62,7 @@ MENSAGEM RECEBIDA
 REGRAS
 1. Se el lead hablar "humano", "agente", "pessoa", "vendedor", "hablar con alguém"
    → intencao = "humano" imediatamente.
-2. Se a confiança for menor que 0.6 para identificar o producto → produto_id = null.
+2. Si el cliente menciona una MARCA o un MODELO que coincide con un producto (los modelos están en la descripción de cada producto), devolvé ese produto_id con confianza ALTA (0.8 o más). Sé decidido: ante una mención clara de marca o modelo NO pidas aclaración, derivá directamente.
 3. Se produto_id for null e todavía hay preguntas disponibles,
    → intencao = "indefinida" e escreva UNA pregunta corta em respuesta_orquestrador.
 4. Se produto_id continuar null e o limite de preguntas for atingido,
