@@ -304,10 +304,10 @@ Deno.serve(async (req) => {
 
   const eventBriefing =
     event === 'abandoned'
-      ? `O cliente acabou de gerar um ${order.payment_method || 'pago'} no valor de R$ ${order.amount?.toFixed(2) ?? '?'} para "${productLabel}" mas AINDA NÃO PAGOU.${cartDescription}\n\nSua missão: tirar dudas, crear urgência leve e ajudar a finalizar. Se útil, ofrezcas reenviar o link/Pix. Se hay order bumps, mencione o conjunto, no só o principal.`
+      ? `O cliente acabou de gerar um ${order.payment_method || 'pago'} no valor de R$ ${order.amount?.toFixed(2) ?? '?'} para "${productLabel}" mas AINDA NÃO PAGOU.${cartDescription}\n\nSua misión: tirar dudas, crear urgência leve e ajudar a finalizar. Se útil, ofrezcas reenviar o link/Pix. Se hay order bumps, mencione o conjunto, no só o principal.`
       : event === 'paid'
-        ? `O cliente acabou de PAGAR R$ ${order.amount?.toFixed(2) ?? '?'} por "${productLabel}".${cartDescription}\n\nSua missão: agradecer, confirmar a compra, orientar próximos passos e — se fizer sentido — presentar um upsell/cross-sell de algo que ele AINDA NÃO levou.`
-        : `O cliente tuvo um pedido REEMBOLSADO/ESTORNADO no valor de R$ ${order.amount?.toFixed(2) ?? '?'} ("${productLabel}").${cartDescription}\n\nSua missão: ser empático, entender o motivo, recuperar a relação e — se posible — propor uma alternativa.`;
+        ? `O cliente acabou de PAGAR R$ ${order.amount?.toFixed(2) ?? '?'} por "${productLabel}".${cartDescription}\n\nSua misión: agradecer, confirmar a compra, orientar próximos passos e — se fizer sentido — presentar um upsell/cross-sell de algo que ele AINDA NÃO levou.`
+        : `O cliente tuvo um pedido REEMBOLSADO/ESTORNADO no valor de R$ ${order.amount?.toFixed(2) ?? '?'} ("${productLabel}").${cartDescription}\n\nSua misión: ser empático, entender o motivo, recuperar a relação e — se posible — propor uma alternativa.`;
 
   const systemPrompt = `Vos sos ${agent.name}, agente de ${agent.agent_type} de la empresa.
 MISSÃO PRINCIPAL: ${agent.primary_objective}
@@ -322,7 +322,7 @@ ${agent.cannot_do?.length ? `O QUE VOS NÃO PODE FAZER:\n${agent.cannot_do.map((
 ${knowledgeContext ? `CONHECIMENTO DO PRODUTO:\n${knowledgeContext}` : ''}
 ${
   scenarios.length
-    ? `\nCENÁRIOS DE PÓS-VENDA APLICÁVEIS (siga na ordem de prioridade — só faça o que estiver descrito acá):\n${scenarios
+    ? `\nCENÁRIOS DE PÓS-VENDA APLICÁVEIS (siga na ordem de prioridade — só hacé o que estiver descrito acá):\n${scenarios
         .map(
           (s, idx) =>
             `\n[Cenário ${idx + 1} — ${s.name}]\nInstrução: ${s.instruction}${
@@ -336,7 +336,7 @@ ${
 }
 
 REGRAS DA MENSAGEM INICIAL:
-- Genera SOLO el mensaje (sin prefixos, sin comillas, sin explicações)
+- Genera SOLO el mensaje (sin prefixos, sin comillas, sin explicaciones)
 - Usa o nombre del cliente: ${order.customer_name || 'cliente'}
 - Mencione o que ele estava levando: ${productLabel}
 - WhatsApp: corta (máx 2 parágrafos), sin markdown, sin emoji exagerado (1 só)

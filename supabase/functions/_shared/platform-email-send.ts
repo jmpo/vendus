@@ -65,7 +65,7 @@ export async function sendPlatformEmail(args: SendPlatformEmailArgs): Promise<{ 
   if (!resp.ok) {
     const txt = await resp.text();
     console.error("Failed to enqueue platform email", { slug: args.slug, status: resp.status, txt });
-    return { ok: false, error: `Falha ao enfileirar email (${resp.status})` };
+    return { ok: false, error: `Fallo ao enfileirar email (${resp.status})` };
   }
 
   return { ok: true };

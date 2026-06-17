@@ -1,5 +1,5 @@
 // Utilitário para extrair primero nombre real del lead.
-// Retorna null cuando o "nombre" parece ser razão social / nombre de empresa,
+// Retorna null cuando o "nombre" parece ser razón social / nombre de empresa,
 // para la IA no tratar "Acesso Digital 360" como se fosse uma pessoa.
 
 const COMPANY_TOKENS = [
@@ -18,7 +18,7 @@ function stripDiacritics(s: string): string {
 function looksLikeCompany(raw: string): boolean {
   const t = raw.trim();
   if (!t) return true;
-  // Tem dígito → casi siempre razão social ("Acesso Digital 360", "AG7")
+  // Tem dígito → casi siempre razón social ("Acesso Digital 360", "AG7")
   if (/\d/.test(t)) return true;
   const norm = stripDiacritics(t.toLowerCase());
   const tokens = norm.split(/\s+/).filter(Boolean);
@@ -41,7 +41,7 @@ function capitalize(s: string): string {
 
 /**
  * Retorna o primero nombre del lead (capitalizado), ou null se o input
- * parecer nombre de empresa / razão social / lixo.
+ * parecer nombre de empresa / razón social / lixo.
  */
 export function extractFirstName(raw?: string | null): string | null {
   if (!raw) return null;

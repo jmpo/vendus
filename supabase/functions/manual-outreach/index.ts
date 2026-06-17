@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
           .select("id")
           .single();
         if (createWidgetErr) {
-          console.error("[ManualOutreach] Falha ao crear widget interno:", createWidgetErr);
+          console.error("[ManualOutreach] Fallo ao crear widget interno:", createWidgetErr);
         }
         outreachWidgetId = createdWidget?.id ?? null;
       }
@@ -171,13 +171,13 @@ Deno.serve(async (req) => {
 
         const modeRules = mode === 'conversational'
           ? `MODO: CONVERSA INTENCIONAL
-- Genera SOLO uma abertura corta (1–2 linhas, no máx. 25 palabras).
-- Faça UNA pregunta provocativa referenciando el evento (ex.: "Vi que usted gerou um Pix, conseguiu finalizar?").
+- Genera SOLO uma abertura corta (1–2 líneas, no máx. 25 palabras).
+- Hacé UNA pregunta provocativa referenciando el evento (ex.: "Vi que usted gerou um Pix, conseguiu finalizar?").
 - NÃO entregue Pix, link, código, instrucciones ou dados del evento ahora — só preguntes.
 - Esperá la respuesta del lead antes de ofrecer cualquier detalle.`
           : `MODO: MENSAGEM DIRETA
 - Genera umel mensaje completa, mas em no máx. 2 parágrafos curtos.
-- Se hay Pix/link, coloque cada um em linha propia, sin texto extra junto.
+- Se hay Pix/link, coloque cada uno em línea propia, sin texto extra junto.
 - Sin despedidas longas. Termine con UNA pregunta ou CTA claro.`;
 
         const systemPrompt = `Vos sos ${agent.name}, um agente de ${agent.agent_type} de la empresa.
@@ -192,7 +192,7 @@ ${extra_context ? `CONTEXTO ADICIONAL: ${extra_context}` : ""}
 ${eventCtxLines ? `CONTEXTO DO EVENTO:\n${eventCtxLines}` : ""}
 ${modeRules}
 REGRAS GERAIS:
-- Genera SOLO el mensaje, sin explicações ou prefixos.
+- Genera SOLO el mensaje, sin explicaciones ou prefixos.
 - Sé natural e humano, NÃO pareça um bot. Sin clichés ("espero que esteja bem", etc.).
 - Personalize con as información del lead.
 - WhatsApp: sin markdown, sin HTML.`;
@@ -234,7 +234,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
 
         console.log(`[ManualOutreach] (${mode}) -> ${lead?.name} (${leadPhone}): ${generatedMessage.slice(0, 80)}...`);
 
-        // Quebra em hasta 2 bolhas curtas (regra defecto WhatsApp do projeto)
+        // Quebra em hasta 2 burbujas curtas (regra defecto WhatsApp do projeto)
         const bubbles = mode === 'conversational'
           ? [generatedMessage] // ya forçamos corto no prompt
           : splitIntoBubbles(generatedMessage, { maxChunks: 2, targetCharsPerChunk: 280 });

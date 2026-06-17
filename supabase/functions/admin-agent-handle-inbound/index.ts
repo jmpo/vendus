@@ -254,7 +254,7 @@ async function runTool(
         const { count: overdueTasks } = await overdueQ;
         const { count: pendingTasks } = await pendingQ;
 
-        // Comissões pendentes
+        // Comisiones pendentes
         let comQ = supabase.from("commissions").select("amount, product_id").eq("organization_id", orgId).eq("status", "pending");
         if (productFilter) comQ = comQ.in("product_id", productFilter);
         const { data: pendingCom } = await comQ;
@@ -628,7 +628,7 @@ serve(async (req) => {
       availableUsers,
     });
 
-    // Permissões por fonte (tool_configs.allowed_sources). Se no definido, libera tudo.
+    // Permisos por fonte (tool_configs.allowed_sources). Se no definido, libera tudo.
     const allowedSources = (agent?.tool_configs as any)?.allowed_sources;
     const filteredTools = Array.isArray(allowedSources)
       ? TOOLS.filter((t: any) => allowedSources.includes(t.function?.name))

@@ -234,7 +234,7 @@ OBJETIVO: ${item.objective || agent.primary_objective}
 ${item.extra_context ? `CONTEXTO: ${item.extra_context}` : ''}
 
 REGRAS:
-- Genera SOLO el mensaje, sin explicações
+- Genera SOLO el mensaje, sin explicaciones
 - Sé natural e humano
 - Mensaje para WhatsApp (corta, direta)
 - DIFERENTE das mensajes anteriores

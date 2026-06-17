@@ -253,8 +253,8 @@ ${orgSupportMaterials ? `📚 MATERIAIS DE SUPORTE GLOBAIS:\n${orgSupportMateria
         primary_objective: "Reescribí o objetivo principal del agente para ser mais claro, estratégico e acionável.",
         additional_prompt: "Melhore as instrucciones adicionais para serem mais detalladas, específicas e blindadas contra desvios.",
         can_do: "Sugiere 3-5 capacidades que este agente debe ter, baseado no contexto.",
-        cannot_do: "Sugiere 3-5 restrições importantes para garantir que no ultrapasse su papel.",
-        handoff_triggers: "Sugiere 3-5 situações em que o agente debe transferir para um humano.",
+        cannot_do: "Sugiere 3-5 restricciones importantes para garantir que no ultrapasse su papel.",
+        handoff_triggers: "Sugiere 3-5 situaciones em que o agente debe transferir para um humano.",
       };
 
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -269,7 +269,7 @@ ${orgSupportMaterials ? `📚 MATERIAIS DE SUPORTE GLOBAIS:\n${orgSupportMateria
             {
               role: "system",
               content: `Vos sos especialista em design de agentes de IA conversacionais.
-Missão de este agente: ${mission}
+Misión de este agente: ${mission}
 
 CONTEXTO REAL:
 ${contextSummary}
@@ -281,7 +281,7 @@ ${fieldPrompts[optimize_field] || 'Otimize o campo fornecido para ser mais efeti
               content: `Valor atual do campo "${optimize_field}":
 "${current_value}"
 
-Devuelve una versão otimizada que respeite o tipo del agente e o contexto real.`,
+Devuelve una versión otimizada que respeite o tipo del agente e o contexto real.`,
             },
           ],
           tools: [
@@ -348,8 +348,8 @@ Devuelve una versão otimizada que respeite o tipo del agente e o contexto real.
 ${isAdmin ? '- Admin: Chief of Staff INTERNO. NUNCA tenta vender, agendar reunión con o admin, ou tratá-lo comel lead.' : ''}
 ${isOrchestrator ? '- Orquestrador: SOLO classifica e roteia. NUNCA explica producto, NUNCA dá precio, NUNCA negocia.' : ''}
 ${isSupport ? '- Suporte: Resolve dudas técnicas. NUNCA vende producto adicional. Usa SOLO materiais cadastrados.' : ''}
-${agent_type === 'sdr' ? '- SDR: Qualifica e identifica intención. NUNCA dá precio fechado, NUNCA data venta — passa para Closer. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que el cliente pedir material visual — esse es o canal oficial. NUNCA invente bloqueios como "no posso enviar por acá", "off-market", "restrição de segurança".' : ''}
-${agent_type === 'closer' ? '- Closer: Apresenta oferta e data. NUNCA dá descuento sin política autorizada. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO direto no WhatsApp cuando o cliente pedir — no desvia, no inventa restrição.' : ''}
+${agent_type === 'sdr' ? '- SDR: Qualifica e identifica intención. NUNCA dá precio fechado, NUNCA data venta — passa para Closer. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que el cliente pedir material visual — esse es o canal oficial. NUNCA invente bloqueios como "no posso enviar por acá", "off-market", "restricción de segurança".' : ''}
+${agent_type === 'closer' ? '- Closer: Apresenta oferta e data. NUNCA dá descuento sin política autorizada. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO direto no WhatsApp cuando o cliente pedir — no desvia, no inventa restricción.' : ''}
 ${agent_type === 'financial' ? '- Financeiro: Lida con boletos/NF/cobrança. NUNCA negocia dívida sin autorização.' : ''}
 ${agent_type === 'custom' ? '- Custom: Se for foco comercial, ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que pedido — canal oficial de mídia.' : ''}
 
@@ -367,7 +367,7 @@ PRINCÍPIOS DE DESIGN:
 1. O objetivo debe ser claro, mensurável e ALINHADO ao tipo del agente
 2. As regras (can_do/cannot_do) devem ser específicas — espelhe o template blindado
 3. handoff_triggers devem proteger a experiência del cliente E o escopo del agente
-4. tone_style e message_style devem combinar con a missão
+4. tone_style e message_style devem combinar con a misión
 5. additional_prompt DEVE incorporar o template blindado acima, populado con dados reais — no invente do zero
 
 🎭 HUMANIZAÇÃO (campo "humanization") — OBRIGATÓRIO para sdr/closer/custom/support:
@@ -378,7 +378,7 @@ PRINCÍPIOS DE DESIGN:
 - persona.loved_words: 6–12 jargões/modismos do nicho (ex pra tráfego: "ROAS", "CPL", "criativo cansado").
 - persona.forbidden_words: 6–12 ítems. SIEMPRE inclua: "incrível", "fantástico", "maravilhoso", "revolucionário", "atenciosamente", "prezado", "estamos à disposición", "agradecemos o contato", "como podemos ajudar".
 - tics.region: elegí coerente con persona.city. tics.slang/openers/connectors/fillers: 2–6 ítems cada, sutis, sin caricatura.
-- reactions.enabled: true (exceto admin/orchestrator/financial). reactions.rules: 3–6 regras.
+- reactions.enabled: true (excepto admin/orchestrator/financial). reactions.rules: 3–6 regras.
   • SDR: regra keyword "precio/valor/quanto custa" → action "context" transferindo pro Closer real (use o nombre em routing_matrix). Regra keyword "quiero comprar/fechar" → context pro Closer.
   • Closer: regra keyword "tá caro/descuento" → context con instrucción de objeción. Regra keyword "vou pensar" → context de follow-up.
   • Suporte: regra keyword "urgente/parou/no funciona" → context de priorização.
@@ -387,9 +387,9 @@ PRINCÍPIOS DE DESIGN:
 NÃO retorne timing, splitting nem style — esses ficam no default do front (ya curados).`;
 
     const userInstruction = isAdmin
-      ? `Crea o agente Chief of Staff (admin executivo) ${adminName ? `para ${adminName}` : ''} da ${orgName}. O additional_prompt DEVE conter o EXECUTIVE_KERNEL completo do template, con nombre do admin e productos da organización preenchidos. Tom executivo, mensajes curtas (4 linhas), nunca vendedor.`
+      ? `Crea o agente Chief of Staff (admin executivo) ${adminName ? `para ${adminName}` : ''} da ${orgName}. O additional_prompt DEVE conter o EXECUTIVE_KERNEL completo do template, con nombre do admin e productos da organización preenchidos. Tom executivo, mensajes curtas (4 líneas), nunca vendedor.`
       : isOrchestrator
-      ? `Crea o agente Orquestrador da ${orgName}. O additional_prompt DEVE conter a matriz de roteamento real e regras claras de "se intención X + producto Y → [HANDOFF:role]". Mensajes ultra curtas (1-2 linhas).`
+      ? `Crea o agente Orquestrador da ${orgName}. O additional_prompt DEVE conter a matriz de roteamento real e regras claras de "se intención X + producto Y → [HANDOFF:role]". Mensajes ultra curtas (1-2 líneas).`
       : isSupport
       ? `Crea o agente de Suporte global da ${orgName}. O additional_prompt DEVE referenciar os materiais cadastrados e o protocolo de 3 passos (confirmar → resolver → confirmar resolución). NUNCA inventa solución.`
       : agent_type === 'financial'
@@ -427,16 +427,16 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (ya
                     description: "Instrucciones detalladas — DEVE incorporar o template blindado fornecido, populado con dados reais (org/producto/admin/matriz). 3-8 parágrafos.",
                   },
                   can_do: { type: "array", items: { type: "string" }, description: "4-6 capacidades específicas do tipo" },
-                  cannot_do: { type: "array", items: { type: "string" }, description: "3-5 restrições críticas do tipo (ex: admin nunca vende, orquestrador nunca dá precio)" },
-                  handoff_triggers: { type: "array", items: { type: "string" }, description: "3-5 situações para transferir/escalar" },
-                  end_conversation_triggers: { type: "array", items: { type: "string" }, description: "2-3 situações para cierrar" },
+                  cannot_do: { type: "array", items: { type: "string" }, description: "3-5 restricciones críticas do tipo (ex: admin nunca vende, orquestrador nunca dá precio)" },
+                  handoff_triggers: { type: "array", items: { type: "string" }, description: "3-5 situaciones para transferir/escalar" },
+                  end_conversation_triggers: { type: "array", items: { type: "string" }, description: "2-3 situaciones para cierrar" },
                   tone_style: { type: "string", enum: ["formal", "consultive", "friendly", "technical"] },
                   message_style: { type: "string", enum: ["short", "balanced", "detailed"] },
                   required_phrases: { type: "array", items: { type: "string" }, description: "0-3 frases recorrentes" },
                    prohibited_phrases: { type: "array", items: { type: "string" }, description: "2-3 frases proibidas (ex: admin nunca diz 'cómo puedo ayudarte con [producto]')" },
                    humanization: {
                      type: "object",
-                     description: "Humanização del agente: persona estendida, tics regionais e reações automáticas. Para tipos comerciais/relacionais (sdr, closer, custom, support) es OBRIGATÓRIO preencher persona e tics adaptados ao ICP/producto. Para admin/orchestrator/financial puede vir vazio (papel interno/técnico).",
+                     description: "Humanización del agente: persona estendida, tics regionais e reações automáticas. Para tipos comerciais/relacionais (sdr, closer, custom, support) es OBRIGATÓRIO preencher persona e tics adaptados ao ICP/producto. Para admin/orchestrator/financial puede vir vacío (papel interno/técnico).",
                      properties: {
                        persona: {
                          type: "object",
@@ -479,7 +479,7 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (ya
                        },
                        reactions: {
                          type: "object",
-                         description: "Reações automáticas a gatilhos. Para SDR/Closer gere regras de keyword 'precio/valor' e 'quiero comprar' que transferem al agente certo (use a matriz de roteamento). Suporte: regra para 'urgente'. Admin: deixe vazio.",
+                         description: "Reações automáticas a disparadores. Para SDR/Closer gere regras de keyword 'precio/valor' e 'quiero comprar' que transferem al agente certo (use a matriz de roteamento). Suporte: regra para 'urgente'. Admin: deixe vacío.",
                          properties: {
                            enabled: { type: "boolean" },
                            rules: {

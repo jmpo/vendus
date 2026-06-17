@@ -241,10 +241,10 @@ export function splitIntoBubbles(text: string, cfg: SplittingConfig = {}): strin
   if (aggr === 1) return [t];
   if (aggr === 2 && t.length <= 200) return [t];
 
-  // Tamanho-alvo por bolha conforme aggressiveness (estilo WhatsApp).
+  // Tamaño-alvo por burbuja conforme aggressiveness (estilo WhatsApp).
   const targetLen = aggr >= 5 ? 100 : aggr === 4 ? 140 : aggr === 3 ? 180 : 220;
 
-  // Quebra primária: por sentença (.!?) e quebras de linha.
+  // Quebra primária: por sentença (.!?) e quebras de línea.
   const sentences = t
     .split(/(?<=[.!?])\s+|\n+/)
     .map((s) => s.trim())
@@ -262,7 +262,7 @@ export function splitIntoBubbles(text: string, cfg: SplittingConfig = {}): strin
 
   if (units.length <= 1) return [t];
 
-  // Junta unidades curtas hasta bater ~targetLen; nunca passa de maxB bolhas.
+  // Junta unidades curtas hasta bater ~targetLen; nunca passa de maxB burbujas.
   const bubbles: string[] = [];
   let current = '';
   for (const u of units) {

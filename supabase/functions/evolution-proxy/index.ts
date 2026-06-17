@@ -49,7 +49,7 @@ async function evoFetch(
       ok: false,
       status: 0,
       body: null,
-      message: `Falha ao conectar em ${config.url}: ${err.message}`,
+      message: `Fallo ao conectar em ${config.url}: ${err.message}`,
     };
   }
   const text = await res.text();
@@ -185,7 +185,7 @@ async function configureWebhook(
     error:
       primary.message ||
       fallback.message ||
-      `Falha ao configurar webhook (status ${primary.status}).`,
+      `Fallo ao configurar webhook (status ${primary.status}).`,
     response: primary.body ?? fallback.body,
   };
 }
@@ -339,7 +339,7 @@ Deno.serve(async (req) => {
       );
       if (!createRes.ok) {
         return new Response(
-          JSON.stringify({ ok: false, error: createRes.message || `Falha ao crear instância (status ${createRes.status})`, response: createRes.body }),
+          JSON.stringify({ ok: false, error: createRes.message || `Fallo ao crear instância (status ${createRes.status})`, response: createRes.body }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -354,7 +354,7 @@ Deno.serve(async (req) => {
         return new Response(
           JSON.stringify({
             ok: false,
-            error: "Servidor criou a instância mas no devolvió UUID. Verificá a versão do Evolution Go.",
+            error: "Servidor criou a instância mas no devolvió UUID. Verificá a versión do Evolution Go.",
             response: createRes.body,
           }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -448,7 +448,7 @@ Deno.serve(async (req) => {
         p_org_id: orgId,
       });
       if (limitsErr) {
-        return new Response(JSON.stringify({ error: "Falha ao cargar limites do plano: " + limitsErr.message }), {
+        return new Response(JSON.stringify({ error: "Fallo ao cargar limites do plano: " + limitsErr.message }), {
           status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -462,7 +462,7 @@ Deno.serve(async (req) => {
       if ((currentCount ?? 0) >= maxConnections) {
         return new Response(JSON.stringify({
           ok: false,
-          error: `Límite de ${maxConnections} conexión(ões) do su plano atingido. Faça upgrade para crear mais.`,
+          error: `Límite de ${maxConnections} conexión(ões) do su plano atingido. Hacé upgrade para crear mais.`,
           limit_reached: true,
           current: currentCount,
           limit: maxConnections,
@@ -493,7 +493,7 @@ Deno.serve(async (req) => {
         .maybeSingle();
       if (dup) {
         return new Response(JSON.stringify({
-          error: "Ya existe uma conexión con esse nombre. Escolha otro.",
+          error: "Ya existe uma conexión con esse nombre. Elegí otro.",
         }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
@@ -511,7 +511,7 @@ Deno.serve(async (req) => {
       if (!createRes.ok) {
         return new Response(JSON.stringify({
           ok: false,
-          error: createRes.message || `Falha ao crear instância (status ${createRes.status})`,
+          error: createRes.message || `Fallo ao crear instância (status ${createRes.status})`,
           response: createRes.body,
         }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
@@ -1016,7 +1016,7 @@ Deno.serve(async (req) => {
       const instanceToken = inst.instance_token || meta.instance_token || null;
 
       if (!uuid || !instanceToken) {
-        return new Response(JSON.stringify({ ok: false, error: "Instância sin UUID/token. Solicite sincronização." }), {
+        return new Response(JSON.stringify({ ok: false, error: "Instância sin UUID/token. Solicite sincronización." }), {
           status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -1144,7 +1144,7 @@ Deno.serve(async (req) => {
       const uuid: string | null = meta.instance_uuid || inst.instance_id || null;
       const instanceToken = inst.instance_token || meta.instance_token || null;
       if (!uuid || !instanceToken) {
-        return new Response(JSON.stringify({ ok: false, error: "Instância sin UUID/token. Solicite sincronização." }), {
+        return new Response(JSON.stringify({ ok: false, error: "Instância sin UUID/token. Solicite sincronización." }), {
           status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -1209,7 +1209,7 @@ Deno.serve(async (req) => {
       const uuid: string | null = meta.instance_uuid || inst.instance_id || null;
       const instanceToken = inst.instance_token || meta.instance_token || null;
       if (!uuid || !instanceToken) {
-        return new Response(JSON.stringify({ ok: false, error: "Instância sin UUID/token. Solicite sincronização." }), {
+        return new Response(JSON.stringify({ ok: false, error: "Instância sin UUID/token. Solicite sincronización." }), {
           status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }

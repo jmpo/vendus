@@ -103,7 +103,7 @@ Deno.serve(async (req) => {
         .eq("id", instance_id).eq("organization_id", organization_id).single();
       instance = data;
     } else {
-      // Sin instance_id: pega a mejor instância conectada da org (default primero, senão mais recente)
+      // Sin instance_id: pega a mejor instância conectada da org (default primero, sino mais recente)
       const { data } = await supabase
         .from("evolution_instances").select("*")
         .eq("organization_id", organization_id)

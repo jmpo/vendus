@@ -139,7 +139,7 @@ Crea secciones para:
 4. Objeciones e como foram tratadas
 5. Insights úteis para vendedores
 
-Formate de forma clara e estruturada para fácil edição.`
+Formate de forma clara e estruturada para fácil edición.`
           }
         ],
         max_tokens: 1000,

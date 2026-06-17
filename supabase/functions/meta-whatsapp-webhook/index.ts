@@ -150,7 +150,7 @@ Deno.serve(async (req: Request) => {
       }
 
 
-      // valida assinatura HMAC (solo no caminho fallback — pinnedConn ya validou).
+      // valida assinatura HMAC (solo no camino fallback — pinnedConn ya validou).
       if (!pinnedConn) {
         try {
           const sig = req.headers.get('x-hub-signature-256') ?? '';

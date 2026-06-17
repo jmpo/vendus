@@ -4,7 +4,7 @@
 // Body: { filename: string, mime_type: string, file_base64: string, agent_type?: string }
 // Resp: { agent: GeneratedAgent }
 //
-// Obs.: O caso JSON es tratado 100% no client (validação + insert direto).
+// Obs.: O caso JSON es tratado 100% no client (validación + insert direto).
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { unzipSync, strFromU8 } from "https://esm.sh/fflate@0.8.2";
@@ -134,9 +134,9 @@ serve(async (req) => {
 A partir do briefing/documento abaixo, extraia uma configuración completa de agente.
 
 REGRAS:
-- Identifica tom, missão, capacidades, restrições e gatilhos de transferencia diretamente do texto.
+- Identifica tom, misión, capacidades, restricciones e disparadores de transferencia diretamente do texto.
 - Se o texto no menciona um campo, infira algo razoável e profissional, sin clichés.
-- Mensajes devem seguir SPIN Selling: profissional, objetivo, no máximo 2 linhas por bloco.
+- Mensajes devem seguir SPIN Selling: profissional, objetivo, no máximo 2 líneas por bloco.
 - Nunca use emojis em prompts.
 - additional_prompt debe consolidar TUDO que o documento diz sobre comportamento, em 3-6 parágrafos.`;
 

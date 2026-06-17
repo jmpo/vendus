@@ -62,7 +62,7 @@ async function evaluateStepConditions(supabase: any, conditions: any, lead_id: s
       .eq("lead_id", lead_id)
       .in("tag_id", conditions.without_tags)
       .limit(1);
-    if (data && data.length) return { ok: false, reason: "Lead possui tag de exclusão" };
+    if (data && data.length) return { ok: false, reason: "Lead possui tag de exclusión" };
   }
 
   // with_tag — exige uma das tags

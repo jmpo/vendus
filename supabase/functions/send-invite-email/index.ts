@@ -101,7 +101,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     if (!result.ok) {
-      throw new Error(result.error || "Falha al enviar convite");
+      throw new Error(result.error || "Fallo al enviar convite");
     }
 
     return new Response(

@@ -89,7 +89,7 @@ export async function aiChat(opts: AICallOptions): Promise<{
 /** Friendly error message helper for non-ok responses. */
 export async function describeAIError(response: Response, providerLabel: string): Promise<string> {
   const text = await response.text().catch(() => '');
-  if (response.status === 429) return 'Límite de requisições excedido. Probá novamente em algunos segundos.';
+  if (response.status === 429) return 'Límite de solicitudes excedido. Probá novamente em algunos segundos.';
   if (response.status === 402) {
     return providerLabel === 'openai'
       ? 'Su cuenta OpenAI está sin créditos ou bloqueada. Verificá em platform.openai.com/billing.'

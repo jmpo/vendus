@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
       _user_id: caller.id,
     });
     if (!isSuper) {
-      return new Response(JSON.stringify({ error: "Permissão negada" }), {
+      return new Response(JSON.stringify({ error: "Permiso negada" }), {
         status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -119,7 +119,7 @@ Deno.serve(async (req) => {
             user_metadata: { full_name },
           });
         if (createError || !created?.user) {
-          throw createError || new Error("Falha ao crear usuario");
+          throw createError || new Error("Fallo ao crear usuario");
         }
         userId = created.user.id;
       } else {

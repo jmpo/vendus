@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
       },
     });
 
-    if (!result.ok) throw new Error(result.error || "Falha al enviar confirmación");
+    if (!result.ok) throw new Error(result.error || "Fallo al enviar confirmación");
 
     return new Response(
       JSON.stringify({ success: true }),

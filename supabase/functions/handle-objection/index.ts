@@ -82,19 +82,19 @@ ${knowledgeContext}
 ${objectionsContext}
 
 ⚠️ REGRAS CRÍTICAS - FORMATO WHATSAPP:
-1. Respuestas CURTAS - máximo 3-4 linhas por sección
+1. Respuestas CURTAS - máximo 3-4 líneas por sección
 2. Usa emojis estratégicos: ✅ 💡 🎯 ⏰ 💰 🤝
-3. Quebras de linha para facilitar leitura no celular
+3. Quebras de línea para facilitar leitura no celular
 4. Tom conversacional e direto
 5. NUNCA seja agressivo - ventas es ajudar
 
 FORMATO DE RESPOSTA:
 
 **O QUE ELE QUER DIZER:**
-[1 linha máximo - o medo/duda real]
+[1 línea máximo - o medo/duda real]
 
 **RESPOSTA SUGERIDA:**
-[Mensaje pronta para WhatsApp - 3-4 linhas curtas con emoji]
+[Mensaje pronta para WhatsApp - 3-4 líneas curtas con emoji]
 
 **PERGUNTA DE RETORNO:**
 [1 pregunta direta de hasta 15 palabras]`;

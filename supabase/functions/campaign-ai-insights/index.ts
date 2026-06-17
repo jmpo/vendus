@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     const failed = list.filter((t: any) => t.status === "failed").length;
     const queued = list.filter((t: any) => ["queued", "sending"].includes(t.status)).length;
 
-    // Distribuição de horario das respuestas
+    // Distribución de horario das respuestas
     const respByHour: Record<number, number> = {};
     list.forEach((t: any) => {
       if (t.responded_at) {
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
       contexts: ctxStats,
     };
 
-    const prompt = `Vos sos o Assistente da Campaña Inteligente da Vendus. Analiza os dados a seguir e produza 3 insights práticos para el gestor (en español, máximo 2 linhas cada, sin clichés). Cada insight debe ter: título corto + recomendação acionável.
+    const prompt = `Vos sos o Assistente da Campaña Inteligente da Vendus. Analiza os dados a seguir e produza 3 insights práticos para el gestor (en español, máximo 2 líneas cada, sin clichés). Cada insight debe ter: título corto + recomendação acionável.
 
 Dados:
 ${JSON.stringify(summary, null, 2)}

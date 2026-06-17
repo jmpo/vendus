@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
     });
     const tokenData = await tokenResp.json();
     if (!tokenResp.ok || !tokenData.access_token) {
-      return json({ error: 'Falha ao autenticar na Hotmart', details: tokenData }, 400);
+      return json({ error: 'Fallo ao autenticar na Hotmart', details: tokenData }, 400);
     }
 
     // 2) Busca historial
@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
     });
     const salesData = await salesResp.json();
     if (!salesResp.ok) {
-      return json({ error: 'Falha al buscar ventas', details: salesData }, 400);
+      return json({ error: 'Fallo al buscar ventas', details: salesData }, 400);
     }
 
     const items = salesData.items ?? [];

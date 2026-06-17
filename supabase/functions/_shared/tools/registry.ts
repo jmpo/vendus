@@ -109,7 +109,7 @@ async function logExecution(
       estimated_cost_cents: costCents,
     });
   } catch (logErr) {
-    console.error('[tools] fala ao registrar execução:', logErr);
+    console.error('[tools] fala ao registrar ejecución:', logErr);
   }
 }
 

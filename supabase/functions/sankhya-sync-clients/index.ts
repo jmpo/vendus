@@ -53,7 +53,7 @@ async function getAuthToken(organizationId: string, supabaseUrl: string, supabas
   });
 
   if (!authResponse.ok) {
-    throw new Error("Falha na autenticação Sankhya");
+    throw new Error("Fallo na autenticación Sankhya");
   }
 
   const authData = await authResponse.json();
@@ -243,7 +243,7 @@ serve(async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Sincronização concluída: ${successCount} registros sincronizados`,
+        message: `Sincronización concluída: ${successCount} registros sincronizados`,
         processed: partnerList.length,
         successCount,
         failedCount

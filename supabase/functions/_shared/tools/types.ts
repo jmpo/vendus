@@ -1,6 +1,6 @@
 // Tipos compartilhados do registry de ferramentas dos agentes.
 // Cada ferramenta declara su schema (formato OpenAI tool calling),
-// recebe um contexto de execução e devuelve um resultado padronizado.
+// recebe um contexto de ejecución e devuelve um resultado padronizado.
 
 export interface ToolContext {
   organizationId: string;
@@ -26,7 +26,7 @@ export interface ToolDefinition {
   description: string;
   // JSON Schema (estilo OpenAI function-calling).
   parameters: Record<string, any>;
-  // Custo estimado por execução em centavos (para limites de orçamento).
+  // Custo estimado por ejecución em centavos (para limites de orçamento).
   estimated_cost_cents?: number;
   // Categorias para filtrar cuáles tools um agente específico puede usar.
   categories: Array<'crm' | 'finance' | 'marketing' | 'operations' | 'communication'>;

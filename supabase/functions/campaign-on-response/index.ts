@@ -97,7 +97,7 @@ Deno.serve(async (req) => {
         .eq("status", "queued");
     }
 
-    // 3) Atualizações nel lead (etapa, temperatura)
+    // 3) Actualizaciones nel lead (etapa, temperatura)
     const leadUpdate: Record<string, any> = {};
     if (actions.stage_id) leadUpdate.stage_id = actions.stage_id;
     if (actions.temperature) leadUpdate.temperature = actions.temperature;

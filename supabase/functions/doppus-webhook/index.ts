@@ -1,7 +1,7 @@
 // Doppus Postback (Webhook) — público.
 // A Doppus envía POST con header `doppus-token` e body JSON.
 // Este endpoint:
-//   1. Siempre responde 2xx (Doppus exige isso para aceitar a URL).
+//   1. Siempre responde 2xx (Doppus exige eso para aceitar a URL).
 //   2. Identifica a empresa por el producto Doppus (items[0].code) ou por el token.
 //   3. Mapeia status reais da Doppus para la engine unificada de pós-venta.
 //
@@ -94,7 +94,7 @@ function safeJsonParse(raw: string): any {
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
-  // Validações de URL por la Doppus pueden chegar como GET/HEAD ou POST vazio.
+  // Validações de URL por la Doppus pueden chegar como GET/HEAD ou POST vacío.
   // SIEMPRE retornamos 2xx, ou a Doppus rejeita a URL.
   if (req.method === 'GET') return json({ ok: true, provider: 'doppus-webhook', ready: true });
   if (req.method === 'HEAD') return new Response(null, { status: 200, headers: corsHeaders });
@@ -138,7 +138,7 @@ Deno.serve(async (req) => {
     );
 
   if (!looksLikeRealEvent) {
-    // Validação da Doppus (POST vazio ou {"doppus": true}, etc.)
+    // Validación da Doppus (POST vacío ou {"doppus": true}, etc.)
     return json({ ok: true, provider: 'doppus-webhook', ready: true, validation_only: true });
   }
 
@@ -304,7 +304,7 @@ Deno.serve(async (req) => {
     const orgId = resolvedOrgId;
     const internalProductId = matchedProduct.internal_product_id;
 
-    // Validação opcional de token: se há token registrado e veio um token diferente, registra mas segue.
+    // Validación opcional de token: se há token registrado e veio um token diferente, registra mas segue.
     if (matchedProduct.token && tokenReceived && matchedProduct.token !== tokenReceived) {
       await logEvent(admin, {
         orgId, productId: internalProductId, eventType: 'invalid_token', leadId: null, payload,

@@ -1225,7 +1225,7 @@ async function executeAction(
           .select('id')
           .single();
         if (createWidgetError || !createdWidget?.id) {
-          throw new Error(`Falha ao crear widget interno de outreach: ${createWidgetError?.message || 'sin id'}`);
+          throw new Error(`Fallo ao crear widget interno de outreach: ${createWidgetError?.message || 'sin id'}`);
         }
         outreachWidget = createdWidget;
       }
@@ -1266,7 +1266,7 @@ OBJETIVO DESTA ABORDAGEM: ${config.ai_objective || 'Abordar el lead de forma est
 ${config.ai_extra_context ? `CONTEXTO ADICIONAL: ${config.ai_extra_context}` : ''}
 
 REGRAS:
-- Genera SOLO el mensaje, sin explicações ou prefixos
+- Genera SOLO el mensaje, sin explicaciones ou prefixos
 - Sé natural e humano, NÃO pareça um bot
 - Personalize con as información del lead
 - A mensaje debe ser para WhatsApp (corta, direta, sin formatação HTML)
@@ -1608,12 +1608,12 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           .select('id')
           .single();
         if (createWidgetError || !createdWidget?.id) {
-          throw new Error(`Falha ao crear widget interno de outreach: ${createWidgetError?.message || 'sin id'}`);
+          throw new Error(`Fallo ao crear widget interno de outreach: ${createWidgetError?.message || 'sin id'}`);
         }
         widgetRow = createdWidget;
       }
 
-      // 5. Determina status inicial conforme atribuição
+      // 5. Determina status inicial conforme asignación
       // - con agente IA  -> bot_active
       // - con vendedor   -> human_active (ya aceito)
       // - sin nada       -> waiting_human (entra na fila do sector)
@@ -1652,7 +1652,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
         .insert(conversationPayload)
         .select()
         .single();
-      if (convErr) throw new Error(`Falha ao crear conversación: ${convErr.message}`);
+      if (convErr) throw new Error(`Fallo ao crear conversación: ${convErr.message}`);
 
       // Se vendedor fue atribuído, refletir nel lead también (Single Attendant trigger cuida do resto)
       if (assignedUserId) {
@@ -1712,7 +1712,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           });
           if (sendErr || (sendData as any)?.ok === false) {
             const errMsg = sendErr?.message || JSON.stringify(sendData).slice(0, 300);
-            throw new Error(`Falha al enviar primeirel mensaje: ${errMsg}`);
+            throw new Error(`Fallo al enviar primeirel mensaje: ${errMsg}`);
           }
 
           // Salvel mensaje outbound no historial

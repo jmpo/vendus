@@ -236,7 +236,7 @@ async function processJob(supabase: any, job: any, siteUrl: string) {
           guestName: isInternal ? (booking.profiles?.full_name || "Vendedor") : booking.guest_name,
           guestEmail: targetEmail,
           eventName: booking.booking_event_types?.name || "Reunión",
-          hostName: booking.profiles?.full_name || "Anfitrião",
+          hostName: booking.profiles?.full_name || "Anfitrión",
           startTime: booking.start_time,
           endTime: booking.end_time,
           meetLink: calendarEvent?.meet_link || undefined,

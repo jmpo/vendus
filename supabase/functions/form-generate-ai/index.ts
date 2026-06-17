@@ -132,20 +132,20 @@ Garantia: ${product.guarantee || 'N/A'}
     const objectiveDescriptions = {
       qualification: 'Qualificar leads identificando fit con o producto e maturidade de compra. Crea preguntas que identifiquem se el lead es um ICP qualificado.',
       diagnostic: 'Diagnosticar necessidades e dores del lead para personalizar a abordagem comercial. Foque em entender o cenário atual e desafios.',
-      capture: 'Captar información básicas de contato de forma rápida e no-invasiva. Mantenha o formulário corto e direto.',
+      capture: 'Captar información básicas de contato de forma rápida e no-invasiva. Mantené o formulário corto e direto.',
       presale: 'Preparar el lead para uma reunión de ventas coletando información detalladas sobre expectativas e orçamento.',
       feedback: 'Coletar feedback sobre o producto ou processo de ventas. Usa escalas e preguntas abiertas.',
     };
 
     const toneDescriptions = {
-      formal: 'Usa lenguaje formal e profissional, adequada para B2B corporativo. Evita modismos e mantenha tom respeitoso.',
+      formal: 'Usa lenguaje formal e profissional, adequada para B2B corporativo. Evita modismos e mantené tom respeitoso.',
       informal: 'Usa lenguaje amigable e descontraída, como una conversación casual. Sé cálido e empático.',
       technical: 'Usa termos técnicos relevantes ao sector, assumindo conocimiento prévio. Sé preciso e objetivo.',
     };
 
     // Build enhanced system prompt
-    const systemPrompt = `Vos sos um especialista em creación de formulários de captação de leads para ventas B2B.
-Su objetivo es gerar um formulário otimizado para conversão, baseado no contexto completo do producto e da campaña.
+    const systemPrompt = `Vos sos um especialista em creación de formulários de captación de leads para ventas B2B.
+Su objetivo es gerar um formulário otimizado para conversión, baseado no contexto completo do producto e da campaña.
 
 CONTEXTO DO PRODUTO:
 ${productContext}
@@ -159,7 +159,7 @@ ${objectionsContext}
 ` : ''}${user_context ? `CONTEXTO ESPECÍFICO DA CAMPANHA (Fornecido por el usuario — PRIORIDADE MÁXIMA):
 ${user_context}
 
-⚠️ ATENÇÃO: As preguntas DEVEM refletir explicitamente o contexto acima. Se o usuario citou nicho, campaña (ex: Black Friday), ICP específico, sector, evento ou objeción concreta, as preguntas precisam abordar isso diretamente. No gere um formulário genérico.
+⚠️ ATENÇÃO: As preguntas DEVEM refletir explicitamente o contexto acima. Se o usuario citou nicho, campaña (ex: Black Friday), ICP específico, sector, evento ou objeción concreta, as preguntas precisam abordar eso diretamente. No gere um formulário genérico.
 
 ` : ''}OBJETIVO DO FORMULÁRIO: ${objectiveDescriptions[objective]}
 
@@ -172,7 +172,7 @@ REGRAS IMPORTANTES:
 4. ${use_brain && knowledgeContext ? 'Baseie as preguntas no conocimiento real do producto e sus diferenciais' : 'Foque nas necessidades típicas do ICP descrito'}
 5. ${user_context ? 'Personalize as preguntas para el contexto da campaña descrito acima — no ignore esse contexto' : 'Foque em capturar dados que ajudem o time de ventas'}
 6. Límite ao número de preguntas solicitado (${num_questions} preguntas + telas de boas-vindas e agradecimento)
-7. Retorne SOLO um JSON válido, sin explicações ou markdown
+7. Retorne SOLO um JSON válido, sin explicaciones ou markdown
 
 TIPOS DE BLOCOS VÁLIDOS (use SOLO estes valores em block_type):
 - welcome_screen: Pantalla de bienvenida (SIEMPRE el primer bloque)
@@ -181,8 +181,8 @@ TIPOS DE BLOCOS VÁLIDOS (use SOLO estes valores em block_type):
 - email: Email (use maps_to: "email")
 - phone: Teléfono/WhatsApp (use maps_to: "phone")
 - number: Número
-- select: Seleção única (inclua "options" como array de {label, value})
-- multi_select: Seleção múltiple (inclua "options" como array de {label, value})
+- select: Selección única (inclua "options" como array de {label, value})
+- multi_select: Selección múltiple (inclua "options" como array de {label, value})
 - yes_no: Sí/No
 - scale: Escala numérica — IMPORTANTE: coloque a configuración em "options" como objeto {"min":1,"max":10,"min_label":"...","max_label":"..."}
 - end_screen: Pantalla final/agradecimiento (SIEMPRE el último bloque)
@@ -202,7 +202,7 @@ FORMATO DE RESPOSTA (JSON ARRAY puro, sin markdown):
 
 IMPORTANTE: O array debe conter exatamente ${num_questions} blocos de pregunta + welcome_screen + end_screen (total: ${num_questions + 2} blocos).`;
 
-    const userPrompt = `Genera o formulário de ${num_questions} preguntas seguindo as instrucciones acima. Retorne SOLO o JSON array, sin explicações ou código markdown.`;
+    const userPrompt = `Genera o formulário de ${num_questions} preguntas seguindo as instrucciones acima. Retorne SOLO o JSON array, sin explicaciones ou código markdown.`;
 
     console.log('Calling AI to generate form with enriched context...');
 
@@ -321,7 +321,7 @@ IMPORTANTE: O array debe conter exatamente ${num_questions} blocos de pregunta +
     const objectiveNames = {
       qualification: 'Calificación',
       diagnostic: 'Diagnóstico',
-      capture: 'Captação',
+      capture: 'Captación',
       presale: 'Pré-venta',
       feedback: 'Feedback',
     };

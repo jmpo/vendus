@@ -221,7 +221,7 @@ serve(async (req) => {
               };
             }
 
-            // Se ya tiene google_event_id, faz PATCH; senão POST
+            // Se ya tiene google_event_id, faz PATCH; sino POST
             const isUpdate = !!localEvent.google_event_id;
             let createUrl = isUpdate
               ? `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(localEvent.google_event_id)}`

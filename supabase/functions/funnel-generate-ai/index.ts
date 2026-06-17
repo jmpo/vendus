@@ -96,7 +96,7 @@ Problemas que resolve: ${product.problems_solved || 'N/A'}
       technical: 'Usá términos técnicos relevantes. Sé preciso y objetivo.',
     };
 
-    const systemPrompt = `Vos sos um especialista em crear funis de captação de leads de alta conversão.
+    const systemPrompt = `Vos sos um especialista em crear funis de captación de leads de alta conversión.
 Su trabajo es transformar a descripción do usuario em um flujo de blocos estruturados que serão renderizados como uma landing page interativa.
 
 CONTEXTO DO PRODUTO:
@@ -111,7 +111,7 @@ TIPOS DE BLOCOS DISPONÍVEIS:
 
 1. **message** - Exibir texto/contenido para el lead
    Campos: { content: "texto con suporte a markdown" }
-   Usa para: boas-vindas, explicações, transições entre secciones
+   Usa para: boas-vindas, explicaciones, transições entre secciones
 
 2. **input** - Capturar um dado del lead
    Campos: { input_type: "name"|"email"|"phone"|"text"|"number"|"cpf"|"textarea", variable_name: "nome_variavel", placeholder: "texto placeholder", required: true/false }
@@ -127,7 +127,7 @@ TIPOS DE BLOCOS DISPONÍVEIS:
 
 5. **end** - Tela final de éxito
    Campos: { success_message: "mensaje final", redirect_url: "" }
-   Usa para: finalizar um caminho do embudo
+   Usa para: finalizar um camino do embudo
 
 6. **score** - Adicionar puntuación al lead (invisível)
    Campos: { score_value: número }
@@ -146,8 +146,8 @@ REGRAS DE POSIÇÃO (X/Y no canvas):
 - Blocos em sequência linear: incrementar Y em 150, manter X constante
 - Cuando hay ramificação (buttons con N opciones): 
   - O bloco buttons fica na posición atual
-  - Os caminhos ramificam horizontalmente: primero caminho em X=100, segundo em X=450, terceiro em X=800
-  - Cada caminho continua incrementando Y normalmente
+  - Os caminhos ramificam horizontalmente: primero camino em X=100, segundo em X=450, terceiro em X=800
+  - Cada camino continua incrementando Y normalmente
 - Usa X base = 250 para o flujo principal
 
 FORMATO DE RESPOSTA (JSON):
@@ -166,20 +166,20 @@ FORMATO DE RESPOSTA (JSON):
 }
 
 IMPORTANTE:
-- Retorne SOLO JSON válido, sin markdown ou explicações
+- Retorne SOLO JSON válido, sin markdown ou explicaciones
 - Todos los IDs devem ser UUIDs v4 únicos
 - Todas las conexiones next_block_id devem referenciar IDs existentes
-- Cada caminho de ramificação DEVE terminar con um bloco "end"
+- Cada camino de ramificação DEVE terminar con um bloco "end"
 - Usa emojis nos botones para tornar a experiência mais visual
 - Creá copys cortos y conversacionales, optimizados para mobile
 - Se o usuario mencionar vídeos, use blocos video con video_url: "URL_PLACEHOLDER"
-- Se o usuario mencionar planos/precios, crie botones con as opciones e blocos end con redirect_url vazio`;
+- Se o usuario mencionar planos/precios, crie botones con as opciones e blocos end con redirect_url vacío`;
 
-    const userPrompt = `Crea o embudo de captação seguindo esta descripción:
+    const userPrompt = `Crea o embudo de captación seguindo esta descripción:
 
 ${prompt}
 
-Retorne SOLO o JSON no formato especificado, sin explicações.`;
+Retorne SOLO o JSON no formato especificado, sin explicaciones.`;
 
     console.log('Calling AI to generate funnel...');
 
@@ -206,7 +206,7 @@ Retorne SOLO o JSON no formato especificado, sin explicações.`;
       
       if (aiResponse.status === 429) {
         return new Response(
-          JSON.stringify({ error: 'Límite de requisições excedido. Probá novamente em algunos segundos.' }),
+          JSON.stringify({ error: 'Límite de solicitudes excedido. Probá novamente em algunos segundos.' }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }

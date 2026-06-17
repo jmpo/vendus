@@ -90,14 +90,14 @@ serve(async (req: Request): Promise<Response> => {
     if (!authResponse.ok) {
       const errorText = await authResponse.text();
       console.error("Sankhya auth error:", errorText);
-      throw new Error(`Falha na autenticação: ${authResponse.status}`);
+      throw new Error(`Fallo na autenticación: ${authResponse.status}`);
     }
 
     const authData = await authResponse.json();
 
     // Check for Sankhya-specific error
     if (authData.status === "0" || authData.statusMessage) {
-      throw new Error(authData.statusMessage || "Error na autenticação Sankhya");
+      throw new Error(authData.statusMessage || "Error na autenticación Sankhya");
     }
 
     // Extract bearer token from response

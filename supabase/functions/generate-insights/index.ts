@@ -155,7 +155,7 @@ DADOS DO PIPELINE:
 - Total de leads: ${analysis.totalLeads}
 - Leads por estágio: ${JSON.stringify(analysis.leadsByStage)}
 - Leads em risco (sin contato): ${analysis.atRiskLeads.length}
-- Taxa de conversão (últimos 30 días): ${analysis.conversionRate}%
+- Taxa de conversión (últimos 30 días): ${analysis.conversionRate}%
 - Média de días no pipeline: ${analysis.avgDaysInPipeline}
 - Leads quentes: ${analysis.hotLeadsCount}
 - Leads frios: ${analysis.coldLeadsCount}
@@ -200,7 +200,7 @@ Responda SOLO no formato JSON abaixo, sin texto adicional:
     if (!response.ok) {
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: "Límite de requisições excedido. Probá novamente em algunos segundos." }),
+          JSON.stringify({ error: "Límite de solicitudes excedido. Probá novamente em algunos segundos." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }

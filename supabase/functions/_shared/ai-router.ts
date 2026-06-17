@@ -112,7 +112,7 @@ export async function resolveAIConfig(
     }
   }
 
-  /** Tenta escolher uma chave do pool da plataforma. Retorna null se vazio. */
+  /** Tenta escolher uma chave do pool da plataforma. Retorna null se vacío. */
   async function pickPoolKey(provider: string, strategy: string): Promise<{ id: string; api_key: string; model_default?: string; label: string } | null> {
     try {
       const { data, error } = await supabase.rpc('pick_platform_ai_key', { p_provider: provider, p_strategy: strategy });
@@ -210,7 +210,7 @@ export async function resolveAIConfig(
       return buildLovableConfig(envLovableKey || pool.api_key, usedModel, 'gateway', extra);
     }
 
-    // 4) Pool vazio
+    // 4) Pool vacío
     if (plan.provider === 'lovable' && envLovableKey) {
       return { ...envFallbackConfig, model: preferredModel || routedModel || DEFAULT_MODEL };
     }

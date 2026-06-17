@@ -37,7 +37,7 @@ serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceKey);
 
-    // Autenticação obligatoria: copiloto es ferramenta interna do vendedor.
+    // Autenticación obligatoria: copiloto es ferramenta interna do vendedor.
     let organizationId: string | null = null;
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
@@ -201,7 +201,7 @@ Para TODA situación do vendedor, entregue exatamente en este formato:
 [1-2 frases explicando a real intención ou objeción oculta del cliente]
 
 **RESPOSTA ESTRATÉGICA:**
-[Mensaje pronta para copiar e enviar. 2-4 linhas. Tom humano e profissional]
+[Mensaje pronta para copiar e enviar. 2-4 líneas. Tom humano e profissional]
 
 **PERGUNTA DE RETORNO:**
 [1 pregunta para manter a conversación e avanzar a venta]
@@ -274,7 +274,7 @@ O QUE NUNCA FAZER
       console.error('AI gateway error:', response.status, errorText);
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: 'Límite de requisições excedido. Probá novamente em algunos segundos.' }),
+          JSON.stringify({ error: 'Límite de solicitudes excedido. Probá novamente em algunos segundos.' }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
         );
       }

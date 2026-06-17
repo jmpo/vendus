@@ -302,7 +302,7 @@ Deno.serve(async (req) => {
           guestName: guestName,
           guestEmail: guestEmail,
           eventName: eventType.name,
-          hostName: hostProfile?.full_name || 'Anfitrião',
+          hostName: hostProfile?.full_name || 'Anfitrión',
           startTime: startTimeIso,
           endTime: endTime,
           meetLink: calendarEvent.meet_link || undefined,

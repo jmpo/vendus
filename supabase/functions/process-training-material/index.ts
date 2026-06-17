@@ -120,7 +120,7 @@ serve(async (req) => {
         .from('agent_training_materials')
         .update({ 
           processing_status: 'failed',
-          processing_error: 'Archivo vazio ou no legível'
+          processing_error: 'Archivo vacío ou no legível'
         })
         .eq('id', body.material_id);
 
@@ -202,10 +202,10 @@ async function extractDocumentFaithfully(fileData: Blob, mimeType: string, filen
 
 REGRAS ABSOLUTAS:
 1. Extraia TODO o texto do documento de forma FIEL e COMPLETA
-2. Mantenha a estrutura original (títulos, subtítulos, parágrafos, listas, tabelas)
+2. Mantené a estrutura original (títulos, subtítulos, parágrafos, listas, tabelas)
 3. NÃO resuma, NÃO altere, NÃO omita NENHUMA parte do texto
 4. NÃO adicione comentários, interpretações ou análises
-5. NÃO reorganize o contenido - mantenha a ordem original
+5. NÃO reorganize o contenido - mantené a ordem original
 6. Se hay tabelas, reproduza-as em formato legível
 7. Se hay imagens con texto (OCR), extraia o texto fielmente
 8. Retorne SOLO o texto extraído, nada mais`

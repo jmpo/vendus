@@ -1,5 +1,5 @@
 // API pública REST do módulo Cadências Inteligentes.
-// Autenticação: header `Authorization: Bearer cdn_<key>` (cadence_api_keys.key_hash via SHA-256).
+// Autenticación: header `Authorization: Bearer cdn_<key>` (cadence_api_keys.key_hash via SHA-256).
 //
 // Endpoints (path relativo a /cadence-api):
 //   GET    /cadences                          -> lista cadências da org

@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
       const { data: profile } = await admin.from('profiles').select('organization_id').eq('id', userId).maybeSingle();
       organizationId = profile?.organization_id ?? null;
       if (!organizationId) return json({ error: 'Usuario sin organización' }, 400);
-      if (!isAdminOrManager && !isSuper) return json({ error: 'Permissão negada' }, 403);
+      if (!isAdminOrManager && !isSuper) return json({ error: 'Permiso negada' }, 403);
     }
 
     // Helper: localiza credencial atual

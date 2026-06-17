@@ -87,7 +87,7 @@ Retorne SOLO um JSON válido con este formato exato:
       return new Response(JSON.stringify({
         error: aiResp.status === 429 ? 'Límite de uso da IA atingido. Probá novamente em instantes.'
           : aiResp.status === 402 ? 'Créditos de IA esgotados.'
-          : 'Falha ao gerar resultado IA.',
+          : 'Fallo ao gerar resultado IA.',
       }), { status: aiResp.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 

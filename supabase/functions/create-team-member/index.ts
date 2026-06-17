@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
       .eq('user_id', caller.id);
     const callerRoles = (roles || []).map((r: any) => r.role);
     if (!callerRoles.some((r: string) => ['admin', 'manager', 'super_admin'].includes(r))) {
-      return new Response(JSON.stringify({ error: 'Permissão negada' }), {
+      return new Response(JSON.stringify({ error: 'Permiso negada' }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -153,7 +153,7 @@ Deno.serve(async (req) => {
       return fail('insert_user_role', msg, roleErr);
     }
 
-    // Permissões + notification settings (no-fatal: parceiros pueden ter banco incompleto)
+    // Permisos + notification settings (no-fatal: parceiros pueden ter banco incompleto)
     const { error: permErr } = await admin.rpc('initialize_user_permissions', {
       p_user_id: newUserId,
       p_organization_id: orgId,

@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
       _user_id: caller.id,
     });
     if (!isSuper) {
-      return new Response(JSON.stringify({ error: "Permissão negada" }), {
+      return new Response(JSON.stringify({ error: "Permiso negada" }), {
         status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

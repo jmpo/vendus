@@ -183,7 +183,7 @@ Deno.serve(async (req) => {
       return json({ error: upsertErr.message }, 500);
     }
 
-    // Cria/atualiza Lead se temos identificação do comprador
+    // Cria/atualiza Lead se temos identificación do comprador
     // Busca por phone_normalized (misma coluna usada na constraint única).
     let leadId: string | null = null;
     if (buyerEmail || buyerPhone) {

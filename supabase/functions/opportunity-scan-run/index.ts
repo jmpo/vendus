@@ -158,7 +158,7 @@ async function fetchCandidates(supabase: any, orgId: string, f: ScanFilters) {
   if (f.channels?.length) q = q.in('channel', f.channels);
   if (!f.include_ai_active) q = q.is('current_agent_id', null);
 
-  // Exclusões (PostgREST: not.in.(...))
+  // Exclusiones (PostgREST: not.in.(...))
   const notIn = (col: string, ids?: string[]) => {
     if (ids?.length) q = q.not(col, 'in', `(${ids.join(',')})`);
   };
@@ -186,7 +186,7 @@ async function fetchCandidates(supabase: any, orgId: string, f: ScanFilters) {
 
   const leadIds = convs.map((c: any) => c.lead_id).filter(Boolean);
 
-  // Filtros por tag (inclusão / exclusão / require_no_tags)
+  // Filtros por tag (inclusão / exclusión / require_no_tags)
   if (leadIds.length && (f.tag_ids?.length || f.exclude_tag_ids?.length || f.require_no_tags)) {
     const { data: allTags } = await supabase
       .from('lead_tag_assignments')
@@ -357,7 +357,7 @@ Retorne JSON estrito:
   "reason": "explicación corta em 1-2 frases",
   "signals": ["sinal1", "sinal2"],
   "suggested_action": "acción concreta recomendada",
-  "followup_message": "mensaje pronta de follow-up que o vendedor puede enviar (máx 2 linhas, tom profissional, en español)"
+  "followup_message": "mensaje pronta de follow-up que o vendedor puede enviar (máx 2 líneas, tom profissional, en español)"
 }`;
 
     const res = await fetch(LOVABLE_GATEWAY, {

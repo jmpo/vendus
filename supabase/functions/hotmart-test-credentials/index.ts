@@ -89,7 +89,7 @@ Deno.serve(async (req) => {
       return json(
         {
           ok: false,
-          error: tokenData.error_description ?? tokenData.error ?? 'Falha na autenticação Hotmart',
+          error: tokenData.error_description ?? tokenData.error ?? 'Fallo na autenticación Hotmart',
           details: tokenData,
         },
         400,

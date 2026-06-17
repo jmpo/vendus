@@ -1,5 +1,5 @@
 // Cliente HTTP fino do Meta Graph API (WhatsApp Cloud).
-// Versão fixa para upgrade controlado.
+// Versión fixa para upgrade controlado.
 
 export const GRAPH_VERSION = 'v21.0';
 export const GRAPH_BASE = `https://graph.facebook.com/${GRAPH_VERSION}`;

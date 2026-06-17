@@ -8,7 +8,7 @@ const corsHeaders = {
 };
 
 // ============================================================================
-// Anti-spam helpers (humanização + dedup + lock por conversación)
+// Anti-spam helpers (humanización + dedup + lock por conversación)
 // ============================================================================
 
 /** Hash normalizado de uma respuesta para dedup corto-prazo. */
@@ -343,7 +343,7 @@ function normalizePayload(payload: any): Normalized | null {
       (j: any) => typeof j === "string" && j.includes("@s.whatsapp.net"),
     ) as string | undefined;
 
-    // Preferimos o JID telefônico real; mantemos o LID como referência separada.
+    // Preferimos o JID telefônico real; mantemos o LID como referencia separada.
     const remoteJid = altPhoneJid || rawRemoteJid;
     const lidJid = rawRemoteJid.includes("@lid") ? rawRemoteJid : (altJidCandidates.find((j: any) => typeof j === "string" && j.includes("@lid")) as string | undefined);
 
@@ -1515,7 +1515,7 @@ Deno.serve(async (req) => {
             if (!wa?.enabled) continue;
             const boundInstance = wa.evolution_instance_id;
             if (boundInstance && boundInstance !== instance.id) continue;
-            // Sin regras de gatilho: toda primeirel mensaje dispara o embudo habilitado.
+            // Sin regras de disparador: toda primeirel mensaje dispara o embudo habilitado.
             funnelToRun = { id: cand.id, start_block_id: (cand as any).start_block_id || null };
             break;
           }
@@ -1986,7 +1986,7 @@ Deno.serve(async (req) => {
           .single();
 
         if (insertErr) {
-          // Race: otra invocação concorrente ya gravou esta misma msg
+          // Race: otra invocación concorrente ya gravou esta misma msg
           // (índice único parcial garante unicidade no banco).
           if ((insertErr as any).code === "23505") {
             console.log("[evolution-webhook] skip: inbound duplicate (unique index)", norm.messageId);
@@ -2017,7 +2017,7 @@ Deno.serve(async (req) => {
         }));
 
         // Broadcast realtime → o panel (SellerInbox) escuta `conversation:{id}`
-        // e adiciona el mensaje na cache instantaneamente. Sin isso, a janela
+        // e adiciona el mensaje na cache instantaneamente. Sin eso, a janela
         // de chat fica congelada hasta o usuario recarregar / trocar de conversación.
         if (inserted) {
           try {
@@ -2128,12 +2128,12 @@ Deno.serve(async (req) => {
       }
 
       // ============================================================
-      // BUFFER CURTO (humanização sin queimar tempo)
+      // BUFFER CURTO (humanización sin queimar tempo)
       // ============================================================
-      // Lê configuraciones de humanização da org. Janela defecto = 3s.
-      // Teto absoluto = 8s desde a 1ª msg do burst — nunca mais que isso.
+      // Lê configuraciones de humanización da org. Janela defecto = 3s.
+      // Teto absoluto = 8s desde a 1ª msg do burst — nunca mais que eso.
       // Loop: dorme em fatias de 1s; se chegou nova msg do visitor, deferimos
-      // para la invocação de esa nova msg (que va re-medir o teto).
+      // para la invocación de esa nova msg (que va re-medir o teto).
       let groupingEnabled = true;
       let groupingWindowMs = 3000;
       let groupingMaxMs = 8000;
@@ -2169,7 +2169,7 @@ Deno.serve(async (req) => {
         console.log("[evolution-webhook] grouping start", JSON.stringify({ window: groupingWindowMs, max: groupingMaxMs }));
 
         // Rolling window: a cada msg nova do visitor, estende a espera hasta o teto absoluto (max).
-        // Se otra invocação posterior assumir o turno, abortamos esta.
+        // Se otra invocación posterior assumir o turno, abortamos esta.
         while ((Date.now() - startedAt) < groupingMaxMs) {
           const remainingToWindow = groupingWindowMs - (Date.now() - startedAt) + extensions * groupingWindowMs;
           const remainingToMax = groupingMaxMs - (Date.now() - startedAt);
@@ -2194,13 +2194,13 @@ Deno.serve(async (req) => {
           });
 
           if (arrived.length > 0) {
-            // Novel mensaje do visitor → estende janela. A invocação mais nova
+            // Novel mensaje do visitor → estende janela. A invocación mais nova
             // assume o turno: se esta no for a mais antiga, abortamos.
             const newest = arrived[0];
             lastSeenAt = newest.created_at;
             lastSeenId = newest.id;
             extensions += 1;
-            deferred = true; // otra invocação (gerada por la msg nova) cuidará da respuesta
+            deferred = true; // otra invocación (gerada por la msg nova) cuidará da respuesta
             console.log("[evolution-webhook] grouping: newer msg arrived, deferring to it");
             break;
           }
@@ -2324,7 +2324,7 @@ Deno.serve(async (req) => {
               }
               case "buttons": {
                 const opts: any[] = b.data?.options || [];
-                const header = replaceVars(b.data?.content || "Escolha una opción:");
+                const header = replaceVars(b.data?.content || "Elegí una opción:");
                 chunksToSend.push(header + "\n\n" + opts.map((o: any, i: number) => `${i + 1}) ${o.emoji ? o.emoji + ' ' : ''}${o.label}`).join("\n"));
                 nextBlockId = b.id; // wait here for next user message
                 currentBlock = null;
@@ -2400,7 +2400,7 @@ Deno.serve(async (req) => {
           }
           await supabase.from("webchat_conversations").update(updatePatch).eq("id", conversationId);
 
-          // 4) Send chunks via Evolution — con hard-cap de 2 bolhas (anti-spam)
+          // 4) Send chunks via Evolution — con hard-cap de 2 burbujas (anti-spam)
           if (chunksToSend.length > 2) {
             const head = chunksToSend[0];
             const tail = chunksToSend.slice(1).join("\n\n").trim();
@@ -2713,8 +2713,8 @@ Deno.serve(async (req) => {
               const sharedMetadata = botData?.metadata || null;
 
               // ============================================================
-              // CAP de bolhas (defesa em profundidade) — solo teto absoluto
-              // de 4 bolhas para WhatsApp. No colapsa a decisão del agente.
+              // CAP de burbujas (defesa em profundidade) — solo teto absoluto
+              // de 4 burbujas para WhatsApp. No colapsa a decisión del agente.
               // ============================================================
               if (chunks.length > 0) {
                 const HARD_TETO = 4;
@@ -2826,7 +2826,7 @@ Deno.serve(async (req) => {
                 try { await typingHandle.stop(); } catch { /* noop */ }
 
 
-                // 3) Persiste 1 linha por chunk no Inbox (espelho fiel do WhatsApp)
+                // 3) Persiste 1 línea por chunk no Inbox (espejo fiel do WhatsApp)
                 try {
                   const chunkMetadata: Record<string, any> = {
                     chunk_index: i,

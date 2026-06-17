@@ -26,7 +26,7 @@ export const aplicarEtiquetaTool: ToolDefinition = {
     if (!ctx.leadId) return { success: false, error: 'leadId obligatorio' };
 
     const tagName = String(input.tag_name).trim().toLowerCase();
-    if (!tagName) return { success: false, error: 'tag_name vazio' };
+    if (!tagName) return { success: false, error: 'tag_name vacío' };
 
     // 1) Procura a tag na organización (case-insensitive).
     const { data: existing } = await ctx.supabase

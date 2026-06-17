@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
           sender_type: "agent",
         });
         try {
-          // Roteamento: se conversación tiene meta_connection_id, usa Meta Cloud; senão Evolution
+          // Roteamento: se conversación tiene meta_connection_id, usa Meta Cloud; sino Evolution
           const { data: convFull } = await supabase
             .from("webchat_conversations")
             .select("meta_connection_id")

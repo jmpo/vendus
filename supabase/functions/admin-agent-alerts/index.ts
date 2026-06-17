@@ -125,7 +125,7 @@ async function checkAgentErrors(cfg: OrgCfg) {
     .order("created_at", { ascending: false })
     .limit(200);
 
-  // Agrupa por agent_id e cuenta falhas consecutivas
+  // Agrupa por agent_id e cuenta fallos consecutivas
   const grouped: Record<string, { fails: number; total: number }> = {};
   for (const log of (data ?? []) as any[]) {
     if (!log.agent_id) continue;
@@ -138,7 +138,7 @@ async function checkAgentErrors(cfg: OrgCfg) {
     if (stats.fails < cfg.alert_agent_error_threshold) continue;
     if (await alreadySentByKind(cfg.organization_id, "agent_errors", agentId, 6)) continue;
     const { data: agent } = await supabase.from("product_agents").select("name").eq("id", agentId).maybeSingle();
-    const msg = `⚠️ *Agente IA con falhas*\n\n` +
+    const msg = `⚠️ *Agente IA con fallos*\n\n` +
       `🤖 ${agent?.name || "Agente"}\n` +
       `❌ *${stats.fails}* errores nos últimos 30min`;
     await sendAdminMessage({

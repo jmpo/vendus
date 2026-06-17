@@ -52,7 +52,7 @@ serve(async (req: Request): Promise<Response> => {
           });
           if (!sendRes.ok) {
             const err = await sendRes.text();
-            throw new Error(`Falha al enviar e-mail: ${err}`);
+            throw new Error(`Fallo al enviar e-mail: ${err}`);
           }
           return new Response(
             JSON.stringify({ success: true, message: `E-mail de prueba enviado para ${recipientEmail}` }),

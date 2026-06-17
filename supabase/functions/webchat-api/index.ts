@@ -689,7 +689,7 @@ async function executeInitialFlowBlock(
         break;
 
       case 'buttons':
-        responseContent = block.data.content || 'Escolha una opción:';
+        responseContent = block.data.content || 'Elegí una opción:';
         messageType = 'buttons';
         responseButtons = block.data.buttons?.map((btn: any, index: number) => ({
           id: btn.id,

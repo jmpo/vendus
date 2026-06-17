@@ -263,7 +263,7 @@ export async function runPostSaleActions(
     }
   } else if (!isDelayed && action.send_mode === 'flow' && action.flow_id) {
     // Flow execution: por ora solo registramos o disparo no metadata del lead
-    // (motor de execução de chat_flows es acionado em otro contexto).
+    // (motor de ejecución de chat_flows es acionado em otro contexto).
     try {
       await supabase.from('lead_notes').insert({
         lead_id: lead.id,
@@ -369,7 +369,7 @@ export async function runPostSaleActions(
   if (!isDelayed && action.agent_id && lead.phone) {
     try {
       // Pré-checagem: instância WhatsApp precisa estar conectada antes de tentar enviar.
-      // Se a action tiene instance_id específico, valida ela; senão, basta existir alguna `connected` na org.
+      // Se a action tiene instance_id específico, valida ela; sino, basta existir alguna `connected` na org.
       let instanceOk = false;
       if (action.evolution_instance_id) {
         const { data: inst } = await supabase

@@ -82,10 +82,10 @@ CATEGORIAS:
 - competitor: "Ya uso otra solución"
 
 ⚠️ REGRAS CRÍTICAS - RESPOSTAS PARA WHATSAPP:
-1. SIGNIFICADO: Máximo 1 linha (20-30 palabras)
-2. RESPOSTA: Máximo 3-4 linhas curtas, use emojis estratégicos (✅ 💡 🎯 ⏰ 💰)
+1. SIGNIFICADO: Máximo 1 línea (20-30 palabras)
+2. RESPOSTA: Máximo 3-4 líneas curtas, use emojis estratégicos (✅ 💡 🎯 ⏰ 💰)
 3. PERGUNTA: Uma única pregunta direta (máximo 15 palabras)
-4. Usa quebras de linha para facilitar leitura no celular
+4. Usa quebras de línea para facilitar leitura no celular
 5. Tom conversacional, como mensaje de WhatsApp
 6. Genera 6 objeciones variadas`;
 

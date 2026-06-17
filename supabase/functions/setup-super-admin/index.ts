@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
     });
     if (createErr) throw createErr;
     const userId = created.user?.id;
-    if (!userId) throw new Error("Falha ao crear usuario");
+    if (!userId) throw new Error("Fallo ao crear usuario");
 
     // Garante profile (trigger normalmente cria, blindamos)
     await admin

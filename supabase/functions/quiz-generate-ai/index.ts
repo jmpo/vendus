@@ -23,7 +23,7 @@ interface GenerateQuizRequest {
 
 const TONE_LABELS: Record<string, string> = {
   profissional: 'Profissional e consultivo, evite modismos e emojis em excesso.',
-  consultivo: 'Consultivo, baseado em SPIN selling. Faça preguntas que despertem reflexão.',
+  consultivo: 'Consultivo, baseado em SPIN selling. Hacé preguntas que despertem reflexão.',
   descontraido: 'Descontracturado, cercano, puede usar emojis y lenguaje casual.',
   direto: 'Direto, sin rodeios, preguntas curtas e objetivas.',
 };
@@ -31,7 +31,7 @@ const TONE_LABELS: Record<string, string> = {
 const RESULT_LABELS: Record<string, string> = {
   classificacao: 'Clasifica el lead em 3 categorias (frio/morno/quente) con base no score.',
   diagnostico: 'Genera um diagnóstico detalhado con 3 níveis de maturidade.',
-  recomendacao: 'Recomende a mejor opción/plano/caminho para el lead.',
+  recomendacao: 'Recomende a mejor opción/plano/camino para el lead.',
   pontuacao: 'Mostre uma puntuación final con mensaje corta.',
 };
 
@@ -101,7 +101,7 @@ Problemas que resolve: ${product.problems_solved || 'N/A'}
     if (capture_whatsapp) captureFields.push('WhatsApp (input_type:"phone", variable_name:"whatsapp")');
     if (capture_email) captureFields.push('E-mail (input_type:"email", variable_name:"email")');
 
-    const systemPrompt = `Vos sos especialista em crear QUIZZES de calificación de leads de alta conversão.
+    const systemPrompt = `Vos sos especialista em crear QUIZZES de calificación de leads de alta conversión.
 
 ${productContext ? `CONTEXTO DO PRODUTO:\n${productContext}\n` : ''}
 ${knowledgeContext ? `CONHECIMENTO DO PRODUTO (Cérebro):\n${knowledgeContext}\n` : ''}
@@ -110,7 +110,7 @@ TIPO DE RESULTADO: ${RESULT_LABELS[result_type]}
 
 ESTRUTURA OBRIGATÓRIA (em ordem):
 1. Bloco "text" de boas-vindas corto.
-2. 3 a 6 blocos "buttons" (preguntas de múltiple elegí), cada um con 3-4 opciones, cadla opción con {id, letter (A/B/C/D), label, score (0-35), tag (opcional)}.
+2. 3 a 6 blocos "buttons" (preguntas de múltiple elegí), cada uno con 3-4 opciones, cadla opción con {id, letter (A/B/C/D), label, score (0-35), tag (opcional)}.
 3. Blocos "input" para capturar:
 ${captureFields.map((f) => `   - ${f}`).join('\n') || '   - (ningún)'}
 4. Bloco "end" con:

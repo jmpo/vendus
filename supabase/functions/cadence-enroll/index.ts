@@ -1,7 +1,7 @@
 // Inscreve leads em uma cadência.
 // POST { cadence_id, lead_ids?: string[], source?: string, source_ref?: any, organization_id? }
 // - Se lead_ids vier, usa eles direto.
-// - Senão, resolve via entry_filters da cadência.
+// - Sino, resolve via entry_filters da cadência.
 // - Aplica exclusion_filters.
 // - Cria enrollment + agenda 1º step_run.
 
@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
     let targetLeads: string[] = [];
     if (Array.isArray(lead_ids) && lead_ids.length) {
       targetLeads = lead_ids;
-      // Aplica exclusões manualmente se hay
+      // Aplica exclusiones manualmente se hay
       const excl = cadence.exclusion_filters ?? {};
       if (Object.keys(excl).length) {
         const { leadIds: toRemove } = await resolveAudience(supabase, cadence.organization_id, { ...excl, lead_ids: targetLeads }, {});
