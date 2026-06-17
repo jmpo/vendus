@@ -87,9 +87,66 @@ CREATE TRIGGER update_webchat_widgets_updated_at BEFORE UPDATE ON public.webchat
 CREATE TRIGGER update_webhooks_updated_at BEFORE UPDATE ON public.webhooks FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- VIEWS
-CREATE OR REPLACE VIEW public.platform_branding_public AS
+create or replace view public.platform_branding_public as
+select
+  id,
+  logo_url,
+  logo_dark_url,
+  favicon_url,
+  platform_name,
+  support_email,
+  primary_color,
+  accent_color,
+  gradient_style,
+  gradient_custom,
+  border_radius,
+  default_theme,
+  font_family,
+  font_url,
+  base_font_size,
+  footer_text,
+  terms_url,
+  privacy_url,
+  login_headline,
+  login_subheadline,
+  login_stats_enabled,
+  login_bg_image_url,
+  login_bg_layout,
+  login_logo_position,
+  hide_widget_branding,
+  widget_accent_color,
+  powered_by_text,
+  browser_title,
+  meta_description,
+  og_image_url,
+  twitter_handle,
+  default_language,
+  created_at,
+  updated_at,
+  public_app_url
+from public.platform_settings;
 
-CREATE OR REPLACE VIEW public.public_booking_profiles AS
+CREATE VIEW public.public_booking_profiles AS
+SELECT id, full_name, avatar_url, booking_slug, booking_bio
+FROM public.profiles
+WHERE booking_slug IS NOT NULL AND booking_slug <> '';
 
-CREATE OR REPLACE VIEW public.v_agent_quality_30d AS
+CREATE OR REPLACE VIEW public.v_agent_quality_30d
+WITH (security_invoker = true) AS
+SELECT
+  organization_id,
+  agent_id,
+  COUNT(*)::INT AS evaluations,
+  ROUND(AVG(score_overall)::NUMERIC, 2) AS avg_overall,
+  ROUND(AVG(score_clarity)::NUMERIC, 2) AS avg_clarity,
+  ROUND(AVG(score_tone)::NUMERIC, 2) AS avg_tone,
+  ROUND(AVG(score_objectivity)::NUMERIC, 2) AS avg_objectivity,
+  ROUND(AVG(score_accuracy)::NUMERIC, 2) AS avg_accuracy,
+  ROUND(AVG(score_conversion_potential)::NUMERIC, 2) AS avg_conversion_potential
+FROM public.ai_quality_evaluations
+WHERE created_at >= now() - INTERVAL '30 days'
+GROUP BY organization_id, agent_id;
 
+ALTER VIEW public.platform_branding_public SET (security_invoker = true);
+ALTER VIEW public.public_booking_profiles SET (security_invoker = true);
+ALTER VIEW public.v_agent_quality_30d SET (security_invoker = true);

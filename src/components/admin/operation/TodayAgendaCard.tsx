@@ -55,7 +55,7 @@ export function TodayAgendaCard({ items, onNavigate }: Props) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline gap-2">
                     <span className="text-sm font-semibold text-foreground">
-                      {formatTime(item.equipo)}
+                      {formatTime(item.time)}
                     </span>
                     <span className="text-sm text-foreground truncate">{item.title}</span>
                   </div>

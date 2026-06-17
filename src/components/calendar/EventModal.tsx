@@ -252,7 +252,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
               <div className="relative">
                 <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  type="equipo"
+                  type="time"
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
                   className="pl-10"
@@ -293,7 +293,7 @@ export function EventModal({ open, onOpenChange, event, defaultDate, defaultLead
               <div className="relative">
                 <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  type="equipo"
+                  type="time"
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
                   className="pl-10"

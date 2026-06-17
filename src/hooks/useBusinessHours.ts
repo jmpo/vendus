@@ -6,11 +6,11 @@ import { toast } from '@/hooks/use-toast';
 export type DayKey = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
 
 export const DAY_LABELS: Record<DayKey, string> = {
-  mon: 'Segunda',
-  tue: 'Terça',
-  wed: 'Quarta',
-  thu: 'Quinta',
-  fri: 'Sexta',
+  mon: 'Lunes',
+  tue: 'Martes',
+  wed: 'Miércoles',
+  thu: 'Jueves',
+  fri: 'Viernes',
   sat: 'Sábado',
   sun: 'Domingo',
 };

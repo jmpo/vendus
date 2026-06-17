@@ -427,11 +427,11 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label>Inicio de trabajo</Label>
-                <Input type="equipo" value={general.work_start_time} onChange={(e) => updateGeneral('work_start_time', e.target.value)} />
+                <Input type="time" value={general.work_start_time} onChange={(e) => updateGeneral('work_start_time', e.target.value)} />
               </div>
               <div className="space-y-1.5">
                 <Label>Fin de trabajo</Label>
-                <Input type="equipo" value={general.work_end_time} onChange={(e) => updateGeneral('work_end_time', e.target.value)} />
+                <Input type="time" value={general.work_end_time} onChange={(e) => updateGeneral('work_end_time', e.target.value)} />
               </div>
             </div>
 

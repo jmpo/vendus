@@ -411,8 +411,8 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Horario inicial"><Input type="equipo" value={startTime} onChange={(e) => setStartTime(e.target.value)} /></Field>
-            <Field label="Horario final"><Input type="equipo" value={endTime} onChange={(e) => setEndTime(e.target.value)} /></Field>
+            <Field label="Horario inicial"><Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} /></Field>
+            <Field label="Horario final"><Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} /></Field>
           </div>
           <div className="flex items-center gap-2">
             <Switch checked={randomize} onCheckedChange={setRandomize} />

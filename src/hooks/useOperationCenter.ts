@@ -40,7 +40,7 @@ export interface OperationPriorities {
 export interface AgendaItem {
   id: string;
   type: 'meeting' | 'task' | 'call';
-  equipo: string;
+  time: string;
   title: string;
   subtitle: string;
 }
@@ -187,7 +187,7 @@ export function useTodayAgenda() {
       const events: AgendaItem[] = (eventsRes.data ?? []).map((e: any) => ({
         id: `evt-${e.id}`,
         type: 'meeting',
-        equipo: e.start_time,
+        time: e.start_time,
         title: e.title || 'Reunión',
         subtitle: e.leads?.name ? `Con ${e.leads.name}` : '',
       }));
@@ -197,13 +197,13 @@ export function useTodayAgenda() {
         .map((t: any) => ({
           id: `tsk-${t.id}`,
           type: 'task',
-          equipo: t.due_date,
+          time: t.due_date,
           title: t.title || 'Tarea',
           subtitle: t.leads?.name ? `Lead: ${t.leads.name}` : 'Tarea',
         }));
 
       return [...events, ...tasks]
-        .sort((a, b) => new Date(a.equipo).getTime() - new Date(b.equipo).getTime())
+        .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
         .slice(0, 4);
     },
   });

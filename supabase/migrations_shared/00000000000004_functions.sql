@@ -567,7 +567,7 @@ $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.get_booking_by_token(p_token text)
- RETURNS TABLE(id uuid, guest_name text, guest_email text, guest_phone text, start_time timestamp with equipo zone, end_time timestamp with equipo zone, timezone text, status text, confirmation_token text, additional_info jsonb, created_at timestamp with equipo zone, event_type_id uuid, host_user_id uuid, calendar_event_id uuid, organization_id uuid, cancellation_reason text)
+ RETURNS TABLE(id uuid, guest_name text, guest_email text, guest_phone text, start_time timestamp with time zone, end_time timestamp with time zone, timezone text, status text, confirmation_token text, additional_info jsonb, created_at timestamp with time zone, event_type_id uuid, host_user_id uuid, calendar_event_id uuid, organization_id uuid, cancellation_reason text)
  LANGUAGE sql
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
@@ -655,7 +655,7 @@ END;
 $function$
 ;
 
-CREATE OR REPLACE FUNCTION public.get_product_performance(p_org_id uuid, p_from timestamp with equipo zone DEFAULT NULL::timestamp with equipo zone, p_to timestamp with equipo zone DEFAULT NULL::timestamp with equipo zone)
+CREATE OR REPLACE FUNCTION public.get_product_performance(p_org_id uuid, p_from timestamp with time zone DEFAULT NULL::timestamp with time zone, p_to timestamp with time zone DEFAULT NULL::timestamp with time zone)
  RETURNS jsonb
  LANGUAGE plpgsql
  STABLE SECURITY DEFINER
@@ -897,8 +897,8 @@ END;
 $function$
 ;
 
-CREATE OR REPLACE FUNCTION public.inbox_list_conversations(p_user_id uuid, p_tab text DEFAULT 'attending'::text, p_product_ids uuid[] DEFAULT NULL::uuid[], p_include_no_product boolean DEFAULT false, p_sector_ids uuid[] DEFAULT NULL::uuid[], p_include_no_sector boolean DEFAULT false, p_assigned_user_ids uuid[] DEFAULT NULL::uuid[], p_include_unassigned boolean DEFAULT false, p_tag_ids uuid[] DEFAULT NULL::uuid[], p_channel text DEFAULT NULL::text, p_search text DEFAULT NULL::text, p_cursor_last_message_at timestamp with equipo zone DEFAULT NULL::timestamp with equipo zone, p_limit integer DEFAULT 50)
- RETURNS TABLE(id uuid, organization_id uuid, widget_id uuid, visitor_id text, lead_id uuid, product_id uuid, effective_product_id uuid, effective_product_name text, assigned_user_id uuid, assigned_user_name text, assigned_user_avatar text, current_agent_id uuid, current_agent_name text, current_agent_avatar text, sector_id uuid, sector_name text, sector_color text, evolution_instance_id uuid, status text, channel text, needs_human boolean, last_message_at timestamp with equipo zone, unread_count_agents integer, created_at timestamp with equipo zone, updated_at timestamp with equipo zone, closed_at timestamp with equipo zone, visitor_name text, visitor_email text, visitor_phone text, visitor_avatar_url text, visitor_whatsapp text, accepted_at timestamp with equipo zone, accepted_by uuid, widget_name text, widget_primary_color text, widget_product_id uuid, lead_name text, lead_email text, lead_phone text, lead_product_id uuid)
+CREATE OR REPLACE FUNCTION public.inbox_list_conversations(p_user_id uuid, p_tab text DEFAULT 'attending'::text, p_product_ids uuid[] DEFAULT NULL::uuid[], p_include_no_product boolean DEFAULT false, p_sector_ids uuid[] DEFAULT NULL::uuid[], p_include_no_sector boolean DEFAULT false, p_assigned_user_ids uuid[] DEFAULT NULL::uuid[], p_include_unassigned boolean DEFAULT false, p_tag_ids uuid[] DEFAULT NULL::uuid[], p_channel text DEFAULT NULL::text, p_search text DEFAULT NULL::text, p_cursor_last_message_at timestamp with time zone DEFAULT NULL::timestamp with time zone, p_limit integer DEFAULT 50)
+ RETURNS TABLE(id uuid, organization_id uuid, widget_id uuid, visitor_id text, lead_id uuid, product_id uuid, effective_product_id uuid, effective_product_name text, assigned_user_id uuid, assigned_user_name text, assigned_user_avatar text, current_agent_id uuid, current_agent_name text, current_agent_avatar text, sector_id uuid, sector_name text, sector_color text, evolution_instance_id uuid, status text, channel text, needs_human boolean, last_message_at timestamp with time zone, unread_count_agents integer, created_at timestamp with time zone, updated_at timestamp with time zone, closed_at timestamp with time zone, visitor_name text, visitor_email text, visitor_phone text, visitor_avatar_url text, visitor_whatsapp text, accepted_at timestamp with time zone, accepted_by uuid, widget_name text, widget_primary_color text, widget_product_id uuid, lead_name text, lead_email text, lead_phone text, lead_product_id uuid)
  LANGUAGE plpgsql
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
@@ -1687,7 +1687,7 @@ $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.search_lead_memory(p_lead_id uuid, p_query_embedding vector, p_match_count integer DEFAULT 8, p_min_similarity numeric DEFAULT 0.5)
- RETURNS TABLE(id uuid, content text, source text, role text, importance_score numeric, similarity numeric, metadata jsonb, created_at timestamp with equipo zone)
+ RETURNS TABLE(id uuid, content text, source text, role text, importance_score numeric, similarity numeric, metadata jsonb, created_at timestamp with time zone)
  LANGUAGE plpgsql
  STABLE SECURITY DEFINER
  SET search_path TO 'public'

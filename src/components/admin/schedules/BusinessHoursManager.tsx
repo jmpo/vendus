@@ -15,12 +15,7 @@ import {
 } from '@/hooks/useBusinessHours';
 
 const TIMEZONES = [
-  { value: 'America/Sao_Paulo', label: 'Brasília (GMT-3)' },
-  { value: 'America/Manaus', label: 'Manaus (GMT-4)' },
-  { value: 'America/Belem', label: 'Belém (GMT-3)' },
-  { value: 'America/Fortaleza', label: 'Fortaleza (GMT-3)' },
-  { value: 'America/Recife', label: 'Recife (GMT-3)' },
-  { value: 'America/Rio_Branco', label: 'Rio Branco (GMT-5)' },
+  { value: 'America/Asuncion', label: 'Asunción, Paraguay' },
 ];
 
 const DEFAULT_SCHEDULE: WeekSchedule = {
@@ -41,7 +36,7 @@ export function BusinessHoursManager() {
   const delHoliday = useDeleteHoliday();
 
   const [schedule, setSchedule] = useState<WeekSchedule>(DEFAULT_SCHEDULE);
-  const [timezone, setTimezone] = useState('America/Sao_Paulo');
+  const [timezone, setTimezone] = useState('America/Asuncion');
   const [outMessage, setOutMessage] = useState('');
   const [outEnabled, setOutEnabled] = useState(false);
 
@@ -104,14 +99,14 @@ export function BusinessHoursManager() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold">Horarios de funcionamento</h1>
+          <h1 className="text-2xl font-bold">Horarios de funcionamiento</h1>
           <p className="text-sm text-muted-foreground">
-            Defina cuando su equipo atende. Fora desse horario, a IA puede enviar uma mensaje automática.
+            Definí cuándo atiende tu equipo. Fuera de ese horario, la IA puede enviar un mensaje automático.
           </p>
         </div>
         <Badge variant={isOpenNow ? 'default' : 'secondary'} className="gap-2 text-sm py-2 px-3">
           {isOpenNow ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
-          Ahora: {isOpenNow ? 'Aberto' : 'Cerrado'}
+          Ahora: {isOpenNow ? 'Abierto' : 'Cerrado'}
         </Badge>
       </div>
 
@@ -120,11 +115,11 @@ export function BusinessHoursManager() {
           <CardTitle className="text-base flex items-center gap-2">
             <Clock className="h-4 w-4" /> Agenda semanal
           </CardTitle>
-          <CardDescription>Configure os horarios de cada día. Usted puede agregar múltiples blocos (ex.: 08-12 e 14-18).</CardDescription>
+          <CardDescription>Configurá los horarios de cada día. Podés agregar múltiples bloques (ej.: 08-12 y 14-18).</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2 max-w-xs">
-            <Label>Fuso horario</Label>
+            <Label>Zona horaria</Label>
             <Select value={timezone} onValueChange={setTimezone}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -152,9 +147,9 @@ export function BusinessHoursManager() {
                       <>
                         {blocks.map((b, idx) => (
                           <div key={idx} className="flex items-center gap-2">
-                            <Input type="equipo" value={b.start} onChange={(e) => updateBlock(day, idx, 'start', e.target.value)} className="w-32" />
-                            <span className="text-muted-foreground text-sm">às</span>
-                            <Input type="equipo" value={b.end} onChange={(e) => updateBlock(day, idx, 'end', e.target.value)} className="w-32" />
+                            <Input type="time" value={b.start} onChange={(e) => updateBlock(day, idx, 'start', e.target.value)} className="w-32" />
+                            <span className="text-muted-foreground text-sm">a las</span>
+                            <Input type="time" value={b.end} onChange={(e) => updateBlock(day, idx, 'end', e.target.value)} className="w-32" />
                             {blocks.length > 1 && (
                               <Button variant="ghost" size="icon" onClick={() => removeBlock(day, idx)}>
                                 <Trash2 className="h-4 w-4" />
@@ -163,7 +158,7 @@ export function BusinessHoursManager() {
                           </div>
                         ))}
                         <Button variant="ghost" size="sm" onClick={() => addBlock(day)}>
-                          <Plus className="h-3 w-3 mr-1" /> Agregar bloco
+                          <Plus className="h-3 w-3 mr-1" /> Agregar bloque
                         </Button>
                       </>
                     )}
@@ -177,20 +172,20 @@ export function BusinessHoursManager() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Mensaje fora do horario</CardTitle>
-          <CardDescription>O que enviar automaticamente cuando alguém escrever fora do expediente.</CardDescription>
+          <CardTitle className="text-base">Mensaje fuera del horario</CardTitle>
+          <CardDescription>Qué enviar automáticamente cuando alguien escribe fuera del horario de atención.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex items-center gap-3">
             <Switch checked={outEnabled} onCheckedChange={setOutEnabled} />
             <Label className="cursor-pointer" onClick={() => setOutEnabled(!outEnabled)}>
-              Ativar respuesta automática fora do horario
+              Activar respuesta automática fuera del horario
             </Label>
           </div>
           <Textarea
             value={outMessage}
             onChange={(e) => setOutMessage(e.target.value)}
-            placeholder="Ex.: Hola! Estamos fora do horario de atención. Retornaremos no próximo día útil."
+            placeholder="Ej.: ¡Hola! Estamos fuera del horario de atención. Te respondemos el próximo día hábil."
             rows={3}
             disabled={!outEnabled}
           />
@@ -200,14 +195,14 @@ export function BusinessHoursManager() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <CalendarOff className="h-4 w-4" /> Feriados e fechas bloqueadas
+            <CalendarOff className="h-4 w-4" /> Feriados y fechas bloqueadas
           </CardTitle>
-          <CardDescription>Datas em que a empresa estará fechada mismo siendo día útil.</CardDescription>
+          <CardDescription>Fechas en que la empresa estará cerrada aunque sea día hábil.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex flex-col sm:flex-row gap-2">
             <Input type="date" value={newHolidayDate} onChange={(e) => setNewHolidayDate(e.target.value)} className="sm:w-44" />
-            <Input value={newHolidayDesc} onChange={(e) => setNewHolidayDesc(e.target.value)} placeholder="Descripción (opcional, ex.: Natal)" className="flex-1" />
+            <Input value={newHolidayDesc} onChange={(e) => setNewHolidayDesc(e.target.value)} placeholder="Descripción (opcional, ej.: Navidad)" className="flex-1" />
             <Button onClick={handleAddHoliday} disabled={!newHolidayDate}>
               <Plus className="h-4 w-4 mr-2" /> Agregar
             </Button>
@@ -230,7 +225,7 @@ export function BusinessHoursManager() {
 
       <div className="flex justify-end">
         <Button size="lg" onClick={handleSave} disabled={upsert.isPending}>
-          Guardar configuraciones
+          Guardar configuración
         </Button>
       </div>
     </div>

@@ -12,7 +12,7 @@ CREATE TABLE public.admin_agent_messages (
   reference_id uuid,
   content text NOT NULL,
   whatsapp_message_id text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.admin_notifications (
@@ -30,8 +30,8 @@ CREATE TABLE public.admin_notifications (
   recipients_count integer DEFAULT 0,
   emails_sent integer DEFAULT 0,
   emails_failed integer DEFAULT 0,
-  created_at timestamp with equipo zone DEFAULT now(),
-  sent_at timestamp with equipo zone,
+  created_at timestamp with time zone DEFAULT now(),
+  sent_at timestamp with time zone,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.agent_action_logs (
@@ -46,7 +46,7 @@ CREATE TABLE public.agent_action_logs (
   result jsonb DEFAULT '{}'::jsonb,
   success boolean DEFAULT true NOT NULL,
   error_message text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.agent_activation_logs (
@@ -60,7 +60,7 @@ CREATE TABLE public.agent_activation_logs (
   matched_term text,
   match_type text,
   channel text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.agent_handoff_history (
@@ -74,7 +74,7 @@ CREATE TABLE public.agent_handoff_history (
   reason text,
   rule_id uuid,
   context jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.agent_post_sale_scenarios (
@@ -89,8 +89,8 @@ CREATE TABLE public.agent_post_sale_scenarios (
   links jsonb DEFAULT '[]'::jsonb NOT NULL,
   tags_to_apply text[] DEFAULT '{}'::text[] NOT NULL,
   filters jsonb DEFAULT '{}'::jsonb NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   created_by uuid,
   PRIMARY KEY (id)
 );
@@ -109,10 +109,10 @@ CREATE TABLE public.agent_routing_rules (
   deal_value_min numeric,
   deal_value_max numeric,
   target_specialist_id uuid NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   match_count integer DEFAULT 0 NOT NULL,
-  last_matched_at timestamp with equipo zone,
+  last_matched_at timestamp with time zone,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.agent_safety_limits (
@@ -121,8 +121,8 @@ CREATE TABLE public.agent_safety_limits (
   max_tool_executions_per_day integer DEFAULT 5000 NOT NULL,
   max_cost_cents_per_day integer DEFAULT 50000 NOT NULL,
   cooldown_seconds_between_same_tool integer DEFAULT 2 NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (organization_id)
 );
 CREATE TABLE public.agent_specialists (
@@ -134,8 +134,8 @@ CREATE TABLE public.agent_specialists (
   description text,
   is_active boolean DEFAULT true NOT NULL,
   priority integer DEFAULT 100 NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.agent_tool_executions (
@@ -153,7 +153,7 @@ CREATE TABLE public.agent_tool_executions (
   error_message text,
   duration_ms integer,
   estimated_cost_cents integer DEFAULT 0,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.agent_training_materials (
@@ -169,8 +169,8 @@ CREATE TABLE public.agent_training_materials (
   processing_status text DEFAULT 'pending'::text,
   processing_error text,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   product_id uuid,
   agent_id uuid,
   PRIMARY KEY (id)
@@ -182,7 +182,7 @@ CREATE TABLE public.ai_audits (
   issues text[] DEFAULT '{}'::text[],
   suggestions text[] DEFAULT '{}'::text[],
   tone_analysis jsonb DEFAULT '{}'::jsonb,
-  analyzed_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  analyzed_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.ai_insights (
@@ -195,7 +195,7 @@ CREATE TABLE public.ai_insights (
   insight text NOT NULL,
   priority task_priority DEFAULT 'medium'::task_priority,
   is_dismissed boolean DEFAULT false,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.ai_knowledge_base (
@@ -207,8 +207,8 @@ CREATE TABLE public.ai_knowledge_base (
   category text DEFAULT 'general'::text NOT NULL,
   tags text[] DEFAULT '{}'::text[],
   is_active boolean DEFAULT true,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.ai_outreach_queue (
@@ -227,10 +227,10 @@ CREATE TABLE public.ai_outreach_queue (
   followup_interval_hours integer DEFAULT 24,
   max_followups integer DEFAULT 3,
   followups_sent integer DEFAULT 0 NOT NULL,
-  last_outreach_at timestamp with equipo zone,
-  next_followup_at timestamp with equipo zone,
+  last_outreach_at timestamp with time zone,
+  next_followup_at timestamp with time zone,
   error_message text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   followup_steps jsonb DEFAULT '[]'::jsonb,
   business_hours_start text DEFAULT '09:00'::text,
   business_hours_end text DEFAULT '18:00'::text,
@@ -245,11 +245,11 @@ CREATE TABLE public.ai_prompt_experiments (
   agent_id uuid,
   status text DEFAULT 'draft'::text NOT NULL,
   primary_metric text DEFAULT 'score_overall'::text,
-  starts_at timestamp with equipo zone,
-  ends_at timestamp with equipo zone,
+  starts_at timestamp with time zone,
+  ends_at timestamp with time zone,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.ai_prompt_variants (
@@ -264,8 +264,8 @@ CREATE TABLE public.ai_prompt_variants (
   conversions integer DEFAULT 0 NOT NULL,
   total_score numeric DEFAULT 0 NOT NULL,
   evaluations_count integer DEFAULT 0 NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.ai_quality_evaluations (
@@ -288,7 +288,7 @@ CREATE TABLE public.ai_quality_evaluations (
   improvement_suggestions text,
   judge_model text,
   cost_usd numeric DEFAULT 0,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.ai_response_feedback (
@@ -300,9 +300,9 @@ CREATE TABLE public.ai_response_feedback (
   feedback_type text DEFAULT 'correction'::text,
   created_by uuid,
   organization_id uuid NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   applied_to_training boolean DEFAULT false,
-  applied_at timestamp with equipo zone,
+  applied_at timestamp with time zone,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.ai_router_failures (
@@ -313,7 +313,7 @@ CREATE TABLE public.ai_router_failures (
   status_code integer,
   error_message text,
   fell_back_to text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.auto_notification_settings (
@@ -326,8 +326,8 @@ CREATE TABLE public.auto_notification_settings (
   daily_report_enabled boolean DEFAULT true,
   daily_report_hour integer DEFAULT 7,
   daily_report_send_email boolean DEFAULT true,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   admin_agent_enabled boolean DEFAULT false,
   admin_whatsapp_number text,
   admin_user_id uuid,
@@ -357,10 +357,10 @@ CREATE TABLE public.availability_overrides (
   organization_id uuid NOT NULL,
   date date NOT NULL,
   is_available boolean DEFAULT false,
-  start_time equipo without equipo zone,
-  end_time equipo without equipo zone,
+  start_time time without time zone,
+  end_time time without time zone,
   reason text,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.billing_history (
@@ -370,11 +370,11 @@ CREATE TABLE public.billing_history (
   amount numeric(10,2) NOT NULL,
   status text DEFAULT 'pending'::text,
   invoice_url text,
-  payment_date timestamp with equipo zone,
-  due_date timestamp with equipo zone,
+  payment_date timestamp with time zone,
+  due_date timestamp with time zone,
   description text,
   stripe_invoice_id text,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.booking_event_types (
@@ -396,8 +396,8 @@ CREATE TABLE public.booking_event_types (
   questions jsonb DEFAULT '[]'::jsonb,
   confirmation_message text,
   create_meet boolean DEFAULT true,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   thank_you_title text,
   thank_you_message text,
   what_happens jsonb DEFAULT '[]'::jsonb,
@@ -414,8 +414,8 @@ CREATE TABLE public.booking_requests (
   guest_name text NOT NULL,
   guest_email text NOT NULL,
   guest_phone text,
-  start_time timestamp with equipo zone NOT NULL,
-  end_time timestamp with equipo zone NOT NULL,
+  start_time timestamp with time zone NOT NULL,
+  end_time timestamp with time zone NOT NULL,
   timezone text DEFAULT 'America/Sao_Paulo'::text,
   status text DEFAULT 'confirmed'::text,
   additional_info jsonb DEFAULT '{}'::jsonb,
@@ -423,7 +423,7 @@ CREATE TABLE public.booking_requests (
   confirmation_token text DEFAULT encode(extensions.gen_random_bytes(16), 'hex'::text),
   lead_id uuid,
   tracking jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.business_holidays (
@@ -431,7 +431,7 @@ CREATE TABLE public.business_holidays (
   organization_id uuid NOT NULL,
   date date NOT NULL,
   description text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.business_hours (
@@ -441,8 +441,8 @@ CREATE TABLE public.business_hours (
   schedule jsonb DEFAULT jsonb_build_object('mon', jsonb_build_array(jsonb_build_object('start', '09:00', 'end', '18:00')), 'tue', jsonb_build_array(jsonb_build_object('start', '09:00', 'end', '18:00')), 'wed', jsonb_build_array(jsonb_build_object('start', '09:00', 'end', '18:00')), 'thu', jsonb_build_array(jsonb_build_object('start', '09:00', 'end', '18:00')), 'fri', jsonb_build_array(jsonb_build_object('start', '09:00', 'end', '18:00')), 'sat', jsonb_build_array(), 'sun', jsonb_build_array()) NOT NULL,
   out_of_hours_message text DEFAULT 'Hola! No momento estamos fora do horario de atención. Retornaremos em breve.'::text NOT NULL,
   out_of_hours_enabled boolean DEFAULT false NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.cadence_templates (
@@ -452,8 +452,8 @@ CREATE TABLE public.cadence_templates (
   title text NOT NULL,
   trigger text,
   blocks jsonb DEFAULT '[]'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.cakto_credentials (
@@ -465,12 +465,12 @@ CREATE TABLE public.cakto_credentials (
   scopes text[] DEFAULT ARRAY['read'::text, 'orders'::text, 'products'::text] NOT NULL,
   webhook_secret text,
   last_token text,
-  token_expires_at timestamp with equipo zone,
+  token_expires_at timestamp with time zone,
   connection_status text DEFAULT 'disconnected'::text NOT NULL,
-  last_sync_at timestamp with equipo zone,
+  last_sync_at timestamp with time zone,
   last_error text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.cakto_orders (
@@ -494,12 +494,12 @@ CREATE TABLE public.cakto_orders (
   product_cakto_id text,
   product_name text,
   product_image text,
-  paid_at timestamp with equipo zone,
-  created_at_cakto timestamp with equipo zone,
+  paid_at timestamp with time zone,
+  created_at_cakto timestamp with time zone,
   raw_payload jsonb,
-  synced_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  synced_at timestamp with time zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   product_id uuid,
   offer_id uuid,
   items jsonb DEFAULT '[]'::jsonb,
@@ -518,8 +518,8 @@ CREATE TABLE public.cakto_recovery_config (
   trigger_on_refunded boolean DEFAULT false NOT NULL,
   delay_seconds integer DEFAULT 0 NOT NULL,
   cooldown_minutes integer DEFAULT 60 NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.cakto_recovery_dispatches (
@@ -537,7 +537,7 @@ CREATE TABLE public.cakto_recovery_dispatches (
   success boolean DEFAULT false NOT NULL,
   error_message text,
   skipped_reason text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.calendar_events (
@@ -548,8 +548,8 @@ CREATE TABLE public.calendar_events (
   description text,
   location text,
   event_type text DEFAULT 'meeting'::text,
-  start_time timestamp with equipo zone NOT NULL,
-  end_time timestamp with equipo zone NOT NULL,
+  start_time timestamp with time zone NOT NULL,
+  end_time timestamp with time zone NOT NULL,
   all_day boolean DEFAULT false,
   timezone text DEFAULT 'America/Sao_Paulo'::text,
   is_recurring boolean DEFAULT false,
@@ -564,13 +564,13 @@ CREATE TABLE public.calendar_events (
   reminder_minutes integer[] DEFAULT ARRAY[15, 60],
   google_event_id text,
   google_calendar_id text,
-  last_synced_at timestamp with equipo zone,
+  last_synced_at timestamp with time zone,
   sync_status text DEFAULT 'local_only'::text,
   color text,
   notes text,
   metadata jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   created_by uuid,
   synced_from_google boolean DEFAULT false,
   meet_link text,
@@ -605,8 +605,8 @@ CREATE TABLE public.capture_funnels (
   total_views integer DEFAULT 0,
   total_leads integer DEFAULT 0,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.catalog_sync_logs (
@@ -622,8 +622,8 @@ CREATE TABLE public.catalog_sync_logs (
   items_updated integer DEFAULT 0,
   items_failed integer DEFAULT 0,
   error_message text,
-  started_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  finished_at timestamp with equipo zone,
+  started_at timestamp with time zone DEFAULT now() NOT NULL,
+  finished_at timestamp with time zone,
   created_by uuid,
   PRIMARY KEY (id)
 );
@@ -639,8 +639,8 @@ CREATE TABLE public.chat_flows (
   trigger_type text DEFAULT 'always'::text,
   trigger_conditions jsonb DEFAULT '{}'::jsonb,
   collected_variables jsonb DEFAULT '[]'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   created_by uuid,
   PRIMARY KEY (id)
 );
@@ -657,8 +657,8 @@ CREATE TABLE public.commission_rules (
   stage_id uuid,
   is_default boolean DEFAULT true,
   is_active boolean DEFAULT true,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.commissions (
@@ -671,13 +671,13 @@ CREATE TABLE public.commissions (
   percentage_applied numeric,
   rule_id uuid,
   status text DEFAULT 'pending'::text,
-  earned_at timestamp with equipo zone DEFAULT now(),
-  approved_at timestamp with equipo zone,
+  earned_at timestamp with time zone DEFAULT now(),
+  approved_at timestamp with time zone,
   approved_by uuid,
-  paid_at timestamp with equipo zone,
+  paid_at timestamp with time zone,
   paid_by uuid,
   notes text,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.conversation_notes (
@@ -685,7 +685,7 @@ CREATE TABLE public.conversation_notes (
   conversation_id uuid NOT NULL,
   user_id uuid NOT NULL,
   content text NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.conversation_transfers (
@@ -696,7 +696,7 @@ CREATE TABLE public.conversation_transfers (
   to_queue_id uuid,
   internal_note text,
   created_by uuid NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.custom_fields (
@@ -708,8 +708,8 @@ CREATE TABLE public.custom_fields (
   description text,
   options jsonb DEFAULT '[]'::jsonb NOT NULL,
   is_active boolean DEFAULT true NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.deals (
@@ -721,9 +721,9 @@ CREATE TABLE public.deals (
   deal_value numeric NOT NULL,
   status text DEFAULT 'won'::text,
   notes text,
-  closed_at timestamp with equipo zone DEFAULT now(),
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  closed_at timestamp with time zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   plan_name text,
   PRIMARY KEY (id)
 );
@@ -735,8 +735,8 @@ CREATE TABLE public.distribution_config (
   round_robin_index integer DEFAULT 0 NOT NULL,
   auto_reassign boolean DEFAULT true NOT NULL,
   max_accept_time_minutes integer DEFAULT 5,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.email_send_log (
@@ -747,17 +747,17 @@ CREATE TABLE public.email_send_log (
   status text NOT NULL,
   error_message text,
   metadata jsonb,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.email_send_state (
   id integer DEFAULT 1 NOT NULL,
-  retry_after_until timestamp with equipo zone,
+  retry_after_until timestamp with time zone,
   batch_size integer DEFAULT 10 NOT NULL,
   send_delay_ms integer DEFAULT 200 NOT NULL,
   auth_email_ttl_minutes integer DEFAULT 15 NOT NULL,
   transactional_email_ttl_minutes integer DEFAULT 60 NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.email_templates (
@@ -770,16 +770,16 @@ CREATE TABLE public.email_templates (
   variables jsonb DEFAULT '[]'::jsonb,
   is_system boolean DEFAULT false,
   is_active boolean DEFAULT true,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.email_unsubscribe_tokens (
   id uuid DEFAULT gen_random_uuid() NOT NULL,
   token text NOT NULL,
   email text NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  used_at timestamp with equipo zone,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  used_at timestamp with time zone,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.evolution_instances (
@@ -791,13 +791,13 @@ CREATE TABLE public.evolution_instances (
   phone_number text,
   status text DEFAULT 'disconnected'::text NOT NULL,
   qr_code text,
-  qr_code_updated_at timestamp with equipo zone,
+  qr_code_updated_at timestamp with time zone,
   webhook_subscribed boolean DEFAULT false NOT NULL,
   is_default boolean DEFAULT false NOT NULL,
-  last_connected_at timestamp with equipo zone,
+  last_connected_at timestamp with time zone,
   metadata jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   created_by_super_admin boolean DEFAULT false NOT NULL,
   PRIMARY KEY (id)
 );
@@ -817,10 +817,10 @@ CREATE TABLE public.facebook_lead_integrations (
   default_temperature text DEFAULT 'hot'::text,
   default_tags text[] DEFAULT '{}'::text[],
   is_active boolean DEFAULT true,
-  last_lead_received_at timestamp with equipo zone,
+  last_lead_received_at timestamp with time zone,
   leads_count integer DEFAULT 0,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.facebook_lead_logs (
@@ -835,8 +835,8 @@ CREATE TABLE public.facebook_lead_logs (
   lead_id uuid,
   status text DEFAULT 'pending'::text,
   error_message text,
-  processed_at timestamp with equipo zone,
-  created_at timestamp with equipo zone DEFAULT now(),
+  processed_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.form_blocks (
@@ -856,7 +856,7 @@ CREATE TABLE public.form_blocks (
   apply_tags text[] DEFAULT '{}'::text[],
   validation jsonb DEFAULT '{}'::jsonb,
   block_settings jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.form_submissions (
@@ -878,11 +878,11 @@ CREATE TABLE public.form_submissions (
   geo_country text,
   geo_city text,
   status text DEFAULT 'completed'::text,
-  started_at timestamp with equipo zone DEFAULT now(),
-  completed_at timestamp with equipo zone,
+  started_at timestamp with time zone DEFAULT now(),
+  completed_at timestamp with time zone,
   step_analytics jsonb DEFAULT '[]'::jsonb,
   time_spent_seconds integer DEFAULT 0,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.form_templates (
@@ -899,8 +899,8 @@ CREATE TABLE public.form_templates (
   is_system boolean DEFAULT false,
   usage_count integer DEFAULT 0,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.forms (
@@ -923,8 +923,8 @@ CREATE TABLE public.forms (
   utm_capture boolean DEFAULT true,
   settings jsonb DEFAULT '{"show_branding": true, "auto_create_lead": true, "notify_on_submission": true, "allow_multiple_submissions": false}'::jsonb,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   views_count integer DEFAULT 0,
   submissions_count integer DEFAULT 0,
   PRIMARY KEY (id)
@@ -956,7 +956,7 @@ CREATE TABLE public.funnel_webhook_logs (
   error_message text,
   duration_ms integer,
   trigger_source text DEFAULT 'on_block'::text NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.google_calendar_connections (
@@ -965,14 +965,14 @@ CREATE TABLE public.google_calendar_connections (
   organization_id uuid NOT NULL,
   access_token text,
   refresh_token text,
-  token_expires_at timestamp with equipo zone,
+  token_expires_at timestamp with time zone,
   calendar_id text DEFAULT 'primary'::text,
   sync_enabled boolean DEFAULT true,
   sync_direction text DEFAULT 'both'::text,
-  last_sync_at timestamp with equipo zone,
+  last_sync_at timestamp with time zone,
   sync_error text,
-  connected_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  connected_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   google_email text,
   is_active boolean DEFAULT true,
   selected_calendar_id text,
@@ -985,7 +985,7 @@ CREATE TABLE public.help_article_feedback (
   user_id uuid NOT NULL,
   is_helpful boolean NOT NULL,
   comment text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.help_articles (
@@ -1005,9 +1005,9 @@ CREATE TABLE public.help_articles (
   not_helpful_count integer DEFAULT 0 NOT NULL,
   related_release_id uuid,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  published_at timestamp with equipo zone,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
+  published_at timestamp with time zone,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.help_categories (
@@ -1019,8 +1019,8 @@ CREATE TABLE public.help_categories (
   color text DEFAULT 'primary'::text,
   display_order integer DEFAULT 0 NOT NULL,
   is_active boolean DEFAULT true NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   visibility text DEFAULT 'all'::text NOT NULL,
   PRIMARY KEY (id)
 );
@@ -1032,9 +1032,9 @@ CREATE TABLE public.hotmart_credentials (
   basic_token text,
   hottok text,
   is_active boolean DEFAULT false NOT NULL,
-  last_verified_at timestamp with equipo zone,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  last_verified_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.hotmart_orders (
@@ -1059,10 +1059,10 @@ CREATE TABLE public.hotmart_orders (
   commission_amount numeric(12,2),
   subscription_code text,
   raw_payload jsonb,
-  created_at_hotmart timestamp with equipo zone,
-  synced_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at_hotmart timestamp with time zone,
+  synced_at timestamp with time zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.hotmart_product_mapping (
@@ -1071,8 +1071,8 @@ CREATE TABLE public.hotmart_product_mapping (
   hotmart_product_id text NOT NULL,
   hotmart_product_name text,
   product_id uuid,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.integration_settings (
@@ -1082,9 +1082,9 @@ CREATE TABLE public.integration_settings (
   api_key_masked text,
   is_configured boolean DEFAULT false,
   settings jsonb DEFAULT '{}'::jsonb,
-  last_verified_at timestamp with equipo zone,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  last_verified_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.interactions (
@@ -1097,7 +1097,7 @@ CREATE TABLE public.interactions (
   cadence_day integer,
   template_used text,
   metadata jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.lead_notes (
@@ -1106,7 +1106,7 @@ CREATE TABLE public.lead_notes (
   author_id uuid NOT NULL,
   content text NOT NULL,
   role_label text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.lead_queue (
@@ -1117,8 +1117,8 @@ CREATE TABLE public.lead_queue (
   product_id uuid,
   priority integer DEFAULT 0 NOT NULL,
   status text DEFAULT 'pending'::text NOT NULL,
-  queued_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  assigned_at timestamp with equipo zone,
+  queued_at timestamp with time zone DEFAULT now() NOT NULL,
+  assigned_at timestamp with time zone,
   assigned_to uuid,
   PRIMARY KEY (id)
 );
@@ -1134,15 +1134,15 @@ CREATE TABLE public.lead_semantic_memory (
   embedding vector(1536),
   importance_score numeric DEFAULT 0.5,
   metadata jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.lead_stage_history (
   id uuid DEFAULT gen_random_uuid() NOT NULL,
   lead_id uuid NOT NULL,
   stage_id uuid,
-  entered_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  exited_at timestamp with equipo zone,
+  entered_at timestamp with time zone DEFAULT now() NOT NULL,
+  exited_at timestamp with time zone,
   days_in_stage integer,
   PRIMARY KEY (id)
 );
@@ -1151,7 +1151,7 @@ CREATE TABLE public.lead_tag_assignments (
   tag_id uuid NOT NULL,
   applied_by uuid,
   source text DEFAULT 'manual'::text NOT NULL,
-  applied_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  applied_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (lead_id, tag_id)
 );
 CREATE TABLE public.lead_tags (
@@ -1162,8 +1162,8 @@ CREATE TABLE public.lead_tags (
   description text,
   is_automatic boolean DEFAULT false NOT NULL,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   is_lifecycle_status boolean DEFAULT false NOT NULL,
   PRIMARY KEY (id)
 );
@@ -1176,7 +1176,7 @@ CREATE TABLE public.lead_transfer_history (
   to_squad_id uuid,
   reason text,
   transferred_by uuid,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.leads (
@@ -1193,12 +1193,12 @@ CREATE TABLE public.leads (
   source text,
   temperature lead_temperature DEFAULT 'warm'::lead_temperature,
   cadence_day integer DEFAULT 1,
-  last_contact_at timestamp with equipo zone,
+  last_contact_at timestamp with time zone,
   next_action text,
   notes text,
   metadata jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   utm_source text,
   utm_medium text,
   utm_campaign text,
@@ -1210,7 +1210,7 @@ CREATE TABLE public.leads (
   landing_page text,
   squad_id uuid,
   previous_assigned_to uuid,
-  transferred_at timestamp with equipo zone,
+  transferred_at timestamp with time zone,
   transferred_by uuid,
   transfer_reason text,
   expected_close_date date,
@@ -1222,7 +1222,7 @@ CREATE TABLE public.leads (
   sdr_id uuid,
   closer_id uuid,
   sector_id uuid,
-  phone_normalized text DEFAULT normalize_phone_br(phone),
+  phone_normalized text,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.mass_email_campaigns (
@@ -1233,12 +1233,12 @@ CREATE TABLE public.mass_email_campaigns (
   html_content text NOT NULL,
   target_type text DEFAULT 'all'::text NOT NULL,
   target_filters jsonb DEFAULT '{}'::jsonb,
-  scheduled_at timestamp with equipo zone,
-  sent_at timestamp with equipo zone,
+  scheduled_at timestamp with time zone,
+  sent_at timestamp with time zone,
   status text DEFAULT 'draft'::text,
   stats jsonb DEFAULT '{"sent": 0, "total": 0, "failed": 0}'::jsonb,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.mass_email_recipients (
@@ -1247,9 +1247,9 @@ CREATE TABLE public.mass_email_recipients (
   user_id uuid,
   email text NOT NULL,
   status text DEFAULT 'pending'::text,
-  sent_at timestamp with equipo zone,
+  sent_at timestamp with time zone,
   error_message text,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.materials (
@@ -1262,8 +1262,8 @@ CREATE TABLE public.materials (
   tags text[] DEFAULT '{}'::text[],
   objective text,
   status text DEFAULT 'active'::text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.message_reactions (
@@ -1274,7 +1274,7 @@ CREATE TABLE public.message_reactions (
   user_id uuid,
   visitor_id text,
   reactor_type text NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.notification_logs (
@@ -1284,7 +1284,7 @@ CREATE TABLE public.notification_logs (
   notification_type text NOT NULL,
   reference_id uuid,
   reference_date date DEFAULT CURRENT_DATE,
-  sent_at timestamp with equipo zone DEFAULT now(),
+  sent_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.notifications (
@@ -1296,7 +1296,7 @@ CREATE TABLE public.notifications (
   action_url text,
   is_read boolean DEFAULT false,
   metadata jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   product_id uuid,
   admin_notification_id uuid,
   PRIMARY KEY (id)
@@ -1311,8 +1311,8 @@ CREATE TABLE public.objections (
   suggested_response text NOT NULL,
   follow_up_question text,
   proof_material_id uuid,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.orchestration_logs (
@@ -1330,7 +1330,7 @@ CREATE TABLE public.orchestration_logs (
   agent_routed_to uuid,
   action text NOT NULL,
   raw_response jsonb,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.org_ai_credentials (
@@ -1340,10 +1340,10 @@ CREATE TABLE public.org_ai_credentials (
   api_key_encrypted text NOT NULL,
   api_key_masked text,
   model_default text,
-  last_verified_at timestamp with equipo zone,
+  last_verified_at timestamp with time zone,
   last_error text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.org_ai_routing (
@@ -1353,8 +1353,8 @@ CREATE TABLE public.org_ai_routing (
   provider text NOT NULL,
   model text,
   fallback_to_lovable boolean DEFAULT true NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.organization_orchestrator_config (
@@ -1365,8 +1365,8 @@ CREATE TABLE public.organization_orchestrator_config (
   max_triage_questions integer DEFAULT 2 NOT NULL,
   min_confidence numeric DEFAULT 0.6 NOT NULL,
   fallback_to_human_after integer DEFAULT 2 NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.organizations (
@@ -1374,8 +1374,8 @@ CREATE TABLE public.organizations (
   name text NOT NULL,
   logo_url text,
   settings jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   email text,
   cnpj text,
   phone text,
@@ -1406,11 +1406,11 @@ CREATE TABLE public.payment_links (
   currency text DEFAULT 'BRL'::text NOT NULL,
   url text NOT NULL,
   status text DEFAULT 'sent'::text NOT NULL,
-  opened_at timestamp with equipo zone,
-  paid_at timestamp with equipo zone,
+  opened_at timestamp with time zone,
+  paid_at timestamp with time zone,
   metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.pipeline_stages (
@@ -1421,7 +1421,7 @@ CREATE TABLE public.pipeline_stages (
   order_index integer DEFAULT 0 NOT NULL,
   is_won boolean DEFAULT false,
   is_lost boolean DEFAULT false,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   description text,
   PRIMARY KEY (id)
 );
@@ -1433,7 +1433,7 @@ CREATE TABLE public.platform_audit_logs (
   entity_id uuid,
   metadata jsonb DEFAULT '{}'::jsonb,
   ip_address text,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.platform_email_settings (
@@ -1450,8 +1450,8 @@ CREATE TABLE public.platform_email_settings (
   reminder_on_due_date boolean DEFAULT true,
   alert_days_after integer DEFAULT 3,
   suspend_days_after integer DEFAULT 15,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.platform_email_templates (
@@ -1465,8 +1465,8 @@ CREATE TABLE public.platform_email_templates (
   variables jsonb DEFAULT '[]'::jsonb NOT NULL,
   is_active boolean DEFAULT true NOT NULL,
   is_system boolean DEFAULT true NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.platform_plans (
@@ -1508,8 +1508,8 @@ CREATE TABLE public.platform_plans (
   feature_forms boolean DEFAULT true NOT NULL,
   feature_webhooks boolean DEFAULT false NOT NULL,
   extra_features jsonb DEFAULT '{}'::jsonb NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   checkout_url text,
   highlight_label text,
   cakto_product_id text,
@@ -1519,7 +1519,7 @@ CREATE TABLE public.platform_plans (
 CREATE TABLE public.platform_release_reads (
   user_id uuid NOT NULL,
   release_id uuid NOT NULL,
-  read_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  read_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (user_id, release_id)
 );
 CREATE TABLE public.platform_releases (
@@ -1532,10 +1532,10 @@ CREATE TABLE public.platform_releases (
   content_html text,
   cover_image_url text,
   is_published boolean DEFAULT false NOT NULL,
-  published_at timestamp with equipo zone,
+  published_at timestamp with time zone,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.platform_settings (
@@ -1549,8 +1549,8 @@ CREATE TABLE public.platform_settings (
   footer_text text DEFAULT '© 2026 Bizon Sales. Todos os direitos reservados.'::text,
   terms_url text,
   privacy_url text,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   login_headline text,
   login_subheadline text,
   login_stats_enabled boolean DEFAULT true,
@@ -1593,8 +1593,8 @@ CREATE TABLE public.post_sale_event_actions (
   notify_user_id uuid,
   is_active boolean DEFAULT true NOT NULL,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   add_tag_ids uuid[] DEFAULT '{}'::uuid[] NOT NULL,
   remove_tag_ids uuid[] DEFAULT '{}'::uuid[] NOT NULL,
   send_mode text DEFAULT 'none'::text NOT NULL,
@@ -1618,7 +1618,7 @@ CREATE TABLE public.post_sale_event_logs (
   action_id uuid,
   executed_actions jsonb DEFAULT '[]'::jsonb NOT NULL,
   event_data jsonb DEFAULT '{}'::jsonb NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.product_agents (
@@ -1653,8 +1653,8 @@ CREATE TABLE public.product_agents (
   is_active boolean DEFAULT true,
   is_default boolean DEFAULT false,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   can_apply_tags boolean DEFAULT false NOT NULL,
   can_update_lead boolean DEFAULT false NOT NULL,
   can_send_emails boolean DEFAULT false NOT NULL,
@@ -1712,9 +1712,9 @@ CREATE TABLE public.product_catalog_items (
   source_url text,
   is_active boolean DEFAULT true NOT NULL,
   search_vector tsvector,
-  last_synced_at timestamp with equipo zone,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  last_synced_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   videos text[] DEFAULT '{}'::text[] NOT NULL,
   documents jsonb DEFAULT '[]'::jsonb NOT NULL,
   PRIMARY KEY (id)
@@ -1733,8 +1733,8 @@ CREATE TABLE public.product_ctas (
   intent_level text DEFAULT 'medium'::text,
   display_order integer DEFAULT 0,
   is_active boolean DEFAULT true,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   video_url text,
   PRIMARY KEY (id)
 );
@@ -1751,7 +1751,7 @@ CREATE TABLE public.product_knowledge_sources (
   file_type character varying,
   file_size integer,
   source_url text,
-  last_crawled_at timestamp with equipo zone,
+  last_crawled_at timestamp with time zone,
   video_id character varying,
   video_duration integer,
   transcript text,
@@ -1761,11 +1761,11 @@ CREATE TABLE public.product_knowledge_sources (
   data_json jsonb,
   processing_status character varying DEFAULT 'pending'::character varying,
   processing_error text,
-  processed_at timestamp with equipo zone,
+  processed_at timestamp with time zone,
   is_active boolean DEFAULT true,
   is_synced boolean DEFAULT false,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   created_by uuid,
   PRIMARY KEY (id)
 );
@@ -1782,8 +1782,8 @@ CREATE TABLE public.product_offers (
   "position" integer DEFAULT 0,
   is_active boolean DEFAULT true NOT NULL,
   notes text,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.product_onboarding_state (
@@ -1795,9 +1795,9 @@ CREATE TABLE public.product_onboarding_state (
   total_steps integer DEFAULT 8,
   draft_data jsonb DEFAULT '{}'::jsonb,
   ai_optimizations jsonb DEFAULT '[]'::jsonb,
-  completed_at timestamp with equipo zone,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  completed_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.product_suites (
@@ -1810,8 +1810,8 @@ CREATE TABLE public.product_suites (
   color text DEFAULT '#10B981'::text,
   status text DEFAULT 'active'::text NOT NULL,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.product_training_videos (
@@ -1826,8 +1826,8 @@ CREATE TABLE public.product_training_videos (
   order_index integer DEFAULT 0,
   is_active boolean DEFAULT true,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.products (
@@ -1844,8 +1844,8 @@ CREATE TABLE public.products (
   status product_status DEFAULT 'draft'::product_status,
   settings jsonb DEFAULT '{}'::jsonb,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   logo_url text,
   banner_url text,
   product_image_url text,
@@ -1871,19 +1871,19 @@ CREATE TABLE public.profiles (
   avatar_url text,
   phone text,
   is_active boolean DEFAULT true,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   booking_slug text,
   booking_bio text,
   recovery_whatsapp text,
-  work_start_time equipo without equipo zone DEFAULT '00:00:00'::equipo without equipo zone,
-  work_end_time equipo without equipo zone DEFAULT '23:59:00'::equipo without equipo zone,
+  work_start_time time without time zone DEFAULT '00:00:00'::time without time zone,
+  work_end_time time without time zone DEFAULT '23:59:00'::time without time zone,
   farewell_message text,
   default_theme text DEFAULT 'system'::text,
   default_menu_state text DEFAULT 'open'::text,
   default_connection_id uuid,
-  guided_onboarding_completed_at timestamp with equipo zone,
-  guided_onboarding_skipped_at timestamp with equipo zone,
+  guided_onboarding_completed_at timestamp with time zone,
+  guided_onboarding_skipped_at timestamp with time zone,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.quick_replies (
@@ -1895,8 +1895,8 @@ CREATE TABLE public.quick_replies (
   shortcut text,
   is_active boolean DEFAULT true,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.sales_goals (
@@ -1911,8 +1911,8 @@ CREATE TABLE public.sales_goals (
   achieved_value numeric DEFAULT 0,
   achieved_deals integer DEFAULT 0,
   is_active boolean DEFAULT true,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   created_by uuid,
   PRIMARY KEY (id)
 );
@@ -1932,8 +1932,8 @@ CREATE TABLE public.sales_leads (
   utm_source text,
   utm_medium text,
   utm_campaign text,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.sales_squads (
@@ -1946,8 +1946,8 @@ CREATE TABLE public.sales_squads (
   leader_id uuid,
   color text DEFAULT '#6366F1'::text,
   is_active boolean DEFAULT true,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   created_by uuid,
   PRIMARY KEY (id)
 );
@@ -1957,12 +1957,12 @@ CREATE TABLE public.sankhya_mappings (
   entity_type text NOT NULL,
   local_id uuid NOT NULL,
   sankhya_id text NOT NULL,
-  last_sync_at timestamp with equipo zone,
+  last_sync_at timestamp with time zone,
   sync_status text DEFAULT 'pending'::text,
   sync_direction text DEFAULT 'from_sankhya'::text,
   metadata jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.sankhya_sync_logs (
@@ -1974,8 +1974,8 @@ CREATE TABLE public.sankhya_sync_logs (
   records_success integer DEFAULT 0,
   records_failed integer DEFAULT 0,
   error_details jsonb,
-  started_at timestamp with equipo zone DEFAULT now(),
-  finished_at timestamp with equipo zone,
+  started_at timestamp with time zone DEFAULT now(),
+  finished_at timestamp with time zone,
   status text DEFAULT 'running'::text,
   PRIMARY KEY (id)
 );
@@ -1983,19 +1983,19 @@ CREATE TABLE public.scheduled_messages (
   id uuid DEFAULT gen_random_uuid() NOT NULL,
   conversation_id uuid,
   content text NOT NULL,
-  scheduled_at timestamp with equipo zone NOT NULL,
+  scheduled_at timestamp with time zone NOT NULL,
   status text DEFAULT 'pending'::text,
   created_by uuid,
   organization_id uuid,
-  sent_at timestamp with equipo zone,
-  created_at timestamp with equipo zone DEFAULT now(),
+  sent_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.sector_members (
   id uuid DEFAULT gen_random_uuid() NOT NULL,
   sector_id uuid NOT NULL,
   user_id uuid NOT NULL,
-  joined_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  joined_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.sectors (
@@ -2013,8 +2013,8 @@ CREATE TABLE public.sectors (
   rotation_strategy sector_rotation_strategy DEFAULT 'round_robin'::sector_rotation_strategy,
   is_active boolean DEFAULT true,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   icon text DEFAULT 'Building2'::text,
   is_default boolean DEFAULT false NOT NULL,
   PRIMARY KEY (id)
@@ -2024,7 +2024,7 @@ CREATE TABLE public.squad_members (
   squad_id uuid NOT NULL,
   user_id uuid NOT NULL,
   role text DEFAULT 'member'::text,
-  joined_at timestamp with equipo zone DEFAULT now(),
+  joined_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.stage_values (
@@ -2033,8 +2033,8 @@ CREATE TABLE public.stage_values (
   product_id uuid NOT NULL,
   expected_value numeric DEFAULT 0,
   probability_percent numeric DEFAULT 0,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.subscriptions (
@@ -2044,15 +2044,15 @@ CREATE TABLE public.subscriptions (
   status text DEFAULT 'active'::text,
   price_monthly numeric(10,2) DEFAULT 0,
   billing_cycle text DEFAULT 'monthly'::text,
-  current_period_start timestamp with equipo zone,
-  current_period_end timestamp with equipo zone,
-  trial_ends_at timestamp with equipo zone,
-  canceled_at timestamp with equipo zone,
+  current_period_start timestamp with time zone,
+  current_period_end timestamp with time zone,
+  trial_ends_at timestamp with time zone,
+  canceled_at timestamp with time zone,
   payment_method jsonb,
   stripe_customer_id text,
   stripe_subscription_id text,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   plan_id uuid,
   PRIMARY KEY (id)
 );
@@ -2062,7 +2062,7 @@ CREATE TABLE public.support_messages (
   author_id uuid NOT NULL,
   author_role text NOT NULL,
   content text NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.support_tickets (
@@ -2074,12 +2074,12 @@ CREATE TABLE public.support_tickets (
   status support_ticket_status DEFAULT 'open'::support_ticket_status NOT NULL,
   priority support_ticket_priority DEFAULT 'normal'::support_ticket_priority NOT NULL,
   assigned_super_admin uuid,
-  last_message_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  last_message_at timestamp with time zone DEFAULT now() NOT NULL,
   last_message_by_role text DEFAULT 'admin'::text NOT NULL,
   unread_for_admin boolean DEFAULT false NOT NULL,
   unread_for_super_admin boolean DEFAULT true NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.suppressed_emails (
@@ -2087,7 +2087,7 @@ CREATE TABLE public.suppressed_emails (
   email text NOT NULL,
   reason text NOT NULL,
   metadata jsonb,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.tag_automations (
@@ -2099,8 +2099,8 @@ CREATE TABLE public.tag_automations (
   tag_id_to_remove uuid,
   is_active boolean DEFAULT true NOT NULL,
   created_by uuid,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.tasks (
@@ -2113,10 +2113,10 @@ CREATE TABLE public.tasks (
   type text DEFAULT 'follow_up'::text,
   status task_status DEFAULT 'pending'::task_status,
   priority task_priority DEFAULT 'medium'::task_priority,
-  due_date timestamp with equipo zone,
-  completed_at timestamp with equipo zone,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  due_date timestamp with time zone,
+  completed_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   created_by uuid,
   PRIMARY KEY (id)
 );
@@ -2129,8 +2129,8 @@ CREATE TABLE public.team_invitations (
   organization_id uuid NOT NULL,
   token text DEFAULT encode(extensions.gen_random_bytes(32), 'hex'::text) NOT NULL,
   status text DEFAULT 'pending'::text NOT NULL,
-  expires_at timestamp with equipo zone DEFAULT (now() + '7 days'::interval) NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  expires_at timestamp with time zone DEFAULT (now() + '7 days'::interval) NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.user_availability (
@@ -2138,10 +2138,10 @@ CREATE TABLE public.user_availability (
   user_id uuid NOT NULL,
   organization_id uuid NOT NULL,
   day_of_week integer NOT NULL,
-  start_time equipo without equipo zone NOT NULL,
-  end_time equipo without equipo zone NOT NULL,
+  start_time time without time zone NOT NULL,
+  end_time time without time zone NOT NULL,
   is_available boolean DEFAULT true,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.user_badges (
@@ -2150,7 +2150,7 @@ CREATE TABLE public.user_badges (
   badge_type text NOT NULL,
   badge_name text NOT NULL,
   description text,
-  earned_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  earned_at timestamp with time zone DEFAULT now() NOT NULL,
   metadata jsonb DEFAULT '{}'::jsonb,
   PRIMARY KEY (id)
 );
@@ -2164,8 +2164,8 @@ CREATE TABLE public.user_notification_settings (
   notify_unassigned_sector_tickets boolean DEFAULT false,
   notify_appointments boolean DEFAULT true,
   push_enabled boolean DEFAULT false,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (user_id)
 );
 CREATE TABLE public.user_permissions (
@@ -2185,8 +2185,8 @@ CREATE TABLE public.user_permissions (
   allow_inbox_panel boolean DEFAULT false,
   allow_groups boolean DEFAULT false,
   allow_connection_actions boolean DEFAULT false,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   view_unassigned_sector_tickets boolean DEFAULT false,
   view_schedules_mode text DEFAULT 'mine_only'::text,
   PRIMARY KEY (id)
@@ -2197,14 +2197,14 @@ CREATE TABLE public.user_product_assignments (
   product_id uuid NOT NULL,
   assigned_by uuid,
   monthly_goal numeric(10,2) DEFAULT 0,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.user_roles (
   id uuid DEFAULT gen_random_uuid() NOT NULL,
   user_id uuid NOT NULL,
   role app_role DEFAULT 'seller'::app_role NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  created_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.user_status (
@@ -2212,9 +2212,9 @@ CREATE TABLE public.user_status (
   user_id uuid NOT NULL,
   organization_id uuid NOT NULL,
   status text DEFAULT 'offline'::text NOT NULL,
-  last_status_change timestamp with equipo zone DEFAULT now() NOT NULL,
+  last_status_change timestamp with time zone DEFAULT now() NOT NULL,
   active_leads_count integer DEFAULT 0 NOT NULL,
-  updated_at timestamp with equipo zone DEFAULT now() NOT NULL,
+  updated_at timestamp with time zone DEFAULT now() NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE public.webchat_agent_configs (
@@ -2233,8 +2233,8 @@ CREATE TABLE public.webchat_agent_configs (
   fallback_message text DEFAULT 'Desculpe, no entendi. Posso transferir usted para um agente?'::text,
   handoff_message text DEFAULT 'Certo! Estou transferindo usted para um agente. Aguarde um momento.'::text,
   is_active boolean DEFAULT true,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   temperature numeric DEFAULT 0.7,
   max_tokens integer DEFAULT 500,
   persona_style text DEFAULT 'friendly'::text,
@@ -2255,7 +2255,7 @@ CREATE TABLE public.webchat_assignment_events (
   from_user_id uuid,
   to_user_id uuid,
   action text NOT NULL,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.webchat_conversations (
@@ -2279,15 +2279,15 @@ CREATE TABLE public.webchat_conversations (
   utm_campaign text,
   utm_content text,
   utm_term text,
-  last_message_at timestamp with equipo zone,
+  last_message_at timestamp with time zone,
   unread_count_agents integer DEFAULT 0,
-  first_response_at timestamp with equipo zone,
+  first_response_at timestamp with time zone,
   metadata jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
-  closed_at timestamp with equipo zone,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  closed_at timestamp with time zone,
   visitor_whatsapp text,
-  lead_created_at timestamp with equipo zone,
+  lead_created_at timestamp with time zone,
   data_collected boolean DEFAULT false,
   collected_data jsonb DEFAULT '{}'::jsonb,
   current_flow_id uuid,
@@ -2302,12 +2302,12 @@ CREATE TABLE public.webchat_conversations (
   detected_intent text,
   flow_source text,
   sector_id uuid,
-  meeting_scheduled_at timestamp with equipo zone,
+  meeting_scheduled_at timestamp with time zone,
   meeting_event_id text,
   meeting_metadata jsonb,
   visitor_avatar_url text,
   product_id uuid,
-  accepted_at timestamp with equipo zone,
+  accepted_at timestamp with time zone,
   accepted_by uuid,
   needs_human boolean DEFAULT false NOT NULL,
   PRIMARY KEY (id)
@@ -2321,12 +2321,12 @@ CREATE TABLE public.webchat_messages (
   content text NOT NULL,
   content_type text DEFAULT 'text'::text,
   metadata jsonb DEFAULT '{}'::jsonb,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   message_type text DEFAULT 'text'::text,
   buttons jsonb,
   video_url text,
   is_deleted boolean DEFAULT false,
-  edited_at timestamp with equipo zone,
+  edited_at timestamp with time zone,
   original_content text,
   reply_to_message_id uuid,
   is_starred boolean DEFAULT false,
@@ -2350,8 +2350,8 @@ CREATE TABLE public.webchat_widgets (
   collect_email boolean DEFAULT false,
   collect_phone boolean DEFAULT false,
   collect_name boolean DEFAULT true,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   product_id uuid,
   PRIMARY KEY (id)
 );
@@ -2368,7 +2368,7 @@ CREATE TABLE public.webhook_logs (
   error_message text,
   lead_id uuid,
   processing_time_ms integer,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.webhook_sample_requests (
@@ -2378,7 +2378,7 @@ CREATE TABLE public.webhook_sample_requests (
   request_body jsonb NOT NULL,
   extracted_fields jsonb NOT NULL,
   is_default boolean DEFAULT false,
-  created_at timestamp with equipo zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
   PRIMARY KEY (id)
 );
 CREATE TABLE public.webhooks (
@@ -2396,9 +2396,9 @@ CREATE TABLE public.webhooks (
   identification_config jsonb DEFAULT '{}'::jsonb,
   requests_count integer DEFAULT 0,
   requests_this_month integer DEFAULT 0,
-  last_request_at timestamp with equipo zone,
-  created_at timestamp with equipo zone DEFAULT now(),
-  updated_at timestamp with equipo zone DEFAULT now(),
+  last_request_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   created_by uuid,
   squad_id uuid,
   PRIMARY KEY (id)

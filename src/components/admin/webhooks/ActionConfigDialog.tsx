@@ -816,14 +816,14 @@ export function ActionConfigDialog({
                 </Label>
                 <div className="flex items-center gap-2">
                   <Input
-                    type="equipo"
+                    type="time"
                     className="w-28"
                     value={config.ai_business_hours_start || '09:00'}
                     onChange={(e) => setConfig(prev => ({ ...prev, ai_business_hours_start: e.target.value }))}
                   />
                   <span className="text-sm text-muted-foreground">às</span>
                   <Input
-                    type="equipo"
+                    type="time"
                     className="w-28"
                     value={config.ai_business_hours_end || '18:00'}
                     onChange={(e) => setConfig(prev => ({ ...prev, ai_business_hours_end: e.target.value }))}

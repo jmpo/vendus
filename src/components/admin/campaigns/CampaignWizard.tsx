@@ -638,11 +638,11 @@ export function CampaignWizard({
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>Inicio</Label>
-                <Input type="equipo" value={form.recurrence.start} onChange={(e) => setForm({ ...form, recurrence: { ...form.recurrence, start: e.target.value } })} />
+                <Input type="time" value={form.recurrence.start} onChange={(e) => setForm({ ...form, recurrence: { ...form.recurrence, start: e.target.value } })} />
               </div>
               <div>
                 <Label>Fin</Label>
-                <Input type="equipo" value={form.recurrence.end} onChange={(e) => setForm({ ...form, recurrence: { ...form.recurrence, end: e.target.value } })} />
+                <Input type="time" value={form.recurrence.end} onChange={(e) => setForm({ ...form, recurrence: { ...form.recurrence, end: e.target.value } })} />
               </div>
               <div className="col-span-2">
                 <Label>Dias da semana</Label>
