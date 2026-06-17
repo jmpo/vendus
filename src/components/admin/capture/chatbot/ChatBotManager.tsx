@@ -210,7 +210,7 @@ export function ChatBotManager() {
                       )}
                       <DropdownMenuItem className="text-destructive"
                         onClick={(e) => { e.stopPropagation(); setDeleteId(f.id); }}>
-                        <Trash2 className="h-4 w-4 mr-2" /> Excluir
+                        <Trash2 className="h-4 w-4 mr-2" /> Eliminar
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -256,7 +256,7 @@ export function ChatBotManager() {
               disabled={!name.trim() || !productId || createFunnel.isPending}>
               {createFunnel.isPending
                 ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Creando...</>
-                : 'Criar ChatBot'}
+                : 'Crear ChatBot'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -275,7 +275,7 @@ export function ChatBotManager() {
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={() => { if (deleteId) deleteFunnel.mutate(deleteId); setDeleteId(null); }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Excluir
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

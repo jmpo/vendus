@@ -106,18 +106,18 @@ export async function fetchPlatformBranding(): Promise<PlatformSettings | null> 
  * Hook canônico de identidad visual.
  *
  * Importante:
- *  - NÃO usamos `initialData` aqui. Quando combinado com `staleTime > 0`,
+ *  - NÃO usamos `initialData` acá. Cuando combinado con `staleTime > 0`,
  *    o React Query trata o cache como "fresco" e no busca o estado real
- *    do banco — fue por isso que alterações feitas no painel Super Admin
- *    paravam de aparecer ("travadas" em uma versão antiga).
+ *    do banco — fue por eso que cambios feitas no painel Super Admin
+ *    paravam de aparecer ("travadas" em uma versión antiga).
  *  - O `localStorage` continua siendo usado como fallback visual imediato
- *    apenas para evitar flash, lido em sync na primeira renderização.
+ *    solo para evitar flash, lido em sync na primera renderização.
  */
 export function usePlatformBranding() {
   const { data: settings } = useQuery({
     queryKey: PLATFORM_BRANDING_QUERY_KEY,
     queryFn: fetchPlatformBranding,
-    // Sempre revalidar — alterações no Super Admin precisam aparecer rápido
+    // Siempre revalidar — cambios no Super Admin precisam aparecer rápido
     staleTime: 0,
     gcTime: 1000 * 60 * 30,
     refetchOnMount: 'always',
@@ -248,7 +248,7 @@ export function usePlatformBranding() {
     }
 
     const platformName = settings.platform_name || 'Plataforma';
-    const description = settings.meta_description || 'Plataforma de ventas com IA';
+    const description = settings.meta_description || 'Plataforma de ventas con IA';
 
     const updateMeta = (selector: string, attr: string, value: string) => {
       let el = document.querySelector(selector) as HTMLMetaElement;
@@ -282,8 +282,8 @@ export function usePlatformBranding() {
 }
 
 /**
- * Lê o cache local de branding síncronamente — usado apenas como
- * placeholder visual antes do React Query cargar a versão real.
+ * Lê o cache local de branding síncronamente — usado solo como
+ * placeholder visual antes do React Query cargar a versión real.
  */
 export function readCachedBrandingSync(): PlatformSettings | null {
   try {

@@ -259,7 +259,7 @@ export function PlatformAIUsageDashboard() {
                     );
                   })}
                   {byModel.length === 0 && (
-                    <tr><td colSpan={4} className="py-6 text-center text-muted-foreground">Sin datos en el período.</td></tr>
+                    <tr><td colSpan={4} className="py-6 text-center text-muted-foreground">Sin datos en el periodo.</td></tr>
                   )}
                 </tbody>
               </table>
@@ -294,7 +294,7 @@ export function PlatformAIUsageDashboard() {
                     </tr>
                   ))}
                   {byKey.length === 0 && (
-                    <tr><td colSpan={3} className="py-6 text-center text-muted-foreground">Sin datos en el período.</td></tr>
+                    <tr><td colSpan={3} className="py-6 text-center text-muted-foreground">Sin datos en el periodo.</td></tr>
                   )}
                 </tbody>
               </table>

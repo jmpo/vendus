@@ -68,7 +68,7 @@ const PRESET_COLORS = [
   '#f97316', '#eab308', '#22c55e', '#14b8a6',
 ];
 
-// Estado compartilhado entre os passos do onboarding (referências dos recursos criados)
+// Estado compartilhado entre os passos do onboarding (referencias dos recursos criados)
 interface OnboardingShared {
   productId: string | null;
   productName: string | null;
@@ -177,7 +177,7 @@ function WelcomeStep({ onNext, onSkipAll }: { onNext: () => void; onSkipAll: () 
       </div>
       <h2 className="text-2xl font-bold mb-2">Hola, {firstName}!</h2>
       <p className="text-muted-foreground max-w-sm mb-8">
-        Em pocos minutos usted sai com producto, WhatsApp conectado e um agente treinado pronto para vender.
+        Em pocos minutos usted sai con producto, WhatsApp conectado e um agente treinado pronto para vender.
       </p>
       <div className="flex gap-3 w-full max-w-xs">
         <Button variant="outline" onClick={onSkipAll} className="flex-1">
@@ -304,7 +304,7 @@ function IdentityStep({ onNext, onSkip, onBack }: { onNext: () => void; onSkip: 
         onBack={onBack}
         onSkip={onSkip}
         onPrimary={handleSave}
-        primaryLabel="Salvar e continuar"
+        primaryLabel="Guardar e continuar"
         loading={updateCompany.isPending}
       />
     </div>
@@ -334,7 +334,7 @@ function ProductStep({
   const [icp, setIcp] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
 
-  // Fonte de conhecimento inicial
+  // Fonte de conocimiento inicial
   const [sourceTab, setSourceTab] = useState<'website' | 'file' | 'text'>('website');
   const [sourceUrl, setSourceUrl] = useState('');
   const [sourceFile, setSourceFile] = useState<File | null>(null);
@@ -342,7 +342,7 @@ function ProductStep({
 
   const [saving, setSaving] = useState(false);
 
-  // Quando IA analisa o site, ya preenche también a fonte de website
+  // Cuando IA analisa o site, ya preenche también a fonte de website
   const analyze = async () => {
     if (!url.trim()) {
       toast.error('Cole a URL do site do su producto');
@@ -392,7 +392,7 @@ function ProductStep({
       return;
     }
     if (!hasSource()) {
-      toast.error('Adicione pelo menos uma fonte de conhecimento para treinar a IA');
+      toast.error('Agregá por el menos uma fonte de conocimiento para treinar a IA');
       return;
     }
     setSaving(true);
@@ -406,13 +406,13 @@ function ProductStep({
         organization_id: profile.organization_id,
       } as any);
 
-      if (!product?.id) throw new Error('Falha ao crear producto');
+      if (!product?.id) throw new Error('Fallo ao crear producto');
 
-      // 2. Estágios padrão
+      // 2. Etapas predeterminado
       const stages = DEFAULT_PIPELINE_STAGES.map((s) => ({ ...s, product_id: product.id }));
       await supabase.from('pipeline_stages').insert(stages);
 
-      // 3. Cria fonte de conhecimento conforme aba selecionada
+      // 3. Cria fonte de conocimiento conforme aba selecionada
       try {
         if (sourceTab === 'website') {
           await createSource.mutateAsync({
@@ -443,7 +443,7 @@ function ProductStep({
         }
         toast.success('Producto creado e cérebro em treinamento!');
       } catch (err: any) {
-        toast.warning('Producto creado, mas a fonte de conhecimento falló. Usted puede adicionar después no Cérebro do Producto.');
+        toast.warning('Producto creado, mas a fonte de conocimiento falló. Usted puede agregar después no Cérebro do Producto.');
       }
 
       update({ productId: product.id, productName: product.name });
@@ -459,8 +459,8 @@ function ProductStep({
     <div className="flex-1 flex flex-col">
       <StepHeader
         icon={Package}
-        title="Su primeiro producto"
-        description="Cole a URL do su site para a IA preencher tudo, ou preencha manualmente."
+        title="Su primero producto"
+        description="Cole a URL do su site para a IA completar tudo, ou completá manualmente."
       />
 
       <div className="space-y-4 flex-1">
@@ -508,14 +508,14 @@ function ProductStep({
           />
         </div>
 
-        {/* Fonte de conhecimento — obligatoria */}
+        {/* Fonte de conocimiento — obligatoria */}
         <div className="border-t pt-4">
           <Label className="mb-2 block flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-primary" />
             Treine o cérebro do producto *
           </Label>
           <p className="text-xs text-muted-foreground mb-3">
-            Pelo menos uma fonte para a IA aprender sobre su producto.
+            Por el menos uma fonte para a IA aprender sobre su producto.
           </p>
           <Tabs value={sourceTab} onValueChange={(v) => setSourceTab(v as any)}>
             <TabsList className="grid grid-cols-3 w-full">
@@ -530,7 +530,7 @@ function ProductStep({
                 placeholder="https://seusite.com.br/producto"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                A IA vai ler o site e extrair o conhecimento automaticamente.
+                A IA vai ler o site e extrair o conocimiento automaticamente.
               </p>
             </TabsContent>
             <TabsContent value="file" className="pt-3">
@@ -549,7 +549,7 @@ function ProductStep({
               <Textarea
                 value={sourceText}
                 onChange={(e) => setSourceText(e.target.value)}
-                placeholder="Cole aqui qualquer conteúdo: descripción completa, FAQs, scripts de venta, comparações com concorrentes..."
+                placeholder="Cole acá cualquier contenido: descripción completa, FAQs, scripts de venta, comparações con concorrentes..."
                 rows={5}
               />
             </TabsContent>
@@ -561,7 +561,7 @@ function ProductStep({
         onBack={onBack}
         onSkip={onSkip}
         onPrimary={handleSave}
-        primaryLabel="Criar producto e treinar"
+        primaryLabel="Crear producto e treinar"
         loading={saving}
         disabled={!name.trim() || !hasSource()}
       />
@@ -608,7 +608,7 @@ function WhatsAppStep({
         if (data.phone_number) setPhoneNumber(data.phone_number);
         if (data.status === 'connected' || data.status === 'paired') {
           toast.success('WhatsApp conectado!');
-          // Vincula a conexão ao admin que está haciendo o onboarding
+          // Vincula a conexión ao admin que está haciendo o onboarding
           if (profile?.id) {
             try {
               await supabase
@@ -633,13 +633,13 @@ function WhatsAppStep({
     try {
       const created: any = await createInstance.mutateAsync({ name: sanitized });
       const newId = created?.instance?.id || created?.id;
-      if (!newId) throw new Error('Falha ao obter ID da instância');
+      if (!newId) throw new Error('Fallo ao obter ID da instância');
       setInstanceId(newId);
       const result: any = await connectInstance.mutateAsync(newId);
       if (result?.qr_code) setQr(result.qr_code);
       setStatus('qr_pending');
     } catch (err: any) {
-      // erros ya tostam pelos hooks
+      // erros ya tostam por los hooks
     }
   };
 
@@ -651,14 +651,14 @@ function WhatsAppStep({
       <StepHeader
         icon={Smartphone}
         title="Conecte o WhatsApp"
-        description="Crea a conexão e escaneie o QR Code aqui mismo."
+        description="Crea a conexión e escaneie o QR Code acá mismo."
       />
 
       <div className="space-y-4 flex-1">
         {!instanceId && (
           <>
             <div>
-              <Label className="mb-2 block">Nombre da conexão *</Label>
+              <Label className="mb-2 block">Nombre da conexión *</Label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -666,11 +666,11 @@ function WhatsAppStep({
                 disabled={createInstance.isPending}
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Apenas letras minúsculas, números e hífens. Mínimo 3 caracteres.
+                Solo letras minúsculas, números e hífens. Mínimo 3 caracteres.
               </p>
               {name && !valid && (
                 <p className="text-xs text-destructive mt-1">
-                  Usa apenas letras minúsculas, números e hífens (3 a 40 caracteres).
+                  Usa solo letras minúsculas, números e hífens (3 a 40 caracteres).
                 </p>
               )}
             </div>
@@ -681,7 +681,7 @@ function WhatsAppStep({
             >
               {createInstance.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
               <QrCode className="h-4 w-4" />
-              Criar e gerar QR Code
+              Crear e generar QR Code
             </Button>
           </>
         )}
@@ -715,12 +715,12 @@ function WhatsAppStep({
                   />
                 </div>
                 <p className="text-sm text-center text-muted-foreground max-w-sm">
-                  Abra o WhatsApp → <strong>Configurações</strong> → <strong>Aparelhos conectados</strong> → <strong>Conectar aparelho</strong>.
+                  Abra o WhatsApp → <strong>Configuraciones</strong> → <strong>Aparelhos conectados</strong> → <strong>Conectar aparelho</strong>.
                 </p>
                 <Badge variant="secondary">Aguardando leitura...</Badge>
               </>
             ) : (
-              <p className="text-sm text-muted-foreground">No fue possível gerar o QR Code.</p>
+              <p className="text-sm text-muted-foreground">No fue posible generar o QR Code.</p>
             )}
           </div>
         )}
@@ -730,7 +730,7 @@ function WhatsAppStep({
         onBack={onBack}
         onSkip={onSkip}
         onPrimary={onNext}
-        primaryLabel={isConnected ? 'Avançar' : 'Continuar mismo assim'}
+        primaryLabel={isConnected ? 'Avanzar' : 'Continuar mismo assim'}
       />
     </div>
   );
@@ -738,7 +738,7 @@ function WhatsAppStep({
 
 /* ---------------- AGENTE ---------------- */
 const AGENT_TYPES: Array<{ id: AgentType; label: string; desc: string; objective: string }> = [
-  { id: 'sdr', label: 'SDR', desc: 'Qualifica e agenda', objective: 'Calificar leads e agendar reuniões' },
+  { id: 'sdr', label: 'SDR', desc: 'Qualifica e agenda', objective: 'Calificar leads e agendar reuniones' },
   { id: 'closer', label: 'Closer', desc: 'Fecha ventas', objective: 'Conduzir o lead até o cierre da venta' },
   { id: 'support', label: 'Atención', desc: 'Tira dudas', objective: 'Atender, esclarecer dudas e encantar o cliente' },
   { id: 'custom', label: 'Personalizado', desc: 'Usted define', objective: 'Atender o cliente conforme necesidad' },
@@ -813,7 +813,7 @@ function AgentStep({
             title: `Treinamento agente: ${agentName}`,
           });
         } catch {
-          toast.warning('Falha ao subir o documento — agente será creado mismo assim');
+          toast.warning('Fallo ao subir o documento — agente será creado mismo assim');
         }
       }
       // Treinamento via texto livre → adiciona como fonte 'training'
@@ -853,7 +853,7 @@ function AgentStep({
       update({ agentId: (created as any).id, agentName: agentName });
       onNext();
     } catch {
-      // toast pelo hook
+      // toast por el hook
     } finally {
       setSaving(false);
     }
@@ -864,7 +864,7 @@ function AgentStep({
       <StepHeader
         icon={Bot}
         title="Crea su agente de IA"
-        description="Ele vai atender pelo WhatsApp usando o cérebro do producto."
+        description="Ele vai atender por el WhatsApp usando o cérebro do producto."
       />
 
       <div className="space-y-4 flex-1">
@@ -939,7 +939,7 @@ function AgentStep({
             </TabsList>
             <TabsContent value="ai" className="pt-3 space-y-2">
               <p className="text-xs text-muted-foreground">
-                A IA vai usar o cérebro do producto + tipo + objetivo para gerar o prompt.
+                A IA vai usar o cérebro do producto + tipo + objetivo para generar o prompt.
               </p>
               <Button
                 onClick={handleGenerate}
@@ -948,7 +948,7 @@ function AgentStep({
                 className="w-full gap-2"
               >
                 {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
-                {isGenerating ? 'Gerando...' : aiGenerated ? 'Regenerar com IA' : 'Gerar com IA'}
+                {isGenerating ? 'Gerando...' : aiGenerated ? 'Regenerar con IA' : 'Generar con IA'}
               </Button>
               {aiGenerated && (
                 <Textarea
@@ -963,7 +963,7 @@ function AgentStep({
               <Textarea
                 value={promptExtra}
                 onChange={(e) => setPromptExtra(e.target.value)}
-                placeholder="Instruções adicionais para el agente..."
+                placeholder="Instrucciones adicionais para el agente..."
                 rows={5}
               />
             </TabsContent>
@@ -979,7 +979,7 @@ function AgentStep({
                 </p>
               )}
               <p className="text-xs text-muted-foreground mt-2">
-                O conteúdo será adicionado ao cérebro do producto e usado pelo agente.
+                O contenido será adicionado ao cérebro do producto e usado por el agente.
               </p>
             </TabsContent>
           </Tabs>
@@ -990,7 +990,7 @@ function AgentStep({
         onBack={onBack}
         onSkip={onSkip}
         onPrimary={handleSave}
-        primaryLabel="Criar agente"
+        primaryLabel="Crear agente"
         loading={saving}
         disabled={!agentName.trim()}
       />
@@ -1034,7 +1034,7 @@ function TeamStep({ onNext, onSkip, onBack }: { onNext: () => void; onSkip: () =
       <StepHeader
         icon={Users}
         title="Convide su equipo"
-        description="Adicione e-mails dos vendedores. Eles recebem o convite na hora."
+        description="Agregá e-mails dos vendedores. Eles recebem o convite na hora."
       />
       <div className="space-y-3 flex-1">
         {emails.map((email, idx) => (
@@ -1051,7 +1051,7 @@ function TeamStep({ onNext, onSkip, onBack }: { onNext: () => void; onSkip: () =
           onClick={() => setEmails((arr) => [...arr, ''])}
           className="text-sm text-primary hover:underline"
         >
-          + Adicionar mais um
+          + Agregar mais um
         </button>
       </div>
       <StepFooter
@@ -1079,14 +1079,14 @@ function DoneStep({ onFinish, shared }: { onFinish: () => void; shared: Onboardi
       </div>
       <h2 className="text-2xl font-bold mb-2">Tudo pronto!</h2>
       <p className="text-muted-foreground max-w-sm mb-6">
-        Su empresa está configurada. Faça um teste real ahora.
+        Su empresa está configurada. Hacé um teste real ahora.
       </p>
 
       <div className="w-full max-w-sm space-y-2 text-left mb-8 bg-muted/40 rounded-lg p-4">
         {shared.productName && (
           <div className="flex items-center gap-2 text-sm">
             <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
-            <span>Producto <strong>{shared.productName}</strong> com cérebro treinado</span>
+            <span>Producto <strong>{shared.productName}</strong> con cérebro treinado</span>
           </div>
         )}
         {shared.instanceName && (

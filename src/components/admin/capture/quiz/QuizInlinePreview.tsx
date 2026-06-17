@@ -6,22 +6,22 @@ import type { Funnel } from '@/types/funnel';
 
 interface Props {
   funnel: Funnel;
-  /** Timestamp do último auto-save: força reload do iframe cuando muda. */
+  /** Timestamp do último auto-save: fuerza reload do iframe cuando muda. */
   refreshKey?: number;
 }
 
 /**
  * Preview inline do Quiz exibido no painel direito da aba Flujo,
- * em moldura mobile/desktop, refletindo a aparência salva.
+ * em moldura mobile/desktop, refletindo a apariencia salva.
  */
 export function QuizInlinePreview({ funnel, refreshKey = 0 }: Props) {
   const [device, setDevice] = useState<'mobile' | 'desktop'>('mobile');
   const [manualReload, setManualReload] = useState(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Usa o origin atual (editor/preview/published) para garantir que o iframe
+  // Usa o origin actual (editor/preview/published) para garantir que o iframe
   // rode no mismo build em que o usuario está editando — evita 404 cuando o
-  // quiz aún no fue publicado no domínio de produção.
+  // quiz aún no fue publicado no domínio de producción.
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
   const slug = (funnel.channels as any)?.quiz?.slug_override || funnel.slug;
   const quizUrl = slug ? `${baseUrl}/q/${slug}?preview=1` : '';
@@ -42,7 +42,7 @@ export function QuizInlinePreview({ funnel, refreshKey = 0 }: Props) {
       {/* Toolbar */}
       <div className="flex items-center justify-between gap-2">
         <Badge variant={isActive ? 'default' : 'secondary'} className="text-[10px]">
-          {isActive ? 'Quiz ativo' : 'Rascunho'}
+          {isActive ? 'Quiz ativo' : 'Borrador'}
         </Badge>
         <div className="flex items-center gap-1">
           <div className="flex gap-0.5 bg-background border rounded-md p-0.5">
@@ -82,7 +82,7 @@ export function QuizInlinePreview({ funnel, refreshKey = 0 }: Props) {
             </div>
             <p className="text-sm font-medium">Preview indisponível</p>
             <p className="text-xs text-muted-foreground">
-              Salve o quiz para gerar um link público e visualizar o preview aqui.
+              Guardá o quiz para generar um link público e visualizar o preview acá.
             </p>
           </div>
         </div>
@@ -124,7 +124,7 @@ export function QuizInlinePreview({ funnel, refreshKey = 0 }: Props) {
       )}
 
       <p className="text-[11px] text-muted-foreground text-center">
-        O preview reflete a aparência salva. Edições no flujo aparecem após o auto-save.
+        O preview reflete a apariencia salva. Edições no flujo aparecem após o auto-save.
       </p>
     </div>
   );

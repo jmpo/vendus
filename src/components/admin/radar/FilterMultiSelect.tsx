@@ -68,7 +68,7 @@ export function FilterMultiSelect({
             <Check className="h-3 w-3" /> Incluir {activeIn > 0 && `(${activeIn})`}
           </TabsTrigger>
           <TabsTrigger value="exclude" className="h-6 text-[11px] gap-1">
-            <Ban className="h-3 w-3" /> Excluir {activeEx > 0 && `(${activeEx})`}
+            <Ban className="h-3 w-3" /> Eliminar {activeEx > 0 && `(${activeEx})`}
           </TabsTrigger>
         </TabsList>
 

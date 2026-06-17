@@ -129,7 +129,7 @@ export function CatalogPickerDialog({ open, onOpenChange, productId, onSend }: C
               <p className="text-xs mt-1">
                 {items.length === 0
                   ? 'Cadastre productos no catálogo para enviá-los rápidamente no chat.'
-                  : 'Tente outros termos de busca.'}
+                  : 'Tente otros termos de busca.'}
               </p>
             </div>
           ) : (

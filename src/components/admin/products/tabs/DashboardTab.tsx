@@ -74,7 +74,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
   // Build funnel stages from leads
   const stageGroups = productLeads.reduce((acc, lead) => {
     const stage = (lead as any).pipeline_stages;
-    const stageName = stage?.name || 'Sem etapa';
+    const stageName = stage?.name || 'Sin etapa';
     const stageColor = stage?.color || '#6b7280';
     const stageOrder = stage?.order_index ?? 99;
     if (!acc[stageName]) {
@@ -126,7 +126,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">{conversionRate}%</p>
-                <p className="text-sm text-muted-foreground">Taxa de Conversão</p>
+                <p className="text-sm text-muted-foreground">Taxa de Conversión</p>
               </div>
             </div>
           </CardContent>
@@ -154,7 +154,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">{goalProgress}%</p>
-                <p className="text-sm text-muted-foreground">Meta do Mês</p>
+                <p className="text-sm text-muted-foreground">Meta do Mes</p>
               </div>
             </div>
           </CardContent>
@@ -182,7 +182,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
           <CardContent>
             {leadsAtRisk.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">
-                Nenhum lead em risco! 🎉
+                Ningún lead em risco! 🎉
               </p>
             ) : (
               <div className="space-y-3 max-h-60 overflow-y-auto">
@@ -197,7 +197,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
                       </p>
                     </div>
                     <Badge variant="outline" className="bg-destructive/10 text-destructive">
-                      Sem acción
+                      Sin acción
                     </Badge>
                   </div>
                 ))}
@@ -224,7 +224,7 @@ export function DashboardTab({ productId }: DashboardTabProps) {
           <CardContent>
             {productCommissions.filter(c => c.status === 'pending').length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">
-                Nenhuma comisión pendente
+                Ninguna comisión pendente
               </p>
             ) : (
               <div className="space-y-3 max-h-60 overflow-y-auto">

@@ -17,7 +17,7 @@ export function FormPreview({ form, blocks, theme }: FormPreviewProps) {
         "min-h-[400px] flex items-center justify-center p-8 text-center",
         theme === 'dark' ? 'bg-zinc-900 text-zinc-400' : 'bg-white text-muted-foreground'
       )}>
-        <p>Adicione blocos para visualizar o formulário</p>
+        <p>Agregá blocos para visualizar o formulario</p>
       </div>
     );
   }
@@ -89,14 +89,14 @@ export function FormPreview({ form, blocks, theme }: FormPreviewProps) {
                     "w-full p-3 rounded-lg border text-lg resize-none",
                     inputBg, textColor
                   )}
-                  placeholder={block.placeholder || 'Escribí aqui...'}
+                  placeholder={block.placeholder || 'Escribí acá...'}
                   rows={4}
                 />
               ) : (
                 <Input
                   type={block.block_type === 'email' ? 'email' : block.block_type === 'phone' ? 'tel' : block.block_type === 'number' ? 'number' : 'text'}
                   className={cn("h-14 text-lg", inputBg, textColor)}
-                  placeholder={block.placeholder || 'Escribí aqui...'}
+                  placeholder={block.placeholder || 'Escribí acá...'}
                 />
               )}
               

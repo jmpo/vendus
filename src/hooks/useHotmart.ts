@@ -97,7 +97,7 @@ export function useTestHotmartConnection() {
         body: creds ?? {},
       });
       if (error) throw error;
-      if (!data?.ok) throw new Error(data?.error ?? 'Falha no teste');
+      if (!data?.ok) throw new Error(data?.error ?? 'Fallo no teste');
       return data;
     },
     onSuccess: () => toast.success('Conexión Hotmart OK'),

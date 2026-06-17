@@ -45,12 +45,12 @@ function blockTitle(b: FunnelBlock): string {
     d.video_url ||
     d.image_alt ||
     d.link_title ||
-    (b.type === 'buttons' ? 'Pergunta de escolha' :
+    (b.type === 'buttons' ? 'Pergunta de elegí' :
      b.type === 'input' ? 'Pergunta aberta' :
      b.type === 'end' ? 'Final' :
-     b.type === 'score' ? 'Adicionar pontuação' :
+     b.type === 'score' ? 'Agregar puntuación' :
      b.type === 'tag' ? 'Aplicar etiqueta' :
-     b.type === 'condition' ? 'Condição lógica' :
+     b.type === 'condition' ? 'Condición lógica' :
      b.type)
   );
 }
@@ -59,9 +59,9 @@ function blockKindLabel(b: FunnelBlock): string {
   const sub = (b.data as any)?.quiz_subtype as string | undefined;
   if (sub) {
     const map: Record<string, string> = {
-      single: 'Elegí única', multiple: 'Múltipla escolha', yesno: 'Sí/No',
+      single: 'Elegí única', multiple: 'Múltipla elegí', yesno: 'Sí/No',
       scale: 'Escala 1-10', nps: 'NPS', ranking: 'Ranking',
-      date: 'Fecha', upload: 'Upload', audio: 'Áudio',
+      date: 'Fecha', upload: 'Upload', audio: 'Audio',
       result: 'Resultado', redirect: 'Redirecionamento', goto: 'Ir para',
     };
     if (map[sub]) return map[sub];
@@ -73,7 +73,7 @@ function blockKindLabel(b: FunnelBlock): string {
   }
   return ({
     buttons: 'Elegí', message: 'Mensaje', image: 'Imagen', video: 'Vídeo',
-    end: 'Final', score: 'Score', tag: 'Tag', condition: 'Condição', link: 'Link',
+    end: 'Final', score: 'Score', tag: 'Tag', condition: 'Condición', link: 'Link',
   } as Record<string, string>)[b.type] || b.type;
 }
 
@@ -82,7 +82,7 @@ export function QuizVisualCanvas({
   onSelectBlock, onDeleteBlock, onDuplicateBlock, onReorder,
   onInsertAt, onSetStart, onPaletteDrop,
 }: Props) {
-  // Ordena blocos: start primeiro, después seguindo next_block_id, después resto em ordem original
+  // Ordena blocos: start primero, después seguindo next_block_id, después resto em ordem original
   const ordered = useMemo(() => {
     if (blocks.length === 0) return [];
     const byId = new Map(blocks.map(b => [b.id, b]));
@@ -135,7 +135,7 @@ export function QuizVisualCanvas({
           </div>
           <h3 className="font-semibold mb-1">Comece su quiz</h3>
           <p className="text-sm text-muted-foreground">
-            Arraste um bloco da paleta à esquerda, ou clique em qualquer item para inserir aqui.
+            Arraste um bloco da paleta à esquerda, ou clique em cualquier item para inserir acá.
           </p>
         </div>
       </div>
@@ -193,7 +193,7 @@ export function QuizVisualCanvas({
                     </div>
                   </div>
 
-                  {/* Conteúdo */}
+                  {/* Contenido */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1.5">
                       {Icon && <Icon className="h-3.5 w-3.5 text-muted-foreground" />}
@@ -226,7 +226,7 @@ export function QuizVisualCanvas({
                       </div>
                     )}
 
-                    {/* Opções (preview) */}
+                    {/* Opciones (preview) */}
                     {opts && opts.length > 0 && (
                       <div className="space-y-1 mt-2">
                         {opts.slice(0, 5).map((opt, i) => (
@@ -261,7 +261,7 @@ export function QuizVisualCanvas({
                       </div>
                     )}
 
-                    {/* Condição: 2 caminhos */}
+                    {/* Condición: 2 caminhos */}
                     {block.type === 'condition' && (() => {
                       const cond = (block.data as any)?.condition;
                       const tId = (block.data as any)?.true_next_block_id;
@@ -315,14 +315,14 @@ export function QuizVisualCanvas({
                         className="text-destructive"
                         onClick={(e) => { e.stopPropagation(); onDeleteBlock(block.id); }}
                       >
-                        <Trash2 className="h-4 w-4 mr-2" /> Excluir
+                        <Trash2 className="h-4 w-4 mr-2" /> Eliminar
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
               </div>
 
-              {/* Linha conectora */}
+              {/* Línea conectora */}
               {idx < ordered.length - 1 && (
                 <div className="flex justify-center py-1">
                   <div className="w-px h-4 bg-border" />
@@ -379,7 +379,7 @@ function DropZone({
         )}
       >
         <Plus className="h-3 w-3" />
-        <span>{active ? 'Soltar aqui' : large ? 'Adicionar bloco' : 'Inserir'}</span>
+        <span>{active ? 'Soltar acá' : large ? 'Agregar bloco' : 'Inserir'}</span>
       </div>
     </div>
   );

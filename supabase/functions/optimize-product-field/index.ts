@@ -19,14 +19,14 @@ Inclua características demográficas, comportamentais e sinais de compra.`,
   
   pitch_15s: `Vos sos um especialista em elevator pitch.
 Reescribí este pitch de 15 segundos para ser memorável, impactante e gerar curiosidade.
-Deve ser algo que um vendedor puede hablar naturalmente em una conversación.`,
+Debe ser algo que um vendedor puede hablar naturalmente em una conversación.`,
   
   pitch_30s: `Vos sos um especialista em apresentações de ventas.
 Reescribí este pitch de 30 segundos para incluir problema, solución e valor.
 Mantenha natural e conversacional, mas persuasivo.`,
   
   pitch_2min: `Vos sos um especialista em storytelling para ventas.
-Reescribí este pitch de 2 minutos usando a estrutura: Problema → Impacto → Solução → Resultados.
+Reescribí este pitch de 2 minutos usando a estrutura: Problema → Impacto → Solución → Resultados.
 Inclua elementos de prova social e urgência cuando apropiado.`,
 };
 

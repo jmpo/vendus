@@ -126,7 +126,7 @@ export async function runPostSaleActions(
     }
   }
 
-  // 1) Aplica automações de tag (add + remove conforme tag_id_to_remove).
+  // 1) Aplica automatizaciones de tag (add + remove conforme tag_id_to_remove).
   try {
     await supabase.rpc('apply_tag_automations', {
       p_lead_id: ctx.leadId,

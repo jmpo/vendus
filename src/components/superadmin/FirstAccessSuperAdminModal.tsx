@@ -287,7 +287,7 @@ function StepName({ userId, initial, onDone, alreadyDone }: { userId: string; in
 }
 
 function StepPlan({ onDone, alreadyDone }: { onDone: () => void; alreadyDone?: boolean }) {
-  if (alreadyDone) return <AlreadyDone label="Plan comercial ya cadastrado" onContinue={onDone} />;
+  if (alreadyDone) return <AlreadyDone label="Plan comercial ya registrado" onContinue={onDone} />;
 
   return (
     <div className="space-y-3">
@@ -420,7 +420,7 @@ function StepEvolution({ onDone, alreadyDone }: { onDone: () => void; alreadyDon
           disabled={testMut.isPending || !cleanUrl || !globalApiKey}
         >
           {testMut.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-          Testar Conexão
+          Testar Conexión
         </Button>
         <Button
           className="flex-1"

@@ -172,7 +172,7 @@ export function useKanbanData(productId: string, filters: KanbanFilters) {
   if (unassignedLeads.length > 0) {
     kanbanStages.unshift({
       id: 'unassigned',
-      name: 'Sem Etapa',
+      name: 'Sin Etapa',
       color: '#6b7280',
       order_index: -1,
       is_won: null,

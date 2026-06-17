@@ -61,10 +61,10 @@ const compressImage = async (file: File, maxSizeMB: number = 2): Promise<File> =
   });
 };
 
-// Validação de URL de vídeo (YouTube/Vimeo)
+// Validación de URL de vídeo (YouTube/Vimeo)
 const isValidVideoUrl = (url: string): boolean => {
-  const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+/;
-  const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.com\/.+/;
+  const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.con|youtu\.be)\/.+/;
+  const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.con\/.+/;
   return youtubeRegex.test(url) || vimeoRegex.test(url);
 };
 
@@ -85,13 +85,13 @@ const typeLabels: Record<string, string> = {
   image: 'Imagen',
   video: 'Vídeo',
   link: 'Link',
-  banner: 'Banner/Apresentação',
+  banner: 'Banner/Presentación',
 };
 
 const tagOptions = [
   { value: 'proof', label: 'Prova Social' },
-  { value: 'presentation', label: 'Apresentação' },
-  { value: 'objection', label: 'Objeção' },
+  { value: 'presentation', label: 'Presentación' },
+  { value: 'objection', label: 'Objeción' },
   { value: 'closing', label: 'Cierre' },
 ];
 
@@ -171,7 +171,7 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
       return;
     }
 
-    // Validação específica para vídeo
+    // Validación específica para vídeo
     if (newMaterial.type === 'video' && !isValidVideoUrl(newMaterial.url)) {
       toast.error('Para vídeos, informe uma URL do YouTube ou Vimeo');
       return;
@@ -215,12 +215,12 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
         status: 'active',
       });
 
-      toast.success('Material adicionado com éxito!');
+      toast.success('Material adicionado con éxito!');
       resetForm();
       setIsDialogOpen(false);
     } catch (error: any) {
       console.error('Error ao hacer upload:', error);
-      toast.error(error.message || 'Error ao adicionar material');
+      toast.error(error.message || 'Error ao agregar material');
     } finally {
       setIsUploading(false);
     }
@@ -293,12 +293,12 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
           <DialogTrigger asChild>
             <Button onClick={() => { resetForm(); setIsDialogOpen(true); }}>
               <Plus className="mr-2 h-4 w-4" />
-              Adicionar Material
+              Agregar Material
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-lg">
             <DialogHeader>
-              <DialogTitle>Adicionar Material</DialogTitle>
+              <DialogTitle>Agregar Material</DialogTitle>
             </DialogHeader>
             
             <div className="space-y-4 mt-4">
@@ -364,8 +364,8 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
                       <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
                       <p className="text-sm text-muted-foreground">
                         {isDragActive
-                          ? 'Solte o archivo aqui...'
-                          : 'Arraste um archivo ou clique para selecionar'}
+                          ? 'Solte o archivo acá...'
+                          : 'Arraste um archivo ou clique para seleccionar'}
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
                         PDF (máx. 10MB), Imagens (comprimidas automaticamente)
@@ -384,13 +384,13 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
                   <Input
                     placeholder={newMaterial.type === 'video' 
                       ? 'https://youtube.com/watch?v=... ou https://vimeo.com/...' 
-                      : 'https://exemplo.com/material.pdf'}
+                      : 'https://ejemplo.com/material.pdf'}
                     value={newMaterial.url}
                     onChange={(e) => setNewMaterial(prev => ({ ...prev, url: e.target.value }))}
                   />
                   {newMaterial.type === 'video' && (
                     <p className="text-xs text-muted-foreground">
-                      Apenas links do YouTube ou Vimeo son aceitos
+                      Solo links do YouTube ou Vimeo son aceitos
                     </p>
                   )}
                 </div>
@@ -400,7 +400,7 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
               <div className="space-y-2">
                 <Label>Nombre do Material *</Label>
                 <Input
-                  placeholder="Ex: Apresentação Institucional"
+                  placeholder="Ex: Presentación Institucional"
                   value={newMaterial.name}
                   onChange={(e) => setNewMaterial(prev => ({ ...prev, name: e.target.value }))}
                 />
@@ -468,7 +468,7 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
                 ) : (
                   <>
                     <Plus className="mr-2 h-4 w-4" />
-                    Adicionar Material
+                    Agregar Material
                   </>
                 )}
               </Button>
@@ -481,13 +481,13 @@ export function MaterialsTab({ productId }: MaterialsTabProps) {
         <Card className="bg-card">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="h-12 w-12 text-muted-foreground/50 mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-1">Nenhum material</h3>
+            <h3 className="text-lg font-medium text-foreground mb-1">Ningún material</h3>
             <p className="text-sm text-muted-foreground mb-4 text-center">
-              Adicione materiales de apoio como PDFs, apresentações, cases e propostas
+              Agregá materiales de apoio como PDFs, apresentações, cases e propostas
             </p>
             <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              Adicionar Primeiro Material
+              Agregar Primero Material
             </Button>
           </CardContent>
         </Card>

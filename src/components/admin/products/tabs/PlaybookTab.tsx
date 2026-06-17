@@ -106,7 +106,7 @@ export function PlaybookTab({ productId }: PlaybookTabProps) {
 
   // Extract YouTube video ID for embed
   const getYouTubeEmbedUrl = (url: string) => {
-    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const regex = /(?:youtube\.con\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
     const match = url.match(regex);
     return match ? `https://www.youtube.com/embed/${match[1]}` : url;
   };

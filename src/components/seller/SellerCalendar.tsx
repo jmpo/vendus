@@ -158,7 +158,7 @@ export function SellerCalendar({ userId, productId }: SellerCalendarProps) {
           <div>
             <h2 className="text-xl font-semibold text-foreground">Mi Agenda</h2>
             <p className="text-sm text-muted-foreground">
-              {events.length} evento{events.length !== 1 ? 's' : ''} en el período
+              {events.length} evento{events.length !== 1 ? 's' : ''} en el periodo
             </p>
           </div>
         </div>

@@ -167,7 +167,7 @@ export function FormLivePreview({ form, blocks, theme, onComplete }: FormLivePre
         "min-h-[500px] flex items-center justify-center p-8",
         themeStyles.bg, themeStyles.muted
       )}>
-        <p>Adicione blocos para visualizar o formulário</p>
+        <p>Agregá blocos para visualizar o formulario</p>
       </div>
     );
   }
@@ -205,7 +205,7 @@ export function FormLivePreview({ form, blocks, theme, onComplete }: FormLivePre
             transition={{ delay: 0.4 }}
             className={cn("text-lg max-w-md", themeStyles.muted)}
           >
-            {endScreen?.description || 'Sus respuestas foram enviadas com éxito.'}
+            {endScreen?.description || 'Sus respuestas foram enviadas con éxito.'}
           </motion.p>
           {endScreen?.block_settings?.cta_text && (
             <motion.div
@@ -324,7 +324,7 @@ export function FormLivePreview({ form, blocks, theme, onComplete }: FormLivePre
                     "focus:ring-2 focus:ring-primary focus:border-primary",
                     themeStyles.input, themeStyles.text
                   )}
-                  placeholder={block.placeholder || 'Escribí aqui...'}
+                  placeholder={block.placeholder || 'Escribí acá...'}
                   rows={4}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
@@ -338,7 +338,7 @@ export function FormLivePreview({ form, blocks, theme, onComplete }: FormLivePre
                     "focus:ring-2 focus:ring-primary focus:border-primary",
                     themeStyles.input, themeStyles.text
                   )}
-                  placeholder={block.placeholder || 'Escribí aqui...'}
+                  placeholder={block.placeholder || 'Escribí acá...'}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   autoFocus

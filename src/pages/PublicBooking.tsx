@@ -125,7 +125,7 @@ export default function PublicBooking() {
   const handleConversationalSubmit = async (data: BookingFormData) => {
     if (!eventType || !selectedDate) return;
 
-    // Horario fixo de Brasília (-03:00, sem horario de verão) — slots vêm em hora local BRT
+    // Horario fixo de Brasília (-03:00, sin horario de verão) — slots vêm em hora local BRT
     const startTime = `${format(selectedDate, 'yyyy-MM-dd')}T${data.selectedSlot.start}:00-03:00`;
     
     // Collect additional info
@@ -169,7 +169,7 @@ export default function PublicBooking() {
     e.preventDefault();
     if (!eventType || !selectedDate || !selectedSlot) return;
 
-    // Horario fixo de Brasília (-03:00, sem horario de verão) — slots vêm em hora local BRT
+    // Horario fixo de Brasília (-03:00, sin horario de verão) — slots vêm em hora local BRT
     const startTime = `${format(selectedDate, 'yyyy-MM-dd')}T${selectedSlot.start}:00-03:00`;
     
     // Collect additional info from custom questions
@@ -476,7 +476,7 @@ export default function PublicBooking() {
 
                 {/* Form */}
                 <div className="flex-1 p-6">
-                  <h3 className="font-medium mb-4">Preencha sus dados</h3>
+                  <h3 className="font-medium mb-4">Completá sus dados</h3>
                   
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
@@ -513,7 +513,7 @@ export default function PublicBooking() {
                       />
                     </div>
 
-                    {/* Custom Questions — filtra as que duplicam Nombre / E-mail / Teléfono padrão */}
+                    {/* Custom Questions — filtra as que duplicam Nombre / E-mail / Teléfono predeterminado */}
                     {eventType.questions?.filter((question) => {
                       const label = (question.label || '').toLowerCase().trim();
                       const type = (question.type || '').toLowerCase();

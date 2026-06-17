@@ -30,7 +30,7 @@ import { Loader2, User, Building, Mail, Phone, FileText } from 'lucide-react';
 import { LEAD_ORIGINS, LEAD_CHANNELS } from '@/hooks/useLeadTracking';
 
 const formSchema = z.object({
-  name: z.string().min(2, 'Nombre debe ter pelo menos 2 caracteres'),
+  name: z.string().min(2, 'Nombre debe ter por el menos 2 caracteres'),
   email: z.string().email('Email inválido').optional().or(z.literal('')),
   phone: z.string().optional(),
   company: z.string().optional(),
@@ -151,7 +151,7 @@ export function CreateLeadDialog({
                       <Mail className="h-3 w-3" /> Email
                     </FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="email@exemplo.com" {...field} />
+                      <Input type="email" placeholder="email@ejemplo.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -200,7 +200,7 @@ export function CreateLeadDialog({
                   <FormItem>
                     <FormLabel>Cargo</FormLabel>
                     <FormControl>
-                      <Input placeholder="Cargo/Função" {...field} />
+                      <Input placeholder="Cargo/Función" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -346,7 +346,7 @@ export function CreateLeadDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex items-center gap-1">
-                    <FileText className="h-3 w-3" /> Observações
+                    <FileText className="h-3 w-3" /> Observaciones
                   </FormLabel>
                   <FormControl>
                     <Textarea
@@ -371,7 +371,7 @@ export function CreateLeadDialog({
               </Button>
               <Button type="submit" disabled={isLoading}>
                 {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Criar Lead
+                Crear Lead
               </Button>
             </div>
           </form>

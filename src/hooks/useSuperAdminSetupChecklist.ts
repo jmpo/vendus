@@ -32,7 +32,7 @@ export function useSuperAdminSetupChecklist() {
       const items: ChecklistItem[] = [
         {
           id: 'password',
-          label: 'Trocar contraseña padrão',
+          label: 'Trocar contraseña predeterminado',
           description: 'Sustituí la contraseña de instalación por una contraseña fuerte.',
           done: !!s?.default_password_changed,
           required: true,
@@ -49,7 +49,7 @@ export function useSuperAdminSetupChecklist() {
         {
           id: 'plans',
           label: 'Planos comerciais',
-          description: 'Tenha pelo menos 1 plan ativo cadastrado.',
+          description: 'Tenha por el menos 1 plan ativo registrado.',
           done: (plansRes.count ?? 0) > 0,
           required: true,
           navigateTo: 'plans',
@@ -57,14 +57,14 @@ export function useSuperAdminSetupChecklist() {
         {
           id: 'evolution',
           label: 'Servidor WhatsApp (Evolution)',
-          description: 'Opcional — necessário para WhatsApp das empresas.',
+          description: 'Opcional — necesario para WhatsApp das empresas.',
           done: !!s?.evolution_go_url,
           required: false,
           navigateTo: 'whatsapp',
         },
         {
           id: 'organization',
-          label: 'Criar primeira empresa',
+          label: 'Crear primera empresa',
           description: 'Registrá la primera organización cliente.',
           done: (orgsRes.count ?? 0) > 0,
           required: true,

@@ -96,7 +96,7 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
 
   const handleCreateDraft = async () => {
     if (!profile?.organization_id) return;
-    if (!form.display_name.trim()) { toast.error('Dê um nombre para esta conexão'); return; }
+    if (!form.display_name.trim()) { toast.error('Dê um nombre para esta conexión'); return; }
     const res = await draft.mutateAsync({
       organization_id: profile.organization_id,
       display_name: form.display_name.trim(),
@@ -112,7 +112,7 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
   const handleActivate = async () => {
     if (!profile?.organization_id || !draftId) return;
     if (!form.app_id || !form.fb_page_id || !form.ig_business_account_id || !form.page_access_token) {
-      toast.error('Preencha todos os campos'); return;
+      toast.error('Completá todos los campos'); return;
     }
     const res: any = await save.mutateAsync({
       connection_id: draftId,
@@ -138,7 +138,7 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
             Instagram Direct (Meta) — Passo {step} de {TOTAL_STEPS}
           </DialogTitle>
           <DialogDescription>
-            Conexão BYO: usted usa su próprio Meta App, su Página do Facebook e su cuenta Instagram profissional.
+            Conexión BYO: usted usa su propio Meta App, su Página do Facebook e su cuenta Instagram profissional.
             Credenciais ficam criptografadas e só esta empresa as enxerga.
           </DialogDescription>
         </DialogHeader>
@@ -148,10 +148,10 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
           <div className="space-y-4">
             <Alert className="border-pink-500/40">
               <ShieldAlert className="h-4 w-4 text-pink-600" />
-              <AlertTitle>Esta conexão é SEPARADA do WhatsApp Oficial</AlertTitle>
+              <AlertTitle>Esta conexión é SEPARADA do WhatsApp Oficial</AlertTitle>
               <AlertDescription className="text-sm">
                 Usa credenciais, webhook e Verify Token <strong>exclusivos do Instagram</strong>.
-                No reaproveite a URL nem o token do WhatsApp aqui.
+                No reaproveite a URL nem o token do WhatsApp acá.
               </AlertDescription>
             </Alert>
             <Alert>
@@ -159,15 +159,15 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
               <AlertTitle>Pré-requisitos</AlertTitle>
               <AlertDescription className="space-y-1.5 mt-2 text-sm">
                 <p>• Cuenta Instagram convertida em <strong>Business ou Creator</strong>.</p>
-                <p>• <strong>Página do Facebook</strong> vinculada a essa cuenta IG.</p>
-                <p>• Cuenta Meta Business + Meta App próprio (no use o do WhatsApp).</p>
-                <p>• Permissões: <code>instagram_basic</code>, <code>instagram_manage_messages</code>, <code>pages_manage_metadata</code>, <code>pages_messaging</code>, <code>pages_show_list</code>.</p>
+                <p>• <strong>Página do Facebook</strong> vinculada a esa cuenta IG.</p>
+                <p>• Cuenta Meta Business + Meta App propio (no use o do WhatsApp).</p>
+                <p>• Permisos: <code>instagram_basic</code>, <code>instagram_manage_messages</code>, <code>pages_manage_metadata</code>, <code>pages_messaging</code>, <code>pages_show_list</code>.</p>
               </AlertDescription>
             </Alert>
           </div>
         )}
 
-        {/* ---------------- STEP 2: Criar Meta App ---------------- */}
+        {/* ---------------- STEP 2: Crear Meta App ---------------- */}
         {step === 2 && (
           <div className="space-y-4">
             <Alert>
@@ -175,9 +175,9 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
               <AlertTitle>Crea su Meta App</AlertTitle>
               <AlertDescription className="space-y-1.5 mt-2 text-sm">
                 <p>1. Acesse <a href="https://developers.facebook.com/apps" target="_blank" rel="noreferrer" className="text-primary underline">Meta for Developers</a> e crie um App tipo <strong>Business</strong>.</p>
-                <p>2. Adicione o producto <strong>Instagram</strong> (Instagram Messaging API) e/ou <strong>Messenger</strong>.</p>
+                <p>2. Agregá o producto <strong>Instagram</strong> (Instagram Messaging API) e/ou <strong>Messenger</strong>.</p>
                 <p>3. Vincule su <strong>Página do Facebook</strong> e su cuenta <strong>Instagram Business</strong>.</p>
-                <p>4. Em Configurações → Básico anote <strong>App ID</strong> e <strong>App Secret</strong>.</p>
+                <p>4. Em Configuraciones → Básico anote <strong>App ID</strong> e <strong>App Secret</strong>.</p>
               </AlertDescription>
             </Alert>
             <Button asChild variant="outline" className="w-full">
@@ -186,13 +186,13 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
               </a>
             </Button>
             <div className="space-y-2">
-              <Label>Nombre da conexão</Label>
+              <Label>Nombre da conexión</Label>
               <Input
                 value={form.display_name}
                 onChange={(e) => setForm({ ...form, display_name: e.target.value })}
                 placeholder="Ex.: Instagram @minhamarca"
               />
-              <p className="text-xs text-muted-foreground">Usado só internamente para identificar essa conexão.</p>
+              <p className="text-xs text-muted-foreground">Usado só internamente para identificar esa conexión.</p>
             </div>
           </div>
         )}
@@ -202,9 +202,9 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
           <div className="space-y-4">
             <Alert>
               <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>Essa URL é exclusiva da conexão Instagram</AlertTitle>
+              <AlertTitle>Esa URL é exclusiva da conexión Instagram</AlertTitle>
               <AlertDescription className="text-sm">
-                No use a URL do WhatsApp aqui. Cada conexão tiene URL e Verify Token próprios.
+                No use a URL do WhatsApp acá. Cada conexión tiene URL e Verify Token propios.
               </AlertDescription>
             </Alert>
 
@@ -239,15 +239,15 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
             {webhookOk ? (
               <Alert className="border-green-500/40 bg-green-50 dark:bg-green-950/30">
                 <CheckCircle2 className="h-4 w-4 text-green-600" />
-                <AlertTitle>Webhook verificado pela Meta ✅</AlertTitle>
-                <AlertDescription>Pode avançar para colar sus credenciais.</AlertDescription>
+                <AlertTitle>Webhook verificado por la Meta ✅</AlertTitle>
+                <AlertDescription>Puede avanzar para colar sus credenciais.</AlertDescription>
               </Alert>
             ) : (
               <Alert>
                 <Loader2 className="h-4 w-4 animate-spin" />
                 <AlertTitle>Aguardando a Meta validar...</AlertTitle>
                 <AlertDescription className="text-sm">
-                  Quando usted clicar em "Verificar e guardar" no Meta, a confirmação aparece aqui automaticamente.
+                  Cuando usted clicar em "Verificar e guardar" no Meta, a confirmación aparece acá automaticamente.
                 </AlertDescription>
               </Alert>
             )}
@@ -259,10 +259,10 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
           <div className="space-y-3">
             <Alert>
               <Info className="h-4 w-4" />
-              <AlertTitle>Onde encontrar cada dado</AlertTitle>
+              <AlertTitle>Donde encontrar cada dado</AlertTitle>
               <AlertDescription className="text-sm space-y-1.5 mt-2">
-                <p><strong>App ID</strong> + <strong>App Secret</strong>: Meta App → Configurações → Básico.</p>
-                <p><strong>Page Access Token</strong>: Graph API Explorer → escolha o App → "Get Page Access Token" → troque por long-lived em <code>/oauth/access_token</code>.</p>
+                <p><strong>App ID</strong> + <strong>App Secret</strong>: Meta App → Configuraciones → Básico.</p>
+                <p><strong>Page Access Token</strong>: Graph API Explorer → elegí o App → "Get Page Access Token" → troque por long-lived em <code>/oauth/access_token</code>.</p>
                 <p><strong>Instagram Business Account ID</strong>: <code>GET /{'{page-id}'}?fields=instagram_business_account</code>.</p>
                 <p><strong>Facebook Page ID</strong>: aparece no painel da página ou em <code>/me/accounts</code>.</p>
               </AlertDescription>
@@ -294,7 +294,7 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
             </div>
 
             <p className="text-xs text-muted-foreground">
-              Usa um Page Access Token com permisos de Instagram Messaging. Recomendamos usar token de larga duración (60 días).
+              Usa um Page Access Token con permisos de Instagram Messaging. Recomendamos usar token de larga duración (60 días).
             </p>
           </div>
         )}
@@ -312,7 +312,7 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
 
             <div className="rounded-md border p-3 space-y-1.5 text-sm">
               <div className="flex justify-between"><span className="text-muted-foreground">Webhook</span>
-                {webhookOk ? <Badge className="bg-green-500/15 text-green-700 border-green-500/30">Verificado pela Meta</Badge>
+                {webhookOk ? <Badge className="bg-green-500/15 text-green-700 border-green-500/30">Verificado por la Meta</Badge>
                 : <Badge variant="secondary">Pendente</Badge>}
               </div>
               <div className="flex justify-between"><span className="text-muted-foreground">App ID</span><span className="font-mono text-xs">{form.app_id}</span></div>
@@ -324,7 +324,7 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
               <Alert>
                 <AlertTriangle className="h-4 w-4" />
                 <AlertDescription className="text-sm">
-                  O webhook aún no fue verificado pela Meta. Usted puede ativar mismo assim, mas só vai receber mensajes después que a Meta validar o webhook.
+                  O webhook aún no fue verificado por la Meta. Usted puede ativar mismo así, mas só vai receber mensajes después que a Meta validar o webhook.
                 </AlertDescription>
               </Alert>
             )}
@@ -335,14 +335,14 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
           {step > 1 && step < 5 && (
             <Button variant="outline" onClick={() => setStep(step - 1)}>Voltar</Button>
           )}
-          {step === 1 && <Button onClick={() => setStep(2)}>Avançar</Button>}
+          {step === 1 && <Button onClick={() => setStep(2)}>Avanzar</Button>}
           {step === 2 && (
             <Button onClick={handleCreateDraft} disabled={draft.isPending || !form.display_name.trim()}>
               {draft.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Gerar URL e Verify Token
+              Generar URL e Verify Token
             </Button>
           )}
-          {step === 3 && <Button onClick={() => setStep(4)}>Avançar para credenciais</Button>}
+          {step === 3 && <Button onClick={() => setStep(4)}>Avanzar para credenciais</Button>}
           {step === 4 && <Button onClick={() => setStep(5)}>Revisar e ativar</Button>}
           {step === 5 && (
             <Button onClick={handleActivate} disabled={save.isPending}>

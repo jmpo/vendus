@@ -61,7 +61,7 @@ export default function PublicForm() {
       const roundRobinConfig = formData.round_robin_config as unknown as { users: string[]; current_index: number } | null;
       const customScripts = formData.custom_scripts as unknown as { header: string; footer: string } | null;
 
-      // Salvaguarda: se o fundo é escuro e o texto ficou no default escuro, força branco
+      // Salvaguarda: se o fundo é escuro e o texto ficou no default escuro, fuerza branco
       const mergedTheme: FormTheme = {
         primary_color: '#3B82F6',
         secondary_color: '#1E40AF',
@@ -667,8 +667,8 @@ export default function PublicForm() {
         <Card className="max-w-md mx-auto">
           <CardContent className="pt-6 text-center space-y-4">
             <AlertCircle className="h-12 w-12 mx-auto text-destructive" />
-            <h2 className="text-xl font-semibold">Formulário no encontrado</h2>
-            <p className="text-muted-foreground">{error || 'O formulário que usted está procurando no existe ou está inativo.'}</p>
+            <h2 className="text-xl font-semibold">Formulario no encontrado</h2>
+            <p className="text-muted-foreground">{error || 'O formulario que usted está procurando no existe ou está inativo.'}</p>
           </CardContent>
         </Card>
       </div>
@@ -717,7 +717,7 @@ export default function PublicForm() {
             {endBlock?.label || 'Gracias!'}
           </h1>
           <p className="text-lg text-muted-foreground">
-            {endBlock?.description || 'Sus respuestas foram enviadas com éxito.'}
+            {endBlock?.description || 'Sus respuestas foram enviadas con éxito.'}
           </p>
         </motion.div>
       </div>

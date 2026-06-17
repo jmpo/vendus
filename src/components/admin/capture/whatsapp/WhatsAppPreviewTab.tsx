@@ -16,7 +16,7 @@ interface PreviewMsg {
 /**
  * Renderiza um preview estático do flujo como se fosse o WhatsApp.
  * Percorre os blocos seguindo `next_block_id` a partir do start_block_id e
- * mostra cada bloco textual como bolha, parando em handoff/ai/end.
+ * mostra cada bloco textual como burbuja, parando em handoff/ai/end.
  */
 function buildPreviewMessages(blocks: FunnelBlock[], startId: string | null): PreviewMsg[] {
   if (!startId || blocks.length === 0) return [];
@@ -44,7 +44,7 @@ function buildPreviewMessages(blocks: FunnelBlock[], startId: string | null): Pr
       case 'input':
       case 'quick_form':
         out.push({ side: 'bot', text: data.label || data.prompt || 'Escribí su respuesta...', type: 'input' });
-        out.push({ side: 'user', text: '_aguardando resposta_', type: 'input' });
+        out.push({ side: 'user', text: '_aguardando respuesta_', type: 'input' });
         break;
       case 'delay':
         out.push({ side: 'bot', text: `⏱️ ${data.duration || 2}s de pausa`, type: 'note' });
@@ -59,7 +59,7 @@ function buildPreviewMessages(blocks: FunnelBlock[], startId: string | null): Pr
         });
         return out;
       case 'schedule':
-        out.push({ side: 'bot', text: '📅 Oferece horários disponíveis para reserva', type: 'note' });
+        out.push({ side: 'bot', text: '📅 Oferece horarios disponibles para reserva', type: 'note' });
         break;
       case 'handoff':
         out.push({ side: 'bot', text: '👤 Transferindo para agente humano...', type: 'note' });
@@ -90,12 +90,12 @@ export function WhatsAppPreviewTab({ funnel }: Props) {
       <div className="flex items-center justify-between gap-2 pb-3 border-b shrink-0">
         <div className="flex items-center gap-2">
           <Badge variant={isEnabled ? 'default' : 'secondary'}>
-            {isEnabled ? 'WhatsApp habilitado' : 'Desabilitado — habilite na aba Conexão'}
+            {isEnabled ? 'WhatsApp habilitado' : 'Desabilitado — habilite na aba Conexión'}
           </Badge>
           {!isEnabled && (
             <span className="text-xs text-muted-foreground flex items-center gap-1">
               <AlertCircle className="h-3 w-3" />
-              Flujo no dispara enquanto o canal estiver desabilitado
+              Flujo no dispara mientras o canal estiver desabilitado
             </span>
           )}
         </div>
@@ -135,7 +135,7 @@ export function WhatsAppPreviewTab({ funnel }: Props) {
               <div className="flex flex-col items-center justify-center h-[400px] text-center px-6">
                 <MessageSquare className="h-10 w-10 text-muted-foreground/40 mb-3" />
                 <p className="text-sm text-muted-foreground">
-                  Adicione blocos no Flujo para visualizar a conversación aqui.
+                  Agregá blocos no Flujo para visualizar a conversación acá.
                 </p>
               </div>
             ) : (

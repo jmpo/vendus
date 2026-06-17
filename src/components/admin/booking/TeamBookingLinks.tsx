@@ -131,7 +131,7 @@ export function TeamBookingLinks() {
       toast.success(`Enlace generado: /agendar/${finalSlug}`);
       queryClient.invalidateQueries({ queryKey: ['team-members'] });
     } catch (err: any) {
-      toast.error('Error al generar el enlace: ' + (err?.message ?? 'desconhecido'));
+      toast.error('Error al generar el enlace: ' + (err?.message ?? 'desconocido'));
     } finally {
       setGeneratingFor(null);
     }
@@ -170,8 +170,8 @@ export function TeamBookingLinks() {
                 Links de Agendamiento da Equipo
               </CardTitle>
               <CardDescription>
-                Copie e envie o link individual de cada vendedor — sem precisar acessar a
-                cuenta dele.
+                Copie e envie o link individual de cada vendedor — sin precisar acessar a
+                cuenta de él.
               </CardDescription>
             </div>
             <Button
@@ -237,7 +237,7 @@ export function TeamBookingLinks() {
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
                               <p className="font-medium truncate">
-                                {member.full_name || 'Sem nombre'}
+                                {member.full_name || 'Sin nombre'}
                               </p>
                               {!hasSlug && (
                                 <Badge variant="outline" className="text-xs">
@@ -246,12 +246,12 @@ export function TeamBookingLinks() {
                               )}
                             </div>
                             <p className="text-xs text-muted-foreground truncate">
-                              {hasSlug ? url : member.email || 'Sem e-mail'}
+                              {hasSlug ? url : member.email || 'Sin e-mail'}
                             </p>
                           </div>
                         </div>
 
-                        {/* Ações */}
+                        {/* Acciones */}
                         <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
                           {!hasSlug ? (
                             <Button

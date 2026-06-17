@@ -45,7 +45,7 @@ Deno.serve(async (req: Request) => {
       return new Response('bad request', { status: 400 });
     }
     const sb = supa();
-    // Resolve por path id (preferido) ou por el próprio token (retrocompat).
+    // Resolve por path id (preferido) ou por el propio token (retrocompat).
     let connRow: { id: string; webhook_verify_token: string } | null = null;
     if (pathConnectionId) {
       const { data } = await sb

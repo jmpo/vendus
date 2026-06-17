@@ -1,8 +1,8 @@
 import type { MediaPayload, MediaKind } from '@/components/seller/inbox/MediaAttachment';
 
 /**
- * Lê `metadata.media` de uma mensagem e devolve um payload normalizado para
- * o componente <MediaAttachment/>. Retorna null se a mensagem não tem mídia.
+ * Lê `metadata.media` de uma mensaje e devolve um payload normalizado para
+ * o componente <MediaAttachment/>. Retorna null se a mensaje no tem mídia.
  *
  * Aceita formatos legados (campos espalhados em metadata.* — audio_url,
  * image_url, etc.) e o formato canônico novo (metadata.media = {...}).

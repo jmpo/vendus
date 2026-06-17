@@ -153,7 +153,7 @@ export function AdminExecutiveAgentSettings() {
             </Badge>
           </h3>
           <p className="text-sm text-muted-foreground max-w-2xl">
-            Assistente IA exclusivo do administrador. Envia resumos diários e alertas em tempo real
+            Assistente IA exclusivo do administrador. Envia resumos diários e alertas en tiempo real
             via WhatsApp, e responde preguntas sobre pipeline, equipo, financeiro e tareas.
           </p>
         </div>
@@ -419,7 +419,7 @@ export function AdminExecutiveAgentSettings() {
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <Label className="text-sm font-medium">Meta atingida</Label>
-                      <p className="text-xs text-muted-foreground">Notificar cuando vendedor bater a meta do período</p>
+                      <p className="text-xs text-muted-foreground">Notificar cuando vendedor bater a meta do periodo</p>
                     </div>
                     <Switch
                       checked={form.alert_goal_achieved}
@@ -436,11 +436,11 @@ export function AdminExecutiveAgentSettings() {
               <div className="flex items-start gap-3">
                 <Bot className="h-5 w-5 text-muted-foreground mt-0.5" />
                 <div className="text-sm text-muted-foreground">
-                  <p className="font-medium text-foreground mb-1">Como conversar com o agente?</p>
+                  <p className="font-medium text-foreground mb-1">Como conversar con o agente?</p>
                   <p>
-                    Mande qualquer mensaje do su WhatsApp cadastrado para o número da plataforma e o
-                    agente responderá em segundos. Exemplos: <em>"como está o pipeline hoy?"</em>,{' '}
-                    <em>"quem está online?"</em>, <em>"tiene tarea em atraso?"</em>,{' '}
+                    Mande cualquier mensaje do su WhatsApp registrado para o número da plataforma e o
+                    agente responderá em segundos. Ejemplos: <em>"como está o pipeline hoy?"</em>,{' '}
+                    <em>"quem está online?"</em>, <em>"tiene tarea em retraso?"</em>,{' '}
                     <em>"me manda o financeiro do mes"</em>.
                   </p>
                 </div>

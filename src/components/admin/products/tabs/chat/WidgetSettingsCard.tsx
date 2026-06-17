@@ -27,7 +27,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
     placeholder_text: widget.placeholder_text || 'Escribí su mensaje...',
     position: widget.position || 'bottom-right',
     auto_open_delay: widget.auto_open_delay || 0,
-    offline_message: widget.offline_message || 'No momento no estamos disponíveis. Deixe su mensaje que retornaremos.',
+    offline_message: widget.offline_message || 'No momento no estamos disponibles. Deixe su mensaje que retornaremos.',
   });
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
       placeholder_text: widget.placeholder_text || 'Escribí su mensaje...',
       position: widget.position || 'bottom-right',
       auto_open_delay: widget.auto_open_delay || 0,
-      offline_message: widget.offline_message || 'No momento no estamos disponíveis. Deixe su mensaje que retornaremos.',
+      offline_message: widget.offline_message || 'No momento no estamos disponibles. Deixe su mensaje que retornaremos.',
     });
   }, [widget]);
 
@@ -50,7 +50,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
         id: widget.id,
         ...formData,
       });
-      toast.success('Configurações salvas com éxito!');
+      toast.success('Configuraciones salvas con éxito!');
     } catch (error) {
       toast.error('Error ao guardar configuraciones');
     }
@@ -65,7 +65,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
-              Configurações Básicas
+              Configuraciones Básicas
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -90,7 +90,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
             </div>
 
             <div className="space-y-2">
-              <Label>Posição</Label>
+              <Label>Posición</Label>
               <Select 
                 value={formData.position} 
                 onValueChange={(value) => setFormData({ ...formData, position: value })}
@@ -112,7 +112,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Palette className="h-4 w-4" />
-              Aparência
+              Apariencia
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -159,7 +159,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
-              Mensagens
+              Mensajes
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -187,7 +187,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
               <Textarea
                 value={formData.offline_message}
                 onChange={(e) => setFormData({ ...formData, offline_message: e.target.value })}
-                placeholder="No estamos disponíveis..."
+                placeholder="No estamos disponibles..."
                 rows={2}
               />
             </div>
@@ -222,7 +222,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
           ) : (
             <Save className="mr-2 h-4 w-4" />
           )}
-          Salvar Configurações
+          Guardar Configuraciones
         </Button>
       </div>
 
@@ -234,7 +234,7 @@ export function WidgetSettingsCard({ widget, productId }: WidgetSettingsCardProp
               <Eye className="h-4 w-4" />
               Preview
             </CardTitle>
-            <CardDescription>Visualização do widget</CardDescription>
+            <CardDescription>Visualización do widget</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="relative bg-muted/50 rounded-lg h-[400px] overflow-hidden">

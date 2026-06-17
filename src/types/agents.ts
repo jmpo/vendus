@@ -102,26 +102,26 @@ export interface ProductAgent {
   activation_priority?: number;
   activation_scope?: string; // 'all' | 'whatsapp' | 'chat' | 'inbox' | 'funnel'
   takeover_on_match?: boolean;
-  // Vínculo opcional com uma conexão WhatsApp específica.
-  // null = atende em qualquer conexão (padrão). Preenchido = só atende mensagens
+  // Vínculo opcional con uma conexión WhatsApp específica.
+  // null = atende em cualquier conexión (predeterminado). Completado = só atende mensajes
   // recebidas naquela instância Evolution.
   evolution_instance_id?: string | null;
   // Humanization config (timing, splitting, style) — see AgentHumanizationTab
   humanization?: Record<string, any> | null;
-  // (Removido) ai_model: o modelo agora é gerenciado globalmente em org_ai_routing
-  // (Configurações > Integrações > Roteamento de IA, capability='agent_chat').
+  // (Removido) ai_model: o modelo ahora é gerenciado globalmente em org_ai_routing
+  // (Configuraciones > Integraciones > Roteamento de IA, capability='agent_chat').
   // === Agendamento (booking) ===
-  // Anfitrião padrão cuja agenda a IA consulta e onde a reunião é criada.
+  // Anfitrião predeterminado cuja agenda a IA consulta e onde a reunión é criada.
   default_schedule_user_id?: string | null;
-  // Tipos de evento (booking_event_types) que esse agente pode oferecer ao lead.
+  // Tipos de evento (booking_event_types) que ese agente puede oferecer ao lead.
   allowed_event_type_ids?: string[];
-  // Usuários extras que recebem notificação quando a IA confirma uma reunião.
+  // Usuarios extras que recebem notificación cuando a IA confirma uma reunión.
   booking_notification_user_ids?: string[];
-  // Se true, notifica todos os admins da organização ao confirmar.
+  // Se true, notifica todos los admins da organização ao confirmar.
   booking_notify_org_admins?: boolean;
-  // Configurações exclusivas do Agente Admin Executivo (persistidas em auto_notification_settings)
+  // Configuraciones exclusivas do Agente Admin Executivo (persistidas em auto_notification_settings)
   monitored_product_ids?: string[];
-  // === Welcome + Quick Menu (Orquestrador) ===
+  // === Welcome + Quick Menu (Orquestador) ===
   welcome_enabled?: boolean;
   welcome_message?: string | null;
   quick_menu_mode?: 'off' | 'always' | 'fallback';
@@ -151,7 +151,7 @@ export const AGENT_TYPE_LABELS: Record<AgentType, string> = {
   support: 'Suporte',
   financial: 'Financeiro',
   admin: 'Administrativo',
-  orchestrator: 'Orquestrador',
+  orchestrator: 'Orquestador',
   custom: 'Personalizado',
 };
 
@@ -173,22 +173,22 @@ export const AGENT_TEMPLATES: Record<AgentType, AgentTemplate> = {
     name: 'SDR Qualificador',
     description: 'Qualifica leads e encaminha para vendas',
     icon: '🎯',
-    primary_objective: 'Qualificar leads e encaminhar para o closer quando houver interesse real',
+    primary_objective: 'Qualificar leads e derivar para o closer cuando houver interesse real',
     can_do: [
-      'Fazer perguntas de qualificação',
+      'Fazer perguntas de calificación',
       'Aplicar tags aos leads',
-      'Avançar leads no funil',
-      'Coletar informações de contato',
+      'Avanzar leads no funil',
+      'Coletar informaciones de contato',
     ],
     cannot_do: [
-      'Falar de preço fechado',
+      'Falar de precio fechado',
       'Fechar vendas',
       'Dar descontos',
     ],
     handoff_triggers: [
-      'Lead pede para falar com humano',
+      'Lead pede para falar con humano',
       'Lead demonstra alto interesse de compra',
-      'Lead tem objeções complexas',
+      'Lead tem objeciones complexas',
     ],
     tone_style: 'friendly',
     message_style: 'balanced',
@@ -199,19 +199,19 @@ export const AGENT_TEMPLATES: Record<AgentType, AgentTemplate> = {
     icon: '💼',
     primary_objective: 'Fechar vendas e converter leads qualificados em clientes',
     can_do: [
-      'Negociar condições',
+      'Negociar condiciones',
       'Apresentar propostas',
-      'Falar sobre preços e planos',
+      'Falar sobre precios e planos',
       'Enviar links de pagamento',
-      'Chamar humano quando necessário',
+      'Chamar humano cuando necesario',
     ],
     cannot_do: [
-      'Dar descontos não autorizados',
+      'Dar descontos no autorizados',
       'Prometer prazos irreais',
     ],
     handoff_triggers: [
-      'Lead solicita condições especiais',
-      'Lead quer falar com gerente',
+      'Lead solicita condiciones especiais',
+      'Lead quer falar con gerente',
       'Negociação complexa',
     ],
     tone_style: 'consultive',
@@ -226,15 +226,15 @@ export const AGENT_TEMPLATES: Record<AgentType, AgentTemplate> = {
       'Responder dúvidas técnicas',
       'Abrir tickets de suporte',
       'Escalar para equipe técnica',
-      'Enviar tutoriais e documentação',
+      'Enviar tutoriais e documentación',
     ],
     cannot_do: [
       'Vender novos produtos',
       'Negociar contratos',
-      'Fazer alterações em conta',
+      'Fazer cambios em conta',
     ],
     handoff_triggers: [
-      'Problema não resolvido após 3 tentativas',
+      'Problema no resolvido após 3 tentativas',
       'Cliente insatisfeito',
       'Solicitação de reembolso',
     ],
@@ -243,9 +243,9 @@ export const AGENT_TEMPLATES: Record<AgentType, AgentTemplate> = {
   },
   financial: {
     name: 'Financeiro',
-    description: 'Lida com cobranças e questões financeiras',
+    description: 'Lida con cobranças e questões financeiras',
     icon: '💰',
-    primary_objective: 'Lidar com questões financeiras e cobranças de forma profissional',
+    primary_objective: 'Lidar con questões financeiras e cobranças de forma profissional',
     can_do: [
       'Informar sobre faturas',
       'Enviar boletos e links de pagamento',
@@ -253,14 +253,14 @@ export const AGENT_TEMPLATES: Record<AgentType, AgentTemplate> = {
       'Informar sobre atrasos',
     ],
     cannot_do: [
-      'Negociar dívidas sem autorização',
+      'Negociar dívidas sin autorização',
       'Cancelar contratos',
       'Fazer estornos',
     ],
     handoff_triggers: [
       'Solicitação de negociação de dívida',
       'Disputa de cobrança',
-      'Cancelamento de serviço',
+      'Cancelamento de servicio',
     ],
     tone_style: 'formal',
     message_style: 'short',
@@ -273,8 +273,8 @@ export const AGENT_TEMPLATES: Record<AgentType, AgentTemplate> = {
     can_do: [
       'Responder sobre processos',
       'Direcionar para áreas corretas',
-      'Informar horários e contatos',
-      'Agendar reuniões',
+      'Informar horarios e contatos',
+      'Agendar reuniones',
     ],
     cannot_do: [
       'Tomar decisões finais',
@@ -282,41 +282,41 @@ export const AGENT_TEMPLATES: Record<AgentType, AgentTemplate> = {
       'Aprovar solicitações',
     ],
     handoff_triggers: [
-      'Solicitação que requer aprovação',
+      'Solicitação que requer aprobación',
       'Reclamação formal',
     ],
     tone_style: 'formal',
     message_style: 'balanced',
   },
   orchestrator: {
-    name: 'Orquestrador Mestre',
-    description: 'Classifica produto+intenção e roteia para o especialista',
+    name: 'Orquestador Mestre',
+    description: 'Classifica produto+intención e roteia para o especialista',
     icon: '🧭',
-    primary_objective: 'Classificar a mensagem recebida (produto + intenção) e rotear o lead para o especialista correto, ou pedir UMA pergunta de esclarecimento quando não conseguir classificar com confiança.',
+    primary_objective: 'Classificar a mensaje recebida (produto + intención) e rotear o lead para o especialista correto, ou pedir UMA pergunta de esclarecimento cuando no conseguir classificar con confiança.',
     can_do: [
       'Identificar de qual produto o lead está falando',
-      'Detectar intenção (informação, compra, suporte, financeiro, humano)',
+      'Detectar intención (información, compra, suporte, financeiro, humano)',
       'Rotear para SDR / Closer / Suporte / Financeiro do produto certo',
-      'Fazer UMA pergunta curta para desambiguar quando necessário',
-      'Transferir para humano quando for solicitado',
+      'Fazer UMA pergunta curta para desambiguar cuando necesario',
+      'Transferir para humano cuando for solicitado',
     ],
     cannot_do: [
-      'Vender, negociar ou explicar detalhes de produto',
+      'Vender, negociar ou explicar detalles de produto',
       'Responder dúvidas técnicas (encaminha para Suporte)',
-      'Falar de preço, condições ou plano (encaminha para Closer)',
-      'Mais de 2 perguntas seguidas — se não classificar, transfere para humano',
+      'Falar de precio, condiciones ou plano (encaminha para Closer)',
+      'Mais de 2 perguntas seguidas — se no classificar, transfere para humano',
     ],
     handoff_triggers: [
-      'Lead pede explicitamente para falar com humano',
-      'Não consegui classificar produto após 2 perguntas',
-      'Mensagem ofensiva ou fora do escopo da empresa',
+      'Lead pede explicitamente para falar con humano',
+      'No consegui classificar produto após 2 perguntas',
+      'Mensaje ofensiva ou fora do escopo da empresa',
     ],
     tone_style: 'friendly',
     message_style: 'short',
   },
   custom: {
     name: 'Agente Personalizado',
-    description: 'Configure do zero conforme sua necessidade',
+    description: 'Configure do zero conforme tu necessidade',
     icon: '✨',
     primary_objective: '',
     can_do: [],

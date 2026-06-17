@@ -91,7 +91,7 @@ serve(async (req: Request): Promise<Response> => {
         }
 
         return new Response(
-          JSON.stringify({ success: true, message: "Conexão con Firecrawl bem-sucedida" }),
+          JSON.stringify({ success: true, message: "Conexión con Firecrawl bem-sucedida" }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }

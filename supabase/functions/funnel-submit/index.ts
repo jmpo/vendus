@@ -249,13 +249,13 @@ Deno.serve(async (req) => {
         },
       });
 
-    // ─── Fase 4: Integrações pós-quiz (tags, cadência, agente IA) ───
+    // ─── Fase 4: Integraciones pós-quiz (tags, cadência, agente IA) ───
     try {
       // 7.1 Aplicar tags configuradas + tags coletadas em runtime
       const applyTagIds: string[] = Array.isArray(postActions.apply_tag_ids) ? postActions.apply_tag_ids : [];
       const runtimeTagNames: string[] = Array.isArray(quiz_tags) ? quiz_tags.filter(Boolean) : [];
 
-      // Resolver tags por nombre (cria se necessário)
+      // Resolver tags por nombre (cria se necesario)
       const resolvedTagIds = new Set<string>(applyTagIds);
       if (runtimeTagNames.length) {
         const { data: existingTags } = await supabase

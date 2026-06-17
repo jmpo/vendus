@@ -21,7 +21,7 @@ interface Props {
 }
 
 const statusConfig: Record<FunnelStatus, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-  draft: { label: 'Rascunho', variant: 'secondary' },
+  draft: { label: 'Borrador', variant: 'secondary' },
   active: { label: 'Ativo', variant: 'default' },
   paused: { label: 'Pausado', variant: 'outline' },
   archived: { label: 'Arquivado', variant: 'destructive' },
@@ -31,15 +31,15 @@ function validateWhatsApp(blocks: FunnelBlock[], channels: any): string[] {
   const warnings: string[] = [];
   const wa = channels?.whatsapp;
   if (!wa?.enabled) {
-    warnings.push('Canal WhatsApp desabilitado — habilite na aba Conexão para o flujo disparar.');
+    warnings.push('Canal WhatsApp desabilitado — habilite na aba Conexión para o flujo disparar.');
   }
   if (!blocks || blocks.length === 0) {
-    warnings.push('Flujo vazio — adicione pelo menos uma mensaje de boas-vindas.');
+    warnings.push('Flujo vacío — agregá por el menos uma mensaje de boas-vindas.');
     return warnings;
   }
   const ids = new Set(blocks.map(b => b.id));
   const hasMessage = blocks.some(b => b.type === 'message');
-  if (!hasMessage) warnings.push('Sem bloco de mensaje inicial — o lead no recebe nada ao iniciar a conversación.');
+  if (!hasMessage) warnings.push('Sin bloco de mensaje inicial — o lead no recebe nada ao iniciar a conversación.');
   blocks.forEach(b => {
     const next = (b.data as any)?.next_block_id || b.next_block_id;
     if (next && !ids.has(next)) warnings.push(`Bloco "${b.type}" aponta para um bloco inexistente.`);
@@ -149,7 +149,7 @@ export function WhatsAppBuilder({ funnelId, onBack }: Props) {
         <TabsList className="grid w-full max-w-2xl grid-cols-5">
           <TabsTrigger value="flow" className="gap-2"><Workflow className="h-4 w-4" /><span className="hidden sm:inline">Flujo</span></TabsTrigger>
           <TabsTrigger value="preview" className="gap-2"><Eye className="h-4 w-4" /><span className="hidden sm:inline">Preview</span></TabsTrigger>
-          <TabsTrigger value="connection" className="gap-2"><Smartphone className="h-4 w-4" /><span className="hidden sm:inline">Conexão</span></TabsTrigger>
+          <TabsTrigger value="connection" className="gap-2"><Smartphone className="h-4 w-4" /><span className="hidden sm:inline">Conexión</span></TabsTrigger>
           <TabsTrigger value="logs" className="gap-2"><Activity className="h-4 w-4" /><span className="hidden sm:inline">Webhooks</span></TabsTrigger>
           <TabsTrigger value="settings" className="gap-2"><Settings className="h-4 w-4" /><span className="hidden sm:inline">Config</span></TabsTrigger>
         </TabsList>

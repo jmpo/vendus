@@ -90,7 +90,7 @@ export function QuizIntegrationsTab({ funnel }: Props) {
         </div>
         <Button onClick={handleSave} disabled={updateFunnel.isPending} className="gap-2">
           {updateFunnel.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          Salvar
+          Guardar
         </Button>
       </div>
 
@@ -101,15 +101,15 @@ export function QuizIntegrationsTab({ funnel }: Props) {
             <Bot className="h-4 w-4 text-primary" /> Agente IA pós-quiz
           </CardTitle>
           <CardDescription>
-            Vincule um agente para continuar a conversación, calificar e agendar reuniões logo após o quiz.
+            Vincule um agente para continuar a conversación, calificar e agendar reuniones logo após o quiz.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <Label>Agente vinculado</Label>
           <Select value={agentId || 'none'} onValueChange={(v) => setAgentId(v === 'none' ? '' : v)}>
-            <SelectTrigger><SelectValue placeholder="Nenhum agente" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Ningún agente" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="none">Nenhum</SelectItem>
+              <SelectItem value="none">Ningún</SelectItem>
               {activeAgents.map((a: any) => (
                 <SelectItem key={a.id} value={a.id}>
                   {a.name} {a.agent_type ? `· ${a.agent_type}` : ''}
@@ -119,7 +119,7 @@ export function QuizIntegrationsTab({ funnel }: Props) {
           </Select>
           {agentId && (
             <p className="text-xs text-muted-foreground">
-              O agente receberá o contexto completo do quiz (respuestas, score, tags) na primeira interação inbound del lead.
+              O agente receberá o contexto completo do quiz (respuestas, score, tags) na primera interacción inbound del lead.
             </p>
           )}
         </CardContent>
@@ -138,9 +138,9 @@ export function QuizIntegrationsTab({ funnel }: Props) {
         <CardContent className="space-y-3">
           <Label>Cadencia</Label>
           <Select value={cadenceId || 'none'} onValueChange={(v) => setCadenceId(v === 'none' ? '' : v)}>
-            <SelectTrigger><SelectValue placeholder="Nenhuma cadencia" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Ninguna cadencia" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="none">Nenhuma</SelectItem>
+              <SelectItem value="none">Ninguna</SelectItem>
               {activeCadences.map((c: any) => (
                 <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
               ))}
@@ -156,7 +156,7 @@ export function QuizIntegrationsTab({ funnel }: Props) {
             <Flame className="h-4 w-4 text-orange-500" /> Calificación Automática
           </CardTitle>
           <CardDescription>
-            Define a temperatura del lead com base no score do quiz.
+            Define a temperatura del lead con base no score do quiz.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -179,7 +179,7 @@ export function QuizIntegrationsTab({ funnel }: Props) {
             </div>
           </div>
           <div className="text-xs text-muted-foreground">
-            Lead com score abaixo de {actions.warm_threshold} = frio · entre {actions.warm_threshold} e {actions.hot_threshold - 1} = morno · ≥ {actions.hot_threshold} = quente.
+            Lead con score abaixo de {actions.warm_threshold} = frio · entre {actions.warm_threshold} e {actions.hot_threshold - 1} = morno · ≥ {actions.hot_threshold} = quente.
           </div>
         </CardContent>
       </Card>
@@ -191,7 +191,7 @@ export function QuizIntegrationsTab({ funnel }: Props) {
             <TagIcon className="h-4 w-4 text-primary" /> Tags fixas
           </CardTitle>
           <CardDescription>
-            Tags aplicadas a todo lead que concluir o quiz (além das tags dinâmicas das respuestas).
+            Tags aplicadas a todo lead que concluir o quiz (además das tags dinâmicas das respuestas).
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -208,7 +208,7 @@ export function QuizIntegrationsTab({ funnel }: Props) {
             </div>
           )}
           <Select value="" onValueChange={(v) => v && toggleTag(v)}>
-            <SelectTrigger><SelectValue placeholder="+ Adicionar tag" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="+ Agregar tag" /></SelectTrigger>
             <SelectContent>
               {(tags || []).filter(t => !actions.apply_tag_ids.includes(t.id)).map(t => (
                 <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
@@ -222,14 +222,14 @@ export function QuizIntegrationsTab({ funnel }: Props) {
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <Briefcase className="h-4 w-4 text-primary" /> Ações adicionais
+            <Briefcase className="h-4 w-4 text-primary" /> Acciones adicionais
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-sm">Criar oportunidad no pipeline</Label>
-              <p className="text-xs text-muted-foreground">Move o lead diretamente para o primeiro estágio com um deal aberto.</p>
+              <Label className="text-sm">Crear oportunidad no pipeline</Label>
+              <p className="text-xs text-muted-foreground">Move o lead diretamente para o primero etapa con um deal aberto.</p>
             </div>
             <Switch
               checked={actions.create_deal}

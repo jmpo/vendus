@@ -137,7 +137,7 @@ async function processStalledLeads(supabase: any, settings: AutoNotificationSett
         user_id: lead.assigned_to,
         type: 'urgency',
         title: `Lead parado: ${lead.name}`,
-        message: `Sem contato há ${daysSince} días. Que tal retomar la conversación?`,
+        message: `Sin contato há ${daysSince} días. Que tal retomar la conversación?`,
         action_url: `/leads?highlight=${lead.id}`,
       });
 

@@ -89,7 +89,7 @@ export function EditVisitorDialog({
           </div>
           <div>
             <Label>Email</Label>
-            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@exemplo.com" />
+            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@ejemplo.com" />
           </div>
           <div>
             <Label>Teléfono</Label>

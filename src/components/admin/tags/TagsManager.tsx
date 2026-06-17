@@ -102,7 +102,7 @@ export function TagsManager() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>¿Eliminar etiqueta?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              A etiqueta "{tag.name}" será removida de todos os leads. Esta acción no puede ser desfeita.
+                              A etiqueta "{tag.name}" será removida de todos los leads. Esta acción no puede ser desfeita.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>

@@ -118,15 +118,15 @@ export function StageCard({ stage, leadCount, onEdit, onDelete, isDragging }: St
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Excluir etapa "{stage.name}"?</AlertDialogTitle>
+              <AlertDialogTitle>Eliminar etapa "{stage.name}"?</AlertDialogTitle>
               <AlertDialogDescription>
                 {leadCount > 0 ? (
                   <>
                     <span className="text-destructive font-medium">
-                      Atenção: {leadCount} lead{leadCount !== 1 ? 's' : ''} está{leadCount !== 1 ? 'ão' : ''} nesta etapa.
+                      Atención: {leadCount} lead{leadCount !== 1 ? 's' : ''} está{leadCount !== 1 ? 'ão' : ''} nesta etapa.
                     </span>
                     <br />
-                    Ao eliminar, esses leads ficarão sem etapa definida no pipeline.
+                    Ao eliminar, esses leads ficarão sin etapa definida no pipeline.
                   </>
                 ) : (
                   'Esta acción no puede ser desfeita.'
@@ -139,7 +139,7 @@ export function StageCard({ stage, leadCount, onEdit, onDelete, isDragging }: St
                 onClick={handleDelete}
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               >
-                Excluir
+                Eliminar
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

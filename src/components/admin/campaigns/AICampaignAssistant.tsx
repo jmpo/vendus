@@ -37,16 +37,16 @@ export function AICampaignAssistant({ campaignId }: { campaignId: string }) {
       <CardContent className="space-y-3">
         {!insights && !loading && (
           <p className="text-sm text-muted-foreground">
-            Hacé clic em "Analisar campaña" para receber recomendações sobre melhor horario, agente e contexto a partir dos dados reais.
+            Hacé clic em "Analisar campaña" para receber recomendações sobre mejor horario, agente e contexto a partir dos dados reais.
           </p>
         )}
         {summary && (
           <div className="text-xs text-muted-foreground flex flex-wrap gap-3">
             <span>Enviadas: <strong>{summary.totals?.sent ?? 0}</strong></span>
-            <span>Respostas: <strong>{summary.totals?.responded ?? 0}</strong></span>
+            <span>Respuestas: <strong>{summary.totals?.responded ?? 0}</strong></span>
             <span>Taxa: <strong className="text-primary">{summary.totals?.response_rate ?? 0}%</strong></span>
             {!!summary.best_response_hours?.length && (
-              <span>Melhores horários: <strong>{summary.best_response_hours.map((h: any) => `${h.hour}h`).join(', ')}</strong></span>
+              <span>Mejores horarios: <strong>{summary.best_response_hours.map((h: any) => `${h.hour}h`).join(', ')}</strong></span>
             )}
           </div>
         )}
@@ -57,7 +57,7 @@ export function AICampaignAssistant({ campaignId }: { campaignId: string }) {
           </div>
         ))}
         {insights && !insights.length && (
-          <p className="text-sm text-muted-foreground">Sem insights por enquanto — colete mais dados antes de reanalisar.</p>
+          <p className="text-sm text-muted-foreground">Sin insights por mientras — colete mais dados antes de reanalisar.</p>
         )}
       </CardContent>
     </Card>

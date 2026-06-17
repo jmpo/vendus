@@ -70,14 +70,14 @@ export const FormBlockNode = memo(function FormBlockNode({
       case 'phone':
       case 'number':
       case 'textarea':
-        return block.placeholder || 'Escribí aqui...';
+        return block.placeholder || 'Escribí acá...';
       case 'select':
       case 'multi_select':
         const selectOptions = block.options as SelectOption[];
         if (Array.isArray(selectOptions) && selectOptions.length > 0) {
           return `${selectOptions.length} opciones`;
         }
-        return 'Adicionar opciones';
+        return 'Agregar opciones';
       case 'scale':
         const scaleOpts = block.options as ScaleOptions;
         if (scaleOpts && typeof scaleOpts === 'object' && 'min' in scaleOpts) {
@@ -89,7 +89,7 @@ export const FormBlockNode = memo(function FormBlockNode({
       case 'score':
         return `+${block.score_value} pontos`;
       case 'tag':
-        return block.apply_tags?.join(', ') || 'Adicionar etiquetas';
+        return block.apply_tags?.join(', ') || 'Agregar etiquetas';
       case 'hidden_field':
         return `Mapeia para: ${block.maps_to || 'indefinido'}`;
       case 'ai_question':
@@ -98,12 +98,12 @@ export const FormBlockNode = memo(function FormBlockNode({
       case 'image':
         return (block.block_settings as any)?.url ? 'Imagen configurada' : 'Configure a URL/upload';
       case 'video_upload':
-        return (block.block_settings as any)?.url ? 'Vídeo enviado' : 'Faça upload de um vídeo';
+        return (block.block_settings as any)?.url ? 'Vídeo enviado' : 'Hacé upload de um vídeo';
       case 'video_embed':
         return (block.block_settings as any)?.url || 'Cole URL do YouTube/Vimeo/Loom';
       case 'carousel': {
         const imgs = ((block.block_settings as any)?.images as string[]) || [];
-        return imgs.length ? `${imgs.length} imagen(ns)` : 'Adicione imagens';
+        return imgs.length ? `${imgs.length} imagen(ns)` : 'Agregá imagens';
       }
       case 'divider':
         return 'Divisor visual';
@@ -152,7 +152,7 @@ export const FormBlockNode = memo(function FormBlockNode({
             {block.required && (
               <Badge variant="outline" className="text-xs font-normal gap-0.5">
                 <Asterisk className="h-2.5 w-2.5" />
-                Obrigatório
+                Obligatorio
               </Badge>
             )}
             {block.maps_to && !['hidden_field'].includes(block.block_type) && (

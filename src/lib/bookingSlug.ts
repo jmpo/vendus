@@ -11,7 +11,7 @@ export const generateBookingSlug = (fullName: string): string => {
 
 /**
  * Garante que o profile tenha um booking_slug.
- * Se já existir, retorna; senão gera a partir do full_name (ou fallback)
+ * Se já existir, retorna; sino gera a partir do full_name (ou fallback)
  * checa unicidade e salva em profiles.
  */
 export async function ensureBookingSlug(params: {
@@ -41,7 +41,7 @@ export async function ensureBookingSlug(params: {
     .eq('id', userId);
 
   if (error) {
-    console.error('[ensureBookingSlug] erro ao salvar slug', error);
+    console.error('[ensureBookingSlug] erro ao guardar slug', error);
     return null;
   }
   return finalSlug;

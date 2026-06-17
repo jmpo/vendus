@@ -92,7 +92,7 @@ export function ChangeSquadDialog({ member, open, onOpenChange }: ChangeSquadDia
 
             {currentSquad && (
               <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Squad atual:</p>
+                <p className="text-sm text-muted-foreground">Squad actual:</p>
                 <Badge 
                   variant="outline" 
                   className="text-sm"
@@ -147,7 +147,7 @@ export function ChangeSquadDialog({ member, open, onOpenChange }: ChangeSquadDia
           </Button>
           <Button onClick={handleSave} disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Salvar
+            Guardar
           </Button>
         </DialogFooter>
       </DialogContent>

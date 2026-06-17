@@ -86,7 +86,7 @@ export function FormBlockPalette({ onDragStart, onBlockClick }: FormBlockPalette
       <div className="p-4 border-b">
         <h3 className="font-semibold text-sm">Blocos</h3>
         <p className="text-xs text-muted-foreground mt-1">
-          Arraste ou clique para adicionar
+          Arraste ou clique para agregar
         </p>
       </div>
       
@@ -97,7 +97,7 @@ export function FormBlockPalette({ onDragStart, onBlockClick }: FormBlockPalette
       <div className="p-3 border-t bg-muted/30">
         <div className="text-xs text-muted-foreground space-y-1">
           <p>💡 <strong>Dica:</strong></p>
-          <p>Comece com uma tela de boas-vindas e termine com uma tela final.</p>
+          <p>Comece con uma tela de boas-vindas e termine con uma tela final.</p>
         </div>
       </div>
     </div>

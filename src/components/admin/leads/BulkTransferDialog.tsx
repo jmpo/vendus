@@ -114,7 +114,7 @@ export function BulkTransferDialog({
           <div className="space-y-2">
             <Label>Motivo (opcional)</Label>
             <Textarea
-              placeholder="Descreva o motivo da transferência..."
+              placeholder="Descreva o motivo da transferencia..."
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={3}

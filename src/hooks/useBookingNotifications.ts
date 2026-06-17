@@ -54,13 +54,13 @@ Passando para confirmar a *{{nome_evento}}* da *{{empresa}}*.
 ⏰ {{hora}}
 📍 {{modalidade}}
 
-Posso confirmar essa agenda? Respondé:
+Posso confirmar esa agenda? Respondé:
 1️⃣ Confirmar
 2️⃣ Reagendar
 3️⃣ Cancelar`;
 
 export const DEFAULT_RECOVERY = `Hola, {{nome_lead}}!
-Ainda no recebemos su confirmação para a reunión com {{nome_vendedor}}.
+Aún no recebemos su confirmación para a reunión con {{nome_vendedor}}.
 
 Usted conseguirá participar?
 
@@ -71,7 +71,7 @@ Usted conseguirá participar?
 export const DEFAULT_INTERNAL = `✅ {{nome_lead}} confirmou a reunión.
 
 🗓 {{data}} às {{hora}}
-📞 {{telefone_lead}}
+📞 {{teléfono_lead}}
 🔗 {{link_reuniao}}`;
 
 export function buildDefaultSettings(orgId: string, eventTypeId: string): Partial<BookingNotificationSettings> {
@@ -164,7 +164,7 @@ export function useBookingNotifications(eventTypeId: string | null | undefined) 
         offset_value: input.offset_value ?? 1,
         offset_unit: (input.offset_unit ?? 'hours') as OffsetUnit,
         channel: (input.channel ?? 'whatsapp') as ReminderChannel,
-        message_template: input.message_template ?? `Hola, {{nome_lead}}! Lembrete: su reunión com {{nome_vendedor}} é em breve.\n\n🗓 {{data}}\n⏰ {{hora}}\n{{link_reuniao}}`,
+        message_template: input.message_template ?? `Hola, {{nome_lead}}! Lembrete: su reunión con {{nome_vendedor}} é em breve.\n\n🗓 {{data}}\n⏰ {{hora}}\n{{link_reuniao}}`,
         email_subject: input.email_subject ?? 'Lembrete da su reunión',
         is_active: input.is_active ?? true,
         order_index: input.order_index ?? (reminders.data?.length ?? 0),
@@ -216,7 +216,7 @@ export const TEMPLATE_VARIABLES = [
   { key: '{{nome_lead}}', label: 'Nombre del lead' },
   { key: '{{nome_vendedor}}', label: 'Vendedor' },
   { key: '{{email_lead}}', label: 'Email' },
-  { key: '{{telefone_lead}}', label: 'Teléfono' },
+  { key: '{{teléfono_lead}}', label: 'Teléfono' },
   { key: '{{data}}', label: 'Fecha' },
   { key: '{{hora}}', label: 'Hora' },
   { key: '{{modalidade}}', label: 'Modalidade' },

@@ -16,7 +16,7 @@ export interface AppearancePreset {
   description: string;
   category: PresetCategory;
   preview: { primary: string; bg: string; accent: string; bubble?: string };
-  /** Patch base aplicado a todos os canais */
+  /** Patch base aplicado a todos los canais */
   base: Partial<ChannelAppearance>;
   /** Overrides específicos das channel_options por canal (tipo livre — mesclado raso) */
   perChannelOptions?: Partial<Record<ChannelKey, Record<string, unknown>>>;
@@ -29,7 +29,7 @@ export const APPEARANCE_PRESETS: AppearancePreset[] = [
   // ============ PADRÃO INLEAD ============
   {
     id: 'inlead',
-    name: 'inlead (padrão)',
+    name: 'inlead (predeterminado)',
     description: 'Tipografia Inter, indigo, fundo branco — identidade inlead',
     category: 'generic',
     preview: { primary: '#6366F1', bg: '#FFFFFF', accent: '#4F46E5', bubble: '#EEF2FF' },
@@ -60,7 +60,7 @@ export const APPEARANCE_PRESETS: AppearancePreset[] = [
   {
     id: 'whatsapp',
     name: 'WhatsApp',
-    description: 'Verde clássico, bolhas estilo WA',
+    description: 'Verde clássico, burbujas estilo WA',
     category: 'messaging',
     preview: { primary: '#25D366', bg: '#ECE5DD', accent: '#075E54', bubble: '#DCF8C6' },
     base: {
@@ -81,14 +81,14 @@ export const APPEARANCE_PRESETS: AppearancePreset[] = [
       show_online_status: true,
     },
     perChannelOptions: {
-      chat: { bubble_style: 'bubble', bot_bubble_color: '#FFFFFF', user_bubble_color: '#DCF8C6', header_gradient: false, input_placeholder: 'Mensagem' },
+      chat: { bubble_style: 'bubble', bot_bubble_color: '#FFFFFF', user_bubble_color: '#DCF8C6', header_gradient: false, input_placeholder: 'Mensaje' },
       widget: { fab_icon: 'message-circle', callout_text: 'Fale conosco' },
     },
   },
   {
     id: 'telegram',
     name: 'Telegram',
-    description: 'Azul céu, bolhas suaves',
+    description: 'Azul céu, burbujas suaves',
     category: 'messaging',
     preview: { primary: '#0088CC', bg: '#E7F3FA', accent: '#179CDE', bubble: '#EFFDDE' },
     base: {
@@ -109,7 +109,7 @@ export const APPEARANCE_PRESETS: AppearancePreset[] = [
       show_online_status: true,
     },
     perChannelOptions: {
-      chat: { bubble_style: 'rounded', bot_bubble_color: '#FFFFFF', user_bubble_color: '#EFFDDE', header_gradient: true, input_placeholder: 'Escreva uma mensagem' },
+      chat: { bubble_style: 'rounded', bot_bubble_color: '#FFFFFF', user_bubble_color: '#EFFDDE', header_gradient: true, input_placeholder: 'Escreva uma mensaje' },
     },
   },
   {
@@ -142,7 +142,7 @@ export const APPEARANCE_PRESETS: AppearancePreset[] = [
   {
     id: 'messenger',
     name: 'Messenger',
-    description: 'Azul Facebook, bolhas redondas',
+    description: 'Azul Facebook, burbujas redondas',
     category: 'messaging',
     preview: { primary: '#0084FF', bg: '#F0F2F5', accent: '#1877F2', bubble: '#0084FF' },
     base: {
@@ -305,7 +305,7 @@ export const APPEARANCE_PRESETS: AppearancePreset[] = [
   {
     id: 'minimal-mono',
     name: 'Minimal Mono',
-    description: 'Preto e branco, sem sombras',
+    description: 'Preto e branco, sin sombras',
     category: 'generic',
     preview: { primary: '#000000', bg: '#FFFFFF', accent: '#404040', bubble: '#F5F5F5' },
     base: {
@@ -387,8 +387,8 @@ export const APPEARANCE_PRESETS: AppearancePreset[] = [
 // -----------------------------------------------------
 
 /**
- * Aplica um preset ao canal indicado, preservando as opções específicas
- * do canal quando o preset não as define.
+ * Aplica um preset ao canal indicado, preservando as opciones específicas
+ * do canal cuando o preset no as define.
  */
 export function applyPresetToChannel(
   current: ChannelAppearance,
@@ -406,7 +406,7 @@ export function applyPresetToChannel(
   return {
     ...base,
     ...preset.base,
-    // preserva uploads do usuário (logos, avatares, bg) ao trocar tema
+    // preserva uploads do usuario (logos, avatares, bg) ao trocar tema
     logo_url: current.logo_url ?? null,
     avatar_url: current.avatar_url ?? null,
     background_image_url: current.background_image_url ?? null,
@@ -415,7 +415,7 @@ export function applyPresetToChannel(
 }
 
 /**
- * Aplica preset a todos os 4 canais de uma vez.
+ * Aplica preset a todos los 4 canais de uma vez.
  */
 export function applyPresetToAll(
   current: FunnelAppearance,

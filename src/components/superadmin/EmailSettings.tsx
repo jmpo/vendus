@@ -129,8 +129,8 @@ export function EmailSettings() {
                 <div className="space-y-1">
                   <p className="font-medium text-sm">Sistema activo</p>
                   <p className="text-sm text-muted-foreground">
-                    Todos os e-mails da plataforma son enviados via Lovable Emails através do domínio configurado.
-                    Inclui DKIM, SPF, fila com retry automático e descadastro one-click.
+                    Todos los e-mails da plataforma son enviados via Lovable Emails através do domínio configurado.
+                    Inclui DKIM, SPF, fila con retry automático e descadastro one-click.
                   </p>
                 </div>
               </div>

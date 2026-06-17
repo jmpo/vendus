@@ -146,7 +146,7 @@ export function FlowBuilder({ flow, onBack }: FlowBuilderProps) {
             disabled={saveBlocks.isPending || !hasChanges}
           >
             <Save className="w-4 h-4 mr-2" />
-            {saveBlocks.isPending ? 'Guardando...' : 'Salvar'}
+            {saveBlocks.isPending ? 'Guardando...' : 'Guardar'}
           </Button>
         </div>
       </div>

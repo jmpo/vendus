@@ -169,9 +169,9 @@ serve(async (req) => {
       if (objections?.length) {
         knowledgeContext += `\n## OBJEÇÕES E RESPOSTAS\n`;
         for (const obj of objections) {
-          knowledgeContext += `\n### Objeção: "${obj.what_they_say}"\n`;
+          knowledgeContext += `\n### Objeción: "${obj.what_they_say}"\n`;
           if (obj.what_they_mean) knowledgeContext += `O que significa: ${obj.what_they_mean}\n`;
-          knowledgeContext += `Resposta sugerida: ${obj.suggested_response}\n`;
+          knowledgeContext += `Respuesta sugerida: ${obj.suggested_response}\n`;
         }
       }
     }
@@ -187,8 +187,8 @@ COMO USAR A BASE DE CONHECIMENTO
 ═══════════════════════════════════════
 
 - Para DADOS DO PRODUTO (precios, funcionalidades, prazos, specs): use SOMENTE o que está no contexto acima. Se no tiver, diga: "Sobre esse detalle específico do producto, sugiro confirmar con o gestor antes de responder al cliente."
-- Para ESTRATÉGIA DE VENDAS (como abordar, como reactivar, como negociar, como contornar objeções): use su conhecimento de ventas consultivas livremente, adaptando ao contexto do producto cuando hay información disponível
-- Quando existir uma FAQ ou treinamento que responda à pregunta, USE como base
+- Para ESTRATÉGIA DE VENDAS (como abordar, como reactivar, como negociar, como contornar objeciones): use su conocimiento de ventas consultivas livremente, adaptando ao contexto do producto cuando hay información disponible
+- Cuando existir uma FAQ ou treinamento que responda à pregunta, USE como base
 - NUNCA invente precios, custos ou dados técnicos do producto
 
 ═══════════════════════════════════════
@@ -198,7 +198,7 @@ COMO RESPONDER
 Para TODA situación do vendedor, entregue exatamente en este formato:
 
 **O QUE ELE QUIS DIZER:**
-[1-2 frases explicando a real intenção ou objeção oculta del cliente]
+[1-2 frases explicando a real intención ou objeción oculta del cliente]
 
 **RESPOSTA ESTRATÉGICA:**
 [Mensaje pronta para copiar e enviar. 2-4 linhas. Tom humano e profissional]
@@ -210,7 +210,7 @@ Para TODA situación do vendedor, entregue exatamente en este formato:
 REGRAS
 ═══════════════════════════════════════
 
-- Resposta otimizada para WhatsApp (corta, direta)
+- Respuesta otimizada para WhatsApp (corta, direta)
 - NÃO use emojis
 - NÃO use asteriscos ou formatação markdown nas respuestas prontas
 - Usa o nombre del cliente cuando souber
@@ -221,7 +221,7 @@ REGRAS
 ANÁLISE DE PRINTS
 ═══════════════════════════════════════
 
-Quando receber print de conversación:
+Cuando receber print de conversación:
 1. Analiza rapidamente o contexto
 2. Entregue no mismo formato das 3 partes
 3. Sé cirúrgico e objetivo
@@ -266,7 +266,7 @@ O QUE NUNCA FAZER
 
     let response = await doCall(false);
 
-    // No fazemos fallback automático para Lovable aqui: se a org escolheu OpenAI,
+    // No fazemos fallback automático para Lovable acá: se a org escolheu OpenAI,
     // cualquier error debe aparecer como error OpenAI, sin consumir créditos Lovable.
 
     if (!response.ok) {
@@ -288,7 +288,7 @@ O QUE NUNCA FAZER
       }
       if (response.status === 401 || response.status === 403) {
         return new Response(
-          JSON.stringify({ error: `Chave do provedor "${cfg.provider}" inválida ou sin permiso. Verificá em Integrações.` }),
+          JSON.stringify({ error: `Chave do provedor "${cfg.provider}" inválida ou sin permiso. Verificá em Integraciones.` }),
           { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
         );
       }

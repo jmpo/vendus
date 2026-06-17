@@ -52,7 +52,7 @@ export function LeadCadencesTab({ leadId, organizationId }: LeadCadencesTabProps
 
     const rows = ((data as any[]) ?? []).map((r) => ({ ...r, cadence_name: r.cadences?.name }));
 
-    // Siguiente execução + última mensaje (para enrollments ativos)
+    // Siguiente ejecución + última mensaje (para enrollments ativos)
     const activeIds = rows.filter((r) => r.status === 'active').map((r) => r.id);
     if (activeIds.length) {
       const { data: runs } = await supabase

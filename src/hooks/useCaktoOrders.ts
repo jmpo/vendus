@@ -80,7 +80,7 @@ export function useCaktoSummary(scope: CaktoScope) {
   });
 }
 
-/** Summary calculado direto do banco (pedidos persistidos), agregando todos os providers ou um específico. */
+/** Summary calculado direto do banco (pedidos persistidos), agregando todos los providers ou um específico. */
 export function usePaymentsSummary(scope: CaktoScope, provider: PaymentProvider | 'all' = 'all') {
   return useQuery({
     queryKey: ['payments-summary', scope, provider],

@@ -15,9 +15,9 @@ import type { ProductAgent } from '@/types/agents';
 interface AgentImportModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  // Quando informado, importa ya vinculado a este producto (sem mostrar seletor)
+  // Cuando informado, importa ya vinculado a este producto (sin mostrar seletor)
   fixedProductId?: string | null;
-  // Após gerar a partir de documento, abre o editor com o rascunho
+  // Após generar a partir de documento, abre o editor con o borrador
   onDraftReady?: (draft: Partial<ProductAgent>, productId: string | null) => void;
 }
 
@@ -42,7 +42,7 @@ const AGENT_TYPE_MAP: Record<string, string> = {
   suporte: 'support', support: 'support',
   financeiro: 'financial', financial: 'financial',
   administrativo: 'admin', admin: 'admin',
-  orquestrador: 'orchestrator', orchestrator: 'orchestrator',
+  orquestador: 'orchestrator', orchestrator: 'orchestrator',
 };
 const TONE_MAP: Record<string, string> = {
   amigável: 'friendly', amigavel: 'friendly', friendly: 'friendly',
@@ -61,7 +61,7 @@ function norm(v: unknown, map: Record<string, string>, fallback: string): string
   return map[v.toLowerCase().trim()] ?? fallback;
 }
 
-// Detecta formato aninhado (com `agent`, `identity`, `objective`, `tone`...) e converte para o schema flat.
+// Detecta formato aninhado (con `agent`, `identity`, `objective`, `tone`...) e converte para o schema flat.
 function flattenNestedAgent(raw: Record<string, unknown>): Record<string, unknown> {
   const r = (raw.agent && typeof raw.agent === 'object' ? raw.agent : raw) as Record<string, unknown>;
   const NESTED_KEYS = ['identity', 'objective', 'tone', 'rules', 'tools', 'transfer', 'tags', 'qualification', 'follow_up', 'sales_flow', 'responses', 'closing_examples', 'product', 'offer', 'guarantee'];
@@ -125,9 +125,9 @@ function flattenNestedAgent(raw: Record<string, unknown>): Record<string, unknow
   if (typeof transfer.delay_between_messages_seconds === 'number') out.message_delay_seconds = transfer.delay_between_messages_seconds;
   if (typeof transfer.include_previous_conversation_summary === 'boolean') out.handoff_include_summary = transfer.include_previous_conversation_summary;
 
-  // Consolida o conteúdo rico restante no additional_prompt
+  // Consolida o contenido rico restante no additional_prompt
   const sections: string[] = [];
-  if (objective.complementary_prompt) sections.push(`# Missão\n${objective.complementary_prompt}`);
+  if (objective.complementary_prompt) sections.push(`# Misión\n${objective.complementary_prompt}`);
 
   const product = (r.product ?? {}) as Record<string, unknown>;
   if (Object.keys(product).length) {
@@ -139,7 +139,7 @@ function flattenNestedAgent(raw: Record<string, unknown>): Record<string, unknow
     if (Array.isArray(product.core_beliefs)) lines.push(`Crenças centrais:\n- ${(product.core_beliefs as string[]).join('\n- ')}`);
     if (Array.isArray(product.target_audience)) lines.push(`Público-alvo:\n- ${(product.target_audience as string[]).join('\n- ')}`);
     if (Array.isArray(product.main_pains)) lines.push(`Principais dores:\n- ${(product.main_pains as string[]).join('\n- ')}`);
-    if (Array.isArray(product.desired_transformation)) lines.push(`Transformação desejada:\n- ${(product.desired_transformation as string[]).join('\n- ')}`);
+    if (Array.isArray(product.desired_transformation)) lines.push(`Transformación desejada:\n- ${(product.desired_transformation as string[]).join('\n- ')}`);
     if (Array.isArray(product.features)) lines.push(`Features:\n- ${(product.features as string[]).join('\n- ')}`);
     if (product.sales_page_url) lines.push(`Página de ventas: ${product.sales_page_url}`);
     if (product.checkout_url) lines.push(`Checkout: ${product.checkout_url}`);
@@ -161,7 +161,7 @@ function flattenNestedAgent(raw: Record<string, unknown>): Record<string, unknow
 
   const responses = (r.responses ?? {}) as Record<string, unknown>;
   if (Object.keys(responses).length) {
-    const lines = ['# Respostas-modelo'];
+    const lines = ['# Respuestas-modelo'];
     for (const [k, v] of Object.entries(responses)) lines.push(`### ${k}\n${v}`);
     sections.push(lines.join('\n\n'));
   }
@@ -180,7 +180,7 @@ function flattenNestedAgent(raw: Record<string, unknown>): Record<string, unknow
   }
 
   if (Array.isArray(r.closing_examples)) {
-    sections.push(`# Exemplos de cierre\n${JSON.stringify(r.closing_examples, null, 2)}`);
+    sections.push(`# Ejemplos de cierre\n${JSON.stringify(r.closing_examples, null, 2)}`);
   }
 
   if (Array.isArray(tone.personality)) sections.push(`Personalidade: ${(tone.personality as string[]).join(', ')}`);
@@ -199,7 +199,7 @@ function flattenNestedAgent(raw: Record<string, unknown>): Record<string, unknow
   return out;
 }
 
-// Sanitiza um JSON externo: remove campos sensíveis, normaliza formato e força tipos seguros.
+// Sanitiza um JSON externo: remove campos sensíveis, normaliza formato e fuerza tipos seguros.
 function sanitizeAgentJson(raw: unknown): Partial<ProductAgent> {
   if (!raw || typeof raw !== 'object') throw new Error('JSON inválido');
   const flat = flattenNestedAgent(raw as Record<string, unknown>);
@@ -260,7 +260,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
       const sanitized = sanitizeAgentJson(parsed);
       setJsonPreview(sanitized);
     } catch (e) {
-      setJsonError(e instanceof Error ? e.message : 'Falha ao ler JSON');
+      setJsonError(e instanceof Error ? e.message : 'Fallo ao ler JSON');
     }
   };
 
@@ -285,7 +285,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
       { ...jsonPreview, product_id: finalProductId, is_default: false } as Partial<ProductAgent>,
       {
         onSuccess: () => {
-          toast.success('Agente importado com éxito!');
+          toast.success('Agente importado con éxito!');
           close(false);
         },
         onSettled: () => setBusy(false),
@@ -320,7 +320,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
         },
       });
       if (error) throw error;
-      if (!data?.agent) throw new Error('Resposta inválida da IA');
+      if (!data?.agent) throw new Error('Respuesta inválida da IA');
 
       const finalProductId = (fixedProductId ?? null) || (productId === '__global__' ? null : productId);
       const draft: Partial<ProductAgent> = {
@@ -331,20 +331,20 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
 
       if (onDraftReady) {
         onDraftReady(draft, finalProductId);
-        toast.success('Rascunho gerado! Revise e salve.');
+        toast.success('Borrador gerado! Revise e guardá.');
         close(false);
       } else {
         // Cai direto no insert se ninguém quiere revisar
         createAgent.mutate(draft, {
           onSuccess: () => {
-            toast.success('Agente importado com éxito!');
+            toast.success('Agente importado con éxito!');
             close(false);
           },
         });
       }
     } catch (e) {
       console.error(e);
-      toast.error(e instanceof Error ? e.message : 'Falha ao importar documento');
+      toast.error(e instanceof Error ? e.message : 'Fallo ao importar documento');
     } finally {
       setBusy(false);
     }
@@ -392,13 +392,13 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
               />
               <label htmlFor="agent-json-input" className="cursor-pointer flex flex-col items-center gap-2">
                 <UploadCloud className="h-8 w-8 text-muted-foreground" />
-                <span className="text-sm font-medium">{jsonFile?.name ?? 'Selecionar archivo .json'}</span>
+                <span className="text-sm font-medium">{jsonFile?.name ?? 'Seleccionar archivo .json'}</span>
                 <span className="text-xs text-muted-foreground">Usa o "Exportar JSON" de otro agente</span>
               </label>
             </Card>
 
             <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Ou cole o JSON aqui</Label>
+              <Label className="text-xs text-muted-foreground">Ou cole o JSON acá</Label>
               <textarea
                 value={jsonText}
                 onChange={(e) => handleJsonTextChange(e.target.value)}
@@ -447,7 +447,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
                   <SelectItem value="support">Soporte</SelectItem>
                   <SelectItem value="financial">Financeiro</SelectItem>
                   <SelectItem value="admin">Administrativo</SelectItem>
-                  <SelectItem value="orchestrator">Orquestrador</SelectItem>
+                  <SelectItem value="orchestrator">Orquestador</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -462,13 +462,13 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
               />
               <label htmlFor="agent-doc-input" className="cursor-pointer flex flex-col items-center gap-2">
                 <UploadCloud className="h-8 w-8 text-muted-foreground" />
-                <span className="text-sm font-medium">{docFile?.name ?? 'Selecionar archivo'}</span>
+                <span className="text-sm font-medium">{docFile?.name ?? 'Seleccionar archivo'}</span>
                 <span className="text-xs text-muted-foreground">PDF, DOCX, TXT ou MD · até 5 MB</span>
               </label>
             </Card>
 
             <p className="text-xs text-muted-foreground">
-              A IA lê o conteúdo e gera um rascunho del agente (nombre, missão, regras, tom, gatilhos).
+              A IA lê o contenido e gera um borrador del agente (nombre, misión, regras, tom, gatilhos).
               Usted revisa antes de guardar.
             </p>
           </TabsContent>
@@ -484,7 +484,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
           ) : (
             <Button onClick={handleImportDoc} disabled={!docFile || busy}>
               {busy && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Gerar Rascunho com IA
+              Generar Borrador con IA
             </Button>
           )}
         </DialogFooter>

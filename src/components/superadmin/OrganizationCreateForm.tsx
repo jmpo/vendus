@@ -145,7 +145,7 @@ export function OrganizationCreateForm({
         entity_id: org.id,
       });
 
-      // Cria o usuario admin de la empresa com o e-mail informado
+      // Cria o usuario admin de la empresa con o e-mail informado
       let adminInviteToken: string | null = null;
       try {
         const { data: adminResult, error: adminError } = await supabase.functions.invoke(

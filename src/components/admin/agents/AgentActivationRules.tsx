@@ -109,7 +109,7 @@ export function AgentActivationRules({ formData, onChange }: Props) {
                 <Info className="h-3 w-3 text-muted-foreground" />
               </TooltipTrigger>
               <TooltipContent side="top" className="max-w-xs">
-                Match por palavra isolada (ex.: "preço" bate em "qual o preço?", mas no em "imprecisão").
+                Match por palabra isolada (ex.: "precio" bate em "qual o precio?", mas no em "imprecisão").
                 Mínimo 3 letras.
               </TooltipContent>
             </Tooltip>

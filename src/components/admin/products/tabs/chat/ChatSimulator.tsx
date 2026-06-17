@@ -137,17 +137,17 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
   // Convert YouTube/Vimeo URLs to embed format
   const getEmbedUrl = (url: string): string => {
     // YouTube
-    const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+    const youtubeMatch = url.match(/(?:youtube\.con\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
     if (youtubeMatch) {
       return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
     }
     // Vimeo
-    const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+    const vimeoMatch = url.match(/vimeo\.con\/(\d+)/);
     if (vimeoMatch) {
       return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
     }
     // Loom
-    const loomMatch = url.match(/loom\.com\/share\/([a-zA-Z0-9]+)/);
+    const loomMatch = url.match(/loom\.con\/share\/([a-zA-Z0-9]+)/);
     if (loomMatch) {
       return `https://www.loom.com/embed/${loomMatch[1]}`;
     }
@@ -217,8 +217,8 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
                   <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p className="font-medium">Simulador de Chat</p>
                   <p className="text-sm">
-                    Faça preguntas como se fosse um visitante do su site.
-                    <br />A IA responderá usando o conhecimento do Cérebro do Producto.
+                    Hacé preguntas como se fosse um visitante do su site.
+                    <br />A IA responderá usando o conocimiento do Cérebro do Producto.
                   </p>
                 </div>
               )}
@@ -260,7 +260,7 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
                         </div>
                         <div className="p-2 flex items-center justify-between text-xs text-muted-foreground">
                           <span className="flex items-center gap-1">
-                            <Video className="h-3 w-3" /> Vídeo de apresentação
+                            <Video className="h-3 w-3" /> Vídeo de presentación
                           </span>
                           <a 
                             href={message.video_url} 
@@ -350,12 +350,12 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
             <div className="p-3 rounded-lg bg-muted/50">
               <p className="font-medium text-sm">{product?.name || 'Producto'}</p>
               <p className="text-xs text-muted-foreground line-clamp-2">
-                {product?.short_description || product?.description || 'Sem descripción'}
+                {product?.short_description || product?.description || 'Sin descripción'}
               </p>
             </div>
 
             <div className="space-y-2">
-              <p className="text-sm font-medium">Fontes de conhecimento:</p>
+              <p className="text-sm font-medium">Fontes de conocimiento:</p>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div className="flex items-center gap-2 p-2 rounded bg-muted/50">
                   <HelpCircle className="h-4 w-4 text-blue-500" />
@@ -379,7 +379,7 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
             {activeSources.length === 0 && (
               <div className="p-3 rounded-lg bg-warning/10 border border-warning/20">
                 <p className="text-xs text-warning-foreground">
-                  ⚠️ Nenhuma fonte de conhecimento ativa. A IA terá respuestas limitadas.
+                  ⚠️ Ninguna fonte de conocimiento ativa. A IA terá respuestas limitadas.
                 </p>
               </div>
             )}
@@ -391,7 +391,7 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
               <Bot className="h-4 w-4" />
-              Configuración Atual
+              Configuración Actual
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
@@ -426,10 +426,10 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
             <CardTitle className="text-base">💡 Dicas de Teste</CardTitle>
           </CardHeader>
           <CardContent className="text-xs text-muted-foreground space-y-2">
-            <p>• Pergunte sobre preços, funcionalidades e diferenciais</p>
-            <p>• Teste objeções comuns que clientes podem ter</p>
+            <p>• Pergunte sobre precios, funcionalidades e diferenciais</p>
+            <p>• Teste objeciones comuns que clientes pueden ter</p>
             <p>• Verifique se as respuestas estão coerentes</p>
-            <p>• Usa palavras de transferência para testar handoff</p>
+            <p>• Usa palabras de transferencia para testar handoff</p>
           </CardContent>
         </Card>
       </div>

@@ -96,10 +96,10 @@ export function AvailabilityManager() {
         }
       }
       
-      toast.success(`Horários copiados para ${toDays.length} día${toDays.length !== 1 ? 's' : ''}`);
+      toast.success(`Horarios copiados para ${toDays.length} día${toDays.length !== 1 ? 's' : ''}`);
       setCopyDialogOpen(false);
     } catch (error) {
-      toast.error('Error ao copiar horários');
+      toast.error('Error ao copiar horarios');
     } finally {
       setIsCopying(false);
     }
@@ -117,7 +117,7 @@ export function AvailabilityManager() {
       toast.success(`${slots.length} horario${slots.length !== 1 ? 's' : ''} adicionado${slots.length !== 1 ? 's' : ''}`);
       setAddSlotDialogOpen(false);
     } catch (error) {
-      toast.error('Error ao adicionar horários');
+      toast.error('Error ao agregar horarios');
     }
   };
 
@@ -203,9 +203,9 @@ export function AvailabilityManager() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Disponibilidade</h2>
+          <h2 className="text-2xl font-bold">Disponibilidad</h2>
           <p className="text-muted-foreground">
-            Configure cuando usted está disponível para reuniões
+            Configure cuando usted está disponible para reuniones
           </p>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 rounded-lg px-3 py-2">
@@ -471,7 +471,7 @@ export function AvailabilityManager() {
                 className="flex-1"
                 onClick={() => setOverrideForm(prev => ({ ...prev, is_available: true }))}
               >
-                Definir horários
+                Definir horarios
               </Button>
             </div>
 
@@ -523,7 +523,7 @@ export function AvailabilityManager() {
               Cancelar
             </Button>
             <Button onClick={handleSaveOverride} disabled={addOverride.isPending}>
-              Salvar
+              Guardar
             </Button>
           </DialogFooter>
         </DialogContent>

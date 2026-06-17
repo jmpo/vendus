@@ -169,7 +169,7 @@ serve(async (req) => {
 
         // Get local events that need exporting:
         // - never synced (google_event_id IS NULL), OR
-        // - already pushed once but aún marcados como local_only (recuperação manual)
+        // - already pushed once but aún marcados como local_only (recuperación manual)
         const { data: localEvents, error: localError } = await supabase
           .from("calendar_events")
           .select("*")

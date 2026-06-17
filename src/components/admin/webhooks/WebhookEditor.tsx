@@ -264,8 +264,8 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
           <CardContent className="py-4">
             <p className="text-sm font-semibold text-destructive">⚠️ Webhook sin producto vinculado</p>
             <p className="text-xs text-muted-foreground mt-1">
-              Leads criados por este webhook no terão pipeline stage, no aparecerão no Kanban e acciones como "Agente IA" no funcionarão. 
-              Configure um producto nas acciones de "Criar Lead" ou vincule um producto ao webhook.
+              Leads criados por este webhook no terão pipeline stage, no aparecerán no Kanban e acciones como "Agente IA" no funcionarão. 
+              Configure um producto nas acciones de "Crear Lead" ou vincule um producto ao webhook.
             </p>
           </CardContent>
         </Card>

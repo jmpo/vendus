@@ -21,8 +21,8 @@ interface ProductDetailPageProps {
 }
 
 const statusOptions = [
-  { value: 'draft', label: 'Rascunho', color: 'bg-muted text-muted-foreground' },
-  { value: 'review', label: 'Em Revisão', color: 'bg-warning/10 text-warning' },
+  { value: 'draft', label: 'Borrador', color: 'bg-muted text-muted-foreground' },
+  { value: 'review', label: 'Em Revisión', color: 'bg-warning/10 text-warning' },
   { value: 'published', label: 'Publicado', color: 'bg-success/10 text-success' },
 ];
 

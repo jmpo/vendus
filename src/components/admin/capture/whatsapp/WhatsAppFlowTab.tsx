@@ -163,9 +163,9 @@ export function WhatsAppFlowTab({ funnel }: Props) {
         {saveFlowBlocks.isPending ? (
           <><Loader2 className="h-3 w-3 animate-spin" /> Salvando...</>
         ) : isDirty ? (
-          <span className="text-amber-600 dark:text-amber-400">Alterações pendentes — auto-save em 1.5s</span>
+          <span className="text-amber-600 dark:text-amber-400">Cambios pendentes — auto-save em 1.5s</span>
         ) : lastSavedAt ? (
-          <><CheckCircle2 className="h-3 w-3 text-green-600" /> Salvo automaticamente</>
+          <><CheckCircle2 className="h-3 w-3 text-green-600" /> Guardado automaticamente</>
         ) : null}
       </div>
 

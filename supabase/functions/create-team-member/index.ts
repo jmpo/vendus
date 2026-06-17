@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
     });
     const { data: { user: caller } } = await userClient.auth.getUser();
     if (!caller) {
-      return new Response(JSON.stringify({ error: 'Sessão inválida' }), {
+      return new Response(JSON.stringify({ error: 'Sesión inválida' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (!callerProfile?.organization_id) {
-      return new Response(JSON.stringify({ error: 'Sem organización' }), {
+      return new Response(JSON.stringify({ error: 'Sin organización' }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -153,7 +153,7 @@ Deno.serve(async (req) => {
       return fail('insert_user_role', msg, roleErr);
     }
 
-    // Permissões + notification settings (no-fatal: parceiros podem ter banco incompleto)
+    // Permissões + notification settings (no-fatal: parceiros pueden ter banco incompleto)
     const { error: permErr } = await admin.rpc('initialize_user_permissions', {
       p_user_id: newUserId,
       p_organization_id: orgId,

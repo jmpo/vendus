@@ -20,7 +20,7 @@ export function usePlatformName() {
     refetchOnWindowFocus: true,
   });
 
-  // Cache local serve apenas como placeholder enquanto a primeira request resolve
+  // Cache local serve solo como placeholder mientras a primera request resolve
   const fallback = data ?? readCachedBrandingSync();
 
   return {
@@ -29,7 +29,7 @@ export function usePlatformName() {
     loginHeadline: fallback?.login_headline || 'Transforme leads em \nrotina de ventas',
     loginSubheadline:
       fallback?.login_subheadline ||
-      'Playbooks, cadencias, objeções e IA em um só lugar. Venda mais com consistência e inteligência.',
+      'Playbooks, cadencias, objeciones e IA em um só lugar. Venda mais con consistência e inteligência.',
     loginStatsEnabled: fallback?.login_stats_enabled ?? true,
     footerText: fallback?.footer_text || '',
     loginBgImageUrl: (fallback as any)?.login_bg_image_url || null,

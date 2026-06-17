@@ -84,7 +84,7 @@ export default function Login() {
     }
   };
 
-  // Processar headline com quebra de linha
+  // Processar headline con quebra de línea
   const headlineParts = loginHeadline.split('\n');
 
   const layout = loginBgImageUrl ? loginBgLayout : 'split-left';

@@ -224,7 +224,7 @@ export function AgentHierarchyView({
         {orchestrator && (
           <div className="flex flex-col items-center gap-2">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-primary/80">
-              Orquestrador
+              Orquestador
             </span>
             <div data-tree-id={orchestrator.id}>
               <AgentTreeNode

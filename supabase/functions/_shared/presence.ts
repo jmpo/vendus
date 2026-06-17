@@ -1,4 +1,4 @@
-// Presence Engine — dispara "digitando..." / "gravando áudio..." real no WhatsApp
+// Presence Engine — dispara "digitando..." / "gravando audio..." real no WhatsApp
 // via Evolution Go (POST /message/presence). Renova o estado a cada 7s (heartbeat)
 // porque o Baileys expira o "composing" em ~10s.
 
@@ -70,7 +70,7 @@ export async function sendPresence(
 }
 
 /**
- * Inicia "digitando..." (ou "gravando áudio..." se isAudio) con heartbeat.
+ * Inicia "digitando..." (ou "gravando audio..." se isAudio) con heartbeat.
  * Retorna handle.stop() que dispara "paused" e cancela o heartbeat.
  *
  * Uso:

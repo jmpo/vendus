@@ -1,11 +1,11 @@
 // Recebe eventos da Cakto (via cakto-webhook), decide se dispara o agente de
-// recuperação automática e envía a primeirel mensaje via WhatsApp.
+// recuperación automática e envía a primeirel mensaje via WhatsApp.
 //
 // Flujo:
 // 1) Lê config da org (cakto_recovery_config)
 // 2) Verifica se el evento está habilitado
 // 3) Aplica cooldown (no dispara o mismel evento pro mismel lead em <X min)
-// 4) Localiza/cria el lead (pelo teléfono/email da Cakto)
+// 4) Localiza/cria el lead (por el teléfono/email da Cakto)
 // 5) Gerel mensaje inicial con a IA usando o agente configurado
 // 6) Envia via WhatsApp (BotConversa ou IsiChat)
 // 7) Cria la conversación (webchat_conversations) pra IA continuar respondiendo
@@ -145,7 +145,7 @@ Deno.serve(async (req) => {
       success: false,
       skipped_reason: 'no_phone',
     });
-    return json({ skipped: true, reason: 'sem teléfono' });
+    return json({ skipped: true, reason: 'sin teléfono' });
   }
 
   // 3) Localiza lead por el teléfono ou email (cria se no existir)
@@ -221,10 +221,10 @@ Deno.serve(async (req) => {
     .maybeSingle();
 
   if (!agent) {
-    return json({ error: 'agente de recuperação no encontrado' }, 404);
+    return json({ error: 'agente de recuperación no encontrado' }, 404);
   }
 
-  // Conhecimento (limitado pra no estourar contexto)
+  // Conocimiento (limitado pra no estourar contexto)
   const { data: knowledgeSources } = await supabase
     .from('ai_knowledge_base')
     .select('title, content, category')
@@ -322,7 +322,7 @@ ${agent.cannot_do?.length ? `O QUE VOS NÃO PODE FAZER:\n${agent.cannot_do.map((
 ${knowledgeContext ? `CONHECIMENTO DO PRODUTO:\n${knowledgeContext}` : ''}
 ${
   scenarios.length
-    ? `\nCENÁRIOS DE PÓS-VENDA APLICÁVEIS (siga na ordem de prioridade — só faça o que estiver descrito aqui):\n${scenarios
+    ? `\nCENÁRIOS DE PÓS-VENDA APLICÁVEIS (siga na ordem de prioridade — só faça o que estiver descrito acá):\n${scenarios
         .map(
           (s, idx) =>
             `\n[Cenário ${idx + 1} — ${s.name}]\nInstrução: ${s.instruction}${
@@ -336,14 +336,14 @@ ${
 }
 
 REGRAS DA MENSAGEM INICIAL:
-- Genera SOLO el mensaje (sem prefixos, sin comillas, sin explicações)
+- Genera SOLO el mensaje (sin prefixos, sin comillas, sin explicações)
 - Usa o nombre del cliente: ${order.customer_name || 'cliente'}
 - Mencione o que ele estava levando: ${productLabel}
 - WhatsApp: corta (máx 2 parágrafos), sin markdown, sin emoji exagerado (1 só)
 - Termine con pregunta clara
 - NUNCA pareça um robô. Soa como vendedor humano que viu o pedido e resolveu llamar.`;
 
-  const userPrompt = `Genera el mensaje inicial de WhatsApp para esta situación. Cliente: ${order.customer_name || 'sem nombre'}. Teléfono: ${phone}.`;
+  const userPrompt = `Genera el mensaje inicial de WhatsApp para esta situación. Cliente: ${order.customer_name || 'sin nombre'}. Teléfono: ${phone}.`;
 
   const aiResp = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',

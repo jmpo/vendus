@@ -56,7 +56,7 @@ export const QUIZ_PALETTE: QuizPaletteCategory[] = [
     bg: 'bg-emerald-500/10',
     items: [
       { blockType: 'buttons', preset: 'single', label: 'Elegí única', icon: CircleDot },
-      { blockType: 'buttons', preset: 'multiple', label: 'Múltipla escolha', icon: ListChecks },
+      { blockType: 'buttons', preset: 'multiple', label: 'Múltipla elegí', icon: ListChecks },
       { blockType: 'buttons', preset: 'yesno', label: 'Sí / No', icon: ToggleLeft },
       { blockType: 'buttons', preset: 'scale', label: 'Escala 1-10', icon: Gauge },
       { blockType: 'buttons', preset: 'nps', label: 'NPS', icon: Star },
@@ -72,7 +72,7 @@ export const QUIZ_PALETTE: QuizPaletteCategory[] = [
     items: [
       { blockType: 'image', label: 'Imagen', icon: ImageIcon },
       { blockType: 'video', label: 'Vídeo', icon: Video },
-      { blockType: 'message', preset: 'audio', label: 'Áudio', icon: Music },
+      { blockType: 'message', preset: 'audio', label: 'Audio', icon: Music },
       { blockType: 'input', preset: 'upload', label: 'Upload', icon: Upload },
     ],
   },
@@ -83,10 +83,10 @@ export const QUIZ_PALETTE: QuizPaletteCategory[] = [
     accent: 'text-amber-600 dark:text-amber-400',
     bg: 'bg-amber-500/10',
     items: [
-      { blockType: 'condition', label: 'Condição', icon: GitBranch, description: 'Se / Então / Senão' },
+      { blockType: 'condition', label: 'Condición', icon: GitBranch, description: 'Se / Entonces / Sino' },
       { blockType: 'condition', preset: 'goto', label: 'Ir para', icon: Forward, description: 'Pular para otro bloco' },
       { blockType: 'score', label: 'Score', icon: TrendingUp },
-      { blockType: 'tag', label: 'Segmentação', icon: TagIcon },
+      { blockType: 'tag', label: 'Segmentación', icon: TagIcon },
     ],
   },
   {
@@ -184,7 +184,7 @@ export function applyPresetToBlockData(
   const next = { ...data };
   switch (preset) {
     case 'text':     next.input_type = 'text';     next.placeholder = 'Escribí su respuesta...'; break;
-    case 'textarea': next.input_type = 'textarea'; next.placeholder = 'Escribe aqui...'; break;
+    case 'textarea': next.input_type = 'textarea'; next.placeholder = 'Escribe acá...'; break;
     case 'email':    next.input_type = 'email';    next.placeholder = 'su@email.com'; break;
     case 'phone':    next.input_type = 'phone';    next.placeholder = '(11) 99999-9999'; break;
     case 'number':   next.input_type = 'number';   next.placeholder = '0'; break;
@@ -192,7 +192,7 @@ export function applyPresetToBlockData(
     case 'cpf':      next.input_type = 'cpf';      next.placeholder = '000.000.000-00'; break;
     case 'name':     next.input_type = 'name';     next.variable_name = 'name';     next.placeholder = 'Su nombre'; break;
     case 'upload':   next.input_type = 'text';     next.quiz_subtype = 'upload';    next.placeholder = 'Anexar archivo (em breve)'; break;
-    case 'audio':    next.quiz_subtype = 'audio';  next.content = 'Áudio (cole a URL no painel)'; break;
+    case 'audio':    next.quiz_subtype = 'audio';  next.content = 'Audio (cole a URL no painel)'; break;
     case 'single':   next.layout = 'vertical';     next.quiz_subtype = 'single'; break;
     case 'multiple': next.layout = 'vertical';     next.quiz_subtype = 'multiple'; break;
     case 'yesno':

@@ -3,7 +3,7 @@ import type { FunnelBlockData } from '@/types/funnel';
 export type DisplayRule = NonNullable<NonNullable<FunnelBlockData['block_display']>['rules']>[number];
 
 /**
- * Avalia se um bloco deve ser exibido conforme suas regras de display.
+ * Avalia se um bloco debe ser exibido conforme tus regras de display.
  * - `device`: filtra por mobile/desktop.
  * - `rules`: combinação AND/OR de comparações sobre `responses`.
  */
@@ -38,7 +38,7 @@ export function evaluateDisplay(
     }
   };
 
-  // Reduz com combinador (default AND)
+  // Reduz con combinador (default AND)
   let acc = evalOne(rules[0]);
   for (let i = 1; i < rules.length; i++) {
     const r = rules[i];

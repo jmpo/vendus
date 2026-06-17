@@ -53,7 +53,7 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
     return (
       <div className="text-center py-6 space-y-3">
         <p className="text-xs text-muted-foreground">
-          No fue possível gerar o resumen ahora.
+          No fue posible generar o resumen ahora.
         </p>
         <Button size="sm" variant="outline" onClick={() => refetch()}>
           <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
@@ -90,7 +90,7 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
       {/* Score */}
       <div className="p-3 bg-muted/40 rounded-lg space-y-2">
         <div className="flex items-end justify-between">
-          <span className="text-xs text-muted-foreground">Nota geral</span>
+          <span className="text-xs text-muted-foreground">Nota general</span>
           <span className={`text-2xl font-bold ${scoreColor}`}>
             {score.toFixed(1)}
             <span className="text-xs text-muted-foreground font-normal">/10</span>
@@ -109,7 +109,7 @@ export function AISummaryTab({ conversationId }: AISummaryTabProps) {
           )}
           {data.metrics.objectionsHandled !== undefined && (
             <Badge variant="outline" className="text-[10px]">
-              Objeções tratadas: {data.metrics.objectionsHandled}
+              Objeciones tratadas: {data.metrics.objectionsHandled}
             </Badge>
           )}
           {data.metrics.avgResponseTime && (

@@ -1,8 +1,8 @@
 // meta-whatsapp-draft
-// Cria uma conexión WhatsApp Meta em modo "rascunho" para que o wizard
+// Cria uma conexión WhatsApp Meta em modo "borrador" para que o wizard
 // possa exibir Verify Token e URL de callback ANTES de o usuario ter
 // terminado de crear o Meta App.
-// Cada conexión recebe su próprio webhook_verify_token; a URL final é
+// Cada conexión recebe su propio webhook_verify_token; a URL final é
 // {SUPABASE_URL}/functions/v1/meta-whatsapp-webhook/{connection_id}.
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -57,7 +57,7 @@ Deno.serve(async (req: Request) => {
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 
-  // Se passaram connection_id, tenta retomar rascunho existente.
+  // Se passaram connection_id, tenta retomar borrador existente.
   if (connection_id) {
     const { data: existing } = await sbAdmin
       .from('whatsapp_meta_connections')
@@ -76,7 +76,7 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  // INSERT do rascunho.
+  // INSERT do borrador.
   const verifyToken = generateVerifyToken();
   const { data: row, error } = await sbAdmin
     .from('whatsapp_meta_connections')

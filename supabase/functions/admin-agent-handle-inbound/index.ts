@@ -478,7 +478,7 @@ async function callAI(
       }
       continue;
     }
-    return msg.content || "Sem respuesta.";
+    return msg.content || "Sin respuesta.";
   }
   return "No pude completar tu solicitud. Probá reformularlo.";
 }
@@ -494,7 +494,7 @@ async function resolveAdminName(
   if (adminUserId) {
     const { data } = await supabase
       .from("profiles").select("full_name").eq("id", adminUserId).maybeSingle();
-    if (data?.full_name) return String(data.full_name).split(" ")[0]; // primeiro nombre
+    if (data?.full_name) return String(data.full_name).split(" ")[0]; // primero nombre
   }
   if (adminPhone) {
     const tail = adminPhone.replace(/\D/g, "").slice(-10);
@@ -579,7 +579,7 @@ serve(async (req) => {
       });
     }
 
-    // Identidade de la empresa e do admin (para el kernel) + catálogo de transferência
+    // Identidade de la empresa e do admin (para el kernel) + catálogo de transferencia
     const [orgRes, prodsRes, adminName, agentsCatalogRes, usersCatalogRes] = await Promise.all([
       supabase.from("organizations").select("name").eq("id", organization_id).maybeSingle(),
       supabase.from("products").select("name, id").eq("organization_id", organization_id).limit(20),

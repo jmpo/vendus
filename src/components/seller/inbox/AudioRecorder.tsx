@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface AudioRecorderProps {
-  /** Chamado quando o usuário confirma o envio. Retorna o Blob + duração ms. */
+  /** Chamado cuando o usuario confirma o envio. Retorna o Blob + duración ms. */
   onConfirm: (blob: Blob, durationMs: number) => void;
   onCancel: () => void;
   disabled?: boolean;
@@ -18,7 +18,7 @@ function formatTime(ms: number) {
 }
 
 /**
- * Gravador de áudio inline. Pede permissão do mic, mostra timer,
+ * Gravador de audio inline. Pede permiso do mic, mostra timer,
  * permite cancelar (lixeira) ou confirmar (enviar).
  */
 export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderProps) {
@@ -60,7 +60,7 @@ export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderPr
         }, 200);
         setIsStarting(false);
       } catch (e: any) {
-        setError(e?.message || 'Permissão de microfone negada.');
+        setError(e?.message || 'Permiso de microfone negada.');
         setIsStarting(false);
       }
     })();
@@ -100,7 +100,7 @@ export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderPr
       streamRef.current?.getTracks().forEach((t) => t.stop());
       onConfirm(blob, duration);
     } catch (e: any) {
-      setError(e?.message || 'Falha ao finalizar gravação.');
+      setError(e?.message || 'Fallo ao finalizar gravação.');
     }
   };
 
@@ -143,7 +143,7 @@ export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderPr
         )} />
         <span className="text-sm font-mono tabular-nums">{formatTime(elapsed)}</span>
         <span className="text-xs text-muted-foreground hidden sm:inline">
-          {isStarting ? 'Iniciando microfone…' : 'Grabando...� toque em enviar para concluir'}
+          {isStarting ? 'Iniciando microfone…' : 'Grabando...� toque em enviar para concluir'}
         </span>
       </div>
 
@@ -152,7 +152,7 @@ export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderPr
         className="h-10 w-10 rounded-full"
         onClick={handleConfirm}
         disabled={disabled || isStarting || elapsed < 500}
-        aria-label="Enviar áudio"
+        aria-label="Enviar audio"
       >
         {isStarting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
       </Button>

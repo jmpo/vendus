@@ -189,7 +189,7 @@ export function HotmartConfigManager() {
                   type={showBasic ? 'text' : 'password'}
                   value={basicToken}
                   onChange={(e) => setBasicToken(e.target.value)}
-                  placeholder="Cole o Basic Token (sem 'Basic ')"
+                  placeholder="Cole o Basic Token (sin 'Basic ')"
                 />
                 <Button
                   type="button"
@@ -207,11 +207,11 @@ export function HotmartConfigManager() {
           <div className="flex gap-2">
             <Button onClick={handleSave} disabled={upsert.isPending}>
               {upsert.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              Salvar credenciais
+              Guardar credenciais
             </Button>
             <Button variant="outline" onClick={handleTest} disabled={test.isPending}>
               {test.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              Testar conexão
+              Testar conexión
             </Button>
           </div>
 
@@ -228,7 +228,7 @@ export function HotmartConfigManager() {
             <CardHeader className="pb-3">
               <CardTitle className="text-base">URL del Postback</CardTitle>
               <CardDescription>
-                Cole esta URL em <strong>Hotmart → Ferramentas → Notificações (Postback) → Nova URL</strong>
+                Cole esta URL em <strong>Hotmart → Ferramentas → Notificaciones (Postback) → Nova URL</strong>
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -244,7 +244,7 @@ export function HotmartConfigManager() {
           <div>
             <Label htmlFor="hottok">Hottok (token de validación)</Label>
             <p className="text-xs text-muted-foreground mb-2">
-              A Hotmart gera o Hottok no painel do postback. Cole aqui para validar a autenticidade dos eventos.
+              A Hotmart gera o Hottok no painel do postback. Cole acá para validar a autenticidade dos eventos.
             </p>
             <Input
               id="hottok"
@@ -258,7 +258,7 @@ export function HotmartConfigManager() {
               onClick={() => upsert.mutate({ hottok: hottok.trim() || null })}
               disabled={upsert.isPending}
             >
-              Salvar Hottok
+              Guardar Hottok
             </Button>
           </div>
 
@@ -266,7 +266,7 @@ export function HotmartConfigManager() {
             <CardHeader className="pb-3">
               <CardTitle className="text-base">Eventos para activar en Hotmart</CardTitle>
               <CardDescription>
-                Marque os eventos abaixo no postback para que apareçam aqui automaticamente
+                Marque os eventos abaixo no postback para que apareçam acá automaticamente
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -332,14 +332,14 @@ export function HotmartConfigManager() {
         <TabsContent value="products" className="space-y-4">
           <Alert>
             <AlertDescription className="text-sm">
-              Vincule cada producto da Hotmart a um producto interno do CRM. Produtos aparecem aqui automaticamente cuando
-              recebemos a primeira venta.
+              Vincule cada producto da Hotmart a um producto interno do CRM. Produtos aparecem acá automaticamente cuando
+              recebemos a primera venta.
             </AlertDescription>
           </Alert>
 
           {mappings.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              Nenhum producto Hotmart recibido aún. Configure o webhook para comenzar.
+              Ningún producto Hotmart recibido aún. Configure o webhook para comenzar.
             </p>
           ) : (
             <div className="space-y-2">

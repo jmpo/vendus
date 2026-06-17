@@ -19,14 +19,14 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
 
   const handleSubmit = async () => {
     if (!objection.trim()) {
-      toast.error('Escribí a objeção del cliente');
+      toast.error('Escribí a objeción del cliente');
       return;
     }
 
     try {
       await handleObjection(objection, productId);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Error ao processar objeção');
+      toast.error(error instanceof Error ? error.message : 'Error ao processar objeción');
     }
   };
 
@@ -57,7 +57,7 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
       toast.success('¡Objeción guardada en la base!');
       handleReset();
     } catch (error) {
-      toast.error('Error ao guardar objeção');
+      toast.error('Error ao guardar objeción');
     }
   };
 
@@ -103,7 +103,7 @@ export function ObjectionAssistant({ productId, productName }: ObjectionAssistan
           </label>
           <div className="flex gap-2">
             <Textarea
-              placeholder='Ex: "Está mucho caro para o meu presupuesto atual"'
+              placeholder='Ex: "Está mucho caro para o meu presupuesto actual"'
               value={objection}
               onChange={(e) => setObjection(e.target.value)}
               className="min-h-[80px] resize-none bg-background"

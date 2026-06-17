@@ -33,7 +33,7 @@ export function UnifiedConnectionsPanel() {
 
   const handleSelect = (provider: ConnectionProvider) => {
     if (limitReached) {
-      toast.error(`Limite de ${limit} conexão(ões) atingido. Faça upgrade do plan.`);
+      toast.error(`Limite de ${limit} conexión(ões) atingido. Hacé upgrade do plan.`);
       return;
     }
     if (provider === 'evolution') setOpenEvolutionCreate(true);
@@ -45,9 +45,9 @@ export function UnifiedConnectionsPanel() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h3 className="text-lg font-semibold">Sus Conexões</h3>
+          <h3 className="text-lg font-semibold">Sus Conexiones</h3>
           <p className="text-sm text-muted-foreground">
-            Gerencie todos os canais conectados (WhatsApp via QR, WhatsApp Oficial Meta e Instagram).
+            Gerencie todos los canais conectados (WhatsApp via QR, WhatsApp Oficial Meta e Instagram).
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -62,7 +62,7 @@ export function UnifiedConnectionsPanel() {
           ) : (
             <Button onClick={() => setPickerOpen(true)} className="gap-2">
               <Plus className="h-4 w-4" />
-              Nova conexão
+              Nova conexión
             </Button>
           )}
         </div>
@@ -72,7 +72,7 @@ export function UnifiedConnectionsPanel() {
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-sm flex gap-2">
           <Info className="h-4 w-4 mt-0.5 shrink-0 text-amber-600" />
           <p className="text-foreground">
-            Usted atingiu o limite de <strong>{limit}</strong> conexão(ões) do su plan. Faça upgrade para crear mais conexões.
+            Usted atingiu o limite de <strong>{limit}</strong> conexión(ões) do su plan. Hacé upgrade para crear mais conexiones.
           </p>
         </div>
       )}

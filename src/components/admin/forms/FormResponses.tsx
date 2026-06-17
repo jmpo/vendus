@@ -35,7 +35,7 @@ export function FormResponses({ formId }: FormResponsesProps) {
   const [page, setPage] = useState(1);
   const perPage = 10;
 
-  // Respostas son salvas com LABEL como chave; también tenta block.id legado.
+  // Respuestas son salvas con LABEL como chave; también tenta block.id legado.
   const getValueByMapping = (responses: Record<string, unknown>, mapping: string): string | null => {
     if (responses[mapping]) return String(responses[mapping]);
     const block = blocks?.find(b => b.maps_to === mapping);
@@ -162,7 +162,7 @@ export function FormResponses({ formId }: FormResponsesProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Respostas</h2>
+          <h2 className="text-2xl font-bold">Respuestas</h2>
           <p className="text-muted-foreground">
             {submissions?.length || 0} {submissions?.length === 1 ? 'respuesta' : 'respuestas'} recebidas
           </p>
@@ -207,9 +207,9 @@ export function FormResponses({ formId }: FormResponsesProps) {
         <Card>
           <CardContent className="py-16 text-center">
             <Inbox className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
-            <h3 className="text-lg font-medium mb-2">Nenhuma respuesta aún</h3>
+            <h3 className="text-lg font-medium mb-2">Ninguna respuesta aún</h3>
             <p className="text-muted-foreground">
-              Quando alguém preencher o formulário, as respuestas aparecerão aqui.
+              Cuando alguém completar o formulario, as respuestas aparecerán acá.
             </p>
           </CardContent>
         </Card>
@@ -224,7 +224,7 @@ export function FormResponses({ formId }: FormResponsesProps) {
                 <TableHead className="text-center">Score</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Fecha</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

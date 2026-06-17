@@ -10,7 +10,7 @@ interface FormBlockMediaProps {
 
 /**
  * Renderer único para blocos de mídia (imagen, vídeo upload/embed, carrossel, divisor).
- * No captura respuesta — apenas apresenta o conteúdo no flujo.
+ * No captura respuesta — solo apresenta o contenido no flujo.
  */
 export function FormBlockMedia({ block, className }: FormBlockMediaProps) {
   const s = (block.block_settings || {}) as Record<string, any>;
@@ -61,7 +61,7 @@ export function FormBlockMedia({ block, className }: FormBlockMediaProps) {
       return (
         <div className={cn('w-full max-w-xl mx-auto px-6', className)}>
           <div className="flex items-center justify-center h-48 rounded-xl border-2 border-dashed bg-muted/30 text-muted-foreground">
-            <p className="text-sm">Faça upload de um vídeo no editor</p>
+            <p className="text-sm">Hacé upload de um vídeo no editor</p>
           </div>
         </div>
       );
@@ -169,7 +169,7 @@ function Carousel({ images, label, className }: { images: string[]; label?: stri
     return (
       <div className={cn('w-full max-w-xl mx-auto px-6', className)}>
         <div className="flex items-center justify-center h-48 rounded-xl border-2 border-dashed bg-muted/30 text-muted-foreground">
-          <p className="text-sm">Adicione imagens ao carrossel no editor</p>
+          <p className="text-sm">Agregá imagens ao carrossel no editor</p>
         </div>
       </div>
     );

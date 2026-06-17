@@ -114,7 +114,7 @@ export function LeadEditModal({ isOpen, onClose, lead, onSave }: LeadEditModalPr
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="email@exemplo.com"
+                placeholder="email@ejemplo.com"
               />
             </div>
           </div>

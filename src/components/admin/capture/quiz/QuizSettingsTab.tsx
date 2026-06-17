@@ -60,7 +60,7 @@ export function QuizSettingsTab({ funnel }: Props) {
         </div>
         <Button onClick={handleSave} disabled={updateFunnel.isPending} className="gap-2">
           {updateFunnel.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          Salvar
+          Guardar
         </Button>
       </div>
 
@@ -81,7 +81,7 @@ export function QuizSettingsTab({ funnel }: Props) {
                 {products?.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
               </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground">Leads gerados serão vinculados a este producto.</p>
+            <p className="text-xs text-muted-foreground">Leads gerados serán vinculados a este producto.</p>
           </div>
 
           {formData.product_id !== funnel.product_id && (
@@ -176,7 +176,7 @@ export function QuizSettingsTab({ funnel }: Props) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Temperatura padrão</Label>
+              <Label>Temperatura predeterminado</Label>
               <Select value={formData.default_temperature} onValueChange={(v) => setFormData(p => ({ ...p, default_temperature: v }))}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -187,7 +187,7 @@ export function QuizSettingsTab({ funnel }: Props) {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Etiquetas padrão (separadas por vírgula)</Label>
+              <Label>Etiquetas predeterminado (separadas por vírgula)</Label>
               <Input
                 value={formData.default_tags}
                 onChange={(e) => setFormData(p => ({ ...p, default_tags: e.target.value }))}

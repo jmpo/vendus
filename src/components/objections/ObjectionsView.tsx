@@ -40,7 +40,7 @@ interface ObjectionsViewProps {
 }
 
 const categoryConfig = {
-  price: { label: 'Preço', icon: DollarSign, color: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' },
+  price: { label: 'Precio', icon: DollarSign, color: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' },
   timing: { label: 'Timing', icon: Clock, color: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
   trust: { label: 'Confiança', icon: Shield, color: 'bg-purple-500/10 text-purple-500 border-purple-500/20' },
   thinking: { label: 'Lo voy a pensar', icon: Brain, color: 'bg-orange-500/10 text-orange-500 border-orange-500/20' },
@@ -171,7 +171,7 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
           {showAdminActions && productId && productName && (
             <Button onClick={() => setGeneratorOpen(true)} className="gap-2">
               <Sparkles className="h-4 w-4" />
-              Gerar Objeções com IA
+              Generar Objeciones con IA
             </Button>
           )}
         </div>
@@ -284,7 +284,7 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
                           <div className="flex items-center gap-2">
                             <Reply size={16} className="text-primary" />
                             <span className="text-sm font-medium text-primary">
-                              Resposta sugerida:
+                              Respuesta sugerida:
                             </span>
                           </div>
                           <div className={cn("flex gap-2", isMobile && "w-full")}>
@@ -307,7 +307,7 @@ export function ObjectionsView({ objections, productId, productName, showAdminAc
                                 ) : (
                                   <>
                                     <Sparkles size={14} />
-                                    Refinar com IA
+                                    Refinar con IA
                                   </>
                                 )}
                               </Button>

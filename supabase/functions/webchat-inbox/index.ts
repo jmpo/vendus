@@ -110,7 +110,7 @@ serve(async (req) => {
     const orgId = profile?.organization_id || null;
 
     // Helper para parsear listas de UUID/strings via querystring (vírgula-separada).
-    // Suporta valores especiais: __none__ (sem producto/sector), unassigned (sem agente).
+    // Suporta valores especiais: __none__ (sin producto/sector), unassigned (sin agente).
     const parseIdList = (raw: string | null): { ids: string[] | null; includeNone: boolean; includeUnassigned: boolean } => {
       if (!raw) return { ids: null, includeNone: false, includeUnassigned: false };
       const parts = raw.split(',').map(s => s.trim()).filter(Boolean);
@@ -636,7 +636,7 @@ serve(async (req) => {
             if (hasMedia) {
               const m = body.media;
               // TODOS os tipos de mídia (audio, image, video, document, sticker) usam /send/media.
-              // O servidor Evolution Go no expõe /send/audio — áudio precisa ir como media con type=audio.
+              // O servidor Evolution Go no expõe /send/audio — audio precisa ir como media con type=audio.
               evoBody = {
                 organization_id: orgId,
                 instance_id: evoInstanceId,
@@ -681,7 +681,7 @@ serve(async (req) => {
               console.log('[webchat-inbox] Sent via Evolution Go:', JSON.stringify(sendData).slice(0, 200));
             }
           } else {
-            // Sem instância Evolution conectada — marca fala visível
+            // Sin instância Evolution conectada — marca fala visível
             console.error('[webchat-inbox] No connected Evolution instance for org', orgId);
             const baseMeta = (insertData.metadata as Record<string, unknown>) || {};
             await supabase
@@ -690,7 +690,7 @@ serve(async (req) => {
                 metadata: {
                   ...baseMeta,
                   delivery_status: 'failed',
-                  error: 'Ningunoa instância WhatsApp conectada. Conecte uma instância em Configurações → WhatsApp.',
+                  error: 'Ningunoa instância WhatsApp conectada. Conecte uma instância em Configuraciones → WhatsApp.',
                   failed_at: new Date().toISOString(),
                 },
               })

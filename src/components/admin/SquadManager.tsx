@@ -276,7 +276,7 @@ export function SquadManager() {
                   Guardando...
                 </>
               ) : editingSquad ? (
-                'Salvar'
+                'Guardar'
               ) : (
                 'Crear Squad'
               )}

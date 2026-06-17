@@ -302,7 +302,7 @@ export function AssignmentManager() {
               ) : (
                 <div className="text-center py-6 text-muted-foreground text-sm">
                   <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  Nenhum vendedor asignado
+                  Ningún vendedor asignado
                 </div>
               )}
             </CardContent>

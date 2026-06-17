@@ -286,7 +286,7 @@ Deno.serve(async (req) => {
 
           // --- Variable tel lead field mapping (aligned with funnel-submit) ---
           const VARIABLE_TO_LEAD_FIELD: Record<string, string> = {
-            'name': 'name', 'nombre': 'name', 'nome_completo': 'name', 'full_name': 'name', 'primeiro_nome': 'name',
+            'name': 'name', 'nombre': 'name', 'nome_completo': 'name', 'full_name': 'name', 'primero_nome': 'name',
             'email': 'email', 'e-mail': 'email', 'e_mail': 'email',
             'phone': 'phone', 'teléfono': 'phone', 'whatsapp': 'phone', 'celular': 'phone', 'tel': 'phone', 'fone': 'phone',
             'company': 'company', 'empresa': 'company',

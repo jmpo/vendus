@@ -16,7 +16,7 @@ export function ContextLibrary({ orgId }: { orgId: string | null }) {
 
   const save = async () => {
     if (!orgId || !editing?.name?.trim() || !editing.instructions?.trim()) {
-      toast.error('Nombre e instruções son obligatorios');
+      toast.error('Nombre e instrucciones son obligatorios');
       return;
     }
     const payload = {
@@ -38,7 +38,7 @@ export function ContextLibrary({ orgId }: { orgId: string | null }) {
   };
 
   const remove = async (id: string) => {
-    if (!confirm('Excluir este contexto?')) return;
+    if (!confirm('Eliminar este contexto?')) return;
     const { error } = await supabase.from('campaign_contexts').delete().eq('id', id);
     if (error) { toast.error(error.message); return; }
     toast.success('Excluído');
@@ -49,7 +49,7 @@ export function ContextLibrary({ orgId }: { orgId: string | null }) {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <p className="text-sm text-muted-foreground">
-          Briefings estratégicos reutilizáveis. O agente IA recebe o contexto antes de crear a primeira mensaje.
+          Briefings estratégicos reutilizáveis. O agente IA recebe o contexto antes de crear a primera mensaje.
         </p>
         <Button onClick={() => setEditing({})}>
           <Plus className="h-4 w-4 mr-2" />Novo Contexto
@@ -57,12 +57,12 @@ export function ContextLibrary({ orgId }: { orgId: string | null }) {
       </div>
 
       {loading ? (
-        <p className="text-sm text-muted-foreground">Carregando…</p>
+        <p className="text-sm text-muted-foreground">Cargando…</p>
       ) : !contexts.length ? (
         <Card>
           <CardContent className="p-10 flex flex-col items-center text-center gap-3">
             <BookOpen className="h-8 w-8 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">Nenhum contexto na biblioteca aún.</p>
+            <p className="text-sm text-muted-foreground">Ningún contexto na biblioteca aún.</p>
           </CardContent>
         </Card>
       ) : (
@@ -113,7 +113,7 @@ export function ContextLibrary({ orgId }: { orgId: string | null }) {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label>Objetivo</Label>
-                  <Input value={editing.objective ?? ''} onChange={(e) => setEditing({ ...editing, objective: e.target.value })} placeholder="Ex: Descobrir objeção" />
+                  <Input value={editing.objective ?? ''} onChange={(e) => setEditing({ ...editing, objective: e.target.value })} placeholder="Ex: Descobrir objeción" />
                 </div>
                 <div>
                   <Label>Tom</Label>
@@ -125,19 +125,19 @@ export function ContextLibrary({ orgId }: { orgId: string | null }) {
                 <Input value={editing.cta ?? ''} onChange={(e) => setEditing({ ...editing, cta: e.target.value })} placeholder="Ex: Agendar conversación" />
               </div>
               <div>
-                <Label>Instruções para el agente *</Label>
+                <Label>Instrucciones para el agente *</Label>
                 <Textarea
                   rows={6}
                   value={editing.instructions ?? ''}
                   onChange={(e) => setEditing({ ...editing, instructions: e.target.value })}
-                  placeholder="Este lead participou da aula ao vivo do Vendus.&#10;Demonstrou interesse em código-fonte liberado.&#10;Ainda no comprou.&#10;Descubrí qual fue su principal objeção.&#10;No envie propuesta imediatamente."
+                  placeholder="Este lead participou da aula ao vivo do Vendus.&#10;Demonstrou interesse em código-fonte liberado.&#10;Aún no comprou.&#10;Descubrí qual fue su principal objeción.&#10;No envie propuesta imediatamente."
                 />
               </div>
             </div>
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditing(null)}>Cancelar</Button>
-            <Button onClick={save}>Salvar</Button>
+            <Button onClick={save}>Guardar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

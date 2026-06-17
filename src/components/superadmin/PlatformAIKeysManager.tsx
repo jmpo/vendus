@@ -51,7 +51,7 @@ export function PlatformAIKeysManager() {
           <h2 className="text-2xl font-bold">IA de la Plataforma</h2>
           <p className="text-sm text-muted-foreground max-w-2xl mt-1">
             Registre las claves de IA que se compartirán entre las empresas con el plan "IA de la plataforma" activado.
-            Usted puede cadastrar várias chaves do mismo provedor — o roteador distribui as llamadas por estratégia
+            Usted puede registrar várias chaves do mismo provedor — o roteador distribui as llamadas por estratégia
             (aleatório ponderado ou round-robin) conforme o plan escolher.
           </p>
         </div>
@@ -62,7 +62,7 @@ export function PlatformAIKeysManager() {
 
       {isLoading && <p className="text-sm text-muted-foreground">Cargando...</p>}
 
-      {/* Card Lovable: informativo, sem cadastro manual */}
+      {/* Card Lovable: informativo, sin registro manual */}
       <Card className="border-violet-500/30 bg-violet-500/5">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">

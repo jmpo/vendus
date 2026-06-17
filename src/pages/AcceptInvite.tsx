@@ -90,7 +90,7 @@ export default function AcceptInvite() {
       if (authError) throw authError;
       if (!authData.user) throw new Error('No se pudo crear la cuenta. Inténtelo de nuevo.');
 
-      // Detecta email ya cadastrado: Supabase retorna um user "fake" sem identities
+      // Detecta email ya registrado: Supabase retorna um user "fake" sin identities
       // cuando o email ya existe (proteção contra enumeração). Nesse caso o user_id
       // no está em auth.users e o accept_invitation falharia na FK.
       const identities = (authData.user as any).identities;

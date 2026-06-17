@@ -69,7 +69,7 @@ Deno.serve(async (req) => {
       .eq("organization_id", profile.organization_id)
       .eq("channel", "whatsapp")
       .eq("visitor_phone_normalized", normalizedPhone)
-      .order("status", { ascending: true }) // no-closed primeiro
+      .order("status", { ascending: true }) // no-closed primero
       .order("last_message_at", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false })
       .limit(1);
@@ -165,7 +165,7 @@ Deno.serve(async (req) => {
       .single();
 
     if (insertError && (insertError as any).code === "23505") {
-      // Race con webhook/automação — recupera la conversación que ganhou o INSERT
+      // Race con webhook/automatización — recupera la conversación que ganhou o INSERT
       const { data: race } = await supabase
         .from("webchat_conversations")
         .select("id")

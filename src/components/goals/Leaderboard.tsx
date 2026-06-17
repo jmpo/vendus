@@ -79,7 +79,7 @@ export function Leaderboard({ productId, period, maxHeight = "400px" }: Leaderbo
           <div>
             <h3 className="font-semibold text-foreground">Ranking de Vendedores</h3>
             <p className="text-xs text-muted-foreground">
-              {period ? 'Período seleccionado' : 'Todos los tiempos'}
+              {period ? 'Periodo seleccionado' : 'Todos los tiempos'}
             </p>
           </div>
         </div>

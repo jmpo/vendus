@@ -16,7 +16,7 @@ export function ComingSoonSection({ title, description }: ComingSoonSectionProps
         <Badge variant="secondary" className="mb-3">Em breve</Badge>
         <h2 className="text-2xl font-semibold text-foreground mb-2">{title}</h2>
         <p className="text-sm text-muted-foreground">
-          {description ?? 'Estamos preparando esta seção. Em breve estará disponível por aqui.'}
+          {description ?? 'Estamos preparando esta sección. Em breve estará disponible por acá.'}
         </p>
       </div>
     </div>

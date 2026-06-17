@@ -16,10 +16,10 @@ export interface NotificationSettings {
 
 export const NOTIFICATION_LABELS: Record<keyof Omit<NotificationSettings, 'user_id' | 'organization_id' | 'push_enabled'>, string> = {
   notify_new_tickets: 'Notificaciones de novos tickets',
-  notify_status_change: 'Notificaciones de alteração de status',
+  notify_status_change: 'Notificaciones de cambio de status',
   notify_new_messages: 'Notificaciones de novas mensajes',
   notify_groups: 'Notificaciones de grupos',
-  notify_unassigned_sector_tickets: 'Notificaciones de tickets sem sector',
+  notify_unassigned_sector_tickets: 'Notificaciones de tickets sin sector',
   notify_appointments: 'Notificaciones de reservas',
 };
 

@@ -24,7 +24,7 @@ export function PresenceTestButton({ instanceId, instanceName }: Props) {
   const run = async () => {
     const digits = phone.replace(/\D/g, '');
     if (digits.length < 10) {
-      toast.error('Informe um número válido com DDD (e DDI 55 se possível).');
+      toast.error('Informe um número válido con DDD (e DDI 55 se posible).');
       return;
     }
     setLoading(true);
@@ -41,12 +41,12 @@ export function PresenceTestButton({ instanceId, instanceName }: Props) {
       if ((data as any)?.error) throw new Error((data as any).error);
       toast.success(
         isAudio
-          ? `Disparado "gravando áudio..." por ${duration}s. Confira o celular.`
+          ? `Disparado "gravando audio..." por ${duration}s. Confira o celular.`
           : `Disparado "digitando..." por ${duration}s. Confira o celular.`,
       );
       setOpen(false);
     } catch (e: any) {
-      toast.error(`Falha no teste: ${e?.message || String(e)}`);
+      toast.error(`Fallo no teste: ${e?.message || String(e)}`);
     } finally {
       setLoading(false);
     }
@@ -69,8 +69,8 @@ export function PresenceTestButton({ instanceId, instanceName }: Props) {
           <DialogHeader>
             <DialogTitle>Testar presença · {instanceName}</DialogTitle>
             <DialogDescription>
-              Dispara o status no WhatsApp do número informado, sem enviar mensaje alguna. Usted
-              debe ver "digitando..." (ou "gravando áudio...") aparecer no celular dentro de
+              Dispara o status no WhatsApp do número informado, sin enviar mensaje alguna. Usted
+              debe ver "digitando..." (ou "gravando audio...") aparecer no celular dentro de
               poucos segundos.
             </DialogDescription>
           </DialogHeader>
@@ -92,7 +92,7 @@ export function PresenceTestButton({ instanceId, instanceName }: Props) {
               <div>
                 <p className="text-sm font-medium">Tipo</p>
                 <p className="text-xs text-muted-foreground">
-                  {isAudio ? '"gravando áudio..."' : '"digitando..."'}
+                  {isAudio ? '"gravando audio..."' : '"digitando..."'}
                 </p>
               </div>
               <Button
@@ -101,7 +101,7 @@ export function PresenceTestButton({ instanceId, instanceName }: Props) {
                 variant={isAudio ? 'default' : 'outline'}
                 onClick={() => setIsAudio((v) => !v)}
               >
-                {isAudio ? 'Áudio' : 'Texto'}
+                {isAudio ? 'Audio' : 'Texto'}
               </Button>
             </div>
 

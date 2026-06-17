@@ -1,4 +1,4 @@
-// Gera insights de uma campaña (melhor agente/contexto/horario, riscos)
+// Gera insights de uma campaña (mejor agente/contexto/horario, riscos)
 // usando Lovable AI Gateway. POST { campaign_id }
 
 const corsHeaders = {

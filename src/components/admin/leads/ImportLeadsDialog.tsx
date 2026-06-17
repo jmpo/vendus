@@ -68,7 +68,7 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
     const text = await file.text();
     const { headers: h, rows: r } = parseCsv(text);
     if (h.length === 0 || r.length === 0) {
-      toast.error('CSV vazio ou inválido');
+      toast.error('CSV vacío ou inválido');
       return;
     }
     setHeaders(h);
@@ -161,7 +161,7 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
               />
               <Button asChild className="w-full gap-2 cursor-pointer" variant="default">
                 <span onClick={() => document.getElementById('csv-upload')?.click()}>
-                  <Upload className="h-4 w-4" /> Selecionar archivo CSV
+                  <Upload className="h-4 w-4" /> Seleccionar archivo CSV
                 </span>
               </Button>
             </Label>
@@ -171,7 +171,7 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
         {step === 'map' && (
           <div className="space-y-4 py-2">
             <p className="text-sm text-muted-foreground">
-              {rows.length} linhas detectadas. Mapeie as colunas:
+              {rows.length} líneas detectadas. Mapeie as colunas:
             </p>
             <div className="max-h-72 overflow-y-auto space-y-2 pr-2">
               {headers.map((h) => (
@@ -190,21 +190,21 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
             </div>
             <div className="grid grid-cols-2 gap-3 pt-2 border-t">
               <div>
-                <Label className="text-xs">Producto padrão (opcional)</Label>
+                <Label className="text-xs">Producto predeterminado (opcional)</Label>
                 <Select value={productId} onValueChange={setProductId}>
-                  <SelectTrigger><SelectValue placeholder="Sem producto" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Sin producto" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__none">Sem producto</SelectItem>
+                    <SelectItem value="__none">Sin producto</SelectItem>
                     {products.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label className="text-xs">Squad padrão (opcional)</Label>
+                <Label className="text-xs">Squad predeterminado (opcional)</Label>
                 <Select value={squadId} onValueChange={setSquadId}>
-                  <SelectTrigger><SelectValue placeholder="Sem squad" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Sin squad" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__none">Sem squad</SelectItem>
+                    <SelectItem value="__none">Sin squad</SelectItem>
                     {squads.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
@@ -224,7 +224,7 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
         {step === 'done' && result && (
           <div className="py-6 space-y-3 text-center">
             <CheckCircle2 className="h-10 w-10 text-emerald-500 mx-auto" />
-            <p className="font-medium">Importação concluída</p>
+            <p className="font-medium">Importación concluída</p>
             <div className="text-sm text-muted-foreground space-y-1">
               <p>✓ {result.created} criados</p>
               {result.duplicated > 0 && <p>⊘ {result.duplicated} duplicados (teléfono ya existe)</p>}

@@ -58,7 +58,7 @@ export function BulkTagPopover({ trigger, selectedLeadIds, onDone }: Props) {
         <div className="max-h-72 overflow-y-auto p-2">
           {tags.length === 0 ? (
             <p className="text-sm text-muted-foreground p-3 text-center">
-              Nenhuma etiqueta cadastrada
+              Ninguna etiqueta registrada
             </p>
           ) : (
             tags.map((t) => {

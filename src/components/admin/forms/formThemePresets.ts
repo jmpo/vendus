@@ -32,7 +32,7 @@ export const FORM_THEME_PRESETS: FormThemePreset[] = [
   },
   {
     id: 'inlead',
-    name: 'inlead (padrão)',
+    name: 'inlead (predeterminado)',
     description: 'Tipografia Inter, indigo, fundo claro',
     category: 'generic',
     theme: {
@@ -52,7 +52,7 @@ export const FORM_THEME_PRESETS: FormThemePreset[] = [
   {
     id: 'whatsapp',
     name: 'WhatsApp',
-    description: 'Verde clássico, bolhas estilo WA',
+    description: 'Verde clássico, burbujas estilo WA',
     category: 'messaging',
     theme: {
       primary_color: '#25D366',
@@ -71,7 +71,7 @@ export const FORM_THEME_PRESETS: FormThemePreset[] = [
   {
     id: 'telegram',
     name: 'Telegram',
-    description: 'Azul céu, bolhas suaves',
+    description: 'Azul céu, burbujas suaves',
     category: 'messaging',
     theme: {
       primary_color: '#2AABEE',
@@ -109,7 +109,7 @@ export const FORM_THEME_PRESETS: FormThemePreset[] = [
   {
     id: 'messenger',
     name: 'Messenger',
-    description: 'Azul Facebook, bolhas redondas',
+    description: 'Azul Facebook, burbujas redondas',
     category: 'messaging',
     theme: {
       primary_color: '#0084FF',
@@ -223,7 +223,7 @@ export const FORM_THEME_PRESETS: FormThemePreset[] = [
   {
     id: 'minimal_mono',
     name: 'Minimal Mono',
-    description: 'Preto e branco, sem sombras',
+    description: 'Preto e branco, sin sombras',
     category: 'generic',
     theme: {
       primary_color: '#0A0A0A',

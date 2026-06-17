@@ -72,7 +72,7 @@ export function InboxFiltersDrawer({
   const [section, setSection] = useState<Section>('root');
   const [subSearch, setSubSearch] = useState('');
 
-  // Reseta navegação ao reabrir
+  // Reseta navegación ao reabrir
   useEffect(() => {
     if (open) {
       setSection('root');
@@ -138,7 +138,7 @@ export function InboxFiltersDrawer({
     </div>
   );
 
-  // Linha de categoria (lista raiz)
+  // Línea de categoria (lista raiz)
   const CategoryRow = ({
     label,
     count,
@@ -165,7 +165,7 @@ export function InboxFiltersDrawer({
     </button>
   );
 
-  // Linha de opción dentro de uma sub-tela (com checkbox)
+  // Línea de opción dentro de uma sub-tela (con checkbox)
   const OptionRow = ({
     label,
     checked,

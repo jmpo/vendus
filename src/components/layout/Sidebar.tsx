@@ -100,7 +100,7 @@ export function Sidebar({
         </Button>
       </div>
 
-      {/* Product badge eliminado — troca de producto ahora é feita pelo dropdown no header */}
+      {/* Product badge eliminado — troca de producto ahora é feita por el dropdown no header */}
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
@@ -134,7 +134,7 @@ export function Sidebar({
           );
         })}
 
-        {/* Lista de productos atribuídos cuando ningún está selecionado */}
+        {/* Lista de productos atribuídos cuando ningún está seleccionado */}
         {!selectedProduct && !collapsed && (
           <div className="px-1 py-2">
             {assignedProducts.length === 0 ? (

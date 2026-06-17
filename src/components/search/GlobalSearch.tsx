@@ -140,13 +140,13 @@ export function GlobalSearch({ onSelectLead, onSelectProduct }: GlobalSearchProp
 
           {!isLoading && searchQuery.length >= 2 && !hasResults && (
             <CommandEmpty>
-              Nenhum resultado para "{searchQuery}"
+              Ningún resultado para "{searchQuery}"
             </CommandEmpty>
           )}
 
           {searchQuery.length < 2 && (
             <div className="py-6 text-center text-sm text-muted-foreground">
-              Escribí pelo menos 2 caracteres para buscar
+              Escribí por el menos 2 caracteres para buscar
             </div>
           )}
 
@@ -221,7 +221,7 @@ export function GlobalSearch({ onSelectLead, onSelectProduct }: GlobalSearchProp
           {results?.objections && results.objections.length > 0 && (
             <>
               <CommandSeparator />
-              <CommandGroup heading="Objeções">
+              <CommandGroup heading="Objeciones">
                 {results.objections.map((objection) => (
                   <CommandItem 
                     key={objection.id} 
@@ -242,7 +242,7 @@ export function GlobalSearch({ onSelectLead, onSelectProduct }: GlobalSearchProp
           {results?.knowledge && results.knowledge.length > 0 && (
             <>
               <CommandSeparator />
-              <CommandGroup heading="Base de Conhecimento">
+              <CommandGroup heading="Base de Conocimiento">
                 {results.knowledge.map((item) => (
                   <CommandItem 
                     key={item.id} 

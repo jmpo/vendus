@@ -46,8 +46,8 @@ function csvEscape(v: unknown): string {
 
 export function leadsToCsv(leads: ExportableLead[], ctx: ExportContext): string {
   const headers = [
-    'Nome', 'E-mail', 'Telefone', 'Empresa', 'Cargo', 'Temperatura',
-    'Origem', 'Canal', 'Estágio', 'Vendedor', 'Squad', 'Produto',
+    'Nome', 'E-mail', 'Teléfono', 'Empresa', 'Cargo', 'Temperatura',
+    'Origem', 'Canal', 'Etapa', 'Vendedor', 'Squad', 'Produto',
     'Valor (R$)', 'Etiquetas', 'UTM Source', 'UTM Medium', 'UTM Campaign',
     'Criado em', 'Último contato',
   ];

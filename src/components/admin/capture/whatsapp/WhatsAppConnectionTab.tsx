@@ -29,7 +29,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
       },
     };
     await update.mutateAsync({ id: funnel.id, channels: nextChannels as any } as any);
-    toast.success('Conexão salva');
+    toast.success('Conexión salva');
   };
 
   const selectedInstance = instances.find(i => i.id === instanceId);
@@ -42,7 +42,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
         <div>
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-emerald-600" />
-            Conexão WhatsApp
+            Conexión WhatsApp
           </h2>
           <p className="text-muted-foreground text-sm">
             Defina em qual instância Evolution este flujo dispara.
@@ -50,7 +50,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
         </div>
         <Button onClick={handleSave} disabled={!isDirty || update.isPending} className="gap-2">
           {update.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          Salvar
+          Guardar
         </Button>
       </div>
 
@@ -58,7 +58,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
         <CardHeader>
           <CardTitle className="text-base">Status do canal</CardTitle>
           <CardDescription>
-            Quando habilitado, toda primeira mensaje recibida na instância selecionada inicia este flujo.
+            Cuando habilitado, toda primera mensaje recibida na instância selecionada inicia este flujo.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -66,7 +66,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
             <div className="space-y-1">
               <Label className="text-sm font-medium">Flujo ativo no WhatsApp</Label>
               <p className="text-xs text-muted-foreground">
-                Desabilite para pausar o disparo sem despublicar o embudo.
+                Desabilite para pausar o disparo sin despublicar o embudo.
               </p>
             </div>
             <Switch checked={enabled} onCheckedChange={setEnabled} />
@@ -75,7 +75,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
           {!enabled && (
             <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-sm">
               <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
-              <p>Com o canal desabilitado, mensajes recebidas serão tratadas pelo agente IA padrão ou pela fila humana.</p>
+              <p>Con o canal desabilitado, mensajes recebidas serán tratadas por el agente IA predeterminado ou por la fila humana.</p>
             </div>
           )}
         </CardContent>
@@ -88,7 +88,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
             Instância vinculada
           </CardTitle>
           <CardDescription>
-            Elegí uma instância específica para isolar o flujo, ou deixe em "Qualquer instância" para que dispare em todas.
+            Elegí uma instância específica para isolar o flujo, ou deixe em "Cualquier instância" para que dispare em todas.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -96,13 +96,13 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
             <Label>Instância Evolution</Label>
             <Select value={instanceId} onValueChange={setInstanceId} disabled={loadingInstances}>
               <SelectTrigger>
-                <SelectValue placeholder={loadingInstances ? 'Carregando...' : 'Seleccioná'} />
+                <SelectValue placeholder={loadingInstances ? 'Cargando...' : 'Seleccioná'} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="any">
                   <div className="flex items-center gap-2">
                     <Wifi className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span>Qualquer instância de la empresa</span>
+                    <span>Cualquier instância de la empresa</span>
                   </div>
                 </SelectItem>
                 {instances.map(i => (
@@ -124,7 +124,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
             </Select>
             {instances.length === 0 && !loadingInstances && (
               <p className="text-xs text-muted-foreground">
-                Nenhuma instância conectada. Conecte uma em <strong>Conexões → WhatsApp</strong>.
+                Ninguna instância conectada. Conecte uma em <strong>Conexiones → WhatsApp</strong>.
               </p>
             )}
           </div>
@@ -156,16 +156,16 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-2">
           <p>
-            <strong className="text-foreground">1.</strong> Lead envia a primeira mensaje para a instância acima.
+            <strong className="text-foreground">1.</strong> Lead envia a primera mensaje para a instância acima.
           </p>
           <p>
-            <strong className="text-foreground">2.</strong> O sistema verifica funis ativos com WhatsApp habilitado e cria uma conversación.
+            <strong className="text-foreground">2.</strong> O sistema verifica funis ativos con WhatsApp habilitado e cria uma conversación.
           </p>
           <p>
             <strong className="text-foreground">3.</strong> Este flujo assume — executa cada bloco em ordem, podendo passar para IA, agendar reunión ou transferir para humano.
           </p>
           <p className="pt-2 text-xs">
-            Apenas um embudo dispara por mensaje. Se houver múltiplos ativos, o primeiro encontrado prevalece — use a instância para segmentar.
+            Solo um embudo dispara por mensaje. Se houver múltiples ativos, o primero encontrado prevalece — use a instância para segmentar.
           </p>
         </CardContent>
       </Card>

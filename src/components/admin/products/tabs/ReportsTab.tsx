@@ -69,7 +69,7 @@ export function ReportsTab({ productId }: ReportsTabProps) {
   // Build funnel stages from leads
   const stageGroups = productLeads.reduce((acc, lead) => {
     const stage = (lead as any).pipeline_stages;
-    const stageName = stage?.name || 'Sem etapa';
+    const stageName = stage?.name || 'Sin etapa';
     const stageColor = stage?.color || '#6b7280';
     const stageOrder = stage?.order_index ?? 99;
     if (!acc[stageName]) {

@@ -49,22 +49,22 @@ export function WidgetShareTab({ funnel }: Props) {
           Instalar Widget no site
         </h2>
         <p className="text-muted-foreground text-sm">
-          Cole o snippet abaixo antes de <code className="text-xs bg-muted px-1 py-0.5 rounded">&lt;/body&gt;</code> em qualquer página HTML.
+          Cole o snippet abaixo antes de <code className="text-xs bg-muted px-1 py-0.5 rounded">&lt;/body&gt;</code> em cualquier página HTML.
         </p>
       </div>
 
       {editor && (
         <div className="rounded-lg border border-primary/20 bg-primary/10 p-3 text-sm">
-          O snippet usa o domínio publicado: <strong>{baseUrl}</strong>. Publique o app antes de instalar em produção.
+          O snippet usa o domínio publicado: <strong>{baseUrl}</strong>. Publique o app antes de instalar em producción.
         </div>
       )}
 
-      {/* Snippet de instalação */}
+      {/* Snippet de instalación */}
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-base flex items-center gap-2">
             <Code className="h-4 w-4" />
-            Snippet de instalação
+            Snippet de instalación
           </CardTitle>
           <CardDescription>Tag única, carrega assíncrona e no bloqueia o site.</CardDescription>
         </CardHeader>
@@ -116,7 +116,7 @@ export function WidgetShareTab({ funnel }: Props) {
               Descargar SVG
             </Button>
             <p className="text-xs text-muted-foreground max-w-xs">
-              Vetor de alta resolução, escala para qualquer tamanho sem perda.
+              Vetor de alta resolución, escala para cualquier tamaño sin perda.
             </p>
           </div>
         </CardContent>
@@ -132,7 +132,7 @@ export function WidgetShareTab({ funnel }: Props) {
           <CardDescription>Alternativa se o snippet for bloqueado por CSP do site.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-          <Label className="text-xs text-muted-foreground">Altura ajustável (700px por padrão)</Label>
+          <Label className="text-xs text-muted-foreground">Altura ajustável (700px por defecto)</Label>
           <div className="bg-muted rounded-lg p-3 overflow-x-auto">
             <pre className="text-xs font-mono whitespace-pre text-foreground">{iframeCode}</pre>
           </div>

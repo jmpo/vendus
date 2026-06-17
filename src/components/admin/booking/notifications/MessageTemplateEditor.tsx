@@ -59,7 +59,7 @@ export function MessageTemplateEditor({
               onClick={() => insertAtCursor('{{nome_lead}}')}
             >
               <Plus className="h-3 w-3 mr-1" />
-              Inserir variável
+              Inserir variable
             </Button>
           )}
         </div>

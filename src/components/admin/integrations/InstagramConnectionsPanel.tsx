@@ -17,7 +17,7 @@ function StatusBadge({ c }: { c: InstagramConnection }) {
   if (c.status === 'active') return <Badge className="bg-pink-500/15 text-pink-700 border-pink-500/30">Ativa</Badge>;
   if (c.status === 'error') return <Badge variant="destructive">Error</Badge>;
   if (c.status === 'revoked') return <Badge variant="outline">Revogada</Badge>;
-  if (c.status === 'draft') return <Badge variant="secondary">Rascunho</Badge>;
+  if (c.status === 'draft') return <Badge variant="secondary">Borrador</Badge>;
   return <Badge variant="secondary">Pendente</Badge>;
 }
 
@@ -51,7 +51,7 @@ export function InstagramConnectionsPanel({ hideHeader, openWizard, onCloseWizar
             </div>
           </div>
           <Button onClick={() => { setEditing(null); setInternalOpen(true); }}>
-            <Plus className="h-4 w-4 mr-2" />Nova conexão
+            <Plus className="h-4 w-4 mr-2" />Nova conexión
           </Button>
         </div>
       )}
@@ -100,7 +100,7 @@ export function InstagramConnectionsPanel({ hideHeader, openWizard, onCloseWizar
       <AlertDialog open={!!toDelete} onOpenChange={(v) => !v && setToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remover conexão Instagram?</AlertDialogTitle>
+            <AlertDialogTitle>Remover conexión Instagram?</AlertDialogTitle>
             <AlertDialogDescription>
               Remove "{toDelete?.display_name}". Conversas e mensajes ya recebidas continuam preservadas.
             </AlertDialogDescription>

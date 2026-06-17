@@ -164,7 +164,7 @@ export function AgentsTab({ productId }: AgentsTabProps) {
             <CardTitle className="text-lg mb-2">Ningún agente configurado</CardTitle>
             <CardDescription className="text-center max-w-sm mb-4">
               Crea agentes especializados para atender sus leads de forma automatizada.
-              Cada agente usa o Cérebro do Producto com comportamentos específicos.
+              Cada agente usa o Cérebro do Producto con comportamentos específicos.
             </CardDescription>
             <Button onClick={handleCreate}>
               <Plus className="h-4 w-4 mr-2" />
@@ -185,16 +185,16 @@ export function AgentsTab({ productId }: AgentsTabProps) {
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground space-y-2">
             <p>
-              • Todos os agentes usam o mismo <strong>Cérebro do Producto</strong> como base de conhecimento
+              • Todos los agentes usam o mismo <strong>Cérebro do Producto</strong> como base de conocimiento
             </p>
             <p>
-              • Cada agente tiene su próprio <strong>papel, tom de voz e regras</strong>
+              • Cada agente tiene su propio <strong>papel, tom de voz e regras</strong>
             </p>
             <p>
-              • O agente <strong>Padrão</strong> é usado automaticamente cuando ningún otro é especificado
+              • O agente <strong>Predeterminado</strong> é usado automaticamente cuando ningún otro é especificado
             </p>
             <p>
-              • Usa o bloco <strong>"Trocar Agente"</strong> nos fluxos para alternar entre agentes
+              • Usa o bloco <strong>"Trocar Agente"</strong> nos flujos para alternar entre agentes
             </p>
           </CardContent>
         </Card>

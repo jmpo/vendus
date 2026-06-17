@@ -31,8 +31,8 @@ const TONE_LABELS: Record<string, string> = {
 const RESULT_LABELS: Record<string, string> = {
   classificacao: 'Clasifica el lead em 3 categorias (frio/morno/quente) con base no score.',
   diagnostico: 'Genera um diagnóstico detalhado con 3 níveis de maturidade.',
-  recomendacao: 'Recomende a melhor opción/plano/caminho para el lead.',
-  pontuacao: 'Mostre uma pontuação final con mensaje corta.',
+  recomendacao: 'Recomende a mejor opción/plano/caminho para el lead.',
+  pontuacao: 'Mostre uma puntuación final con mensaje corta.',
 };
 
 serve(async (req) => {
@@ -113,7 +113,7 @@ ESTRUTURA OBRIGATÓRIA (em ordem):
 2. 3 a 6 blocos "buttons" (preguntas de múltiple elegí), cada um con 3-4 opciones, cadla opción con {id, letter (A/B/C/D), label, score (0-35), tag (opcional)}.
 3. Blocos "input" para capturar:
 ${captureFields.map((f) => `   - ${f}`).join('\n') || '   - (ningún)'}
-4. Bloco "end" com:
+4. Bloco "end" con:
    - content: "Resultado pronto!"
    - result_tiers: array con 3 níveis [{id, label, min, max, color, message}]
    - result_metrics: array opcional [{id, label, value (0-100), display:"percent", color}]
@@ -189,7 +189,7 @@ Retorne SOLO o JSON.`;
     try { parsed = JSON.parse(cleanContent); }
     catch (e) {
       console.error('Parse fail', content);
-      return new Response(JSON.stringify({ error: 'Resposta da IA inválida. Probá novamente.' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ error: 'Respuesta da IA inválida. Probá novamente.' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     if (!parsed.blocks || !Array.isArray(parsed.blocks) || parsed.blocks.length === 0) {

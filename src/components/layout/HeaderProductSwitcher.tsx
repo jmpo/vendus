@@ -36,7 +36,7 @@ export function HeaderProductSwitcher({
           <div className="flex items-center gap-2 min-w-0">
             <Package className="h-4 w-4 text-primary shrink-0" />
             <span className="font-medium truncate">
-              {selectedProduct?.name || 'Selecionar producto'}
+              {selectedProduct?.name || 'Seleccionar producto'}
             </span>
           </div>
           <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />

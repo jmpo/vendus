@@ -155,7 +155,7 @@ export function ChatCalendarPicker({
                 ) : availableSlots.length === 0 ? (
                   <div className="text-center py-6">
                     <p className="text-sm text-muted-foreground">
-                      Sem horários disponíveis nesta data
+                      Sin horarios disponibles nesta data
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
                       Seleccione otra data

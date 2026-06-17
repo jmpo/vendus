@@ -120,7 +120,7 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
       if (!data?.ok) {
         const skipped = data?.result?.skipped;
         const errs = data?.result?.errors?.join(' · ');
-        toast.warning(`Reprocesso com avisos${skipped ? `: ${skipped}` : ''}${errs ? ` — ${errs}` : ''}`);
+        toast.warning(`Reprocesso con avisos${skipped ? `: ${skipped}` : ''}${errs ? ` — ${errs}` : ''}`);
       } else {
         toast.success('Pedido reprocessado');
       }
@@ -214,7 +214,7 @@ export function CaktoOrderDetailDialog({ order, open, onOpenChange, canReprocess
                   detail={
                     prov?.org?.platform_plans
                       ? `${(prov.org.platform_plans as any).name} · status=${prov.org.plan_status} · ativado em ${fmtDate(prov.org.plan_activated_at)}`
-                      : 'Nenhum plan vinculado'
+                      : 'Ningún plan vinculado'
                   }
                 />
                 <ProvisioningRow

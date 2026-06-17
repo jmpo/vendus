@@ -88,7 +88,7 @@ export function AgentWelcomeMenuTab({ formData, onChange }: AgentWelcomeMenuTabP
     if (formData.quick_menu_mode === 'always' && lines.length) {
       parts.push(`${intro}\n${lines.join('\n')}`);
     }
-    return parts.join('\n\n') || '(Configure a saudação ou o menu para ver o preview)';
+    return parts.join('\n\n') || '(Configure a saludo ou o menu para ver o preview)';
   }, [formData.welcome_enabled, formData.welcome_message, formData.quick_menu_mode, formData.quick_menu_intro, options]);
 
   return (

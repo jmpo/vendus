@@ -112,7 +112,7 @@ export function AddActionDialog({
             )}
             {isMultiAllowed && addedCount > 0 && (
               <Badge variant="outline" className="text-xs text-primary border-primary/40">
-                {addedCount}x adicionada — adicionar mais
+                {addedCount}x adicionada — agregar mais
               </Badge>
             )}
           </div>
@@ -121,7 +121,7 @@ export function AddActionDialog({
           </p>
           {isMultiAllowed && (
             <p className="text-xs text-primary mt-1 font-medium">
-              ✓ Pode ser adicionada várias vezes (um por campo)
+              ✓ Puede ser adicionada várias vezes (um por campo)
             </p>
           )}
         </div>
@@ -141,7 +141,7 @@ export function AddActionDialog({
             {/* Lead Actions */}
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3">
-                Ações de Lead
+                Acciones de Lead
               </h3>
               <div className="space-y-2">
                 {leadActions.map(([type, info]) => renderActionButton([type, info]))}
@@ -151,7 +151,7 @@ export function AddActionDialog({
             {/* Transfer Actions */}
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3">
-                Transferência e Pipeline
+                Transferencia e Pipeline
               </h3>
               <div className="space-y-2">
                 {transferActions.map(([type, info]) => renderActionButton([type, info]))}

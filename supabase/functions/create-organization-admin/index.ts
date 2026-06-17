@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
       data: { user: caller },
     } = await userClient.auth.getUser();
     if (!caller) {
-      return new Response(JSON.stringify({ error: "Sessão inválida" }), {
+      return new Response(JSON.stringify({ error: "Sesión inválida" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -108,7 +108,7 @@ Deno.serve(async (req) => {
         });
 
       if (inviteError || !invite?.user) {
-        // Fallback: cria usuario direto (sem email) con contraseña aleatória
+        // Fallback: cria usuario direto (sin email) con contraseña aleatória
         const randomPwd =
           crypto.randomUUID().replace(/-/g, "") + "Aa1!";
         const { data: created, error: createError } =

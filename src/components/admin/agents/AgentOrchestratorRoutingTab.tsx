@@ -53,7 +53,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
           .eq('is_active', true)
           .order('name'),
       ]);
-      // Aceita qualquer status exceto archived/deleted/inactive (e null = ok)
+      // Aceita cualquier status excepto archived/deleted/inactive (e null = ok)
       const products = (productsRes.data || []).filter(
         (p: ProductRow) => !p.status || !EXCLUDED_PRODUCT_STATUSES.has(p.status)
       );
@@ -68,7 +68,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
   const products = data?.products || [];
   const agents = data?.agents || [];
 
-  // Todos os agentes ativos da org, exceto o próprio e outros orquestradores
+  // Todos los agentes ativos da org, excepto o propio e otros orquestradores
   const routableAgents = useMemo(
     () =>
       agents.filter(
@@ -104,7 +104,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
   );
 
   // tool_configs.routing_products / routing_agents — array de IDs incluídos no roteamento.
-  // Quando o array está ausente (undefined), tratamos como "todos selecionados" por padrão.
+  // Cuando o array está ausente (undefined), tratamos como "todos selecionados" por defecto.
   const tc = (formData.tool_configs as any) || {};
   const selectedProductIds: string[] | undefined = tc.routing_products;
   const selectedAgentIds: string[] | undefined = tc.routing_agents;
@@ -137,7 +137,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
   const clearProducts = () =>
     onChange({ tool_configs: { ...tc, routing_products: [] } });
 
-  // Helpers para seleção em grupos de agentes
+  // Helpers para selección em grupos de agentes
   const setAgentsSelection = (idsToSet: string[], include: boolean) => {
     const base =
       selectedAgentIds === undefined ? routableAgents.map((a) => a.id) : [...selectedAgentIds];
@@ -180,8 +180,8 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
           <div className="text-sm text-muted-foreground">
             <p className="font-medium text-foreground">Matriz de Enrutamiento</p>
             <p>
-              Seleccioná quais productos e agentes este Orquestrador puede rotear. Itens
-              desmarcados serão ignorados na hora de transferir a conversación.
+              Seleccioná cuáles productos e agentes este Orquestador puede rotear. Itens
+              desmarcados serán ignorados na hora de transferir a conversación.
             </p>
           </div>
         </div>
@@ -221,10 +221,10 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <p className="text-xs text-muted-foreground text-center py-4">Carregando…</p>
+            <p className="text-xs text-muted-foreground text-center py-4">Cargando…</p>
           ) : products.length === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-4">
-              Ninguno producto cadastrado. Crea productos primeiro para o Orquestrador ter para dónde rotear.
+              Ningún producto registrado. Creá productos primero para que el Orquestador tenga a dónde rutear.
             </p>
           ) : (
             <div className="space-y-2">
@@ -265,7 +265,7 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
                       <div className="flex flex-wrap gap-1.5">
                         {productAgents.length === 0 ? (
                           <span className="text-xs text-muted-foreground italic">
-                            Sem especialistas — Orquestrador atenderá direto.
+                            Sin especialistas — el Orquestador atenderá directo.
                           </span>
                         ) : (
                           productAgents.map((a) => (
@@ -318,10 +318,10 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <p className="text-xs text-muted-foreground text-center py-4">Carregando…</p>
+            <p className="text-xs text-muted-foreground text-center py-4">Cargando…</p>
           ) : globalAgents.length === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-4">
-              Sem agentes globais (Soporte / Financeiro / Administrativo). Crea um para o Orquestrador rotear suporte/financeiro.
+              Sin agentes globais (Soporte / Financeiro / Administrativo). Crea um para o Orquestador rotear suporte/financeiro.
             </p>
           ) : (
             <div className="space-y-2">
@@ -386,10 +386,10 @@ export function AgentOrchestratorRoutingTab({ currentAgentId, formData, onChange
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <p className="text-xs text-muted-foreground text-center py-4">Carregando…</p>
+            <p className="text-xs text-muted-foreground text-center py-4">Cargando…</p>
           ) : agentsByProduct.length === 0 ? (
             <p className="text-xs text-muted-foreground text-center py-4">
-              Ninguno agente vinculado a productos. Crea SDRs / Closers nos productos para o Orquestrador rotear.
+              Ninguno agente vinculado a productos. Crea SDRs / Closers nos productos para o Orquestador rotear.
             </p>
           ) : (
             <div className="space-y-4">

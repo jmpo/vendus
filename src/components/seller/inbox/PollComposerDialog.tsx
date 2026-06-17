@@ -53,11 +53,11 @@ export function PollComposerDialog({ open, onOpenChange, onConfirm }: PollCompos
               id="poll-q"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ex.: Qual horario é melhor para tú?"
+              placeholder="Ex.: Qual horario é mejor para tú?"
             />
           </div>
           <div className="space-y-2">
-            <Label>Opções</Label>
+            <Label>Opciones</Label>
             {options.map((opt, idx) => (
               <div key={idx} className="flex items-center gap-2">
                 <Input

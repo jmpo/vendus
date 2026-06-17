@@ -172,7 +172,7 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
         </CardContent>
       </Card>
 
-      {/* Histórico de Comisiones */}
+      {/* Historial de Comisiones */}
       <Card>
         <CardHeader className={isMobile ? "p-4" : ""}>
           <CardTitle className={cn("flex items-center gap-2", isMobile && "text-base")}>

@@ -29,7 +29,7 @@ async function getAuthToken(organizationId: string, supabaseUrl: string, supabas
     .single();
 
   if (error || !settings) {
-    throw new Error("Configurações do Sankhya no encontradas");
+    throw new Error("Configuraciones do Sankhya no encontradas");
   }
 
   const config = (settings.settings as unknown) as SankhyaConfig;
@@ -60,7 +60,7 @@ async function getAuthToken(organizationId: string, supabaseUrl: string, supabas
   const token = authData.responseBody?.jsessionid?.$;
 
   if (!token) {
-    throw new Error("Token de sessão no devuelto");
+    throw new Error("Token de sesión no devuelto");
   }
 
   return { token, xToken: config.x_token };

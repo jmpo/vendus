@@ -106,7 +106,7 @@ export function WhatsAppManager() {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Buscar fluxos..." value={searchQuery}
+          <Input placeholder="Buscar flujos..." value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)} className="pl-10" />
         </div>
         <Select value={productFilter} onValueChange={setProductFilter}>
@@ -228,7 +228,7 @@ export function WhatsAppManager() {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={(e) => { e.stopPropagation(); setDeleteId(f.id); }}
                           className="text-destructive focus:text-destructive">
-                          <Trash2 className="h-4 w-4 mr-2" /> Excluir
+                          <Trash2 className="h-4 w-4 mr-2" /> Eliminar
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -271,7 +271,7 @@ export function WhatsAppManager() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsCreateOpen(false)}>Cancelar</Button>
             <Button onClick={handleCreate} disabled={!name.trim() || !productId || createFunnel.isPending}>
-              {createFunnel.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Criar'}
+              {createFunnel.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Crear'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -292,7 +292,7 @@ export function WhatsAppManager() {
               onClick={() => { if (deleteId) deleteFunnel.mutate(deleteId); setDeleteId(null); }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Excluir
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

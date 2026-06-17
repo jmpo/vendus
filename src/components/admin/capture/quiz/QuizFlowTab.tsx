@@ -94,10 +94,10 @@ export function QuizFlowTab({ funnel }: Props) {
     return base;
   }, []);
 
-  /** Insere bloco em uma posição (secuencia visual). */
+  /** Insere bloco em uma posición (secuencia visual). */
   const insertAt = useCallback((newBlock: FunnelBlock, index: number) => {
     setBlocks(prev => {
-      // Pegamos a ordem visual atual
+      // Pegamos a ordem visual actual
       const byId = new Map(prev.map(b => [b.id, b]));
       const visited = new Set<string>();
       const ordered: FunnelBlock[] = [];
@@ -278,7 +278,7 @@ export function QuizFlowTab({ funnel }: Props) {
       ) : isDirty ? (
         <span className="text-amber-600 dark:text-amber-400">Auto-save em 1.5s</span>
       ) : lastSavedAt ? (
-        <><CheckCircle2 className="h-3 w-3 text-green-600" /> Salvo</>
+        <><CheckCircle2 className="h-3 w-3 text-green-600" /> Guardado</>
       ) : null}
     </div>
   );
@@ -330,5 +330,5 @@ export function QuizFlowTab({ funnel }: Props) {
   return <QuizBuilderShellDesktop funnel={funnel} />;
 }
 
-// Import dinâmico via wrapper para manter compat com mobile tabs acima.
+// Import dinâmico via wrapper para manter compat con mobile tabs acima.
 import { QuizBuilderShell as QuizBuilderShellDesktop } from './builder/QuizBuilderShell';

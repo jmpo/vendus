@@ -53,7 +53,7 @@ export function RemindersList({ eventTypeId }: Props) {
         <div>
           <Label className="text-base">Lembretes Automáticos</Label>
           <p className="text-xs text-muted-foreground">
-            Crea lembretes que serão enviados antes da reunión.
+            Crea lembretes que serán enviados antes da reunión.
           </p>
         </div>
         <Button
@@ -63,13 +63,13 @@ export function RemindersList({ eventTypeId }: Props) {
           disabled={createReminder.isPending}
         >
           <Plus className="h-4 w-4 mr-1" />
-          Adicionar lembrete
+          Agregar lembrete
         </Button>
       </div>
 
       {reminders.length === 0 ? (
         <div className="rounded-lg border border-dashed border-border/60 p-6 text-center text-sm text-muted-foreground">
-          Nenhum lembrete configurado.
+          Ningún lembrete configurado.
         </div>
       ) : (
         <div className="rounded-lg border border-border/60 overflow-hidden">
@@ -77,7 +77,7 @@ export function RemindersList({ eventTypeId }: Props) {
             <div>Envia antes</div>
             <div>Canal</div>
             <div>Mensaje</div>
-            <div className="text-right">Ações</div>
+            <div className="text-right">Acciones</div>
           </div>
 
           <div className="divide-y divide-border/40">

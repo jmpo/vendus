@@ -14,7 +14,7 @@ export interface UploadResult {
 export interface UseMediaUploadReturn {
   upload: (file: File, opts?: { kind?: MediaKind; durationMs?: number }) => Promise<UploadResult>;
   isUploading: boolean;
-  progress: number; // 0..100 (best effort — Supabase no dá progresso real, então oscila entre 0/50/100)
+  progress: number; // 0..100 (best effort — Supabase no dá progresso real, entonces oscila entre 0/50/100)
   error: string | null;
   reset: () => void;
 }
@@ -92,7 +92,7 @@ export function useMediaUpload(): UseMediaUploadReturn {
     }
     const userId = user?.id;
     if (!userId) {
-      const msg = 'Sessão inválida para upload. Faça login novamente.';
+      const msg = 'Sesión inválida para upload. Hacé login novamente.';
       setError(msg);
       throw new Error(msg);
     }
@@ -152,7 +152,7 @@ export function useMediaUpload(): UseMediaUploadReturn {
       setProgress(100);
       return { media, path };
     } catch (e: any) {
-      const msg = e?.message || 'Falha no upload.';
+      const msg = e?.message || 'Fallo no upload.';
       setError(msg);
       throw e;
     } finally {

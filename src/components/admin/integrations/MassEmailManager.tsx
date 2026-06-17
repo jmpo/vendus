@@ -72,7 +72,7 @@ export function MassEmailManager() {
                   <th className="px-4 py-3 text-left text-sm font-medium">Asunto</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Destinatarios</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Status</th>
-                  <th className="px-4 py-3 text-right text-sm font-medium">Ações</th>
+                  <th className="px-4 py-3 text-right text-sm font-medium">Acciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -116,7 +116,7 @@ export function MassEmailManager() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Send className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-1">Ninguna campaña enviada</h3>
+            <h3 className="text-lg font-semibold mb-1">Ninguna campaña enviado</h3>
             <p className="text-sm text-muted-foreground text-center mb-4">
               Cree su primera campaña para enviar mensajes en masa
             </p>

@@ -237,7 +237,7 @@ export function MaterialManager() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Excluir material?</AlertDialogTitle>
+                        <AlertDialogTitle>Eliminar material?</AlertDialogTitle>
                         <AlertDialogDescription>
                           Esta acción no puede ser desfeita.
                         </AlertDialogDescription>
@@ -248,7 +248,7 @@ export function MaterialManager() {
                           onClick={() => handleDelete(material.id)}
                           className="bg-destructive text-destructive-foreground"
                         >
-                          Excluir
+                          Eliminar
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
@@ -276,7 +276,7 @@ export function MaterialManager() {
         )}
       </div>
 
-      {/* Dialog de Criar/Editar */}
+      {/* Dialog de Crear/Editar */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -349,7 +349,7 @@ export function MaterialManager() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="objective">Objetivo / Quando usar</Label>
+              <Label htmlFor="objective">Objetivo / Cuando usar</Label>
               <Textarea
                 id="objective"
                 value={formData.objective}
@@ -378,7 +378,7 @@ export function MaterialManager() {
               {(createMaterial.isPending || updateMaterial.isPending) && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {editingMaterial ? 'Salvar' : 'Criar'}
+              {editingMaterial ? 'Guardar' : 'Crear'}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,5 +1,5 @@
 // Quiz AI Result — gera diagnóstico personalizado a partir das respuestas do quiz.
-// Retorna 4 seções: diagnostico, oportunidades, proximos_passos, oferta.
+// Retorna 4 secciones: diagnostico, oportunidades, proximos_passos, oferta.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { resolveAIConfig, prepareAIRequestBody } from '../_shared/ai-router.ts';
@@ -48,14 +48,14 @@ Deno.serve(async (req) => {
 
     const tagLine = body.tags?.length ? `Tags: ${body.tags.join(', ')}` : '';
 
-    const system = body.custom_prompt?.trim() || `Vos sos um consultor sênior. Com base nas respuestas de um quiz de diagnóstico, gere um relatório corto, objetivo e personalizado en español. Tom profissional, direto, sin clichés. NUNCA invente dados.`;
+    const system = body.custom_prompt?.trim() || `Vos sos um consultor sênior. Con base nas respuestas de um quiz de diagnóstico, gere um relatório corto, objetivo e personalizado en español. Tom profissional, direto, sin clichés. NUNCA invente dados.`;
 
     const user = `${productCtx}
 
-Score do respondente: ${body.score_total} (${body.score_tier || 'sem faixa'})
+Score do respondente: ${body.score_total} (${body.score_tier || 'sin faixa'})
 ${tagLine}
 
-Respostas:
+Respuestas:
 ${respLines}
 
 Retorne SOLO um JSON válido con este formato exato:

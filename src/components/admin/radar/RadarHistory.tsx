@@ -17,14 +17,14 @@ export function RadarHistory({ onSelect }: { onSelect: (id: string) => void }) {
 
   if (!scans?.length) {
     return (
-      <Card><CardContent className="py-12 text-center text-muted-foreground">Nenhuma análise realizada aún</CardContent></Card>
+      <Card><CardContent className="py-12 text-center text-muted-foreground">Ninguna análise realizada aún</CardContent></Card>
     );
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Histórico de análises</CardTitle>
+        <CardTitle className="text-base">Historial de análises</CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
         {scans.map((s) => {

@@ -244,7 +244,7 @@ export function useUpdateEvent() {
       queryClient.invalidateQueries({ queryKey: ['upcoming-events'] });
       toast({
         title: 'Evento actualizado',
-        description: 'As alterações foram guardadas.',
+        description: 'As cambios foram guardadas.',
       });
     },
     onError: (error) => {

@@ -54,7 +54,7 @@ export function PanelColumn({ title, subtitle, count, color, avatarUrl, initials
       <ScrollArea className="h-[420px]">
         <div className="p-2 space-y-1.5">
           {items.length === 0 ? (
-            <div className="text-center text-xs text-muted-foreground py-8">Nenhuma conversación</div>
+            <div className="text-center text-xs text-muted-foreground py-8">Ninguna conversación</div>
           ) : (
             items.map((c) => <ConversationMiniCard key={c.id} conversation={c} onClick={onCardClick} />)
           )}

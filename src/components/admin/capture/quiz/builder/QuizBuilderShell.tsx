@@ -41,7 +41,7 @@ function relinkSequence(ordered: FunnelBlock[], all: FunnelBlock[]): FunnelBlock
 
 /**
  * Builder estilo Inlead em 4 colunas:
- * [Etapas] [Paleta] [Canvas ao vivo] [Inspector com 3 abas]
+ * [Etapas] [Paleta] [Canvas ao vivo] [Inspector con 3 abas]
  */
 export function QuizBuilderShell({ funnel }: Props) {
   const [blocks, setBlocks] = useState<FunnelBlock[]>(funnel.flow_blocks || []);
@@ -74,7 +74,7 @@ export function QuizBuilderShell({ funnel }: Props) {
 
   const selectedBlock = selectedBlockId ? blocks.find((b) => b.id === selectedBlockId) : null;
 
-  // ───── Ações ─────
+  // ───── Acciones ─────
   const createFromPalette = useCallback((item: QuizPaletteItem) => {
     const base = createDefaultBlock(item.blockType as FunnelBlockType, { x: 0, y: 0 });
     base.data = applyPresetToBlockData(item.preset, base.data) as any;
@@ -83,7 +83,7 @@ export function QuizBuilderShell({ funnel }: Props) {
 
   const insertAtEnd = useCallback((nb: FunnelBlock) => {
     setBlocks((prev) => {
-      // ordena pela cadeia
+      // ordena por la cadeia
       const byId = new Map(prev.map((b) => [b.id, b]));
       const visited = new Set<string>();
       const ordered: FunnelBlock[] = [];
@@ -178,7 +178,7 @@ export function QuizBuilderShell({ funnel }: Props) {
   ) : isDirty ? (
     <span className="text-xs text-amber-600 dark:text-amber-400">Auto-save…</span>
   ) : lastSavedAt ? (
-    <span className="flex items-center gap-1 text-xs text-muted-foreground"><CheckCircle2 className="h-3 w-3 text-green-600" /> Salvo</span>
+    <span className="flex items-center gap-1 text-xs text-muted-foreground"><CheckCircle2 className="h-3 w-3 text-green-600" /> Guardado</span>
   ) : null;
 
   return (
@@ -225,7 +225,7 @@ export function QuizBuilderShell({ funnel }: Props) {
         <div className="w-[340px] shrink-0 rounded-md border bg-card overflow-hidden flex flex-col">
           <div className="px-3 py-2 border-b shrink-0 flex items-center justify-between">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-              {selectedBlock ? 'Propriedades' : 'Nenhuma seleção'}
+              {selectedBlock ? 'Propriedades' : 'Ninguna selección'}
             </span>
           </div>
           <div className="flex-1 min-h-0">

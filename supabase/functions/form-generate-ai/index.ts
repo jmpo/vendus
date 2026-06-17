@@ -140,7 +140,7 @@ Garantia: ${product.guarantee || 'N/A'}
     const toneDescriptions = {
       formal: 'Usa lenguaje formal e profissional, adequada para B2B corporativo. Evita modismos e mantenha tom respeitoso.',
       informal: 'Usa lenguaje amigable e descontraída, como una conversación casual. Sé cálido e empático.',
-      technical: 'Usa termos técnicos relevantes ao sector, assumindo conhecimento prévio. Sé preciso e objetivo.',
+      technical: 'Usa termos técnicos relevantes ao sector, assumindo conocimiento prévio. Sé preciso e objetivo.',
     };
 
     // Build enhanced system prompt
@@ -159,7 +159,7 @@ ${objectionsContext}
 ` : ''}${user_context ? `CONTEXTO ESPECÍFICO DA CAMPANHA (Fornecido por el usuario — PRIORIDADE MÁXIMA):
 ${user_context}
 
-⚠️ ATENÇÃO: As preguntas DEVEM refletir explicitamente o contexto acima. Se o usuario citou nicho, campaña (ex: Black Friday), ICP específico, sector, evento ou objeção concreta, as preguntas precisam abordar isso diretamente. No gere um formulário genérico.
+⚠️ ATENÇÃO: As preguntas DEVEM refletir explicitamente o contexto acima. Se o usuario citou nicho, campaña (ex: Black Friday), ICP específico, sector, evento ou objeción concreta, as preguntas precisam abordar isso diretamente. No gere um formulário genérico.
 
 ` : ''}OBJETIVO DO FORMULÁRIO: ${objectiveDescriptions[objective]}
 
@@ -168,8 +168,8 @@ TOM DE COMUNICAÇÃO: ${toneDescriptions[tone]}
 REGRAS IMPORTANTES:
 1. Crea preguntas claras e objetivas que qualifiquem o lead
 2. Usa a lenguaje adequada ao tom solicitado
-3. ${use_objections && objectionsContext ? 'Usa as objeções para crear preguntas inteligentes de calificación (ex: se objeção es precio, preguntes sobre orçamento disponible)' : 'Inclua preguntas que ajudem a entender o perfil del lead'}
-4. ${use_brain && knowledgeContext ? 'Baseie as preguntas no conhecimento real do producto e sus diferenciais' : 'Foque nas necessidades típicas do ICP descrito'}
+3. ${use_objections && objectionsContext ? 'Usa as objeciones para crear preguntas inteligentes de calificación (ex: se objeción es precio, preguntes sobre orçamento disponible)' : 'Inclua preguntas que ajudem a entender o perfil del lead'}
+4. ${use_brain && knowledgeContext ? 'Baseie as preguntas no conocimiento real do producto e sus diferenciais' : 'Foque nas necessidades típicas do ICP descrito'}
 5. ${user_context ? 'Personalize as preguntas para el contexto da campaña descrito acima — no ignore esse contexto' : 'Foque em capturar dados que ajudem o time de ventas'}
 6. Límite ao número de preguntas solicitado (${num_questions} preguntas + telas de boas-vindas e agradecimento)
 7. Retorne SOLO um JSON válido, sin explicações ou markdown
@@ -196,13 +196,13 @@ FORMATO DE RESPOSTA (JSON ARRAY puro, sin markdown):
   {"block_type":"text","label":"Empresa?","required":true,"maps_to":"company"},
   {"block_type":"select","label":"Principal desafio?","options":[{"label":"Opción A","value":"a"},{"label":"Opción B","value":"b"}],"required":true},
   {"block_type":"scale","label":"De 1 a 10, urgência?","options":{"min":1,"max":10,"min_label":"Podés esperar","max_label":"Urgente"},"required":true},
-  {"block_type":"email","label":"Su melhor email?","required":true,"maps_to":"email"},
+  {"block_type":"email","label":"Su mejor email?","required":true,"maps_to":"email"},
   {"block_type":"end_screen","label":"Gracias!","description":"Entraremos em contato."}
 ]
 
 IMPORTANTE: O array debe conter exatamente ${num_questions} blocos de pregunta + welcome_screen + end_screen (total: ${num_questions + 2} blocos).`;
 
-    const userPrompt = `Genera o formulário de ${num_questions} preguntas seguindo as instruções acima. Retorne SOLO o JSON array, sin explicações ou código markdown.`;
+    const userPrompt = `Genera o formulário de ${num_questions} preguntas seguindo as instrucciones acima. Retorne SOLO o JSON array, sin explicações ou código markdown.`;
 
     console.log('Calling AI to generate form with enriched context...');
 
@@ -319,7 +319,7 @@ IMPORTANTE: O array debe conter exatamente ${num_questions} blocos de pregunta +
 
     // Generate suggested form name based on context
     const objectiveNames = {
-      qualification: 'Qualificação',
+      qualification: 'Calificación',
       diagnostic: 'Diagnóstico',
       capture: 'Captação',
       presale: 'Pré-venta',

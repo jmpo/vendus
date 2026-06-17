@@ -26,7 +26,7 @@ export function ContactPickerDialog({ open, onOpenChange, onConfirm }: ContactPi
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Compartilhar contacto</DialogTitle>
+          <DialogTitle>Compartir contacto</DialogTitle>
         </DialogHeader>
         <div className="space-y-3 py-2">
           <div>
@@ -39,7 +39,7 @@ export function ContactPickerDialog({ open, onOpenChange, onConfirm }: ContactPi
             />
           </div>
           <div>
-            <Label htmlFor="contact-phone">Teléfono (com DDD)</Label>
+            <Label htmlFor="contact-phone">Teléfono (con DDD)</Label>
             <Input
               id="contact-phone"
               value={phone}

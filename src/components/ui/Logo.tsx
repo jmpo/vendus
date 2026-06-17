@@ -19,7 +19,7 @@ interface LogoProps {
 export function Logo({ className, showText = true, size = 'md' }: LogoProps) {
   const { resolvedTheme } = useTheme();
 
-  // Mesma query canônica de branding — garante consistência entre Sidebar,
+  // Misma query canônica de branding — garante consistência entre Sidebar,
   // Login, Header etc. e captura mudanças feitas no Super Admin.
   const { data: settings } = useQuery({
     queryKey: PLATFORM_BRANDING_QUERY_KEY,

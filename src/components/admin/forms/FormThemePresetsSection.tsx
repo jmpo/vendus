@@ -15,7 +15,7 @@ interface Props {
 
 const TABS: { value: 'all' | FormThemeCategory; label: string }[] = [
   { value: 'all', label: 'Todos' },
-  { value: 'messaging', label: 'Mensageria' },
+  { value: 'messaging', label: 'Mensajería' },
   { value: 'social', label: 'Redes sociais' },
   { value: 'generic', label: 'Genéricos' },
 ];
@@ -113,10 +113,10 @@ function ThemeCard({
           className="absolute top-0 left-0 right-0 h-2"
           style={{ backgroundColor: primary }}
         />
-        {/* Avatar/bolha */}
+        {/* Avatar/burbuja */}
         <div className="absolute top-4 left-3 right-10 h-2.5 rounded-full" style={{ backgroundColor: bubbleBg }} />
         <div className="absolute top-9 left-3 w-16 h-2 rounded-full" style={{ backgroundColor: bubbleBg }} />
-        {/* Botão simulando a primária */}
+        {/* Botón simulando a primária */}
         <div
           className="absolute bottom-3 right-3 h-5 w-10 rounded-md"
           style={{ backgroundColor: primary }}

@@ -331,7 +331,7 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
         )}
       </div>
 
-      {/* Dialog de Edição */}
+      {/* Dialog de Edición */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -380,7 +380,7 @@ export function ProductListPage({ onProductSelect }: ProductListPageProps) {
         </DialogContent>
       </Dialog>
 
-      {/* Dialog de Confirmação de Exclusão */}
+      {/* Dialog de Confirmación de Exclusión */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

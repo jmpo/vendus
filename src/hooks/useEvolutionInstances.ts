@@ -150,7 +150,7 @@ export function useCreateEvolutionInstance() {
   });
 }
 
-// Self-service: cliente cria a própria instância (limite controlado pelo plan).
+// Self-service: cliente cria a propia instância (limite controlado por el plan).
 export function useCreateEvolutionInstanceSelf() {
   const qc = useQueryClient();
   const proxy = useProxyAction();
@@ -187,7 +187,7 @@ export function useSubscribeEvolutionWebhook() {
         body: { action: 'subscribe_webhook', id },
       });
       if (error) throw error;
-      if (data && data.ok === false) throw new Error(data.error || 'Falha ao configurar webhook');
+      if (data && data.ok === false) throw new Error(data.error || 'Fallo ao configurar webhook');
       return data;
     },
     onSuccess: () => {
@@ -195,7 +195,7 @@ export function useSubscribeEvolutionWebhook() {
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
       toast.success('Webhook configurado con éxito');
     },
-    onError: (e: any) => toast.error('Error: ' + (e?.message || 'error desconhecido')),
+    onError: (e: any) => toast.error('Error: ' + (e?.message || 'error desconocido')),
   });
 }
 
@@ -213,7 +213,7 @@ export function useDeleteEvolutionInstance() {
   });
 }
 
-// Self-service: org admin/manager puede eliminar a própria conexión
+// Self-service: org admin/manager puede eliminar a propia conexión
 export function useDeleteEvolutionInstanceSelf() {
   const qc = useQueryClient();
   const proxy = useProxyAction();
@@ -228,7 +228,7 @@ export function useDeleteEvolutionInstanceSelf() {
   });
 }
 
-// Self-service: renomeia (display name) a própria conexión
+// Self-service: renomeia (display name) a propia conexión
 export function useRenameEvolutionInstanceSelf() {
   const qc = useQueryClient();
   const proxy = useProxyAction();
@@ -266,7 +266,7 @@ export function useDisconnectEvolutionInstance() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['evolution-instances'] });
       qc.invalidateQueries({ queryKey: ['evolution-instances-all'] });
-      toast.success('Sessão pausada. Reconecte cuando quiser — o número fica guardado.');
+      toast.success('Sesión pausada. Reconecte cuando quiser — o número fica guardado.');
     },
     onError: (e: any) => toast.error('Error al pausar sesión: ' + e.message),
   });
@@ -316,7 +316,7 @@ export function useSyncEvolutionInstances() {
       if (total === 0) {
         toast.info('Ninguna instancia encontrada en el servidor.');
       } else {
-        const base = `Sincronização: ${imported} importada(s), ${updated} actualizada(s)`;
+        const base = `Sincronización: ${imported} importada(s), ${updated} actualizada(s)`;
         if (whFailed > 0) {
           toast.warning(`${base}. ${whFailed} webhook(s) falharam.`);
         } else {

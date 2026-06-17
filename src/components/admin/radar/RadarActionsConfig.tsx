@@ -28,7 +28,7 @@ export function RadarActionsConfig({ value, onChange }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Ações automáticas</CardTitle>
+        <CardTitle className="text-base">Acciones automáticas</CardTitle>
         <CardDescription className="text-xs">O que hacer cuando o radar classificar cada lead</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -39,7 +39,7 @@ export function RadarActionsConfig({ value, onChange }: Props) {
               <div className={`text-sm font-medium ${color}`}>{emoji} {label}</div>
 
               <div className="flex items-center justify-between text-sm">
-                <Label className="cursor-pointer flex-1">Criar tarea para o dono</Label>
+                <Label className="cursor-pointer flex-1">Crear tarea para o dono</Label>
                 <Switch
                   checked={!!cfg.create_task?.enabled}
                   onCheckedChange={(v) => update(key, { create_task: { enabled: v, due_in_hours: cfg.create_task?.due_in_hours ?? 24 } })}
@@ -70,10 +70,10 @@ export function RadarActionsConfig({ value, onChange }: Props) {
                   onValueChange={(v) => update(key, { apply_tag_id: v === '__none__' ? undefined : v })}
                 >
                   <SelectTrigger className="h-7 w-40 text-xs">
-                    <SelectValue placeholder="Nenhuma" />
+                    <SelectValue placeholder="Ninguna" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__none__">Nenhuma</SelectItem>
+                    <SelectItem value="__none__">Ninguna</SelectItem>
                     {(tags || []).map((t: any) => (
                       <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
                     ))}

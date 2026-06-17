@@ -87,12 +87,12 @@ export const integrationsCatalog: IntegrationCategory[] = [
         color: 'bg-violet-500/10 text-violet-500',
         configKey: 'lovable-ai',
         alwaysActive: true,
-        keywords: ['gemini', 'gpt', 'nativo', 'padrão'],
+        keywords: ['gemini', 'gpt', 'nativo', 'predeterminado'],
       },
       {
         id: 'ai-routing',
         name: 'Roteamento de IA',
-        description: 'Escolha qual IA atende cada parte da plataforma',
+        description: 'Elegí qual IA atende cada parte da plataforma',
         icon: Brain,
         color: 'bg-violet-500/10 text-violet-500',
         configKey: 'ai-routing',
@@ -101,7 +101,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'openai',
         name: 'OpenAI (ChatGPT)',
-        description: 'Use sua própria chave da OpenAI',
+        description: 'Use tu propia chave da OpenAI',
         icon: Cpu,
         color: 'bg-teal-500/10 text-teal-500',
         configKey: 'openai',
@@ -110,7 +110,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'anthropic',
         name: 'Anthropic (Claude)',
-        description: 'Conecte sua conta Claude',
+        description: 'Conecte tu conta Claude',
         icon: Brain,
         color: 'bg-orange-500/10 text-orange-500',
         configKey: 'anthropic',
@@ -119,7 +119,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'gemini',
         name: 'Google Gemini',
-        description: 'Use sua chave da Google AI',
+        description: 'Use tu chave da Google AI',
         icon: Sparkles,
         color: 'bg-blue-500/10 text-blue-500',
         configKey: 'gemini',
@@ -128,7 +128,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'perplexity',
         name: 'Perplexity',
-        description: 'Busca avançada com IA',
+        description: 'Busca avançada con IA',
         icon: SearchIcon,
         color: 'bg-cyan-500/10 text-cyan-500',
         comingSoon: true,
@@ -144,7 +144,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'cakto',
         name: 'Cakto',
-        description: 'Checkout, PIX, cartão e split (BR)',
+        description: 'Checkout, PIX, tarjeta e split (BR)',
         icon: CreditCard,
         color: 'bg-emerald-500/10 text-emerald-500',
         configKey: 'cakto',
@@ -164,7 +164,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'doppus',
         name: 'Doppus',
-        description: 'Vendas, PIX, cartão e assinaturas (BR)',
+        description: 'Vendas, PIX, tarjeta e assinaturas (BR)',
         icon: CreditCard,
         color: 'bg-orange-500/10 text-orange-500',
         configKey: 'doppus',
@@ -183,7 +183,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'mercadopago',
         name: 'Mercado Pago',
-        description: 'PIX, boleto e cartão (BR)',
+        description: 'PIX, boleto e tarjeta (BR)',
         icon: Wallet,
         color: 'bg-yellow-500/10 text-yellow-500',
         logoSrc: '/integrations/logos/mercadopago.svg',
@@ -201,7 +201,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'pagarme',
         name: 'Pagar.me',
-        description: 'Cartão, boleto e PIX (BR)',
+        description: 'Tarjeta, boleto e PIX (BR)',
         icon: DollarSign,
         color: 'bg-green-500/10 text-green-500',
         logoSrc: '/integrations/logos/pagarme.svg',
@@ -210,7 +210,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'pix-direto',
         name: 'PIX Direto',
-        description: 'Integração via banco (Sicredi, Bradesco, etc)',
+        description: 'Integración via banco (Sicredi, Bradesco, etc)',
         icon: Zap,
         color: 'bg-teal-500/10 text-teal-500',
         logoSrc: '/integrations/logos/pix.svg',
@@ -222,11 +222,11 @@ export const integrationsCatalog: IntegrationCategory[] = [
     id: 'email',
     label: 'E-mail & Comunicação',
     icon: Mail,
-    description: 'Envio transacional, templates e campanhas',
+    description: 'Envio transacional, templates e campañas',
     items: [
       {
         id: 'email-config',
-        name: 'Configuração de E-mail',
+        name: 'Configuración de E-mail',
         description: 'Remetente, assinatura e logo',
         icon: Mail,
         color: 'bg-blue-500/10 text-blue-500',
@@ -236,7 +236,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'email-templates',
         name: 'Templates de E-mail',
-        description: 'Modelos reutilizáveis de mensagens',
+        description: 'Modelos reutilizáveis de mensajes',
         icon: FileText,
         color: 'bg-purple-500/10 text-purple-500',
         configKey: 'email-templates',
@@ -244,16 +244,16 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'mass-email',
         name: 'E-mail em Massa',
-        description: 'Campanhas para listas segmentadas',
+        description: 'Campañas para listas segmentadas',
         icon: Inbox,
         color: 'bg-pink-500/10 text-pink-500',
         configKey: 'mass-email',
-        keywords: ['marketing', 'campanha'],
+        keywords: ['marketing', 'campaña'],
       },
       {
         id: 'smtp-custom',
         name: 'SMTP Customizado',
-        description: 'Use seu próprio servidor de e-mail',
+        description: 'Use tu propio servidor de e-mail',
         icon: Mail,
         color: 'bg-slate-500/10 text-slate-500',
         comingSoon: true,
@@ -277,7 +277,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'outlook',
         name: 'Microsoft Outlook',
-        description: 'Sincronização com calendário Outlook',
+        description: 'Sincronización con calendário Outlook',
         icon: CalIcon,
         color: 'bg-cyan-500/10 text-cyan-500',
         comingSoon: true,
@@ -288,7 +288,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
     id: 'marketing',
     label: 'Marketing & Captura',
     icon: Megaphone,
-    description: 'Capture leads de campanhas pagas',
+    description: 'Capture leads de campañas pagas',
     items: [
       {
         id: 'facebook',
@@ -302,7 +302,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'google-ads',
         name: 'Google Ads',
-        description: 'Importação de leads do Google',
+        description: 'Importación de leads do Google',
         icon: Target,
         color: 'bg-red-500/10 text-red-500',
         comingSoon: true,
@@ -318,7 +318,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'instagram-leads',
         name: 'Instagram Leads',
-        description: 'Capture leads de campanhas no Instagram',
+        description: 'Capture leads de campañas no Instagram',
         icon: Instagram,
         color: 'bg-pink-500/10 text-pink-500',
         comingSoon: true,
@@ -329,7 +329,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
     id: 'erp',
     label: 'ERP & Sistemas',
     icon: Building2,
-    description: 'Sincronize com sistemas de gestão',
+    description: 'Sincronize con sistemas de gestión',
     items: [
       {
         id: 'sankhya',
@@ -351,7 +351,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'omie',
         name: 'Omie',
-        description: 'Gestão financeira e comercial',
+        description: 'Gestión financeira e comercial',
         icon: Building2,
         color: 'bg-green-500/10 text-green-500',
         comingSoon: true,
@@ -370,12 +370,12 @@ export const integrationsCatalog: IntegrationCategory[] = [
     id: 'tools',
     label: 'Ferramentas & Webhooks',
     icon: Zap,
-    description: 'Automações, scraping e integrações customizadas',
+    description: 'Automatizaciones, scraping e integraciones customizadas',
     items: [
       {
         id: 'api-keys',
         name: 'Chaves de API',
-        description: 'Resend, Firecrawl, Zapier e outros',
+        description: 'Resend, Firecrawl, Zapier e otros',
         icon: Key,
         color: 'bg-amber-500/10 text-amber-500',
         configKey: 'api-keys',
@@ -383,7 +383,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'firecrawl',
         name: 'Firecrawl',
-        description: 'Web scraping com IA',
+        description: 'Web scraping con IA',
         icon: Globe,
         color: 'bg-orange-500/10 text-orange-500',
         configKey: 'api-keys',
@@ -392,7 +392,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'zapier',
         name: 'Zapier',
-        description: 'Conecte com mais de 5000 apps',
+        description: 'Conecte con mais de 5000 apps',
         icon: Zap,
         color: 'bg-yellow-500/10 text-yellow-500',
         configKey: 'api-keys',
@@ -400,7 +400,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
       {
         id: 'webhooks',
         name: 'Webhooks Customizados',
-        description: 'Configure webhooks em Automação → Webhooks',
+        description: 'Configure webhooks em Automatización → Webhooks',
         icon: Webhook,
         color: 'bg-violet-500/10 text-violet-500',
         configKey: 'webhooks-link',

@@ -108,7 +108,7 @@ export function useCreateDeal() {
 
   return useMutation({
     mutationFn: async (deal: Omit<Deal, 'id' | 'created_at' | 'updated_at' | 'leads' | 'profiles' | 'products'>) => {
-      // Criar o deal
+      // Crear o deal
       const { plan_name, ...dealData } = deal;
       const { data: newDeal, error: dealError } = await supabase
         .from('deals')

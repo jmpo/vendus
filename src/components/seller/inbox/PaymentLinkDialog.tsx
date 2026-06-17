@@ -137,7 +137,7 @@ export function PaymentLinkDialog({
               type="url"
             />
             <p className="text-[11px] text-muted-foreground">
-              Cole o link gerado no Cakto, Stripe, Mercado Pago, Pix QR o qualquer gateway.
+              Cole o link gerado no Cakto, Stripe, Mercado Pago, Pix QR o cualquier gateway.
             </p>
           </div>
 
@@ -146,7 +146,7 @@ export function PaymentLinkDialog({
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Pago via Pix com 5% de descuento à vista"
+              placeholder="Pago via Pix con 5% de descuento à vista"
               rows={2}
               maxLength={300}
             />
@@ -154,7 +154,7 @@ export function PaymentLinkDialog({
 
           {canSubmit && (
             <div className="rounded-lg border bg-muted/40 p-3 text-xs">
-              <p className="text-muted-foreground mb-1 font-medium">Pré-visualização</p>
+              <p className="text-muted-foreground mb-1 font-medium">Pré-visualización</p>
               <p className="whitespace-pre-wrap font-mono text-[11px]">
                 {`💳 *${title.trim()}*\n${formatMoney(amount)}${description.trim() ? `\n\n${description.trim()}` : ''}\n\n🔗 ${url.trim()}`}
               </p>

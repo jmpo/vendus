@@ -206,7 +206,7 @@ export async function ensureAdminUser(
   if (rpcErr) errors.push(`rpc: ${rpcErr.message}`);
   if (typeof foundId === 'string') userId = foundId;
 
-  // 2) Cria se necessário
+  // 2) Cria se necesario
   if (!userId) {
     const { data: created, error: createErr } = await admin.auth.admin.createUser({
       email,
@@ -249,7 +249,7 @@ export async function ensureAdminUser(
     if (roleErr) errors.push(`role: ${roleErr.message}`);
   }
 
-  // 5) Gera link de recuperação + dispara e-mail (idempotente)
+  // 5) Gera link de recuperación + dispara e-mail (idempotente)
   try {
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
     const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;

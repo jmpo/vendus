@@ -120,7 +120,7 @@ export function KanbanLeadCard({ lead, stageColor, onViewDetails, isDragging, on
           </div>
         ) : (
           <Badge variant="outline" className="text-[10px] text-muted-foreground">
-            Sem vendedor
+            Sin vendedor
           </Badge>
         )}
       </div>

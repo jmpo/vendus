@@ -204,8 +204,8 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
             </div>
             <p className="text-xs text-muted-foreground">
               {hostMember
-                ? `Tipos cadastrados por ${hostMember.full_name || hostMember.email}.`
-                : 'Seleccioná um anfitrião para listar os tipos de evento dele.'}
+                ? `Tipos registrados por ${hostMember.full_name || hostMember.email}.`
+                : 'Seleccioná um anfitrião para listar os tipos de evento de él.'}
               {' '}Si se permite más de uno, la IA le pregunta al lead cuál desea agendar.
             </p>
 
@@ -220,9 +220,9 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
                   <div className="space-y-1">
                     <div className="font-medium">Listo para agendar automáticamente</div>
                     <p className="text-xs text-muted-foreground">
-                      Sem tipo de evento configurado, o sistema cria automaticamente{' '}
-                      <span className="font-medium text-foreground">"Apresentação {linkedProduct.name}"</span>{' '}
-                      (30 min, Google Meet) na primeira reunión agendada por esse agente.
+                      Sin tipo de evento configurado, o sistema cria automaticamente{' '}
+                      <span className="font-medium text-foreground">"Presentación {linkedProduct.name}"</span>{' '}
+                      (30 min, Google Meet) na primera reunión agendada por ese agente.
                       Usted puede personalizar después ou{' '}
                       <Link to="/admin?tab=booking" className="text-primary underline">crear tipos específicos</Link>.
                     </p>
@@ -230,9 +230,9 @@ export function AgentSchedulingTab({ formData, onChange }: Props) {
                 </div>
               ) : (
                 <div className="text-xs text-muted-foreground italic p-3 border border-dashed rounded-lg">
-                  Esse anfitrião aún no tiene tipos de evento ativos.{' '}
+                  Ese anfitrião aún no tiene tipos de evento ativos.{' '}
                   <Link to="/admin?tab=booking" className="text-primary underline">
-                    Criar ahora
+                    Crear ahora
                   </Link>
                 </div>
               )

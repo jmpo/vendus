@@ -261,7 +261,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Dispara automações de tag (mismo motor da Cakto)
+    // Dispara automatizaciones de tag (mismo motor da Cakto)
     if (leadId && mappedEvent) {
       await admin.rpc('apply_tag_automations', {
         p_lead_id: leadId,

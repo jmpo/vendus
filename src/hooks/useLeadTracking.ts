@@ -85,7 +85,7 @@ export function useLeadsByCampaign(productId?: string) {
 
       // Group by campaign
       const grouped = data.reduce((acc, lead) => {
-        const campaign = lead.utm_campaign || 'Sem campaña';
+        const campaign = lead.utm_campaign || 'Sin campaña';
         acc[campaign] = (acc[campaign] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
@@ -99,18 +99,18 @@ export const LEAD_ORIGINS = [
   { value: 'website', label: 'Website' },
   { value: 'indicacao', label: 'Indicação' },
   { value: 'evento', label: 'Evento' },
-  { value: 'importacao', label: 'Importação' },
+  { value: 'importacao', label: 'Importación' },
   { value: 'cold_call', label: 'Cold Call' },
   { value: 'redes_sociais', label: 'Redes Sociais' },
   { value: 'parceiro', label: 'Parceiro' },
-  { value: 'otro', label: 'Outro' }
+  { value: 'otro', label: 'Otro' }
 ];
 
 export const LEAD_CHANNELS = [
   { value: 'landing_page', label: 'Landing Page' },
-  { value: 'form', label: 'Formulário' },
+  { value: 'form', label: 'Formulario' },
   { value: 'chat', label: 'Chat' },
-  { value: 'manual', label: 'Cadastro Manual' },
+  { value: 'manual', label: 'Registro Manual' },
   { value: 'api', label: 'API/Integración' },
   { value: 'whatsapp', label: 'WhatsApp' },
   { value: 'email', label: 'E-mail' }

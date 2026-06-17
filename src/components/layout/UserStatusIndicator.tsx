@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 
 const STATUS_CONFIG: Record<UserStatusType, { label: string; description: string; color: string }> = {
   online: {
-    label: 'Disponível',
+    label: 'Disponible',
     description: 'Recebe leads automaticamente',
     color: 'text-green-500',
   },

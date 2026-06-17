@@ -50,7 +50,7 @@ export function AgentSupportTab({ formData, onChange, agentId }: Props) {
           <BookOpen className="h-4 w-4 text-muted-foreground mt-0.5" />
           <div className="text-sm text-muted-foreground">
             <p className="font-medium text-foreground">Base de soporte de este agente</p>
-            <p>Materiales técnicos, links úteis e respuestas rápidas que serão usados <strong>exclusivamente por este agente de Soporte</strong> ao responder dudas.</p>
+            <p>Materiales técnicos, links úteis e respuestas rápidas que serán usados <strong>exclusivamente por este agente de Soporte</strong> ao responder dudas.</p>
           </div>
         </div>
       </div>
@@ -145,16 +145,16 @@ export function AgentSupportTab({ formData, onChange, agentId }: Props) {
             <div>
               <Label className="text-xs">Pergunta</Label>
               <Input
-                placeholder="Ex: Como faço para resetar minha contraseña?"
+                placeholder="Ex: Como faço para resetar mi contraseña?"
                 value={newQA.question}
                 onChange={(e) => setNewQA({ ...newQA, question: e.target.value })}
                 className="h-8 text-sm"
               />
             </div>
             <div>
-              <Label className="text-xs">Resposta</Label>
+              <Label className="text-xs">Respuesta</Label>
               <Textarea
-                placeholder="Resposta direta que o agente vai usar..."
+                placeholder="Respuesta direta que o agente vai usar..."
                 value={newQA.answer}
                 onChange={(e) => setNewQA({ ...newQA, answer: e.target.value })}
                 rows={2}

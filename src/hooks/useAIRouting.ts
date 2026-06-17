@@ -32,11 +32,11 @@ export interface AICredentialRow {
 
 export const CAPABILITY_LABELS: Record<AICapability, { title: string; desc: string }> = {
   agent_chat:           { title: 'Agentes de conversación',     desc: 'WhatsApp, WebChat e Inbox' },
-  sales_copilot:        { title: 'Copiloto de ventas',      desc: 'Sugestões para vendedores no painel' },
-  audio_transcription:  { title: 'Transcrição de áudio',    desc: 'Conversão de áudios em texto (Whisper)' },
+  sales_copilot:        { title: 'Copiloto de ventas',      desc: 'Sugerencias para vendedores no painel' },
+  audio_transcription:  { title: 'Transcripción de audio',    desc: 'Conversión de áudios em texto (Whisper)' },
   image_vision:         { title: 'Leitura de imagens',      desc: 'Análise de fotos e prints recebidos' },
-  content_generation:   { title: 'Geração de conteúdo',     desc: 'Criação de funis, formularios, agentes, objeções' },
-  analysis_insights:    { title: 'Análise e insights',      desc: 'Avaliação de conversaciones, supervisão e relatórios' },
+  content_generation:   { title: 'Generación de contenido',     desc: 'Creación de funis, formularios, agentes, objeciones' },
+  analysis_insights:    { title: 'Análise e insights',      desc: 'Avaliação de conversaciones, supervisão e reportes' },
   embeddings:           { title: 'Memória semântica',       desc: 'Embeddings para busca contextual em conversaciones' },
 };
 

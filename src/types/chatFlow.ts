@@ -15,11 +15,11 @@ export type ValidationRule = 'required' | 'email' | 'phone' | 'cpf' | 'none';
 export type TriggerType = 'always' | 'first_visit' | 'utm_match' | 'none';
 export type HandoffTarget = 'queue' | 'specific_user' | 'squad';
 
-// Tipos de ação para botões do Flow Builder
+// Tipos de acción para botones do Flow Builder
 export type ButtonActionType = 
-  | 'next_block'    // Continua para próximo bloco do fluxo
+  | 'next_block'    // Continua para próximo bloco do flujo
   | 'url'           // Abre link externo
-  | 'whatsapp'      // Abre WhatsApp com número e mensagem
+  | 'whatsapp'      // Abre WhatsApp con número e mensaje
   | 'handoff'       // Transfere para atendente
   | 'ai_takeover';  // IA assume a conversa
 
@@ -27,13 +27,13 @@ export interface FlowButton {
   id: string;
   label: string;
   emoji?: string;
-  action_type: ButtonActionType;  // Tipo de ação do botão
-  next_block_id: string | null;   // Usado quando action_type = 'next_block'
-  url?: string;                   // Usado quando action_type = 'url'
+  action_type: ButtonActionType;  // Tipo de acción do botón
+  next_block_id: string | null;   // Usado cuando action_type = 'next_block'
+  url?: string;                   // Usado cuando action_type = 'url'
   open_in_new_tab?: boolean;      // Abrir link em nova aba
-  whatsapp_number?: string;       // Usado quando action_type = 'whatsapp'
-  whatsapp_message?: string;      // Mensagem pré-definida para WhatsApp
-  ai_context?: string;            // Contexto extra para IA quando action_type = 'ai_takeover'
+  whatsapp_number?: string;       // Usado cuando action_type = 'whatsapp'
+  whatsapp_message?: string;      // Mensaje pré-definida para WhatsApp
+  ai_context?: string;            // Contexto extra para IA cuando action_type = 'ai_takeover'
 }
 
 export interface FlowBlockData {
@@ -125,7 +125,7 @@ export interface FlowExecutionState {
   flow_completed: boolean;
 }
 
-// Bloco com metadados para o editor visual
+// Bloco con metadados para o editor visual
 export interface FlowBlockWithMeta extends FlowBlock {
   isSelected?: boolean;
   isConnecting?: boolean;
@@ -135,9 +135,9 @@ export interface FlowBlockWithMeta extends FlowBlock {
 
 // Constantes
 export const BLOCK_TYPES: { type: FlowBlockType; label: string; icon: string; color: string }[] = [
-  { type: 'message', label: 'Mensagem', icon: 'MessageSquare', color: 'bg-blue-500' },
+  { type: 'message', label: 'Mensaje', icon: 'MessageSquare', color: 'bg-blue-500' },
   { type: 'input', label: 'Captura', icon: 'FormInput', color: 'bg-green-500' },
-  { type: 'buttons', label: 'Botões', icon: 'LayoutGrid', color: 'bg-purple-500' },
+  { type: 'buttons', label: 'Botones', icon: 'LayoutGrid', color: 'bg-purple-500' },
   { type: 'ai_takeover', label: 'IA Assume', icon: 'Bot', color: 'bg-orange-500' },
   { type: 'handoff', label: 'Atendente', icon: 'UserCheck', color: 'bg-red-500' },
   { type: 'tag', label: 'Tag', icon: 'Tag', color: 'bg-yellow-500' },
@@ -146,17 +146,17 @@ export const BLOCK_TYPES: { type: FlowBlockType; label: string; icon: string; co
 ];
 
 export const INPUT_TYPES: { type: InputType; label: string; placeholder: string }[] = [
-  { type: 'name', label: 'Nome', placeholder: 'Digite seu nome...' },
-  { type: 'phone', label: 'Telefone', placeholder: '(00) 00000-0000' },
-  { type: 'email', label: 'E-mail', placeholder: 'seu@email.com' },
-  { type: 'text', label: 'Texto Livre', placeholder: 'Digite aqui...' },
+  { type: 'name', label: 'Nome', placeholder: 'Digite tu nome...' },
+  { type: 'phone', label: 'Teléfono', placeholder: '(00) 00000-0000' },
+  { type: 'email', label: 'E-mail', placeholder: 'tu@email.com' },
+  { type: 'text', label: 'Texto Livre', placeholder: 'Digite acá...' },
   { type: 'number', label: 'Número', placeholder: '0' },
   { type: 'cpf', label: 'CPF', placeholder: '000.000.000-00' },
 ];
 
 export const DEFAULT_BLOCK_DATA: Record<FlowBlockType, FlowBlockData> = {
   message: { content: 'Olá! Como posso ajudar?', delay_ms: 500 },
-  input: { input_type: 'name', variable_name: 'nome', placeholder: 'Digite seu nome...', validation: 'required' },
+  input: { input_type: 'name', variable_name: 'nome', placeholder: 'Digite tu nome...', validation: 'required' },
   buttons: { buttons: [], buttons_layout: 'vertical' },
   ai_takeover: { ai_context_prompt: '', transfer_variables: true },
   handoff: { handoff_message: 'Vou te transferir para um de nossos especialistas!', handoff_target: 'queue' },
@@ -165,9 +165,9 @@ export const DEFAULT_BLOCK_DATA: Record<FlowBlockType, FlowBlockData> = {
   delay: { delay_seconds: 2 },
 };
 
-// Constantes para tipos de ação de botões
+// Constantes para tipos de acción de botones
 export const BUTTON_ACTION_TYPES: { type: ButtonActionType; label: string; icon: string }[] = [
-  { type: 'next_block', label: 'Continuar no Fluxo', icon: 'ArrowRight' },
+  { type: 'next_block', label: 'Continuar no Flujo', icon: 'ArrowRight' },
   { type: 'url', label: 'Abrir Link', icon: 'ExternalLink' },
   { type: 'whatsapp', label: 'WhatsApp', icon: 'MessageCircle' },
   { type: 'ai_takeover', label: 'IA Assume', icon: 'Bot' },

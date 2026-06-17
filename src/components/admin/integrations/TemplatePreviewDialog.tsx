@@ -22,7 +22,7 @@ export function TemplatePreviewDialog({ template, open, onClose }: TemplatePrevi
       organizationName: 'Su Empresa',
       invitedByName: 'Maria Santos',
       title: 'Comunicado Importante',
-      message: 'Este é o conteúdo da mensaje de exemplo.',
+      message: 'Este é o contenido da mensaje de ejemplo.',
       senderName: 'Administrador'
     };
 

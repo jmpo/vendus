@@ -60,7 +60,7 @@ export function CaptureResultsSection() {
       if (funnelId !== 'all') {
         return rows.filter(l => (l.metadata as any)?.funnel_id === funnelId);
       }
-      // Apenas quizzes (filtrar pelos funnel_ids dos quizzes da org)
+      // Solo quizzes (filtrar por los funnel_ids dos quizzes da org)
       const quizFunnelIds = new Set((funnels || []).map((f: any) => f.id));
       return rows.filter(l => quizFunnelIds.has((l.metadata as any)?.funnel_id));
     },

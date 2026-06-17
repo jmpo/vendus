@@ -204,7 +204,7 @@ export function useProductAssignments(productId?: string) {
     queryKey: ['product-assignments', productId],
     queryFn: async () => {
       // Resolve org context: super admins poderiam ver atribuições de
-      // outras empresas; aplicamos defesa em profundidade no cliente.
+      // otras empresas; aplicamos defesa em profundidade no cliente.
       const { data: authData } = await supabase.auth.getUser();
       const uid = authData?.user?.id;
       let orgId: string | undefined;
@@ -218,7 +218,7 @@ export function useProductAssignments(productId?: string) {
       }
       if (!orgId) return [];
 
-      // Busca somente IDs de usuarios de la empresa atual.
+      // Busca somente IDs de usuarios de la empresa actual.
       const { data: orgProfiles, error: orgErr } = await supabase
         .from('profiles')
         .select('id')

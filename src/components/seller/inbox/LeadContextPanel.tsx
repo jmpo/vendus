@@ -76,7 +76,7 @@ interface LeadContextPanelProps {
   stages?: PipelineStage[];
   /** Agente IA atualmente vinculado (current_agent_id) */
   currentAgent?: { id: string; name: string; avatar_url: string | null } | null;
-  /** Sector responsable pela conversación */
+  /** Sector responsable por la conversación */
   currentSectorId?: string | null;
   /** Conexión de origem (ex.: nombre da instância WhatsApp) — somente leitura */
   connectionLabel?: string | null;
@@ -411,7 +411,7 @@ export function LeadContextPanel({
               {/* Contact info */}
               <div className="space-y-2.5">
                 <h5 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                  Informações
+                  Informaciones
                 </h5>
                 {displayEmail && (
                   <div className="flex items-center gap-2.5 text-xs">
@@ -451,7 +451,7 @@ export function LeadContextPanel({
                   {stages.length > 0 && (
                     <Select onValueChange={onMoveStage} value={lead.current_stage_id || undefined}>
                       <SelectTrigger className="h-8 text-xs">
-                        <SelectValue placeholder="Seleccionar estágio..." />
+                        <SelectValue placeholder="Seleccionar etapa..." />
                       </SelectTrigger>
                       <SelectContent>
                         {stages.map((stage) => (
@@ -561,7 +561,7 @@ export function LeadContextPanel({
               {/* Quick actions */}
               <div className="space-y-1.5">
                 <h5 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                  Ações Rápidas
+                  Acciones Rápidas
                 </h5>
                 {lead && onViewLead && (
                   <Button variant="outline" size="sm" onClick={onViewLead} className="w-full justify-start">

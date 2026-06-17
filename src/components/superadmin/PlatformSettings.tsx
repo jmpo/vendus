@@ -112,12 +112,12 @@ export function PlatformSettings() {
     try {
       await updateSettings.mutateAsync(formData);
       await createAuditLog.mutateAsync({
-        action: 'Configurações da plataforma atualizadas',
+        action: 'Configuraciones da plataforma atualizadas',
         entity_type: 'platform_settings',
       });
-      toast.success('Configurações salvas com éxito');
+      toast.success('Configuraciones salvas con éxito');
     } catch (error: any) {
-      toast.error('Error ao guardar: ' + (error?.message || 'desconhecido'));
+      toast.error('Error ao guardar: ' + (error?.message || 'desconocido'));
     }
   };
 
@@ -309,7 +309,7 @@ export function PlatformSettings() {
                     label="Color Primario"
                     value={formData.primary_color}
                     onChange={(v) => update({ primary_color: v })}
-                    description="Cor principal — botões, links, ícones ativos"
+                    description="Cor principal — botones, links, ícones ativos"
                     defaultValue="#84CC16"
                   />
                   <ColorPickerField
@@ -424,7 +424,7 @@ export function PlatformSettings() {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <Label>Tamanho Base da Fonte</Label>
+                    <Label>Tamaño Base da Fonte</Label>
                     <span className="text-sm font-mono text-muted-foreground">
                       {formData.base_font_size}px
                     </span>
@@ -442,7 +442,7 @@ export function PlatformSettings() {
 
             <Card className="lg:col-span-2">
               <CardHeader>
-                <CardTitle>Pré-visualização</CardTitle>
+                <CardTitle>Pré-visualización</CardTitle>
               </CardHeader>
               <CardContent>
                 <div
@@ -452,11 +452,11 @@ export function PlatformSettings() {
                   <h1 className="text-3xl font-bold">Heading 1</h1>
                   <h2 className="text-xl font-semibold">Heading 2</h2>
                   <p className="text-base">
-                    O rato roeu a roupa do rei de Roma. Esta é a aparência do corpo do texto na fonte
+                    O rato roeu a roupa do rei de Roma. Esta é a apariencia do corpo do texto na fonte
                     selecionada.
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Texto secundário com estilo menor.
+                    Texto secundário con estilo menor.
                   </p>
                 </div>
               </CardContent>
@@ -469,7 +469,7 @@ export function PlatformSettings() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Conteúdo</CardTitle>
+                <CardTitle>Contenido</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -479,7 +479,7 @@ export function PlatformSettings() {
                     onChange={(e) => update({ login_headline: e.target.value })}
                     placeholder="Transforme leads em rotina de ventas"
                   />
-                  <p className="text-xs text-muted-foreground">Usa \n para quebra de linha</p>
+                  <p className="text-xs text-muted-foreground">Usa \n para quebra de línea</p>
                 </div>
                 <div className="space-y-2">
                   <Label>Subtítulo</Label>
@@ -500,7 +500,7 @@ export function PlatformSettings() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Posição do Bloco do Logo</Label>
+                  <Label>Posición do Bloco do Logo</Label>
                   <Select
                     value={formData.login_logo_position}
                     onValueChange={(v) => update({ login_logo_position: v })}
@@ -532,7 +532,7 @@ export function PlatformSettings() {
                   onRemove={() => update({ login_bg_image_url: '' })}
                   type="login_bg"
                   label="Imagen de Fundo do Login"
-                  description="Recomendado: 1920x1080px, JPG. Deixe vazio para usar o gradiente."
+                  description="Recomendado: 1920x1080px, JPG. Deixe vacío para usar o gradiente."
                   aspectRatio="wide"
                 />
 
@@ -547,9 +547,9 @@ export function PlatformSettings() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="split-left">Lado esquerdo (formulário à direita)</SelectItem>
-                      <SelectItem value="split-right">Lado direito (formulário à esquerda)</SelectItem>
-                      <SelectItem value="fullscreen">Tela inteira (atrás do formulário)</SelectItem>
+                      <SelectItem value="split-left">Lado esquerdo (formulario à direita)</SelectItem>
+                      <SelectItem value="split-right">Lado direito (formulario à esquerda)</SelectItem>
+                      <SelectItem value="fullscreen">Tela inteira (atrás do formulario)</SelectItem>
                     </SelectContent>
                   </Select>
                   <p className="text-xs text-muted-foreground">
@@ -567,7 +567,7 @@ export function PlatformSettings() {
             <CardHeader>
               <CardTitle>Branding em Widgets Públicos</CardTitle>
               <CardDescription>
-                Como o branding aparece em formulários, chat e widgets externos
+                Como o branding aparece em formularios, chat e widgets externos
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 max-w-2xl">
@@ -579,7 +579,7 @@ export function PlatformSettings() {
                   placeholder="Powered by Vendus"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Deixe vazio para ocultar completamente
+                  Deixe vacío para ocultar completamente
                 </p>
               </div>
 
@@ -587,7 +587,7 @@ export function PlatformSettings() {
                 <div>
                   <Label>Ocultar branding em widgets</Label>
                   <p className="text-xs text-muted-foreground">
-                    Remove "Powered by" e marca em todos os widgets externos (premium)
+                    Remove "Powered by" e marca em todos los widgets externos (premium)
                   </p>
                 </div>
                 <Switch
@@ -600,7 +600,7 @@ export function PlatformSettings() {
                 label="Color de Acento dos Widgets"
                 value={formData.widget_accent_color || formData.primary_color}
                 onChange={(v) => update({ widget_accent_color: v })}
-                description="Pode diferir da cor da plataforma interna. Útil cuando os widgets ficam em sites de terceiros."
+                description="Puede diferir da cor da plataforma interna. Útil cuando os widgets ficam em sites de terceiros."
                 defaultValue={formData.primary_color}
               />
             </CardContent>
@@ -626,7 +626,7 @@ export function PlatformSettings() {
                     placeholder="Vendus — Plataforma de ventas"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Se vazio, usa o nombre da plataforma
+                    Se vacío, usa o nombre da plataforma
                   </p>
                 </div>
                 <div className="space-y-2">
@@ -651,7 +651,7 @@ export function PlatformSettings() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Idioma Padrão</Label>
+                  <Label>Idioma Predeterminado</Label>
                   <Select
                     value={formData.default_language}
                     onValueChange={(v) => update({ default_language: v })}
@@ -683,7 +683,7 @@ export function PlatformSettings() {
                   onRemove={() => update({ og_image_url: '' })}
                   type="logo"
                   label="Imagen de Compartilhamento"
-                  description="Recomendado: 1200x630px, JPG/PNG. Se vazio, usa o logo principal."
+                  description="Recomendado: 1200x630px, JPG/PNG. Se vacío, usa o logo principal."
                   aspectRatio="wide"
                 />
               </CardContent>

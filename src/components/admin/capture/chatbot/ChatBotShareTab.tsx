@@ -47,16 +47,16 @@ export function ChatBotShareTab({ funnel }: Props) {
       <div>
         <h2 className="text-lg font-semibold mb-2 flex items-center gap-2">
           <MessageCircle className="h-5 w-5 text-primary" />
-          Compartilhar ChatBot
+          Compartir ChatBot
         </h2>
         <p className="text-muted-foreground text-sm">
-          Usa o link, o QR Code ou incorpore em qualquer site.
+          Usa o link, o QR Code ou incorpore em cualquier site.
         </p>
       </div>
 
       {editor && (
         <div className="rounded-lg border border-primary/20 bg-primary/10 p-3 text-sm">
-          O link usa o domínio publicado: <strong>{baseUrl}</strong>. Publique o app antes de compartilhar.
+          O link usa o domínio publicado: <strong>{baseUrl}</strong>. Publique o app antes de compartir.
         </div>
       )}
 
@@ -97,7 +97,7 @@ export function ChatBotShareTab({ funnel }: Props) {
               Descargar SVG
             </Button>
             <p className="text-xs text-muted-foreground max-w-xs">
-              Vetor de alta resolução, puede ser escalado para qualquer tamanho sem perda.
+              Vetor de alta resolución, puede ser escalado para cualquier tamaño sin perda.
             </p>
           </div>
         </CardContent>
@@ -110,10 +110,10 @@ export function ChatBotShareTab({ funnel }: Props) {
             <Code className="h-4 w-4" />
             Incorporar no su site
           </CardTitle>
-          <CardDescription>Cole este iframe em qualquer página HTML.</CardDescription>
+          <CardDescription>Cole este iframe em cualquier página HTML.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-          <Label className="text-xs text-muted-foreground">Altura ajustável (700px por padrão)</Label>
+          <Label className="text-xs text-muted-foreground">Altura ajustável (700px por defecto)</Label>
           <div className="bg-muted rounded-lg p-3 overflow-x-auto">
             <pre className="text-xs font-mono whitespace-pre text-foreground">{iframeCode}</pre>
           </div>

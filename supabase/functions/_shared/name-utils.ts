@@ -1,4 +1,4 @@
-// Utilitário para extrair primeiro nombre real del lead.
+// Utilitário para extrair primero nombre real del lead.
 // Retorna null cuando o "nombre" parece ser razão social / nombre de empresa,
 // para la IA no tratar "Acesso Digital 360" como se fosse uma pessoa.
 
@@ -24,12 +24,12 @@ function looksLikeCompany(raw: string): boolean {
   const tokens = norm.split(/\s+/).filter(Boolean);
   // Token de empresa em cualquier posición
   if (tokens.some((tok) => COMPANY_TOKENS.includes(tok))) return true;
-  // 2+ palavras totalmente em CAIXA ALTA
+  // 2+ palabras totalmente em CAIXA ALTA
   const words = t.split(/\s+/).filter(Boolean);
   if (words.length >= 2 && words.every((w) => w === w.toUpperCase() && /[A-ZÁÉÍÓÚÂÊÔÃÕÇ]/.test(w))) {
     return true;
   }
-  // Uma única "palavra" larga demais pra ser nombre ("AcessoDigital360")
+  // Uma única "palabra" larga demais pra ser nombre ("AcessoDigital360")
   if (words.length === 1 && words[0].length > 18) return true;
   return false;
 }
@@ -40,7 +40,7 @@ function capitalize(s: string): string {
 }
 
 /**
- * Retorna o primeiro nombre del lead (capitalizado), ou null se o input
+ * Retorna o primero nombre del lead (capitalizado), ou null se o input
  * parecer nombre de empresa / razão social / lixo.
  */
 export function extractFirstName(raw?: string | null): string | null {

@@ -65,7 +65,7 @@ export function SupportTickets({ scope = 'admin' }: Props) {
           ) : !tickets || tickets.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <MessageSquare className="h-10 w-10 mx-auto mb-3 opacity-40" />
-              <p>{isSuper ? 'Nenhum ticket aberto.' : 'Usted aún no abriu ningún ticket.'}</p>
+              <p>{isSuper ? 'Ningún ticket aberto.' : 'Usted aún no abriu ningún ticket.'}</p>
             </div>
           ) : (
             <div className="space-y-2">

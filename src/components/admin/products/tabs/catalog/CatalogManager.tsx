@@ -62,7 +62,7 @@ export function CatalogManager({ productId }: CatalogManagerProps) {
           </div>
 
           {isLoading ? (
-            <div className="text-center py-12 text-muted-foreground">Carregando...</div>
+            <div className="text-center py-12 text-muted-foreground">Cargando...</div>
           ) : items && items.length > 0 ? (
             <div className="grid gap-3 md:grid-cols-2">
               {items.map((item) => (
@@ -149,13 +149,13 @@ export function CatalogManager({ productId }: CatalogManagerProps) {
             <Card className="border-dashed">
               <CardContent className="py-12 text-center">
                 <Sparkles className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-                <h3 className="font-semibold mb-1">Catálogo vazio</h3>
+                <h3 className="font-semibold mb-1">Catálogo vacío</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Adicione itens manualmente, importe planilha ou sincronize com um site.
+                  Agregá itens manualmente, importe planilha ou sincronize con um site.
                 </p>
                 <Button onClick={() => setCreatingNew(true)}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Adicionar primeiro item
+                  Agregar primero item
                 </Button>
               </CardContent>
             </Card>

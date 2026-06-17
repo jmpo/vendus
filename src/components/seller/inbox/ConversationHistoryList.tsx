@@ -79,7 +79,7 @@ export function ConversationHistoryList({
                     </Badge>
                   </div>
                   <p className="text-xs text-foreground/90 truncate mt-0.5">
-                    {previewWithMedia(c.last_message, (c as any).last_message_metadata, 70) || 'Sem mensajes'}
+                    {previewWithMedia(c.last_message, (c as any).last_message_metadata, 70) || 'Sin mensajes'}
                   </p>
                 </div>
               </div>

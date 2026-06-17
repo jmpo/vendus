@@ -68,7 +68,7 @@ export async function resolveAIProvider(
     return { provider: "lovable", apiKey: key, model: wanted.model, fallbackToLovable: false };
   }
 
-  // Provedor externo: tenta chave da org primeiro.
+  // Provedor externo: tenta chave da org primero.
   const { data: cred } = await supabase
     .from("org_ai_credentials")
     .select("api_key_encrypted, model_default")
@@ -85,7 +85,7 @@ export async function resolveAIProvider(
     };
   }
 
-  // Sem chave da org -> tenta secret global (compatibilidade con OPENAI_API_KEY antiga).
+  // Sin chave da org -> tenta secret global (compatibilidade con OPENAI_API_KEY antiga).
   const envName = `${wanted.provider.toUpperCase()}_API_KEY`;
   const envKey = Deno.env.get(envName);
   if (envKey) {

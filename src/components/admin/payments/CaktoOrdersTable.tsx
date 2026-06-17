@@ -69,7 +69,7 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
       if (!data?.ok) {
         const skipped = data?.result?.skipped;
         const errs = data?.result?.errors?.join(' · ');
-        toast.warning(`Reprocesso concluído com avisos${skipped ? `: ${skipped}` : ''}${errs ? ` — ${errs}` : ''}`);
+        toast.warning(`Reprocesso concluído con avisos${skipped ? `: ${skipped}` : ''}${errs ? ` — ${errs}` : ''}`);
       } else {
         toast.success('Pedido reprocessado');
       }
@@ -103,7 +103,7 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger className="w-[180px]"><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos os status</SelectItem>
+              <SelectItem value="all">Todos los status</SelectItem>
               <SelectItem value="paid">Pago</SelectItem>
               <SelectItem value="pending">Pendente</SelectItem>
               <SelectItem value="waiting_payment">Aguardando</SelectItem>
@@ -127,15 +127,15 @@ export function CaktoOrdersTable({ scope, provider = 'all', hideSync }: Props) {
                 <TableHead className="text-right">Valor</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Ref</TableHead>
-                {showReprocess && <TableHead className="text-right">Ações</TableHead>}
+                {showReprocess && <TableHead className="text-right">Acciones</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading && (
-                <TableRow><TableCell colSpan={showReprocess ? 9 : 8} className="text-center text-muted-foreground py-6">Carregando…</TableCell></TableRow>
+                <TableRow><TableCell colSpan={showReprocess ? 9 : 8} className="text-center text-muted-foreground py-6">Cargando…</TableCell></TableRow>
               )}
               {!isLoading && (orders?.length ?? 0) === 0 && (
-                <TableRow><TableCell colSpan={showReprocess ? 9 : 8} className="text-center text-muted-foreground py-6">Nenhum pedido encontrado.</TableCell></TableRow>
+                <TableRow><TableCell colSpan={showReprocess ? 9 : 8} className="text-center text-muted-foreground py-6">Ningún pedido encontrado.</TableCell></TableRow>
               )}
               {orders?.map((o) => {
                 const meta = STATUS_LABELS[o.status] ?? { label: o.status, className: 'bg-muted text-muted-foreground' };

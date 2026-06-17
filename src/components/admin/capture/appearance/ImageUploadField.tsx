@@ -25,7 +25,7 @@ export function ImageUploadField({ value, onChange, label, helper, folder = 'gen
   const handleFile = async (file: File) => {
     if (!file) return;
     if (file.size > MAX) { toast.error('Máx. 5MB'); return; }
-    if (!profile?.organization_id) { toast.error('Sem organización'); return; }
+    if (!profile?.organization_id) { toast.error('Sin organización'); return; }
 
     setUploading(true);
     try {
@@ -35,9 +35,9 @@ export function ImageUploadField({ value, onChange, label, helper, folder = 'gen
       if (error) throw error;
       const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
       onChange(data.publicUrl);
-      toast.success('Imagen enviada');
+      toast.success('Imagen enviado');
     } catch (e: any) {
-      toast.error(e.message || 'Falha no upload');
+      toast.error(e.message || 'Fallo no upload');
     } finally {
       setUploading(false);
     }

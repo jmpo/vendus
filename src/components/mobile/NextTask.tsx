@@ -49,7 +49,7 @@ export function NextTask({
   };
 
   const getTimeLabel = (dueDate: string | null) => {
-    if (!dueDate) return 'Sem prazo';
+    if (!dueDate) return 'Sin prazo';
     
     const date = new Date(dueDate);
     
@@ -130,7 +130,7 @@ export function NextTask({
                 Tudo em día! 🎉
               </h4>
               <p className="text-xs text-muted-foreground">
-                Nenhuma tarea pendente no momento
+                Ninguna tarea pendente no momento
               </p>
             </div>
           </div>

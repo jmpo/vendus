@@ -50,7 +50,7 @@ interface ConversationListProps {
   /** Mostra o nombre del agente em cada card (modo Admin). */
   showAssignedUser?: boolean;
   headerLabel?: string;
-  /** Substitui o botão de filtro padrão (usado para ancorar popover). */
+  /** Substitui o botón de filtro predeterminado (usado para ancorar popover). */
   filtersSlot?: React.ReactNode;
   /** Aba ativa controlada (backend filtra por status). */
   activeTab?: StatusTab;
@@ -94,7 +94,7 @@ export function ConversationList({
     else setInternalTab(t);
   };
 
-  // Usa busca externa apenas se houver valor; caso contrário, usa a interna (digitada na toolbar)
+  // Usa busca externa solo se houver valor; de lo contrario, usa a interna (digitada na toolbar)
   const search = (externalSearch && externalSearch.length > 0) ? externalSearch : internalSearch;
   const showResolved = externalShowResolved ?? false;
 
@@ -146,7 +146,7 @@ export function ConversationList({
   // Contadores: usar os do backend (totais reais por aba) cuando vierem; caso
   // contrário, calcular a partir do que está em tela.
   // "Atendendo" = humano. "Aguardando" inclui IA atendendo (bot_active) +
-  // sem ninguém (waiting_human) — em ambos os casos, aún no há humano.
+  // sin ninguém (waiting_human) — em ambos os casos, aún no há humano.
   const counts = useMemo(() => {
     if (tabCounts) return tabCounts;
     return {
@@ -158,7 +158,7 @@ export function ConversationList({
     };
   }, [dedupedConversations, tabCounts]);
 
-  // O backend ya filtra por status conforme a aba selecionada. Aqui só aplicamos
+  // O backend ya filtra por status conforme a aba selecionada. Acá só aplicamos
   // a busca local opcional (digitada na toolbar deste componente).
   const filteredConversations = useMemo(() => {
     let filtered = dedupedConversations;
@@ -189,7 +189,7 @@ export function ConversationList({
     return 'V';
   };
 
-  // Fecha BR como na referência: hoy → "HH:mm", ayer → "Ayer",
+  // Fecha BR como na referencia: hoy → "HH:mm", ayer → "Ayer",
   // misma semana → "EEE HH:mm", más antigo → "dd/MM/yyyy".
   const formatDate = (date: string | null) => {
     if (!date) return '';
@@ -272,7 +272,7 @@ export function ConversationList({
         )}
       </div>
 
-      {/* Tabs pílula — limpas, sem barra verde sólida */}
+      {/* Tabs pílula — limpas, sin barra verde sólida */}
       <div className="px-2 py-2 border-b bg-background">
         <div className="grid grid-cols-3 gap-1 p-1 bg-muted/40 rounded-lg">
           <TabButton
@@ -354,7 +354,7 @@ export function ConversationList({
                 )}
               >
                 <div className="flex gap-3 items-start">
-                  {/* Avatar — usa foto real se disponível */}
+                  {/* Avatar — usa foto real se disponible */}
                   <div className="relative flex-shrink-0">
                     <Avatar className="h-11 w-11">
                       {conv.visitor_avatar_url && (
@@ -383,9 +383,9 @@ export function ConversationList({
                     </div>
                   </div>
 
-                  {/* Conteúdo (linhas: nombre / preview / tags) */}
+                  {/* Contenido (líneas: nombre / preview / tags) */}
                   <div className="flex-1 min-w-0">
-                    {/* Linha 1: nombre (encurtado para siempre caber) */}
+                    {/* Línea 1: nombre (encurtado para siempre caber) */}
                     <div className="min-w-0">
                       <span
                         className={cn(
@@ -398,7 +398,7 @@ export function ConversationList({
                       </span>
                     </div>
 
-                    {/* Linha 2: preview da última mensaje real */}
+                    {/* Línea 2: preview da última mensaje real */}
                     <p
                       className={cn(
                         'text-[13px] truncate mt-1 min-w-0',
@@ -414,7 +414,7 @@ export function ConversationList({
                       )}
                     </p>
 
-                    {/* Linha 3: tags (sector + producto + agente) */}
+                    {/* Línea 3: tags (sector + producto + agente) */}
                     {(conv.sector_name || conv.product_name || (showAssignedUser && conv.assigned_user_name) || conv.current_agent_name) && (
                       <div className="flex items-center gap-1 flex-wrap mt-1.5 min-w-0">
                         {conv.sector_name && (

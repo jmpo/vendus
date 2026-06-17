@@ -123,7 +123,7 @@ export function CaptureAnalyticsSection() {
           <div>
             <h1 className="text-2xl font-semibold">Analytics de Captación</h1>
             <p className="text-sm text-muted-foreground">
-              Performance dos sus quizzes em tempo real.
+              Performance dos sus quizzes en tiempo real.
             </p>
           </div>
         </div>
@@ -132,7 +132,7 @@ export function CaptureAnalyticsSection() {
           <Select value={funnelId} onValueChange={setFunnelId}>
             <SelectTrigger className="w-56"><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos os quizzes</SelectItem>
+              <SelectItem value="all">Todos los quizzes</SelectItem>
               {(funnels || []).map((f: any) => (
                 <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>
               ))}
@@ -155,7 +155,7 @@ export function CaptureAnalyticsSection() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <KPI icon={<Eye className="h-4 w-4" />} label="Visualizações" value={totalViews} color="text-blue-500" />
             <KPI icon={<CheckCircle2 className="h-4 w-4" />} label="Conclusões" value={stats.total} color="text-emerald-500" />
-            <KPI icon={<TrendingUp className="h-4 w-4" />} label="Conversão" value={`${stats.conversionRate.toFixed(1)}%`} color="text-purple-500" />
+            <KPI icon={<TrendingUp className="h-4 w-4" />} label="Conversión" value={`${stats.conversionRate.toFixed(1)}%`} color="text-purple-500" />
             <KPI icon={<Activity className="h-4 w-4" />} label="Score médio" value={stats.avgScore} color="text-orange-500" />
           </div>
 
@@ -241,7 +241,7 @@ export function CaptureAnalyticsSection() {
                 <CardTitle className="text-base flex items-center gap-2">
                   <TagIcon className="h-4 w-4 text-primary" /> Top tags dinâmicas
                 </CardTitle>
-                <CardDescription>Tags mais aplicadas pelas respuestas do quiz.</CardDescription>
+                <CardDescription>Tags mais aplicadas por las respuestas do quiz.</CardDescription>
               </CardHeader>
               <CardContent>
                 {stats.topTags.length === 0 ? (
@@ -289,7 +289,7 @@ function KPI({ icon, label, value, color }: { icon: React.ReactNode; label: stri
 function EmptyState() {
   return (
     <div className="h-[200px] flex items-center justify-center text-sm text-muted-foreground">
-      Sem dados no período selecionado.
+      Sin dados no periodo seleccionado.
     </div>
   );
 }

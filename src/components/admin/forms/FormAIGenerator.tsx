@@ -93,16 +93,16 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
       if (error) throw error;
 
       if (data.success && data.blocks) {
-        toast.success('Formulário gerado com éxito!');
+        toast.success('Formulario gerado con éxito!');
         // IMPORTANT: Wait for callback to complete (saves to DB) before closing
         await onGenerated(data.blocks, data.suggested_name);
         // Dialog is closed by FormsManager after successful creation
       } else {
-        throw new Error(data.error || 'Error ao gerar formulário');
+        throw new Error(data.error || 'Error ao generar formulario');
       }
     } catch (error: any) {
       console.error('Error generating form:', error);
-      toast.error(error.message || 'Error ao gerar formulário com IA');
+      toast.error(error.message || 'Error ao generar formulario con IA');
     } finally {
       setIsGenerating(false);
     }
@@ -145,7 +145,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Gerar Formulário com IA
+            Generar Formulario con IA
           </DialogTitle>
           <DialogDescription>
             A IA vai crear preguntas otimizadas baseadas no producto <strong>{productName}</strong>
@@ -165,7 +165,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
               className="space-y-4 py-4"
             >
               <div className="space-y-3">
-                <Label className="text-base font-medium">Qual o objetivo do formulário?</Label>
+                <Label className="text-base font-medium">Qual o objetivo do formulario?</Label>
                 <div className="grid gap-2">
                   {objectives.map((obj) => {
                     const Icon = obj.icon;
@@ -207,14 +207,14 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
               <div className="space-y-3">
                 <Label className="text-base font-medium">Descreva o contexto da su campaña</Label>
                 <Textarea
-                  placeholder="Ex: Quero calificar leads da campaña de Black Friday focando em igrejas que aún no tiene app próprio e estão cansadas de pagar mensalidades altas..."
+                  placeholder="Ex: Quero calificar leads da campaña de Black Friday focando em igrejas que aún no tiene app propio e estão cansadas de pagar mensalidades altas..."
                   value={userContext}
                   onChange={(e) => setUserContext(e.target.value)}
                   className="min-h-[140px] resize-none"
                 />
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
                   <HelpCircle className="h-3 w-3" />
-                  Quanto mais detalhes usted fornecer, mais personalizadas serão as preguntas
+                  Quanto mais detalles usted fornecer, mais personalizadas serán as preguntas
                 </p>
               </div>
             </motion.div>
@@ -232,7 +232,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
               <div className="space-y-4">
                 <Label className="text-base font-medium flex items-center gap-2">
                   <Brain className="h-4 w-4 text-primary" />
-                  Conhecimento Disponível
+                  Conocimiento Disponible
                 </Label>
                 
                 <div className="bg-muted/50 rounded-lg p-4 space-y-3 text-sm">
@@ -248,16 +248,16 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
                   <div>
                     <p className="font-medium text-foreground">Diferenciais</p>
                     <p className="text-muted-foreground">
-                      {product?.differentials ? 'Cadastrados' : 'No definidos'}
+                      {product?.differentials ? 'Registrados' : 'No definidos'}
                     </p>
                   </div>
 
                   {/* Objections */}
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-foreground">Objeções Mapeadas</p>
+                      <p className="font-medium text-foreground">Objeciones Mapeadas</p>
                       <p className="text-muted-foreground">
-                        {objections?.length || 0} cadastradas
+                        {objections?.length || 0} registradas
                       </p>
                     </div>
                     {objections && objections.length > 0 && (
@@ -304,7 +304,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
                     />
                     <div className="flex-1">
                       <Label htmlFor="useBrain" className="cursor-pointer font-medium">
-                        Usar conhecimento do Cérebro
+                        Usar conocimiento do Cérebro
                       </Label>
                       <p className="text-xs text-muted-foreground">
                         ICP, diferenciais e fontes processadas
@@ -324,12 +324,12 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
                         htmlFor="useObjections" 
                         className={`cursor-pointer font-medium ${!objections?.length ? 'text-muted-foreground' : ''}`}
                       >
-                        Criar preguntas baseadas nas objeções
+                        Crear preguntas baseadas nas objeciones
                       </Label>
                       <p className="text-xs text-muted-foreground">
                         {objections?.length 
-                          ? 'Calificar leads identificando objeções antecipadamente' 
-                          : 'Nenhuma objeção cadastrada aún'}
+                          ? 'Calificar leads identificando objeciones antecipadamente' 
+                          : 'Ninguna objeción registrada aún'}
                       </p>
                     </div>
                   </div>
@@ -414,7 +414,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
               ) : (
                 <>
                   <Sparkles className="h-4 w-4 mr-2" />
-                  Gerar Formulário
+                  Generar Formulario
                 </>
               )}
             </Button>

@@ -73,7 +73,7 @@ export function useUpdateCompanySettings() {
 
 export async function uploadCompanyLogo(file: File, orgId: string): Promise<string> {
   const ext = file.name.split('.').pop() || 'png';
-  // Bucket público dedicado: a primeira pasta é o organization_id (usado pelas policies RLS)
+  // Bucket público dedicado: a primera pasta é o organization_id (usado por las policies RLS)
   const path = `${orgId}/logo-${Date.now()}.${ext}`;
   const { error: upErr } = await supabase.storage.from('company-logos').upload(path, file, {
     upsert: true,

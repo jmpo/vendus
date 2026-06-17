@@ -133,9 +133,9 @@ export function LeadsTable({
         <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
           <UserCircle className="h-6 w-6 text-muted-foreground" />
         </div>
-        <h3 className="font-medium text-foreground mb-1">Nenhum lead encontrado</h3>
+        <h3 className="font-medium text-foreground mb-1">Ningún lead encontrado</h3>
         <p className="text-sm text-muted-foreground">
-          Tente ajustar os filtros ou adicione um novo lead
+          Tente ajustar os filtros ou agregá um novo lead
         </p>
       </div>
     );
@@ -268,7 +268,7 @@ export function LeadsTable({
                     </Badge>
                   ) : (
                     <Badge variant="outline" className="text-muted-foreground">
-                      Sem carteira
+                      Sin carteira
                     </Badge>
                   )}
                 </TableCell>
@@ -306,7 +306,7 @@ export function LeadsTable({
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => onViewLead(lead.id)}>
                         <Eye className="h-4 w-4 mr-2" />
-                        Ver detalhes
+                        Ver detalles
                       </DropdownMenuItem>
                       {lead.phone && (
                         <DropdownMenuItem asChild>
@@ -330,7 +330,7 @@ export function LeadsTable({
                         className="text-destructive focus:text-destructive"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
-                        Excluir
+                        Eliminar
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

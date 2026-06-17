@@ -304,7 +304,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
       {step === 2 && (
         <Card><CardContent className="p-5 space-y-4">
           <p className="text-sm text-muted-foreground">Los leads con cualquiera de estas etiquetas NO entran (o salen) de la secuencia.</p>
-          <TagsPicker label="Excluir si tiene CUALQUIERA de estas etiquetas" tags={tags} selected={exclusionTags} onChange={setExclusionTags} />
+          <TagsPicker label="Eliminar si tiene CUALQUIERA de estas etiquetas" tags={tags} selected={exclusionTags} onChange={setExclusionTags} />
         </CardContent></Card>
       )}
 
@@ -392,7 +392,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
 
       {step === 4 && (
         <Card><CardContent className="p-5 space-y-2 text-sm text-muted-foreground">
-          As regras de execução son configuradas dentro de cada etapa na seção "Cronograma" (etapa 4). Usa os checkboxes "Ejecutar solo si" em cada etapa.
+          As regras de ejecución son configuradas dentro de cada etapa na sección "Cronograma" (etapa 4). Usa os checkboxes "Ejecutar solo si" em cada etapa.
         </CardContent></Card>
       )}
 
@@ -447,7 +447,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
       {step === 8 && (
         <Card><CardContent className="p-5 space-y-4">
           <div className="space-y-1">
-            <h3 className="font-semibold">Revisão</h3>
+            <h3 className="font-semibold">Revisión</h3>
             <p className="text-sm text-muted-foreground">Revisa antes de activar.</p>
           </div>
           <Row k="Nombre" v={name || '—'} />

@@ -327,7 +327,7 @@ export function useSaveFormBlocks() {
       blocks: FormBlock[];
     }) => {
       if (params.blocks.length === 0) {
-        throw new Error('No es posible guardadar um formulario sem blocos. Adicione pelo menos uma tela ou pregunta.');
+        throw new Error('No es posible guardadar um formulario sin blocos. Agregá por el menos uma tela ou pregunta.');
       }
       
       const blocksToUpsert = params.blocks.map((block, index) => ({
@@ -524,7 +524,7 @@ export function useToggleFormStatus() {
       const statusMessages: Record<FormStatus, string> = {
         active: 'Formulario ativado!',
         paused: 'Formulario pausado!',
-        draft: 'Formulario movido para rascunho!',
+        draft: 'Formulario movido para borrador!',
         archived: 'Formulario arquivado!',
       };
       toast.success(statusMessages[data.status]);

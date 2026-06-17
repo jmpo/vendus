@@ -346,7 +346,7 @@ export function AgentsManager() {
             <p className="text-muted-foreground text-center max-w-md mb-4">
               {agents && agents.length > 0
                 ? 'Ningún agente coincide con los filtros aplicados. Intente ajustar la búsqueda.'
-                : 'Cree su primer agente. Puede crear agentes globales (Orquestrador, Soporte) o específicos de un producto (SDR, Closer).'}
+                : 'Cree su primer agente. Puede crear agentes globales (Orquestador, Soporte) o específicos de un producto (SDR, Closer).'}
             </p>
             <Button onClick={handleCreate}>
               <Plus className="h-4 w-4 mr-2" />
@@ -379,7 +379,7 @@ export function AgentsManager() {
           <div className="flex items-center gap-2">
             <Globe className="h-4 w-4 text-primary" />
             <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Globales (sem producto)
+              Globales (sin producto)
             </h2>
             <span className="text-xs text-muted-foreground">· {grouped.globals.length}</span>
           </div>
@@ -466,7 +466,7 @@ export function AgentsManager() {
               onClick={confirmDelete}
               className="bg-destructive hover:bg-destructive/90"
             >
-              Excluir
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -68,13 +68,13 @@ PRICING: ${JSON.stringify(product.pricing) || "No definido"}
         .join("\n\n");
     }
 
-    const systemPrompt = `Vos sos um especialista em ventas via WhatsApp. Genera objeções prováveis con respuestas CURTAS e DIRETAS, otimizadas parel mensajes de texto.
+    const systemPrompt = `Vos sos um especialista em ventas via WhatsApp. Genera objeciones prováveis con respuestas CURTAS e DIRETAS, otimizadas parel mensajes de texto.
 
 ${productContext}
 ${knowledgeContext}
 
 CATEGORIAS:
-- price: Preço/orçamento
+- price: Precio/orçamento
 - timing: "No es o momento"  
 - trust: Falta de confiança
 - thinking: "Voy a pensar"
@@ -82,12 +82,12 @@ CATEGORIAS:
 - competitor: "Ya uso otra solución"
 
 ⚠️ REGRAS CRÍTICAS - RESPOSTAS PARA WHATSAPP:
-1. SIGNIFICADO: Máximo 1 linha (20-30 palavras)
+1. SIGNIFICADO: Máximo 1 linha (20-30 palabras)
 2. RESPOSTA: Máximo 3-4 linhas curtas, use emojis estratégicos (✅ 💡 🎯 ⏰ 💰)
-3. PERGUNTA: Uma única pregunta direta (máximo 15 palavras)
+3. PERGUNTA: Uma única pregunta direta (máximo 15 palabras)
 4. Usa quebras de linha para facilitar leitura no celular
 5. Tom conversacional, como mensaje de WhatsApp
-6. Genera 6 objeções variadas`;
+6. Genera 6 objeciones variadas`;
 
     const { response, config } = await aiChat({
       organizationId,
@@ -98,7 +98,7 @@ CATEGORIAS:
       body: {
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: "Analiza o producto e gere as objeções mais prováveis con sus respectivas respuestas estratégicas." }
+          { role: "user", content: "Analiza o producto e gere as objeciones mais prováveis con sus respectivas respuestas estratégicas." }
         ],
         tools: [
           {

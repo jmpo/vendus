@@ -28,7 +28,7 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
     try {
       await navigator.clipboard.writeText(snippet);
       setCopied(true);
-      toast.success('Código copiado para a área de transferência!');
+      toast.success('Código copiado para a área de transferencia!');
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       toast.error('Error ao copiar código');
@@ -44,7 +44,7 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Code className="h-5 w-5" />
-                Código de Instalação
+                Código de Instalación
               </CardTitle>
               <CardDescription>
                 Copie e cole este código antes do cierre da tag &lt;/body&gt; no su site
@@ -98,13 +98,13 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
       {/* Instructions */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">📋 Instruções de Instalação</CardTitle>
+          <CardTitle className="text-base">📋 Instrucciones de Instalación</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <ol className="list-decimal list-inside space-y-3 text-sm">
             <li className="text-muted-foreground">
               <span className="text-foreground font-medium">Copie o código acima</span>
-              <p className="ml-5 mt-1">Hacé clic no botão "Copiar" para copiar o snippet</p>
+              <p className="ml-5 mt-1">Hacé clic no botón "Copiar" para copiar o snippet</p>
             </li>
             <li className="text-muted-foreground">
               <span className="text-foreground font-medium">Abra o HTML do su site</span>
@@ -115,7 +115,7 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
               <p className="ml-5 mt-1">Insira o código logo antes da tag de cierre do body</p>
             </li>
             <li className="text-muted-foreground">
-              <span className="text-foreground font-medium">Salve e publique</span>
+              <span className="text-foreground font-medium">Guardá e publique</span>
               <p className="ml-5 mt-1">O widget aparecerá automaticamente no canto da tela</p>
             </li>
           </ol>
@@ -129,7 +129,7 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
             <CardTitle className="text-sm">WordPress</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            <p>Usa um plugin como "Insert Headers and Footers" ou adicione diretamente no archivo footer.php do su tema.</p>
+            <p>Usa um plugin como "Insert Headers and Footers" ou agregá diretamente no archivo footer.php do su tema.</p>
           </CardContent>
         </Card>
 
@@ -138,7 +138,7 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
             <CardTitle className="text-sm">Shopify</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            <p>Vá em Online Store → Themes → Edit Code e adicione no archivo theme.liquid antes do &lt;/body&gt;.</p>
+            <p>Vá em Online Store → Themes → Edit Code e agregá no archivo theme.liquid antes do &lt;/body&gt;.</p>
           </CardContent>
         </Card>
 
@@ -147,7 +147,7 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
             <CardTitle className="text-sm">Wix</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            <p>Usa o recurso "Custom Code" nas configuraciones do site para adicionar o snippet.</p>
+            <p>Usa o recurso "Custom Code" nas configuraciones do site para agregar o snippet.</p>
           </CardContent>
         </Card>
 
@@ -170,11 +170,11 @@ export function SnippetCard({ widgetId, productId }: SnippetCardProps) {
             </div>
             <div>
               <p className="font-medium text-sm">Precisa de ayuda?</p>
-              <p className="text-xs text-muted-foreground">Consulte nossa documentação ou entre em contacto</p>
+              <p className="text-xs text-muted-foreground">Consulte nossa documentación ou entre em contacto</p>
             </div>
           </div>
           <Button variant="outline" size="sm">
-            Ver Documentação
+            Ver Documentación
           </Button>
         </CardContent>
       </Card>

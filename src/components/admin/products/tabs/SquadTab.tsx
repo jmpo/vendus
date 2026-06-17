@@ -182,7 +182,7 @@ export function SquadTab({ productId }: SquadTabProps) {
         <CardContent>
           {availableMembers.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              Nenhum vendedor cadastrado na equipo
+              Ningún vendedor registrado na equipo
             </p>
           ) : (
             <div className="space-y-3">
@@ -235,7 +235,7 @@ export function SquadTab({ productId }: SquadTabProps) {
                           </div>
                         </div>
                       ) : (
-                        <span className="text-sm text-muted-foreground">Sem meta definida</span>
+                        <span className="text-sm text-muted-foreground">Sin meta definida</span>
                       )}
 
                       <Button 
@@ -266,7 +266,7 @@ export function SquadTab({ productId }: SquadTabProps) {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="goalValue">Meta mensal (R$)</Label>
+              <Label htmlFor="goalValue">Meta mensual (R$)</Label>
               <Input
                 id="goalValue"
                 type="number"
@@ -287,7 +287,7 @@ export function SquadTab({ productId }: SquadTabProps) {
               {(createGoal.isPending || updateGoal.isPending) && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Salvar
+              Guardar
             </Button>
           </DialogFooter>
         </DialogContent>

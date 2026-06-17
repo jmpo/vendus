@@ -11,7 +11,7 @@ const SAMPLE = {
   nome_lead: 'Guilherme',
   nome_vendedor: 'Endrix Keison',
   email_lead: 'guilherme@vendus.com',
-  telefone_lead: '(61) 99999-9999',
+  teléfono_lead: '(61) 99999-9999',
   data: '13/05/2026',
   hora: '16:00',
   modalidade: 'online',
@@ -45,7 +45,7 @@ export function MessagePreview({ template, whatsappNumber }: Props) {
         <div className="relative bg-[#005c4b]/20 border border-emerald-900/30 rounded-lg rounded-tl-none px-3 py-2 text-sm whitespace-pre-wrap text-foreground/90 font-medium leading-relaxed">
           {rendered || (
             <span className="text-muted-foreground italic">
-              A mensaje aparecerá aqui...
+              A mensaje aparecerá acá...
             </span>
           )}
           <div className="text-[10px] text-muted-foreground/70 text-right mt-1">11:15</div>
@@ -54,7 +54,7 @@ export function MessagePreview({ template, whatsappNumber }: Props) {
 
       {whatsappNumber && (
         <div className="rounded-md bg-primary/5 border border-primary/20 px-3 py-2 text-xs text-muted-foreground">
-          A mensaje será enviada via WhatsApp para o número{' '}
+          A mensaje será enviado via WhatsApp para o número{' '}
           <span className="text-foreground font-medium">{whatsappNumber}</span> del lead.
         </div>
       )}

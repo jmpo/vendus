@@ -54,12 +54,12 @@ export const AgentTreeNode = memo(function AgentTreeNode({
       )}
       onClick={() => onEdit(agent)}
     >
-      {/* Padrão badge */}
+      {/* Predeterminado badge */}
       {agent.is_default && (
         <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-10">
           <Badge className="h-5 px-2 text-[10px] gap-1 shadow-sm">
             <Crown className="h-3 w-3" />
-            Padrão
+            Predeterminado
           </Badge>
         </div>
       )}
@@ -149,7 +149,7 @@ export const AgentTreeNode = memo(function AgentTreeNode({
                 className="text-destructive focus:text-destructive"
               >
                 <Trash2 className="h-3.5 w-3.5 mr-2" />
-                Excluir
+                Eliminar
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

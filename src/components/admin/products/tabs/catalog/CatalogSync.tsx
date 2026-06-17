@@ -38,13 +38,13 @@ export function CatalogSync({ productId }: Props) {
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
           <Globe className="h-4 w-4" />
-          Sincronizar com site externo
+          Sincronizar con site externo
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">
-          A IA vai descobrir páginas no site, extrair os dados de cada item (título, preço, fotos, atributos) e indexar no catálogo.
-          Pode levar alguns minutos.
+          A IA vai descobrir páginas no site, extrair os dados de cada item (título, precio, fotos, atributos) e indexar no catálogo.
+          Puede levar alguns minutos.
         </p>
 
         <div>
@@ -54,9 +54,9 @@ export function CatalogSync({ productId }: Props) {
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <Label>Filtro por padrão na URL</Label>
+            <Label>Filtro por defecto na URL</Label>
             <Input value={pattern} onChange={(e) => setPattern(e.target.value)} placeholder="/imovel/" />
-            <p className="text-xs text-muted-foreground mt-1">Só URLs que contenham esse texto.</p>
+            <p className="text-xs text-muted-foreground mt-1">Só URLs que contenham ese texto.</p>
           </div>
           <div>
             <Label>Tipo de catálogo</Label>
@@ -81,7 +81,7 @@ export function CatalogSync({ productId }: Props) {
           {sync.isPending ? (
             <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Sincronizando...</>
           ) : (
-            <><Globe className="h-4 w-4 mr-2" /> Iniciar sincronização</>
+            <><Globe className="h-4 w-4 mr-2" /> Iniciar sincronización</>
           )}
         </Button>
       </CardContent>

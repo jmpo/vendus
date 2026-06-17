@@ -65,7 +65,7 @@ interface ChatAreaProps {
   isTyping?: boolean;
   productName?: string;
   currentUserId?: string;
-  /** Quando true, exibe a barra "Aceptar Atención" no rodapé em vez do composer */
+  /** Cuando true, exibe a barra "Aceptar Atención" no rodapé em vez do composer */
   needsAccept?: boolean;
   /** Callback acionado cuando o agente clica em "Aceptar Atención" */
   onAcceptTicket?: (squadId?: string) => Promise<void> | void;
@@ -82,7 +82,7 @@ interface ChatAreaProps {
   sectorName?: string;
   /** Cor do sector — usada como acento no header */
   sectorColor?: string;
-  /** Nombre del agente IA atual atendendo a conversación (ex.: "Ana") */
+  /** Nombre del agente IA actual atendendo a conversación (ex.: "Ana") */
   currentAgentName?: string | null;
   /** ID del lead vinculado — usado para cargar etiquetas del lead no header */
   leadId?: string | null;
@@ -113,11 +113,11 @@ interface ChatAreaProps {
   onScheduleMessage?: () => void;
   /** Cria um evento de calendario associado à conversación/lead. */
   onCreateEvent?: () => void;
-  /** Cria uma oportunidad (deal). Disponível apenas com lead vinculado. */
+  /** Cria uma oportunidad (deal). Disponible solo con lead vinculado. */
   onCreateDeal?: () => void;
   /** Abre os "Dados do Contacto" (no mobile, abre o drawer). */
   onViewLead?: () => void;
-  /** Move o lead para um novo estágio do embudo (popover rápido). */
+  /** Move o lead para um novo etapa do embudo (popover rápido). */
   onMoveStageQuick?: (stageId: string) => void;
   pipelineStages?: { id: string; name: string; color: string | null }[];
   currentStageId?: string | null;
@@ -127,7 +127,7 @@ interface ChatAreaProps {
   peerOnline?: boolean;
   /** Abre o seletor de catálogo (envia producto rico no chat). */
   onPickCatalog?: () => void;
-  /** Abre o dialog de geração de link de pago. */
+  /** Abre o dialog de generación de link de pago. */
   onSendPaymentLink?: () => void;
 }
 
@@ -199,7 +199,7 @@ export function ChatArea({
   const [replyToMessage, setReplyToMessage] = useState<{ id: string; content: string; senderType: string } | null>(null);
   const [forwardMessageId, setForwardMessageId] = useState<string | null>(null);
 
-  // Reações por emoji (realtime)
+  // Reacciones por emoji (realtime)
   const { summarize: summarizeReactions, react: reactToMessage } = useMessageReactions(conversationId);
 
   // Etiquetas del lead (carregadas só cuando há lead vinculado)
@@ -208,8 +208,8 @@ export function ChatArea({
   // Group messages by date
   const groupedMessages = useMemo(() => {
     // Dedup visual: cuando a misma mensaje outbound aparece em duplicidade
-    // (ex.: bolha "Agente" + bolha "Agente IA", o eco "via aparelho"),
-    // mantém apenas UMA bolha — a de maior prioridade visual.
+    // (ex.: burbuja "Agente" + burbuja "Agente IA", o eco "via aparelho"),
+    // mantém solo UMA burbuja — a de maior prioridade visual.
     const WINDOW_MS = 5 * 60 * 1000;
     const normalize = (s: string | null | undefined) =>
       (s || '').trim().replace(/\s+/g, ' ').toLowerCase();
@@ -223,7 +223,7 @@ export function ChatArea({
       if (m?.sender_type === 'agent' && !isFromDevice(m)) return 4;
       if (m?.sender_type === 'agent' && isFromDevice(m)) return 2;
       if (m?.sender_type === 'bot') return 1;
-      // outbound desconhecido — trata como plataforma
+      // outbound desconocido — trata como plataforma
       return 3;
     };
 
@@ -356,7 +356,7 @@ export function ChatArea({
   // Acento do sector no header (pequena barra colorida + chip do sector)
   const headerAccent = sectorColor || 'hsl(var(--primary))';
 
-  // Status dinâmico do header mobile (Online / Digitando / Última interação)
+  // Status dinâmico do header mobile (Online / Digitando / Última interacción)
   const lastMessageAt = messages.length > 0 ? messages[messages.length - 1].created_at : null;
   const mobileStatusLine = isTyping
     ? 'Escribiendo…'
@@ -525,7 +525,7 @@ export function ChatArea({
               )}
             </div>
 
-            {/* Linha de Tags: sector + etiquetas del lead */}
+            {/* Línea de Tags: sector + etiquetas del lead */}
             {(sectorName || currentAgentName || leadTagAssignments.length > 0) && (
               <div className="flex items-center gap-1 mt-1 flex-wrap">
                 {sectorName && (

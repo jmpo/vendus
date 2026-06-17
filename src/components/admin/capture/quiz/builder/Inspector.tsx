@@ -14,7 +14,7 @@ interface Props {
   onConnect: (sourceId: string, targetId: string | null) => void;
 }
 
-/** Container das abas do inspector — 3 abas com bloco, 1 aba sem bloco. */
+/** Container das abas do inspector — 3 abas con bloco, 1 aba sin bloco. */
 export function Inspector({ block, blocks, startBlockId, onUpdate, onConnect }: Props) {
   if (!block) {
     return (
@@ -42,13 +42,13 @@ export function Inspector({ block, blocks, startBlockId, onUpdate, onConnect }: 
           value="appearance"
           className="text-xs rounded-none data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
         >
-          Aparência
+          Apariencia
         </TabsTrigger>
         <TabsTrigger
           value="display"
           className="text-xs rounded-none data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
         >
-          Exibição
+          Visualización
         </TabsTrigger>
       </TabsList>
 

@@ -57,7 +57,7 @@ export function RadarLeadDetailSheet({ item, open, onOpenChange, onOpenConversat
   const Icon = ICONS[item.classification];
   const color = COLORS[item.classification];
   const snap = item.lead_snapshot || {};
-  const name = snap.name || lead?.name || 'Sem nombre';
+  const name = snap.name || lead?.name || 'Sin nombre';
 
   function copy(text: string) {
     navigator.clipboard.writeText(text);
@@ -104,7 +104,7 @@ export function RadarLeadDetailSheet({ item, open, onOpenChange, onOpenConversat
 
               {item.suggested_action && (
                 <div className="rounded-md bg-muted/50 p-2 text-sm">
-                  <span className="font-medium">💡 Sugestão: </span>
+                  <span className="font-medium">💡 Sugerencia: </span>
                   <span className="text-muted-foreground">{item.suggested_action}</span>
                 </div>
               )}
@@ -136,7 +136,7 @@ export function RadarLeadDetailSheet({ item, open, onOpenChange, onOpenConversat
                   value={lead?.deal_value ? `₲ ${Number(lead.deal_value).toLocaleString('es-PY')}` : snap.deal_value}
                 />
                 <Info label="Última msg" value={snap.last_message_at ? formatDistanceToNow(new Date(snap.last_message_at), { addSuffix: true, locale: ptBR }) : null} />
-                <Info label="Mensagens" value={snap.message_count} />
+                <Info label="Mensajes" value={snap.message_count} />
               </div>
               {snap.tags?.length > 0 && (
                 <div className="flex flex-wrap gap-1 pt-1">
@@ -156,7 +156,7 @@ export function RadarLeadDetailSheet({ item, open, onOpenChange, onOpenConversat
               <h3 className="text-sm font-semibold">Últimas mensajes</h3>
               {loadingMsgs && <Loader2 className="h-4 w-4 animate-spin" />}
               {!loadingMsgs && (!messages || messages.length === 0) && (
-                <p className="text-xs text-muted-foreground">Nenhuma mensaje disponível.</p>
+                <p className="text-xs text-muted-foreground">Ninguna mensaje disponible.</p>
               )}
               <div className="space-y-2">
                 {(messages || []).map((m: any) => (

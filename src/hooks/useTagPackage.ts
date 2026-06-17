@@ -14,8 +14,8 @@ interface GeneratePackageParams {
  *   - Boleto Generado · {Producto}         (transitória)
  *   - Aguardando Pago · {Producto}  (transitória, dispara em PIX e Boleto)
  *   - Checkout Abandonado · {Producto}   (transitória)
- *   - Cliente · {Producto}               (PERMANENTE — histórico)
- *   - Reembolso · {Producto}             (PERMANENTE — histórico)
+ *   - Cliente · {Producto}               (PERMANENTE — historial)
+ *   - Reembolso · {Producto}             (PERMANENTE — historial)
  *
  * Idempotente: rodar duas vezes para o mismo producto no duplica nada.
  */
@@ -42,7 +42,7 @@ export function useGenerateTagPackage() {
       toast.success(`Paquete generado: ${count} etiquetas + ${count} automatizaciones activas.`);
     },
     onError: (err: any) => {
-      toast.error(err?.message || 'Falha ao gerar pacote de etiquetas.');
+      toast.error(err?.message || 'Fallo ao generar pacote de etiquetas.');
     },
   });
 }

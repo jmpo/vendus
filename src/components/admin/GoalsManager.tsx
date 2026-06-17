@@ -193,7 +193,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Inicio del Período *</label>
+                  <label className="text-sm font-medium">Inicio del Periodo *</label>
                   <Input
                     type="date"
                     value={formData.period_start}
@@ -201,7 +201,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Fin del Período *</label>
+                  <label className="text-sm font-medium">Fin del Periodo *</label>
                   <Input
                     type="date"
                     value={formData.period_end}
@@ -255,7 +255,7 @@ export function GoalsManager({ teamMembers }: GoalsManagerProps) {
               <TableRow>
                 <TableHead>Vendedor</TableHead>
                 <TableHead>Producto</TableHead>
-                <TableHead>Período</TableHead>
+                <TableHead>Periodo</TableHead>
                 <TableHead>Meta Valor</TableHead>
                 <TableHead>Meta Deals</TableHead>
                 <TableHead>Progreso</TableHead>

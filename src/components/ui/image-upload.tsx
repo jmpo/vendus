@@ -91,10 +91,10 @@ export function ImageUpload({
       }
 
       onChange(imageUrl);
-      toast.success('Imagem enviada com sucesso!');
+      toast.success('Imagem enviada con éxito!');
     } catch (error: any) {
       console.error('Upload error:', error);
-      toast.error('Erro ao enviar imagem: ' + (error.message || 'Erro desconhecido'));
+      toast.error('Erro ao enviar imagem: ' + (error.message || 'Erro desconocido'));
     } finally {
       setIsUploading(false);
     }
@@ -105,7 +105,7 @@ export function ImageUpload({
     if (!file) return;
 
     if (file.size > maxFileSize) {
-      toast.error(`Arquivo muito grande. Máximo ${maxSizeMB}MB.`);
+      toast.error(`Arquivo mucho grande. Máximo ${maxSizeMB}MB.`);
       return;
     }
 
@@ -195,7 +195,7 @@ export function ImageUpload({
                   "text-sm font-medium",
                   isDragActive ? "text-primary" : "text-muted-foreground"
                 )}>
-                  {isDragActive ? 'Solte a imagem aqui' : 'Arraste ou clique'}
+                  {isDragActive ? 'Solte a imagem acá' : 'Arraste ou clique'}
                 </p>
                 <p className="text-xs text-muted-foreground">
                   PNG, JPG, WEBP até {maxSizeMB}MB

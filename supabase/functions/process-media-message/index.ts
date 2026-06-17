@@ -194,7 +194,7 @@ Deno.serve(async (req) => {
         console.warn("[process-media-message] resolve org key failed, falling back:", e);
       }
     }
-    if (!apiKey) return jsonResponse({ success: false, error: "OPENAI_API_KEY no configurada (defina em Integrações → OpenAI)" }, 500);
+    if (!apiKey) return jsonResponse({ success: false, error: "OPENAI_API_KEY no configurada (defina em Integraciones → OpenAI)" }, 500);
 
     let bytes: Uint8Array | null = null;
     let mime: string = String(body?.mime || "");
@@ -258,7 +258,7 @@ Deno.serve(async (req) => {
       return jsonResponse({
         success: true,
         kind: "audio",
-        text: text || "(áudio sin fala detectada)",
+        text: text || "(audio sin fala detectada)",
         model_used: "whisper-1",
         detected_mime: finalMime,
       });

@@ -13,8 +13,8 @@ interface LeadsTabsProps {
 
 const tabs = [
   { id: 'all', label: 'Todos', icon: Users },
-  { id: 'my-leads', label: 'Minha Carteira', icon: User },
-  { id: 'unassigned', label: 'Sem Atención', icon: UserX },
+  { id: 'my-leads', label: 'Mi Carteira', icon: User },
+  { id: 'unassigned', label: 'Sin Atención', icon: UserX },
   { id: 'by-squad', label: 'Por Squad', icon: UsersRound },
   { id: 'by-product', label: 'Por Producto', icon: Package },
 ];

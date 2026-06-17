@@ -141,7 +141,7 @@ Deno.serve(async (req) => {
                 content: `Usted extrai dados estruturados de páginas web.
 Tipo de catálogo: ${catalogType}.
 ${CATALOG_SCHEMAS[catalogType] || CATALOG_SCHEMAS.generico}
-Siempre devuelvas precio como número (sem R$, sin pontos de milhar). Se no encontrar, retorne null.
+Siempre devuelvas precio como número (sin R$, sin pontos de milhar). Se no encontrar, retorne null.
 images: array de URLs absolutas das fotos do item.`,
               },
               {
@@ -202,7 +202,7 @@ images: array de URLs absolutas das fotos do item.`,
           organization_id: body.organization_id,
           product_id: body.product_id ?? null,
           external_id: externalId,
-          title: parsed.title || "Sem título",
+          title: parsed.title || "Sin título",
           description: parsed.description ?? null,
           price: parsed.price ?? null,
           currency: "BRL",

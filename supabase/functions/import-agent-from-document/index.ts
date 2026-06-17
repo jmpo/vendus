@@ -73,7 +73,7 @@ serve(async (req) => {
     const token = authHeader.replace("Bearer ", "");
     const { data: userData } = await supabase.auth.getUser(token);
     if (!userData?.user) {
-      return new Response(JSON.stringify({ error: "Sessão inválida" }), {
+      return new Response(JSON.stringify({ error: "Sesión inválida" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -134,9 +134,9 @@ serve(async (req) => {
 A partir do briefing/documento abaixo, extraia uma configuración completa de agente.
 
 REGRAS:
-- Identifica tom, missão, capacidades, restrições e gatilhos de transferência diretamente do texto.
+- Identifica tom, missão, capacidades, restrições e gatilhos de transferencia diretamente do texto.
 - Se o texto no menciona um campo, infira algo razoável e profissional, sin clichés.
-- Mensagens devem seguir SPIN Selling: profissional, objetivo, no máximo 2 linhas por bloco.
+- Mensajes devem seguir SPIN Selling: profissional, objetivo, no máximo 2 linhas por bloco.
 - Nunca use emojis em prompts.
 - additional_prompt debe consolidar TUDO que o documento diz sobre comportamento, em 3-6 parágrafos.`;
 

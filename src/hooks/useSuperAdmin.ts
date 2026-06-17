@@ -75,8 +75,8 @@ export function useUpdatePlatformSettings() {
       }
 
       // Semeia imediatamente o resultado na query canônica de branding
-      // para que Logo, Login, favicon, cores etc. atualizem na misma sessão
-      // sem precisar de refresh manual.
+      // para que Logo, Login, favicon, cores etc. atualizem na misma sesión
+      // sin precisar de refresh manual.
       if (updated) {
         try {
           localStorage.setItem(
@@ -91,7 +91,7 @@ export function useUpdatePlatformSettings() {
 
       queryClient.invalidateQueries({ queryKey: ['platform-settings'] });
       queryClient.invalidateQueries({ queryKey: ['platform-branding'] });
-      // Refetch ativo garante que qualquer dado derivado no servidor
+      // Refetch ativo garante que cualquier dado derivado no servidor
       // (defaults, triggers, etc.) entre na UI imediatamente.
       queryClient.refetchQueries({ queryKey: ['platform-branding'] });
     },
@@ -247,7 +247,7 @@ export function useDeleteOrganization() {
         { body: { organization_id } }
       );
       if (error) throw error;
-      if (data && data.ok === false) throw new Error(data.error || 'Falha ao eliminar');
+      if (data && data.ok === false) throw new Error(data.error || 'Fallo ao eliminar');
       return data;
     },
     onSuccess: () => {
@@ -424,7 +424,7 @@ export function useSuperAdminStats() {
         .select('deal_value');
       const totalDealsValue = deals?.reduce((sum, d) => sum + (Number(d.deal_value) || 0), 0) || 0;
 
-      // Distribución dinâmica baseada nos planes reais cadastrados
+      // Distribución dinâmica baseada nos planes reais registrados
       const [plansRes, orgsRes] = await Promise.all([
         supabase
           .from('platform_plans')
@@ -458,7 +458,7 @@ export function useSuperAdminStats() {
       if (unassignedCount > 0) {
         planDistribution.push({
           id: 'unassigned',
-          name: 'Sem plan',
+          name: 'Sin plan',
           slug: 'unassigned',
           color: '#6b7280',
           count: unassignedCount,
@@ -516,7 +516,7 @@ export function useAllUsers() {
   return useQuery({
     queryKey: ['all-users'],
     queryFn: async () => {
-      // Buscar profiles primeiro (evita error 300 de múltiplos relacionamentos)
+      // Buscar profiles primero (evita error 300 de múltiples relacionamentos)
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('*')
@@ -528,7 +528,7 @@ export function useAllUsers() {
       }
       if (!profiles || profiles.length === 0) return [];
       
-      // Buscar organizaciones (apenas se houver org_ids válidos)
+      // Buscar organizaciones (solo se houver org_ids válidos)
       const orgIds = [...new Set(profiles.map(p => p.organization_id).filter(Boolean))] as string[];
       let organizations: { id: string; name: string }[] = [];
       
@@ -587,7 +587,7 @@ export function useUpdateUserRole() {
       oldRole: string | null; 
       newRole: 'admin' | 'manager' | 'seller';
     }) => {
-      // Deletar role antigo (exceto super_admin)
+      // Deletar role antigo (excepto super_admin)
       if (oldRole && oldRole !== 'super_admin') {
         await supabase
           .from('user_roles')
@@ -624,7 +624,7 @@ export function useRemoveUserFromOrganization() {
       
       if (profileError) throw profileError;
       
-      // Remover roles (exceto super_admin)
+      // Remover roles (excepto super_admin)
       await supabase
         .from('user_roles')
         .delete()
@@ -666,7 +666,7 @@ export function useCreateOrganizationInvitation() {
         throw new Error('Ya existe una invitación pendente para este email');
       }
       
-      // Criar convite
+      // Crear convite
       const { data, error } = await supabase
         .from('team_invitations')
         .insert({

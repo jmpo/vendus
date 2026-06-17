@@ -17,8 +17,8 @@ interface ProcessRequest {
 // Extract YouTube video ID from URL
 function extractYouTubeId(url: string): string | null {
   const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
-    /youtube\.com\/shorts\/([^&\n?#]+)/,
+    /(?:youtube\.con\/watch\?v=|youtu\.be\/|youtube\.con\/embed\/)([^&\n?#]+)/,
+    /youtube\.con\/shorts\/([^&\n?#]+)/,
   ];
   
   for (const pattern of patterns) {
@@ -107,7 +107,7 @@ async function generateYouTubeSummary(videoInfo: any, videoId: string, productId
   const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
   
   if (!OPENAI_API_KEY) {
-    return `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}\n\nNota: Transcrição automática no disponible. Adicione manualmente os pontos-chave do vídeo.`;
+    return `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}\n\nNota: Transcripción automática no disponible. Adicione manualmente os pontos-chave do vídeo.`;
   }
 
   try {
@@ -132,11 +132,11 @@ Título: ${videoInfo.title}
 Autor: ${videoInfo.author_name}
 URL: https://www.youtube.com/watch?v=${videoId}
 
-Crea seções para:
+Crea secciones para:
 1. Resumen geral do contenido
 2. Pontos-chave principais
 3. Argumentos de venta mencionados
-4. Objeções e como foram tratadas
+4. Objeciones e como foram tratadas
 5. Insights úteis para vendedores
 
 Formate de forma clara e estruturada para fácil edição.`
@@ -232,7 +232,7 @@ serve(async (req) => {
       result = {
         title: extracted.title,
         content: extracted.content,
-        description: extracted.description || `Conteúdo extraído de ${validUrl.hostname}`,
+        description: extracted.description || `Contenido extraído de ${validUrl.hostname}`,
       };
     } else {
       return new Response(

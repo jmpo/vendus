@@ -48,7 +48,7 @@ export function CampaignsList({
   };
 
   const remove = async (c: Campaign) => {
-    if (!confirm(`Excluir a campaña "${c.name}"? Esta acción no puede ser desfeita.`)) return;
+    if (!confirm(`Eliminar a campaña "${c.name}"? Esta acción no puede ser desfeita.`)) return;
     const { error } = await supabase.from('campaigns').delete().eq('id', c.id);
     if (error) toast.error(error.message);
     else { toast.success('Campaña eliminada'); onRefresh(); }
@@ -116,7 +116,7 @@ export function CampaignsList({
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => onOpen(c.id)}>Abrir</DropdownMenuItem>
                         <DropdownMenuItem className="text-destructive" onClick={() => remove(c)}>
-                          <Trash2 className="h-4 w-4 mr-2" />Excluir
+                          <Trash2 className="h-4 w-4 mr-2" />Eliminar
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -127,7 +127,7 @@ export function CampaignsList({
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     <Stat icon={<Users className="h-3.5 w-3.5" />} label="Público" value={audience || '—'} />
                     <Stat icon={<Send className="h-3.5 w-3.5" />} label="Disparados" value={`${dispatched}/${s.total || audience || 0}`} />
-                    <Stat icon={<MessageCircle className="h-3.5 w-3.5 text-emerald-500" />} label="Respostas" value={`${s.responded}${dispatched ? ` (${responseRate}%)` : ''}`} />
+                    <Stat icon={<MessageCircle className="h-3.5 w-3.5 text-emerald-500" />} label="Respuestas" value={`${s.responded}${dispatched ? ` (${responseRate}%)` : ''}`} />
                     <Stat icon={<AlertCircle className="h-3.5 w-3.5 text-destructive" />} label="Falhas" value={s.failed} />
                   </div>
 

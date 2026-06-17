@@ -65,8 +65,8 @@ export function CaktoRecoveryPanel() {
             <div>
               <CardTitle>Recuperación Automática de Ventas</CardTitle>
               <CardDescription className="mt-1">
-                Quando a Cakto enviar um evento (Pix gerado, pago, reembolso),
-                o agente escolhido envia uma mensaje no WhatsApp del cliente — sem
+                Cuando a Cakto enviar um evento (Pix gerado, pago, reembolso),
+                o agente escolhido envia uma mensaje no WhatsApp del cliente — sin
                 usted precisar hacer nada.
               </CardDescription>
             </div>
@@ -84,7 +84,7 @@ export function CaktoRecoveryPanel() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label>Agente responsável pela recuperação</Label>
+            <Label>Agente responsável por la recuperación</Label>
             <Select
               value={draft.recovery_agent_id ?? ''}
               onValueChange={(v) => update('recovery_agent_id', v || null)}
@@ -103,12 +103,12 @@ export function CaktoRecoveryPanel() {
             </Select>
             <p className="text-xs text-muted-foreground">
               Recomendamos crear um agente dedicado em <b>Cérebro IA → Agentes</b>{' '}
-              com prompt de recuperação (vamos te ajudar com o template).
+              con prompt de recuperación (vamos te ajudar con o template).
             </p>
           </div>
 
           <div className="space-y-3">
-            <Label>Quais eventos disparam o agente?</Label>
+            <Label>Cuáles eventos disparam o agente?</Label>
             <div className="space-y-3 rounded-lg border p-4">
               <ToggleRow
                 title="Checkout abandonado"
@@ -148,7 +148,7 @@ export function CaktoRecoveryPanel() {
               </p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="delay">Atraso antes de disparar (segundos)</Label>
+              <Label htmlFor="delay">Retraso antes de disparar (segundos)</Label>
               <Input
                 id="delay"
                 type="number"
@@ -168,7 +168,7 @@ export function CaktoRecoveryPanel() {
             <div className="flex items-start gap-2 rounded-md border border-yellow-500/50 bg-yellow-500/10 p-3 text-sm">
               <AlertCircle className="mt-0.5 h-4 w-4 text-yellow-600" />
               <span>
-                Seleccioná um agente antes de ativar. Sem agente, o sistema no
+                Seleccioná um agente antes de ativar. Sin agente, o sistema no
                 envia nada.
               </span>
             </div>
@@ -179,7 +179,7 @@ export function CaktoRecoveryPanel() {
               {save.isPending && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Salvar configuración
+              Guardar configuración
             </Button>
           </div>
         </CardContent>
@@ -191,13 +191,13 @@ export function CaktoRecoveryPanel() {
         <CardHeader>
           <CardTitle>Últimos disparos</CardTitle>
           <CardDescription>
-            Histórico das mensajes enviadas automaticamente pela recuperação.
+            Historial das mensajes enviadas automaticamente por la recuperación.
           </CardDescription>
         </CardHeader>
         <CardContent>
           {!dispatches || dispatches.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              Nenhum disparo aún. Quando a Cakto enviar um evento, ele aparecerá aqui.
+              Ningún disparo aún. Cuando a Cakto enviar um evento, ele aparecerá acá.
             </p>
           ) : (
             <div className="space-y-2">
@@ -227,7 +227,7 @@ export function CaktoRecoveryPanel() {
                         )}
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {d.customer_phone || d.customer_email || 'sem contacto'}
+                        {d.customer_phone || d.customer_email || 'sin contacto'}
                       </div>
                       {d.message_sent && (
                         <div className="mt-1 max-w-xl truncate text-xs">

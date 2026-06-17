@@ -92,7 +92,7 @@ export function KanbanFilters({
           <SelectValue placeholder="Ordenar por" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="created_at">Fecha Criação</SelectItem>
+          <SelectItem value="created_at">Fecha Creación</SelectItem>
           <SelectItem value="deal_value">Valor</SelectItem>
           <SelectItem value="last_contact_at">Último Contacto</SelectItem>
         </SelectContent>

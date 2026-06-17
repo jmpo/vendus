@@ -148,7 +148,7 @@ export function CustomFieldsManager() {
                       <Pencil className="h-4 w-4 mr-2" /> Editar
                     </DropdownMenuItem>
                     <DropdownMenuItem className="text-destructive" onClick={() => deleteField.mutate(field.id)}>
-                      <Trash2 className="h-4 w-4 mr-2" /> Excluir
+                      <Trash2 className="h-4 w-4 mr-2" /> Eliminar
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -196,7 +196,7 @@ export function CustomFieldsManager() {
                 <SelectContent>
                   <SelectItem value="text">Texto</SelectItem>
                   <SelectItem value="number">Número</SelectItem>
-                  <SelectItem value="select">Seleção</SelectItem>
+                  <SelectItem value="select">Selección</SelectItem>
                   <SelectItem value="boolean">Sí/No</SelectItem>
                   <SelectItem value="date">Fecha</SelectItem>
                 </SelectContent>
@@ -239,7 +239,7 @@ export function CustomFieldsManager() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button>
             <Button onClick={handleSave} disabled={!form.name || !form.field_key}>
-              {editingId ? 'Salvar' : 'Criar'}
+              {editingId ? 'Guardar' : 'Crear'}
             </Button>
           </DialogFooter>
         </DialogContent>

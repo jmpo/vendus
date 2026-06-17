@@ -286,7 +286,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
               <div className="flex gap-3">
                 <div className="flex-1">
                   <Input
-                    placeholder="https://exemplo.com/pagina"
+                    placeholder="https://ejemplo.com/pagina"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     disabled={isProcessing}
@@ -362,7 +362,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                 <div className="flex gap-3">
                   <div className="flex-1">
                     <Input
-                      placeholder="https://exemplo.com"
+                      placeholder="https://ejemplo.com"
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
                       disabled={isFetchingLinks || isProcessing}
@@ -416,7 +416,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label>Excluir rutas (ex: /admin/*)</Label>
+                        <Label>Eliminar rutas (ex: /admin/*)</Label>
                         <Input
                           placeholder="/admin/*, /api/*"
                           value={excludePaths}
@@ -636,9 +636,9 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
         <Card className="border-dashed">
           <CardContent className="p-8 text-center">
             <Globe className="h-10 w-10 mx-auto text-muted-foreground mb-4" />
-            <h3 className="font-medium mb-2">Nenhum website adicionado</h3>
+            <h3 className="font-medium mb-2">Ningún website adicionado</h3>
             <p className="text-sm text-muted-foreground">
-              Adicione URLs de páginas ou faça crawl de sites inteiros para treinar a IA.
+              Agregá URLs de páginas ou hacé crawl de sites inteiros para treinar a IA.
             </p>
           </CardContent>
         </Card>

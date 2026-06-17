@@ -110,7 +110,7 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
         </AccordionContent>
       </AccordionItem>
 
-      {/* MARCA & AVATAR — oculto no canal Quiz (sem bot/avatar) */}
+      {/* MARCA & AVATAR — oculto no canal Quiz (sin bot/avatar) */}
       {channel !== 'quiz' && (
         <AccordionItem value="branding" className="border rounded-lg px-3">
           <AccordionTrigger className="hover:no-underline">
@@ -174,7 +174,7 @@ export function AppearanceForm({ channel, appearance, onChange }: Props) {
         </AccordionItem>
       )}
 
-      {/* LOGO (canal Quiz — sem avatar) */}
+      {/* LOGO (canal Quiz — sin avatar) */}
       {channel === 'quiz' && (
         <AccordionItem value="branding-quiz" className="border rounded-lg px-3">
           <AccordionTrigger className="hover:no-underline">
@@ -287,8 +287,8 @@ function ChatOptionsFields({ opts, setOpt }: { opts: ChatChannelOptions; setOpt:
           </SelectContent>
         </Select>
       </div>
-      <ColorPickerField label="Cor da bolha do bot" value={opts.bot_bubble_color} onChange={(v) => setOpt({ bot_bubble_color: v })} />
-      <ColorPickerField label="Cor da bolha do usuario" value={opts.user_bubble_color} onChange={(v) => setOpt({ user_bubble_color: v })} />
+      <ColorPickerField label="Cor da burbuja do bot" value={opts.bot_bubble_color} onChange={(v) => setOpt({ bot_bubble_color: v })} />
+      <ColorPickerField label="Cor da burbuja do usuario" value={opts.user_bubble_color} onChange={(v) => setOpt({ user_bubble_color: v })} />
       <div className="space-y-1.5">
         <Label>Placeholder del campo</Label>
         <Input value={opts.input_placeholder} onChange={(e) => setOpt({ input_placeholder: e.target.value })} />
@@ -360,7 +360,7 @@ function WidgetOptionsFields({ opts, setOpt }: { opts: WidgetChannelOptions; set
   return (
     <>
       <div className="space-y-1.5">
-        <Label>Posição na tela</Label>
+        <Label>Posición na tela</Label>
         <Select value={opts.position} onValueChange={(v) => setOpt({ position: v })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
@@ -372,7 +372,7 @@ function WidgetOptionsFields({ opts, setOpt }: { opts: WidgetChannelOptions; set
         </Select>
       </div>
       <div className="space-y-1.5">
-        <Label>Tamanho do botão flutuante</Label>
+        <Label>Tamaño do botón flutuante</Label>
         <Select value={opts.fab_size} onValueChange={(v) => setOpt({ fab_size: v })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
@@ -389,7 +389,7 @@ function WidgetOptionsFields({ opts, setOpt }: { opts: WidgetChannelOptions; set
       <div className="space-y-1.5">
         <Label>Abrir automaticamente após ({opts.auto_open_delay}s)</Label>
         <Slider min={0} max={60} step={1} value={[opts.auto_open_delay]} onValueChange={([v]) => setOpt({ auto_open_delay: v })} />
-        <p className="text-xs text-muted-foreground">0 = nunca abrir sozinho.</p>
+        <p className="text-xs text-muted-foreground">0 = nunca abrir solo.</p>
       </div>
       <div className="flex items-center justify-between"><Label>Badge de notificación</Label><Switch checked={opts.show_notification_badge} onCheckedChange={(v) => setOpt({ show_notification_badge: v })} /></div>
       <div className="flex items-center justify-between"><Label>Esconder em mobile</Label><Switch checked={opts.hide_on_mobile} onCheckedChange={(v) => setOpt({ hide_on_mobile: v })} /></div>
@@ -427,7 +427,7 @@ function QuizOptionsFields({ opts, setOpt }: { opts: QuizChannelOptions; setOpt:
         <Select value={opts.transition} onValueChange={(v) => setOpt({ transition: v })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="none">Sem animação</SelectItem>
+            <SelectItem value="none">Sin animação</SelectItem>
             <SelectItem value="fade">Fade</SelectItem>
             <SelectItem value="slide">Slide</SelectItem>
           </SelectContent>

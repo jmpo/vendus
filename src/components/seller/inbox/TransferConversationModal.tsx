@@ -33,7 +33,7 @@ interface TransferConversationModalProps {
   onOpenChange: (open: boolean) => void;
   conversationId: string;
   currentAssignedUserId?: string;
-  /** Canal da conversación — usado para mostrar o seletor de conexão só em WhatsApp */
+  /** Canal da conversación — usado para mostrar o seletor de conexión só em WhatsApp */
   currentChannel?: string;
   /** ID da instância Evolution atualmente vinculada à conversación (se houver) */
   currentEvolutionInstanceId?: string | null;
@@ -57,7 +57,7 @@ export function TransferConversationModal({
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [selectedSectorId, setSelectedSectorId] = useState<string | null>(null);
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
-  // Conexão Evolution: 'keep' = manter atual, o ID da nova instância
+  // Conexión Evolution: 'keep' = manter actual, o ID da nova instância
   const [selectedInstanceId, setSelectedInstanceId] = useState<string>('keep');
   const [internalNote, setInternalNote] = useState('');
   const [isTransferring, setIsTransferring] = useState(false);
@@ -108,7 +108,7 @@ export function TransferConversationModal({
     queryFn: async () => {
       if (!profile?.organization_id || !user?.id) return false;
 
-      // Match #1: usuario cadastrado como admin_user_id em auto_notification_settings
+      // Match #1: usuario registrado como admin_user_id em auto_notification_settings
       const { data: settings } = await supabase
         .from('auto_notification_settings')
         .select('admin_user_id')
@@ -251,17 +251,17 @@ export function TransferConversationModal({
         updateData.sector_id = selectedSectorId;
         updateData.status = 'waiting_human';
       } else {
-        // agent: devolve a conversación para a IA com agente específico
+        // agent: devolve a conversación para a IA con agente específico
         updateData.assigned_user_id = null;
         updateData.current_agent_id = selectedAgentId;
         updateData.status = 'bot_active';
-        // Marca conversación como em atención pelo agente escolhido para que o
-        // orquestrador no tente re-rotear (coluna é NOT NULL).
+        // Marca conversación como em atención por el agente escolhido para que o
+        // orquestador no tente re-rotear (coluna é NOT NULL).
         updateData.orchestrator_state = 'em_atendimento';
       }
 
-      // Troca opcional de conexão (instância Evolution / WhatsApp).
-      // No substitui as outras opciones — funciona em conjunto.
+      // Troca opcional de conexión (instância Evolution / WhatsApp).
+      // No substitui as otras opciones — funciona em conjunto.
       const willChangeInstance =
         isWhatsApp &&
         selectedInstanceId !== 'keep' &&
@@ -297,7 +297,7 @@ export function TransferConversationModal({
       if (updateError) throw updateError;
 
       // Create transfer record. Reaproveitamos `to_queue_id` para registrar o sector de destino,
-      // ya que a tabela aún usa esse nombre de coluna por compatibilidade.
+      // ya que a tabela aún usa ese nombre de coluna por compatibilidade.
       const targetAgent =
         transferType === 'agent' && selectedAgentId
           ? aiAgents.find((a) => a.id === selectedAgentId)
@@ -481,7 +481,7 @@ export function TransferConversationModal({
                     </div>
                   ) : sectors.length === 0 ? (
                     <div className="p-4 text-center text-muted-foreground text-sm">
-                      Ninguno sector disponível
+                      Ninguno sector disponible
                     </div>
                   ) : (
                     sectors.map((sector) => (
@@ -499,7 +499,7 @@ export function TransferConversationModal({
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                A conversación se pondrá na fila do sector escolhido e ficará disponível para qualquer agente do sector assumir.
+                A conversación se pondrá na fila do sector escolhido e ficará disponible para cualquier agente do sector assumir.
               </p>
             </div>
           )}
@@ -524,7 +524,7 @@ export function TransferConversationModal({
                   </div>
                 ) : filteredAgents.length === 0 ? (
                   <div className="p-4 text-center text-muted-foreground text-sm">
-                    Ninguno agente disponível
+                    Ninguno agente disponible
                   </div>
                 ) : (
                   <div className="p-2 space-y-1">
@@ -569,8 +569,8 @@ export function TransferConversationModal({
               </ScrollArea>
               <p className="text-xs text-muted-foreground">
                 {hasAdminInList
-                  ? 'Agentes 🔒 Admin son privados do gestor — use apenas para teste o intervenção. A conversación volta ao modo IA com o agente escolhido.'
-                  : 'A conversación volta ao modo IA com este agente assumindo o atención.'}
+                  ? 'Agentes 🔒 Admin son privados do gestor — use solo para teste o intervenção. A conversación volta ao modo IA con o agente escolhido.'
+                  : 'A conversación volta ao modo IA con este agente assumindo o atención.'}
               </p>
             </div>
           )}
@@ -580,14 +580,14 @@ export function TransferConversationModal({
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <Smartphone className="h-4 w-4" />
-                Transferir a conexão
+                Transferir a conexión
               </Label>
               <Select value={selectedInstanceId} onValueChange={setSelectedInstanceId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Manter conexão atual" />
+                  <SelectValue placeholder="Manter conexión actual" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="keep">Manter conexão atual</SelectItem>
+                  <SelectItem value="keep">Manter conexión actual</SelectItem>
                   {evolutionInstances
                     .filter((i) => i.id !== (currentEvolutionInstanceId || ''))
                     .map((i) => (
@@ -612,7 +612,7 @@ export function TransferConversationModal({
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                Mude o número/conexão WhatsApp pelo qual essa conversación será atendida. O histórico é
+                Mude o número/conexión WhatsApp por el qual esa conversación será atendida. O historial é
                 preservado.
               </p>
             </div>
@@ -620,9 +620,9 @@ export function TransferConversationModal({
 
           {/* Internal Note */}
           <div className="space-y-2">
-            <Label>Observações internas (opcional)</Label>
+            <Label>Observaciones internas (opcional)</Label>
             <Textarea
-              placeholder="Adicione uma nota para o siguiente agente..."
+              placeholder="Agregá uma nota para o siguiente agente..."
               value={internalNote}
               onChange={(e) => setInternalNote(e.target.value)}
               className="min-h-[80px]"

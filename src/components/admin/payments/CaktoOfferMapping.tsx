@@ -99,7 +99,7 @@ export function CaktoOfferMapping() {
           <Link2 className="h-5 w-5" /> Mapear ofertas Cakto → Produtos
         </h3>
         <p className="text-sm text-muted-foreground">
-          Vincule cada oferta da Cakto (front-end, order bump, upsell...) ao producto do CRM. Isso ativa as
+          Vincule cada oferta da Cakto (front-end, order bump, upsell...) ao producto do CRM. Eso ativa as
           métricas por producto na tela inicial e a atribuição da equipo.
         </p>
       </div>
@@ -109,7 +109,7 @@ export function CaktoOfferMapping() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <AlertCircle className="h-4 w-4 text-amber-500" />
-              Ofertas sem producto ({unmapped.length})
+              Ofertas sin producto ({unmapped.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -130,7 +130,7 @@ export function CaktoOfferMapping() {
         <CardContent>
           {mapped.length === 0 ? (
             <p className="text-sm text-muted-foreground py-6 text-center">
-              Nenhuma oferta vinculada aún.
+              Ninguna oferta vinculada aún.
             </p>
           ) : (
             <OfferTable
@@ -163,7 +163,7 @@ function OfferTable({
         <div className="col-span-4">Oferta</div>
         <div className="col-span-3">Producto CRM</div>
         <div className="col-span-2">Papel</div>
-        <div className="col-span-2">Preço</div>
+        <div className="col-span-2">Precio</div>
         <div className="col-span-1 text-right">Status</div>
       </div>
       {offers.map((o) => (
@@ -189,10 +189,10 @@ function OfferTable({
               onValueChange={(v) => onUpdate(o.id, { product_id: v === '__none' ? null : v })}
             >
               <SelectTrigger className="h-9">
-                <SelectValue placeholder="Selecionar producto" />
+                <SelectValue placeholder="Seleccionar producto" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none">— Nenhum —</SelectItem>
+                <SelectItem value="__none">— Ningún —</SelectItem>
                 {products.map((p) => (
                   <SelectItem key={p.id} value={p.id}>
                     {p.name}

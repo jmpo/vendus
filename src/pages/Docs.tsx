@@ -37,7 +37,7 @@ export default function Docs() {
   // /docs/:track → index da trilha
   if (!slug) return <TrackIndex trackId={track} />;
 
-  // /docs/:track/:slug → conteúdo
+  // /docs/:track/:slug → contenido
   const found = findPage(track, slug);
   if (!found) return <Navigate to={`/docs/${track}`} replace />;
 
@@ -62,8 +62,8 @@ function DocsHome() {
   return (
     <DocsLayout
       tracks={TRACKS}
-      title="Documentação"
-      description={`Tudo sobre o ${platformName}: CRM omnichannel com IA. Trilhas por papel: vendedor, admin, super admin e desenvolvedor.`}
+      title="Documentación"
+      description={`Tudo sobre o ${platformName}: CRM omnichannel con IA. Trilhas por papel: vendedor, admin, super admin e desenvolvedor.`}
       path="/docs"
     >
       {/* Hero */}
@@ -71,13 +71,13 @@ function DocsHome() {
         <div className="rounded-3xl border border-border bg-gradient-to-br from-primary/5 via-background to-background p-8 md:p-12 mb-12">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
             <BookOpen className="h-3.5 w-3.5" />
-            Documentação oficial
+            Documentación oficial
           </div>
           <h1 className="mt-4 text-4xl md:text-5xl font-bold tracking-tight text-foreground">
             Aprendé tudo sobre o {platformName}
           </h1>
           <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-2xl">
-            CRM omnichannel com IA para times de ventas. Capture, atenda, qualifique, agende, venta e nutra —
+            CRM omnichannel con IA para times de ventas. Capture, atenda, qualifique, agende, venta e nutra —
             tudo em um lugar só.
           </p>
           <div className="mt-6 max-w-md">
@@ -87,7 +87,7 @@ function DocsHome() {
 
         {/* Trilhas */}
         <h2 className="text-2xl font-bold text-foreground mb-1">Elegí a su trilha</h2>
-        <p className="text-muted-foreground mb-6">Documentação organizada por papel.</p>
+        <p className="text-muted-foreground mb-6">Documentación organizada por papel.</p>
 
         <div className="grid gap-4 md:grid-cols-2">
           {TRACKS.filter((t) => t.id !== "conceitos").map((t) => {
@@ -128,12 +128,12 @@ function DocsHome() {
           <Link to="/docs/glossario" className="rounded-2xl border border-border bg-card p-5 hover:border-primary/40 transition">
             <SearchIcon className="h-5 w-5 text-sky-500 mb-2" />
             <div className="font-semibold text-foreground">Glossário A→Z</div>
-            <p className="mt-1 text-sm text-muted-foreground">Termos curtos com link para o conceito completo.</p>
+            <p className="mt-1 text-sm text-muted-foreground">Termos curtos con link para o conceito completo.</p>
           </Link>
           <Link to="/docs/changelog" className="rounded-2xl border border-border bg-card p-5 hover:border-primary/40 transition">
             <Sparkles className="h-5 w-5 text-emerald-500 mb-2" />
             <div className="font-semibold text-foreground">Changelog</div>
-            <p className="mt-1 text-sm text-muted-foreground">O que mudou em cada versão.</p>
+            <p className="mt-1 text-sm text-muted-foreground">O que mudou em cada versión.</p>
           </Link>
         </div>
       </div>
@@ -192,14 +192,14 @@ function Glossario() {
     const extras: Array<{ slug: string; title: string; description: string; track?: string }> = [
       { slug: "spin", title: "SPIN Selling", description: "Framework de venta consultiva (Situação, Problema, Implicação, Necessidade)." },
       { slug: "tma", title: "TMA — Tempo Médio de Atención" , description: "Indicador de eficiência operacional do equipo." },
-      { slug: "tmr", title: "TMR — Tempo Médio de Resposta", description: "Quanto demora a primeira respuesta após mensaje del lead." },
+      { slug: "tmr", title: "TMR — Tempo Médio de Respuesta", description: "Quanto demora a primera respuesta após mensaje del lead." },
       { slug: "sla", title: "SLA — Service Level Agreement", description: "Compromisso de prazo de atención ou respuesta." },
       { slug: "icp", title: "ICP — Ideal Customer Profile", description: "Perfil ideal de cliente. Configurado por producto." },
       { slug: "utm", title: "UTM", description: "Parâmetros de rastreamento de origem (source, medium, campaign, content, term)." },
       { slug: "ddi", title: "DDI 55", description: "Discagem Direta Internacional. Vendus normaliza para 55 (Brasil) em todo número."  },
-      { slug: "rls", title: "RLS — Row Level Security", description: "Controle de acesso por linha. Base da segurança multi-tenant." },
-      { slug: "edge-function", title: "Edge Function", description: "Função serverless (Deno) executada no edge. Vendus tiene 81 delas." },
-      { slug: "realtime", title: "Realtime", description: "Subscrição a mudanças no banco em tempo real (postgres_changes)." },
+      { slug: "rls", title: "RLS — Row Level Security", description: "Controle de acesso por línea. Base da segurança multi-tenant." },
+      { slug: "edge-function", title: "Edge Function", description: "Función serverless (Deno) executada no edge. Vendus tiene 81 delas." },
+      { slug: "realtime", title: "Realtime", description: "Subscrição a mudanças no banco en tiempo real (postgres_changes)." },
     ];
 
     const all = [
@@ -210,7 +210,7 @@ function Glossario() {
   }, []);
 
   return (
-    <DocsLayout tracks={TRACKS} title="Glossário" description="Todos os termos do Vendus em ordem alfabética." path="/docs/glossario">
+    <DocsLayout tracks={TRACKS} title="Glossário" description="Todos los termos do Vendus em ordem alfabética." path="/docs/glossario">
       <PageHero eyebrow="Recursos" icon={BookMarked} title="Glossário A→Z" description="Termos do Vendus em ordem alfabética. Hacé clic para abrir o conceito completo." />
 
       <KeyValue rows={items.map((it) => [
@@ -227,26 +227,26 @@ function Glossario() {
    CHANGELOG
    ============================================================ */
 function Changelog() {
-  const entries: Array<{ version: string; date: string; tag: "Novidade" | "Melhoria" | "Correção"; items: string[] }> = [
+  const entries: Array<{ version: string; date: string; tag: "Novidade" | "Mejora" | "Corrección"; items: string[] }> = [
     {
       version: "2026.06",
       date: "Junho de 2026",
       tag: "Novidade",
       items: [
-        "Documentação pública /docs com 4 trilhas (Vendedor, Admin, Super Admin, Dev) e busca cmd+K.",
-        "Radar de IA com acciones 1-clique (abrir conversación, chamar IA, atribuir, crear tarea).",
-        "Preservação de histórico ao trocar conexão Evolution.",
-        "Cadências inteligentes com gerador IA e auto-stop por respuesta.",
+        "Documentación pública /docs con 4 trilhas (Vendedor, Admin, Super Admin, Dev) e busca cmd+K.",
+        "Radar de IA con acciones 1-clique (abrir conversación, chamar IA, atribuir, crear tarea).",
+        "Preservação de historial ao trocar conexión Evolution.",
+        "Cadências inteligentes con gerador IA e auto-stop por respuesta.",
       ],
     },
     {
       version: "2026.05",
       date: "Maio de 2026",
-      tag: "Melhoria",
+      tag: "Mejora",
       items: [
-        "Agente IA: 18+ ferramentas nativas, jerarquía de seleção e limites de segurança.",
+        "Agente IA: 18+ ferramentas nativas, jerarquía de selección e limites de segurança.",
         "WhatsApp multi-provedor v4 (Evolution Go global).",
-        "Aparência por canal nos funis (4 temas independentes).",
+        "Apariencia por canal nos funis (4 temas independentes).",
       ],
     },
     {
@@ -254,25 +254,25 @@ function Changelog() {
       date: "Abril de 2026",
       tag: "Novidade",
       items: [
-        "Hotmart: postback com validação hottok por org + sync OAuth.",
-        "Inbox: visibilidade por sector com permisos granulares.",
-        "Auto-criação de lead em toda conversación nova.",
+        "Hotmart: postback con validación hottok por org + sync OAuth.",
+        "Inbox: visibilidade por sector con permisos granulares.",
+        "Auto-creación de lead em toda conversación nova.",
       ],
     },
     {
       version: "2026.03",
       date: "Março de 2026",
-      tag: "Melhoria",
+      tag: "Mejora",
       items: [
         "Copiloto multimodal (Gemini Vision + ElevenLabs Scribe v2).",
-        "BANT framework com 17 preguntas e score 0-100.",
-        "White label engine v2 com HSL dinâmico.",
+        "BANT framework con 17 preguntas e score 0-100.",
+        "White label engine v2 con HSL dinâmico.",
       ],
     },
   ];
   return (
-    <DocsLayout tracks={TRACKS} title="Changelog" description="Novedades, mejoras e correcciones por versão." path="/docs/changelog">
-      <PageHero eyebrow="Recursos" icon={Sparkles} title="Changelog" description="O que mudou em cada versão do Vendus." />
+    <DocsLayout tracks={TRACKS} title="Changelog" description="Novedades, mejoras e correcciones por versión." path="/docs/changelog">
+      <PageHero eyebrow="Recursos" icon={Sparkles} title="Changelog" description="O que mudou em cada versión do Vendus." />
 
       <div className="not-prose space-y-6">
         {entries.map((e) => (
@@ -282,7 +282,7 @@ function Changelog() {
               <div className="text-xs text-muted-foreground">{e.date}</div>
               <span className={`ml-auto rounded-md px-2 py-0.5 text-[11px] font-semibold ${
                 e.tag === "Novidade" ? "bg-emerald-500/10 text-emerald-600"
-                : e.tag === "Melhoria" ? "bg-sky-500/10 text-sky-600"
+                : e.tag === "Mejora" ? "bg-sky-500/10 text-sky-600"
                 : "bg-amber-500/10 text-amber-600"
               }`}>{e.tag}</span>
             </div>

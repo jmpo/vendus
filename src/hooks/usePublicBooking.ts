@@ -86,7 +86,7 @@ export function usePublicEventTypeBySlug(userSlug: string | undefined, eventSlug
     queryFn: async () => {
       if (!userSlug || !eventSlug) return null;
       
-      // Primeiro buscar o usuario pelo slug (view pública segura)
+      // Primero buscar o usuario por el slug (view pública segura)
       const { data: profile, error: profileError } = await (supabase as any)
         .from('public_booking_profiles')
         .select('id, full_name, avatar_url, booking_slug, booking_bio')
@@ -96,7 +96,7 @@ export function usePublicEventTypeBySlug(userSlug: string | undefined, eventSlug
       if (profileError) throw profileError;
       if (!profile) return null;
 
-      // Depois buscar o tipo de evento
+      // Después buscar o tipo de evento
       const { data: eventType, error: eventError } = await supabase
         .from('booking_event_types')
         .select('*')
@@ -117,7 +117,7 @@ export function usePublicEventTypeBySlug(userSlug: string | undefined, eventSlug
   });
 }
 
-// Buscar slots disponíveis para uma data
+// Buscar slots disponibles para uma data
 export function useAvailableSlots(eventTypeId: string | undefined, date: string | undefined, timezone: string = 'America/Sao_Paulo') {
   return useQuery({
     queryKey: ['available-slots', eventTypeId, date, timezone],

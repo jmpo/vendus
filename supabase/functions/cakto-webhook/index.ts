@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
         row.offer_id = offer.id;
         row.product_id = offer.product_id;
       } else {
-        // Auto-cria oferta órfã (sem producto) pra aparecer na tela de mapeamento
+        // Auto-cria oferta órfã (sin producto) pra aparecer na tela de mapeamento
         const { data: created } = await admin
           .from('product_offers')
           .insert({
@@ -120,7 +120,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Dispara o agente de recuperação automática (fire-and-forget)
+    // Dispara o agente de recuperación automática (fire-and-forget)
     if (scopeParam === 'organization' && row.organization_id) {
       try {
         const { data: savedOrder } = await admin
@@ -182,7 +182,7 @@ Deno.serve(async (req) => {
 
 /**
  * Traduz event/status/payment_method da Cakto para o tipo de evento das tag_automations.
- * Retorna null se el evento no dispara ninguna automação de tag.
+ * Retorna null se el evento no dispara ninguna automatización de tag.
  */
 function mapCaktoToTagEvent(
   event: string | null,
@@ -224,7 +224,7 @@ async function resolveOrCreateLead(admin: any, row: any): Promise<string | null>
   const phone = row.customer_phone?.replace(/\D/g, '') || null;
   if (!orgId || (!email && !phone)) return null;
 
-  // Tenta encontrar lead existente por email primeiro, después teléfono
+  // Tenta encontrar lead existente por email primero, después teléfono
   let lead: { id: string } | null = null;
   if (email) {
     const { data } = await admin

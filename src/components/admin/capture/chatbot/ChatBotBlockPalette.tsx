@@ -132,7 +132,7 @@ export const ChatBotBlockPalette = memo(function ChatBotBlockPalette({ onAddBloc
 
       <div className="px-3 py-2 border-t bg-muted/30 shrink-0">
         <p className="text-[10px] text-muted-foreground text-center">
-          Blocos exclusivos de Form, Quiz e Widget ficam ocultos aqui
+          Blocos exclusivos de Form, Quiz e Widget ficam ocultos acá
         </p>
       </div>
     </div>

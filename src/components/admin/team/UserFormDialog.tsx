@@ -399,7 +399,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
               )}
             </div>
 
-            {/* Conexão padrão */}
+            {/* Conexión predeterminado */}
             <div className="space-y-1.5">
               <Label>Conexión Predeterminada (WhatsApp)</Label>
               {(!connections || connections.length === 0) ? (
@@ -426,11 +426,11 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label>Inicio de trabalho</Label>
+                <Label>Inicio de trabajo</Label>
                 <Input type="equipo" value={general.work_start_time} onChange={(e) => updateGeneral('work_start_time', e.target.value)} />
               </div>
               <div className="space-y-1.5">
-                <Label>Fin de trabalho</Label>
+                <Label>Fin de trabajo</Label>
                 <Input type="equipo" value={general.work_end_time} onChange={(e) => updateGeneral('work_end_time', e.target.value)} />
               </div>
             </div>
@@ -442,7 +442,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label>Tema padrão</Label>
+                <Label>Tema predeterminado</Label>
                 <Select value={general.default_theme} onValueChange={(v) => updateGeneral('default_theme', v)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -453,7 +453,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label>Menu padrão</Label>
+                <Label>Menu predeterminado</Label>
                 <Select value={general.default_menu_state} onValueChange={(v) => updateGeneral('default_menu_state', v)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -470,7 +470,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
             {!isEdit ? (
               <p className="text-sm text-muted-foreground text-center py-8">
                 Permisos poderão ser configuradas após crear o usuario.<br />
-                Defaults serão aplicadas automaticamente conforme o perfil escolhido.
+                Defaults serán aplicadas automaticamente conforme o perfil escolhido.
               </p>
             ) : !permissions ? (
               <div className="text-center py-8 space-y-3">
@@ -486,7 +486,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
             ) : (
               <>
                 <div className="space-y-1.5">
-                  <Label>Modo de visualização de reservas</Label>
+                  <Label>Modo de visualización de reservas</Label>
                   <Select
                     value={localPerms.view_schedules_mode || 'mine_only'}
                     onValueChange={(v) => setLocalPerms((p) => ({ ...p, view_schedules_mode: v }))}
@@ -534,8 +534,8 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
             ) : (
               <>
                 <div className="space-y-3">
-                  <h4 className="text-sm font-semibold">Configurações Globais</h4>
-                  <p className="text-xs text-muted-foreground -mt-2">Afeta todos os dispositivos.</p>
+                  <h4 className="text-sm font-semibold">Configuraciones Globais</h4>
+                  <p className="text-xs text-muted-foreground -mt-2">Afeta todos los dispositivos.</p>
                   <div className="space-y-3 p-3 border rounded-lg bg-muted/30">
                     {(Object.keys(NOTIFICATION_LABELS) as (keyof typeof NOTIFICATION_LABELS)[]).map((key) => (
                       <div key={key} className="flex items-center justify-between">
@@ -554,19 +554,19 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
                   <h4 className="text-sm font-semibold">Notificaciones neste Aparelho (Push)</h4>
                   <div className="p-4 border rounded-lg text-center space-y-2">
                     <p className="text-xs text-muted-foreground">
-                      Receba notificaciones mismo com o navegador cerrado ou minimizado.
+                      Receba notificaciones mismo con o navegador cerrado ou minimizado.
                     </p>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={async () => {
-                        if (!('Notification' in window)) return toast.error('Navegador sem suporte');
+                        if (!('Notification' in window)) return toast.error('Navegador sin suporte');
                         const perm = await Notification.requestPermission();
                         if (perm === 'granted') {
                           setLocalNotifs((n) => ({ ...n, push_enabled: true }));
                           toast.success('Notificaciones ativadas neste dispositivo');
                         } else {
-                          toast.error('Permissão negada');
+                          toast.error('Permiso negada');
                         }
                       }}
                     >
@@ -583,7 +583,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSubmit} disabled={submitting}>
             {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isEdit ? 'Salvar' : 'Adicionar'}
+            {isEdit ? 'Guardar' : 'Agregar'}
           </Button>
         </DialogFooter>
       </DialogContent>

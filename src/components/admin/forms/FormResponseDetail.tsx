@@ -47,7 +47,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
   const matchLabel = (label: string, keywords: string[]) =>
     keywords.some((k) => (label || '').toLowerCase().includes(k));
 
-  // Respostas son salvas com LABEL como chave (responsesWithLabels), mas puede
+  // Respuestas son salvas con LABEL como chave (responsesWithLabels), mas puede
   // haver chaves por block.id legado. Resolve nos dois formatos.
   const getValueByMapping = (mapping: string): string | null => {
     if (responses[mapping]) return String(responses[mapping]);
@@ -65,7 +65,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
       return responses[b.id] || (b.label && responses[b.label]);
     });
     if (block) return String(responses[block.id] ?? responses[block.label] ?? '');
-    // Fallback: qualquer chave de respuesta cujo nombre bata com o keyword
+    // Fallback: cualquier chave de respuesta cujo nombre bata con o keyword
     const key = Object.keys(responses).find((k) => matchLabel(k, keywords));
     return key ? String(responses[key]) : null;
   };
@@ -125,7 +125,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
         seenLabels.add(block.label);
       }
     });
-    // Inclui respuestas órfãs (labels que no bateram com ningún bloco atual)
+    // Inclui respuestas órfãs (labels que no bateram con ningún bloco actual)
     Object.entries(responses).forEach(([key, value]) => {
       if (seenLabels.has(key)) return;
       if (['name', 'nombre', 'email', 'phone', 'teléfono', 'full_name'].includes(key)) return;
@@ -139,10 +139,10 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
   const leadName = getLeadName();
   const leadPhone = getLeadPhone();
 
-  // Contexto Q&A para a IA chamar com base nas respuestas reais
+  // Contexto Q&A para a IA chamar con base nas respuestas reais
   const qaContext = useMemo(() => {
     const lines = answers.map((a) => `- ${a.label}: ${a.value}`).join('\n');
-    const header = `Lead "${leadName}" respondeu o formulário "${(submission as any).form_name || ''}".`;
+    const header = `Lead "${leadName}" respondeu o formulario "${(submission as any).form_name || ''}".`;
     return `${header}\nUse essas respuestas para personalizar a abordaje:\n${lines}`;
   }, [answers, submission, leadName]);
 
@@ -230,7 +230,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
             <Separator />
 
             <div>
-              <h3 className="text-lg font-semibold mb-4">Respostas do Formulário</h3>
+              <h3 className="text-lg font-semibold mb-4">Respuestas do Formulario</h3>
               <div className="space-y-4">
                 {answers.length > 0 ? answers.map((answer, index) => (
                   <Card key={index}>
@@ -240,7 +240,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
                     </CardContent>
                   </Card>
                 )) : (
-                  <p className="text-muted-foreground text-center py-4">Nenhuma respuesta registrada</p>
+                  <p className="text-muted-foreground text-center py-4">Ninguna respuesta registrada</p>
                 )}
               </div>
             </div>
@@ -330,7 +330,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
                   className="gap-2"
                 >
                   <Sparkles className="h-4 w-4" />
-                  Chamar com IA
+                  Chamar con IA
                 </Button>
               )}
               <Button onClick={navigateToLead}>
@@ -370,7 +370,7 @@ export function FormResponseDetail({ submission, blocks, onClose }: FormResponse
           <div className="py-2">
             <Select value={selectedCadence} onValueChange={setSelectedCadence}>
               <SelectTrigger>
-                <SelectValue placeholder={activeCadences.length ? 'Seleccioná uma cadencia' : 'Nenhuma cadencia ativa'} />
+                <SelectValue placeholder={activeCadences.length ? 'Seleccioná uma cadencia' : 'Ninguna cadencia ativa'} />
               </SelectTrigger>
               <SelectContent>
                 {activeCadences.map((c) => (

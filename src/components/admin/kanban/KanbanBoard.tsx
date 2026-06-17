@@ -198,7 +198,7 @@ export function KanbanBoard() {
       <Dialog open={!!selectedLeadId} onOpenChange={() => setSelectedLeadId(null)}>
         <DialogContent className="max-w-4xl h-[90vh] flex flex-col overflow-hidden p-0">
           <VisuallyHidden>
-            <DialogTitle>Detalhes do Lead</DialogTitle>
+            <DialogTitle>Detalles do Lead</DialogTitle>
           </VisuallyHidden>
           {selectedLeadId && (
             <LeadDetailPage 

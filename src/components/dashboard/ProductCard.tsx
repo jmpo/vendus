@@ -20,8 +20,8 @@ export function ProductCard({ product, onSelect }: ProductCardProps) {
   };
 
   const statusLabels: Record<string, string> = {
-    draft: 'Rascunho',
-    review: 'Em revisão',
+    draft: 'Borrador',
+    review: 'Em revisión',
     published: 'Publicado',
     archived: 'Arquivado'
   };

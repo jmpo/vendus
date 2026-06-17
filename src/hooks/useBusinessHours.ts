@@ -94,7 +94,7 @@ export function useUpsertBusinessHours() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['business-hours'] });
-      toast({ title: 'Horários guardados' });
+      toast({ title: 'Horarios guardados' });
     },
     onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });

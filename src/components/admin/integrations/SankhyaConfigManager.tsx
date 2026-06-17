@@ -123,13 +123,13 @@ export function SankhyaConfigManager() {
                 )}
               </CardTitle>
               <CardDescription>
-                Integración com o ERP Sankhya para sincronização de clientes, productos e pedidos
+                Integración con o ERP Sankhya para sincronização de clientes, productos e pedidos
               </CardDescription>
             </div>
             <Button variant="outline" size="sm" asChild>
               <a href="https://developer.sankhya.com.br" target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-4 w-4 mr-2" />
-                Documentação
+                Documentación
               </a>
             </Button>
           </div>
@@ -204,7 +204,7 @@ export function SankhyaConfigManager() {
               ) : (
                 <RefreshCw className="h-4 w-4 mr-2" />
               )}
-              Testar Conexão
+              Testar Conexión
             </Button>
             <Button
               onClick={handleSaveCredentials}
@@ -213,7 +213,7 @@ export function SankhyaConfigManager() {
               {updateConfig.isPending ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               ) : null}
-              Salvar Credenciais
+              Guardar Credenciais
             </Button>
           </div>
         </CardContent>
@@ -339,7 +339,7 @@ export function SankhyaConfigManager() {
       {/* Sync History */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Histórico de Sincronizações</CardTitle>
+          <CardTitle className="text-lg">Historial de Sincronizações</CardTitle>
           <CardDescription>
             Últimas 20 sincronizações realizadas
           </CardDescription>
@@ -385,7 +385,7 @@ export function SankhyaConfigManager() {
             </Table>
           ) : (
             <div className="text-center py-8 text-muted-foreground">
-              Nenhuma sincronização realizada aún
+              Ninguna sincronização realizada aún
             </div>
           )}
         </CardContent>

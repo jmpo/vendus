@@ -8,7 +8,7 @@ export type FormBlockType =
   | 'conditional' | 'score' | 'tag' | 'hidden_field'
   | 'ai_question' | 'ai_followup'
   | 'welcome_screen' | 'end_screen'
-  // Mídia (somente apresentação, não geram resposta)
+  // Mídia (somente presentación, no geram respuesta)
   | 'image' | 'video_upload' | 'video_embed' | 'carousel' | 'divider';
 
 export type TemplateCategory = 'general' | 'qualification' | 'diagnostic' | 'pre_sale' | 'feedback' | 'survey';
@@ -245,22 +245,22 @@ export const BLOCK_CONFIGS: BlockConfig[] = [
   { type: 'end_screen', label: 'Tela Final', icon: 'CheckCircle', category: 'screen', defaultProps: { label: 'Obrigado!', description: 'Entraremos em contato em breve.' } },
   
   // Inputs
-  { type: 'text', label: 'Texto Curto', icon: 'Type', category: 'input', defaultProps: { label: 'Qual é o seu nome?', placeholder: 'Digite aqui...', maps_to: 'name' } },
-  { type: 'email', label: 'Email', icon: 'Mail', category: 'input', defaultProps: { label: 'Qual é o seu email?', placeholder: 'seu@email.com', maps_to: 'email', required: true } },
-  { type: 'phone', label: 'Telefone', icon: 'Phone', category: 'input', defaultProps: { label: 'Qual é o seu telefone?', placeholder: '(00) 00000-0000', maps_to: 'phone' } },
+  { type: 'text', label: 'Texto Curto', icon: 'Type', category: 'input', defaultProps: { label: 'Qual é o tu nome?', placeholder: 'Digite acá...', maps_to: 'name' } },
+  { type: 'email', label: 'Email', icon: 'Mail', category: 'input', defaultProps: { label: 'Qual é o tu email?', placeholder: 'tu@email.com', maps_to: 'email', required: true } },
+  { type: 'phone', label: 'Teléfono', icon: 'Phone', category: 'input', defaultProps: { label: 'Qual é o tu teléfono?', placeholder: '(00) 00000-0000', maps_to: 'phone' } },
   { type: 'number', label: 'Número', icon: 'Hash', category: 'input', defaultProps: { label: 'Quantos funcionários?', placeholder: '0' } },
-  { type: 'textarea', label: 'Texto Longo', icon: 'AlignLeft', category: 'input', defaultProps: { label: 'Conte-nos mais sobre sua necessidade', placeholder: 'Descreva aqui...', maps_to: 'notes' } },
+  { type: 'textarea', label: 'Texto Longo', icon: 'AlignLeft', category: 'input', defaultProps: { label: 'Conte-nos mais sobre tu necessidade', placeholder: 'Descreva acá...', maps_to: 'notes' } },
   
   // Selection
-  { type: 'select', label: 'Seleção Única', icon: 'List', category: 'selection', defaultProps: { label: 'Escolha uma opção', options: [{ value: 'option1', label: 'Opção 1' }, { value: 'option2', label: 'Opção 2' }] } },
-  { type: 'multi_select', label: 'Seleção Múltipla', icon: 'ListChecks', category: 'selection', defaultProps: { label: 'Selecione as opções', options: [{ value: 'option1', label: 'Opção 1' }, { value: 'option2', label: 'Opção 2' }] } },
-  { type: 'yes_no', label: 'Sim ou Não', icon: 'ToggleLeft', category: 'selection', defaultProps: { label: 'Você tem interesse?' } },
+  { type: 'select', label: 'Selección Única', icon: 'List', category: 'selection', defaultProps: { label: 'Elegí uma opción', options: [{ value: 'option1', label: 'Opción 1' }, { value: 'option2', label: 'Opción 2' }] } },
+  { type: 'multi_select', label: 'Selección Múltipla', icon: 'ListChecks', category: 'selection', defaultProps: { label: 'Seleccioná as opciones', options: [{ value: 'option1', label: 'Opción 1' }, { value: 'option2', label: 'Opción 2' }] } },
+  { type: 'yes_no', label: 'Sim ou No', icon: 'ToggleLeft', category: 'selection', defaultProps: { label: 'Usted tem interesse?' } },
   { type: 'scale', label: 'Escala', icon: 'SlidersHorizontal', category: 'selection', defaultProps: { label: 'De 1 a 10, como avalia?', options: { min: 1, max: 10 } } },
   
   // Logic
-  { type: 'conditional', label: 'Condicional', icon: 'GitBranch', category: 'logic', defaultProps: { label: 'Condição' } },
-  { type: 'score', label: 'Pontuação', icon: 'Target', category: 'logic', defaultProps: { label: 'Adicionar Score', score_value: 10 } },
-  { type: 'tag', label: 'Tag', icon: 'Tag', category: 'logic', defaultProps: { label: 'Adicionar Tag', apply_tags: ['qualificado'] } },
+  { type: 'conditional', label: 'Condicional', icon: 'GitBranch', category: 'logic', defaultProps: { label: 'Condición' } },
+  { type: 'score', label: 'Puntuación', icon: 'Target', category: 'logic', defaultProps: { label: 'Agregar Score', score_value: 10 } },
+  { type: 'tag', label: 'Tag', icon: 'Tag', category: 'logic', defaultProps: { label: 'Agregar Tag', apply_tags: ['qualificado'] } },
   { type: 'hidden_field', label: 'Campo Oculto', icon: 'EyeOff', category: 'logic', defaultProps: { label: 'UTM Source', maps_to: 'utm_source' } },
   
   // Advanced
@@ -277,7 +277,7 @@ export const BLOCK_CONFIGS: BlockConfig[] = [
 
 /**
  * Converte URL do YouTube/Vimeo/Loom para URL de embed.
- * Retorna null se não reconhecer o formato.
+ * Retorna null se no reconhecer o formato.
  */
 export function toEmbedUrl(raw: string, opts?: { autoplay?: boolean }): string | null {
   if (!raw) return null;
@@ -285,19 +285,19 @@ export function toEmbedUrl(raw: string, opts?: { autoplay?: boolean }): string |
   const autoplay = opts?.autoplay ? 1 : 0;
 
   // YouTube
-  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+  const yt = url.match(/(?:youtube\.con\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
   if (yt) {
     return `https://www.youtube.com/embed/${yt[1]}?rel=0&modestbranding=1&autoplay=${autoplay}${autoplay ? '&mute=1' : ''}`;
   }
 
   // Vimeo
-  const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  const vm = url.match(/vimeo\.con\/(?:video\/)?(\d+)/);
   if (vm) {
     return `https://player.vimeo.com/video/${vm[1]}?autoplay=${autoplay}${autoplay ? '&muted=1' : ''}`;
   }
 
   // Loom
-  const loom = url.match(/loom\.com\/(?:share|embed)\/([A-Za-z0-9]+)/);
+  const loom = url.match(/loom\.con\/(?:share|embed)\/([A-Za-z0-9]+)/);
   if (loom) {
     return `https://www.loom.com/embed/${loom[1]}${autoplay ? '?autoplay=1' : ''}`;
   }

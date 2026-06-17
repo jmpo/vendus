@@ -82,7 +82,7 @@ ${knowledgeContext}
 ${objectionsContext}
 
 ⚠️ REGRAS CRÍTICAS - FORMATO WHATSAPP:
-1. Respostas CURTAS - máximo 3-4 linhas por seção
+1. Respuestas CURTAS - máximo 3-4 linhas por sección
 2. Usa emojis estratégicos: ✅ 💡 🎯 ⏰ 💰 🤝
 3. Quebras de linha para facilitar leitura no celular
 4. Tom conversacional e direto
@@ -97,7 +97,7 @@ FORMATO DE RESPOSTA:
 [Mensaje pronta para WhatsApp - 3-4 linhas curtas con emoji]
 
 **PERGUNTA DE RETORNO:**
-[1 pregunta direta de hasta 15 palavras]`;
+[1 pregunta direta de hasta 15 palabras]`;
 
     const { response, config } = await aiChat({
       organizationId,
@@ -108,7 +108,7 @@ FORMATO DE RESPOSTA:
       body: {
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `O cliente disse: "${objection}"\n\nGere uma respuesta estratégica para contornar essa objeção.` }
+          { role: "user", content: `O cliente disse: "${objection}"\n\nGere uma respuesta estratégica para contornar essa objeción.` }
         ],
         stream: true,
       },

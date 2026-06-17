@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button';
 
 /**
  * Banner global de alerta cuando a empresa tiene instâncias Evolution
- * configuradas, mas ninguna está `connected`. Aparece pra qualquer
+ * configuradas, mas ninguna está `connected`. Aparece pra cualquier
  * usuario da org — assim quem comprou via Doppus/Cakto/Hotmart e ficou
- * sem mensaje de pós-venta dispara o alerta.
+ * sin mensaje de pós-venta dispara o alerta.
  */
 export function WhatsAppDisconnectedBanner() {
   const { profile, roles } = useAuth();
@@ -43,7 +43,7 @@ export function WhatsAppDisconnectedBanner() {
       <div className="flex-1 text-sm">
         <span className="font-medium text-destructive">WhatsApp desconectado.</span>{' '}
         <span className="text-foreground/80">
-          Mensagens automáticas de pós-venta e atención no estão siendo enviadas.
+          Mensajes automáticas de pós-venta e atención no estão siendo enviadas.
           {canManage ? ' Reconecte a instância para retomar.' : ' Avise um admin.'}
         </span>
       </div>

@@ -60,7 +60,7 @@ export function NewTicketDialog({ open, onOpenChange }: Props) {
           </div>
           <div className="space-y-2">
             <Label>Descripción</Label>
-            <Textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={5} placeholder="Conte com detalhes o que está acontecendo..." />
+            <Textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={5} placeholder="Conte con detalles o que está acontecendo..." />
           </div>
         </div>
 

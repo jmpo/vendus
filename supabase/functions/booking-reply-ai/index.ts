@@ -1,6 +1,6 @@
 // booking-reply-ai
-// Cuando el lead responde texto livre a uma confirmação/lembrete de booking,
-// a IA interpreta a intenção e executa: confirm | reschedule | cancel | followup.
+// Cuando el lead responde texto livre a uma confirmación/lembrete de booking,
+// a IA interpreta a intención e executa: confirm | reschedule | cancel | followup.
 //
 // Entrada: { booking_id, organization_id, message_text, instance_id?, phone? }
 // Saída: { ok, intent, reply_text }
@@ -105,7 +105,7 @@ Contexto da reunión:
 - Anfitrião: ${booking.profiles?.full_name || "Vendedor"}
 - Evento: ${booking.booking_event_types?.name || "Reunión"}
 - Horario atual: ${startStr} (${tz})
-- Agora: ${nowStr}
+- Ahora: ${nowStr}
 
 Su tarea: interpretar a respuesta del lead e llamar UMA tool apropriada:
 - Se confirma/aceita → confirm_booking
@@ -113,7 +113,7 @@ Su tarea: interpretar a respuesta del lead e llamar UMA tool apropriada:
 - Se cancela definitivamente → cancel_booking
 - Se diz "no posso ahora, me chama después/semana que vem/mes que vem" → propose_followup(when_iso) con data aproximada
 
-Siempre execute UMA tool. Depois escreva uma respuesta corta e gentil para enviar al lead via WhatsApp (máx 2 linhas, 1 emoji).`;
+Siempre execute UMA tool. Después escreva uma respuesta corta e gentil para enviar al lead via WhatsApp (máx 2 linhas, 1 emoji).`;
 
   let aiCfg;
   try {
@@ -283,7 +283,7 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
         .eq("id", booking.id);
 
       const niceWhen = when.toLocaleString("es-PY", { timeZone: booking.timezone || "America/Sao_Paulo", dateStyle: "short" });
-      return { reply: `Sem problema! Voy a te llamar de novo em ${niceWhen} 📞` };
+      return { reply: `Sin problema! Voy a te llamar de novo em ${niceWhen} 📞` };
     }
   }
 

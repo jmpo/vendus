@@ -23,7 +23,7 @@ export function TagAutomationsPanel() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [packageDialogOpen, setPackageDialogOpen] = useState(false);
 
-  // Agrupa automatizaciones por producto (NULL = "Qualquer producto")
+  // Agrupa automatizaciones por producto (NULL = "Cualquier producto")
   const grouped = useMemo(() => {
     const map = new Map<string | null, TagAutomation[]>();
     automations?.forEach((a) => {
@@ -46,7 +46,7 @@ export function TagAutomationsPanel() {
           </CardTitle>
           <CardDescription>
             Aplica etiquetas automáticamente según el estado del checkout. Etiquetas marcadas como
-            "transitorias" son removidas cuando a compra é confirmada — etiquetas permanentes preservam o histórico del cliente.
+            "transitorias" son removidas cuando a compra é confirmada — etiquetas permanentes preservam o historial del cliente.
           </CardDescription>
         </div>
         <div className="flex items-center gap-2 shrink-0">
@@ -64,7 +64,7 @@ export function TagAutomationsPanel() {
             <Sparkles className="h-10 w-10 mx-auto mb-3 opacity-40" />
             <p className="font-medium">Ninguna automatización configurada.</p>
             <p className="text-xs mt-1">
-              Hacé clic em <strong>"Generar paquete para producto"</strong> e escolha um producto.
+              Hacé clic em <strong>"Generar paquete para producto"</strong> e elegí um producto.
               <br />Con 1 clic creas 6 etiquetas y 6 reglas listas.
             </p>
           </div>

@@ -20,8 +20,8 @@ interface Props {
   onAddBlock: (type: FunnelBlockType, position?: { x: number; y: number }) => void;
 }
 
-// Whitelist do WhatsApp — conversação completa com IA, reserva e CRM.
-// Removemos: image (limitado no WhatsApp pelos providers), ab_test, link (no funciona inline).
+// Whitelist do WhatsApp — conversação completa con IA, reserva e CRM.
+// Removemos: image (limitado no WhatsApp por los providers), ab_test, link (no funciona inline).
 const WHATSAPP_BLOCKS: FunnelBlockType[] = [
   'message', 'buttons', 'video', 'delay',
   'input', 'quick_form',
@@ -133,7 +133,7 @@ export const WhatsAppBlockPalette = memo(function WhatsAppBlockPalette({ onAddBl
 
       <div className="px-3 py-2 border-t bg-muted/30 shrink-0">
         <p className="text-[10px] text-muted-foreground text-center">
-          Flujo dispara na primeira mensaje del lead
+          Flujo dispara na primera mensaje del lead
         </p>
       </div>
     </div>

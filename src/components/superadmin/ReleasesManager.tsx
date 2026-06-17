@@ -40,11 +40,11 @@ export function ReleasesManager() {
       published_at: editing.is_published ? (editing.published_at || new Date().toISOString()) : null,
     };
     if (editing.publish_as_article && !editing.is_published) {
-      toast.error('Para publicar como artigo, marque "Publicar atualização" primeiro.');
+      toast.error('Para publicar como artigo, marque "Publicar actualización" primero.');
       return;
     }
     await upsert.mutateAsync(payload);
-    toast.success(editing.publish_as_article && editing.is_published ? 'Atualização publicada e artigo creado na Centro de Ayuda' : 'Atualização salva');
+    toast.success(editing.publish_as_article && editing.is_published ? 'Actualización publicada e artigo creado na Centro de Ayuda' : 'Actualización salva');
     setEditing(null);
   };
 

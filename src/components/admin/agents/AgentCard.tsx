@@ -152,7 +152,7 @@ export const AgentCard = memo(function AgentCard({
 
             {/* Active Channels */}
             <div className="flex flex-wrap gap-1">
-              {/* Aviso silencioso cuando o handoff no fue configurado: a transferência sai muda */}
+              {/* Aviso silencioso cuando o handoff no fue configurado: a transferencia sai muda */}
               {!agent.handoff_outgoing_message?.trim() &&
                 !agent.handoff_incoming_message?.trim() && (
                   <Badge
@@ -167,7 +167,7 @@ export const AgentCard = memo(function AgentCard({
                 <Badge
                   variant="outline"
                   className="text-xs py-0.5 px-1.5 border-primary/40 bg-primary/5 text-primary"
-                  title="Conexão WhatsApp dedicada"
+                  title="Conexión WhatsApp dedicada"
                 >
                   <Smartphone className="h-3 w-3 mr-1" />
                   {instanceLabel}
@@ -210,7 +210,7 @@ export const AgentCard = memo(function AgentCard({
                   Duplicar
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
-                  // Exporta o agente como JSON limpo (sem ids, fechas e org).
+                  // Exporta o agente como JSON limpo (sin ids, fechas e org).
                   const STRIP = new Set([
                     'id', 'created_at', 'updated_at', 'organization_id', 'created_by',
                     'is_default',

@@ -346,7 +346,7 @@ export function useUpdateAgentConfig() {
 }
 
 // ============================================================================
-// Hooks for Conversations (Inbox) — todos os filtros son aplicados no backend
+// Hooks for Conversations (Inbox) — todos los filtros son aplicados no backend
 // ============================================================================
 
 export interface InboxBackendFilters {
@@ -462,7 +462,7 @@ export function useWebChatConversation(conversationId: string) {
     },
     enabled: !!session?.access_token && !!conversationId,
     staleTime: 30000,
-    // Mantém a conversación anterior visível enquanto a nova carrega — elimina o "flash" de loading
+    // Mantém a conversación anterior visível mientras a nova carrega — elimina o "flash" de loading
     placeholderData: (prev) => prev,
     // Pinta cabeçalho/última mensaje instantaneamente a partir do cache da lista de conversaciones
     initialData: () => {
@@ -473,11 +473,11 @@ export function useWebChatConversation(conversationId: string) {
       if (!found) return undefined;
       return { conversation: found as WebChatConversation, messages: [] as WebChatMessage[] };
     },
-    initialDataUpdatedAt: 0, // força refetch em background mismo com initialData
+    initialDataUpdatedAt: 0, // fuerza refetch em background mismo con initialData
     refetchInterval: 15000,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: false,
-    // No insiste em IDs inválidos / sem permiso
+    // No insiste em IDs inválidos / sin permiso
     retry: (failureCount, error: any) => {
       if (error?.status === 404 || error?.status === 403) return false;
       return failureCount < 2;
@@ -559,12 +559,12 @@ export function useSendAgentMessage() {
     },
     // Optimistic update - show message immediately.
     // Usa um clientTempId estável que é enviado para o backend e ecoado de volta
-    // no broadcast `new_message` — assim o listener consegue SUBSTITUIR a bolha
-    // otimista pela mensaje persistida em vez de duplicar.
+    // no broadcast `new_message` — assim o listener consegue SUBSTITUIR a burbuja
+    // otimista por la mensaje persistida em vez de duplicar.
     onMutate: async (vars) => {
       const { conversationId, content, media } = vars;
       const clientTempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-      // Anexa no objeto de variáveis para o mutationFn enviá-lo ao backend
+      // Anexa no objeto de variables para o mutationFn enviá-lo ao backend
       (vars as any).clientTempId = clientTempId;
 
       // Cancel outgoing refetches
@@ -670,7 +670,7 @@ export function useLinkLead() {
 
 /**
  * Define (ou limpa) o producto de uma conversación do Inbox manualmente.
- * Override manual feito pelo agente no painel direito.
+ * Override manual feito por el agente no painel direito.
  */
 export function useSetConversationProduct() {
   const queryClient = useQueryClient();
@@ -721,7 +721,7 @@ export function useSetConversationSector() {
 }
 
 // New hooks for conversation management
-// Mapeia acción -> status alvo para atualização otimista da UI.
+// Mapeia acción -> status alvo para actualización otimista da UI.
 const ACTION_TO_STATUS: Record<string, string | undefined> = {
   reopen: 'human_active',
   resume: 'human_active',
@@ -752,7 +752,7 @@ function useConversationAction(actionName: string) {
       }
       return res.json();
     },
-    // Atualização otimista — UI reflete na hora, antes do servidor responder.
+    // Actualización otimista — UI reflete na hora, antes do servidor responder.
     onMutate: async (conversationId: string) => {
       const targetStatus = ACTION_TO_STATUS[actionName];
       if (!targetStatus) return { previousDetail: undefined, previousList: undefined };
@@ -767,7 +767,7 @@ function useConversationAction(actionName: string) {
         });
       }
 
-      // Atualiza todas as listas em cache (qualquer filtro)
+      // Atualiza todas las listas em cache (cualquier filtro)
       const listQueries = queryClient.getQueriesData<any>({ queryKey: ['webchat-conversations'] });
       const previousList = listQueries.map(([key, data]) => [key, data] as const);
       listQueries.forEach(([key, data]) => {

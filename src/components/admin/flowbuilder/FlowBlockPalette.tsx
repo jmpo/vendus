@@ -31,7 +31,7 @@ export function FlowBlockPalette({ onDragStart }: FlowBlockPaletteProps) {
   return (
     <div className="w-64 bg-card border-r p-4 flex flex-col gap-2">
       <h3 className="font-semibold text-sm text-muted-foreground mb-2">
-        Blocos Disponíveis
+        Blocos Disponibles
       </h3>
       <p className="text-xs text-muted-foreground mb-4">
         Arraste para o canvas
@@ -67,7 +67,7 @@ export function FlowBlockPalette({ onDragStart }: FlowBlockPaletteProps) {
       <div className="mt-auto pt-4 border-t">
         <div className="text-xs text-muted-foreground space-y-1">
           <p>💡 <strong>Dica:</strong></p>
-          <p>Comece com uma mensaje de boas-vindas, capture dados importantes e finalize com "IA Assume".</p>
+          <p>Comece con uma mensaje de boas-vindas, capture dados importantes e finalize con "IA Assume".</p>
         </div>
       </div>
     </div>

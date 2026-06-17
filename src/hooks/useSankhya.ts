@@ -150,7 +150,7 @@ export function useTestSankhyaConnection() {
       return data;
     },
     onSuccess: () => {
-      toast.success('Conexión com Sankhya estabelecida con éxito!');
+      toast.success('Conexión con Sankhya estabelecida con éxito!');
     },
     onError: (error) => {
       toast.error('Error al conectar: ' + error.message);

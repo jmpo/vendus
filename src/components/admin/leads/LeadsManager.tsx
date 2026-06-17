@@ -254,7 +254,7 @@ export function LeadsManager() {
             Central de Leads
           </h1>
           <p className="text-muted-foreground mt-1">
-            Gerencie todos os leads da su operação
+            Gerencie todos los leads da su operación
           </p>
         </div>
 
@@ -370,7 +370,7 @@ export function LeadsManager() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir leads</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar leads</AlertDialogTitle>
             <AlertDialogDescription>
               Tem certeza que desea eliminar {leadsToDelete.length} lead
               {leadsToDelete.length > 1 ? 's' : ''}? Esta acción no puede ser desfeita.
@@ -383,7 +383,7 @@ export function LeadsManager() {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {bulkDelete.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Excluir
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -238,7 +238,7 @@ const defaultHtmlTemplate = `<!DOCTYPE html>
     </div>
     <div class="content">
       <p>Hola,</p>
-      <p>Su conteúdo aqui...</p>
+      <p>Su contenido acá...</p>
     </div>
     <div class="footer">
       <p>Su Empresa</p>

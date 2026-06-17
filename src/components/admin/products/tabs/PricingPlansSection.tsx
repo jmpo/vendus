@@ -14,7 +14,7 @@ export interface ProductPlan {
   id: string;
   name: string;
   price: number;
-  billing_cycle: 'mensal' | 'trimestral' | 'semestral' | 'anual' | 'unico';
+  billing_cycle: 'mensual' | 'trimestral' | 'semestral' | 'anual' | 'unico';
   duration: string;
   features: string[];
   recommended: boolean;
@@ -22,7 +22,7 @@ export interface ProductPlan {
 }
 
 const billingCycleLabels: Record<string, string> = {
-  mensal: 'mes',
+  mensual: 'mes',
   trimestral: 'trimestre',
   semestral: 'semestre',
   anual: 'ano',
@@ -30,7 +30,7 @@ const billingCycleLabels: Record<string, string> = {
 };
 
 const billingCycleOptions = [
-  { value: 'mensal', label: 'Mensal' },
+  { value: 'mensual', label: 'Mensual' },
   { value: 'trimestral', label: 'Trimestral' },
   { value: 'semestral', label: 'Semestral' },
   { value: 'anual', label: 'Anual' },
@@ -40,7 +40,7 @@ const billingCycleOptions = [
 const emptyPlan: Omit<ProductPlan, 'id'> = {
   name: '',
   price: 0,
-  billing_cycle: 'mensal',
+  billing_cycle: 'mensual',
   duration: '',
   features: [],
   recommended: false,
@@ -106,20 +106,20 @@ export function PricingPlansSection({ plans, onChange }: PricingPlansSectionProp
             <div>
               <CardTitle className="text-base flex items-center gap-2">
                 <DollarSign className="h-4 w-4" />
-                Planos e Preços
+                Planos e Precios
               </CardTitle>
-              <CardDescription>Configure os planes disponíveis para este producto</CardDescription>
+              <CardDescription>Configure os planes disponibles para este producto</CardDescription>
             </div>
             <Button size="sm" onClick={openAdd}>
               <Plus className="mr-1 h-4 w-4" />
-              Adicionar Plano
+              Agregar Plano
             </Button>
           </div>
         </CardHeader>
         <CardContent>
           {plans.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-6">
-              Nenhum plan cadastrado. Adicione planes para que os vendedores selecionem ao fechar negocios.
+              Ningún plan registrado. Agregá planes para que os vendedores selecionem ao fechar negocios.
             </p>
           ) : (
             <div className="grid gap-3">
@@ -186,7 +186,7 @@ export function PricingPlansSection({ plans, onChange }: PricingPlansSectionProp
                 <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Ex: Pro" />
               </div>
               <div className="space-y-2">
-                <Label>Preço (R$) *</Label>
+                <Label>Precio (R$) *</Label>
                 <Input value={priceText} onChange={e => setPriceText(e.target.value)} placeholder="297,00" />
               </div>
             </div>
@@ -208,7 +208,7 @@ export function PricingPlansSection({ plans, onChange }: PricingPlansSectionProp
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Recursos incluídos (um por linha)</Label>
+              <Label>Recursos incluídos (um por línea)</Label>
               <Textarea value={featuresText} onChange={e => setFeaturesText(e.target.value)} rows={3} placeholder={"Recurso 1\nRecurso 2\nRecurso 3"} />
             </div>
             <div className="flex items-center gap-6">
@@ -224,7 +224,7 @@ export function PricingPlansSection({ plans, onChange }: PricingPlansSectionProp
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button>
-            <Button onClick={handleSave} disabled={!form.name.trim() || !priceText}>Salvar</Button>
+            <Button onClick={handleSave} disabled={!form.name.trim() || !priceText}>Guardar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

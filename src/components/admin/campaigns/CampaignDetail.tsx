@@ -40,7 +40,7 @@ export function CampaignDetail({
   const progress = total ? Math.round((done / total) * 100) : 0;
 
   const statusLabel: Record<string, string> = {
-    draft: 'Rascunho',
+    draft: 'Borrador',
     active: 'Ativa',
     paused: 'Pausada',
     completed: 'Concluída',
@@ -58,7 +58,7 @@ export function CampaignDetail({
   const targetStatusLabel: Record<string, string> = {
     queued: 'Em fila',
     sending: 'Enviando',
-    sent: 'Enviada',
+    sent: 'Enviado',
     responded: 'Respondeu',
     failed: 'Falhou',
     skipped: 'Pulada',
@@ -111,7 +111,7 @@ export function CampaignDetail({
                 </span>
               </div>
             ))}
-            {!targets.length && <p className="text-xs text-muted-foreground text-center py-4">Nenhum envio aún.</p>}
+            {!targets.length && <p className="text-xs text-muted-foreground text-center py-4">Ningún envio aún.</p>}
           </div>
         </CardContent>
       </Card>

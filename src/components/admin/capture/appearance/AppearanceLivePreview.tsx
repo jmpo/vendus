@@ -38,10 +38,10 @@ export function AppearanceLivePreview({ channel, appearance, device }: Props) {
 type ChatMsg = { id: string; side: 'bot' | 'user'; text: string };
 
 const DEMO_REPLIES = [
-  'Perfeito! Pode me contar um poco mais sobre o que usted procura?',
+  'Perfeito! Puede me contar um poco mais sobre o que usted procura?',
   'Anotado. Quer que eu ya te mostre os próximos passos?',
-  'Ótimo! Posso te enviar ahora mismo um link com mais detalhes.',
-  'Entendi 👍 Usted prefere falar por aqui ou agendar uma call?',
+  'Ótimo! Posso te enviar ahora mismo um link con mais detalles.',
+  'Entendi 👍 Usted prefere falar por acá ou agendar uma call?',
 ];
 
 function ChatPreview({ a }: { a: ChannelAppearance }) {
@@ -303,11 +303,11 @@ function WidgetPreview({ a }: { a: ChannelAppearance }) {
   );
 }
 
-// ===================== QUIZ (padrão inlead) =====================
+// ===================== QUIZ (predeterminado inlead) =====================
 
 function QuizPreview({ a }: { a: ChannelAppearance }) {
   const opts = a.channel_options as QuizChannelOptions;
-  // Detecta se o fundo é escuro para alternar tokens auxiliares (sem hardcode global)
+  // Detecta se o fundo é escuro para alternar tokens auxiliares (sin hardcode global)
   const isDarkBg = isColorDark(a.background_color);
   const subtleBg = isDarkBg ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.04)';
   const subtleBorder = isDarkBg ? 'rgba(255,255,255,0.10)' : 'rgba(15,23,42,0.08)';

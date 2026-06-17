@@ -287,7 +287,7 @@ function InstancesTable() {
             variant="outline"
             onClick={() => syncMut.mutate(undefined)}
             disabled={syncMut.isPending}
-            title="Importa instâncias do servidor Evolution Go. Novas chegam sem empresa atrelada — atribua manualmente después."
+            title="Importa instâncias do servidor Evolution Go. Novas chegam sin empresa atrelada — atribua manualmente después."
           >
             {syncMut.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
             Sincronizar desde el Servidor
@@ -417,7 +417,7 @@ function InstancesTable() {
                             variant="ghost"
                             size="sm"
                             onClick={() => setPausing(inst)}
-                            title="Pausar sessão (mantém pareamento)"
+                            title="Pausar sesión (mantém pareamento)"
                           >
                             <Pause className="h-4 w-4" />
                           </Button>
@@ -469,15 +469,15 @@ function InstancesTable() {
         />
       )}
 
-      {/* Pausar sessão */}
+      {/* Pausar sesión */}
       <AlertDialog open={!!pausing} onOpenChange={(o) => !o && setPausing(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Pausar a sessão?</AlertDialogTitle>
+            <AlertDialogTitle>Pausar a sesión?</AlertDialogTitle>
             <AlertDialogDescription>
-              O pareamento com o número{' '}
-              <strong>{pausing?.phone_number ? `+${pausing.phone_number}` : 'atual'}</strong>{' '}
-              é mantido. Ao reconectar, a sessão volta automaticamente sem precisar de novo QR Code.
+              O pareamento con o número{' '}
+              <strong>{pausing?.phone_number ? `+${pausing.phone_number}` : 'actual'}</strong>{' '}
+              é mantido. Ao reconectar, a sesión volta automaticamente sin precisar de novo QR Code.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -490,7 +490,7 @@ function InstancesTable() {
               disabled={disconnectMut.isPending}
             >
               {disconnectMut.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Pausar sessão
+              Pausar sesión
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -503,9 +503,9 @@ function InstancesTable() {
             <AlertDialogTitle>Desvincular este WhatsApp?</AlertDialogTitle>
             <AlertDialogDescription>
               O número{' '}
-              <strong>{unlinking?.phone_number ? `+${unlinking.phone_number}` : 'atual'}</strong>{' '}
+              <strong>{unlinking?.phone_number ? `+${unlinking.phone_number}` : 'actual'}</strong>{' '}
               será eliminado desta instância e desaparecerá da lista de "Aparelhos conectados" no celular.
-              Para reconectar (este ou otro número) será necessário escanear um novo QR Code.
+              Para reconectar (este ou otro número) será necesario escanear um novo QR Code.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -553,7 +553,7 @@ function AssignDialog({
         <DialogHeader>
           <DialogTitle>Editar instância</DialogTitle>
           <DialogDescription>
-            Atribua <strong>{instance.name}</strong> a uma empresa. A empresa passará a ver e gestionar essa instância no painel dela.
+            Atribua <strong>{instance.name}</strong> a uma empresa. A empresa passará a ver e gestionar esa instância no painel de ella.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
@@ -572,7 +572,7 @@ function AssignDialog({
             </Select>
             {orgId === 'none' && (
               <p className="text-xs text-muted-foreground">
-                A instância ficará invisível para qualquer empresa até ser atribuída.
+                A instância ficará invisível para cualquier empresa até ser atribuída.
               </p>
             )}
           </div>
@@ -581,7 +581,7 @@ function AssignDialog({
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
           <Button onClick={handleSave} disabled={assignMut.isPending}>
             {assignMut.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            Salvar
+            Guardar
           </Button>
         </DialogFooter>
       </DialogContent>

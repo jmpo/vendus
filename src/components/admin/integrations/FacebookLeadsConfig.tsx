@@ -89,7 +89,7 @@ export function FacebookLeadsConfig() {
   
   const handleCreate = async () => {
     if (!productId || !pageId || !accessToken) {
-      toast.error('Preencha todos os campos obligatorios');
+      toast.error('Completá todos los campos obligatorios');
       return;
     }
     
@@ -161,28 +161,28 @@ export function FacebookLeadsConfig() {
               <div>
                 <CardTitle>Facebook Lead Ads</CardTitle>
                 <CardDescription>
-                  Receba leads dos formulários nativos de anúncios do Facebook e Instagram
+                  Receba leads dos formularios nativos de anúncios do Facebook e Instagram
                 </CardDescription>
               </div>
             </div>
             <Button onClick={() => setShowAddDialog(true)}>
               <Plus className="h-4 w-4 mr-2" />
-              Adicionar Página
+              Agregar Página
             </Button>
           </div>
         </CardHeader>
         
         <CardContent>
           {isLoading ? (
-            <div className="text-center py-8 text-muted-foreground">Carregando...</div>
+            <div className="text-center py-8 text-muted-foreground">Cargando...</div>
           ) : integrations?.length === 0 ? (
             <div className="text-center py-8 border-2 border-dashed rounded-lg">
               <p className="text-muted-foreground mb-4">
-                Nenhuma integración configurada
+                Ninguna integración configurada
               </p>
               <Button variant="outline" onClick={() => setShowAddDialog(true)}>
                 <Plus className="h-4 w-4 mr-2" />
-                Configurar primeira integración
+                Configurar primera integración
               </Button>
             </div>
           ) : (
@@ -238,7 +238,7 @@ export function FacebookLeadsConfig() {
                     <Accordion type="single" collapsible className="mt-4">
                       <AccordionItem value="setup" className="border-none">
                         <AccordionTrigger className="text-sm py-2 hover:no-underline">
-                          Ver instruções de configuración
+                          Ver instrucciones de configuración
                         </AccordionTrigger>
                         <AccordionContent>
                           <div className="space-y-3 pt-2">
@@ -379,7 +379,7 @@ export function FacebookLeadsConfig() {
             
             <TabsContent value="mapping" className="space-y-4 mt-4">
               <p className="text-sm text-muted-foreground">
-                Mapeie os campos do formulário do Facebook para os campos do CRM
+                Mapeie os campos do formulario do Facebook para os campos do CRM
               </p>
               
               {Object.entries(DEFAULT_FIELD_MAPPING).map(([fbField]) => (
@@ -413,7 +413,7 @@ export function FacebookLeadsConfig() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="manual">Sem atribuição automática</SelectItem>
+                    <SelectItem value="manual">Sin atribuição automática</SelectItem>
                     <SelectItem value="user">Atribuir a vendedor específico</SelectItem>
                     <SelectItem value="squad">Atribuir a squad</SelectItem>
                   </SelectContent>
@@ -453,7 +453,7 @@ export function FacebookLeadsConfig() {
               )}
               
               <div>
-                <Label>Temperatura padrão</Label>
+                <Label>Temperatura predeterminado</Label>
                 <Select value={defaultTemperature} onValueChange={setDefaultTemperature}>
                   <SelectTrigger>
                     <SelectValue />
@@ -476,7 +476,7 @@ export function FacebookLeadsConfig() {
               onClick={handleCreate}
               disabled={createMutation.isPending}
             >
-              {createMutation.isPending ? 'Salvando...' : 'Criar Integración'}
+              {createMutation.isPending ? 'Salvando...' : 'Crear Integración'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -494,7 +494,7 @@ export function FacebookLeadsConfig() {
           
           {logs?.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              Nenhum lead recibido aún
+              Ningún lead recibido aún
             </div>
           ) : (
             <Table>

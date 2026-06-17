@@ -323,7 +323,7 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
               {updateProduct.isPending && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Salvar
+              Guardar
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -381,14 +381,14 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
                     <AlertDialogTrigger asChild>
                       <Button variant="outline" size="sm" className="text-destructive">
                         <Trash2 className="mr-1 h-3 w-3" />
-                        Excluir
+                        Eliminar
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle>¿Eliminar producto?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Esta acción no se puede deshacer. Isso excluirá permanentemente 
+                          Esta acción no se puede deshacer. Eso excluirá permanentemente 
                           el producto "{product.name}" y todos los datos asociados.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
@@ -398,7 +398,7 @@ export function ProductManager({ onNavigateToBrain }: ProductManagerProps) {
                           onClick={() => handleDelete(product.id)}
                           className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                         >
-                          Excluir
+                          Eliminar
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>

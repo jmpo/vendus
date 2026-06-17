@@ -48,7 +48,7 @@ const cards = [
   },
   {
     key: 'unassigned',
-    label: 'Sem Carteira',
+    label: 'Sin Carteira',
     icon: UserX,
     color: 'from-muted-foreground to-muted-foreground/70',
     iconColor: 'text-muted-foreground',

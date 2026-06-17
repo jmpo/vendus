@@ -39,7 +39,7 @@ export function phoneVariantsBR(input: unknown): string[] {
   const canonical = normalizePhoneBR(raw); // 55 + DDD + 9 + 8 digits = 13
   if (canonical) {
     variants.add(canonical);                       // 5527998385883
-    variants.add(canonical.substring(2));          // 27998385883 (sem DDI)
+    variants.add(canonical.substring(2));          // 27998385883 (sin DDI)
 
     // Legacy sin o "9" extra de celular
     if (canonical.length === 13) {

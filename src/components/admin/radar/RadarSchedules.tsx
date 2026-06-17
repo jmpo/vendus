@@ -60,7 +60,7 @@ export function RadarSchedules({ defaultFilters, defaultActions }: { defaultFilt
         {!schedules?.length && (
           <div className="text-center py-8 text-sm text-muted-foreground">
             <CalendarClock className="h-10 w-10 mx-auto mb-2 opacity-30" />
-            Nenhum reserva configurado
+            Ningún reserva configurado
           </div>
         )}
         {schedules?.map((s: any) => (
@@ -110,13 +110,13 @@ export function RadarSchedules({ defaultFilters, defaultActions }: { defaultFilt
                 <Switch checked={editing.is_active} onCheckedChange={(v) => setEditing({ ...editing, is_active: v })} />
               </div>
               <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
-                Os filtros e acciones usados serão os configurados na aba <strong>Rodar Análise</strong> no momento da criação.
+                Os filtros e acciones usados serán os configurados na aba <strong>Rodar Análise</strong> no momento da creación.
               </div>
             </div>
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
-            <Button onClick={save} disabled={upsert.isPending}>Salvar</Button>
+            <Button onClick={save} disabled={upsert.isPending}>Guardar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

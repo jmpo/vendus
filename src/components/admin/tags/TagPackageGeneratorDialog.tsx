@@ -59,8 +59,8 @@ export function TagPackageGeneratorDialog({ open, onOpenChange }: Props) {
             Generar paquete de etiquetas para un producto
           </DialogTitle>
           <DialogDescription>
-            Cria 6 etiquetas + 6 automatizaciones de uma vez. Cada etiqueta vem prefixada com o nombre do producto,
-            evitando que clientes que compram vários productos misturem fluxos.
+            Cria 6 etiquetas + 6 automatizaciones de uma vez. Cada etiqueta vem prefixada con o nombre do producto,
+            evitando que clientes que compram vários productos misturem flujos.
           </DialogDescription>
         </DialogHeader>
 

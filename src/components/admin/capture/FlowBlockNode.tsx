@@ -105,7 +105,7 @@ interface FlowBlockNodeProps {
   isConnectionTarget?: boolean;
 }
 
-// Preview do conteúdo do bloco
+// Preview do contenido do bloco
 function getBlockPreview(block: FunnelBlock): string {
   switch (block.type) {
     case 'message':
@@ -282,7 +282,7 @@ export const FlowBlockNode = memo(function FlowBlockNode({
               e.stopPropagation();
               onDelete();
             }}
-            title="Excluir"
+            title="Eliminar"
           >
             <Trash2 className="h-3 w-3" />
           </Button>

@@ -24,7 +24,7 @@ export default function ResetPassword() {
       }
     });
 
-    // Fallback: se ya há sessão (link clicado e processado), libera o form
+    // Fallback: se ya há sesión (link clicado e processado), libera o form
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) setReady(true);
     });
@@ -35,7 +35,7 @@ export default function ResetPassword() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password.length < 10) {
-      toast.error('A contraseña debe ter pelo menos 10 caracteres');
+      toast.error('A contraseña debe ter por el menos 10 caracteres');
       return;
     }
     if (password !== confirm) {
@@ -65,7 +65,7 @@ export default function ResetPassword() {
           <p className="text-muted-foreground mt-2">
             {ready
               ? 'Elegí uma nova contraseña forte para su cuenta'
-              : 'Validando link de recuperação...'}
+              : 'Validando link de recuperación...'}
           </p>
         </div>
 
@@ -113,7 +113,7 @@ export default function ResetPassword() {
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  Salvar nova contraseña
+                  Guardar nova contraseña
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </>
               )}

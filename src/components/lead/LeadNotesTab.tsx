@@ -182,7 +182,7 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
         </CardContent>
       </Card>
 
-      {/* Histórico */}
+      {/* Historial */}
       <Card>
         <CardHeader>
           <CardTitle className="text-sm font-medium flex items-center gap-2">

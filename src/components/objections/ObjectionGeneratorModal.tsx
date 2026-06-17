@@ -67,7 +67,7 @@ export function ObjectionGeneratorModal({
       setObjections(generated);
       setSelectedIds(new Set(generated.map((_, i) => i)));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Error ao gerar objeções');
+      toast.error(error instanceof Error ? error.message : 'Error ao generar objeciones');
     }
   };
 
@@ -112,8 +112,8 @@ export function ObjectionGeneratorModal({
             Generar Objeciones con IA
           </DialogTitle>
           <DialogDescription>
-            La IA analizará el producto <strong>{productName}</strong> e gerará as objeções mais 
-            prováveis que sus vendedores irão enfrentar, com respuestas estratégicas.
+            La IA analizará el producto <strong>{productName}</strong> e gerará as objeciones mais 
+            prováveis que sus vendedores irão enfrentar, con respuestas estratégicas.
           </DialogDescription>
         </DialogHeader>
 
@@ -125,8 +125,8 @@ export function ObjectionGeneratorModal({
             <div className="space-y-2">
               <h3 className="font-semibold">¿Listo para generar objeciones?</h3>
               <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                A IA irá analisar o pitch, ICP, diferenciais e base de conhecimento 
-                do producto para crear objeções realistas.
+                A IA irá analisar o pitch, ICP, diferenciais e base de conocimiento 
+                do producto para crear objeciones realistas.
               </p>
             </div>
             <Button 

@@ -133,7 +133,7 @@ export function NotificationManager() {
               ) : notifications.length === 0 ? (
                 <div className="text-center py-12">
                   <Bell className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
-                  <p className="text-muted-foreground">Ninguna notificación enviada aún</p>
+                  <p className="text-muted-foreground">Ninguna notificación enviado aún</p>
                   <Button 
                     variant="outline" 
                     className="mt-4"

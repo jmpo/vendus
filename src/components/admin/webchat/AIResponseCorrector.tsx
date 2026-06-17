@@ -50,12 +50,12 @@ export function AIResponseCorrector({
         feedbackType,
       });
       
-      toast.success('Correção salva! A IA aprenderá com este feedback.');
+      toast.success('Corrección salva! A IA aprenderá con este feedback.');
       setSuggestedResponse('');
       setFeedbackType('correction');
       onOpenChange(false);
     } catch (error) {
-      toast.error('Error ao guardar correção');
+      toast.error('Error ao guardar corrección');
     }
   };
 
@@ -65,23 +65,23 @@ export function AIResponseCorrector({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Wand2 className="h-5 w-5 text-primary" />
-            Corrigir Resposta da IA
+            Corrigir Respuesta da IA
           </DialogTitle>
           <DialogDescription>
-            Sugiere uma respuesta melhor para ensinar a IA
+            Sugiere uma respuesta mejor para ensinar a IA
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Resposta Original (IA)</Label>
+            <Label>Respuesta Original (IA)</Label>
             <div className="p-3 bg-muted rounded-lg text-sm">
               {originalResponse}
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="suggested">Resposta Sugerida</Label>
+            <Label htmlFor="suggested">Respuesta Sugerida</Label>
             <Textarea
               id="suggested"
               value={suggestedResponse}
@@ -92,7 +92,7 @@ export function AIResponseCorrector({
           </div>
 
           <div className="space-y-2">
-            <Label>Tipo de Correção</Label>
+            <Label>Tipo de Corrección</Label>
             <RadioGroup
               value={feedbackType}
               onValueChange={(v) => setFeedbackType(v as typeof feedbackType)}
@@ -101,7 +101,7 @@ export function AIResponseCorrector({
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="correction" id="correction" />
                 <Label htmlFor="correction" className="text-sm cursor-pointer">
-                  Conteúdo incorreto
+                  Contenido incorreto
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
@@ -119,7 +119,7 @@ export function AIResponseCorrector({
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="content" id="content" />
                 <Label htmlFor="content" className="text-sm cursor-pointer">
-                  Poderia ser melhor
+                  Poderia ser mejor
                 </Label>
               </div>
             </RadioGroup>
@@ -132,7 +132,7 @@ export function AIResponseCorrector({
           </Button>
           <Button onClick={handleSubmit} disabled={createFeedback.isPending}>
             {createFeedback.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Salvar Correção
+            Guardar Corrección
           </Button>
         </DialogFooter>
       </DialogContent>

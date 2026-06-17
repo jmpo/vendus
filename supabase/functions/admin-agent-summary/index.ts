@@ -48,7 +48,7 @@ async function buildDailySummary(orgId: string): Promise<string> {
   const activeChats = convsRes.count ?? 0;
   const meetings = eventsRes.count ?? 0;
 
-  // Pipeline aberto (todos os deals em aberto)
+  // Pipeline aberto (todos los deals em aberto)
   const { data: openDeals } = await supabase.from("deals").select("deal_value")
     .eq("organization_id", orgId).eq("status", "open");
   const pipelineTotal = (openDeals ?? []).reduce((s: number, d: any) => s + Number(d.deal_value ?? 0), 0);
@@ -118,7 +118,7 @@ serve(async (req) => {
   try {
     const supabase = getServiceSupabase();
     const now = new Date();
-    const hour = now.getUTCHours() - 3; // BRT (-3) — quick approx; orgs futuras podem ter timezone próprio
+    const hour = now.getUTCHours() - 3; // BRT (-3) — quick approx; orgs futuras pueden ter timezone propio
     const adjHour = ((hour % 24) + 24) % 24;
     const dow = ((now.getUTCDay() + (hour < 0 ? -1 : 0)) % 7 + 7) % 7;
 

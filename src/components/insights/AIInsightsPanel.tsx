@@ -55,11 +55,11 @@ export function AIInsightsPanel({
       toast.success('Novos insights gerados!');
     } catch (error: any) {
       if (error.message?.includes('429')) {
-        toast.error('Limite de requisições. Tente novamente em alguns segundos.');
+        toast.error('Limite de solicitudes. Tente novamente em alguns segundos.');
       } else if (error.message?.includes('402')) {
         toast.error('Créditos de IA esgotados.');
       } else {
-        toast.error('Error ao gerar insights');
+        toast.error('Error ao generar insights');
       }
     } finally {
       setIsGenerating(false);
@@ -103,7 +103,7 @@ export function AIInsightsPanel({
   const getPriorityLabel = (priority: string | null) => {
     switch (priority) {
       case 'high': return 'Alta';
-      case 'medium': return 'Média';
+      case 'medium': return 'Media';
       default: return 'Baixa';
     }
   };
@@ -164,7 +164,7 @@ export function AIInsightsPanel({
           ) : (
             <div className="text-center py-6 text-muted-foreground text-sm">
               <Brain className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              Hacé clic em actualizar para gerar insights
+              Hacé clic em actualizar para generar insights
             </div>
           )}
         </CardContent>
@@ -186,7 +186,7 @@ export function AIInsightsPanel({
           disabled={isGenerating}
         >
           <RefreshCw className={cn("h-4 w-4 mr-2", isGenerating && "animate-spin")} />
-          {isGenerating ? 'Analisando...' : 'Atualizar'}
+          {isGenerating ? 'Analisando...' : 'Actualizar'}
         </Button>
       </CardHeader>
       <CardContent>
@@ -251,14 +251,14 @@ export function AIInsightsPanel({
                 <Brain className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">
-                Nenhum insight disponível
+                Ningún insight disponible
               </h3>
               <p className="text-muted-foreground text-center max-w-md mb-4">
-                Hacé clic em "Atualizar" para que a IA analise su pipeline e gere insights personalizados.
+                Hacé clic em "Actualizar" para que a IA analise su pipeline e generá insights personalizados.
               </p>
               <Button onClick={handleRefresh} disabled={isGenerating}>
                 <Sparkles className="h-4 w-4 mr-2" />
-                Gerar Insights
+                Generar Insights
               </Button>
             </div>
           )}

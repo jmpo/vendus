@@ -199,7 +199,7 @@ export function useLeadsManager() {
   const { data: leadsData, isLoading, refetch } = useQuery({
     queryKey: ['admin-leads', filters, sort, page, pageSize, activeTab],
     queryFn: async () => {
-      // Pré-filtro por etiquetas (inclusão)
+      // Pré-filtro por etiquetas (inclusión)
       let restrictToIds: string[] | null = null;
       let excludeLeadIds: string[] = [];
       if (filters.tagIds.length > 0) {
@@ -212,7 +212,7 @@ export function useLeadsManager() {
           counts.set(a.lead_id, (counts.get(a.lead_id) || 0) + 1);
         });
         if (filters.tagsMatchMode === 'none') {
-          // Excluir leads que possuem qualquer das tags selecionadas
+          // Eliminar leads que possuem cualquier das tags selecionadas
           excludeLeadIds = Array.from(counts.keys());
         } else {
           const ids =
@@ -416,7 +416,7 @@ export function useLeadsManager() {
       if (error?.code === '23505' && String(error?.message || '').includes('leads_org_phone_unique')) {
         toast.error('Ya existe un contacto con este teléfono en esta organización.');
       } else {
-        toast.error('Error al crear lead: ' + (error?.message || 'desconhecido'));
+        toast.error('Error al crear lead: ' + (error?.message || 'desconocido'));
       }
     },
   });

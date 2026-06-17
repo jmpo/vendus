@@ -23,14 +23,14 @@ export function isEditorHost(hostname = typeof window !== 'undefined' ? window.l
 }
 
 /**
- * Cascata de resolução do domínio público da plataforma:
- *  1) `public_app_url` salvo em `platform_settings` (Identidade Visual → Marca)
- *  2) `window.location.origin` quando disponível
- *  3) string vazia
+ * Cascata de resolución do domínio público da plataforma:
+ *  1) `public_app_url` guardado em `platform_settings` (Identidade Visual → Marca)
+ *  2) `window.location.origin` cuando disponible
+ *  3) string vacía
  *
- * IMPORTANTE: não usar fallback hardcoded para `app.vendus.com.br` ou
- * `sales-guide-buddy-11.lovable.app`, senão parceiros que clonam o projeto
- * (remix) veem o domínio da Vendus em links de booking, formulários, widget etc.
+ * IMPORTANTE: no usar fallback hardcoded para `app.vendus.com.br` ou
+ * `sales-guide-buddy-11.lovable.app`, sino parceiros que clonam o projeto
+ * (remix) veem o domínio da Vendus em links de booking, formularios, widget etc.
  */
 export function getPublicAppUrl(configuredUrl?: string | null): string {
   const configured =

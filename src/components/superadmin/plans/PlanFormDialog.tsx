@@ -261,7 +261,7 @@ export function PlanFormBody({
                   placeholder="https://pay.cakto.com.br/..."
                 />
                 <p className="text-xs text-muted-foreground">
-                  Abre cuando o cliente seleciona o plan no ciclo <strong>mensal</strong>.
+                  Abre cuando o cliente seleciona o plan no ciclo <strong>mensual</strong>.
                 </p>
               </div>
               <div className="space-y-2">
@@ -313,8 +313,8 @@ export function PlanFormBody({
               <div>
                 <h4 className="font-semibold text-sm">IA de la Plataforma</h4>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Quando <strong>ligado</strong>, as empresas deste plan consomem dos sus tokens Lovable até o limite mensal.
-                  Quando <strong>desligado</strong>, cada cliente precisa cadastrar a própria clave (OpenAI/Anthropic/Gemini) em Integraciones.
+                  Cuando <strong>ligado</strong>, as empresas deste plan consomem dos sus tokens Lovable até o limite mensual.
+                  Cuando <strong>desligado</strong>, cada cliente precisa registrar a propia clave (OpenAI/Anthropic/Gemini) em Integraciones.
                 </p>
               </div>
               <Switch
@@ -379,7 +379,7 @@ export function PlanFormBody({
                       if (count === 0) {
                         return (
                           <p className="text-[11px] text-destructive">
-                            Nenhuma clave ativa para {p}. Cadastre em Super Admin → IA de la Plataforma.
+                            Ninguna clave ativa para {p}. Cadastre em Super Admin → IA de la Plataforma.
                           </p>
                         );
                       }

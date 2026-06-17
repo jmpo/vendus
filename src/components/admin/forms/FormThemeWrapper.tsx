@@ -118,7 +118,7 @@ export function FormThemeWrapper({ theme, children, className, style }: FormThem
       vars['--input'] = shift(bgHsl, dir * 14);
     }
     if (textHsl) {
-      // Garante contraste: se texto e fundo têm luminância próximas, força legibilidade
+      // Garante contraste: se texto e fundo têm luminância próximas, fuerza legibilidade
       let effectiveText = textHsl;
       if (bgHsl) {
         const diff = Math.abs(textHsl.l - bgHsl.l);
@@ -265,11 +265,11 @@ export const FORM_LETTER_SPACING_OPTIONS: { value: FormLetterSpacing; label: str
   { value: 'tight', label: 'Apertado' },
   { value: 'normal', label: 'Normal' },
   { value: 'wide', label: 'Largo' },
-  { value: 'widest', label: 'Muito largo' },
+  { value: 'widest', label: 'Mucho largo' },
 ];
 
 export const FORM_RADIUS_OPTIONS: { value: string; label: string }[] = [
-  { value: 'none', label: 'Nenhum' },
+  { value: 'none', label: 'Ningún' },
   { value: 'sm', label: 'Pequeno' },
   { value: 'md', label: 'Médio' },
   { value: 'lg', label: 'Grande' },

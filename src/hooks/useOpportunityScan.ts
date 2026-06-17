@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 
 export interface ScanFilters {
-  // inclusão
+  // inclusión
   product_ids?: string[];
   assigned_user_ids?: string[];
   agent_ids?: string[];
@@ -17,7 +17,7 @@ export interface ScanFilters {
   temperatures?: Array<'hot' | 'warm' | 'cold'>;
   min_score?: number;
   min_deal_value?: number;
-  // exclusão
+  // exclusión
   exclude_product_ids?: string[];
   exclude_assigned_user_ids?: string[];
   exclude_agent_ids?: string[];
@@ -163,7 +163,7 @@ export function useRunOpportunityScan() {
         },
       });
       if (error) {
-        // Tenta extrair mensaje do contexto (FunctionsHttpError vem com body em .context)
+        // Tenta extrair mensaje do contexto (FunctionsHttpError vem con body em .context)
         let detail = error.message;
         try {
           const ctx: any = (error as any).context;

@@ -43,7 +43,7 @@ const DEFAULT_TEMPLATES = [
     <div class="content">
       <p>Hola,</p>
       <p>Usted fue convidado por <strong>{{invitedByName}}</strong> para se juntar à equipo como <strong>{{role}}</strong>{{squadName}}.</p>
-      <p>Hacé clic no botão abaixo para aceitar o convite:</p>
+      <p>Hacé clic no botón abaixo para aceitar o convite:</p>
       <p style="text-align: center;">
         <a href="{{inviteLink}}" class="button">Aceitar Convite</a>
       </p>
@@ -104,7 +104,7 @@ const DEFAULT_TEMPLATES = [
   },
   {
     slug: 'announcement',
-    name: 'Comunicado Geral',
+    name: 'Comunicado General',
     subject: '{{title}}',
     html_content: `<!DOCTYPE html>
 <html>

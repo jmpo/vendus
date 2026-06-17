@@ -101,7 +101,7 @@ export function TagFormDialog({ open, onOpenChange, tag }: Props) {
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSave} disabled={!name.trim() || create.isPending || update.isPending}>
-            {tag ? 'Salvar' : 'Criar'}
+            {tag ? 'Guardar' : 'Crear'}
           </Button>
         </DialogFooter>
       </DialogContent>

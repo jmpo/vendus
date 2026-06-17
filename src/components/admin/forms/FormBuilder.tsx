@@ -163,7 +163,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
             className="h-9 px-2 md:px-3"
           >
             <Save className="h-4 w-4 md:mr-2" />
-            <span className="hidden md:inline">{saveBlocks.isPending ? 'Guardando...' : 'Salvar'}</span>
+            <span className="hidden md:inline">{saveBlocks.isPending ? 'Guardando...' : 'Guardar'}</span>
           </Button>
           <Button
             size="sm"
@@ -240,7 +240,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
               className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none h-12 px-0 gap-2"
             >
               <Inbox className="h-4 w-4" />
-              Respostas
+              Respuestas
               {(form.submissions_count || 0) > 0 && (
                 <Badge variant="secondary" className="h-5 px-1.5 text-xs">
                   {form.submissions_count}

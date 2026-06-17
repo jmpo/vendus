@@ -2,8 +2,8 @@ import { lazy, ComponentType } from 'react';
 
 /**
  * Cache de imports já iniciados (deduplicação).
- * Garante que o mesmo módulo nunca seja baixado 2x e que o `prefetch`
- * compartilhe o mesmo Promise do `lazy`.
+ * Garante que o mismo módulo nunca seja baixado 2x e que o `prefetch`
+ * compartilhe o mismo Promise do `lazy`.
  */
 const importCache = new Map<unknown, Promise<unknown>>();
 
@@ -12,7 +12,7 @@ function memoize<T>(factory: () => Promise<T>): () => Promise<T> {
     const cached = importCache.get(factory);
     if (cached) return cached as Promise<T>;
     const p = retry(factory, 2, 500).catch((err) => {
-      // Em caso de falha, remove do cache para permitir nova tentativa.
+      // Em caso de fallo, remove do cache para permitir nova tentativa.
       importCache.delete(factory);
       throw err;
     });
@@ -23,11 +23,11 @@ function memoize<T>(factory: () => Promise<T>): () => Promise<T> {
 
 /**
  * Wrapper sobre `React.lazy` que tenta novamente o import dinâmico em caso
- * de falha (chunk velho no cache após deploy, instabilidade de rede no
+ * de fallo (chunk velho no cache após deploy, instabilidade de rede no
  * mobile). Após N tentativas, propaga o erro para o ErrorBoundary.
  *
- * Também expõe `.preload()` na referência retornada para permitir prefetch
- * antecipado (em hover, idle callback, etc.) sem renderizar o componente.
+ * También expõe `.preload()` na referencia retornada para permitir prefetch
+ * antecipado (em hover, idle callback, etc.) sin renderizar o componente.
  */
 export function lazyWithRetry<T extends ComponentType<any>>(
   factory: () => Promise<{ default: T }>
@@ -41,24 +41,24 @@ export function lazyWithRetry<T extends ComponentType<any>>(
 }
 
 /**
- * Dispara o download de um chunk em segundo plano. Usa o mesmo cache do
- * `lazyWithRetry`, então se o usuário clicar antes do prefetch terminar,
- * apenas espera o Promise existente (sem download duplicado).
+ * Dispara o download de um chunk em segundo plano. Usa o mismo cache do
+ * `lazyWithRetry`, entonces se o usuario clicar antes do prefetch terminar,
+ * solo espera o Promise existente (sin download duplicado).
  */
 export function prefetch(factory: () => Promise<unknown>): void {
   const cached = importCache.get(factory);
   if (cached) return;
   const p = retry(factory, 1, 300).catch((err) => {
     importCache.delete(factory);
-    // Falha silenciosa em prefetch — não queremos quebrar a UI.
+    // Fallo silenciosa em prefetch — no queremos quebrar a UI.
     if (typeof console !== 'undefined') console.debug('[prefetch] falhou:', err);
   });
   importCache.set(factory, p);
 }
 
 /**
- * Agenda um callback para rodar quando o browser estiver ocioso.
- * Útil para prefetch sem competir com renderização inicial.
+ * Agenda um callback para rodar cuando o browser estiver ocioso.
+ * Útil para prefetch sin competir con renderização inicial.
  */
 export function onIdle(cb: () => void, timeout = 2000): void {
   if (typeof window === 'undefined') return;

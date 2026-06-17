@@ -104,14 +104,14 @@ export function BusinessHoursManager() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold">Horários de funcionamento</h1>
+          <h1 className="text-2xl font-bold">Horarios de funcionamento</h1>
           <p className="text-sm text-muted-foreground">
             Defina cuando su equipo atende. Fora desse horario, a IA puede enviar uma mensaje automática.
           </p>
         </div>
         <Badge variant={isOpenNow ? 'default' : 'secondary'} className="gap-2 text-sm py-2 px-3">
           {isOpenNow ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
-          Agora: {isOpenNow ? 'Aberto' : 'Cerrado'}
+          Ahora: {isOpenNow ? 'Aberto' : 'Cerrado'}
         </Badge>
       </div>
 
@@ -120,7 +120,7 @@ export function BusinessHoursManager() {
           <CardTitle className="text-base flex items-center gap-2">
             <Clock className="h-4 w-4" /> Agenda semanal
           </CardTitle>
-          <CardDescription>Configure os horários de cada día. Usted puede adicionar múltiplos blocos (ex.: 08-12 e 14-18).</CardDescription>
+          <CardDescription>Configure os horarios de cada día. Usted puede agregar múltiples blocos (ex.: 08-12 e 14-18).</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2 max-w-xs">
@@ -163,7 +163,7 @@ export function BusinessHoursManager() {
                           </div>
                         ))}
                         <Button variant="ghost" size="sm" onClick={() => addBlock(day)}>
-                          <Plus className="h-3 w-3 mr-1" /> Adicionar bloco
+                          <Plus className="h-3 w-3 mr-1" /> Agregar bloco
                         </Button>
                       </>
                     )}
@@ -209,7 +209,7 @@ export function BusinessHoursManager() {
             <Input type="date" value={newHolidayDate} onChange={(e) => setNewHolidayDate(e.target.value)} className="sm:w-44" />
             <Input value={newHolidayDesc} onChange={(e) => setNewHolidayDesc(e.target.value)} placeholder="Descripción (opcional, ex.: Natal)" className="flex-1" />
             <Button onClick={handleAddHoliday} disabled={!newHolidayDate}>
-              <Plus className="h-4 w-4 mr-2" /> Adicionar
+              <Plus className="h-4 w-4 mr-2" /> Agregar
             </Button>
           </div>
           {holidays && holidays.length > 0 && (
@@ -230,7 +230,7 @@ export function BusinessHoursManager() {
 
       <div className="flex justify-end">
         <Button size="lg" onClick={handleSave} disabled={upsert.isPending}>
-          Salvar configuraciones
+          Guardar configuraciones
         </Button>
       </div>
     </div>

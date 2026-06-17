@@ -252,7 +252,7 @@ export function FlowCanvas({
         {blocks.length === 0 && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="text-center text-muted-foreground">
-              <p className="text-lg font-medium mb-2">Canvas vazio</p>
+              <p className="text-lg font-medium mb-2">Canvas vacío</p>
               <p className="text-sm">Arraste blocos da paleta para comenzar</p>
             </div>
           </div>

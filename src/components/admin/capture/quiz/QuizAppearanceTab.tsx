@@ -26,12 +26,12 @@ export function QuizAppearanceTab({ funnel }: Props) {
 
   const handleSave = async () => {
     await update.mutateAsync({ id: funnel.id, appearance } as any);
-    toast.success('Aparência do Quiz salva');
+    toast.success('Apariencia do Quiz salva');
   };
 
   const handleReset = () => {
     setAppearance({ ...appearance, quiz: defaultChannelAppearance('quiz') });
-    toast.info('Aparência restaurada ao padrão');
+    toast.info('Apariencia restaurada ao predeterminado');
   };
 
   const handleApplyPreset = (preset: AppearancePreset) => {
@@ -46,7 +46,7 @@ export function QuizAppearanceTab({ funnel }: Props) {
     const preset = getPresetById('inlead');
     if (!preset) return;
     setAppearance({ ...appearance, quiz: applyPresetToChannel(appearance.quiz, preset, 'quiz') });
-    toast.success('Padrão inlead aplicado');
+    toast.success('Predeterminado inlead aplicado');
   };
 
   return (
@@ -55,17 +55,17 @@ export function QuizAppearanceTab({ funnel }: Props) {
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-2 text-sm font-medium">
             <ListChecks className="h-4 w-4 text-primary" />
-            Aparência exclusiva do Quiz
+            Apariencia exclusiva do Quiz
           </div>
           <span className="text-[11px] text-muted-foreground">
-            Tipografia, cores e espaçamentos seguem o padrão inlead — sem avatar de bot.
+            Tipografia, cores e espaçamentos seguem o predeterminado inlead — sin avatar de bot.
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={applyInleadDefault} className="gap-1.5">
             <Sparkles className="h-3.5 w-3.5 text-primary" />
-            <span className="hidden sm:inline">Padrão inlead</span>
+            <span className="hidden sm:inline">Predeterminado inlead</span>
           </Button>
           <Button variant="outline" size="sm" onClick={handleReset} className="gap-1.5">
             <RotateCcw className="h-3.5 w-3.5" />
@@ -73,7 +73,7 @@ export function QuizAppearanceTab({ funnel }: Props) {
           </Button>
           <Button size="sm" onClick={handleSave} disabled={!isDirty || update.isPending} className="gap-1.5">
             {update.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-            Salvar
+            Guardar
           </Button>
         </div>
       </div>
@@ -92,7 +92,7 @@ export function QuizAppearanceTab({ funnel }: Props) {
           <div className="bg-muted/30 rounded-lg p-3 sm:p-4 flex flex-col gap-3 lg:h-full">
             <div className="flex items-center justify-between">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                Pré-visualização ao vivo
+                Pré-visualización ao vivo
               </p>
               <div className="flex gap-1 bg-background border rounded-md p-0.5 shrink-0">
                 <button type="button" onClick={() => setDevice('mobile')}

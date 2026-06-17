@@ -33,7 +33,7 @@ const CHANNELS = [
 const STATUSES = [
   { id: 'waiting_human', label: 'Aguardando' },
   { id: 'human_active', label: 'Em atención' },
-  { id: 'bot_active', label: 'Com IA' },
+  { id: 'bot_active', label: 'Con IA' },
 ];
 
 const TEMPERATURES = [
@@ -108,7 +108,7 @@ export function RadarFilters({ value, onChange }: Props) {
       <CardContent className="space-y-5">
         {/* Janela de inatividade */}
         <div>
-          <Label className="text-xs text-muted-foreground">Período de inatividade (días)</Label>
+          <Label className="text-xs text-muted-foreground">Periodo de inatividade (días)</Label>
           <div className="flex items-center gap-3 mt-2">
             <span className="text-sm w-8 text-center">{value.inactivity_days_min ?? 0}</span>
             <Slider
@@ -142,7 +142,7 @@ export function RadarFilters({ value, onChange }: Props) {
 
         <Separator />
 
-        {/* Status (apenas inclusão) */}
+        {/* Status (solo inclusión) */}
         <div className="space-y-2">
           <Label className="text-xs text-muted-foreground">Status da conversación</Label>
           <div className="flex flex-wrap gap-1.5">
@@ -269,28 +269,28 @@ export function RadarFilters({ value, onChange }: Props) {
         {/* Toggles especiais */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label className="text-sm">Apenas conversaciones sem etiqueta</Label>
+            <Label className="text-sm">Solo conversaciones sin etiqueta</Label>
             <Switch
               checked={!!value.require_no_tags}
               onCheckedChange={(v) => onChange({ ...value, require_no_tags: v })}
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label className="text-sm">Apenas conversaciones sem sector</Label>
+            <Label className="text-sm">Solo conversaciones sin sector</Label>
             <Switch
               checked={!!value.require_no_sector}
               onCheckedChange={(v) => onChange({ ...value, require_no_sector: v })}
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label className="text-sm">Apenas conversaciones sem agente</Label>
+            <Label className="text-sm">Solo conversaciones sin agente</Label>
             <Switch
               checked={!!value.require_no_assigned}
               onCheckedChange={(v) => onChange({ ...value, require_no_assigned: v })}
             />
           </div>
           <div className="flex items-center justify-between pt-2 border-t">
-            <Label className="text-sm">Incluir conversaciones com IA ativa</Label>
+            <Label className="text-sm">Incluir conversaciones con IA ativa</Label>
             <Switch
               checked={!!value.include_ai_active}
               onCheckedChange={(v) => onChange({ ...value, include_ai_active: v })}

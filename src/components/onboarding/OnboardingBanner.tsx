@@ -5,10 +5,10 @@ import { GuidedOnboarding } from './GuidedOnboarding';
 import { useGuidedOnboarding } from '@/hooks/useGuidedOnboarding';
 
 /**
- * Tarja amarela persistente que aparece no painel admin enquanto
- * o onboarding guiado no fue concluído. O botão X apenas oculta
- * a tarja na sessão atual — ela retorna em novos acessos até a
- * conclusão definitiva.
+ * Tarja amarela persistente que aparece no painel admin mientras
+ * o onboarding guiado no fue concluído. O botón X solo oculta
+ * a tarja na sesión actual — ela retorna em novos acessos até a
+ * conclusión definitiva.
  */
 export function OnboardingBanner() {
   const { shouldShow, markCompleted } = useGuidedOnboarding();
@@ -16,7 +16,7 @@ export function OnboardingBanner() {
   const [openWizard, setOpenWizard] = useState(false);
 
   if (!shouldShow || dismissedThisSession) {
-    // Mesmo oculto, aún renderizamos o wizard caso esteja aberto.
+    // Mismo oculto, aún renderizamos o wizard caso esteja aberto.
     if (openWizard) {
       return (
         <GuidedOnboarding
@@ -27,8 +27,8 @@ export function OnboardingBanner() {
             setOpenWizard(false);
           }}
           onSkipAll={() => {
-            // No marca como pulado permanentemente — apenas data o wizard.
-            // A tarja continuará aparecendo até a conclusão definitiva.
+            // No marca como pulado permanentemente — solo data o wizard.
+            // A tarja continuará aparecendo até a conclusión definitiva.
             setOpenWizard(false);
           }}
         />

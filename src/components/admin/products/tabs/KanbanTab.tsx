@@ -103,7 +103,7 @@ export function KanbanTab({ productId }: KanbanTabProps) {
                 <SelectValue placeholder="Filtrar por vendedor" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos os vendedores</SelectItem>
+                <SelectItem value="all">Todos los vendedores</SelectItem>
                 {teamMembers?.map(member => (
                   <SelectItem key={member.id} value={member.id}>
                     {member.full_name}
@@ -124,7 +124,7 @@ export function KanbanTab({ productId }: KanbanTabProps) {
               <Card className="bg-card h-full">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium">Sem Etapa</CardTitle>
+                    <CardTitle className="text-sm font-medium">Sin Etapa</CardTitle>
                     <Badge variant="outline">{leadsWithoutStage.length}</Badge>
                   </div>
                 </CardHeader>
@@ -185,7 +185,7 @@ export function KanbanTab({ productId }: KanbanTabProps) {
                       ))}
                       {(!leadsByStage[stage.id] || leadsByStage[stage.id].length === 0) && (
                         <p className="text-xs text-muted-foreground text-center py-8">
-                          Nenhum lead nesta etapa
+                          Ningún lead nesta etapa
                         </p>
                       )}
                     </div>
@@ -200,9 +200,9 @@ export function KanbanTab({ productId }: KanbanTabProps) {
             <Card className="bg-card w-full">
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <Users className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                <h3 className="text-lg font-medium text-foreground mb-1">Nenhum lead</h3>
+                <h3 className="text-lg font-medium text-foreground mb-1">Ningún lead</h3>
                 <p className="text-sm text-muted-foreground">
-                  Configure as etapas do pipeline e adicione leads
+                  Configure as etapas do pipeline e agregá leads
                 </p>
               </CardContent>
             </Card>

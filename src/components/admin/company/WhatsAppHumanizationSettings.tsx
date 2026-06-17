@@ -68,7 +68,7 @@ export function WhatsAppHumanizationSettings() {
 
   const save = useMutation({
     mutationFn: async () => {
-      if (!orgId) throw new Error('Sem organización');
+      if (!orgId) throw new Error('Sin organización');
       const payload = {
         ...form,
         ai_grouping_window_ms: clamp(form.ai_grouping_window_ms, 0, 8000),
@@ -82,7 +82,7 @@ export function WhatsAppHumanizationSettings() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['org-humanization'] });
-      toast({ title: 'Configurações salvas' });
+      toast({ title: 'Configuraciones salvas' });
     },
     onError: (e: any) => toast({ title: 'Error', description: e.message, variant: 'destructive' }),
   });
@@ -98,13 +98,13 @@ export function WhatsAppHumanizationSettings() {
         </CardTitle>
         <CardDescription>
           Controle como a IA agrupa, responde e evita repetir mensajes. Valores altos pioram a
-          experiência del cliente.
+          experiencia del cliente.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {isLoading ? (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin" /> Carregando...
+            <Loader2 className="h-4 w-4 animate-spin" /> Cargando...
           </div>
         ) : (
           <>
@@ -120,7 +120,7 @@ export function WhatsAppHumanizationSettings() {
               <Pair>
                 <Field
                   label="Janela de agrupamento (ms)"
-                  hint="Padrão 3000 ms. Recomendado: 2000–4000."
+                  hint="Predeterminado 3000 ms. Recomendado: 2000–4000."
                   value={form.ai_grouping_window_ms}
                   onChange={(v) => update('ai_grouping_window_ms', v)}
                   min={0}
@@ -128,7 +128,7 @@ export function WhatsAppHumanizationSettings() {
                 />
                 <Field
                   label="Tempo máximo de espera (ms)"
-                  hint="Limite absoluto. Padrão 8000 ms."
+                  hint="Limite absoluto. Predeterminado 8000 ms."
                   value={form.ai_grouping_max_ms}
                   onChange={(v) => update('ai_grouping_max_ms', v)}
                   min={2000}
@@ -161,7 +161,7 @@ export function WhatsAppHumanizationSettings() {
 
             <Section
               title="Presença real no WhatsApp"
-              hint="Dispara o status de 'digitando...' e 'gravando áudio...' que aparece no celular del cliente, em tempo real (via Evolution Go)."
+              hint="Dispara o status de 'digitando...' e 'gravando audio...' que aparece no celular del cliente, en tiempo real (via Evolution Go)."
             >
               <Toggle
                 label="Mostrar 'digitando...' real"
@@ -169,14 +169,14 @@ export function WhatsAppHumanizationSettings() {
                 onChange={(v) => update('presence_enabled', v)}
               />
               <Toggle
-                label="Mostrar 'gravando áudio...' cuando IA enviar áudio"
+                label="Mostrar 'gravando audio...' cuando IA enviar audio"
                 checked={form.presence_recording_enabled}
                 onChange={(v) => update('presence_recording_enabled', v)}
               />
               <Pair>
                 <Field
                   label="Velocidade de digitação (chars/s)"
-                  hint="Padrão 28. Quanto maior, mais rápido digita."
+                  hint="Predeterminado 28. Quanto maior, mais rápido digita."
                   value={form.presence_typing_chars_per_sec}
                   onChange={(v) => update('presence_typing_chars_per_sec', v)}
                   min={5}
@@ -184,7 +184,7 @@ export function WhatsAppHumanizationSettings() {
                 />
                 <Field
                   label="Variação aleatória (%)"
-                  hint="Padrão 15%. Adiciona naturalidade."
+                  hint="Predeterminado 15%. Adiciona naturalidade."
                   value={form.presence_jitter_pct}
                   onChange={(v) => update('presence_jitter_pct', v)}
                   min={0}
@@ -204,7 +204,7 @@ export function WhatsAppHumanizationSettings() {
               />
               <Field
                 label="Janela anti-duplicação (ms)"
-                hint="Padrão 120000 ms (2 minutos)."
+                hint="Predeterminado 120000 ms (2 minutos)."
                 value={form.ai_dedup_window_ms}
                 onChange={(v) => update('ai_dedup_window_ms', v)}
                 min={5000}
@@ -214,7 +214,7 @@ export function WhatsAppHumanizationSettings() {
 
             <Section
               title="Trava por conversación"
-              hint="Garante que apenas uma execução de IA por conversación rode por vez. Recomendado manter ligado."
+              hint="Garante que solo uma ejecución de IA por conversación rode por vez. Recomendado manter ligado."
             >
               <Toggle
                 label="Processamento único por conversación"
@@ -226,7 +226,7 @@ export function WhatsAppHumanizationSettings() {
             <div className="flex justify-end">
               <Button onClick={() => save.mutate()} disabled={save.isPending}>
                 {save.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Salvar configuraciones
+                Guardar configuraciones
               </Button>
             </div>
           </>

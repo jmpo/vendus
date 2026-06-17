@@ -51,7 +51,7 @@ export function SuperAdminRoute({ children }: SuperAdminRouteProps) {
       );
     }
 
-    // Bootstrap: ningún super admin existe aún — esta é a primeira pessoa entrando
+    // Bootstrap: ningún super admin existe aún — esta é a primera pessoa entrando
     // no painel após clonar o projeto. Oferecemos auto-promoção.
     if ((superAdminCount ?? 0) === 0) {
       const promote = async () => {
@@ -68,8 +68,8 @@ export function SuperAdminRoute({ children }: SuperAdminRouteProps) {
           await qc.invalidateQueries({ queryKey: ['super-admin-count'] });
           window.location.reload();
         } else {
-          toast.error('No fue possível promover', {
-            description: (data as any)?.error ?? 'Error desconhecido',
+          toast.error('No fue posible promover', {
+            description: (data as any)?.error ?? 'Error desconocido',
           });
         }
       };
@@ -83,7 +83,7 @@ export function SuperAdminRoute({ children }: SuperAdminRouteProps) {
             <div>
               <h1 className="text-xl font-bold">Configurar plataforma</h1>
               <p className="text-sm text-muted-foreground mt-2">
-                Esta plataforma aún no tiene um Super Admin definido. Como usted é o primeiro a entrar,
+                Esta plataforma aún no tiene um Super Admin definido. Como usted é o primero a entrar,
                 podemos te promover ahora para finalizar a configuración inicial.
               </p>
             </div>
@@ -92,7 +92,7 @@ export function SuperAdminRoute({ children }: SuperAdminRouteProps) {
               Promover-me a Super Admin
             </Button>
             <p className="text-xs text-muted-foreground">
-              Isso só funciona cuando aún no existe ningún Super Admin na plataforma.
+              Eso só funciona cuando aún no existe ningún Super Admin na plataforma.
             </p>
           </div>
         </div>

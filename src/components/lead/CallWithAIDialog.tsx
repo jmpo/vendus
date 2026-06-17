@@ -55,7 +55,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
   const productAgentsQuery = useProductAgents(lead.product_id || '');
   const allAgentsQuery = useAllAgents();
 
-  // Se o lead tiene producto, usa agentes do producto; senão fallback p/ todos da org.
+  // Se o lead tiene producto, usa agentes do producto; sino fallback p/ todos da org.
   const agents = lead.product_id ? productAgentsQuery.data : allAgentsQuery.data;
   const loadingAgents = lead.product_id ? productAgentsQuery.isLoading : allAgentsQuery.isLoading;
 
@@ -66,7 +66,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
   const [mode, setMode] = useState<'direct' | 'conversational'>('direct');
   const [isSending, setIsSending] = useState(false);
 
-  // Quando reabre com novo contexto inicial, sobrescreve.
+  // Cuando reabre con novo contexto inicial, sobrescreve.
   useEffect(() => {
     if (open && initialExtraContext) setExtraContext(initialExtraContext);
     if (open && initialObjective) {
@@ -75,7 +75,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
     }
   }, [open, initialExtraContext, initialObjective]);
 
-  // Pré-seleciona agente padrão / primeiro ativo
+  // Pré-seleciona agente predeterminado / primero ativo
   useEffect(() => {
     if (!agents?.length) return;
     if (agentId && agents.some((a) => a.id === agentId)) return;
@@ -208,7 +208,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
                         <span className="text-xs text-muted-foreground capitalize">· {a.agent_type}</span>
                       )}
                       {a.is_default && (
-                        <span className="text-xs text-primary">· padrão</span>
+                        <span className="text-xs text-primary">· predeterminado</span>
                       )}
                     </div>
                   </SelectItem>

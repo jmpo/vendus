@@ -43,7 +43,7 @@ import {
 
 const ACTION_LABELS: Record<FormOptionAction['type'], string> = {
   redirect: 'Redirecionar (URL/pago)',
-  add_tags: 'Adicionar etiqueta',
+  add_tags: 'Agregar etiqueta',
   start_ai_agent: 'Atribuir agente IA (passivo)',
   start_ai_outreach: 'Agente IA inicia conversación no WhatsApp',
   open_calendar: 'Abrir calendario',
@@ -155,13 +155,13 @@ export function OptionActionsEditor({ actions, onChange, allBlocks, currentBlock
       </PopoverTrigger>
       <PopoverContent className="w-96 p-0" align="end" sideOffset={6}>
         <div className="p-3 border-b">
-          <p className="text-sm font-semibold">Ações ao escolher esta opción</p>
+          <p className="text-sm font-semibold">Acciones ao escolher esta opción</p>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Combine quantas acciones quiser. Executadas al enviar o formulário.
+            Combine quantas acciones quiser. Executadas al enviar o formulario.
           </p>
           <p className="text-[11px] text-muted-foreground mt-2 leading-snug bg-muted/40 rounded p-2 border border-border/40">
-            ✅ As respuestas do formulário son <strong>siempre enviadas</strong> antes
-            de qualquer acción de saída (calendario, redirect, agente, sector). O CRM
+            ✅ As respuestas do formulario son <strong>siempre enviadas</strong> antes
+            de cualquier acción de saída (calendario, redirect, agente, sector). O CRM
             también registra <strong>qual opción</strong> o lead escolheu.
           </p>
         </div>
@@ -170,7 +170,7 @@ export function OptionActionsEditor({ actions, onChange, allBlocks, currentBlock
           <div className="p-3 space-y-3">
             {list.length === 0 && (
               <p className="text-xs text-muted-foreground italic text-center py-2">
-                Nenhuma acción aún. Adicione abaixo.
+                Ninguna acción aún. Agregá abaixo.
               </p>
             )}
 
@@ -205,7 +205,7 @@ export function OptionActionsEditor({ actions, onChange, allBlocks, currentBlock
         </ScrollArea>
 
         <div className="p-3 border-t bg-muted/30">
-          <Label className="text-xs">Adicionar acción</Label>
+          <Label className="text-xs">Agregar acción</Label>
           <div className="grid grid-cols-2 gap-1.5 mt-1.5">
             {(Object.keys(ACTION_LABELS) as FormOptionAction['type'][]).map((type) => {
               const Icon = ACTION_ICONS[type];
@@ -252,7 +252,7 @@ function ActionForm({
         <div className="space-y-1.5">
           <Input
             value={action.url}
-            placeholder="https://pay.exemplo.com/checkout"
+            placeholder="https://pay.ejemplo.com/checkout"
             onChange={(e) => onUpdate({ url: e.target.value } as any)}
             className="h-8 text-xs"
           />
@@ -316,7 +316,7 @@ function ActionForm({
             className="h-8 text-xs"
           />
           <p className="text-[10px] text-muted-foreground leading-tight">
-            Requer teléfono capturado no formulário (DDI 55) e instância WhatsApp ativa.
+            Requer teléfono capturado no formulario (DDI 55) e instância WhatsApp ativa.
             O agente envia a 1ª mensaje usando as respuestas como contexto.
           </p>
         </div>
@@ -344,7 +344,7 @@ function ActionForm({
             />
           </div>
           <p className="text-[10px] text-muted-foreground leading-tight">
-            Ao enviar, o lead será redirecionado para o calendario com nombre e WhatsApp ya preenchidos.
+            Ao enviar, o lead será redirecionado para o calendario con nombre e WhatsApp ya preenchidos.
           </p>
         </div>
       );
@@ -449,7 +449,7 @@ function TagAutocomplete({
       });
       if (created?.id) addTag(created.id);
     } catch {
-      // toast ya tratado pelo hook
+      // toast ya tratado por el hook
     }
   };
 
@@ -534,7 +534,7 @@ function TagAutocomplete({
                 className="w-full text-left px-2 py-1.5 text-xs hover:bg-accent border-t flex items-center gap-1 text-primary"
               >
                 <Plus className="h-3 w-3" />
-                Criar etiqueta «{query.trim()}»
+                Crear etiqueta «{query.trim()}»
               </button>
             )}
           </div>
@@ -543,7 +543,7 @@ function TagAutocomplete({
 
       {tags.length === 0 && !query && (
         <p className="text-[10px] text-muted-foreground italic">
-          Escribí para crear su primeira etiqueta.
+          Escribí para crear su primera etiqueta.
         </p>
       )}
     </div>

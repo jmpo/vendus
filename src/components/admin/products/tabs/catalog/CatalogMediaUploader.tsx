@@ -71,7 +71,7 @@ export function CatalogMediaUploader({
   const handleFiles = useCallback(
     async (files: File[]) => {
       if (!organizationId || !productId) {
-        toast.error('Salve o producto antes de hacer upload.');
+        toast.error('Guardá o producto antes de hacer upload.');
         return;
       }
       setUploading(true);
@@ -118,7 +118,7 @@ export function CatalogMediaUploader({
 
         if (upErr) {
           console.error('upload error', upErr);
-          toast.error(`Falha al enviar ${file.name}: ${upErr.message}`);
+          toast.error(`Fallo al enviar ${file.name}: ${upErr.message}`);
           continue;
         }
 
@@ -207,7 +207,7 @@ export function CatalogMediaUploader({
           <div className="flex flex-col items-center gap-2">
             <Upload className="h-8 w-8 text-muted-foreground" />
             <p className="text-sm font-medium">
-              {isDragActive ? 'Solte os archivos aqui' : 'Arraste fotos, vídeos ou PDFs'}
+              {isDragActive ? 'Solte os archivos acá' : 'Arraste fotos, vídeos ou PDFs'}
             </p>
             <p className="text-xs text-muted-foreground">
               📷 JPG/PNG/WEBP até 5MB · 🎬 MP4/MOV até 25MB · 📄 PDF até 10MB

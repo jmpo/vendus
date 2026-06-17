@@ -109,7 +109,7 @@ export function useDraftMetaWAConnection() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['meta-wa-connections'] });
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao iniciar rascunho'),
+    onError: (e: any) => toast.error(e?.message ?? 'Fallo ao iniciar borrador'),
   });
 }
 
@@ -125,9 +125,9 @@ export function useTestMetaWAConnection() {
       qc.invalidateQueries({ queryKey: ['meta-wa-connections'] });
       qc.invalidateQueries({ queryKey: ['meta-wa-templates'] });
       if (data?.ok) toast.success('Conexión validada');
-      else toast.error(data?.error ?? 'Falha no teste');
+      else toast.error(data?.error ?? 'Fallo no teste');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha no teste'),
+    onError: (e: any) => toast.error(e?.message ?? 'Fallo no teste'),
   });
 }
 
@@ -143,7 +143,7 @@ export function useSyncMetaWATemplates() {
       qc.invalidateQueries({ queryKey: ['meta-wa-templates'] });
       toast.success(`${data?.count ?? 0} templates sincronizados`);
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao sincronizar'),
+    onError: (e: any) => toast.error(e?.message ?? 'Fallo ao sincronizar'),
   });
 }
 
@@ -160,7 +160,7 @@ export function useSubmitMetaWATemplate() {
       qc.invalidateQueries({ queryKey: ['meta-wa-templates'] });
       toast.success('Plantilla enviada para aprobación');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha al enviar template'),
+    onError: (e: any) => toast.error(e?.message ?? 'Fallo al enviar template'),
   });
 }
 
@@ -175,6 +175,6 @@ export function useDeleteMetaWAConnection() {
       qc.invalidateQueries({ queryKey: ['meta-wa-connections'] });
       toast.success('Conexión eliminada');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao eliminar'),
+    onError: (e: any) => toast.error(e?.message ?? 'Fallo ao eliminar'),
   });
 }

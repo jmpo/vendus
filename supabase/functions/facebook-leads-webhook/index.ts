@@ -212,7 +212,7 @@ async function createLeadFromFacebook(
   rawLeadData: any
 ) {
   try {
-    // Buscar primeiro estágio do pipeline
+    // Buscar primero estágio do pipeline
     const { data: firstStage } = await supabase
       .from('pipeline_stages')
       .select('id')

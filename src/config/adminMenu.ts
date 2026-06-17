@@ -121,7 +121,7 @@ export const allMenuItems: AdminMenuItem[] = [
   ...menuGroups.flatMap((g) => g.items),
 ];
 
-// Helper: encontra o id do grupo que contém a seção ativa (para abrir o accordion)
+// Helper: encontra o id do grupo que contém a sección ativa (para abrir o accordion)
 export function findGroupIdForSection(sectionId: string): string | undefined {
   return menuGroups.find((g) => g.items.some((i) => i.id === sectionId))?.id;
 }

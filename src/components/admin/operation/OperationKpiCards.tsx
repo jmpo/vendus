@@ -15,7 +15,7 @@ export function OperationKpiCards({ kpis, onNavigate }: Props) {
       hint:
         kpis && kpis.newLeadsDelta !== 0
           ? `${kpis.newLeadsDelta > 0 ? '+' : ''}${kpis.newLeadsDelta}% vs ayer`
-          : 'Sem comparação vs ayer',
+          : 'Sin comparação vs ayer',
       hintClass: (kpis?.newLeadsDelta ?? 0) >= 0 ? 'text-emerald-600' : 'text-destructive',
       icon: Users,
       onClick: () => onNavigate('leads'),

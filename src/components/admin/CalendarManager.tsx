@@ -49,7 +49,7 @@ import {
 type ViewMode = 'month' | 'week' | 'day' | 'list';
 
 /**
- * Visão de calendario (mes/semana/día/lista) + Google Calendar.
+ * Visión de calendario (mes/semana/día/lista) + Google Calendar.
  * Extraída em sub-componente para que CalendarManager seja só a casca de abas.
  */
 function AgendaCalendarView() {
@@ -175,7 +175,7 @@ function AgendaCalendarView() {
 
   return (
     <div className="space-y-4">
-      {/* Barra compacta: stats inline + botão Nuevo Evento */}
+      {/* Barra compacta: stats inline + botón Nuevo Evento */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/40">
@@ -185,7 +185,7 @@ function AgendaCalendarView() {
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/40">
             <LayoutGrid className="h-4 w-4 text-blue-500" />
-            <span className="text-xs text-muted-foreground">En el período</span>
+            <span className="text-xs text-muted-foreground">En el periodo</span>
             <span className="text-sm font-semibold">{stats.total}</span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/40">
@@ -281,7 +281,7 @@ function AgendaCalendarView() {
         </div>
       </details>
 
-      {/* Navegação */}
+      {/* Navegación */}
       {viewMode !== 'list' && (
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -300,7 +300,7 @@ function AgendaCalendarView() {
         </div>
       )}
 
-      {/* Visualização */}
+      {/* Visualización */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -354,7 +354,7 @@ function AgendaCalendarView() {
  *  - Agenda (calendario visual)
  *  - Reuniones (bookings recebidos)
  *  - Tipos de Evento (pré-configuración do admin)
- *  - Disponibilidad (horários)
+ *  - Disponibilidad (horarios)
  *  - Enlaces del Equipo (centralização para o admin enviar links de cada vendedor)
  */
 export function CalendarManager() {

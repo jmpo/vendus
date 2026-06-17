@@ -59,7 +59,7 @@ export function GoogleCalendarOAuthConfig() {
     }
 
     if (!clientSecret && !isConfigured) {
-      toast.error('Client Secret é obligatorio para primeira configuración');
+      toast.error('Client Secret é obligatorio para primera configuración');
       return;
     }
 
@@ -67,15 +67,15 @@ export function GoogleCalendarOAuthConfig() {
     if (clientSecret) {
       const trimmed = clientSecret.trim();
       if (clientId && trimmed === clientId.trim()) {
-        toast.error('Client Secret no puede ser igual ao Client ID. Cole o secret correto (começa com "GOCSPX-").');
+        toast.error('Client Secret no puede ser igual ao Client ID. Cole o secret correto (começa con "GOCSPX-").');
         return;
       }
       if (trimmed.endsWith('.apps.googleusercontent.com')) {
-        toast.error('Usted colou um Client ID no campo Client Secret. O secret correto começa com "GOCSPX-".');
+        toast.error('Usted colou um Client ID no campo Client Secret. O secret correto começa con "GOCSPX-".');
         return;
       }
       if (!trimmed.startsWith('GOCSPX-')) {
-        toast.error('Client Secret inválido. Ele debe comenzar com "GOCSPX-" (copie do Google Cloud Console).');
+        toast.error('Client Secret inválido. Ele debe comenzar con "GOCSPX-" (copie do Google Cloud Console).');
         return;
       }
     }
@@ -131,7 +131,7 @@ export function GoogleCalendarOAuthConfig() {
 
       queryClient.invalidateQueries({ queryKey: ['google-calendar-oauth'] });
       queryClient.invalidateQueries({ queryKey: ['google-calendar-oauth-config'] });
-      toast.success('Configuración salva com éxito');
+      toast.success('Configuración salva con éxito');
       
       // Clear form
       setClientId('');
@@ -234,12 +234,12 @@ export function GoogleCalendarOAuthConfig() {
                     Google Cloud Console
                   </a>
                 </li>
-                <li>Crea um novo projeto ou selecione um existente</li>
+                <li>Crea um novo projeto ou seleccioná um existente</li>
                 <li>Vá em "APIs e Serviços" → "Credenciais"</li>
-                <li>Hacé clic em "Criar credenciais" → "ID del cliente OAuth"</li>
+                <li>Hacé clic em "Crear credenciais" → "ID del cliente OAuth"</li>
                 <li>Seleccioná "Aplicativo da Web"</li>
                 <li>
-                  Em "URIs de redirecionamento autorizados", adicione:
+                  Em "URIs de redirecionamento autorizados", agregá:
                   <code className="block mt-1 p-2 bg-muted rounded text-xs break-all">
                     {`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/google-calendar-callback`}
                   </code>
@@ -261,7 +261,7 @@ export function GoogleCalendarOAuthConfig() {
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">
-            {isConfigured ? 'Atualizar Credenciais' : 'Configurar Credenciais'}
+            {isConfigured ? 'Actualizar Credenciais' : 'Configurar Credenciais'}
           </CardTitle>
           <CardDescription>
             Insira as credenciais OAuth do Google Cloud Console
@@ -273,7 +273,7 @@ export function GoogleCalendarOAuthConfig() {
             <Input
               id="clientId"
               type="text"
-              placeholder={settings?.clientId ? `Atual: ${settings.clientId.slice(0, 30)}...` : 'Cole o Client ID aqui'}
+              placeholder={settings?.clientId ? `Atual: ${settings.clientId.slice(0, 30)}...` : 'Cole o Client ID acá'}
               value={clientId}
               onChange={(e) => setClientId(e.target.value)}
             />
@@ -285,7 +285,7 @@ export function GoogleCalendarOAuthConfig() {
               <Input
                 id="clientSecret"
                 type={showSecret ? 'text' : 'password'}
-                placeholder={settings?.clientSecretMasked ? `Atual: ${settings.clientSecretMasked}` : 'Cole o Client Secret aqui'}
+                placeholder={settings?.clientSecretMasked ? `Atual: ${settings.clientSecretMasked}` : 'Cole o Client Secret acá'}
                 value={clientSecret}
                 onChange={(e) => setClientSecret(e.target.value)}
               />
@@ -315,7 +315,7 @@ export function GoogleCalendarOAuthConfig() {
             {isSaving ? (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
             ) : null}
-            {isConfigured ? 'Atualizar Configuración' : 'Salvar Configuración'}
+            {isConfigured ? 'Actualizar Configuración' : 'Guardar Configuración'}
           </Button>
         </CardContent>
       </Card>

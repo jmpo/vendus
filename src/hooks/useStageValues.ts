@@ -64,7 +64,7 @@ export function usePipelineFinancialSummary(productId: string, sellerId?: string
   return useQuery({
     queryKey: ['pipeline-financial-summary', productId, sellerId],
     queryFn: async () => {
-      // Buscar stages com valores
+      // Buscar stages con valores
       const { data: stageValues, error: stageError } = await supabase
         .from('stage_values')
         .select(`

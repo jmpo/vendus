@@ -220,7 +220,7 @@ export function MessageBubbleWithButtons({
                   onClick={() => window.open(catalogItem.url!, '_blank')}
                 >
                   <ExternalLink className="h-4 w-4" />
-                  Ver detalhes
+                  Ver detalles
                 </Button>
               )}
             </div>
@@ -257,7 +257,7 @@ export function MessageBubbleWithButtons({
               className="text-xs text-muted-foreground hover:text-primary"
               onClick={onCorrectClick}
             >
-              ✏️ Sugerir correção
+              ✏️ Sugerir corrección
             </Button>
           </div>
         )}

@@ -188,7 +188,7 @@ export function CalendarListView({ events, onEventClick }: CalendarListViewProps
                                 onClick={() => deleteEvent.mutate(event.id)}
                                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                               >
-                                Excluir
+                                Eliminar
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>

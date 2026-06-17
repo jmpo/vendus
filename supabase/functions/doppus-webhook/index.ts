@@ -94,7 +94,7 @@ function safeJsonParse(raw: string): any {
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
-  // Validações de URL por la Doppus podem chegar como GET/HEAD ou POST vazio.
+  // Validações de URL por la Doppus pueden chegar como GET/HEAD ou POST vazio.
   // SIEMPRE retornamos 2xx, ou a Doppus rejeita a URL.
   if (req.method === 'GET') return json({ ok: true, provider: 'doppus-webhook', ready: true });
   if (req.method === 'HEAD') return new Response(null, { status: 200, headers: corsHeaders });
@@ -218,7 +218,7 @@ Deno.serve(async (req) => {
         : null;
     };
 
-    // A) ?org=... primeiro
+    // A) ?org=... primero
     if (resolvedOrgId) {
       const row = rows.find((r) => r.organization_id === resolvedOrgId);
       if (row) {
@@ -277,7 +277,7 @@ Deno.serve(async (req) => {
     }
 
     if (!resolvedOrgId || !matchedProduct?.internal_product_id) {
-      // Loga (sem org se no resolveu) e RESPONDE 200 — Doppus no puede rejeitar a URL.
+      // Loga (sin org se no resolveu) e RESPONDE 200 — Doppus no puede rejeitar a URL.
       await logEvent(admin, {
         orgId: resolvedOrgId,
         productId: null,
@@ -538,7 +538,7 @@ Deno.serve(async (req) => {
     return json({ ok: true, statusCode, mappedEvent, leadId, engine: engineResult });
   } catch (err) {
     console.error('[doppus-webhook] fatal', err);
-    // Mesmo em error inesperado, respondemos 200 para Doppus no desactivar a URL.
+    // Mismo em error inesperado, respondemos 200 para Doppus no desactivar a URL.
     return json({ ok: false, error: (err as Error).message });
   }
 });

@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
 /**
- * Controla a exibição do onboarding guiado pós-cadastro para admins.
+ * Controla a exibição do onboarding guiado pós-registro para admins.
  * Persiste o estado em profiles.guided_onboarding_completed_at / skipped_at
  * para no depender de localStorage (sobrevive a troca de device).
  */

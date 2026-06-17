@@ -200,8 +200,8 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
               </div>
             ) : !stats?.planDistribution || stats.planDistribution.length === 0 ? (
               <div className="text-center text-sm text-muted-foreground py-8">
-                Nenhum plan cadastrado.<br />
-                Crea planes em <span className="font-medium text-foreground">Planos</span> para ver a distribución aqui.
+                Ningún plan registrado.<br />
+                Crea planes em <span className="font-medium text-foreground">Planos</span> para ver a distribución acá.
               </div>
             ) : (
               <div className="space-y-3">
@@ -234,7 +234,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
               </div>
             ) : recentOrgs.length === 0 ? (
               <p className="text-muted-foreground text-center py-8">
-                Nenhuma empresa cadastrada aún
+                Ninguna empresa registrada aún
               </p>
             ) : (
               <div className="space-y-3">
@@ -283,7 +283,7 @@ export function SuperAdminDashboard({ onNavigate }: SuperAdminDashboardProps = {
             </div>
           ) : logs?.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">
-              Nenhuma atividade registrada aún
+              Ninguna atividade registrada aún
             </p>
           ) : (
             <div className="space-y-3">

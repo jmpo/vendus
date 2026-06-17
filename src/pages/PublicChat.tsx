@@ -16,12 +16,12 @@ interface Message {
   content: string;
   block?: FunnelBlock;
   options?: { id: string; label: string; emoji?: string }[];
-  /** Quando definido, renderiza tela de Resultado do Quiz no lugar da bolha padrão. */
+  /** Cuando definido, renderiza tela de Resultado do Quiz no lugar da burbuja predeterminado. */
   resultPayload?: { scoreTotal: number; tags: string[] };
 }
 
 interface PublicChatProps {
-  channel?: ChannelKey; // 'chat' (default) | 'quiz' — controla theme/slug-resolução
+  channel?: ChannelKey; // 'chat' (default) | 'quiz' — controla theme/slug-resolución
 }
 
 export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
@@ -40,7 +40,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
   const scoreRef = useRef<number>(0);
   const tagsRef = useRef<Set<string>>(new Set());
   // Modo "Agente IA": após bloco ai_takeover/agent_switch, o chat passa a
-  // ser conduzido 100% pelo webchat-bot — input fica siempre livre.
+  // ser conduzido 100% por el webchat-bot — input fica siempre livre.
   const [aiMode, setAiMode] = useState<null | {
     conversationId: string;
     agentId: string | null;
@@ -48,7 +48,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
   }>(null);
   const aiModeRef = useRef<typeof aiMode>(null);
   useEffect(() => { aiModeRef.current = aiMode; }, [aiMode]);
-  // Quando o takeover falla, mantemos o input livre para o usuario intentar de novo.
+  // Cuando o takeover falla, mantemos o input livre para o usuario intentar de novo.
   const [aiError, setAiError] = useState(false);
   const pendingTakeoverBlockRef = useRef<FunnelBlock | null>(null);
   const visitorIdRef = useRef<string>('');
@@ -203,7 +203,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
         }, 2000);
       }
     } else if (block.type === 'score') {
-      // Fase 3: bloco de score apenas acumula e avança
+      // Fase 3: bloco de score solo acumula e avança
       const inc = Number((block.data as any)?.score_value || 0);
       scoreRef.current += inc;
       const nextIndex = orderedBlocks.findIndex(b => b.id === block.id) + 1;
@@ -357,7 +357,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
       };
       setAiMode(newMode);
       aiModeRef.current = newMode;
-      // Dispara primeira mensaje (saudação proativa del agente).
+      // Dispara primera mensaje (saludo proativa del agente).
       const lastUserMsg = [...messages].reverse().find(m => m.type === 'user')?.content;
       const initialTrigger = lastUserMsg && lastUserMsg.trim().length > 0
         ? lastUserMsg
@@ -424,7 +424,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
     }
   }, [funnel]);
 
-  // Hooks precisam rodar em todas as renderizações para no quebrar em produção.
+  // Hooks precisam rodar em todas las renderizações para no quebrar em producción.
   const a = useMemo(
     () => (funnel ? getChannelAppearance(funnel as any, channel) : defaultChannelAppearance(channel)),
     [funnel, channel]
@@ -437,7 +437,7 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
     const text = inputValue;
     setInputValue('');
 
-    // Modo Agente IA: envia direto para webchat-bot, sem flujo estático.
+    // Modo Agente IA: envia direto para webchat-bot, sin flujo estático.
     if (aiModeRef.current) {
       await sendToAgent(text, aiModeRef.current);
       setTimeout(() => inputRef.current?.focus(), 100);
@@ -602,11 +602,11 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
   const headerBg = chatOpts.header_gradient
     ? `linear-gradient(135deg, ${a.primary_color}, ${a.secondary_color || a.primary_color})`
     : a.primary_color;
-  // Mesma fórmula do AppearanceLivePreview/ChatPreview para garantir paridade visual
+  // Misma fórmula do AppearanceLivePreview/ChatPreview para garantir paridade visual
   const bubbleRadius = chatOpts.bubble_style === 'squared' ? 4
     : chatOpts.bubble_style === 'bubble' ? 24
     : (a.border_radius || 14);
-  // "Tail" da bolha só faz sentido no estilo padrão (rounded). Squared ya é reto
+  // "Tail" da burbuja só faz sentido no estilo predeterminado (rounded). Squared ya é reto
   // e bubble ya é arredondado uniforme — manter o tail estraga a forma.
   const botTailRadius = chatOpts.bubble_style && chatOpts.bubble_style !== 'rounded' ? bubbleRadius : 4;
   const userTailRadius = botTailRadius;
@@ -755,8 +755,8 @@ export default function PublicChat({ channel = 'chat' }: PublicChatProps = {}) {
             ))}
           </AnimatePresence>
 
-          {/* Typing indicator: siempre visível em modo IA (mismo com show_typing=false),
-              senão o usuario fica sem feedback enquanto o webchat-bot processa. */}
+          {/* Typing indicator: siempre visível em modo IA (mismo con show_typing=false),
+              sino o usuario fica sin feedback mientras o webchat-bot processa. */}
           {isTyping && (chatOpts.show_typing || !!aiMode) && (
             <motion.div
               initial={{ opacity: 0 }}

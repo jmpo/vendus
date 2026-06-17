@@ -21,7 +21,7 @@ export function useAcceptConversation() {
       return data;
     },
     onMutate: async (vars) => {
-      // Update otimista: marca a conversación como aceita pelo usuario e bumpa para o topo
+      // Update otimista: marca a conversación como aceita por el usuario e bumpa para o topo
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         return {
@@ -31,12 +31,12 @@ export function useAcceptConversation() {
         };
       }
 
-      // Cancela queries pendentes (lista + detalhe)
+      // Cancela queries pendentes (lista + detalle)
       await queryClient.cancelQueries({ queryKey: ['webchat-conversations'] });
       const detailKey = ['webchat-conversation', vars.conversation_id];
       await queryClient.cancelQueries({ queryKey: detailKey });
 
-      // Snapshot de TODAS as queries com prefixo webchat-conversations
+      // Snapshot de TODAS as queries con prefixo webchat-conversations
       const queries = queryClient.getQueriesData<any>({ queryKey: ['webchat-conversations'] });
       const snapshots = queries.map(([key, data]) => ({ key, data }));
 
@@ -94,14 +94,14 @@ export function useAcceptConversation() {
           queryClient.setQueryData(key, data);
         }
       }
-      // Rollback detalhe
+      // Rollback detalle
       if (ctx?.detailKey && ctx.previousDetail !== undefined) {
         queryClient.setQueryData(ctx.detailKey, ctx.previousDetail);
       }
     },
     onSettled: (_data, _err, vars) => {
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
-      // refetchType: 'active' força a query aberta a refazer mismo dentro do staleTime
+      // refetchType: 'active' fuerza a query aberta a refazer mismo dentro do staleTime
       queryClient.invalidateQueries({
         queryKey: ['webchat-conversation', vars.conversation_id],
         refetchType: 'active',

@@ -255,7 +255,7 @@ export function splitIntoBubbles(text: string, cfg: SplittingConfig = {}): strin
   let units: string[] = sentences;
   if (sentences.length <= 1 && t.length > targetLen) {
     units = t
-      .split(/(?<=[;])\s+|,\s+(?=(?:mas|então|entao|aí|ai|e aí|e ai|porém|porem|porque|tipo|sabe)\b)|,\s+/i)
+      .split(/(?<=[;])\s+|,\s+(?=(?:mas|entonces|entao|aí|ai|e aí|e ai|porém|porem|porque|tipo|sabe)\b)|,\s+/i)
       .map((s) => s.trim())
       .filter(Boolean);
   }
@@ -463,7 +463,7 @@ export function defaultsForAgentType(agentType: string): HumanizationConfig {
 
 const REGION_HINTS: Record<LinguisticRegion, string> = {
   neutral: 'español brasileiro neutro, sin regionalismo forte',
-  paulista: 'sotaque paulista (mano, tipo, então, daí)',
+  paulista: 'sotaque paulista (mano, tipo, entonces, daí)',
   carioca: 'sotaque carioca (cara, véi, mermão, maneiro)',
   nordestino: 'sotaque nordestino (oxe, vixe, massa, arretado)',
   sulista: 'sotaque sulista/gaúcho (tchê, bah, guri, capaz)',
@@ -583,7 +583,7 @@ const EMOJI_ONLY_RE = /^[\s\p{Extended_Pictographic}\p{Emoji_Presentation}\u200d
 export function detectMessageType(text: string): ReactionMessageType | null {
   const t = (text ?? '').trim();
   if (!t) return null;
-  if (/🎙️|\[áudio\]|\[audio\]|áudio del cliente/i.test(t)) return 'audio';
+  if (/🎙️|\[audio\]|\[audio\]|audio del cliente/i.test(t)) return 'audio';
   if (/\[sticker\]|\[figurinha\]/i.test(t)) return 'sticker';
   if (/\[imagen\]|\[image\]|🖼️/i.test(t)) return 'image';
   if (/\[v[ií]deo\]|\[video\]/i.test(t)) return 'video';

@@ -32,7 +32,7 @@ export default function Setup() {
           return;
         }
       } catch {
-        // segue mostrando o formulário; backend valida de novo no submit
+        // segue mostrando o formulario; backend valida de novo no submit
       } finally {
         if (mounted) setChecking(false);
       }
@@ -157,7 +157,7 @@ export default function Setup() {
                 id="companyName"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
-                placeholder="Minha Empresa Ltda"
+                placeholder="Mi Empresa Ltda"
               />
             </div>
             <div className="space-y-2">

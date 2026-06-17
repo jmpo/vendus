@@ -540,7 +540,7 @@ export function AIChat({ productName, productId }: AIChatProps) {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
-                placeholder={isMobile ? "Pergunte algo..." : "O lead disse algo? Cole aqui e pergunte..."}
+                placeholder={isMobile ? "Pergunte algo..." : "O lead disse algo? Cole acá e pergunte..."}
                 className={cn("pr-12 bg-card border-border", isMobile ? "h-11" : "h-12")}
                 disabled={isLoading || isTranscribing}
               />
@@ -550,7 +550,7 @@ export function AIChat({ productName, productId }: AIChatProps) {
                 onClick={handleStartRecording}
                 className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-primary"
                 disabled={isLoading || isTranscribing}
-                title="Gravar áudio"
+                title="Gravar audio"
               >
                 <Mic size={18} />
               </Button>

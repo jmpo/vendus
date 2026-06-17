@@ -58,12 +58,12 @@ export function ChatBotSettingsTab({ funnel }: Props) {
             Configuraciones del ChatBot
           </h2>
           <p className="text-muted-foreground text-sm">
-            Apenas opciones relevantes para conversaciones em chat público.
+            Solo opciones relevantes para conversaciones em chat público.
           </p>
         </div>
         <Button onClick={handleSave} disabled={updateFunnel.isPending} className="gap-2">
           {updateFunnel.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          Salvar
+          Guardar
         </Button>
       </div>
 
@@ -182,7 +182,7 @@ export function ChatBotSettingsTab({ funnel }: Props) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Temperatura padrão</Label>
+              <Label>Temperatura predeterminado</Label>
               <Select value={formData.default_temperature} onValueChange={(v) => setFormData(p => ({ ...p, default_temperature: v }))}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -193,7 +193,7 @@ export function ChatBotSettingsTab({ funnel }: Props) {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Etiquetas padrão (separadas por vírgula)</Label>
+              <Label>Etiquetas predeterminado (separadas por vírgula)</Label>
               <Input
                 value={formData.default_tags}
                 onChange={(e) => setFormData(p => ({ ...p, default_tags: e.target.value }))}

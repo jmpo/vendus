@@ -122,7 +122,7 @@ export function AgentTestChat({ agentId, agentName, productId, agentType }: Agen
               <p className="text-sm font-medium">{agentName}</p>
               {isOrchestratorTest && (
                 <Badge variant="outline" className="h-4 px-1.5 text-[9px] border-amber-500/40 text-amber-700 bg-amber-50">
-                  Orquestrador
+                  Orquestador
                 </Badge>
               )}
             </div>

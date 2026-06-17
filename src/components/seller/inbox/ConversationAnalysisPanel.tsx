@@ -85,7 +85,7 @@ export function ConversationAnalysisPanel({
         ) : isLoading ? (
           <div className="flex flex-col items-center py-12 gap-3">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-sm text-muted-foreground">Analisando conversación com IA...</p>
+            <p className="text-sm text-muted-foreground">Analisando conversación con IA...</p>
           </div>
         ) : analysis ? (
           <ScrollArea className="max-h-[70vh]">
@@ -110,7 +110,7 @@ export function ConversationAnalysisPanel({
                   <p className="text-sm font-medium">{analysis.metrics.tone}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-muted/50">
-                  <p className="text-xs text-muted-foreground">Objeções tratadas</p>
+                  <p className="text-xs text-muted-foreground">Objeciones tratadas</p>
                   <p className="text-sm font-medium">{analysis.metrics.objectionsHandled}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-muted/50">
@@ -145,7 +145,7 @@ export function ConversationAnalysisPanel({
                 <div>
                   <h4 className="text-sm font-medium flex items-center gap-1.5 mb-2">
                     <AlertTriangle className="h-4 w-4 text-yellow-500" />
-                    Pontos de Melhoria
+                    Pontos de Mejora
                   </h4>
                   <ul className="space-y-1">
                     {analysis.weaknesses.map((w, i) => (
@@ -162,7 +162,7 @@ export function ConversationAnalysisPanel({
                 <div>
                   <h4 className="text-sm font-medium flex items-center gap-1.5 mb-2">
                     <Lightbulb className="h-4 w-4 text-primary" />
-                    Sugestões
+                    Sugerencias
                   </h4>
                   <ul className="space-y-1">
                     {analysis.suggestions.map((s, i) => (

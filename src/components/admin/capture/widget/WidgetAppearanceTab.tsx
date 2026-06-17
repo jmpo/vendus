@@ -26,12 +26,12 @@ export function WidgetAppearanceTab({ funnel }: Props) {
 
   const handleSave = async () => {
     await update.mutateAsync({ id: funnel.id, appearance } as any);
-    toast.success('Aparência do Widget salva');
+    toast.success('Apariencia do Widget salva');
   };
 
   const handleReset = () => {
     setAppearance({ ...appearance, widget: defaultChannelAppearance('widget') });
-    toast.info('Aparência restaurada ao padrão');
+    toast.info('Apariencia restaurada ao predeterminado');
   };
 
   const handleApplyPreset = (preset: AppearancePreset) => {
@@ -47,16 +47,16 @@ export function WidgetAppearanceTab({ funnel }: Props) {
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b shrink-0">
         <div className="flex items-center gap-2 text-sm font-medium">
           <Code2 className="h-4 w-4 text-primary" />
-          Aparência do Widget
+          Apariencia do Widget
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={handleReset} className="gap-1.5">
             <RotateCcw className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Restaurar padrão</span>
+            <span className="hidden sm:inline">Restaurar predeterminado</span>
           </Button>
           <Button size="sm" onClick={handleSave} disabled={!isDirty || update.isPending} className="gap-1.5">
             {update.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-            Salvar
+            Guardar
           </Button>
         </div>
       </div>
@@ -75,7 +75,7 @@ export function WidgetAppearanceTab({ funnel }: Props) {
           <div className="bg-muted/30 rounded-lg p-3 sm:p-4 flex flex-col gap-3 lg:h-full">
             <div className="flex items-center justify-between">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                Pré-visualização ao vivo
+                Pré-visualización ao vivo
               </p>
               <div className="flex gap-1 bg-background border rounded-md p-0.5 shrink-0">
                 <button type="button" onClick={() => setDevice('mobile')}

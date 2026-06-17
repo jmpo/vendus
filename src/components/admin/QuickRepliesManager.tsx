@@ -119,7 +119,7 @@ export function QuickRepliesManager() {
             Respuestas Rápidas
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Crea atajos para que el equipo envíe mensajes listos en el chat. Usa <code className="px-1 bg-muted rounded text-xs">{'{{nombre}}'}</code> e <code className="px-1 bg-muted rounded text-xs">{'{{producto}}'}</code> como variáveis.
+            Crea atajos para que el equipo envíe mensajes listos en el chat. Usa <code className="px-1 bg-muted rounded text-xs">{'{{nombre}}'}</code> e <code className="px-1 bg-muted rounded text-xs">{'{{producto}}'}</code> como variables.
           </p>
         </div>
         <Button onClick={() => setCreating(true)}>
@@ -206,7 +206,7 @@ export function QuickRepliesManager() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deleteId && deleteMutation.mutate(deleteId)}>Excluir</AlertDialogAction>
+            <AlertDialogAction onClick={() => deleteId && deleteMutation.mutate(deleteId)}>Eliminar</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -223,7 +223,7 @@ interface FormProps {
 }
 
 function ReplyFormDialog({ open, onClose, initial, onSave, isSaving }: FormProps) {
-  const [category, setCategory] = useState(initial?.category || 'Geral');
+  const [category, setCategory] = useState(initial?.category || 'General');
   const [title, setTitle] = useState(initial?.title || '');
   const [content, setContent] = useState(initial?.content || '');
   const [shortcut, setShortcut] = useState(initial?.shortcut || '');
@@ -289,7 +289,7 @@ function ReplyFormDialog({ open, onClose, initial, onSave, isSaving }: FormProps
               maxLength={2000}
             />
             <p className="text-xs text-muted-foreground">
-              Usa <code className="px-1 bg-muted rounded">{'{{nombre}}'}</code> e <code className="px-1 bg-muted rounded">{'{{producto}}'}</code> como variáveis dinâmicas.
+              Usa <code className="px-1 bg-muted rounded">{'{{nombre}}'}</code> e <code className="px-1 bg-muted rounded">{'{{producto}}'}</code> como variables dinâmicas.
             </p>
           </div>
         </div>
@@ -297,7 +297,7 @@ function ReplyFormDialog({ open, onClose, initial, onSave, isSaving }: FormProps
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
           <Button onClick={handleSave} disabled={!title.trim() || !content.trim() || isSaving}>
             {isSaving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            Salvar
+            Guardar
           </Button>
         </DialogFooter>
       </DialogContent>

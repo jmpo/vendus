@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
       data: { user: caller },
     } = await userClient.auth.getUser();
     if (!caller) {
-      return new Response(JSON.stringify({ error: "Sessão inválida" }), {
+      return new Response(JSON.stringify({ error: "Sesión inválida" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

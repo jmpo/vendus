@@ -274,12 +274,12 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
       (instances ?? [])[0]?.id ||
       '';
     if (!fallbackInstanceId) {
-      toast.error('Nenhuma conexão WhatsApp cadastrada para esta empresa');
+      toast.error('Ninguna conexión WhatsApp registrada para esta empresa');
       return;
     }
     const chosen = (instances ?? []).find((i: any) => i.id === fallbackInstanceId);
     if (chosen && chosen.status !== 'connected') {
-      toast.error(`Conexão "${chosen.name}" no está conectada (status: ${chosen.status}). Reconecte ou escolha otra.`);
+      toast.error(`Conexión "${chosen.name}" no está conectada (status: ${chosen.status}). Reconecte ou elegí otra.`);
       return;
     }
     setTesting(true);
@@ -288,15 +288,15 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
       const { error } = await supabase.functions.invoke('admin-agent-handle-inbound', {
         body: {
           organization_id: profile?.organization_id,
-          message: 'Me mande um resumen de teste com os dados de hoy.',
+          message: 'Me mande um resumen de teste con os dados de hoy.',
           phone,
           instance_id: fallbackInstanceId,
         },
       });
       if (error) throw error;
-      toast.success(`Mensaje enviada via "${chosen?.name ?? 'conexão'}" — confira su WhatsApp.`);
+      toast.success(`Mensaje enviado via "${chosen?.name ?? 'conexión'}" — confira su WhatsApp.`);
     } catch (e: any) {
-      toast.error('Falha al enviar teste: ' + (e?.message ?? 'error'));
+      toast.error('Fallo al enviar teste: ' + (e?.message ?? 'error'));
     } finally {
       setTesting(false);
     }
@@ -393,7 +393,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                 Productos bajo seguimiento
               </Label>
               <p className="text-xs text-muted-foreground">
-                Seleccione quais productos o agente debe vigiar. Vazio = todos os productos da organización.
+                Seleccione cuáles productos o agente debe vigiar. Vacío = todos los productos da organización.
               </p>
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {(products ?? []).length === 0 && (
@@ -427,7 +427,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
 
       {form.admin_agent_enabled && (
         <>
-          {/* Permissões de leitura — controle do que o agente puede consultar */}
+          {/* Permisos de leitura — controle do que o agente puede consultar */}
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
@@ -537,7 +537,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
             )}
           </Card>
 
-          {/* Relatório Semanal */}
+          {/* Reporte Semanal */}
           <Card className={cn(disabled && 'opacity-50 pointer-events-none')}>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -546,8 +546,8 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                     <Bell className="h-5 w-5 text-accent-foreground" />
                   </div>
                   <div>
-                    <CardTitle className="text-base">Relatório Semanal</CardTitle>
-                    <CardDescription>Comparativo da semana atual vs. semana anterior</CardDescription>
+                    <CardTitle className="text-base">Reporte Semanal</CardTitle>
+                    <CardDescription>Comparativo da semana actual vs. semana anterior</CardDescription>
                   </div>
                 </div>
                 <Switch
@@ -599,7 +599,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                   </div>
                   <div>
                     <CardTitle className="text-base">Alertas em Tempo Real</CardTitle>
-                    <CardDescription>Notificações imediatas cuando triggers disparam</CardDescription>
+                    <CardDescription>Notificaciones imediatas cuando triggers disparam</CardDescription>
                   </div>
                 </div>
                 <Switch
@@ -633,8 +633,8 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
 
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
-                      <Label className="text-sm font-medium">Conversación sem atención</Label>
-                      <p className="text-xs text-muted-foreground">Alertar após X minutos sem respuesta</p>
+                      <Label className="text-sm font-medium">Conversación sin atención</Label>
+                      <p className="text-xs text-muted-foreground">Alertar após X minutos sin respuesta</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Input
@@ -701,7 +701,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <Label className="text-sm font-medium">Meta atingida</Label>
-                      <p className="text-xs text-muted-foreground">Notificar cuando vendedor bater a meta do período</p>
+                      <p className="text-xs text-muted-foreground">Notificar cuando vendedor bater a meta do periodo</p>
                     </div>
                     <Switch
                       checked={form.alert_goal_achieved}
@@ -715,7 +715,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
                       <Label className="text-sm font-medium">Pico de leads em producto específico</Label>
-                      <p className="text-xs text-muted-foreground">Alertar cuando volume &gt; X% acima da média</p>
+                      <p className="text-xs text-muted-foreground">Alertar cuando volume &gt; X% acima da media</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Switch
@@ -767,18 +767,18 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
           <div className="space-y-1.5">
             <Label className="flex items-center gap-2 text-sm">
               <Smartphone className="h-4 w-4" />
-              Conexão WhatsApp para o disparo
+              Conexión WhatsApp para o disparo
             </Label>
             <Select
               value={selectedInstanceId || 'auto'}
               onValueChange={(v) => setSelectedInstanceId(v === 'auto' ? '' : v)}
             >
               <SelectTrigger className="w-full sm:w-[420px]">
-                <SelectValue placeholder="Seleccione uma conexão" />
+                <SelectValue placeholder="Seleccione uma conexión" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="auto">
-                  Automático (preferir conexão conectada)
+                  Automático (preferir conexión conectada)
                 </SelectItem>
                 {(instances ?? []).map((i: any) => (
                   <SelectItem key={i.id} value={i.id}>
@@ -797,7 +797,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                       )}
                       {i.is_default && (
                         <Badge variant="outline" className="ml-1 text-[10px] h-4 px-1">
-                          padrão
+                          predeterminado
                         </Badge>
                       )}
                       <span className="text-[10px] text-muted-foreground ml-1">
@@ -808,13 +808,13 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                 ))}
                 {(instances ?? []).length === 0 && (
                   <SelectItem value="none" disabled>
-                    Nenhuma conexão cadastrada
+                    Ninguna conexión registrada
                   </SelectItem>
                 )}
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Usted verá apenas conexões desta empresa. O agente responde siempre por essa conexão.
+              Usted verá solo conexiones desta empresa. O agente responde siempre por esa conexión.
             </p>
           </div>
         )}
@@ -822,7 +822,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
         <div className="flex flex-wrap items-center gap-2">
           <Button onClick={handleSave} disabled={!hasChanges || saveSettings.isPending}>
             {saveSettings.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-            Salvar configuraciones
+            Guardar configuraciones
           </Button>
           <Button variant="outline" onClick={handleTest} disabled={testing || !form.admin_agent_enabled}>
             {testing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Send className="h-4 w-4 mr-2" />}
@@ -838,12 +838,12 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
             </SheetTrigger>
             <SheetContent className="w-full sm:max-w-lg">
               <SheetHeader>
-                <SheetTitle>Últimas mensajes enviadas pelo Agente Admin</SheetTitle>
+                <SheetTitle>Últimas mensajes enviadas por el Agente Admin</SheetTitle>
               </SheetHeader>
               <ScrollArea className="h-[calc(100vh-100px)] mt-4 pr-4">
                 <div className="space-y-3">
                   {(recentMessages ?? []).length === 0 && (
-                    <p className="text-sm text-muted-foreground italic">Nenhuma mensaje registrada aún.</p>
+                    <p className="text-sm text-muted-foreground italic">Ninguna mensaje registrada aún.</p>
                   )}
                   {(recentMessages ?? []).map((m: any) => (
                     <div
@@ -857,7 +857,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                     >
                       <div className="flex items-center justify-between mb-1">
                         <Badge variant="outline" className="text-[10px]">
-                          {m.direction === 'outbound' ? '→ Enviada' : '← Recebida'} · {m.message_type}
+                          {m.direction === 'outbound' ? '→ Enviado' : '← Recebida'} · {m.message_type}
                         </Badge>
                         <span className="text-[10px] text-muted-foreground">
                           {new Date(m.created_at).toLocaleString('es-PY')}

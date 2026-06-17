@@ -293,7 +293,7 @@ export function FormsManager() {
                           className="text-destructive focus:text-destructive"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
-                          Excluir
+                          Eliminar
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -436,7 +436,7 @@ export function FormsManager() {
             
             {/* Form Details */}
             <div className="space-y-2">
-              <Label htmlFor="form-name">Nombre do formulário *</Label>
+              <Label htmlFor="form-name">Nombre do formulario *</Label>
               <Input
                 id="form-name"
                 value={newFormName}
@@ -451,7 +451,7 @@ export function FormsManager() {
                 id="form-description"
                 value={newFormDescription}
                 onChange={(e) => setNewFormDescription(e.target.value)}
-                placeholder="Descreva o objetivo do formulário..."
+                placeholder="Descreva o objetivo do formulario..."
                 rows={2}
               />
             </div>

@@ -102,7 +102,7 @@ export function KanbanColumn({
               >
                 <span className="text-white text-lg">0</span>
               </div>
-              <p className="text-sm text-muted-foreground">Nenhum lead</p>
+              <p className="text-sm text-muted-foreground">Ningún lead</p>
             </div>
           ) : (
             stage.leads.map((lead) => (

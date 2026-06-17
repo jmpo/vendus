@@ -162,7 +162,7 @@ export function useUserStatus(): UserStatusData {
     }
 
     const labels: Record<UserStatusType, string> = {
-      online: '🟢 Disponível',
+      online: '🟢 Disponible',
       away: '🟡 Ausente',
       offline: '🔴 Offline',
     };

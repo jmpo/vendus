@@ -1,6 +1,6 @@
-// Tabela de preços por modelo (USD por 1M tokens).
-// Atualize conforme os provedores divulgarem novos preços.
-// Última atualização: 2026-06
+// Tabela de precios por modelo (USD por 1M tokens).
+// Actualizá conforme os provedores divulgarem novos precios.
+// Última actualización: 2026-06
 
 export interface ModelPrice {
   input: number;  // USD per 1M input tokens
@@ -40,7 +40,7 @@ export const MODEL_PRICING: Record<string, ModelPrice> = {
   'gemini:gemini-2.0-flash':         { input: 0.10, output: 0.40 },
   'gemini:text-embedding-004':       { input: 0.02, output: 0 },
 
-  // ---- Lovable Gateway (mesmos preços da OpenAI/Google na conta Lovable) ----
+  // ---- Lovable Gateway (mesmos precios da OpenAI/Google na conta Lovable) ----
   'lovable:google/gemini-3-flash-preview':   { input: 0.30, output: 2.50 },
   'lovable:google/gemini-3.1-pro-preview':   { input: 2.50, output: 10.0 },
   'lovable:google/gemini-2.5-pro':           { input: 1.25, output: 10.0 },
@@ -52,7 +52,7 @@ export const MODEL_PRICING: Record<string, ModelPrice> = {
   'lovable:openai/gpt-5-nano':               { input: 0.10, output: 0.40 },
 };
 
-// Fallback médio por provedor quando o modelo não está no mapa
+// Fallback médio por provedor cuando o modelo no está no mapa
 const PROVIDER_FALLBACK: Record<string, ModelPrice> = {
   openai:    { input: 1.0,  output: 3.0 },
   anthropic: { input: 3.0,  output: 15.0 },

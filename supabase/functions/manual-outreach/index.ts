@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
 
     if (!agent) throw new Error("Agent not found");
 
-    // Resolve widget ativo da organización (necessário para crear conversación no inbox)
+    // Resolve widget ativo da organización (necesario para crear conversación no inbox)
     let outreachWidgetId: string | null = null;
     {
       const { data: existingWidget } = await supabase
@@ -149,7 +149,7 @@ Deno.serve(async (req) => {
           .maybeSingle();
 
         // If conversation is already with a human, do NOT send AI outreach
-        // (a menos que o caller force — usado em automações pós-venta críticas)
+        // (a menos que o caller force — usado em automatizaciones pós-venta críticas)
         if (existingConv && !force_when_human && (existingConv.status === "human_active" || existingConv.status === "waiting_human")) {
           results.push({ leadId, skipped: true, reason: `Conversation in ${existingConv.status}` });
           continue;
@@ -171,14 +171,14 @@ Deno.serve(async (req) => {
 
         const modeRules = mode === 'conversational'
           ? `MODO: CONVERSA INTENCIONAL
-- Genera SOLO uma abertura corta (1–2 linhas, no máx. 25 palavras).
+- Genera SOLO uma abertura corta (1–2 linhas, no máx. 25 palabras).
 - Faça UNA pregunta provocativa referenciando el evento (ex.: "Vi que usted gerou um Pix, conseguiu finalizar?").
-- NÃO entregue Pix, link, código, instruções ou dados del evento ahora — só preguntes.
+- NÃO entregue Pix, link, código, instrucciones ou dados del evento ahora — só preguntes.
 - Esperá la respuesta del lead antes de ofrecer cualquier detalle.`
           : `MODO: MENSAGEM DIRETA
 - Genera umel mensaje completa, mas em no máx. 2 parágrafos curtos.
-- Se hay Pix/link, coloque cada um em linha própria, sin texto extra junto.
-- Sem despedidas longas. Termine con UNA pregunta ou CTA claro.`;
+- Se hay Pix/link, coloque cada um em linha propia, sin texto extra junto.
+- Sin despedidas longas. Termine con UNA pregunta ou CTA claro.`;
 
         const systemPrompt = `Vos sos ${agent.name}, um agente de ${agent.agent_type} de la empresa.
 MISSÃO: ${agent.primary_objective}
@@ -193,7 +193,7 @@ ${eventCtxLines ? `CONTEXTO DO EVENTO:\n${eventCtxLines}` : ""}
 ${modeRules}
 REGRAS GERAIS:
 - Genera SOLO el mensaje, sin explicações ou prefixos.
-- Sé natural e humano, NÃO pareça um bot. Sem clichés ("espero que esteja bem", etc.).
+- Sé natural e humano, NÃO pareça um bot. Sin clichés ("espero que esteja bem", etc.).
 - Personalize con as información del lead.
 - WhatsApp: sin markdown, sin HTML.`;
 
@@ -266,7 +266,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
         }
 
         if (!sent) {
-          results.push({ leadId, error: "WhatsApp send failed (sem instância conectada?)" });
+          results.push({ leadId, error: "WhatsApp send failed (sin instância conectada?)" });
           continue;
         }
 

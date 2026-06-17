@@ -27,7 +27,7 @@ export function densityToGap(d: Density): string {
 }
 
 /**
- * Gera variáveis CSS + style inline a partir da aparência de um canal.
+ * Gera variables CSS + style inline a partir da apariencia de um canal.
  * Use no elemento root do renderizador.
  */
 export function applyAppearance(a: ChannelAppearance): React.CSSProperties {
@@ -36,7 +36,7 @@ export function applyAppearance(a: ChannelAppearance): React.CSSProperties {
     : undefined;
 
   return {
-    // CSS vars consumidas pelo renderer
+    // CSS vars consumidas por el renderer
     ['--fa-primary' as any]: a.primary_color,
     ['--fa-secondary' as any]: a.secondary_color,
     ['--fa-bg' as any]: a.background_color,

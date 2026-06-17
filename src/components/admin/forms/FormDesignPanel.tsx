@@ -66,11 +66,11 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
       const { data: signed, error: signErr } = await supabase.storage
         .from('form-media')
         .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
-      if (signErr || !signed?.signedUrl) throw signErr || new Error('Falha ao gerar URL');
+      if (signErr || !signed?.signedUrl) throw signErr || new Error('Fallo ao generar URL');
       onUpdateTheme({ logo_url: signed.signedUrl });
       toast.success('Logo actualizada');
     } catch (err: any) {
-      toast.error('Falha no upload: ' + err.message);
+      toast.error('Fallo no upload: ' + err.message);
     } finally {
       setUploading(false);
     }
@@ -79,8 +79,8 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
   return (
     <aside className="w-full md:w-80 shrink-0 md:border-l bg-card flex flex-col h-full">
       <div className="px-4 py-3 border-b">
-        <h3 className="font-semibold">Design do formulário</h3>
-        <p className="text-xs text-muted-foreground">Ajustes refletem em tempo real no preview</p>
+        <h3 className="font-semibold">Design do formulario</h3>
+        <p className="text-xs text-muted-foreground">Ajustes refletem en tiempo real no preview</p>
       </div>
 
       <ScrollArea className="flex-1">
@@ -138,7 +138,7 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
             {theme.logo_url && (
               <div className="grid grid-cols-2 gap-2 pt-2">
                 <div className="space-y-1.5">
-                  <Label className="text-xs">Tamanho</Label>
+                  <Label className="text-xs">Tamaño</Label>
                   <Select
                     value={theme.logo_size || 'md'}
                     onValueChange={(v: FormLogoSize) => onUpdateTheme({ logo_size: v })}
@@ -146,14 +146,14 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
                     <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="sm">Pequena</SelectItem>
-                      <SelectItem value="md">Média</SelectItem>
+                      <SelectItem value="md">Media</SelectItem>
                       <SelectItem value="lg">Grande</SelectItem>
                       <SelectItem value="xl">Extra grande</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs">Posição</Label>
+                  <Label className="text-xs">Posición</Label>
                   <Select
                     value={theme.logo_position || 'center'}
                     onValueChange={(v: FormLogoPosition) => onUpdateTheme({ logo_position: v })}
@@ -186,7 +186,7 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
             {theme.show_progress && (
               <>
                 <div className="space-y-1.5">
-                  <Label className="text-xs">Posição</Label>
+                  <Label className="text-xs">Posición</Label>
                   <Select
                     value={theme.progress_position || 'top'}
                     onValueChange={(v: FormProgressPosition) => onUpdateTheme({ progress_position: v })}
@@ -313,9 +313,9 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
 
           {/* Buttons / Radius */}
           <section className="space-y-3">
-            <Label className="text-xs font-semibold uppercase text-muted-foreground">Botões e cantos</Label>
+            <Label className="text-xs font-semibold uppercase text-muted-foreground">Botones e cantos</Label>
             <div className="space-y-1.5">
-              <Label className="text-xs">Estilo do botão</Label>
+              <Label className="text-xs">Estilo do botón</Label>
               <Select
                 value={theme.button_style}
                 onValueChange={(v: FormTheme['button_style']) => onUpdateTheme({ button_style: v })}
@@ -323,7 +323,7 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
                 <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="filled">Sólido</SelectItem>
-                  <SelectItem value="outlined">Contorno</SelectItem>
+                  <SelectItem value="outlined">Manejo</SelectItem>
                   <SelectItem value="text">Texto</SelectItem>
                 </SelectContent>
               </Select>
@@ -348,7 +348,7 @@ export function FormDesignPanel({ form, onUpdateTheme }: FormDesignPanelProps) {
 
           {/* Layout */}
           <section className="space-y-3">
-            <Label className="text-xs font-semibold uppercase text-muted-foreground">Layout do formulário</Label>
+            <Label className="text-xs font-semibold uppercase text-muted-foreground">Layout do formulario</Label>
             <div className="space-y-1.5">
               <Label className="text-xs">Tipo</Label>
               <Select

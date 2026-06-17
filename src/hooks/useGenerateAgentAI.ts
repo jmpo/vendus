@@ -58,7 +58,7 @@ export function useGenerateAgentAI() {
       throw new Error('Failed to generate agent');
     } catch (error) {
       console.error('Error generating agent:', error);
-      toast.error('Error al generar agente com IA');
+      toast.error('Error al generar agente con IA');
       return null;
     } finally {
       setIsGenerating(false);

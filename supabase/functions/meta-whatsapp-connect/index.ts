@@ -72,12 +72,12 @@ Deno.serve(async (req: Request) => {
     return json({ error: 'WABA ID inválido ou sin permiso whatsapp_business_management', detail: ge.graph?.message ?? String(e) }, 400);
   }
 
-  // Detecta se es update/promoção (connection_id) ou creación direta (sem id).
+  // Detecta se es update/promoção (connection_id) ou creación direta (sin id).
   const isExisting = !!connection_id;
   let row: any;
 
   if (isExisting) {
-    // Carrega o registro (rascunho ou ativo) e promove a 'active'.
+    // Carrega o registro (borrador ou ativo) e promove a 'active'.
     const { data: current, error: loadErr } = await sbAdmin
       .from('whatsapp_meta_connections')
       .select('id, status, app_secret_encrypted, access_token_encrypted, webhook_verify_token')

@@ -121,7 +121,7 @@ export function EmailTemplatesManager() {
                       className="text-destructive hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4 mr-1" />
-                      Excluir
+                      Eliminar
                     </Button>
                   )}
                 </div>
@@ -166,7 +166,7 @@ export function EmailTemplatesManager() {
               {deleteTemplate.isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
               ) : null}
-              Excluir
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

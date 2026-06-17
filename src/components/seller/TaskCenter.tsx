@@ -297,7 +297,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="low">Baixa</SelectItem>
-                        <SelectItem value="medium">Média</SelectItem>
+                        <SelectItem value="medium">Media</SelectItem>
                         <SelectItem value="high">Alta</SelectItem>
                         <SelectItem value="urgent">Urgente</SelectItem>
                       </SelectContent>
@@ -511,7 +511,7 @@ export function TaskCenter({ userId, productId, productName, compact = false }: 
                 <p className="text-muted-foreground text-center max-w-md">
                   {filter === 'today' 
                     ? 'Aproveite para revisar tus leads o explorar o playbook.'
-                    : 'Tus tareas aparecerão aqui conforme tú avançar com os leads.'}
+                    : 'Tus tareas aparecerán acá conforme tú avanzar con os leads.'}
                 </p>
               </div>
             )}

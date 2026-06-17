@@ -22,7 +22,7 @@ interface MobileHeaderProps {
   subtitle?: string;
   showBack?: boolean;
   onBack?: () => void;
-  /** Lista de productos disponíveis para troca rápida */
+  /** Lista de productos disponibles para troca rápida */
   products?: DBProduct[];
   selectedProduct?: DBProduct | null;
   onSelectProduct?: (product: DBProduct) => void;
@@ -56,7 +56,7 @@ export function MobileHeader({
         'transition-[padding] duration-200'
       )}
       style={{
-        // Garante que o conteúdo fique abaixo da status bar do iOS / notch.
+        // Garante que o contenido fique abaixo da status bar do iOS / notch.
         paddingTop: 'env(safe-area-inset-top, 0px)',
       }}
     >

@@ -177,7 +177,7 @@ export function CompanySettings() {
 
       <div className="flex justify-end">
         <Button size="lg" onClick={handleSave} disabled={update.isPending}>
-          Salvar dados de la empresa
+          Guardar dados de la empresa
         </Button>
       </div>
     </div>

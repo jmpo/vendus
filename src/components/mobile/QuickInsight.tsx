@@ -159,7 +159,7 @@ export function generateInsight(stats: {
   if (stats.conversionRate && stats.conversionRate > 30) {
     return {
       type: 'success',
-      message: `Su taxa de conversão está em ${stats.conversionRate}%. Continue assim!`,
+      message: `Su taxa de conversión está em ${stats.conversionRate}%. Continue assim!`,
     };
   }
 

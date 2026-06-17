@@ -20,8 +20,8 @@ interface Props {
   onAddBlock: (type: FunnelBlockType, position?: { x: number; y: number }) => void;
 }
 
-// Whitelist do Widget — paleta enxuta para bolha embed em sites externos.
-// Sem create_lead/update_lead (siempre son criados automaticamente) e sem ab_test.
+// Whitelist do Widget — paleta enxuta para burbuja embed em sites externos.
+// Sin create_lead/update_lead (siempre son criados automaticamente) e sin ab_test.
 const WIDGET_BLOCKS: FunnelBlockType[] = [
   'message', 'buttons', 'video', 'image', 'link', 'delay',
   'input', 'quick_form',
@@ -101,7 +101,7 @@ export const WidgetBlockPalette = memo(function WidgetBlockPalette({ onAddBlock 
           </div>
           <div>
             <h3 className="text-sm font-semibold">Blocos do Widget</h3>
-            <p className="text-[10px] text-muted-foreground">Bolha embed para sites</p>
+            <p className="text-[10px] text-muted-foreground">Burbuja embed para sites</p>
           </div>
         </div>
       </div>

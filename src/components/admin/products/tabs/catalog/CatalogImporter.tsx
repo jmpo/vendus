@@ -10,7 +10,7 @@ import { toast } from '@/hooks/use-toast';
 
 interface Props { productId: string }
 
-// CSV parser simple (linhas separadas por \n, vírgula como separador, com aspas)
+// CSV parser simple (líneas separadas por \n, vírgula como separador, con aspas)
 function parseCSV(text: string): string[][] {
   const rows: string[][] = [];
   let cur: string[] = [];
@@ -46,14 +46,14 @@ export function CatalogImporter({ productId }: Props) {
     const text = await file.text();
     const rows = parseCSV(text);
     if (rows.length < 2) {
-      toast({ title: 'Archivo vazio ou inválido', variant: 'destructive' });
+      toast({ title: 'Archivo vacío ou inválido', variant: 'destructive' });
       return;
     }
     const hdr = rows[0].map((h) => h.trim().toLowerCase());
     setHeaders(hdr);
 
-    // Mapeamento: title, description, price, url, thumbnail_url, tags, external_id + qualquer otra coluna vira attribute
-    const STANDARD = new Set(['title', 'titulo', 'título', 'description', 'descricao', 'descripción', 'price', 'preco', 'preço', 'url', 'link', 'thumbnail_url', 'foto', 'imagen', 'tags', 'external_id', 'id', 'images']);
+    // Mapeamento: title, description, price, url, thumbnail_url, tags, external_id + cualquier otra coluna vira attribute
+    const STANDARD = new Set(['title', 'titulo', 'título', 'description', 'descricao', 'descripción', 'price', 'preco', 'precio', 'url', 'link', 'thumbnail_url', 'foto', 'imagen', 'tags', 'external_id', 'id', 'images']);
 
     const items = rows.slice(1).map((r) => {
       const item: any = { attributes: {}, tags: [], images: [] };
@@ -63,7 +63,7 @@ export function CatalogImporter({ productId }: Props) {
         if (!v) return;
         if (h === 'title' || h === 'titulo' || h === 'título') item.title = v;
         else if (h === 'description' || h === 'descricao' || h === 'descripción') item.description = v;
-        else if (h === 'price' || h === 'preco' || h === 'preço') {
+        else if (h === 'price' || h === 'preco' || h === 'precio') {
           const n = Number(v.replace(/[^\d.,-]/g, '').replace(',', '.'));
           item.price = isNaN(n) ? null : n;
         }
@@ -103,7 +103,7 @@ export function CatalogImporter({ productId }: Props) {
         <div className="text-sm text-muted-foreground space-y-1">
           <p>Colunas reconhecidas: <code className="text-xs">title, description, price, url, thumbnail_url, images, tags, external_id</code></p>
           <p>Demais colunas viram <strong>atributos</strong> de busca (ex: bairro, cidade, quartos, ano).</p>
-          <p>Usa <code className="text-xs">|</code> como separador para múltiplos valores em <code>images</code> e <code>tags</code>.</p>
+          <p>Usa <code className="text-xs">|</code> como separador para múltiples valores em <code>images</code> e <code>tags</code>.</p>
         </div>
 
         <div>
@@ -116,7 +116,7 @@ export function CatalogImporter({ productId }: Props) {
         {preview.length > 0 && (
           <>
             <div className="rounded-md border p-3 bg-muted/30 max-h-64 overflow-y-auto text-xs">
-              <p className="font-medium mb-2">Pré-visualização ({preview.length} itens, primeiros 5):</p>
+              <p className="font-medium mb-2">Pré-visualización ({preview.length} itens, primeiros 5):</p>
               {preview.slice(0, 5).map((it, i) => (
                 <div key={i} className="py-1 border-b last:border-0">
                   <strong>{it.title}</strong>

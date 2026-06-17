@@ -28,7 +28,7 @@ export function AppearanceTab({ block, onUpdate }: Props) {
           <SelectContent>
             <SelectItem value="relief" className="text-xs">Relevo</SelectItem>
             <SelectItem value="flat" className="text-xs">Plano</SelectItem>
-            <SelectItem value="outline" className="text-xs">Contorno</SelectItem>
+            <SelectItem value="outline" className="text-xs">Manejo</SelectItem>
             <SelectItem value="loose" className="text-xs">Solto</SelectItem>
           </SelectContent>
         </Select>
@@ -40,7 +40,7 @@ export function AppearanceTab({ block, onUpdate }: Props) {
             <Select value={ap.indicator || 'none'} onValueChange={(v) => setAp({ indicator: v as any })}>
               <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="none" className="text-xs">Nenhum</SelectItem>
+                <SelectItem value="none" className="text-xs">Ningún</SelectItem>
                 <SelectItem value="number" className="text-xs">Numerado</SelectItem>
                 <SelectItem value="check" className="text-xs">Check</SelectItem>
                 <SelectItem value="radio" className="text-xs">Radio</SelectItem>
@@ -101,9 +101,9 @@ export function AppearanceTab({ block, onUpdate }: Props) {
           <Select value={ap.shadow || 'soft'} onValueChange={(v) => setAp({ shadow: v as any })}>
             <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="none" className="text-xs">Sem sombra</SelectItem>
+              <SelectItem value="none" className="text-xs">Sin sombra</SelectItem>
               <SelectItem value="soft" className="text-xs">Suave</SelectItem>
-              <SelectItem value="medium" className="text-xs">Média</SelectItem>
+              <SelectItem value="medium" className="text-xs">Media</SelectItem>
               <SelectItem value="strong" className="text-xs">Forte</SelectItem>
             </SelectContent>
           </Select>

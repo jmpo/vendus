@@ -20,7 +20,7 @@ import {
 import { useAITokenStatus } from '@/hooks/useAITokenStatus';
 
 const PROVIDER_LABELS: Record<AIProvider, string> = {
-  lovable: 'Lovable AI (padrão)',
+  lovable: 'Lovable AI (predeterminado)',
   openai: 'OpenAI (ChatGPT)',
   anthropic: 'Anthropic (Claude)',
   gemini: 'Google Gemini',
@@ -111,7 +111,7 @@ export function AIRoutingPanel() {
           <AlertTriangle className="h-4 w-4 text-amber-500" />
           <AlertDescription>
             <strong>Su plan no inclui IA da plataforma.</strong> Para ativar agentes, copiloto e
-            demais recursos com IA, cadastre su própria chave (OpenAI, Anthropic ou Gemini) abaixo
+            demais recursos con IA, cadastre su propia chave (OpenAI, Anthropic ou Gemini) abaixo
             em <strong>Provedores</strong>.
           </AlertDescription>
         </Alert>
@@ -122,9 +122,9 @@ export function AIRoutingPanel() {
         <AlertDescription>
           Elegí qual IA atende cada parte da plataforma e qual modelo usar.
           {platformAllowed ? (
-            <> <strong>Lovable AI</strong> é o padrão. Para usar OpenAI, Claude ou Gemini, configure a chave correspondente.</>
+            <> <strong>Lovable AI</strong> é o predeterminado. Para usar OpenAI, Claude ou Gemini, configure a chave correspondente.</>
           ) : (
-            <> Configure pelo menos uma chave externa (OpenAI, Claude ou Gemini) para comenzar.</>
+            <> Configure por el menos uma chave externa (OpenAI, Claude ou Gemini) para comenzar.</>
           )}
         </AlertDescription>
       </Alert>
@@ -188,7 +188,7 @@ export function AIRoutingPanel() {
                           const suffix = isLovableBlocked
                             ? ' — bloqueado no su plan'
                             : !enabled
-                              ? ' — sem chave'
+                              ? ' — sin chave'
                               : '';
                           return (
                             <SelectItem key={p} value={p} disabled={!enabled}>

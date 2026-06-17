@@ -42,7 +42,7 @@ export function MobileLeadsList({ productId, productName, organizationId }: Mobi
 
   const getStageName = (stageId: string | null) => {
     const stage = stages.find(s => s.id === stageId);
-    return stage?.name || 'Sem estágio';
+    return stage?.name || 'Sin etapa';
   };
 
   const getStageColor = (stageId: string | null) => {
@@ -90,7 +90,7 @@ export function MobileLeadsList({ productId, productName, organizationId }: Mobi
       <div className="flex-1 overflow-auto space-y-3">
         {filteredLeads.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
-            <p className="text-sm">Nenhum lead encontrado</p>
+            <p className="text-sm">Ningún lead encontrado</p>
           </div>
         ) : (
           filteredLeads.map((lead) => (

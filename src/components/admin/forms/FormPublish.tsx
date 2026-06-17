@@ -53,12 +53,12 @@ export function FormPublish({ form }: FormPublishProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Status do Formulário</CardTitle>
-              <CardDescription>Estado atual e información de publicação</CardDescription>
+              <CardTitle>Status do Formulario</CardTitle>
+              <CardDescription>Estado actual e información de publicação</CardDescription>
             </div>
             <Badge variant={form.status === 'active' ? 'default' : 'secondary'} className="text-sm">
               {form.status === 'active' ? '🟢 Publicado' : 
-               form.status === 'draft' ? '📝 Rascunho' :
+               form.status === 'draft' ? '📝 Borrador' :
                form.status === 'paused' ? '⏸️ Pausado' : '📦 Arquivado'}
             </Badge>
           </div>
@@ -71,7 +71,7 @@ export function FormPublish({ form }: FormPublishProps) {
             </div>
             <div className="p-4 bg-muted rounded-lg">
               <p className="text-2xl font-bold">{form.submissions_count || 0}</p>
-              <p className="text-sm text-muted-foreground">Respostas</p>
+              <p className="text-sm text-muted-foreground">Respuestas</p>
             </div>
             <div className="p-4 bg-muted rounded-lg">
               <p className="text-2xl font-bold">
@@ -79,7 +79,7 @@ export function FormPublish({ form }: FormPublishProps) {
                   ? `${((form.submissions_count || 0) / form.views_count * 100).toFixed(1)}%` 
                   : '0%'}
               </p>
-              <p className="text-sm text-muted-foreground">Conversão</p>
+              <p className="text-sm text-muted-foreground">Conversión</p>
             </div>
           </div>
         </CardContent>
@@ -88,8 +88,8 @@ export function FormPublish({ form }: FormPublishProps) {
       {/* Share Options */}
       <Card>
         <CardHeader>
-          <CardTitle>Compartilhar Formulário</CardTitle>
-          <CardDescription>Elegí como desea disponibilizar su formulário</CardDescription>
+          <CardTitle>Compartir Formulario</CardTitle>
+          <CardDescription>Elegí como desea disponibilizar su formulario</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="link" className="w-full">
@@ -129,7 +129,7 @@ export function FormPublish({ form }: FormPublishProps) {
               
               <div className="p-4 bg-muted rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  💡 <strong>Dica:</strong> Usa este link em campañas de email, posts em redes sociais ou compartilhe diretamente com sus leads.
+                  💡 <strong>Dica:</strong> Usa este link em campañas de email, posts em redes sociais ou compartilhe diretamente con sus leads.
                 </p>
               </div>
             </TabsContent>
@@ -154,7 +154,7 @@ export function FormPublish({ form }: FormPublishProps) {
               
               <div className="p-4 bg-muted rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  💡 <strong>Dica:</strong> Cole este código em qualquer página HTML para incorporar o formulário. Ajuste a altura conforme necessário.
+                  💡 <strong>Dica:</strong> Cole este código em cualquier página HTML para incorporar o formulario. Ajuste a altura conforme necesario.
                 </p>
               </div>
             </TabsContent>
@@ -191,7 +191,7 @@ export function FormPublish({ form }: FormPublishProps) {
       <Card>
         <CardHeader>
           <CardTitle>QR Code</CardTitle>
-          <CardDescription>Compartilhe o formulário em materiales impressos</CardDescription>
+          <CardDescription>Compartilhe o formulario em materiales impressos</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center gap-6">
           <div className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center">
@@ -201,7 +201,7 @@ export function FormPublish({ form }: FormPublishProps) {
           </div>
           <div className="flex-1">
             <p className="text-sm text-muted-foreground mb-4">
-              Baixe o QR Code para usar em materiales impressos, cartões de visita ou apresentações.
+              Baixe o QR Code para usar em materiales impressos, tarjetas de visita ou apresentações.
             </p>
             <Button variant="outline" disabled={form.status !== 'active'}>
               Descargar QR Code

@@ -73,7 +73,7 @@ const NON_AGENT_FIELDS_PREFIXES = ['admin_', 'daily_summary', 'weekly_', 'realti
 const NON_AGENT_FIELDS_EXACT = new Set([
   'monitored_product_ids',
   'summary_kpis',
-  // Campos relacionais vindos de selects com join (ex.: all-agents -> product:products)
+  // Campos relacionais vindos de selects con join (ex.: all-agents -> product:products)
   // no existem na tabela product_agents e precisam ser ignorados no save.
   'product',
 ]);

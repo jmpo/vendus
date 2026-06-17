@@ -266,7 +266,7 @@ export function MessageBubble({
           </p>
         )}
 
-        {/* Sender name (oculto cuando for a própria mensaje del agente — reduz ruído visual) */}
+        {/* Sender name (oculto cuando for a propia mensaje del agente — reduz ruído visual) */}
         {!isVisitor && isFirstInGroup && !isDeleted && !isOwnMessage && (
           <p className="text-[10px] opacity-70 mb-1 font-medium">
             {formatSenderLabel({
@@ -390,7 +390,7 @@ export function MessageBubble({
 }
 
 /**
- * Renderiza conteúdo da mensaje com formatação WhatsApp -> Markdown.
+ * Renderiza contenido da mensaje con formatação WhatsApp -> Markdown.
  * Restringe os elementos permitidos para evitar HTML arbitrário.
  */
 function MessageMarkdown({ content, isVisitor }: { content: string; isVisitor: boolean }) {

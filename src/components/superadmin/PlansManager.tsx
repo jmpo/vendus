@@ -157,7 +157,7 @@ export function PlansManager() {
                           size="icon"
                           onClick={() => setDeleting(plan)}
                           disabled={inUse > 0}
-                          title={inUse > 0 ? `${inUse} empresa(s) usando` : 'Excluir'}
+                          title={inUse > 0 ? `${inUse} empresa(s) usando` : 'Eliminar'}
                         >
                           <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
@@ -192,7 +192,7 @@ export function PlansManager() {
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Excluir
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

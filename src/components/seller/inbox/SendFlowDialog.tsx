@@ -64,7 +64,7 @@ export function SendFlowDialog({
           flowId: selectedFlowId,
         },
       });
-      toast({ title: 'Flujo enviado com éxito!' });
+      toast({ title: 'Flujo enviado con éxito!' });
       onOpenChange(false);
     } catch {
       toast({ title: 'Error al enviar flujo', variant: 'destructive' });

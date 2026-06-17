@@ -98,7 +98,7 @@ serve(async (req) => {
       let totalDays = 0;
 
       for (const lead of leads) {
-        const stageName = (lead.pipeline_stages as any)?.name || "Sem estágio";
+        const stageName = (lead.pipeline_stages as any)?.name || "Sin estágio";
         
         if (!stageGroups[stageName]) {
           stageGroups[stageName] = { count: 0, value: 0 };
@@ -154,7 +154,7 @@ serve(async (req) => {
 DADOS DO PIPELINE:
 - Total de leads: ${analysis.totalLeads}
 - Leads por estágio: ${JSON.stringify(analysis.leadsByStage)}
-- Leads em risco (sem contato): ${analysis.atRiskLeads.length}
+- Leads em risco (sin contato): ${analysis.atRiskLeads.length}
 - Taxa de conversão (últimos 30 días): ${analysis.conversionRate}%
 - Média de días no pipeline: ${analysis.avgDaysInPipeline}
 - Leads quentes: ${analysis.hotLeadsCount}
@@ -162,8 +162,8 @@ DADOS DO PIPELINE:
 - Tareas atrasadas: ${analysis.overdueTasksCount}
 - Estágio con mais leads (potencial gargalo): ${analysis.bottleneckStage}
 
-LEADS EM RISCO (sem contato há 3+ días):
-${analysis.atRiskLeads.slice(0, 5).map(l => `- ${l.name} (${l.company || 'sem empresa'}): ${l.daysWithoutContact} días`).join("\n")}
+LEADS EM RISCO (sin contato há 3+ días):
+${analysis.atRiskLeads.slice(0, 5).map(l => `- ${l.name} (${l.company || 'sin empresa'}): ${l.daysWithoutContact} días`).join("\n")}
 
 Genera 3-5 insights acionáveis e específicos para este vendedor. Cada insight debe:
 1. Ter um título corto e impactante
@@ -207,7 +207,7 @@ Responda SOLO no formato JSON abaixo, sin texto adicional:
       if (response.status === 402) {
         const msg = aiConfig.source === 'external_key'
           ? `Créditos esgotados na su cuenta ${aiConfig.provider}. Verificá o saldo do provedor externo.`
-          : "Créditos de IA esgotados. Configure uma chave externa (OpenAI) em Configurações > IA Roteamento ou adicione créditos Lovable.";
+          : "Créditos de IA esgotados. Configure uma chave externa (OpenAI) em Configuraciones > IA Roteamento ou adicione créditos Lovable.";
         return new Response(
           JSON.stringify({ error: msg }),
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }

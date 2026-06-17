@@ -1,5 +1,5 @@
-// Registry central de todas as ferramentas que os agentes podem executar.
-// Para adicionar una herramienta nova: crear archivo em ./impl/, importar e registrar aqui.
+// Registry central de todas las ferramentas que os agentes pueden executar.
+// Para adicionar una herramienta nova: crear archivo em ./impl/, importar e registrar acá.
 
 import type { ToolDefinition, ToolContext, ToolResult, ToolCallSchema } from './types.ts';
 import { criarDealTool } from './impl/criar_deal.ts';

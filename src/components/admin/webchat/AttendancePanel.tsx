@@ -30,7 +30,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
 
   const sectorOptions = useMemo(
     () => [
-      { id: '__none__', name: 'Sem sector', color: null as string | null },
+      { id: '__none__', name: 'Sin sector', color: null as string | null },
       ...sectors.map((s) => ({ id: s.id, name: s.name, color: s.color })),
     ],
     [sectors],
@@ -49,7 +49,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
           <h2 className="text-lg font-bold">Painel de Atendimentos</h2>
           <p className="text-xs text-muted-foreground flex items-center gap-1.5">
             <Wifi className="h-3 w-3 text-emerald-500" />
-            Atualização em tempo real
+            Actualización en tiempo real
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={refetch} disabled={isFetching}>
@@ -183,7 +183,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
               accent="amber"
             >
               {sections.queueBySector.length === 0 ? (
-                <div className="w-full text-center text-sm text-muted-foreground py-8">🎉 Fila vazia</div>
+                <div className="w-full text-center text-sm text-muted-foreground py-8">🎉 Fila vacía</div>
               ) : (
                 sections.queueBySector.map((g) => (
                   <PanelColumn
@@ -210,7 +210,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
             >
               {sections.aiByAgent.length === 0 ? (
                 <div className="w-full text-center text-sm text-muted-foreground py-8">
-                  Nenhum agente atendendo no momento
+                  Ningún agente atendendo no momento
                 </div>
               ) : (
                 sections.aiByAgent.map((g) => (
@@ -240,7 +240,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
             >
               {sections.humansByUser.length === 0 ? (
                 <div className="w-full text-center text-sm text-muted-foreground py-8">
-                  Nenhum agente humano ativo
+                  Ningún agente humano ativo
                 </div>
               ) : (
                 sections.humansByUser.map((g) => (

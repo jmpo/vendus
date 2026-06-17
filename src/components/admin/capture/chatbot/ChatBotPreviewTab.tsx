@@ -37,7 +37,7 @@ export function ChatBotPreviewTab({ funnel }: Props) {
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b shrink-0">
         <div className="flex items-center gap-2">
           <Badge variant={isActive ? 'default' : 'secondary'}>
-            {isActive ? 'ChatBot ativo' : 'Rascunho — apenas usted vê'}
+            {isActive ? 'ChatBot ativo' : 'Borrador — solo usted vê'}
           </Badge>
           {!isActive && (
             <span className="text-xs text-muted-foreground hidden sm:flex items-center gap-1">

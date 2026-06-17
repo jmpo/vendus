@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { evaluateDisplay } from '@/lib/quizDisplayRules';
 
 /**
- * Renderer público do Quiz no padrão inlead (form-style, 1 tela por bloco).
+ * Renderer público do Quiz no predeterminado inlead (form-style, 1 tela por bloco).
  * No usa header de bot, avatar, balões — UI 100% focada na pregunta.
  */
 export default function PublicQuizRunner() {
@@ -75,7 +75,7 @@ export default function PublicQuizRunner() {
     return out;
   }, [funnel]);
 
-  // ───── Aparência ─────
+  // ───── Apariencia ─────
   const a = useMemo(
     () => (funnel ? getChannelAppearance(funnel as any, 'quiz') : defaultChannelAppearance('quiz')),
     [funnel],
@@ -140,7 +140,7 @@ export default function PublicQuizRunner() {
         i++; continue;
       }
       if (b.type === 'delay') { i++; continue; }
-      // Regra de exibição (device + condicionais sobre respuestas)
+      // Regra de visualización (device + condicionais sobre respuestas)
       if (!evaluateDisplay(b.data.block_display, { responses: responsesRef.current, isMobile })) {
         i++; continue;
       }
@@ -196,7 +196,7 @@ export default function PublicQuizRunner() {
     }
   };
 
-  // ───── Avançar ─────
+  // ───── Avanzar ─────
   const goNext = (overrideTarget?: string | null) => {
     if (!currentBlock) return;
 
@@ -326,7 +326,7 @@ export default function PublicQuizRunner() {
         </div>
       )}
 
-      {/* Conteúdo */}
+      {/* Contenido */}
       <div className="flex-1 w-full flex items-start sm:items-center justify-center px-5 sm:px-6 py-6 sm:py-10">
         <div className="w-full max-w-[480px] mx-auto flex flex-col">
           {showLogo && (
@@ -409,7 +409,7 @@ export default function PublicQuizRunner() {
                   />
                 )}
 
-                {/* Conteúdo por tipo */}
+                {/* Contenido por tipo */}
                 {(currentBlock.type === 'message' || currentBlock.type === ('text' as any)) && (
                   <div className="mt-2" />
                 )}
@@ -543,7 +543,7 @@ export default function PublicQuizRunner() {
 
       {isPreview && (
         <div className="text-center py-2 text-[10px] uppercase tracking-wider" style={{ color: mutedText }}>
-          Modo preview — respuestas no serão salvas
+          Modo preview — respuestas no serán salvas
         </div>
       )}
 

@@ -104,7 +104,7 @@ Deno.serve(async (req) => {
 
     return json({
       ok: true,
-      message: 'Conexão estabelecida con éxito',
+      message: 'Conexión estabelecida con éxito',
       expires_in: tokenData.expires_in,
       scope: tokenData.scope,
     });

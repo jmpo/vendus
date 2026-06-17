@@ -153,7 +153,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
         oldRole: userToEdit.user_roles?.[0]?.role || null,
         newRole,
       });
-      toast.success('Rol actualizado com éxito!');
+      toast.success('Rol actualizado con éxito!');
       setUserToEdit(null);
     } catch (error) {
       toast.error('Error al actualizar el rol');
@@ -482,7 +482,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
               {/* Usuarios existentes */}
               {!org.profiles?.length ? (
                 <p className="text-muted-foreground text-center py-8">
-                  Nenhum usuario cadastrado
+                  Ningún usuario registrado
                 </p>
               ) : (
                 <div className="space-y-3">
@@ -497,7 +497,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                           <AvatarFallback>{getInitials(user.full_name)}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium">{user.full_name || 'Sem nombre'}</p>
+                          <p className="font-medium">{user.full_name || 'Sin nombre'}</p>
                           <p className="text-sm text-muted-foreground">{user.email}</p>
                         </div>
                       </div>
@@ -650,7 +650,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                 <div className="space-y-4 py-4">
                   <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
                     <p className="text-sm text-muted-foreground mb-2">
-                      Compartilhe este link com <strong>{createdInvite.email}</strong>:
+                      Compartilhe este link con <strong>{createdInvite.email}</strong>:
                     </p>
                     <div className="flex items-center gap-2">
                       <Input 
@@ -680,7 +680,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                       onClick={handleSendInvite}
                       disabled={createInvitation.isPending}
                     >
-                      {createInvitation.isPending ? 'Criando...' : 'Criar Convite'}
+                      {createInvitation.isPending ? 'Criando...' : 'Crear Convite'}
                     </Button>
                   </>
                 ) : (
@@ -692,7 +692,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
             </DialogContent>
           </Dialog>
 
-          {/* Alert de Exclusão de Convite */}
+          {/* Alert de Exclusión de Convite */}
           <AlertDialog open={!!inviteToDelete} onOpenChange={() => setInviteToDelete(null)}>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -726,7 +726,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                     <AvatarFallback>{getInitials(userToEdit?.full_name || '')}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium">{userToEdit?.full_name || 'Sem nombre'}</p>
+                    <p className="font-medium">{userToEdit?.full_name || 'Sin nombre'}</p>
                     <p className="text-sm text-muted-foreground">{userToEdit?.email}</p>
                   </div>
                 </div>
@@ -755,7 +755,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                   onClick={handleSaveRole}
                   disabled={updateUserRole.isPending}
                 >
-                  {updateUserRole.isPending ? 'Salvando...' : 'Salvar'}
+                  {updateUserRole.isPending ? 'Salvando...' : 'Guardar'}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -767,7 +767,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
               <AlertDialogHeader>
                 <AlertDialogTitle>Remover Usuario</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Tem certeza que desea eliminar <strong>{userToRemove?.full_name || userToRemove?.email}</strong> de la empresa? O usuario perderá acesso e sus papéis serão removidos.
+                  Tem certeza que desea eliminar <strong>{userToRemove?.full_name || userToRemove?.email}</strong> de la empresa? O usuario perderá acesso e sus papéis serán removidos.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -799,14 +799,14 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                     <AvatarFallback>{getInitials(userToManage?.full_name || '')}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium">{userToManage?.full_name || 'Sem nombre'}</p>
+                    <p className="font-medium">{userToManage?.full_name || 'Sin nombre'}</p>
                     <p className="text-sm text-muted-foreground">{userToManage?.email}</p>
                   </div>
                 </div>
 
                 {manageAction === 'confirm_email' && (
                   <p className="text-sm text-muted-foreground">
-                    Confirmar manualmente o email deste usuario, dispensando a verificação por link. Usa cuando o usuario no recebeu ou perdeu o email de validação.
+                    Confirmar manualmente o email deste usuario, dispensando a verificação por link. Usa cuando o usuario no recebeu ou perdeu o email de validación.
                   </p>
                 )}
 
@@ -865,12 +865,12 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
         <TabsContent value="subscription">
           <Card>
             <CardHeader>
-              <CardTitle>Suscripción Atual</CardTitle>
+              <CardTitle>Suscripción Actual</CardTitle>
             </CardHeader>
             <CardContent>
               {!hasPlan ? (
                 <p className="text-muted-foreground text-center py-8">
-                  Nenhum plan ativo
+                  Ningún plan ativo
                 </p>
               ) : (
                 <div className="space-y-4">
@@ -928,12 +928,12 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
         <TabsContent value="billing">
           <Card>
             <CardHeader>
-              <CardTitle>Histórico de Facturación</CardTitle>
+              <CardTitle>Historial de Facturación</CardTitle>
             </CardHeader>
             <CardContent>
               {!billingHistory?.length ? (
                 <p className="text-muted-foreground text-center py-8">
-                  Nenhuma cobro registrada
+                  Ninguna cobro registrada
                 </p>
               ) : (
                 <div className="space-y-3">
@@ -973,7 +973,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
             <AlertDialogDescription asChild>
               <div className="space-y-3">
                 <p className="text-destructive font-medium">
-                  Esta acción é irreversível. Todos os dados (usuarios, leads, conversaciones, productos, integraciones) serão removidos.
+                  Esta acción é irreversível. Todos los dados (usuarios, leads, conversaciones, productos, integraciones) serán removidos.
                 </p>
                 <p>Para confirmar, digite o nombre exato: <strong>{org.name}</strong></p>
                 <Input

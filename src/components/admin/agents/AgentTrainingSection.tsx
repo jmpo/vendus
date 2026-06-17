@@ -42,12 +42,12 @@ interface TrainingMaterial {
 
 const CATEGORIES = [
   { value: 'sales_techniques', label: '🎯 Técnicas de ventas', description: 'SPIN Selling, Challenger, etc.' },
-  { value: 'communication', label: '💬 Comunicación', description: 'Rapport, escuta ativa, linguagem corporal' },
-  { value: 'objections', label: '🛡️ Objeciones', description: 'Técnicas de contorno de objeções' },
+  { value: 'communication', label: '💬 Comunicación', description: 'Rapport, escucha activa, lenguaje corporal' },
+  { value: 'objections', label: '🛡️ Objeciones', description: 'Técnicas de manejo de objeciones' },
   { value: 'closing', label: '✅ Cierre', description: 'Técnicas de cierre de ventas' },
   { value: 'prospecting', label: '🔍 Prospección', description: 'Como encontrar e abordar leads' },
   { value: 'negotiation', label: '🤝 Negociación', description: 'Táticas de negociación' },
-  { value: 'general', label: '📋 Geral', description: 'Outros materiales de treinamento' },
+  { value: 'general', label: '📋 General', description: 'Otros materiales de treinamento' },
 ];
 
 export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectionProps) {
@@ -237,7 +237,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
   };
 
   const getCategoryLabel = (category: string) => {
-    return CATEGORIES.find(c => c.value === category)?.label || '📋 Geral';
+    return CATEGORIES.find(c => c.value === category)?.label || '📋 General';
   };
 
   return (
@@ -248,7 +248,7 @@ export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectio
           <GraduationCap className="h-4 w-4 text-muted-foreground mt-0.5" />
           <div className="text-sm text-muted-foreground">
             <p className="font-medium text-foreground">Entrenamiento específico</p>
-            <p>Adicione PDFs e documentos que serão usados <strong>apenas por este agente</strong>, além do conhecimento geral do producto.</p>
+            <p>Agregá PDFs e documentos que serán usados <strong>solo por este agente</strong>, además do conocimiento general do producto.</p>
           </div>
         </div>
       </div>

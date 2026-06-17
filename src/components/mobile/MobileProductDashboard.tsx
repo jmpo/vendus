@@ -70,7 +70,7 @@ export function MobileProductDashboard({ product, onNavigate }: MobileProductDas
       sparklineData: sparklineData?.leads,
     },
     {
-      label: 'Conversão',
+      label: 'Conversión',
       value: stats?.conversionRate || 0,
       icon: TrendingUp,
       color: 'text-green-500',
@@ -133,7 +133,7 @@ export function MobileProductDashboard({ product, onNavigate }: MobileProductDas
         <Card className="p-4 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h3 className="font-semibold text-foreground">🎯 Meta do Mês</h3>
+              <h3 className="font-semibold text-foreground">🎯 Meta do Mes</h3>
               <p className="text-xs text-muted-foreground">
                 {daysRemaining > 0 ? `${daysRemaining} días restantes` : 'Último día!'}
               </p>
@@ -240,7 +240,7 @@ export function MobileProductDashboard({ product, onNavigate }: MobileProductDas
                     <div>
                       <p className="text-sm font-medium text-foreground">{lead.name}</p>
                       <p className="text-xs text-destructive font-medium">
-                        {lead.daysWithoutContact} días sem contacto
+                        {lead.daysWithoutContact} días sin contacto
                       </p>
                     </div>
                   </div>

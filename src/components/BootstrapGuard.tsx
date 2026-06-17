@@ -4,10 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 
 /**
  * Verifica uma única vez se a plataforma já tem um Super Admin.
- * - Se NÃO tem: força navegação para /setup.
- * - Se TEM e usuário está em /setup: redireciona para /login.
+ * - Se NÃO tem: fuerza navegación para /setup.
+ * - Se TEM e usuario está em /setup: redireciona para /login.
  *
- * Rotas públicas que não devem disparar setup (formulários, agendamento etc.)
+ * Rotas públicas que no deben disparar setup (formularios, agendamento etc.)
  * ficam de fora do redirecionamento.
  */
 const PUBLIC_PREFIXES = [

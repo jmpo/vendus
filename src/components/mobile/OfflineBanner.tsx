@@ -57,7 +57,7 @@ export function OfflineBanner() {
               <>
                 <RefreshCw size={18} className="text-white" />
                 <span className="text-sm font-medium text-white flex-1">
-                  Conexão restaurada!
+                  Conexión restaurada!
                 </span>
               </>
             ) : (

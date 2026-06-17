@@ -36,13 +36,13 @@ const isEmbeddableVideo = (url: string): boolean => {
 
 const getEmbedUrl = (url: string): string => {
   // YouTube
-  const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  const youtubeMatch = url.match(/(?:youtube\.con\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   if (youtubeMatch) {
     return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
   }
   
   // Vimeo
-  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+  const vimeoMatch = url.match(/vimeo\.con\/(\d+)/);
   if (vimeoMatch) {
     return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
   }

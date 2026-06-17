@@ -15,9 +15,9 @@ export function MobileProductSelector({ products, onSelectProduct }: MobileProdu
       case 'published':
         return <Badge className="bg-green-500/20 text-green-500 text-[10px]">Ativo</Badge>;
       case 'draft':
-        return <Badge className="bg-yellow-500/20 text-yellow-500 text-[10px]">Rascunho</Badge>;
+        return <Badge className="bg-yellow-500/20 text-yellow-500 text-[10px]">Borrador</Badge>;
       case 'review':
-        return <Badge className="bg-blue-500/20 text-blue-500 text-[10px]">Em Revisão</Badge>;
+        return <Badge className="bg-blue-500/20 text-blue-500 text-[10px]">Em Revisión</Badge>;
       default:
         return null;
     }
@@ -36,7 +36,7 @@ export function MobileProductSelector({ products, onSelectProduct }: MobileProdu
       <div className="space-y-3">
         {products.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">Nenhum producto atribuído a usted</p>
+            <p className="text-muted-foreground">Ningún producto atribuído a usted</p>
           </div>
         ) : (
           products.map((product) => (

@@ -38,9 +38,9 @@ const ROLE_OPTIONS = [
   { value: 'sdr', label: 'SDR (Calificación)' },
   { value: 'closer', label: 'Closer (Cierre)' },
   { value: 'support', label: 'Soporte' },
-  { value: 'retention', label: 'Retenção' },
-  { value: 'recovery', label: 'Recuperação' },
-  { value: 'custom', label: 'Outro' },
+  { value: 'retention', label: 'Retención' },
+  { value: 'recovery', label: 'Recuperación' },
+  { value: 'custom', label: 'Otro' },
 ];
 
 const CHANNEL_OPTIONS = ['whatsapp', 'instagram', 'webchat', 'facebook', 'voice'];
@@ -75,7 +75,7 @@ export function AgentSupervisorPanel() {
               <div>
                 <CardTitle>Supervisor multiagente</CardTitle>
                 <CardDescription>
-                  Roteamento inteligente: defina especialistas e regras. Quando ninguna regra bate,
+                  Roteamento inteligente: defina especialistas e regras. Cuando ninguna regra bate,
                   o supervisor IA decide automaticamente.
                 </CardDescription>
               </div>
@@ -184,7 +184,7 @@ export function AgentSupervisorPanel() {
           {rulesLoading && <p className="text-sm text-muted-foreground">Cargando...</p>}
           {!rulesLoading && rules.length === 0 && (
             <p className="text-sm text-muted-foreground">
-              Ninguna regla. Sem regras, o supervisor IA decide cada handoff automaticamente.
+              Ninguna regla. Sin regras, o supervisor IA decide cada handoff automaticamente.
             </p>
           )}
           {rules.map((r) => {
@@ -366,7 +366,7 @@ export function AgentSupervisorPanel() {
                 <Input
                   value={editingRule.name ?? ''}
                   onChange={(e) => setEditingRule({ ...editingRule, name: e.target.value })}
-                  placeholder="Ex: Pix abandonado vai pra recuperação"
+                  placeholder="Ex: Pix abandonado vai pra recuperación"
                 />
               </div>
 
@@ -392,7 +392,7 @@ export function AgentSupervisorPanel() {
               </div>
 
               <div>
-                <Label>Eventos (qualquer)</Label>
+                <Label>Eventos (cualquier)</Label>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {EVENT_OPTIONS.map((ev) => {
                     const active = editingRule.match_events?.includes(ev);
@@ -419,7 +419,7 @@ export function AgentSupervisorPanel() {
               </div>
 
               <div>
-                <Label>Canais (qualquer)</Label>
+                <Label>Canais (cualquier)</Label>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {CHANNEL_OPTIONS.map((ch) => {
                     const active = editingRule.match_channels?.includes(ch);
@@ -476,7 +476,7 @@ export function AgentSupervisorPanel() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Prioridad (menor = primeiro)</Label>
+                  <Label>Prioridad (menor = primero)</Label>
                   <Input
                     type="number"
                     value={editingRule.priority ?? 100}

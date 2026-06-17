@@ -224,10 +224,10 @@ export function MobileKanban({ productId, productName, organizationId }: MobileK
               className="flex flex-col items-center justify-center py-16 text-muted-foreground"
             >
               <User size={32} className="mb-3 opacity-30" />
-              <p className="text-sm">Nenhum lead nesta etapa</p>
+              <p className="text-sm">Ningún lead nesta etapa</p>
               <Button variant="ghost" size="sm" className="mt-3 text-xs" onClick={() => setAddLeadOpen(true)}>
                 <Plus size={14} className="mr-1" />
-                Adicionar lead
+                Agregar lead
               </Button>
             </motion.div>
           ) : (
@@ -398,7 +398,7 @@ export function MobileKanban({ productId, productName, organizationId }: MobileK
               onClick={handleAddLead}
               disabled={createLead.isPending}
             >
-              {createLead.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Adicionar Lead'}
+              {createLead.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Agregar Lead'}
             </Button>
           </div>
         </SheetContent>

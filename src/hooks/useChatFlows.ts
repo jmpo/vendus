@@ -23,7 +23,7 @@ function parseChatFlow(data: any): ChatFlow {
   };
 }
 
-// Buscar todos os flujos de um producto
+// Buscar todos los flujos de um producto
 export function useChatFlows(productId?: string) {
   return useQuery({
     queryKey: ['chat-flows', productId],
@@ -87,7 +87,7 @@ export function useActiveChatFlow(productId?: string) {
   });
 }
 
-// Criar novo flujo
+// Crear novo flujo
 export function useCreateChatFlow() {
   const queryClient = useQueryClient();
   
@@ -128,7 +128,7 @@ export function useCreateChatFlow() {
   });
 }
 
-// Atualizar flujo
+// Actualizar flujo
 export function useUpdateChatFlow() {
   const queryClient = useQueryClient();
   
@@ -173,7 +173,7 @@ export function useUpdateChatFlow() {
   });
 }
 
-// Salvar blocos do flujo
+// Guardar blocos do flujo
 export function useSaveChatFlowBlocks() {
   const queryClient = useQueryClient();
   
@@ -216,7 +216,7 @@ export function useToggleChatFlowActive() {
   
   return useMutation({
     mutationFn: async (params: { flowId: string; isActive: boolean; productId: string }) => {
-      // Se ativando, desativar outros flujos do producto primeiro
+      // Se ativando, desativar otros flujos do producto primero
       if (params.isActive) {
         await supabase
           .from('chat_flows')
@@ -290,7 +290,7 @@ export function useDuplicateChatFlow() {
       
       if (fetchError) throw fetchError;
       
-      // Criar cópia
+      // Crear cópia
       const { data, error } = await supabase
         .from('chat_flows')
         .insert({

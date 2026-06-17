@@ -111,7 +111,7 @@ TIPOS DE BLOCOS DISPONÍVEIS:
 
 1. **message** - Exibir texto/contenido para el lead
    Campos: { content: "texto con suporte a markdown" }
-   Usa para: boas-vindas, explicações, transições entre seções
+   Usa para: boas-vindas, explicações, transições entre secciones
 
 2. **input** - Capturar um dado del lead
    Campos: { input_type: "name"|"email"|"phone"|"text"|"number"|"cpf"|"textarea", variable_name: "nome_variavel", placeholder: "texto placeholder", required: true/false }
@@ -129,7 +129,7 @@ TIPOS DE BLOCOS DISPONÍVEIS:
    Campos: { success_message: "mensaje final", redirect_url: "" }
    Usa para: finalizar um caminho do embudo
 
-6. **score** - Adicionar pontuação al lead (invisível)
+6. **score** - Adicionar puntuación al lead (invisível)
    Campos: { score_value: número }
 
 7. **tag** - Aplicar tags al lead (invisível)
@@ -137,23 +137,23 @@ TIPOS DE BLOCOS DISPONÍVEIS:
 
 REGRAS DE CONEXÃO:
 - Bloques lineales: usá "next_block_id" en el bloque para apuntar al próximo
-- Blocos buttons: cada option tiene su próprio "next_block_id" (ramificação)
+- Blocos buttons: cada option tiene su propio "next_block_id" (ramificação)
 - Bloques score/tag: son invisibles, conectalos al próximo bloque visible vía next_block_id
 - Blocos end: NÃO têm next_block_id (son terminais)
 - Genera IDs usando formato UUID v4
 
 REGRAS DE POSIÇÃO (X/Y no canvas):
 - Blocos em sequência linear: incrementar Y em 150, manter X constante
-- Quando hay ramificação (buttons con N opciones): 
+- Cuando hay ramificação (buttons con N opciones): 
   - O bloco buttons fica na posición atual
-  - Os caminhos ramificam horizontalmente: primeiro caminho em X=100, segundo em X=450, terceiro em X=800
+  - Os caminhos ramificam horizontalmente: primero caminho em X=100, segundo em X=450, terceiro em X=800
   - Cada caminho continua incrementando Y normalmente
 - Usa X base = 250 para o flujo principal
 
 FORMATO DE RESPOSTA (JSON):
 {
   "suggested_name": "Nombre sugerido para el embudo",
-  "start_block_id": "uuid_do_primeiro_bloco",
+  "start_block_id": "uuid_do_primero_bloco",
   "flow_blocks": [
     {
       "id": "uuid-gerado",
@@ -167,13 +167,13 @@ FORMATO DE RESPOSTA (JSON):
 
 IMPORTANTE:
 - Retorne SOLO JSON válido, sin markdown ou explicações
-- Todos os IDs devem ser UUIDs v4 únicos
-- Todas as conexões next_block_id devem referenciar IDs existentes
+- Todos los IDs devem ser UUIDs v4 únicos
+- Todas las conexiones next_block_id devem referenciar IDs existentes
 - Cada caminho de ramificação DEVE terminar con um bloco "end"
-- Usa emojis nos botões para tornar a experiência mais visual
+- Usa emojis nos botones para tornar a experiência mais visual
 - Creá copys cortos y conversacionales, optimizados para mobile
 - Se o usuario mencionar vídeos, use blocos video con video_url: "URL_PLACEHOLDER"
-- Se o usuario mencionar planos/precios, crie botões con as opciones e blocos end con redirect_url vazio`;
+- Se o usuario mencionar planos/precios, crie botones con as opciones e blocos end con redirect_url vazio`;
 
     const userPrompt = `Crea o embudo de captação seguindo esta descripción:
 

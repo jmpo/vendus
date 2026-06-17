@@ -57,7 +57,7 @@ export const POST_SALE_VARIABLE_GROUPS: VariableGroup[] = [
     label: 'Boleto',
     vars: [
       { key: 'boleto_url', description: 'URL do boleto (PDF)' },
-      { key: 'boleto_barcode', description: 'Linha digitável' },
+      { key: 'boleto_barcode', description: 'Línea digitável' },
       { key: 'boleto_expires_at', description: 'Vencimento do boleto' },
     ],
   },
@@ -73,7 +73,7 @@ export const POST_SALE_VARIABLE_GROUPS: VariableGroup[] = [
 ];
 
 interface Props {
-  /** ref para o textarea/input — usada para inserir na posição do cursor */
+  /** ref para o textarea/input — usada para inserir na posición do cursor */
   targetRef: React.RefObject<HTMLTextAreaElement | HTMLInputElement>;
   value: string;
   onChange: (next: string) => void;
@@ -105,14 +105,14 @@ export function PostSaleVariablePicker({ targetRef, value, onChange }: Props) {
       <PopoverTrigger asChild>
         <Button ref={buttonRef} type="button" variant="outline" size="sm" className="h-8 gap-1.5">
           <Braces className="h-3.5 w-3.5" />
-          Variáveis
+          Variables
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0" align="end">
         <div className="border-b px-3 py-2">
-          <p className="text-sm font-medium">Inserir variável</p>
+          <p className="text-sm font-medium">Inserir variable</p>
           <p className="text-xs text-muted-foreground">
-            Hacé clic para inserir na posição do cursor.
+            Hacé clic para inserir na posición do cursor.
           </p>
         </div>
         <div className="max-h-80 overflow-y-auto p-2 space-y-3">

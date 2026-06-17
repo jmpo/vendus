@@ -55,7 +55,7 @@ serve(async (req) => {
 
     const prompt = `Analiza a seguinte conversación de atención comercial para el producto "${productName}".
 
-Transcrição:
+Transcripción:
 ${transcript}
 
 Retorne a análise usando a ferramenta analyze_conversation.`;
@@ -75,10 +75,10 @@ Retorne a análise usando a ferramenta analyze_conversation.`;
 - Tempo de respuesta (rápido, adequado, lento)
 - Tom da conversación (profissional, amigable, frio)
 - Técnicas de ventas utilizadas (rapport, SPIN, gatilhos mentais, etc.)
-- Objeções identificadas e como foram tratadas
+- Objeciones identificadas e como foram tratadas
 - Nota geral de 1 a 10
 - Pontos fortes e fracos específicos
-- Sugestões de melhoria acionáveis`,
+- Sugerencias de melhoria acionáveis`,
           },
           { role: "user", content: prompt },
         ],

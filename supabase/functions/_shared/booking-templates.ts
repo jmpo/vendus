@@ -54,7 +54,7 @@ export function buildBookingVars(input: {
   return {
     nome_lead: input.guest_name || "",
     email_lead: input.guest_email || "",
-    telefone_lead: input.guest_phone || "",
+    teléfono_lead: input.guest_phone || "",
     nome_evento: input.event_name || "Reunión",
     nome_anfitriao: input.host_name || "",
     nome_vendedor: input.host_name || "",

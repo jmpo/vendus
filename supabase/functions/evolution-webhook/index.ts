@@ -301,7 +301,7 @@ function normalizePayload(payload: any): Normalized | null {
         msg.message?.extendedTextMessage?.text ||
         msg.message?.imageMessage?.caption ||
         msg.message?.videoMessage?.caption ||
-        (msg.message?.audioMessage ? "[áudio]" : "") ||
+        (msg.message?.audioMessage ? "[audio]" : "") ||
         (msg.message?.imageMessage ? "[imagen]" : "") ||
         (msg.message?.videoMessage ? "[vídeo]" : "") ||
         (msg.message?.documentMessage ? "[documento]" : "") ||
@@ -352,7 +352,7 @@ function normalizePayload(payload: any): Normalized | null {
       message.extendedTextMessage?.text ||
       message.imageMessage?.caption ||
       message.videoMessage?.caption ||
-      (message.audioMessage ? "[áudio]" : "") ||
+      (message.audioMessage ? "[audio]" : "") ||
       (message.imageMessage ? "[imagen]" : "") ||
       (message.videoMessage ? "[vídeo]" : "") ||
       (message.documentMessage ? "[documento]" : "") ||
@@ -893,7 +893,7 @@ Deno.serve(async (req) => {
       const remoteIsLid = remoteJid.includes("@lid");
       const lidJid = norm.lidJid || (remoteIsLid ? remoteJid : undefined);
       const lidId = lidJid ? lidJid.split("@")[0].split(":")[0] : undefined;
-      // Se só temos @lid (sem teléfono real resolvido), NÃO derivamos um "teléfono" do LID.
+      // Se só temos @lid (sin teléfono real resolvido), NÃO derivamos um "teléfono" do LID.
       const remotePhone = remoteIsLid ? "" : remoteJid.split("@")[0].split(":")[0].replace(/\D/g, "");
       const instancePhone = (instance.phone_number || "").replace(/\D/g, "");
       const remotePhoneCandidates = remotePhone ? phoneVariantsBR(remotePhone) : [];
@@ -1030,7 +1030,7 @@ Deno.serve(async (req) => {
             }
           }
 
-          // Sem teléfono real e sin match por LID → no crear conversación fantasma.
+          // Sin teléfono real e sin match por LID → no crear conversación fantasma.
           if (!convOut?.id && !remotePhoneCanonical) {
             console.log("[evolution-webhook] external_outbound: skip lid_no_phone", { lidId });
             return new Response(JSON.stringify({ ok: true, skipped: "lid_no_phone" }), {
@@ -1515,7 +1515,7 @@ Deno.serve(async (req) => {
             if (!wa?.enabled) continue;
             const boundInstance = wa.evolution_instance_id;
             if (boundInstance && boundInstance !== instance.id) continue;
-            // Sem regras de gatilho: toda primeirel mensaje dispara o embudo habilitado.
+            // Sin regras de gatilho: toda primeirel mensaje dispara o embudo habilitado.
             funnelToRun = { id: cand.id, start_block_id: (cand as any).start_block_id || null };
             break;
           }
@@ -1523,7 +1523,7 @@ Deno.serve(async (req) => {
           console.warn("[evolution-webhook] funnel lookup error:", e?.message || String(e));
         }
 
-        // Resolve sector defecto da organización (fallback "Sem Sector")
+        // Resolve sector defecto da organización (fallback "Sin Sector")
         let defaultSectorId: string | null = null;
         try {
           const { data: defSec } = await supabase
@@ -1859,7 +1859,7 @@ Deno.serve(async (req) => {
               if (text) {
                 processedKind = norm.media.type as "audio" | "image";
                 if (norm.media.type === "audio") {
-                  processedContent = `🎙️ Áudio del cliente (transcrito): ${text}`;
+                  processedContent = `🎙️ Audio del cliente (transcrito): ${text}`;
                 } else {
                   processedContent = norm.media.caption
                     ? `🖼️ Imagen (leyenda: "${norm.media.caption}"): ${text}`
@@ -1880,7 +1880,7 @@ Deno.serve(async (req) => {
               }
             } else {
               if (norm.media.type === "audio") {
-                processedContent = `🎙️ [Áudio recibido — sin dados disponibles para transcrição.]`;
+                processedContent = `🎙️ [Audio recibido — sin dados disponibles para transcripción.]`;
               } else {
                 processedContent = `🖼️ [Imagen recibida — sin dados disponibles para análise.]`;
               }
@@ -1889,7 +1889,7 @@ Deno.serve(async (req) => {
           } else if (norm.media.type === "audio" || norm.media.type === "image") {
             // Toggle off but media uploaded → still surface placeholder for agent.
             if (norm.media.type === "audio") {
-              processedContent = `🎙️ [Áudio recibido — transcrição desativada para este agente.]`;
+              processedContent = `🎙️ [Audio recibido — transcripción desativada para este agente.]`;
             } else {
               processedContent = `🖼️ [Imagen recibida — análise visual desativada para este agente.]`;
             }
@@ -1911,7 +1911,7 @@ Deno.serve(async (req) => {
         } catch (e: any) {
           console.warn("[evolution-webhook] media processing failed:", e?.message || String(e));
           if (norm.media.type === "audio") {
-            processedContent = `🎙️ [Áudio recibido — fala técnica ao processar.]`;
+            processedContent = `🎙️ [Audio recibido — fala técnica ao processar.]`;
           } else if (norm.media.type === "image") {
             processedContent = `🖼️ [Imagen recibida — fala técnica ao processar.]`;
           } else if (norm.media.type === "video") {
@@ -2017,7 +2017,7 @@ Deno.serve(async (req) => {
         }));
 
         // Broadcast realtime → o panel (SellerInbox) escuta `conversation:{id}`
-        // e adiciona el mensaje na cache instantaneamente. Sem isso, a janela
+        // e adiciona el mensaje na cache instantaneamente. Sin isso, a janela
         // de chat fica congelada hasta o usuario recarregar / trocar de conversación.
         if (inserted) {
           try {
@@ -2855,7 +2855,7 @@ Deno.serve(async (req) => {
                 }
               }
 
-              // Atualiza last_message_at después de todos os chunks
+              // Atualiza last_message_at después de todos los chunks
               if (chunks.length > 0) {
                 try {
                   await supabase

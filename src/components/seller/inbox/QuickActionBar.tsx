@@ -37,17 +37,17 @@ interface QuickActionBarProps {
   onAnalyze?: () => void;
   /** Cria um evento de calendario (atalho rápido). */
   onCreateEvent?: () => void;
-  /** Cria uma oportunidad de venta. Visível só com lead vinculado. */
+  /** Cria uma oportunidad de venta. Visível só con lead vinculado. */
   onCreateDeal?: () => void;
-  /** Abre os "Dados do Contacto" / detalhe del lead. */
+  /** Abre os "Dados do Contacto" / detalle del lead. */
   onViewLead?: () => void;
-  /** Move o lead para otro estágio do embudo — opcional. */
+  /** Move o lead para otro etapa do embudo — opcional. */
   onMoveStageQuick?: (stageId: string) => void;
   pipelineStages?: { id: string; name: string; color: string | null }[];
   currentStageId?: string | null;
   /** Abre seletor de producto do catálogo para enviar como mensaje rica. */
   onPickCatalog?: () => void;
-  /** Abre dialog de gerar/enviar link de pago. */
+  /** Abre dialog de generar/enviar link de pago. */
   onSendPaymentLink?: () => void;
 }
 
@@ -83,10 +83,10 @@ export function QuickActionBar({
               disabled={isSuggestingReply}
             >
               <Sparkles className={cn('h-3.5 w-3.5', isSuggestingReply && 'animate-spin')} />
-              Sugerir Resposta IA
+              Sugerir Respuesta IA
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Gerar sugestão com IA baseada no contexto</TooltipContent>
+          <TooltipContent>Generar sugerencia con IA baseada no contexto</TooltipContent>
         </Tooltip>
       )}
 
@@ -120,7 +120,7 @@ export function QuickActionBar({
               Cobrar
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Gerar e enviar link de pago</TooltipContent>
+          <TooltipContent>Generar e enviar link de pago</TooltipContent>
         </Tooltip>
       )}
 
@@ -262,7 +262,7 @@ export function QuickActionBar({
               Analisar
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Analisar conversación com IA</TooltipContent>
+          <TooltipContent>Analisar conversación con IA</TooltipContent>
         </Tooltip>
       )}
     </div>

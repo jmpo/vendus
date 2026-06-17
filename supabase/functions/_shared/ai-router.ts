@@ -164,7 +164,7 @@ export async function resolveAIConfig(
   if (!organizationId) return envFallbackConfig;
 
   try {
-    // 1) Roteamento configurado por la empresa (chave própria) tiene prioridade
+    // 1) Roteamento configurado por la empresa (chave propia) tiene prioridade
     const { data: routing } = await supabase
       .from('org_ai_routing')
       .select('provider, model, fallback_to_lovable')
@@ -186,14 +186,14 @@ export async function resolveAIConfig(
       if (apiKey && orgProvider === 'openai') {
         return buildOpenAIConfig(apiKey, routedModel, 'external_key');
       }
-      // sin chave própria → cai pro pool / plano abaixo
+      // sin chave propia → cai pro pool / plano abaixo
     }
 
     // 2) Plano de la empresa decide se usa pool da plataforma
     const plan = await readPlan();
     if (!plan.allow) {
       const err: any = new Error(
-        'Su plano no inclui IA da plataforma. Cadastre uma chave própria (OpenAI/Anthropic/Gemini) em Integrações.',
+        'Su plano no inclui IA da plataforma. Cadastre uma chave propia (OpenAI/Anthropic/Gemini) em Integraciones.',
       );
       err.code = 'AI_PLAN_NO_PLATFORM';
       throw err;
@@ -229,7 +229,7 @@ export async function resolveAIConfig(
 
 /**
  * Registra consumo de tokens da plataforma después chamada Lovable AI.
- * Para chave própria del cliente, solo grava log informativo (no consome cota).
+ * Para chave propia del cliente, solo grava log informativo (no consome cota).
  */
 export async function recordAIUsage(
   supabase: any,
@@ -339,7 +339,7 @@ export async function resolveTranscriptionConfig(
       apiKey: fallbackKey,
     };
   }
-  throw new Error('Transcrição requer uma chave OpenAI configurada.');
+  throw new Error('Transcripción requer uma chave OpenAI configurada.');
 }
 
 /**

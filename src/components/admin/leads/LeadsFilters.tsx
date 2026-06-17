@@ -66,8 +66,8 @@ const OPERATORS_BY_TYPE: Record<
     { value: 'lt', label: 'Menor que (<)' },
     { value: 'lte', label: 'Menor ou igual (≤)' },
     { value: 'between', label: 'Entre' },
-    { value: 'is_empty', label: 'Está vazio' },
-    { value: 'is_not_empty', label: 'Está preenchido' },
+    { value: 'is_empty', label: 'Está vacío' },
+    { value: 'is_not_empty', label: 'Está completado' },
   ],
   number: [
     { value: 'eq', label: 'Igual a (=)' },
@@ -77,14 +77,14 @@ const OPERATORS_BY_TYPE: Record<
     { value: 'lt', label: 'Menor que (<)' },
     { value: 'lte', label: 'Menor ou igual (≤)' },
     { value: 'between', label: 'Entre' },
-    { value: 'is_empty', label: 'Está vazio' },
-    { value: 'is_not_empty', label: 'Está preenchido' },
+    { value: 'is_empty', label: 'Está vacío' },
+    { value: 'is_not_empty', label: 'Está completado' },
   ],
   select: [
     { value: 'eq', label: 'Igual a' },
     { value: 'neq', label: 'Diferente de' },
-    { value: 'is_empty', label: 'Está vazio' },
-    { value: 'is_not_empty', label: 'Está preenchido' },
+    { value: 'is_empty', label: 'Está vacío' },
+    { value: 'is_not_empty', label: 'Está completado' },
   ],
   boolean: [
     { value: 'eq', label: 'É verdadeiro/falso' },
@@ -92,11 +92,11 @@ const OPERATORS_BY_TYPE: Record<
   ],
   date: [
     { value: 'eq', label: 'Em' },
-    { value: 'gt', label: 'Depois de' },
+    { value: 'gt', label: 'Después de' },
     { value: 'lt', label: 'Antes de' },
     { value: 'between', label: 'Entre' },
-    { value: 'is_empty', label: 'Está vazio' },
-    { value: 'is_not_empty', label: 'Está preenchido' },
+    { value: 'is_empty', label: 'Está vacío' },
+    { value: 'is_not_empty', label: 'Está completado' },
   ],
 };
 
@@ -388,7 +388,7 @@ export function LeadsFilters({
             </div>
 
             <div className="max-h-[70vh] overflow-y-auto p-4 space-y-5">
-              {/* Período */}
+              {/* Periodo */}
               <div className="space-y-2">
                 <label className="text-sm font-medium">Fecha de inscrição</label>
                 <div className="flex flex-wrap gap-2">
@@ -543,7 +543,7 @@ export function LeadsFilters({
                             : 'text-muted-foreground'
                         )}
                       >
-                        Qualquer
+                        Cualquier
                       </button>
                       <button
                         onClick={() => onFilterChange('tagsMatchMode', 'all')}
@@ -560,7 +560,7 @@ export function LeadsFilters({
                   )}
                 </div>
                 {!leadTags || leadTags.length === 0 ? (
-                  <p className="text-xs text-muted-foreground">Nenhuma etiqueta cadastrada.</p>
+                  <p className="text-xs text-muted-foreground">Ninguna etiqueta registrada.</p>
                 ) : (
                   <>
                     <Input
@@ -594,7 +594,7 @@ export function LeadsFilters({
                         );
                       })}
                       {filteredTags.length === 0 && (
-                        <p className="text-xs text-muted-foreground">Nenhuma etiqueta encontrada.</p>
+                        <p className="text-xs text-muted-foreground">Ninguna etiqueta encontrada.</p>
                       )}
                     </div>
                   </>
@@ -605,14 +605,14 @@ export function LeadsFilters({
               <div className="space-y-3 rounded-md border border-destructive/30 bg-destructive/5 p-3">
                 <div className="flex items-center gap-2">
                   <X className="h-4 w-4 text-destructive" />
-                  <label className="text-sm font-medium text-destructive">Excluir do resultado</label>
+                  <label className="text-sm font-medium text-destructive">Eliminar do resultado</label>
                 </div>
 
                 {/* Etiquetas a eliminar */}
                 {leadTags && leadTags.length > 0 && (
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-muted-foreground">
-                      Sem as etiquetas
+                      Sin as etiquetas
                     </label>
                     <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto">
                       {leadTags.map((tag) => {
@@ -644,7 +644,7 @@ export function LeadsFilters({
 
                 {/* Origens a eliminar */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-muted-foreground">Sem as origens</label>
+                  <label className="text-xs font-medium text-muted-foreground">Sin as origens</label>
                   <div className="flex flex-wrap gap-1.5">
                     {LEAD_ORIGINS.map((origin) => {
                       const active = filters.excludeOrigin.includes(origin.value);
@@ -668,7 +668,7 @@ export function LeadsFilters({
 
                 {/* Canais a eliminar */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-muted-foreground">Sem os canais</label>
+                  <label className="text-xs font-medium text-muted-foreground">Sin os canais</label>
                   <div className="flex flex-wrap gap-1.5">
                     {LEAD_CHANNELS.map((channel) => {
                       const active = filters.excludeChannel.includes(channel.value);
@@ -699,7 +699,7 @@ export function LeadsFilters({
                 </div>
                 {customFields.length === 0 ? (
                   <p className="text-xs text-muted-foreground">
-                    Nenhum campo personalizado cadastrado.
+                    Ningún campo personalizado registrado.
                   </p>
                 ) : (
                   <>
@@ -715,7 +715,7 @@ export function LeadsFilters({
                       <SelectTrigger className="h-8 text-xs">
                         <div className="flex items-center gap-2">
                           <Plus className="h-3.5 w-3.5" />
-                          <SelectValue placeholder="Adicionar filtro por campo" />
+                          <SelectValue placeholder="Agregar filtro por campo" />
                         </div>
                       </SelectTrigger>
                       <SelectContent>
@@ -738,10 +738,10 @@ export function LeadsFilters({
                   onValueChange={(v) => onFilterChange('squadId', v === '__all__' ? null : v)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Todos os squads" />
+                    <SelectValue placeholder="Todos los squads" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__all__">Todos os squads</SelectItem>
+                    <SelectItem value="__all__">Todos los squads</SelectItem>
                     {squads.map((squad) => (
                       <SelectItem key={squad.id} value={squad.id}>
                         {squad.name}
@@ -759,10 +759,10 @@ export function LeadsFilters({
                   onValueChange={(v) => onFilterChange('productId', v === '__all__' ? null : v)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Todos os productos" />
+                    <SelectValue placeholder="Todos los productos" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__all__">Todos os productos</SelectItem>
+                    <SelectItem value="__all__">Todos los productos</SelectItem>
                     {products.map((product) => (
                       <SelectItem key={product.id} value={product.id}>
                         {product.name}
@@ -774,16 +774,16 @@ export function LeadsFilters({
 
               {/* Stage */}
               <div className="space-y-2">
-                <label className="text-sm font-medium">Estágio</label>
+                <label className="text-sm font-medium">Etapa</label>
                 <Select
                   value={filters.stageId || '__all__'}
                   onValueChange={(v) => onFilterChange('stageId', v === '__all__' ? null : v)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Todos os estágios" />
+                    <SelectValue placeholder="Todos los etapas" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__all__">Todos os estágios</SelectItem>
+                    <SelectItem value="__all__">Todos los etapas</SelectItem>
                     {stages.map((stage) => (
                       <SelectItem key={stage.id} value={stage.id}>
                         {stage.name}
@@ -838,7 +838,7 @@ export function LeadsFilters({
             return (
               <Badge key={`ex-${tid}`} variant="destructive" className="gap-1">
                 <span className="w-2 h-2 rounded-full" style={{ backgroundColor: t.color }} />
-                sem: {t.name}
+                sin: {t.name}
                 <X
                   className="h-3 w-3 cursor-pointer"
                   onClick={() =>
@@ -853,7 +853,7 @@ export function LeadsFilters({
           })}
           {filters.excludeOrigin.map((origin) => (
             <Badge key={`ex-o-${origin}`} variant="destructive" className="gap-1">
-              sem origem: {LEAD_ORIGINS.find((o) => o.value === origin)?.label ?? origin}
+              sin origem: {LEAD_ORIGINS.find((o) => o.value === origin)?.label ?? origin}
               <X
                 className="h-3 w-3 cursor-pointer"
                 onClick={() => toggleArrayFilter('excludeOrigin', origin)}
@@ -862,7 +862,7 @@ export function LeadsFilters({
           ))}
           {filters.excludeChannel.map((channel) => (
             <Badge key={`ex-c-${channel}`} variant="destructive" className="gap-1">
-              sem canal: {LEAD_CHANNELS.find((c) => c.value === channel)?.label ?? channel}
+              sin canal: {LEAD_CHANNELS.find((c) => c.value === channel)?.label ?? channel}
               <X
                 className="h-3 w-3 cursor-pointer"
                 onClick={() => toggleArrayFilter('excludeChannel', channel)}

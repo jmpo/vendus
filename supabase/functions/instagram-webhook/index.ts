@@ -77,7 +77,7 @@ Deno.serve(async (req: Request) => {
   const sig = req.headers.get('x-hub-signature-256') ?? '';
   const entries = Array.isArray(payload.entry) ? payload.entry : [];
 
-  // Resolver conexión: prioriza path; fallback resolve por el entry.id (ig_business_account_id) entre conexões ativas.
+  // Resolver conexión: prioriza path; fallback resolve por el entry.id (ig_business_account_id) entre conexiones ativas.
   let resolvedConn: any = null;
   if (pathConnectionId) {
     const { data } = await sb

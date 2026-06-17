@@ -90,7 +90,7 @@ export function PostSaleTab({ productId }: Props) {
       <div>
         <h2 className="text-lg font-semibold">Eventos Post-venta</h2>
         <p className="text-sm text-muted-foreground">
-          O webhook do gateway (Hotmart, Cakto, Doppus, Kiwify) ya está conectado. Aqui usted define <strong>o que acontece</strong> cuando cada evento chega.
+          O webhook do gateway (Hotmart, Cakto, Doppus, Kiwify) ya está conectado. Acá usted define <strong>o que acontece</strong> cuando cada evento chega.
         </p>
       </div>
 
@@ -281,7 +281,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
           <Section icon={<Tag className="h-4 w-4" />} title="1. Etiquetas">
             <div className="space-y-3">
               <div>
-                <Label className="text-xs text-muted-foreground">Adicionar</Label>
+                <Label className="text-xs text-muted-foreground">Agregar</Label>
                 <TagMultiSelect tags={tags} selected={addTagIds} onToggle={(id) => toggleTag(id, addTagIds, setAddTagIds)} />
               </div>
               <div>
@@ -306,7 +306,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
               {sendMode === 'flow' && (
                 flows.length === 0 ? (
                   <p className="text-xs text-muted-foreground">
-                    Nenhum flujo creado para este producto. Crea um na aba <strong>Flujos</strong> primeiro.
+                    Ningún flujo creado para este producto. Crea um na aba <strong>Flujos</strong> primero.
                   </p>
                 ) : (
                   <Select value={flowId ?? ''} onValueChange={(v) => setFlowId(v || null)}>
@@ -361,7 +361,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
                     onChange={(e) => setInlineMessage(e.target.value)}
                   />
                   <p className="text-xs text-muted-foreground">
-                    Usa o botão <strong>Variáveis</strong> para inserir dados del lead, pedido, PIX, boleto e links.
+                    Usa o botón <strong>Variables</strong> para inserir dados del lead, pedido, PIX, boleto e links.
                   </p>
                 </div>
               )}
@@ -416,13 +416,13 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
             </div>
           </Section>
 
-          {/* 4. Encaminhar */}
-          <Section icon={<Users className="h-4 w-4" />} title="4. Encaminhar lead (opcional)">
+          {/* 4. Derivar */}
+          <Section icon={<Users className="h-4 w-4" />} title="4. Derivar lead (opcional)">
             <div className="space-y-3">
               <Select value={forwardKind} onValueChange={(v: any) => setForwardKind(v)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">No encaminhar</SelectItem>
+                  <SelectItem value="none">No derivar</SelectItem>
                   <SelectItem value="sector">Sector</SelectItem>
                   <SelectItem value="user">Pessoa</SelectItem>
                   <SelectItem value="agent">Agente de IA</SelectItem>
@@ -431,7 +431,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
 
               {forwardKind === 'sector' && (
                 <Select value={assignSectorId ?? NONE} onValueChange={(v) => setAssignSectorId(v === NONE ? null : v)}>
-                  <SelectTrigger><SelectValue placeholder="Selecionar sector" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Seleccionar sector" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value={NONE}>—</SelectItem>
                     {sectors.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
@@ -441,7 +441,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
 
               {forwardKind === 'user' && (
                 <Select value={assignUserId ?? NONE} onValueChange={(v) => setAssignUserId(v === NONE ? null : v)}>
-                  <SelectTrigger><SelectValue placeholder="Selecionar pessoa" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Seleccionar pessoa" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value={NONE}>—</SelectItem>
                     {team.map(m => <SelectItem key={m.id} value={m.id}>{m.full_name || m.email || m.id}</SelectItem>)}
@@ -452,10 +452,10 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
               {forwardKind === 'agent' && (
                 <div className="space-y-2">
                   <Select value={agentId ?? NONE} onValueChange={(v) => setAgentId(v === NONE ? null : v)}>
-                    <SelectTrigger><SelectValue placeholder="Selecionar agente" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="Seleccionar agente" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value={NONE}>—</SelectItem>
-                      {agents.map(a => <SelectItem key={a.id} value={a.id}>{a.name}{a.is_default ? ' (padrão)' : ''}</SelectItem>)}
+                      {agents.map(a => <SelectItem key={a.id} value={a.id}>{a.name}{a.is_default ? ' (predeterminado)' : ''}</SelectItem>)}
                     </SelectContent>
                   </Select>
                   <Input placeholder="Objetivo do contacto" value={objective} onChange={(e) => setObjective(e.target.value)} />
@@ -476,7 +476,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
                         />
                         <div className="text-xs">
                           <div className="font-medium text-foreground">Mensaje direta</div>
-                          <div className="text-muted-foreground">Envia tudo de uma vez (Pix, link, instruções) en hasta 2 bolhas curtas.</div>
+                          <div className="text-muted-foreground">Envia tudo de uma vez (Pix, link, instrucciones) en hasta 2 burbujas curtas.</div>
                         </div>
                       </label>
                       <label
@@ -491,7 +491,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
                         />
                         <div className="text-xs">
                           <div className="font-medium text-foreground">Conversación intencional</div>
-                          <div className="text-muted-foreground">Abre com uma pregunta corta. A IA só entrega Pix/link conforme o lead reage.</div>
+                          <div className="text-muted-foreground">Abre con uma pregunta corta. A IA só entrega Pix/link conforme o lead reage.</div>
                         </div>
                       </label>
                     </div>
@@ -504,9 +504,9 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
           {/* E-mail por template (mantido como opción avançada) */}
           <Section icon={<Mail className="h-4 w-4" />} title="E-mail por template (opcional)">
             <Select value={emailTemplateId ?? NONE} onValueChange={(v) => setEmailTemplateId(v === NONE ? null : v)}>
-              <SelectTrigger><SelectValue placeholder="Nenhum" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Ningún" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value={NONE}>Nenhum</SelectItem>
+                <SelectItem value={NONE}>Ningún</SelectItem>
                 {templates.map(t => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}
               </SelectContent>
             </Select>
@@ -518,7 +518,7 @@ function EventCard({ productId, event, existing, agents, templates, stages, tags
             )}
             <Button onClick={handleSave} disabled={saving}>
               {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              Salvar
+              Guardar
             </Button>
           </div>
         </CardContent>
@@ -559,7 +559,7 @@ function TagMultiSelect({
       if (created?.id) onToggle(created.id);
       setQuery('');
     } catch (e) {
-      // toast ya é exibido pelo hook
+      // toast ya é exibido por el hook
     }
   };
 
@@ -587,7 +587,7 @@ function TagMultiSelect({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button type="button" variant="outline" size="sm" className="h-8 text-xs">
-            <Tag className="h-3 w-3 mr-1.5" /> Adicionar etiqueta
+            <Tag className="h-3 w-3 mr-1.5" /> Agregar etiqueta
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0 w-72" align="start">
@@ -603,7 +603,7 @@ function TagMultiSelect({
                     className="w-full text-left px-3 py-2 text-sm hover:bg-accent flex items-center gap-2"
                   >
                     {createTag.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
-                    Criar "<strong>{query.trim()}</strong>"
+                    Crear "<strong>{query.trim()}</strong>"
                   </button>
                 ) : (
                   <p className="px-3 py-2 text-sm text-muted-foreground">Escribí para buscar ou crear</p>
@@ -628,7 +628,7 @@ function TagMultiSelect({
                 {!exactMatch && query.trim() && filtered.length > 0 && (
                   <CommandItem onSelect={handleCreate} className="cursor-pointer text-primary">
                     <Plus className="h-3 w-3 mr-2" />
-                    Criar "{query.trim()}"
+                    Crear "{query.trim()}"
                   </CommandItem>
                 )}
               </CommandGroup>
@@ -646,14 +646,14 @@ function RecentLogs({ productId }: { productId: string }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base flex items-center gap-2"><History className="h-4 w-4" />Histórico recente</CardTitle>
+        <CardTitle className="text-base flex items-center gap-2"><History className="h-4 w-4" />Historial recente</CardTitle>
         <CardDescription>Últimos eventos pós-venta processados para este producto.</CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="text-sm text-muted-foreground">Carregando...</div>
+          <div className="text-sm text-muted-foreground">Cargando...</div>
         ) : !logs || logs.length === 0 ? (
-          <div className="text-sm text-muted-foreground">Nenhum evento registrado aún.</div>
+          <div className="text-sm text-muted-foreground">Ningún evento registrado aún.</div>
         ) : (
           <div className="space-y-2">
             {logs.map(log => {

@@ -98,7 +98,7 @@ export const QuizBlockPalette = memo(function QuizBlockPalette({ onAddBlock }: P
           </div>
           <div>
             <h3 className="text-sm font-semibold">Blocos do Quiz</h3>
-            <p className="text-[10px] text-muted-foreground">Perguntas + pontuação</p>
+            <p className="text-[10px] text-muted-foreground">Perguntas + puntuación</p>
           </div>
         </div>
       </div>
@@ -130,7 +130,7 @@ export const QuizBlockPalette = memo(function QuizBlockPalette({ onAddBlock }: P
 
       <div className="px-3 py-2 border-t bg-muted/30 shrink-0">
         <p className="text-[10px] text-muted-foreground text-center">
-          Usa "Botões" para preguntas e "Pontuar" para classificar
+          Usa "Botones" para preguntas e "Pontuar" para classificar
         </p>
       </div>
     </div>

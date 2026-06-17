@@ -174,7 +174,7 @@ export function EditMemberPermissionsDialog({ member, open, onOpenChange }: Edit
           {permissions && (
             <Button onClick={handleSave} disabled={!hasChanges || updatePermissions.isPending}>
               {updatePermissions.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Salvar
+              Guardar
             </Button>
           )}
         </DialogFooter>

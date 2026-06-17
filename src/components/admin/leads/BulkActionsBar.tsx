@@ -39,7 +39,7 @@ export function BulkActionsBar({
       <div className="flex items-center gap-2">
         <CheckCircle className="h-5 w-5 text-primary" />
         <span className="font-medium">
-          {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
+          {selectedCount} seleccionado{selectedCount > 1 ? 's' : ''}
         </span>
       </div>
 
@@ -83,7 +83,7 @@ export function BulkActionsBar({
           className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
         >
           <Trash2 className="h-4 w-4 mr-1" />
-          Excluir
+          Eliminar
         </Button>
       </div>
 

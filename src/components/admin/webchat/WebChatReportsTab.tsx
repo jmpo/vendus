@@ -76,7 +76,7 @@ export function WebChatReportsTab() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tempo Médio de Resposta</CardTitle>
+            <CardTitle className="text-sm font-medium">Tempo Médio de Respuesta</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -84,14 +84,14 @@ export function WebChatReportsTab() {
               {avgResponseTime > 0 ? `${avgResponseTime.toFixed(1)}min` : '--'}
             </div>
             <p className="text-xs text-muted-foreground">
-              primeira respuesta humana
+              primera respuesta humana
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Resolvido pelo Bot</CardTitle>
+            <CardTitle className="text-sm font-medium">Resolvido por el Bot</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -110,13 +110,13 @@ export function WebChatReportsTab() {
             <BarChart3 className="h-5 w-5" />
             Distribución por Status
           </CardTitle>
-          <CardDescription>Visão geral do estado das conversaciones</CardDescription>
+          <CardDescription>Visión general do estado das conversaciones</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span>Com Bot</span>
+                <span>Con Bot</span>
                 <span className="font-medium">
                   {conversations.filter(c => c.status === 'bot_active').length}
                 </span>
@@ -192,9 +192,9 @@ export function WebChatReportsTab() {
       {/* Coming Soon */}
       <Card>
         <CardHeader>
-          <CardTitle>Mais Relatórios (Em Breve)</CardTitle>
+          <CardTitle>Mais Reportes (Em Breve)</CardTitle>
           <CardDescription>
-            Estatísticas avançadas serão adicionadas nas próximas versões
+            Estatísticas avançadas serán adicionadas nas próximas versiones
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -202,7 +202,7 @@ export function WebChatReportsTab() {
             <li>• Conversas por hora/día da semana</li>
             <li>• Performance por agente</li>
             <li>• Leads gerados via chat</li>
-            <li>• Taxa de conversão chat → venta</li>
+            <li>• Taxa de conversión chat → venta</li>
             <li>• Análise de sentimento das conversaciones</li>
           </ul>
         </CardContent>

@@ -108,7 +108,7 @@ export function QuizBlockInspector({
   type Metric = { id: string; label: string; value: number; display?: string; color?: string };
   const tiers: Tier[] = ((block.data as any).result_tiers as Tier[]) || [
     { id: 't1', label: 'Iniciante', min: 0, max: 20, color: '#f97316', message: 'Há mucho espaço para crescer.' },
-    { id: 't2', label: 'Intermediário', min: 21, max: 50, color: '#3b82f6', message: 'Bom caminho — vamos acelerar.' },
+    { id: 't2', label: 'Intermediário', min: 21, max: 50, color: '#3b82f6', message: 'Bom camino — vamos acelerar.' },
     { id: 't3', label: 'Avançado', min: 51, max: 100, color: '#10b981', message: 'Excelente! Pronto para o próximo nível.' },
   ];
   const metrics: Metric[] = ((block.data as any).result_metrics as Metric[]) || [];
@@ -126,7 +126,7 @@ export function QuizBlockInspector({
 
       <Tabs defaultValue={isEnd ? 'result' : 'content'}>
         <TabsList className={cn('w-full grid h-8', isEnd ? 'grid-cols-3' : 'grid-cols-2')}>
-          <TabsTrigger value="content" className="text-xs">Conteúdo</TabsTrigger>
+          <TabsTrigger value="content" className="text-xs">Contenido</TabsTrigger>
           <TabsTrigger value="logic" className="text-xs">
             <GitBranch className="h-3 w-3 mr-1" /> Lógica
           </TabsTrigger>
@@ -153,7 +153,7 @@ export function QuizBlockInspector({
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <Label className="text-xs flex items-center gap-1">
-                    <Hash className="h-3 w-3" /> Variável
+                    <Hash className="h-3 w-3" /> Variable
                   </Label>
                   <Input
                     className="text-xs font-mono h-8"
@@ -163,7 +163,7 @@ export function QuizBlockInspector({
                   />
                 </div>
                 <div className="flex items-end justify-between gap-2 pb-1">
-                  <Label className="text-xs">Obrigatória</Label>
+                  <Label className="text-xs">Obligatoria</Label>
                   <Switch
                     checked={!!block.data.required}
                     onCheckedChange={(v) => update('required', v)}
@@ -194,7 +194,7 @@ export function QuizBlockInspector({
 
               <div className="grid grid-cols-[1fr_88px] gap-2">
                 <div>
-                  <Label className="text-xs">Texto do botão</Label>
+                  <Label className="text-xs">Texto do botón</Label>
                   <Input
                     className="text-xs h-8"
                     value={block.data.cta_label || ''}
@@ -257,7 +257,7 @@ export function QuizBlockInspector({
             <>
               <Separator />
               <div className="flex items-center justify-between">
-                <Label className="text-xs font-semibold">Opções</Label>
+                <Label className="text-xs font-semibold">Opciones</Label>
                 <Button size="sm" variant="ghost" onClick={addOption} className="h-7 text-xs">
                   <Plus className="h-3 w-3 mr-1" /> Opción
                 </Button>
@@ -359,7 +359,7 @@ export function QuizBlockInspector({
 
                 {!hasOptions && (
                   <p className="text-xs text-muted-foreground text-center py-3">
-                    Adicione opciones para el lead escolher
+                    Agregá opciones para el lead escolher
                   </p>
                 )}
               </div>
@@ -369,7 +369,7 @@ export function QuizBlockInspector({
           {isScore && (
             <>
               <div>
-                <Label className="text-xs">Variável (opcional)</Label>
+                <Label className="text-xs">Variable (opcional)</Label>
                 <Input
                   className="text-xs font-mono h-8"
                   value={block.data.variable_name || ''}
@@ -419,7 +419,7 @@ export function QuizBlockInspector({
                 <div className="grid grid-cols-[1fr_auto] gap-2">
                   <Input
                     className="text-xs h-8 font-mono"
-                    placeholder="variável"
+                    placeholder="variable"
                     value={block.data.condition?.variable || ''}
                     onChange={(e) => update('condition', {
                       ...(block.data.condition || { operator: 'equals', value: '' }),
@@ -454,7 +454,7 @@ export function QuizBlockInspector({
 
               <div className="rounded-lg border bg-emerald-500/5 border-emerald-500/20 p-2.5 space-y-1">
                 <p className="text-[10px] uppercase tracking-wider font-semibold text-emerald-700 dark:text-emerald-400">
-                  Então (verdadeiro) → Ir para
+                  Entonces (verdadeiro) → Ir para
                 </p>
                 <Select
                   value={block.data.true_next_block_id || 'sequential'}
@@ -474,7 +474,7 @@ export function QuizBlockInspector({
 
               <div className="rounded-lg border bg-rose-500/5 border-rose-500/20 p-2.5 space-y-1">
                 <p className="text-[10px] uppercase tracking-wider font-semibold text-rose-700 dark:text-rose-400">
-                  Senão (falso) → Ir para
+                  Sino (falso) → Ir para
                 </p>
                 <Select
                   value={block.data.false_next_block_id || 'sequential'}
@@ -496,7 +496,7 @@ export function QuizBlockInspector({
             <>
               <div>
                 <Label className="text-xs flex items-center gap-1">
-                  <ArrowRight className="h-3 w-3" /> Avançar para
+                  <ArrowRight className="h-3 w-3" /> Avanzar para
                 </Label>
                 <Select
                   value={block.next_block_id || 'sequential'}
@@ -513,7 +513,7 @@ export function QuizBlockInspector({
                   </SelectContent>
                 </Select>
                 <p className="text-[10px] text-muted-foreground mt-1">
-                  Por padrão segue a ordem visual. Elegí um destino para crear ramificação.
+                  Por defecto segue a ordem visual. Elegí um destino para crear ramificação.
                 </p>
               </div>
 
@@ -541,7 +541,7 @@ export function QuizBlockInspector({
                     );
                   })}
                   <p className="text-[10px] text-muted-foreground pt-1">
-                    Edite o destino de cada opción na aba <strong>Conteúdo</strong>.
+                    Edite o destino de cada opción na aba <strong>Contenido</strong>.
                   </p>
                 </div>
               )}
@@ -549,7 +549,7 @@ export function QuizBlockInspector({
           )}
         </TabsContent>
 
-        {/* ───────── RESULTADO (apenas para blocos end) ───────── */}
+        {/* ───────── RESULTADO (solo para blocos end) ───────── */}
         {isEnd && (
           <TabsContent value="result" className="space-y-4 pt-3">
             <div>
@@ -566,7 +566,7 @@ export function QuizBlockInspector({
             <div className="rounded-lg border bg-violet-500/5 border-violet-500/20 p-2.5 space-y-2">
               <div className="flex items-center justify-between">
                 <Label className="text-xs font-semibold flex items-center gap-1 text-violet-700 dark:text-violet-400">
-                  ✨ Análise com IA
+                  ✨ Análise con IA
                 </Label>
                 <Switch
                   checked={!!(block.data as any).result_ai_enabled || (block.data as any).quiz_subtype === 'result_ai'}
@@ -586,14 +586,14 @@ export function QuizBlockInspector({
                 />
               )}
               <p className="text-[10px] text-muted-foreground">
-                Gera diagnóstico, oportunidades, próximos passos e oferta com base nas respuestas e score.
+                Gera diagnóstico, oportunidades, próximos passos e oferta con base nas respuestas e score.
               </p>
             </div>
 
-            {/* Faixas de pontuação */}
+            {/* Faixas de puntuación */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label className="text-xs font-semibold">Faixas de pontuação</Label>
+                <Label className="text-xs font-semibold">Faixas de puntuación</Label>
                 <Button size="sm" variant="ghost" className="h-7 text-xs"
                   onClick={() => setTiers([...tiers, {
                     id: generateBlockId(), label: 'Nova faixa', min: 0, max: 100, color: '#8b5cf6',
@@ -663,7 +663,7 @@ export function QuizBlockInspector({
                       className="text-xs h-7 flex-1"
                       value={m.label}
                       onChange={(e) => setMetrics(metrics.map(x => x.id === m.id ? { ...x, label: e.target.value } : x))}
-                      placeholder="Taxa de conversão"
+                      placeholder="Taxa de conversión"
                     />
                     <input
                       type="color"
@@ -695,7 +695,7 @@ export function QuizBlockInspector({
               ))}
               {metrics.length === 0 && (
                 <p className="text-[10px] text-muted-foreground text-center py-2">
-                  Adicione cards visuais para impressionar o respondente.
+                  Agregá cards visuais para impressionar o respondente.
                 </p>
               )}
             </div>

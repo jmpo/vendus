@@ -46,7 +46,7 @@ export function WidgetSettingsTab({ funnel }: Props) {
       assigned_user_id: formData.assigned_user_id || null,
     };
     await updateFunnel.mutateAsync({ id: funnel.id, ...updates });
-    toast.success('Configurações do Widget salvas');
+    toast.success('Configuraciones do Widget salvas');
   };
 
   return (
@@ -55,15 +55,15 @@ export function WidgetSettingsTab({ funnel }: Props) {
         <div>
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <Code2 className="h-5 w-5 text-primary" />
-            Configurações do Widget
+            Configuraciones do Widget
           </h2>
           <p className="text-muted-foreground text-sm">
-            Apenas opciones relevantes para instalação em sites externos.
+            Solo opciones relevantes para instalación em sites externos.
           </p>
         </div>
         <Button onClick={handleSave} disabled={updateFunnel.isPending} className="gap-2">
           {updateFunnel.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          Salvar
+          Guardar
         </Button>
       </div>
 
@@ -182,7 +182,7 @@ export function WidgetSettingsTab({ funnel }: Props) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Temperatura padrão</Label>
+              <Label>Temperatura predeterminado</Label>
               <Select value={formData.default_temperature} onValueChange={(v) => setFormData(p => ({ ...p, default_temperature: v }))}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -193,7 +193,7 @@ export function WidgetSettingsTab({ funnel }: Props) {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Etiquetas padrão (separadas por vírgula)</Label>
+              <Label>Etiquetas predeterminado (separadas por vírgula)</Label>
               <Input
                 value={formData.default_tags}
                 onChange={(e) => setFormData(p => ({ ...p, default_tags: e.target.value }))}

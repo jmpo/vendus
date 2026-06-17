@@ -59,7 +59,7 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
         const errText = await resp.text();
         throw new Error(errText || `HTTP ${resp.status}`);
       }
-      toast.success('Requisição reprocessada com éxito!');
+      toast.success('Solicitud reprocessada con éxito!');
       refetch();
     } catch (err: any) {
       toast.error(`Error ao reprocessar: ${err.message}`);
@@ -127,12 +127,12 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
               </SelectContent>
             </Select>
             <span className="text-sm text-muted-foreground">
-              {filteredLogs.length} requisições
+              {filteredLogs.length} solicitudes
             </span>
           </div>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
             <RefreshCw className="h-4 w-4 mr-2" />
-            Atualizar
+            Actualizar
           </Button>
         </div>
 
@@ -141,9 +141,9 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
           <Card>
             <CardContent className="py-12 text-center">
               <Clock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">Nenhum log encontrado</h3>
+              <h3 className="text-lg font-medium mb-2">Ningún log encontrado</h3>
               <p className="text-muted-foreground">
-                As requisições recebidas aparecerão aqui
+                As solicitudes recebidas aparecerán acá
               </p>
             </CardContent>
           </Card>
@@ -186,7 +186,7 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
                           onClick={() => setSelectedLog(log)}
                         >
                           <Eye className="h-4 w-4 mr-1" />
-                          Detalhes
+                          Detalles
                         </Button>
                         <Button
                           variant="ghost"
@@ -218,7 +218,7 @@ export function WebhookLogsTab({ webhookId }: WebhookLogsTabProps) {
           <DialogHeader>
             <div className="flex items-center justify-between">
               <DialogTitle className="flex items-center gap-2">
-                Detalhes da Requisição
+                Detalles da Solicitud
                 {selectedLog && getStatusBadge(selectedLog.status)}
               </DialogTitle>
               {selectedLog && (

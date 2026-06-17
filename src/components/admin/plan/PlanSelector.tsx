@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// Paleta rotativa por posição (segue tokens do design system)
+// Paleta rotativa por posición (segue tokens do design system)
 const PLAN_THEMES = [
   { ring: 'ring-blue-500/40',  bg: 'bg-blue-500',    text: 'text-blue-500',    soft: 'bg-blue-500/10',    btn: 'bg-blue-500 hover:bg-blue-600 text-white' },
   { ring: 'ring-orange-500/40',bg: 'bg-orange-500',  text: 'text-orange-500',  soft: 'bg-orange-500/10',  btn: 'bg-orange-500 hover:bg-orange-600 text-white' },
@@ -33,14 +33,14 @@ const FEATURE_LABELS: Record<string, string> = {
   feature_kanban: 'Kanban de leads',
   feature_pipeline: 'Pipeline de ventas',
   feature_scheduling: 'Agendamientos',
-  feature_campaigns: 'Campanhas',
+  feature_campaigns: 'Campañas',
   feature_outreach: 'Cadencia de follow-up',
   feature_ai_agents: 'Agentes de IA',
   feature_voice_agents: 'Agentes de voz',
-  feature_audio_transcription_ai: 'Transcrição de áudio IA',
-  feature_text_correction_ai: 'Correção de texto IA',
+  feature_audio_transcription_ai: 'Transcripción de audio IA',
+  feature_text_correction_ai: 'Corrección de texto IA',
   feature_capture_funnels: 'Funis de captura',
-  feature_forms: 'Formulários',
+  feature_forms: 'Formularios',
   feature_external_api: 'API externa',
   feature_integrations: 'Integraciones nativas',
   feature_webhooks: 'Webhooks',
@@ -95,7 +95,7 @@ export function PlanSelector() {
 
   const currentPlanId = effective?.plan_id || null;
 
-  // Para comparar upgrade/downgrade, usamos siempre o mismo ciclo selecionado
+  // Para comparar upgrade/downgrade, usamos siempre o mismo ciclo seleccionado
   const getPrice = (p: PlatformPlan) =>
     cycle === 'yearly' ? p.price_yearly : p.price_monthly;
 
@@ -243,12 +243,12 @@ export function PlanSelector() {
               : null;
 
             const limits = [
-              { icon: Users,         label: 'Usuários',        value: plan.max_users },
-              { icon: Plug,          label: 'Conexões',        value: plan.max_connections },
+              { icon: Users,         label: 'Usuarios',        value: plan.max_users },
+              { icon: Plug,          label: 'Conexiones',        value: plan.max_connections },
               { icon: Layers,        label: 'Setores',         value: plan.max_sectors },
               { icon: Package,       label: 'Produtos',        value: plan.max_products },
               { icon: Contact,       label: 'Contatos',        value: plan.max_contacts },
-              { icon: MessageSquare, label: 'Mensagens/mes',   value: plan.max_messages_month },
+              { icon: MessageSquare, label: 'Mensajes/mes',   value: plan.max_messages_month },
               { icon: Brain,         label: 'Tokens IA/mes',   value: plan.max_ai_tokens_month },
             ];
 
@@ -289,7 +289,7 @@ export function PlanSelector() {
                 {/* Nombre */}
                 <h3 className="text-xl font-bold text-center mb-2">{plan.name}</h3>
 
-                {/* Preço */}
+                {/* Precio */}
                 <div className="text-center mb-1">
                   <span className="text-3xl font-bold">{formatPrice(price)}</span>
                   <span className="text-muted-foreground text-sm ml-1">
@@ -340,7 +340,7 @@ export function PlanSelector() {
                   )}
                 </ul>
 
-                {/* Botão */}
+                {/* Botón */}
                 <div className="mt-auto">{renderButton(plan, theme)}</div>
               </div>
             );

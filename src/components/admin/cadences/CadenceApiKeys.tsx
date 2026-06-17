@@ -132,7 +132,7 @@ export function CadenceApiKeys({ orgId }: Props) {
             ['GET', '/cadences/:id/stats', 'Métricas + desglose por paso'],
             ['POST', '/cadences/:id/enroll', 'Inscribe leads'],
             ['GET', '/enrollments?cadence_id=…&status=…', 'Lista de inscripciones'],
-            ['GET', '/enrollments/:id', 'Detalhe + runs'],
+            ['GET', '/enrollments/:id', 'Detalle + runs'],
             ['POST', '/enrollments/:id/stop', 'Interrumpe inscripción'],
           ].map(([m, p, d]) => (
             <div key={p} className="flex gap-3 items-baseline border-b pb-1">

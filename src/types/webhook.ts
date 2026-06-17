@@ -147,13 +147,13 @@ export interface WebhookSampleRequest {
 
 export const ACTION_TYPES: Record<WebhookActionType, { label: string; description: string; icon: string }> = {
   create_lead: {
-    label: 'Criar Lead',
-    description: 'Cria um novo lead no CRM com os dados do payload',
+    label: 'Crear Lead',
+    description: 'Cria um novo lead no CRM con os dados do payload',
     icon: 'UserPlus'
   },
   update_lead: {
-    label: 'Atualizar Lead',
-    description: 'Atualiza um lead existente baseado em email ou telefone',
+    label: 'Actualizar Lead',
+    description: 'Atualiza um lead existente baseado em email ou teléfono',
     icon: 'UserCog'
   },
   transfer_user: {
@@ -173,22 +173,22 @@ export const ACTION_TYPES: Record<WebhookActionType, { label: string; descriptio
   },
   move_stage: {
     label: 'Mover no Pipeline',
-    description: 'Move o lead para um estágio específico do pipeline',
+    description: 'Move o lead para um etapa específico do pipeline',
     icon: 'ArrowRight'
   },
   apply_tags: {
     label: 'Aplicar Etiquetas',
-    description: 'Aplica etiquetas (com cor) ao lead',
+    description: 'Aplica etiquetas (con cor) ao lead',
     icon: 'Tag'
   },
   update_field: {
-    label: 'Atualizar Campo',
+    label: 'Actualizar Campo',
     description: 'Atualiza um campo específico do lead',
     icon: 'Edit'
   },
   trigger_flow: {
-    label: 'Disparar Fluxo',
-    description: 'Inicia um fluxo de chat automático',
+    label: 'Disparar Flujo',
+    description: 'Inicia um flujo de chat automático',
     icon: 'Zap'
   },
   send_email: {
@@ -198,12 +198,12 @@ export const ACTION_TYPES: Record<WebhookActionType, { label: string; descriptio
   },
   send_email_to_seller: {
     label: 'Enviar Email para Vendedor',
-    description: 'Notifica o vendedor responsável por email com dados do lead',
+    description: 'Notifica o vendedor responsável por email con dados do lead',
     icon: 'Mail'
   },
   notify_user: {
     label: 'Notificar Vendedor (App)',
-    description: 'Envia notificação no app para o vendedor responsável',
+    description: 'Envia notificación no app para o vendedor responsável',
     icon: 'Bell'
   },
   set_temperature: {
@@ -218,12 +218,12 @@ export const ACTION_TYPES: Record<WebhookActionType, { label: string; descriptio
   },
   notify_whatsapp: {
     label: 'Notificar Equipe (WhatsApp)',
-    description: 'Envia mensagem WhatsApp via IsiChat para membro(s) da equipe',
+    description: 'Envia mensaje WhatsApp via IsiChat para membro(s) da equipe',
     icon: 'MessageCircle'
   },
   ai_agent_outreach: {
     label: 'Acionar Agente IA (WhatsApp)',
-    description: 'Agente IA analisa o lead e envia mensagem estratégica via WhatsApp',
+    description: 'Agente IA analisa o lead e envia mensaje estratégica via WhatsApp',
     icon: 'Bot'
   }
 };

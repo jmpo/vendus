@@ -52,7 +52,7 @@ const f = {
   CaptureAnalyticsSection: () => import('@/components/admin/capture/channels/CaptureAnalyticsSection').then(m => ({ default: m.CaptureAnalyticsSection })),
 };
 
-// Lazy components (com retry + cache compartilhado para prefetch).
+// Lazy components (con retry + cache compartilhado para prefetch).
 const OperationCenter = lazyWithRetry(f.OperationCenter);
 const TeamManager = lazyWithRetry(f.TeamManager);
 const FinancialDashboard = lazyWithRetry(f.FinancialDashboard);
@@ -92,7 +92,7 @@ const CaptureResultsSection = lazyWithRetry(f.CaptureResultsSection);
 const CaptureAnalyticsSection = lazyWithRetry(f.CaptureAnalyticsSection);
 
 /**
- * Mapa: id da seção → factory de import. Usado pelo prefetch on-hover
+ * Mapa: id da sección → factory de import. Usado por el prefetch on-hover
  * (AdminSidebar/MobileAdminLayout chamam `prefetchSection(id)`).
  */
 const sectionFactories: Record<string, () => Promise<unknown>> = {
@@ -145,12 +145,12 @@ export default function Admin() {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
-  // Cache de seções ya visitadas — mantemos elas montadas (apenas escondidas)
+  // Cache de secciones ya visitadas — mantemos elas montadas (solo escondidas)
   // para que a 2ª visita seja instantânea.
   const visitedRef = useRef<Set<string>>(new Set([activeSection]));
   visitedRef.current.add(activeSection);
 
-  // Sincroniza tab da URL → estado (permite navegação programática via ?tab=plan)
+  // Sincroniza tab da URL → estado (permite navegación programática via ?tab=plan)
   useEffect(() => {
     const tab = searchParams.get('tab');
     if (tab && tab !== activeSection) {
@@ -159,8 +159,8 @@ export default function Admin() {
     }
   }, [searchParams, activeSection]);
 
-  // Prefetch agressivo: assim que o app carrega, baixamos no idle todas as
-  // seções principais. O usuario sente "clicou, abriu".
+  // Prefetch agressivo: así que o app carrega, baixamos no idle todas las
+  // secciones principais. O usuario sente "clicou, abriu".
   useEffect(() => {
     onIdle(() => {
       Object.values(f).forEach((factory) => prefetch(factory));
@@ -175,7 +175,7 @@ export default function Admin() {
     // Garante que o chunk começa a descargar antes da transição (caso aún
     // no tenha sido prefechado).
     prefetchAdminSection(id);
-    // Mantém ?tab=... na URL para que reload preserve a seção atual.
+    // Mantém ?tab=... na URL para que reload preserve a sección actual.
     const next = new URLSearchParams(searchParams);
     next.set('tab', id);
     setSearchParams(next, { replace: true });
@@ -190,7 +190,7 @@ export default function Admin() {
     setSelectedProductId(null);
   };
 
-  // Renderiza o conteúdo de UMA seção específica.
+  // Renderiza o contenido de UMA sección específica.
   const renderSection = (sectionId: string) => {
     if (sectionId === 'products' && selectedProductId) {
       return (
@@ -250,8 +250,8 @@ export default function Admin() {
     }
   };
 
-  // Renderiza TODAS as seções ya visitadas, escondendo as inativas.
-  // Resultado: revisitar uma seção é instantâneo (componente segue montado).
+  // Renderiza TODAS as secciones ya visitadas, escondendo as inativas.
+  // Resultado: revisitar uma sección é instantâneo (componente segue montado).
   const renderContent = () => (
     <>
       {Array.from(visitedRef.current).map((sectionId) => {
@@ -261,13 +261,13 @@ export default function Admin() {
             key={sectionId}
             // `hidden` remove do flujo visual mas mantém o componente montado.
             hidden={!isActive}
-            // Aria para acessibilidade cuando a seção está oculta.
+            // Aria para acessibilidade cuando a sección está oculta.
             aria-hidden={!isActive}
             style={!isActive ? { display: 'none' } : undefined}
           >
             <SectionErrorBoundary sectionName={sectionId}>
               {/* fallback={null} = nunca mostra spinner; useTransition mantém
-                  a tela anterior visível enquanto o chunk novo baixa. */}
+                  a tela anterior visível mientras o chunk novo baixa. */}
               <Suspense fallback={null}>{renderSection(sectionId)}</Suspense>
             </SectionErrorBoundary>
           </div>

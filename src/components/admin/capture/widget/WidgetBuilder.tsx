@@ -22,7 +22,7 @@ interface Props {
 }
 
 const statusConfig: Record<FunnelStatus, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-  draft: { label: 'Rascunho', variant: 'secondary' },
+  draft: { label: 'Borrador', variant: 'secondary' },
   active: { label: 'Ativo', variant: 'default' },
   paused: { label: 'Pausado', variant: 'outline' },
   archived: { label: 'Arquivado', variant: 'destructive' },
@@ -31,13 +31,13 @@ const statusConfig: Record<FunnelStatus, { label: string; variant: 'default' | '
 function validateWidget(blocks: FunnelBlock[]): string[] {
   const warnings: string[] = [];
   if (!blocks || blocks.length === 0) {
-    warnings.push('Flujo vazio — adicione blocos para publicar.');
+    warnings.push('Flujo vacío — agregá blocos para publicar.');
     return warnings;
   }
   const ids = new Set(blocks.map(b => b.id));
   blocks.forEach(b => {
     if (b.type === 'ai_takeover' && !(b.data as any)?.agent_id) {
-      warnings.push(`Bloco "IA assume" (${(b.data as any)?.label || b.id.slice(0, 6)}) sem agente vinculado.`);
+      warnings.push(`Bloco "IA assume" (${(b.data as any)?.label || b.id.slice(0, 6)}) sin agente vinculado.`);
     }
     const next = (b.data as any)?.next_block_id;
     if (next && !ids.has(next)) {
@@ -156,7 +156,7 @@ export function WidgetBuilder({ funnelId, onBack }: Props) {
         <TabsList className="grid w-full max-w-2xl grid-cols-6">
           <TabsTrigger value="flow" className="gap-2"><Workflow className="h-4 w-4" /><span className="hidden sm:inline">Flujo</span></TabsTrigger>
           <TabsTrigger value="preview" className="gap-2"><Eye className="h-4 w-4" /><span className="hidden sm:inline">Preview</span></TabsTrigger>
-          <TabsTrigger value="appearance" className="gap-2"><Palette className="h-4 w-4" /><span className="hidden sm:inline">Aparência</span></TabsTrigger>
+          <TabsTrigger value="appearance" className="gap-2"><Palette className="h-4 w-4" /><span className="hidden sm:inline">Apariencia</span></TabsTrigger>
           <TabsTrigger value="share" className="gap-2"><Share2 className="h-4 w-4" /><span className="hidden sm:inline">Instalar</span></TabsTrigger>
           <TabsTrigger value="logs" className="gap-2"><Activity className="h-4 w-4" /><span className="hidden sm:inline">Webhooks</span></TabsTrigger>
           <TabsTrigger value="settings" className="gap-2"><Settings className="h-4 w-4" /><span className="hidden sm:inline">Config</span></TabsTrigger>

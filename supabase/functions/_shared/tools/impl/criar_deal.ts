@@ -4,7 +4,7 @@ import type { ToolDefinition } from '../types.ts';
 export const criarDealTool: ToolDefinition = {
   name: 'criar_deal',
   description:
-    'Cria uma oportunidad de venta (deal) no pipeline para el lead atual. Usa cuando el lead demonstrar intenção clara de compra ou solicitar uma proposta. No use para preguntas informativas.',
+    'Cria uma oportunidad de venta (deal) no pipeline para el lead atual. Usa cuando el lead demonstrar intención clara de compra ou solicitar uma proposta. No use para preguntas informativas.',
   categories: ['crm'],
   estimated_cost_cents: 0,
   parameters: {
@@ -12,7 +12,7 @@ export const criarDealTool: ToolDefinition = {
     properties: {
       product_id: {
         type: 'string',
-        description: 'UUID do producto a ser vinculado ao deal. Obrigatório.',
+        description: 'UUID do producto a ser vinculado ao deal. Obligatorio.',
       },
       deal_value: {
         type: 'number',

@@ -111,10 +111,10 @@ export function CampaignReports({ campaigns }: { campaigns: Campaign[] }) {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <KPI label="Campanhas ativas" value={active} />
+        <KPI label="Campañas ativas" value={active} />
         <KPI label="Finalizadas" value={completed} />
-        <KPI label="Mensagens enviadas" value={summary.sent} />
-        <KPI label="Respostas recebidas" value={summary.responded} accent />
+        <KPI label="Mensajes enviadas" value={summary.sent} />
+        <KPI label="Respuestas recebidas" value={summary.responded} accent />
         <KPI label="Taxa de respuesta" value={pct(summary.responded, summary.sent)} accent />
       </div>
 
@@ -124,7 +124,7 @@ export function CampaignReports({ campaigns }: { campaigns: Campaign[] }) {
         <Card>
           <CardContent className="p-10 flex flex-col items-center gap-3 text-muted-foreground text-sm">
             <BarChart3 className="h-8 w-8" />
-            Nenhum dado aún. Dispare uma campaña para popular os relatórios.
+            Ningún dado aún. Dispare uma campaña para popular os reportes.
           </CardContent>
         </Card>
       ) : (
@@ -162,7 +162,7 @@ function BreakdownCard({
     <Card>
       <CardHeader><CardTitle className="text-base">{title}</CardTitle></CardHeader>
       <CardContent className="space-y-1 text-sm">
-        {!rows.length && <p className="text-xs text-muted-foreground">Sem dados.</p>}
+        {!rows.length && <p className="text-xs text-muted-foreground">Sin dados.</p>}
         {rows.slice(0, 8).map((r) => (
           <div key={r.id} className="flex items-center gap-2 py-1 border-b last:border-0">
             <span className="flex-1 truncate">{r.name}</span>

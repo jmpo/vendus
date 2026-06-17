@@ -247,7 +247,7 @@ export function CommissionManager() {
                 Cancelar
               </Button>
               <Button onClick={handleSubmit} disabled={createRule.isPending || updateRule.isPending}>
-                {editingRule ? 'Salvar' : 'Crear Regla'}
+                {editingRule ? 'Guardar' : 'Crear Regla'}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -282,7 +282,7 @@ export function CommissionManager() {
                           <TableHead>Aplicación</TableHead>
                           <TableHead>Valor</TableHead>
                           <TableHead>Limites</TableHead>
-                          <TableHead className="text-right">Ações</TableHead>
+                          <TableHead className="text-right">Acciones</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>

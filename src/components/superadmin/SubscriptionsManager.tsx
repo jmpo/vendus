@@ -67,7 +67,7 @@ export function SubscriptionsManager() {
       case 'active':
         return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">Ativo</Badge>;
       case 'past_due':
-        return <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20">En Atraso</Badge>;
+        return <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20">En Retraso</Badge>;
       case 'canceled':
         return <Badge className="bg-red-500/10 text-red-500 border-red-500/20">Cancelado</Badge>;
       case 'suspended':
@@ -150,7 +150,7 @@ export function SubscriptionsManager() {
       ) : (
         <Card>
           <CardContent className="py-6 text-sm text-muted-foreground text-center">
-            Nenhum plan cadastrado. Crea planes em <span className="font-medium text-foreground">Planes</span> para visualizar a distribución.
+            Ningún plan registrado. Crea planes em <span className="font-medium text-foreground">Planes</span> para visualizar a distribución.
           </CardContent>
         </Card>
       )}
@@ -161,7 +161,7 @@ export function SubscriptionsManager() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-amber-500">
               <AlertTriangle className="h-5 w-5" />
-              Suscripciones em Atraso ({overdueSubs.length})
+              Suscripciones em Retraso ({overdueSubs.length})
             </CardTitle>
             <CardDescription>
               Empresas con pago pendiente que necesitan atención
@@ -227,7 +227,7 @@ export function SubscriptionsManager() {
               <SelectContent>
                 <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="active">Ativo</SelectItem>
-                <SelectItem value="past_due">En Atraso</SelectItem>
+                <SelectItem value="past_due">En Retraso</SelectItem>
                 <SelectItem value="suspended">Suspenso</SelectItem>
                 <SelectItem value="canceled">Cancelado</SelectItem>
                 <SelectItem value="trialing">Trial</SelectItem>

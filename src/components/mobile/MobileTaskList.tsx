@@ -31,7 +31,7 @@ export function MobileTaskList({ userId, productId }: MobileTaskListProps) {
     switch (priority) {
       case 'urgent': return 'Urgente';
       case 'high': return 'Alta';
-      case 'medium': return 'Média';
+      case 'medium': return 'Media';
       case 'low': return 'Baixa';
       default: return 'Normal';
     }
@@ -80,8 +80,8 @@ export function MobileTaskList({ userId, productId }: MobileTaskListProps) {
     return (
       <div className="text-center py-12 px-4">
         <CheckCircle2 size={48} className="mx-auto text-muted-foreground/30 mb-3" />
-        <p className="text-muted-foreground">Nenhuma tarea pendente</p>
-        <p className="text-sm text-muted-foreground/70">Sus tareas aparecerão aqui</p>
+        <p className="text-muted-foreground">Ninguna tarea pendente</p>
+        <p className="text-sm text-muted-foreground/70">Sus tareas aparecerán acá</p>
       </div>
     );
   }

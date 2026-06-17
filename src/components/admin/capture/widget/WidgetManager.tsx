@@ -207,7 +207,7 @@ export function WidgetManager() {
                       )}
                       <DropdownMenuItem className="text-destructive"
                         onClick={(e) => { e.stopPropagation(); setDeleteId(f.id); }}>
-                        <Trash2 className="h-4 w-4 mr-2" /> Excluir
+                        <Trash2 className="h-4 w-4 mr-2" /> Eliminar
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -252,7 +252,7 @@ export function WidgetManager() {
               disabled={!name.trim() || !productId || createFunnel.isPending}>
               {createFunnel.isPending
                 ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Creando...</>
-                : 'Criar Widget'}
+                : 'Crear Widget'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -263,7 +263,7 @@ export function WidgetManager() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Eliminar Widget?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción no puede ser desfeita. Todos os dados do flujo serão perdidos
+              Esta acción no puede ser desfeita. Todos los dados do flujo serán perdidos
               e o snippet instalado em sites externos deixará de funcionar.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -271,7 +271,7 @@ export function WidgetManager() {
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={() => { if (deleteId) deleteFunnel.mutate(deleteId); setDeleteId(null); }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Excluir
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

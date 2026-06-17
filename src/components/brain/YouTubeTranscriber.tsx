@@ -212,7 +212,7 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
                     ) : (
                       <Check className="h-4 w-4 mr-2" />
                     )}
-                    Adicionar ao Cérebro
+                    Agregar ao Cérebro
                   </Button>
                 </div>
               </CardContent>
@@ -327,9 +327,9 @@ export function YouTubeTranscriber({ productId }: YouTubeTranscriberProps) {
         <Card className="border-dashed">
           <CardContent className="p-8 text-center">
             <Youtube className="h-10 w-10 mx-auto text-red-500/50 mb-4" />
-            <h3 className="font-medium mb-2">Nenhum video adicionado</h3>
+            <h3 className="font-medium mb-2">Ningún video adicionado</h3>
             <p className="text-sm text-muted-foreground">
-              Adicione videos do YouTube para extrair conhecimento e treinar a IA.
+              Agregá videos do YouTube para extrair conocimiento e treinar a IA.
             </p>
           </CardContent>
         </Card>

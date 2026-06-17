@@ -115,7 +115,7 @@ export function AssignProductDialog({
       }
       
       await Promise.all(promises);
-      toast.success('Atribuições atualizadas com éxito!');
+      toast.success('Atribuições atualizadas con éxito!');
       onOpenChange(false);
     } catch (error: any) {
       console.error('Error updating assignments:', error);
@@ -153,7 +153,7 @@ export function AssignProductDialog({
             {/* Products List */}
             <div className="space-y-2">
               <p className="text-sm font-medium text-muted-foreground">
-                Seleccioná os productos ({selectedCount} selecionado{selectedCount !== 1 ? 's' : ''}):
+                Seleccioná os productos ({selectedCount} seleccionado{selectedCount !== 1 ? 's' : ''}):
               </p>
               
               {productsLoading ? (
@@ -163,7 +163,7 @@ export function AssignProductDialog({
               ) : products?.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Package className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p>Nenhum producto cadastrado</p>
+                  <p>Ningún producto registrado</p>
                 </div>
               ) : (
                 <ScrollArea className="h-[280px] pr-4">
@@ -233,7 +233,7 @@ export function AssignProductDialog({
           </Button>
           <Button onClick={handleSave} disabled={saving}>
             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Salvar Atribuições
+            Guardar Atribuições
           </Button>
         </DialogFooter>
       </DialogContent>

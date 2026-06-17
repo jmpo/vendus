@@ -204,7 +204,7 @@ export function StageManagerDialog({
   const handleSaveFromRef = async () => {
     if (!formRef.current) return;
     if (!formRef.current.isValid()) {
-      toast.error('Preencha o nombre da etapa');
+      toast.error('Completá o nombre da etapa');
       return;
     }
     const data = formRef.current.getData();
@@ -298,7 +298,7 @@ export function StageManagerDialog({
 
             {localStages.length === 0 && !isAddingNew && (
               <div className="text-center py-8 text-muted-foreground">
-                <p>Nenhuma etapa configurada.</p>
+                <p>Ninguna etapa configurada.</p>
                 <p className="text-sm">Hacé clic em "Nueva Etapa" para comenzar.</p>
               </div>
             )}
@@ -327,7 +327,7 @@ export function StageManagerDialog({
                 ) : (
                   <Check className="h-4 w-4 mr-2" />
                 )}
-                {isAddingNew ? 'Criar Etapa' : 'Salvar Etapa'}
+                {isAddingNew ? 'Crear Etapa' : 'Guardar Etapa'}
               </Button>
             </>
           ) : (
@@ -352,7 +352,7 @@ export function StageManagerDialog({
                     ) : (
                       <Save className="h-4 w-4 mr-2" />
                     )}
-                    Salvar Ordem
+                    Guardar Ordem
                   </Button>
                 )}
 

@@ -1,5 +1,5 @@
 // Edge Function: presence-test
-// Dispara presence ("digitando..." ou "gravando áudio...") por X segundos
+// Dispara presence ("digitando..." ou "gravando audio...") por X segundos
 // SEM enviar ningunel mensaje. Usado por el Admin para validar se o WhatsApp
 // do número testado mostra o status real.
 

@@ -128,9 +128,9 @@ export function FormCanvas({
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mb-6">
                 <Plus className="h-10 w-10 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Comece a crear su formulário</h3>
+              <h3 className="text-xl font-semibold mb-2">Comece a crear su formulario</h3>
               <p className="text-muted-foreground mb-6 max-w-md">
-                Arraste blocos da paleta ao lado ou use os atalhos abaixo para adicionar preguntas
+                Arraste blocos da paleta ao lado ou use os atalhos abaixo para agregar preguntas
               </p>
               <div className="flex gap-3">
                 <Button 
@@ -146,7 +146,7 @@ export function FormCanvas({
                   className="gap-2"
                 >
                   <Plus className="h-4 w-4" />
-                  Primeira Pergunta
+                  Primera Pergunta
                 </Button>
               </div>
             </div>
@@ -198,7 +198,7 @@ export function FormCanvas({
                 )}
               >
                 <Plus className="h-6 w-6" />
-                <span className="text-sm font-medium">Adicionar pregunta</span>
+                <span className="text-sm font-medium">Agregar pregunta</span>
               </button>
             </div>
           )}

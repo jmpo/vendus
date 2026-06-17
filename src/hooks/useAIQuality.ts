@@ -92,7 +92,7 @@ export function useTriggerEvaluation() {
           : 'Avaliação disparada',
       );
     },
-    onError: (e: any) => toast.error(e.message ?? 'Falha ao avaliar'),
+    onError: (e: any) => toast.error(e.message ?? 'Fallo ao avaliar'),
   });
 }
 

@@ -5,7 +5,7 @@ import type { ToolDefinition } from '../types.ts';
 export const gerarLinkPagamentoTool: ToolDefinition = {
   name: 'gerar_link_pagamento',
   description:
-    'Gera um link de pago (Pix/tarjeta) para el lead finalizar a compra. Usa cuando el lead confirmar a intenção de pagar AHORA. O link ya vem con o e-mail/teléfono del lead pré-preenchido cuando posible.',
+    'Gera um link de pago (Pix/tarjeta) para el lead finalizar a compra. Usa cuando el lead confirmar a intención de pagar AHORA. O link ya vem con o e-mail/teléfono del lead pré-preenchido cuando posible.',
   categories: ['finance'],
   estimated_cost_cents: 0,
   parameters: {
@@ -56,7 +56,7 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
       return {
         success: false,
         error:
-          'Producto no tiene link de checkout configurado. Configure uma oferta con checkout_url (ex: link Cakto) na seção Produtos.',
+          'Producto no tiene link de checkout configurado. Configure uma oferta con checkout_url (ex: link Cakto) na sección Produtos.',
       };
     }
 
@@ -89,7 +89,7 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
         offer_name: offer.name,
         price: offer.price,
       },
-      user_message: `Aqui está su link de pago: ${checkoutUrl}`,
+      user_message: `Acá está su link de pago: ${checkoutUrl}`,
     };
   },
 };

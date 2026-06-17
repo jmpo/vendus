@@ -134,7 +134,7 @@ export function DoppusConfigManager() {
               </Badge>
             ) : (
               <Badge variant="outline" className="text-amber-600 border-amber-600">
-                <AlertCircle className="h-3 w-3 mr-1" /> Sem productos
+                <AlertCircle className="h-3 w-3 mr-1" /> Sin productos
               </Badge>
             )}
           </h3>
@@ -170,7 +170,7 @@ export function DoppusConfigManager() {
                 <li>Selecciona todos los eventos disparadores y guarda.</li>
               </ol>
               <p className="text-xs text-muted-foreground pt-1">
-                A URL é única para todos os productos. Identificamos o producto pelo <code>items[0].code</code> e validamos o token recibido no header <code>doppus-token</code>.
+                A URL é única para todos los productos. Identificamos o producto por el <code>items[0].code</code> e validamos o token recibido no header <code>doppus-token</code>.
               </p>
             </AlertDescription>
           </Alert>
@@ -229,7 +229,7 @@ export function DoppusConfigManager() {
           <div>
             <Label htmlFor="doppus-api-token">API Token (opcional)</Label>
             <p className="text-xs text-muted-foreground mb-1">
-              Usado para sincronizar pedidos via API (futuro). No é necessário para receber webhooks.
+              Usado para sincronizar pedidos via API (futuro). No é necesario para receber webhooks.
             </p>
             <Input
               id="doppus-api-token"
@@ -243,7 +243,7 @@ export function DoppusConfigManager() {
               onClick={() => saveSettings.mutate({ api_token: apiToken || null })}
               disabled={saveSettings.isPending}
             >
-              Salvar
+              Guardar
             </Button>
           </div>
         </TabsContent>
@@ -256,7 +256,7 @@ export function DoppusConfigManager() {
 
 function buildWebhook(supaUrl: string, _orgId: string, _token?: string) {
   // URL única e estável. A Doppus envia o producto no payload (items[0].code) e
-  // o token no header `doppus-token`; o backend resolve a organización sozinho.
+  // o token no header `doppus-token`; o backend resolve a organización solo.
   return `${supaUrl}/functions/v1/doppus-webhook`;
 }
 
@@ -364,7 +364,7 @@ function ProductCard({
             }}
           >
             {busy && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            Salvar alterações
+            Guardar alterações
           </Button>
         </div>
       </CardContent>
@@ -393,7 +393,7 @@ function NewProductForm({
   if (!open) {
     return (
       <Button variant="outline" className="w-full" onClick={() => setOpen(true)}>
-        <Plus className="h-4 w-4 mr-2" /> Adicionar producto
+        <Plus className="h-4 w-4 mr-2" /> Agregar producto
       </Button>
     );
   }
@@ -424,7 +424,7 @@ function NewProductForm({
             placeholder="Pega el token generado en Doppus"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Vá em Doppus → Postbacks → copie o Token de Segurança do producto e cole aqui.
+            Vá em Doppus → Postbacks → copie o Token de Segurança do producto e cole acá.
           </p>
         </div>
 
@@ -455,12 +455,12 @@ function NewProductForm({
                 id: crypto.randomUUID(),
                 name, doppus_product_id: doppusId, token, internal_product_id: internalId,
               });
-              toast.success('Producto cadastrado');
+              toast.success('Producto registrado');
               setOpen(false); reset();
             }}
           >
             {busy && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            Cadastrar
+            Registrar
           </Button>
         </div>
       </CardContent>
@@ -494,7 +494,7 @@ function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: Do
       <Alert>
         <Webhook className="h-4 w-4" />
         <AlertDescription className="text-sm">
-          Histórico das últimas 50 chamadas recebidas da Doppus para esta organización. Atualiza
+          Historial das últimas 50 chamadas recebidas da Doppus para esta organización. Atualiza
           automaticamente a cada 15s.
         </AlertDescription>
       </Alert>
@@ -505,7 +505,7 @@ function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: Do
             <SelectValue placeholder="Filtrar por producto" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os productos</SelectItem>
+            <SelectItem value="all">Todos los productos</SelectItem>
             {dpProducts.map((p) => (
               <SelectItem key={p.id} value={p.internal_product_id}>
                 {p.name}
@@ -515,7 +515,7 @@ function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: Do
         </Select>
         <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
           {isFetching ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-1" />}
-          Atualizar
+          Actualizar
         </Button>
         <Badge variant="secondary" className="ml-auto">{logs.length} registro(s)</Badge>
       </div>
@@ -528,7 +528,7 @@ function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: Do
             </div>
           ) : logs.length === 0 ? (
             <div className="py-12 text-center text-sm text-muted-foreground">
-              Nenhum webhook recibido aún.<br />
+              Ningún webhook recibido aún.<br />
               Configure a URL do producto na Doppus e dispare um teste.
             </div>
           ) : (
@@ -589,7 +589,7 @@ function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: Do
               <div className="space-y-4 pr-3">
                 <div>
                   <p className="text-xs font-semibold text-muted-foreground uppercase mb-1">
-                    Ações executadas
+                    Acciones executadas
                   </p>
                   <div className="space-y-1.5">
                     {(selected.executed_actions ?? []).map((a, i) => (
@@ -611,7 +611,7 @@ function WebhookLogsPanel({ orgId, dpProducts }: { orgId: string; dpProducts: Do
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-muted-foreground uppercase mb-1">
-                    Dados do evento (variáveis)
+                    Dados do evento (variables)
                   </p>
                   <pre className="text-xs bg-muted/50 rounded p-3 overflow-x-auto">
                     {JSON.stringify(

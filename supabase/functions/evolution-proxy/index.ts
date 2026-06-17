@@ -284,7 +284,7 @@ Deno.serve(async (req) => {
 
       if (res.ok) {
         return new Response(
-          JSON.stringify({ ok: true, status: res.status, message: "Conexão estabelecida con éxito!", data: res.body }),
+          JSON.stringify({ ok: true, status: res.status, message: "Conexión estabelecida con éxito!", data: res.body }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -412,7 +412,7 @@ Deno.serve(async (req) => {
     }
 
     // ---- CREATE INSTANCE SELF-SERVICE (admin/manager da org) ----
-    // Cliente cria instância para la própria empresa, respeitando o limite do plano.
+    // Cliente cria instância para la propia empresa, respeitando o limite do plano.
     if (action === "create_instance_self") {
       // Authorization: precisa ser admin ou manager da organización
       if (!profile?.organization_id) {
@@ -428,7 +428,7 @@ Deno.serve(async (req) => {
         _user_id: user.id, _role: "manager",
       });
       if (!isSuperAdmin && !hasAdmin && !hasManager) {
-        return new Response(JSON.stringify({ error: "Solo administradores ou gerentes podem crear conexões." }), {
+        return new Response(JSON.stringify({ error: "Solo administradores ou gerentes pueden crear conexiones." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -602,7 +602,7 @@ Deno.serve(async (req) => {
         });
       }
       if (!isSuperAdmin && inst.organization_id !== profile?.organization_id) {
-        return new Response(JSON.stringify({ error: "Sem permiso." }), {
+        return new Response(JSON.stringify({ error: "Sin permiso." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -633,7 +633,7 @@ Deno.serve(async (req) => {
       const { data: hasAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
       const { data: hasManager } = await supabase.rpc("has_role", { _user_id: user.id, _role: "manager" });
       if (!isSuperAdmin && !hasAdmin && !hasManager) {
-        return new Response(JSON.stringify({ error: "Solo administradores ou gerentes podem eliminar conexões." }), {
+        return new Response(JSON.stringify({ error: "Solo administradores ou gerentes pueden eliminar conexiones." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -650,7 +650,7 @@ Deno.serve(async (req) => {
         });
       }
       if (!isSuperAdmin && inst.organization_id !== profile?.organization_id) {
-        return new Response(JSON.stringify({ error: "Sem permiso." }), {
+        return new Response(JSON.stringify({ error: "Sin permiso." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -1169,7 +1169,7 @@ Deno.serve(async (req) => {
 
       if (!res.ok) {
         return new Response(
-          JSON.stringify({ ok: false, error: res.message || `Error ${res.status} ao pausar sessão` }),
+          JSON.stringify({ ok: false, error: res.message || `Error ${res.status} ao pausar sesión` }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }

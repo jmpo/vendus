@@ -50,13 +50,13 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
       {/* Basic Info */}
       <Card>
         <CardHeader>
-          <CardTitle>Informações Básicas</CardTitle>
-          <CardDescription>Nombre, descripción e identificação do formulário</CardDescription>
+          <CardTitle>Informaciones Básicas</CardTitle>
+          <CardDescription>Nombre, descripción e identificação do formulario</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Nombre do Formulário</Label>
+              <Label>Nombre do Formulario</Label>
               <Input
                 value={form.name}
                 onChange={(e) => onUpdate({ name: e.target.value })}
@@ -75,7 +75,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
             <Textarea
               value={form.description || ''}
               onChange={(e) => onUpdate({ description: e.target.value })}
-              placeholder="Descripción interna do formulário..."
+              placeholder="Descripción interna do formulario..."
             />
           </div>
         </CardContent>
@@ -89,14 +89,14 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
             Distribución de Leads
           </CardTitle>
           <CardDescription>
-            Defina como os leads serão distribuídos ao serem capturados
+            Defina como os leads serán distribuídos ao serem capturados
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             {[
-              { value: 'manual', label: 'Manual', icon: Inbox, description: 'Leads entram sem atribuição' },
-              { value: 'user', label: 'Usuario Específico', icon: User, description: 'Sempre atribuir a um vendedor' },
+              { value: 'manual', label: 'Manual', icon: Inbox, description: 'Leads entram sin atribuição' },
+              { value: 'user', label: 'Usuario Específico', icon: User, description: 'Siempre atribuir a um vendedor' },
               { value: 'squad', label: 'Squad', icon: Users, description: 'Distribuir para fila do equipo' },
               { value: 'round_robin', label: 'Round Robin', icon: Shuffle, description: 'Rotação automática entre vendedores' },
             ].map((rule) => {
@@ -128,7 +128,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
           </div>
           
           <div className="space-y-2">
-            <Label>Temperatura Padrão do Lead</Label>
+            <Label>Temperatura Predeterminado do Lead</Label>
             <Select
               value={form.default_temperature}
               onValueChange={(value) => onUpdate({ default_temperature: value })}
@@ -162,7 +162,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
             <div>
               <Label>Capturar UTMs</Label>
               <p className="text-sm text-muted-foreground">
-                Salvar parâmetros UTM automaticamente
+                Guardar parâmetros UTM automaticamente
               </p>
             </div>
             <Switch
@@ -202,7 +202,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
             Página de Gracias
           </CardTitle>
           <CardDescription>
-            Elegí qual bloco será exibido como tela final após o envio. Por padrão usamos o bloco "Tela Final".
+            Elegí qual bloco será exibido como tela final após o envio. Por defecto usamos o bloco "Tela Final".
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -217,10 +217,10 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
             })}
           >
             <SelectTrigger className="mt-2">
-              <SelectValue placeholder="Padrão (Tela Final)" />
+              <SelectValue placeholder="Predeterminado (Tela Final)" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="__default__">Padrão (Tela Final)</SelectItem>
+              <SelectItem value="__default__">Predeterminado (Tela Final)</SelectItem>
               {blocks
                 .filter((b) => b.block_type !== 'welcome_screen')
                 .map((b) => (
@@ -231,7 +231,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
             </SelectContent>
           </Select>
           <p className="text-xs text-muted-foreground mt-2">
-            O bloco selecionado será exibido <strong>após o envio</strong>. O botão <strong>Enviar</strong> aparecerá automaticamente na pregunta anterior — assim o lead ya é gravado antes da página de gracias.
+            O bloco seleccionado será exibido <strong>após o envio</strong>. O botón <strong>Enviar</strong> aparecerá automaticamente na pregunta anterior — así o lead ya é gravado antes da página de gracias.
           </p>
         </CardContent>
       </Card>
@@ -244,7 +244,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
             Etiquetas al enviar
           </CardTitle>
           <CardDescription>
-            Estas etiquetas serão aplicadas automaticamente al lead cuando ele clicar em <strong>Enviar</strong>.
+            Estas etiquetas serán aplicadas automaticamente al lead cuando ele clicar em <strong>Enviar</strong>.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -273,7 +273,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
 
           <div className="border rounded-lg max-h-56 overflow-auto divide-y">
             {allTags.length === 0 ? (
-              <p className="p-3 text-sm text-muted-foreground">Nenhuma etiqueta creada aún.</p>
+              <p className="p-3 text-sm text-muted-foreground">Ninguna etiqueta creada aún.</p>
             ) : (
               allTags.map((t) => (
                 <label
@@ -296,7 +296,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
 
           <div className="flex gap-2">
             <Input
-              placeholder="Criar nova etiqueta..."
+              placeholder="Crear nova etiqueta..."
               value={newTagName}
               onChange={(e) => setNewTagName(e.target.value)}
               onKeyDown={(e) => {
@@ -313,7 +313,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
               className="gap-1"
             >
               <Plus className="h-4 w-4" />
-              Criar
+              Crear
             </Button>
           </div>
         </CardContent>
@@ -336,7 +336,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
             <CadencePicker
               value={(form as any).post_cadence_id ?? null}
               onChange={(id) => onUpdate({ post_cadence_id: id } as any)}
-              placeholder="Nenhuma — no inscrever"
+              placeholder="Ninguna — no inscrever"
             />
           </div>
         </CardContent>

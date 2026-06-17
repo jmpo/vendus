@@ -26,14 +26,14 @@ interface Props {
 
 const CATEGORY_LABEL: Record<PresetCategory | 'all', string> = {
   all: 'Todos',
-  messaging: 'Mensageria',
+  messaging: 'Mensajería',
   social: 'Redes sociais',
   generic: 'Genéricos',
 };
 
 const CHANNEL_LABEL: Record<ChannelKey, string> = {
   chat: 'Chat',
-  form: 'Formulário',
+  form: 'Formulario',
   widget: 'Widget',
   quiz: 'Quiz',
 };
@@ -98,7 +98,7 @@ export function PresetGallery({ channel, onApply }: Props) {
           <AlertDialogHeader>
             <AlertDialogTitle>Aplicar tema "{pending?.name}"</AlertDialogTitle>
             <AlertDialogDescription>
-              Isso substituirá as configuraciones visuais atuais. Logos, avatares e imagens de fundo enviados pelo usuario serão preservados.
+              Eso substituirá as configuraciones visuais actuales. Logos, avatares e imagens de fundo enviados por el usuario serán preservados.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 sm:gap-2">
@@ -120,7 +120,7 @@ export function PresetGallery({ channel, onApply }: Props) {
               }}
             >
               <Check className="h-3.5 w-3.5 mr-1" />
-              Em todos os canais
+              Em todos los canais
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

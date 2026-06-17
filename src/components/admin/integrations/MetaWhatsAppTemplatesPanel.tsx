@@ -42,7 +42,7 @@ export function MetaWhatsAppTemplatesPanel({ connection, onClose }: { connection
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2"><FileText className="h-5 w-5" />Templates — {connection.display_name}</DialogTitle>
           <DialogDescription>
-            Templates HSM aprovados pela Meta pueden ser enviados fora da janela de 24h.
+            Templates HSM aprovados por la Meta pueden ser enviados fora da janela de 24h.
           </DialogDescription>
         </DialogHeader>
 
@@ -88,7 +88,7 @@ export function MetaWhatsAppTemplatesPanel({ connection, onClose }: { connection
               </Select>
             </div>
             <div>
-              <Label>Corpo (use {'{{1}}'}, {'{{2}}'}... para variáveis)</Label>
+              <Label>Corpo (use {'{{1}}'}, {'{{2}}'}... para variables)</Label>
               <Textarea rows={4} value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} placeholder="Hola {{1}}, su pedido {{2}} fue confirmado!" />
             </div>
             <div className="flex justify-end gap-2">
@@ -104,7 +104,7 @@ export function MetaWhatsAppTemplatesPanel({ connection, onClose }: { connection
           <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin" /></div>
         ) : templates.length === 0 ? (
           <Card className="p-6 text-center text-sm text-muted-foreground">
-            Nenhum template aún. Crea um ou clique em "Sincronizar" para descargar os ya aprovados na Meta.
+            Ningún template aún. Crea um ou clique em "Sincronizar" para descargar os ya aprovados na Meta.
           </Card>
         ) : (
           <div className="space-y-2">

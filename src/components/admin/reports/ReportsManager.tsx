@@ -154,7 +154,7 @@ export function ReportsManager() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Taxa de Conversão</p>
+                    <p className="text-sm text-muted-foreground">Taxa de Conversión</p>
                     <p className="text-2xl font-bold mt-1">
                       {(kpis?.conversionRate || 0).toFixed(1)}%
                     </p>
@@ -423,7 +423,7 @@ export function ReportsManager() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Comisiones Pagas (Mês)</p>
+                    <p className="text-sm text-muted-foreground">Comisiones Pagas (Mes)</p>
                     <p className="text-2xl font-bold mt-1">
                       {formatCurrency(0)}
                     </p>

@@ -68,7 +68,7 @@ export default function Settings() {
     }
 
     if (passwordForm.newPassword.length < 6) {
-      toast.error('A contraseña debe ter pelo menos 6 caracteres');
+      toast.error('A contraseña debe ter por el menos 6 caracteres');
       return;
     }
 
@@ -84,7 +84,7 @@ export default function Settings() {
     try {
       await connectGoogle();
     } catch (error) {
-      toast.error('Error ao conectar com Google Calendar');
+      toast.error('Error ao conectar con Google Calendar');
     }
   };
 
@@ -106,8 +106,8 @@ export default function Settings() {
             <ArrowLeft size={20} />
           </Button>
           <div>
-            <h1 className="text-xl font-semibold text-foreground">Configurações</h1>
-            <p className="text-sm text-muted-foreground">Gerencie su cuenta e preferências</p>
+            <h1 className="text-xl font-semibold text-foreground">Configuraciones</h1>
+            <p className="text-sm text-muted-foreground">Gerencie su cuenta e preferencias</p>
           </div>
         </div>
       </header>
@@ -129,7 +129,7 @@ export default function Settings() {
             </TabsTrigger>
             <TabsTrigger value="notifications" className="gap-2">
               <Bell size={16} className="hidden sm:block" />
-              Notificações
+              Notificaciones
             </TabsTrigger>
           </TabsList>
 
@@ -142,20 +142,20 @@ export default function Settings() {
                   Alterar Contraseña
                 </CardTitle>
                 <CardDescription>
-                  Atualize su contraseña de acesso à plataforma
+                  Actualizá su contraseña de acesso à plataforma
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handlePasswordSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="currentPassword">Contraseña Atual</Label>
+                    <Label htmlFor="currentPassword">Contraseña Actual</Label>
                     <div className="relative">
                       <Input
                         id="currentPassword"
                         type={showPasswords.current ? 'text' : 'password'}
                         value={passwordForm.currentPassword}
                         onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
-                        placeholder="Escribí su contraseña atual"
+                        placeholder="Escribí su contraseña actual"
                       />
                       <button
                         type="button"
@@ -215,7 +215,7 @@ export default function Settings() {
                           Atualizando...
                         </>
                       ) : (
-                        'Atualizar Contraseña'
+                        'Actualizar Contraseña'
                       )}
                     </Button>
                   </div>
@@ -233,7 +233,7 @@ export default function Settings() {
                   Autenticação de Dois Fatores (2FA)
                 </CardTitle>
                 <CardDescription>
-                  Adicione uma camada extra de segurança à su cuenta
+                  Agregá uma camada extra de segurança à su cuenta
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -245,7 +245,7 @@ export default function Settings() {
                     <div>
                       <p className="font-medium">Status do 2FA</p>
                       <p className="text-sm text-muted-foreground">
-                        Proteja su cuenta com autenticação em dois fatores
+                        Proteja su cuenta con autenticação em dois fatores
                       </p>
                     </div>
                   </div>
@@ -257,7 +257,7 @@ export default function Settings() {
 
                 <div className="p-4 rounded-lg border border-dashed">
                   <p className="text-sm text-muted-foreground text-center">
-                    A configuración de 2FA via aplicativo autenticador estará disponível em breve.
+                    A configuración de 2FA via aplicativo autenticador estará disponible em breve.
                   </p>
                 </div>
               </CardContent>
@@ -265,7 +265,7 @@ export default function Settings() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Sessões Ativas</CardTitle>
+                <CardTitle>Sesiones Ativas</CardTitle>
                 <CardDescription>
                   Dispositivos conectados à su cuenta
                 </CardDescription>
@@ -277,7 +277,7 @@ export default function Settings() {
                       <Smartphone size={20} className="text-primary" />
                     </div>
                     <div>
-                      <p className="font-medium">Sessão Atual</p>
+                      <p className="font-medium">Sesión Actual</p>
                       <p className="text-sm text-muted-foreground">
                         {navigator.userAgent.includes('Chrome') ? 'Chrome' : 
                          navigator.userAgent.includes('Safari') ? 'Safari' : 
@@ -304,7 +304,7 @@ export default function Settings() {
                   Google Calendar
                 </CardTitle>
                 <CardDescription>
-                  Sincronize sus eventos e compromissos com o Google Calendar
+                  Sincronize sus eventos e compromissos con o Google Calendar
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -364,14 +364,14 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle>Mais Integraciones</CardTitle>
                 <CardDescription>
-                  Conecte outras ferramentas à su cuenta
+                  Conecte otras ferramentas à su cuenta
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="p-6 rounded-lg border border-dashed text-center">
                   <Link2 className="h-8 w-8 mx-auto text-muted-foreground/50 mb-2" />
                   <p className="text-sm text-muted-foreground">
-                    Novas integraciones estarão disponíveis em breve
+                    Novas integraciones estarão disponibles em breve
                   </p>
                 </div>
               </CardContent>
@@ -384,7 +384,7 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Bell size={20} />
-                  Preferências de Notificación
+                  Preferencias de Notificación
                 </CardTitle>
                 <CardDescription>
                   Elegí como desea receber notificaciones
@@ -393,7 +393,7 @@ export default function Settings() {
               <CardContent className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">Notificações por Email</p>
+                    <p className="font-medium">Notificaciones por Email</p>
                     <p className="text-sm text-muted-foreground">
                       Receba actualizaciones importantes por email
                     </p>
@@ -408,7 +408,7 @@ export default function Settings() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">Notificações Push</p>
+                    <p className="font-medium">Notificaciones Push</p>
                     <p className="text-sm text-muted-foreground">
                       Receba notificaciones no navegador
                     </p>

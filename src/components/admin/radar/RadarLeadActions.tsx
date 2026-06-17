@@ -29,7 +29,7 @@ export function RadarLeadActions({ item, compact, onOpenConversation }: Props) {
 
   const contextText = [
     item.reason && `Análise: ${item.reason}`,
-    item.suggested_action && `Sugestão: ${item.suggested_action}`,
+    item.suggested_action && `Sugerencia: ${item.suggested_action}`,
     item.signals?.length && `Sinais: ${item.signals.join(', ')}`,
   ].filter(Boolean).join('\n');
 
@@ -41,7 +41,7 @@ export function RadarLeadActions({ item, compact, onOpenConversation }: Props) {
     if (item.lead_id) {
       window.location.href = `/admin?tab=leads&lead=${item.lead_id}`;
     } else {
-      toast.error('Conversación no disponível');
+      toast.error('Conversación no disponible');
     }
   }
 
@@ -56,7 +56,7 @@ export function RadarLeadActions({ item, compact, onOpenConversation }: Props) {
       .eq('id', item.lead_id)
       .maybeSingle();
     if (error || !data) {
-      toast.error('No fue possível cargar o lead');
+      toast.error('No fue posible cargar o lead');
       return;
     }
     setTransferLead(data);
@@ -87,7 +87,7 @@ export function RadarLeadActions({ item, compact, onOpenConversation }: Props) {
           disabled={!item.lead_id || !leadPhone}
         >
           <Sparkles className="h-3.5 w-3.5 text-primary" />
-          Chamar com IA
+          Chamar con IA
         </Button>
 
         <Button
@@ -109,7 +109,7 @@ export function RadarLeadActions({ item, compact, onOpenConversation }: Props) {
           disabled={!item.lead_id}
         >
           <ListTodo className="h-3.5 w-3.5" />
-          Criar tarea
+          Crear tarea
         </Button>
       </div>
 

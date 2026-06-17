@@ -49,7 +49,7 @@ const SOURCE_TYPES = [
     id: 'youtube', 
     label: 'Videos', 
     icon: Youtube, 
-    description: 'Transcrição automática',
+    description: 'Transcripción automática',
     color: 'text-red-500'
   },
   { 
@@ -122,8 +122,8 @@ export function BrainTab({ productId }: BrainTabProps) {
       <Card className="bg-gradient-to-r from-primary/5 to-transparent border-primary/20">
         <CardContent className="p-4">
           <p className="text-sm text-muted-foreground">
-            Adicione conhecimento através de diferentes fontes. Quanto mais dados, mais inteligente 
-            a IA ficará para ajudar com objeções, cadencias e respuestas contextualizadas.
+            Agregá conocimiento através de diferentes fontes. Quanto mais dados, mais inteligente 
+            a IA ficará para ajudar con objeciones, cadencias e respuestas contextualizadas.
           </p>
         </CardContent>
       </Card>

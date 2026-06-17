@@ -49,9 +49,9 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
       setClientSecret('');
       setWebhookSecret('');
       if (result?.test?.ok) {
-        toast.success(`Credenciais salvas e conexão validada (escopos: ${result.test.scope ?? '—'})`);
+        toast.success(`Credenciais salvas e conexión validada (escopos: ${result.test.scope ?? '—'})`);
       } else if (result?.test?.error) {
-        toast.error(`Salvo, mas a conexão falló: ${result.test.error}`);
+        toast.error(`Guardado, mas a conexión falló: ${result.test.error}`);
       } else {
         toast.success('Credenciais salvas');
       }
@@ -64,7 +64,7 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
     try {
       const r = await test.mutateAsync();
       if (r.ok) toast.success(`Conectado (escopos: ${r.scope})`);
-      else toast.error(r.error ?? 'Falha na conexão');
+      else toast.error(r.error ?? 'Fallo na conexión');
     } catch (e: any) {
       toast.error(e.message ?? 'Error');
     }
@@ -99,7 +99,7 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
               <CardDescription>
                 Conecte su cuenta Cakto para {scope === 'platform' ? 'receber pagos das empresas' : 'monitorar sus ventas'}.{' '}
                 <a href="https://docs.cakto.com.br/authentication" target="_blank" rel="noreferrer" className="text-primary inline-flex items-center gap-1 hover:underline">
-                  Ver documentação <ExternalLink className="h-3 w-3" />
+                  Ver documentación <ExternalLink className="h-3 w-3" />
                 </a>
               </CardDescription>
             </div>
@@ -109,7 +109,7 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
         <CardContent className="space-y-4">
           {isLoading ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" /> Carregando…
+              <Loader2 className="h-4 w-4 animate-spin" /> Cargando…
             </div>
           ) : (
             <>
@@ -159,11 +159,11 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
               <div className="flex flex-wrap gap-2">
                 <Button onClick={handleSave} disabled={save.isPending || !clientId}>
                   {save.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                  Salvar
+                  Guardar
                 </Button>
                 <Button variant="outline" onClick={handleTest} disabled={test.isPending || !cred?.has_secret}>
                   {test.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                  Testar conexão
+                  Testar conexión
                 </Button>
                 {cred && (
                   <Button variant="ghost" className="text-destructive hover:text-destructive" onClick={handleDisconnect}>
@@ -180,7 +180,7 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
         <CardHeader>
           <CardTitle className="text-base">Webhook</CardTitle>
           <CardDescription>
-            Cole esta URL no painel Cakto para receber actualizaciones de pedidos em tempo real. Configure también um segredo abaixo para validar os webhooks.
+            Cole esta URL no painel Cakto para receber actualizaciones de pedidos en tiempo real. Configure también um segredo abaixo para validar os webhooks.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -194,10 +194,10 @@ export function CaktoCredentialsForm({ scope, webhookUrl }: Props) {
               type="password"
               value={webhookSecret}
               onChange={(e) => setWebhookSecret(e.target.value)}
-              placeholder={cred?.webhook_secret_set ? 'Deixe em branco para manter' : 'um valor secreto qualquer'}
+              placeholder={cred?.webhook_secret_set ? 'Deixe em branco para manter' : 'um valor secreto cualquier'}
             />
             <p className="text-xs text-muted-foreground mt-1">
-              Adicione <code className="px-1 rounded bg-muted">?secret=SEU_SEGREDO</code> ao final da URL do webhook na Cakto.
+              Agregá <code className="px-1 rounded bg-muted">?secret=SEU_SEGREDO</code> ao final da URL do webhook na Cakto.
             </p>
           </div>
         </CardContent>

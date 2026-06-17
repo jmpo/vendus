@@ -9,7 +9,7 @@ export type FunnelStatus = 'draft' | 'active' | 'paused' | 'archived';
 // Canais de publicação
 export type FunnelChannel = 'chat' | 'form' | 'widget' | 'landing' | 'whatsapp';
 
-// Regras de distribuição de leads
+// Regras de distribución de leads
 export type DistributionRule = 'manual' | 'round_robin' | 'squad' | 'user';
 
 // =====================================================
@@ -18,8 +18,8 @@ export type DistributionRule = 'manual' | 'round_robin' | 'squad' | 'user';
 
 // Categoria: EXPERIÊNCIA (o que o lead vê)
 export type ExperienceBlockType = 
-  | 'message'      // Mensagem do bot/sistema
-  | 'buttons'      // Opções clicáveis / Menu
+  | 'message'      // Mensaje do bot/sistema
+  | 'buttons'      // Opciones clicáveis / Menu
   | 'video'        // Exibir vídeo (YouTube, Vimeo, embed, HTML)
   | 'image'        // Exibir imagem
   | 'link'         // Link clicável
@@ -31,7 +31,7 @@ export type VideoType = 'youtube' | 'vimeo' | 'embed' | 'custom_html';
 // Categoria: CAPTURA (coletar dados)
 export type CaptureBlockType = 
   | 'input'        // Captura de dados (texto, email, etc)
-  | 'quick_form';  // Formulário rápido inline
+  | 'quick_form';  // Formulario rápido inline
 
 // Categoria: IA (inteligência artificial)
 export type AIBlockType = 
@@ -43,26 +43,26 @@ export type AIBlockType =
 
 // Categoria: LÓGICA (decisões do sistema)
 export type LogicBlockType = 
-  | 'condition'    // Se/Então
+  | 'condition'    // Se/Entonces
   | 'ab_test'      // Teste A/B aleatório
-  | 'score'        // Adicionar pontuação
-  | 'tag';         // Adicionar tag
+  | 'score'        // Agregar puntuación
+  | 'tag';         // Agregar tag
 
 // Categoria: AÇÕES (o que o sistema faz)
 export type ActionBlockType = 
-  | 'create_lead'   // Criar lead no CRM
-  | 'update_lead'   // Atualizar dados do lead
-  | 'create_task'   // Criar tarefa
-  | 'schedule'      // Agendar reunião
+  | 'create_lead'   // Crear lead no CRM
+  | 'update_lead'   // Actualizar dados do lead
+  | 'create_task'   // Crear tarefa
+  | 'schedule'      // Agendar reunión
   | 'handoff'       // Transferir para humano
   | 'end';          // Tela final
 
 // Categoria: INTEGRAÇÕES (sistemas externos)
 export type IntegrationBlockType = 
   | 'webhook'      // Chamada API externa
-  | 'crm_sync';    // Sincronizar com CRM externo
+  | 'crm_sync';    // Sincronizar con CRM externo
 
-// Tipo consolidado de todos os blocos
+// Tipo consolidado de todos los blocos
 export type FunnelBlockType = 
   | ExperienceBlockType 
   | CaptureBlockType 
@@ -78,13 +78,13 @@ export type BlockCategory = 'experience' | 'capture' | 'ai' | 'logic' | 'action'
 // Tipos auxiliares
 // =====================================================
 
-// Tipos de input disponíveis
+// Tipos de input disponibles
 export type FunnelInputType = 'name' | 'email' | 'phone' | 'text' | 'number' | 'cpf' | 'textarea';
 
-// Layout de botões/opções
+// Layout de botones/opciones
 export type FunnelButtonLayout = 'vertical' | 'horizontal';
 
-// Operadores de condição
+// Operadores de condición
 export type ConditionOperator = 'equals' | 'not_equals' | 'contains' | 'greater_than' | 'less_than';
 
 // Alvos de handoff
@@ -94,7 +94,7 @@ export type HandoffTarget = 'queue' | 'user' | 'squad';
 export type AIObjective = 'qualify' | 'sell' | 'schedule' | 'support' | 'custom';
 
 // =====================================================
-// Estrutura de um bloco do fluxo
+// Estrutura de um bloco do flujo
 // =====================================================
 
 export interface FunnelBlockOption {
@@ -105,8 +105,8 @@ export interface FunnelBlockOption {
   next_block_id?: string | null;
   // Extensões Quiz (Fase 1)
   letter?: string;        // A, B, C, D
-  image_url?: string;     // imagem clicável por opção
-  score?: number;         // pontos somados ao selecionar
+  image_url?: string;     // imagem clicável por opción
+  score?: number;         // pontos somados ao seleccionar
   tag?: string;           // tag aplicada ao lead
 }
 
@@ -131,7 +131,7 @@ export interface ABTestVariant {
   next_block_id: string | null;
 }
 
-// Estrutura para Criar Tarefa
+// Estrutura para Crear Tarefa
 export interface CreateTaskConfig {
   title_template: string;
   description_template: string;
@@ -148,12 +148,12 @@ export interface WebhookConfig {
   headers?: Record<string, string>;
   body_template?: string;
   save_response_to?: string;
-  trigger?: 'on_block' | 'on_complete'; // Quando dispara: durante o fluxo ou ao concluir
-  wait_for_response?: boolean; // Bloquear o fluxo até receber resposta?
+  trigger?: 'on_block' | 'on_complete'; // Cuando dispara: durante o flujo ou ao concluir
+  wait_for_response?: boolean; // Bloquear o flujo até receber respuesta?
   timeout_ms?: number; // Timeout em milissegundos (default 10000)
 }
 
-// Log de execução de webhook
+// Log de ejecución de webhook
 export interface FunnelWebhookLog {
   id: string;
   funnel_id: string;
@@ -173,7 +173,7 @@ export interface FunnelWebhookLog {
   created_at: string;
 }
 
-// Configuração de troca automática de agente
+// Configuración de troca automática de agente
 export interface AutoSwitchAgentConfig {
   agent_id: string;
   trigger_condition: string; // Ex: "Lead demonstra interesse de compra"
@@ -187,12 +187,12 @@ export interface FunnelBlockData {
   // Canais onde este bloco aparece
   channels?: FunnelChannel[];
 
-  // Quiz / Form (padrão inlead) — opcional, backward-compatible
+  // Quiz / Form (predeterminado inlead) — opcional, backward-compatible
   subtitle?: string;          // Subtítulo abaixo do título
-  cta_label?: string;         // Texto do botão "Continuar"
+  cta_label?: string;         // Texto do botón "Continuar"
   cta_emoji?: string;         // Emoji opcional no final do CTA
-  show_duration?: boolean;    // Exibe badge "⏳ Duração de X..."
-  duration_label?: string;    // Texto da duração (ex: "2min para responder")
+  show_duration?: boolean;    // Exibe badge "⏳ Duración de X..."
+  duration_label?: string;    // Texto da duración (ex: "2min para responder")
   show_logo?: boolean;        // Sobrescreve exibição de logo no topo da tela
   
   
@@ -201,9 +201,9 @@ export interface FunnelBlockData {
   variable_name?: string;
   placeholder?: string;
   required?: boolean;
-  fallback_block_id?: string; // Se não responder
+  fallback_block_id?: string; // Se no responder
   
-  // Opções (select/buttons)
+  // Opciones (select/buttons)
   options?: FunnelBlockOption[];
   layout?: FunnelButtonLayout;
   
@@ -211,7 +211,7 @@ export interface FunnelBlockData {
   score_value?: number;
   apply_tags?: string[];
   
-  // IA - Geral
+  // IA - General
   ai_context_prompt?: string;
   ai_takeover?: boolean;
   ai_enabled?: boolean;
@@ -256,13 +256,13 @@ export interface FunnelBlockData {
   success_message?: string;
   redirect_url?: string;
   
-  // Criar Tarefa
+  // Crear Tarefa
   task_config?: CreateTaskConfig;
   
   // Webhook
   webhook_config?: WebhookConfig;
   
-  // Quick Form (múltiplos campos inline)
+  // Quick Form (múltiples campos inline)
   form_fields?: {
     id: string;
     type: FunnelInputType;
@@ -274,24 +274,24 @@ export interface FunnelBlockData {
   // Lead actions
   lead_field_updates?: Record<string, string>;
   
-  // Agent switch / AI Takeover com agente
+  // Agent switch / AI Takeover con agente
   agent_id?: string;  // ID do agente a ativar
   
-  // Permissões override (sobrescrever regras do agente neste contexto)
-  override_can_do?: string[];      // Adicionar ao que o agente pode fazer
-  override_cannot_do?: string[];   // Adicionar ao que o agente NÃO pode fazer
+  // Permisos override (sobrescrever regras do agente neste contexto)
+  override_can_do?: string[];      // Agregar ao que o agente puede fazer
+  override_cannot_do?: string[];   // Agregar ao que o agente NÃO puede fazer
   override_handoff_triggers?: string[];  // Triggers adicionais para handoff
   
   // Auto-switch de agente
-  auto_switch_enabled?: boolean;   // IA pode trocar de agente?
-  auto_switch_agents?: AutoSwitchAgentConfig[];  // Agentes disponíveis para troca automática
+  auto_switch_enabled?: boolean;   // IA puede trocar de agente?
+  auto_switch_agents?: AutoSwitchAgentConfig[];  // Agentes disponibles para troca automática
   
   // Schedule block (agendamento inline)
   schedule_event_type_id?: string;     // ID do tipo de evento (booking_event_types)
-  schedule_user_id?: string;           // Usuário específico para agendar
+  schedule_user_id?: string;           // Usuario específico para agendar
   schedule_use_lead_owner?: boolean;   // Usar dono do lead
-  schedule_message?: string;           // Mensagem antes do calendário
-  schedule_success_message?: string;   // Mensagem após agendar
+  schedule_message?: string;           // Mensaje antes do calendário
+  schedule_success_message?: string;   // Mensaje após agendar
 
   // ============================================================
   // Inlead-style Builder (overrides locais por bloco) — opcional
@@ -308,7 +308,7 @@ export interface FunnelBlockData {
     image_transparent?: boolean;
     shadow?: 'none' | 'soft' | 'medium' | 'strong';
     spacing?: 'compact' | 'simple' | 'spacious';
-    width_pct?: number;        // 25..100 — controla a largura do conteúdo do step
+    width_pct?: number;        // 25..100 — controla a largura do contenido do step
     align?: 'left' | 'center' | 'right';
   };
 
@@ -338,7 +338,7 @@ export interface FunnelBlock {
 }
 
 // =====================================================
-// Configurações de canais
+// Configuraciones de canais
 // =====================================================
 
 export interface FunnelChannelSettings {
@@ -349,9 +349,9 @@ export interface FunnelChannelSettings {
 export interface FunnelWhatsAppSettings {
   enabled: boolean;
   evolution_instance_id?: string | null;
-  /** @deprecated mantido apenas para compat com configs antigas; ignorado pelo backend */
+  /** @deprecated mantido solo para compat con configs antigas; ignorado por el backend */
   trigger_mode?: 'always' | 'keyword';
-  /** @deprecated mantido apenas para compat com configs antigas; ignorado pelo backend */
+  /** @deprecated mantido solo para compat con configs antigas; ignorado por el backend */
   trigger_keywords?: string[];
 }
 
@@ -364,7 +364,7 @@ export interface FunnelChannelConfig {
 }
 
 // =====================================================
-// Configurações do Widget
+// Configuraciones do Widget
 // =====================================================
 
 export type WidgetPosition = 'bottom-right' | 'bottom-left';
@@ -400,7 +400,7 @@ export interface FunnelCustomScripts {
 }
 
 // =====================================================
-// Configuração de Round Robin
+// Configuración de Round Robin
 // =====================================================
 
 export interface RoundRobinConfig {
@@ -433,13 +433,13 @@ export interface Funnel {
   channels: FunnelChannelConfig;
   widget_config: FunnelWidgetConfig;
   
-  // Distribuição
+  // Distribución
   distribution_rule: DistributionRule;
   assigned_squad_id?: string | null;
   assigned_user_id?: string | null;
   round_robin_config: RoundRobinConfig;
   
-  // Qualificação
+  // Calificación
   default_temperature: string;
   default_tags: string[];
   
@@ -509,7 +509,7 @@ export interface FunnelConnection {
 }
 
 // =====================================================
-// Tipos para criação/atualização
+// Tipos para creación/actualización
 // =====================================================
 
 export interface CreateFunnelInput {
@@ -576,17 +576,17 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
   // ===== EXPERIÊNCIA (O que o lead vê) =====
   { 
     type: 'message', 
-    label: 'Mensagem', 
+    label: 'Mensaje', 
     icon: '💬', 
-    description: 'Exibir texto ou conteúdo', 
+    description: 'Exibir texto ou contenido', 
     category: 'experience',
     color: 'bg-blue-500'
   },
   { 
     type: 'buttons', 
-    label: 'Botões / Menu', 
+    label: 'Botones / Menu', 
     icon: '🔘', 
-    description: 'Opções clicáveis para o lead', 
+    description: 'Opciones clicáveis para o lead', 
     category: 'experience',
     color: 'bg-blue-500'
   },
@@ -610,7 +610,7 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
     type: 'link', 
     label: 'Link', 
     icon: '🔗', 
-    description: 'URL clicável com título', 
+    description: 'URL clicável con título', 
     category: 'experience',
     color: 'bg-blue-500'
   },
@@ -628,15 +628,15 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
     type: 'input', 
     label: 'Pergunta', 
     icon: '📝', 
-    description: 'Capturar uma resposta', 
+    description: 'Capturar uma respuesta', 
     category: 'capture',
     color: 'bg-emerald-500'
   },
   { 
     type: 'quick_form', 
-    label: 'Formulário Rápido', 
+    label: 'Formulario Rápido', 
     icon: '📋', 
-    description: 'Múltiplos campos inline', 
+    description: 'Múltiples campos inline', 
     category: 'capture',
     color: 'bg-emerald-500'
   },
@@ -652,7 +652,7 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
   },
   { 
     type: 'ai_decide', 
-    label: 'IA Decide Caminho', 
+    label: 'IA Decide Camino', 
     icon: '🧠', 
     description: 'IA escolhe próximo passo', 
     category: 'ai',
@@ -678,7 +678,7 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
     type: 'agent_switch', 
     label: 'Trocar Agente', 
     icon: '🔄', 
-    description: 'Mudar para outro agente IA', 
+    description: 'Mudar para otro agente IA', 
     category: 'ai',
     color: 'bg-orange-500'
   },
@@ -686,7 +686,7 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
   // ===== LÓGICA (Decisões do sistema) =====
   { 
     type: 'condition', 
-    label: 'Se / Então', 
+    label: 'Se / Entonces', 
     icon: '🔀', 
     description: 'Lógica condicional', 
     category: 'logic',
@@ -702,9 +702,9 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
   },
   { 
     type: 'score', 
-    label: 'Pontuação', 
+    label: 'Puntuación', 
     icon: '📊', 
-    description: 'Adicionar score ao lead', 
+    description: 'Agregar score ao lead', 
     category: 'logic',
     color: 'bg-purple-500'
   },
@@ -712,7 +712,7 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
     type: 'tag', 
     label: 'Etiqueta', 
     icon: '🏷️', 
-    description: 'Adicionar etiqueta ao lead', 
+    description: 'Agregar etiqueta ao lead', 
     category: 'logic',
     color: 'bg-purple-500'
   },
@@ -720,15 +720,15 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
   // ===== AÇÕES (O que o sistema faz) =====
   { 
     type: 'create_lead', 
-    label: 'Criar Lead', 
+    label: 'Crear Lead', 
     icon: '👤', 
-    description: 'Criar lead no CRM', 
+    description: 'Crear lead no CRM', 
     category: 'action',
     color: 'bg-rose-500'
   },
   { 
     type: 'update_lead', 
-    label: 'Atualizar Lead', 
+    label: 'Actualizar Lead', 
     icon: '✏️', 
     description: 'Modificar dados do lead', 
     category: 'action',
@@ -736,7 +736,7 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
   },
   { 
     type: 'create_task', 
-    label: 'Criar Tarefa', 
+    label: 'Crear Tarefa', 
     icon: '✅', 
     description: 'Agendar follow-up', 
     category: 'action',
@@ -744,7 +744,7 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
   },
   { 
     type: 'schedule', 
-    label: 'Agendar Reunião', 
+    label: 'Agendar Reunión', 
     icon: '📅', 
     description: 'Marcar no calendário', 
     category: 'action',
@@ -762,7 +762,7 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
     type: 'end', 
     label: 'Finalizar', 
     icon: '🏁', 
-    description: 'Encerrar o fluxo', 
+    description: 'Encerrar o flujo', 
     category: 'action',
     color: 'bg-rose-500'
   },
@@ -787,7 +787,7 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
 ];
 
 // =====================================================
-// Mapeamento de variáveis para campos do lead
+// Mapeamento de variables para campos do lead
 // =====================================================
 
 export const VARIABLE_TO_LEAD_FIELD: Record<string, string> = {
@@ -796,7 +796,7 @@ export const VARIABLE_TO_LEAD_FIELD: Record<string, string> = {
   'email': 'email',
   'e-mail': 'email',
   'phone': 'phone',
-  'telefone': 'phone',
+  'teléfono': 'phone',
   'whatsapp': 'phone',
   'celular': 'phone',
   'company': 'company',
@@ -809,12 +809,12 @@ export const VARIABLE_TO_LEAD_FIELD: Record<string, string> = {
 // =====================================================
 
 export const CATEGORY_LABELS: Record<BlockCategory, { label: string; description: string }> = {
-  experience: { label: 'Experiência', description: 'O que o lead vê' },
+  experience: { label: 'Experiencia', description: 'O que o lead vê' },
   capture: { label: 'Captura', description: 'Coletar dados' },
   ai: { label: 'IA', description: 'Inteligência artificial' },
   logic: { label: 'Lógica', description: 'Decisões do sistema' },
-  action: { label: 'Ações', description: 'O que o sistema faz' },
-  integration: { label: 'Integrações', description: 'Sistemas externos' },
+  action: { label: 'Acciones', description: 'O que o sistema faz' },
+  integration: { label: 'Integraciones', description: 'Sistemas externos' },
 };
 
 // =====================================================
@@ -841,26 +841,26 @@ export function createDefaultBlock(type: FunnelBlockType, position: { x: number;
     type,
     position,
     data: {
-      channels: ['chat', 'form', 'widget'], // Habilitado em todos por padrão
+      channels: ['chat', 'form', 'widget'], // Habilitado em todos por defecto
     },
     next_block_id: null,
   };
 
-  // Configurações padrão por tipo
+  // Configuraciones predeterminado por tipo
   switch (type) {
     case 'message':
-      block.data.content = 'Digite sua mensagem aqui...';
+      block.data.content = 'Digite tu mensaje acá...';
       block.data.delay_ms = 500;
       break;
     case 'input':
       block.data.input_type = 'text';
-      block.data.placeholder = 'Digite sua resposta...';
+      block.data.placeholder = 'Digite tu respuesta...';
       block.data.required = true;
       break;
     case 'buttons':
       block.data.options = [
-        { id: generateBlockId(), label: 'Opção 1' },
-        { id: generateBlockId(), label: 'Opção 2' },
+        { id: generateBlockId(), label: 'Opción 1' },
+        { id: generateBlockId(), label: 'Opción 2' },
       ];
       block.data.layout = 'vertical';
       break;
@@ -888,12 +888,12 @@ export function createDefaultBlock(type: FunnelBlockType, position: { x: number;
       block.data.ai_objective = 'qualify';
       block.data.ai_outputs = [
         { id: generateBlockId(), label: 'Qualificado', next_block_id: null },
-        { id: generateBlockId(), label: 'Não Qualificado', next_block_id: null },
+        { id: generateBlockId(), label: 'No Qualificado', next_block_id: null },
         { id: generateBlockId(), label: 'Precisa Humano', next_block_id: null },
       ];
       break;
     case 'agent_switch':
-      // Placeholder - agent_id será selecionado no editor
+      // Placeholder - agent_id será seleccionado no editor
       break;
     case 'ab_test':
       block.data.ab_variants = [
@@ -904,15 +904,15 @@ export function createDefaultBlock(type: FunnelBlockType, position: { x: number;
     case 'create_task':
       block.data.task_config = {
         title_template: 'Follow-up: {{lead_name}}',
-        description_template: 'Entrar em contato com o lead.',
+        description_template: 'Entrar em contato con o lead.',
         due_in_days: 1,
         assign_to: 'lead_owner',
       };
       break;
     case 'quick_form':
       block.data.form_fields = [
-        { id: generateBlockId(), type: 'name', label: 'Seu nome', variable: 'name', required: true },
-        { id: generateBlockId(), type: 'email', label: 'Seu email', variable: 'email', required: true },
+        { id: generateBlockId(), type: 'name', label: 'Tu nome', variable: 'name', required: true },
+        { id: generateBlockId(), type: 'email', label: 'Tu email', variable: 'email', required: true },
       ];
       break;
     case 'webhook':
@@ -1072,7 +1072,7 @@ export function defaultChannelOptions(channel: ChannelKey): ChannelOptions {
         user_bubble_color: '#E2E8F0',
         show_typing: true,
         header_gradient: true,
-        input_placeholder: 'Mensagem',
+        input_placeholder: 'Mensaje',
         notification_sound: false,
       };
     case 'form':
@@ -1102,7 +1102,7 @@ export function defaultChannelOptions(channel: ChannelKey): ChannelOptions {
         show_counter: true,
         transition: 'slide',
         result_image_url: null,
-        result_message: 'Obrigado pela participação!',
+        result_message: 'Obrigado por la participação!',
       };
   }
 }
@@ -1115,7 +1115,7 @@ export function defaultChannelAppearance(channel: ChannelKey): ChannelAppearance
       : channel === 'widget'
       ? { background_color: '#FFFFFF', border_radius: 18, shadow: 'strong', animations: 'full', bot_name: 'Atendimento' }
       : channel === 'quiz'
-      // Padrão inlead: indigo + branco, Inter, cantos suaves, sem avatar/bot
+      // Predeterminado inlead: indigo + branco, Inter, cantos suaves, sin avatar/bot
       ? { primary_color: '#6366F1', secondary_color: '#4F46E5', background_color: '#FFFFFF', text_color: '#0F172A', font_family: 'Inter', font_size_base: 16, density: 'spacious', border_radius: 16, shadow: 'medium', animations: 'subtle', dark_mode: 'light', logo_position: 'center', avatar_enabled: false, avatar_url: null, bot_name: '', show_online_status: false, background_image_opacity: 0.15 }
       : {};
   return { ...base, ...overrides, channel_options: defaultChannelOptions(channel) };
@@ -1131,7 +1131,7 @@ export function defaultFunnelAppearance(): FunnelAppearance {
 }
 
 /**
- * Lê o tema de um canal específico do funil, com fallback inteligente:
+ * Lê o tema de um canal específico do funil, con fallback inteligente:
  * 1) appearance[channel] se existir
  * 2) deriva a partir do theme legado preenchendo defaults do canal
  */

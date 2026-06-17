@@ -126,7 +126,7 @@ export function CatalogItemEditor({ productId, item, open, onClose }: Props) {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Preço (BRL)</Label>
+              <Label>Precio (BRL)</Label>
               <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="580000" />
             </div>
             <div>
@@ -196,7 +196,7 @@ export function CatalogItemEditor({ productId, item, open, onClose }: Props) {
                 variant="ghost"
                 onClick={() => setAttrPairs([...attrPairs, { key: '', value: '' }])}
               >
-                <Plus className="h-3 w-3 mr-1" /> Adicionar
+                <Plus className="h-3 w-3 mr-1" /> Agregar
               </Button>
             </div>
             <div className="space-y-2">
@@ -239,7 +239,7 @@ export function CatalogItemEditor({ productId, item, open, onClose }: Props) {
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
           <Button onClick={handleSave} disabled={!title.trim() || create.isPending || update.isPending}>
-            {item ? 'Salvar' : 'Criar item'}
+            {item ? 'Guardar' : 'Crear item'}
           </Button>
         </DialogFooter>
       </DialogContent>

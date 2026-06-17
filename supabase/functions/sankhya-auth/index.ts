@@ -49,7 +49,7 @@ serve(async (req: Request): Promise<Response> => {
         .single();
 
       if (error || !settings) {
-        throw new Error("Configurações do Sankhya no encontradas");
+        throw new Error("Configuraciones do Sankhya no encontradas");
       }
 
       const config = settings.settings as {
@@ -104,13 +104,13 @@ serve(async (req: Request): Promise<Response> => {
     const bearerToken = authData.responseBody?.jsessionid?.$;
     
     if (!bearerToken && action === 'authenticate') {
-      throw new Error("Token de sessão no devuelto");
+      throw new Error("Token de sesión no devuelto");
     }
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: action === 'test' ? "Conexão estabelecida con éxito" : "Autenticado",
+        message: action === 'test' ? "Conexión estabelecida con éxito" : "Autenticado",
         token: bearerToken,
         expiresIn: 300 // 5 minutes
       }),

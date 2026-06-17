@@ -101,7 +101,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
     }
   }, [editing, open]);
 
-  // Polling do webhook_subscribed_at enquanto estiver no passo 3.
+  // Polling do webhook_subscribed_at mientras estiver no passo 3.
   useEffect(() => {
     if (pollRef.current) {
       window.clearInterval(pollRef.current);
@@ -149,7 +149,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
       if (!form.display_name) setForm((f) => ({ ...f, display_name: name }));
       setStep(3);
     } catch {
-      // toast ya disparado pelo hook
+      // toast ya disparado por el hook
     }
   };
 
@@ -167,7 +167,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
     if (form.access_token) payload.access_token = form.access_token;
     try {
       await save.mutateAsync(payload);
-      toast.success('WhatsApp Oficial conectado com éxito.');
+      toast.success('WhatsApp Oficial conectado con éxito.');
       onClose();
     } catch (e: any) {
       toast.error(
@@ -188,7 +188,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
     { label: 'Producto WhatsApp adicionado', done: step >= 3 },
     { label: 'Webhook configurado na Meta', done: !!webhookSubscribedAt },
     { label: 'Credenciais coladas', done: step >= 5 && !!form.app_id },
-    { label: 'Conexão validada', done: editing?.status === 'active' },
+    { label: 'Conexión validada', done: editing?.status === 'active' },
   ];
 
   const quickGuide = (
@@ -202,10 +202,10 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
         <p className="font-medium mb-2">Resumen em 7 passos</p>
         <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
           <li>Crea um App Business na Meta.</li>
-          <li>Adicione o producto WhatsApp.</li>
+          <li>Agregá o producto WhatsApp.</li>
           <li>Copie a URL de Callback e o Verify Token do Vendus.</li>
           <li>Cole esses dados no webhook da Meta.</li>
-          <li>Genera um token permanente com Usuario do Sistema.</li>
+          <li>Genera um token permanente con Usuario do Sistema.</li>
           <li>Cole App ID, App Secret, Phone Number ID, WABA ID e Access Token no Vendus.</li>
           <li>Hacé clic em Validar e guardar.</li>
         </ol>
@@ -221,8 +221,8 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
             <div className="flex-1">
               <DialogTitle>WhatsApp Oficial (Meta Cloud API) — Passo {step} de 5</DialogTitle>
               <DialogDescription>
-                Conecte su WhatsApp usando o <strong>su próprio Meta App</strong>. Sus credenciais ficam
-                criptografadas e visíveis apenas nesta empresa.
+                Conecte su WhatsApp usando o <strong>su propio Meta App</strong>. Sus credenciais ficam
+                criptografadas e visíveis solo nesta empresa.
               </DialogDescription>
             </div>
             {quickGuide}
@@ -230,7 +230,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
         </DialogHeader>
 
         <div className="grid md:grid-cols-[1fr,180px] gap-6">
-          {/* Conteúdo */}
+          {/* Contenido */}
           <div className="space-y-4 min-w-0">
             {step === 1 && (
               <div className="space-y-4">
@@ -242,8 +242,8 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                       <li>Uma cuenta empresarial no Meta Business</li>
                       <li>Acesso de administrador ao negocio</li>
                       <li>Um App Meta do tipo <strong>Business</strong></li>
-                      <li>Um número de WhatsApp disponível para API</li>
-                      <li>Permissão para crear Usuários do Sistema</li>
+                      <li>Um número de WhatsApp disponible para API</li>
+                      <li>Permiso para crear Usuarios do Sistema</li>
                       <li>
                         Acesso ao painel{' '}
                         <a
@@ -260,7 +260,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                 </Alert>
                 <Alert className="border-amber-500/40">
                   <AlertTriangle className="h-4 w-4 text-amber-600" />
-                  <AlertTitle>Atenção com o número</AlertTitle>
+                  <AlertTitle>Atención con o número</AlertTitle>
                   <AlertDescription className="text-sm">
                     Se o número ya estiver siendo usado no WhatsApp ou WhatsApp Business App, verifique as
                     regras da Meta antes de conectar na Cloud API. Em alguns casos o número precisa ser
@@ -277,10 +277,10 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                   <AlertTitle>Crea o Meta App da su empresa</AlertTitle>
                   <AlertDescription className="space-y-2 mt-2 text-sm">
                     <p>1. Acesse <a href="https://developers.facebook.com/apps" target="_blank" rel="noreferrer" className="underline">developers.facebook.com/apps</a>.</p>
-                    <p>2. Hacé clic em <strong>"Criar App"</strong>.</p>
+                    <p>2. Hacé clic em <strong>"Crear App"</strong>.</p>
                     <p>3. Elegí o tipo <strong>"Business"</strong>.</p>
                     <p>4. Usa o nombre da su empresa ou projeto.</p>
-                    <p>5. Após crear o App, adicione o producto <strong>WhatsApp</strong>.</p>
+                    <p>5. Após crear o App, agregá o producto <strong>WhatsApp</strong>.</p>
                     <p>6. Acesse <strong>WhatsApp &gt; Configuración da API</strong>.</p>
                   </AlertDescription>
                 </Alert>
@@ -301,14 +301,14 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                 </Alert>
 
                 <div>
-                  <Label>Nombre desta conexão (opcional)</Label>
+                  <Label>Nombre desta conexión (opcional)</Label>
                   <Input
                     value={form.display_name}
                     onChange={(e) => setForm({ ...form, display_name: e.target.value })}
                     placeholder="WhatsApp Oficial — Ventas"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
-                    Usado apenas para identificar essa conexão no Vendus.
+                    Usado solo para identificar esa conexión no Vendus.
                   </p>
                 </div>
               </div>
@@ -318,7 +318,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
               <div className="space-y-4">
                 <Alert className="border-emerald-500/40 bg-emerald-50/40 dark:bg-emerald-950/20">
                   <ShieldCheck className="h-4 w-4 text-emerald-600" />
-                  <AlertTitle>Webhook único gerado para esta conexão</AlertTitle>
+                  <AlertTitle>Webhook único gerado para esta conexión</AlertTitle>
                   <AlertDescription className="text-sm">
                     Copie os dois valores abaixo e cole no painel do <strong>su Meta App</strong>.
                   </AlertDescription>
@@ -343,22 +343,22 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                     </Button>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Token gerado automaticamente pelo Vendus, único para esta conexão.
+                    Token gerado automaticamente por el Vendus, único para esta conexión.
                   </p>
                 </div>
 
                 <Alert>
                   <Info className="h-4 w-4" />
-                  <AlertTitle>Onde colar na Meta</AlertTitle>
+                  <AlertTitle>Donde colar na Meta</AlertTitle>
                   <AlertDescription className="text-sm">
                     <ol className="list-decimal list-inside space-y-1 mt-2">
                       <li>No painel do su App Meta, vá em <strong>WhatsApp</strong>.</li>
                       <li>Acesse <strong>Configuración</strong> (ou <strong>Webhooks</strong>).</li>
                       <li>No campo <em>URL de callback</em>, cole a URL acima.</li>
                       <li>No campo <em>Verificar token</em>, cole o token acima.</li>
-                      <li>Deixe <strong>mTLS / certificado de cliente desativado</strong> por enquanto.</li>
+                      <li>Deixe <strong>mTLS / certificado de cliente desativado</strong> por mientras.</li>
                       <li>Hacé clic em <strong>Verificar e guardar</strong>.</li>
-                      <li>Depois, assine o evento <Badge variant="secondary">messages</Badge>.</li>
+                      <li>Después, assine o evento <Badge variant="secondary">messages</Badge>.</li>
                     </ol>
                   </AlertDescription>
                 </Alert>
@@ -366,7 +366,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                 <Alert className="border-amber-500/40">
                   <AlertTriangle className="h-4 w-4 text-amber-600" />
                   <AlertDescription className="text-sm">
-                    Sem o Webhook, o Vendus puede até enviar mensajes pela API, mas no conseguirá receber
+                    Sin o Webhook, o Vendus puede até enviar mensajes por la API, mas no conseguirá receber
                     respuestas dos clientes nem actualizar status de entrega.
                   </AlertDescription>
                 </Alert>
@@ -374,7 +374,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                 {webhookSubscribedAt ? (
                   <Alert className="border-green-500/40 bg-green-50 dark:bg-green-950/30">
                     <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    <AlertTitle>Webhook validado pela Meta</AlertTitle>
+                    <AlertTitle>Webhook validado por la Meta</AlertTitle>
                     <AlertDescription className="text-sm">
                       Recebemos o handshake em{' '}
                       {new Date(webhookSubscribedAt).toLocaleString('es-PY')}.
@@ -383,7 +383,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                 ) : (
                   <p className="text-xs text-muted-foreground">
                     Aguardando a Meta validar o webhook… clique em "Ya configurei o webhook" para continuar
-                    mismo assim.
+                    mismo así.
                   </p>
                 )}
               </div>
@@ -393,21 +393,21 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
               <div className="space-y-3 text-sm">
                 <Alert>
                   <Info className="h-4 w-4" />
-                  <AlertTitle>Agora pegue os dados que serão colados no próximo passo</AlertTitle>
+                  <AlertTitle>Ahora pegue os dados que serán colados no próximo passo</AlertTitle>
                 </Alert>
                 <div className="space-y-2">
-                  <p><strong>App ID</strong> — Painel do App &gt; Configurações &gt; Básico.</p>
-                  <p><strong>App Secret</strong> — Painel do App &gt; Configurações &gt; Básico &gt; Chave secreta do app.</p>
+                  <p><strong>App ID</strong> — Painel do App &gt; Configuraciones &gt; Básico.</p>
+                  <p><strong>App Secret</strong> — Painel do App &gt; Configuraciones &gt; Básico &gt; Chave secreta do app.</p>
                   <p><strong>Phone Number ID</strong> — Painel do App &gt; WhatsApp &gt; Configuración da API.</p>
                   <p><strong>WABA ID</strong> — Painel do App &gt; WhatsApp &gt; Configuración da API.</p>
                   <div>
-                    <p><strong>Access Token permanente</strong> — Business Settings &gt; Usuários &gt; Usuários do sistema.</p>
+                    <p><strong>Access Token permanente</strong> — Business Settings &gt; Usuarios &gt; Usuarios do sistema.</p>
                     <ol className="list-decimal list-inside ml-2 mt-1 space-y-1 text-muted-foreground">
-                      <li>Crea ou selecione um System User.</li>
+                      <li>Crea ou seleccioná um System User.</li>
                       <li>Atribua acesso ao App Meta.</li>
                       <li>Atribua acesso à cuenta WhatsApp Business / WABA.</li>
                       <li>
-                        Genera um token com as permisos{' '}
+                        Genera um token con as permisos{' '}
                         <code>whatsapp_business_messaging</code> e{' '}
                         <code>whatsapp_business_management</code>.
                       </li>
@@ -427,7 +427,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
             {step === 5 && (
               <div className="space-y-3">
                 <div>
-                  <Label>Nombre da conexão</Label>
+                  <Label>Nombre da conexión</Label>
                   <Input
                     value={form.display_name}
                     onChange={(e) => setForm({ ...form, display_name: e.target.value })}
@@ -504,7 +504,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                     {webhookSubscribedAt ? (
                       <Badge variant="default" className="bg-green-600">validado</Badge>
                     ) : (
-                      <Badge variant="secondary">aguardando validação</Badge>
+                      <Badge variant="secondary">aguardando validación</Badge>
                     )}
                   </div>
                 </div>
@@ -553,7 +553,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
           {step === 2 && (
             <Button onClick={goToStep3} disabled={draft.isPending}>
               {draft.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Avançar para o Webhook
+              Avanzar para o Webhook
             </Button>
           )}
 

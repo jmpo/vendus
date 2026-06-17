@@ -53,7 +53,7 @@ const TEMPLATES: Record<PostSaleEvent, { name: string; instruction: string; link
     {
       name: 'Boas-vindas + acesso',
       instruction:
-        'Parabenize o cliente pela compra, entregue o link de acesso à área de membros e pergunte se ele ya entrou no grupo do WhatsApp. Tom: caloroso, próximo, sem floreios.',
+        'Parabenize o cliente por la compra, entregue o link de acesso à área de membros e pergunte se ele ya entrou no grupo do WhatsApp. Tom: caloroso, próximo, sin floreios.',
       links: [
         { label: 'Área de acesso', url: 'https://area.suaempresa.com', when_to_offer: 'siempre' },
         { label: 'Grupo WhatsApp', url: 'https://chat.whatsapp.com/XXX', when_to_offer: 'após confirmar acesso' },
@@ -74,7 +74,7 @@ const TEMPLATES: Record<PostSaleEvent, { name: string; instruction: string; link
     {
       name: 'Recuperar Pix abandonado',
       instruction:
-        'Cliente gerou Pix e no pagou. Pergunte se houve alguna duda ou problema com o pago. Ofereça reenviar o link/código se ele pedir. NÃO insista mais de 2x.',
+        'Cliente gerou Pix e no pagou. Pergunte se houve alguna duda ou problema con o pago. Ofereça reenviar o link/código se ele pedir. NÃO insista mais de 2x.',
       links: [],
       tags: ['checkout_abandonado_pix'],
     },
@@ -127,7 +127,7 @@ export function PostSaleScenariosEditor() {
       <CardHeader>
         <CardTitle>Cenários de Pós-Venda</CardTitle>
         <CardDescription>
-          Defina o que o agente debe hacer em cada situación. As instruções aqui son
+          Defina o que o agente debe hacer em cada situación. As instrucciones acá son
           injetadas automaticamente no prompt del agente cuando o evento acontece.
         </CardDescription>
       </CardHeader>
@@ -149,7 +149,7 @@ export function PostSaleScenariosEditor() {
 
               {grouped[event].length === 0 ? (
                 <div className="rounded-md bg-muted/30 p-4 text-center text-sm text-muted-foreground">
-                  Nenhum cenário configurado. O agente usará apenas o briefing padrão.
+                  Ningún cenário configurado. O agente usará solo o briefing predeterminado.
                   <div className="mt-2 flex flex-wrap justify-center gap-2">
                     {TEMPLATES[event].map((t) => (
                       <Button
@@ -243,7 +243,7 @@ function ScenarioRow({
           size="icon"
           variant="ghost"
           onClick={() => {
-            if (confirm(`Excluir cenário "${scenario.name}"?`)) {
+            if (confirm(`Eliminar cenário "${scenario.name}"?`)) {
               del.mutate(scenario.id, {
                 onSuccess: () => toast.success('Cenário eliminado'),
               });
@@ -296,7 +296,7 @@ function ScenarioDialog({
 
   const handleSave = () => {
     if (!draft.name?.trim() || !draft.instruction?.trim() || !draft.trigger_event) {
-      toast.error('Preencha nombre, evento e instrução');
+      toast.error('Completá nombre, evento e instrucción');
       return;
     }
     save.mutate(
@@ -330,7 +330,7 @@ function ScenarioDialog({
             {draft.id ? 'Editar cenário' : 'Novo cenário'}
           </DialogTitle>
           <DialogDescription>
-            Defina o que o agente debe hacer cuando esse evento acontecer.
+            Defina o que o agente debe hacer cuando ese evento acontecer.
           </DialogDescription>
         </DialogHeader>
 
@@ -365,7 +365,7 @@ function ScenarioDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>Instrução pro agente</Label>
+            <Label>Instrucción pro agente</Label>
             <Textarea
               rows={5}
               value={draft.instruction ?? ''}
@@ -373,7 +373,7 @@ function ScenarioDialog({
               placeholder="Ex: Parabenize o cliente, entregue o link de acesso e pergunte se ele ya entrou no grupo do WhatsApp..."
             />
             <p className="text-xs text-muted-foreground">
-              Linguagem natural. O agente vai seguir isso à risca.
+              Lenguaje natural. O agente vai seguir eso à risca.
             </p>
           </div>
 
@@ -381,7 +381,7 @@ function ScenarioDialog({
             <div className="flex items-center justify-between">
               <Label>Links que o agente puede oferecer</Label>
               <Button size="sm" variant="ghost" onClick={addLink}>
-                <Plus className="mr-1 h-3 w-3" /> Adicionar link
+                <Plus className="mr-1 h-3 w-3" /> Agregar link
               </Button>
             </div>
             {(draft.links ?? []).map((link, idx) => (
@@ -400,7 +400,7 @@ function ScenarioDialog({
                 />
                 <Input
                   className="col-span-3"
-                  placeholder="Quando oferecer"
+                  placeholder="Cuando oferecer"
                   value={link.when_to_offer ?? ''}
                   onChange={(e) => updateLink(idx, 'when_to_offer', e.target.value)}
                 />
@@ -431,7 +431,7 @@ function ScenarioDialog({
                 }}
               />
               <Button variant="outline" onClick={addTag}>
-                Adicionar
+                Agregar
               </Button>
             </div>
             <div className="flex flex-wrap gap-1">
@@ -462,7 +462,7 @@ function ScenarioDialog({
                 onChange={(e) => update('priority', Number(e.target.value) || 0)}
               />
               <p className="text-xs text-muted-foreground">
-                Maior número = aplicado primeiro.
+                Maior número = aplicado primero.
               </p>
             </div>
             <div className="flex items-end gap-2">
@@ -481,7 +481,7 @@ function ScenarioDialog({
           </Button>
           <Button onClick={handleSave} disabled={save.isPending}>
             {save.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Salvar
+            Guardar
           </Button>
         </DialogFooter>
       </DialogContent>

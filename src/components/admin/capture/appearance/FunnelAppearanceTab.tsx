@@ -44,7 +44,7 @@ export function FunnelAppearanceTab({ funnel }: Props) {
 
   const handleResetChannel = () => {
     setAppearance({ ...appearance, [channel]: defaultChannelAppearance(channel) });
-    toast.info(`Canal ${CHANNEL_META[channel].label} restaurado ao padrão`);
+    toast.info(`Canal ${CHANNEL_META[channel].label} restaurado ao predeterminado`);
   };
 
   const handleCopyFrom = (source: ChannelKey) => {
@@ -59,7 +59,7 @@ export function FunnelAppearanceTab({ funnel }: Props) {
   const handleApplyPreset = (preset: AppearancePreset, scope: 'channel' | 'all') => {
     if (scope === 'all') {
       setAppearance(applyPresetToAll(appearance, preset));
-      toast.success(`Tema "${preset.name}" aplicado a todos os canais`);
+      toast.success(`Tema "${preset.name}" aplicado a todos los canais`);
     } else {
       setAppearance({
         ...appearance,
@@ -109,7 +109,7 @@ export function FunnelAppearanceTab({ funnel }: Props) {
 
           <Button size="sm" onClick={handleSave} disabled={!isDirty || update.isPending} className="gap-1.5">
             {update.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-            Salvar
+            Guardar
           </Button>
         </div>
       </div>

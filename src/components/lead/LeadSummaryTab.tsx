@@ -192,7 +192,7 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
                 <SelectContent>
                   {activePlans.map(plan => {
                     const price = plan.price.toLocaleString('es-ES', { style: 'currency', currency: 'PYG' });
-                    const cycle = plan.billing_cycle !== 'unico' ? `/${plan.billing_cycle === 'mensal' ? 'mes' : plan.billing_cycle}` : '';
+                    const cycle = plan.billing_cycle !== 'unico' ? `/${plan.billing_cycle === 'mensual' ? 'mes' : plan.billing_cycle}` : '';
                     return (
                       <SelectItem key={plan.id} value={plan.id}>
                         <span className="flex items-center gap-1">
@@ -324,7 +324,7 @@ export function LeadSummaryTab({ lead, stagesCount = 7, interactionsCount = 0, o
       {/* Notas recentes */}
       <LeadRecentNotes leadId={lead.id} onSeeAll={onNavigateTab ? () => onNavigateTab('notes') : undefined} />
 
-      {/* Respostas importantes */}
+      {/* Respuestas importantes */}
       <LeadKeyResponses metadata={lead.metadata} />
 
       {/* Campos personalizados (preenchidos por webhooks/integraciones) */}

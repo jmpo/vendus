@@ -21,7 +21,7 @@ interface Props {
   onCreated: (funnelId: string) => void;
 }
 
-const PLACEHOLDER = 'Exemplo: Estou em um evento presencial para empresários e quiero crear um quiz rápido para identificar quem tiene maior potencial de compra. Quero perguntar sobre faturamento, equipo, principal desafío e urgência. No final, quiero classificar o lead como iniciante, intermediário ou avançado.';
+const PLACEHOLDER = 'Ejemplo: Estou em um evento presencial para empresários e quiero crear um quiz rápido para identificar quem tiene maior potencial de compra. Quero perguntar sobre faturamento, equipo, principal desafío e urgência. No final, quiero classificar o lead como iniciante, intermediário ou avançado.';
 
 export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
   const [productId, setProductId] = useState('');
@@ -47,7 +47,7 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
 
   const handleGenerate = async () => {
     if (!productId || !name.trim() || context.trim().length < 20) {
-      toast.error('Preencha producto, nombre e contexto (mín. 20 caracteres)');
+      toast.error('Completá producto, nombre e contexto (mín. 20 caracteres)');
       return;
     }
     setGenerating(true);
@@ -61,9 +61,9 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
         },
       });
       if (error) throw error;
-      if (!data?.success) throw new Error(data?.error || 'Falha ao gerar quiz');
+      if (!data?.success) throw new Error(data?.error || 'Fallo ao generar quiz');
 
-      // Reconstrói blocks com IDs reais e linkagem linear
+      // Reconstrói blocks con IDs reais e linkagem linear
       const blocks: FunnelBlock[] = (data.blocks || []).map((b: any) => ({
         id: generateBlockId(),
         type: b.type,
@@ -90,11 +90,11 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
         }).eq('id', created.id);
       }
 
-      toast.success('Quiz gerado pela IA com éxito!');
+      toast.success('Quiz gerado por la IA con éxito!');
       onOpenChange(false);
       onCreated(created.id);
     } catch (e: any) {
-      toast.error('Error ao gerar quiz: ' + (e.message || 'desconhecido'));
+      toast.error('Error ao generar quiz: ' + (e.message || 'desconocido'));
     } finally {
       setGenerating(false);
     }
@@ -106,7 +106,7 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-primary" />Criar Quiz com IA</DialogTitle>
+          <DialogTitle className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-primary" />Crear Quiz con IA</DialogTitle>
           <DialogDescription>Descreva o contexto e a IA monta o quiz completo.</DialogDescription>
         </DialogHeader>
 
@@ -135,7 +135,7 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
           <div className="space-y-2">
             <Label>Contexto do Quiz *</Label>
             <Textarea rows={6} value={context} onChange={(e) => setContext(e.target.value)} placeholder={PLACEHOLDER} />
-            <p className="text-xs text-muted-foreground">Mínimo 20 caracteres. Quanto mais contexto, melhor o quiz gerado.</p>
+            <p className="text-xs text-muted-foreground">Mínimo 20 caracteres. Quanto mais contexto, mejor o quiz gerado.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -159,7 +159,7 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
                   <SelectItem value="classificacao">Classificação (frio/morno/quente)</SelectItem>
                   <SelectItem value="diagnostico">Diagnóstico</SelectItem>
                   <SelectItem value="recomendacao">Recomendação</SelectItem>
-                  <SelectItem value="pontuacao">Pontuação simple</SelectItem>
+                  <SelectItem value="pontuacao">Puntuación simple</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -173,11 +173,11 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
           </div>
 
           <div className="space-y-3 rounded-lg border p-3">
-            <p className="text-sm font-medium">Ações pós-conclusão</p>
+            <p className="text-sm font-medium">Acciones pós-conclusión</p>
             <div className="flex items-center justify-between"><Label className="font-normal">Acionar agente IA</Label><Switch checked={enableAgent} onCheckedChange={setEnableAgent} /></div>
             {enableAgent && (
               <Select value={agentId} onValueChange={setAgentId}>
-                <SelectTrigger><SelectValue placeholder={productId ? 'Seleccioná um agente' : 'Seleccioná um producto primeiro'} /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder={productId ? 'Seleccioná um agente' : 'Seleccioná um producto primero'} /></SelectTrigger>
                 <SelectContent>
                   {productAgents.map((a: any) => <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>)}
                 </SelectContent>
@@ -198,7 +198,7 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={generating}>Cancelar</Button>
           <Button onClick={handleGenerate} disabled={generating || !productId || !name.trim() || context.trim().length < 20} className="gap-2">
-            {generating ? <><Loader2 className="h-4 w-4 animate-spin" />Gerando quiz...</> : <><Sparkles className="h-4 w-4" />Gerar com IA</>}
+            {generating ? <><Loader2 className="h-4 w-4 animate-spin" />Gerando quiz...</> : <><Sparkles className="h-4 w-4" />Generar con IA</>}
           </Button>
         </DialogFooter>
       </DialogContent>

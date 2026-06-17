@@ -199,7 +199,7 @@ export function useFunnelBySlug(slug?: string, channel?: 'chat' | 'form' | 'land
 }
 
 // =====================================================
-// Hook: Criar embudo
+// Hook: Crear embudo
 // =====================================================
 
 export function useCreateFunnel() {
@@ -210,7 +210,7 @@ export function useCreateFunnel() {
     mutationFn: async (input: CreateFunnelInput) => {
       if (!profile?.organization_id) throw new Error('Organización no encontrada');
 
-      // Gerar slug único se no fornecido
+      // Generar slug único se no fornecido
       const baseSlug = input.slug || generateSlug(input.name);
       let slug = baseSlug;
       let counter = 1;
@@ -278,7 +278,7 @@ export function useCreateFunnel() {
 }
 
 // =====================================================
-// Hook: Atualizar embudo
+// Hook: Actualizar embudo
 // =====================================================
 
 export function useUpdateFunnel() {
@@ -304,7 +304,7 @@ export function useUpdateFunnel() {
       if ((updates as any).appearance) {
         const ap = (updates as any).appearance as FunnelAppearance;
         dbUpdates.appearance = ap as unknown as Json;
-        // Mantém theme legado em sincronia com o canal Chat para compat externa
+        // Mantém theme legado em sincronia con o canal Chat para compat externa
         if (ap.chat) {
           dbUpdates.theme = {
             primary_color: ap.chat.primary_color,
@@ -344,7 +344,7 @@ export function useUpdateFunnel() {
 }
 
 // =====================================================
-// Hook: Excluir embudo
+// Hook: Eliminar embudo
 // =====================================================
 
 export function useDeleteFunnel() {
@@ -390,7 +390,7 @@ export function useDuplicateFunnel() {
 
       if (fetchError || !original) throw fetchError || new Error('Embudo no encontrado');
 
-      // Gerar novo slug
+      // Generar novo slug
       const baseSlug = `${original.slug}-copia`;
       let slug = baseSlug;
       let counter = 1;
@@ -408,7 +408,7 @@ export function useDuplicateFunnel() {
         counter++;
       }
 
-      // Criar cópia
+      // Crear cópia
       const { data, error } = await supabase
         .from('capture_funnels')
         .insert({
@@ -500,7 +500,7 @@ export function useUpdateFunnelStatus() {
       queryClient.invalidateQueries({ queryKey: ['funnel', data.id] });
       
       const statusLabels: Record<string, string> = {
-        draft: 'Rascunho',
+        draft: 'Borrador',
         active: 'Ativo',
         paused: 'Pausado',
         archived: 'Arquivado',
@@ -514,7 +514,7 @@ export function useUpdateFunnelStatus() {
 }
 
 // =====================================================
-// Hook: Salvar flow blocks
+// Hook: Guardar flow blocks
 // =====================================================
 
 export function useSaveFlowBlocks() {

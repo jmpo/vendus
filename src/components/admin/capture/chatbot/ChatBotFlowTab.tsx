@@ -38,7 +38,7 @@ export function ChatBotFlowTab({ funnel }: Props) {
   const saveFlowBlocks = useSaveFlowBlocks();
   const selectedBlock = blocks.find(b => b.id === selectedBlockId);
 
-  // Auto-save com debounce de 1.5s
+  // Auto-save con debounce de 1.5s
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (!isDirty) return;
@@ -52,7 +52,7 @@ export function ChatBotFlowTab({ funnel }: Props) {
         await saveFlowBlocks.mutateAsync({ id: funnel.id, flow_blocks: blocks, start_block_id: validStart });
         setIsDirty(false);
         setLastSavedAt(new Date());
-      } catch { /* toast ya é tratado pelo hook */ }
+      } catch { /* toast ya é tratado por el hook */ }
     }, 1500);
     return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current); };
   }, [blocks, startBlockId, isDirty, funnel.id, saveFlowBlocks]);
@@ -170,9 +170,9 @@ export function ChatBotFlowTab({ funnel }: Props) {
         {saveFlowBlocks.isPending ? (
           <><Loader2 className="h-3 w-3 animate-spin" /> Salvando...</>
         ) : isDirty ? (
-          <span className="text-amber-600 dark:text-amber-400">Alterações pendentes — auto-save em 1.5s</span>
+          <span className="text-amber-600 dark:text-amber-400">Cambios pendentes — auto-save em 1.5s</span>
         ) : lastSavedAt ? (
-          <><CheckCircle2 className="h-3 w-3 text-green-600" /> Salvo automaticamente</>
+          <><CheckCircle2 className="h-3 w-3 text-green-600" /> Guardado automaticamente</>
         ) : null}
       </div>
 

@@ -184,7 +184,7 @@ export async function sendAdminMessage(params: SendAdminMessageParams): Promise<
       const isNoConn = (result.error ?? "").toLowerCase().includes("not connected") ||
         (result.error ?? "").toLowerCase().includes("no evolution instances");
       const prefix = isNoConn
-        ? "⚠️ Sem instância WhatsApp conectada"
+        ? "⚠️ Sin instância WhatsApp conectada"
         : `[ENVIO FALHOU: ${result.error}]`;
       logContent = `${prefix} ${params.message}`;
     }

@@ -42,7 +42,7 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
       assigned_user_id: formData.assigned_user_id || null,
     };
     await updateFunnel.mutateAsync({ id: funnel.id, ...updates });
-    toast.success('Configurações do WhatsApp salvas');
+    toast.success('Configuraciones do WhatsApp salvas');
   };
 
   return (
@@ -51,15 +51,15 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
         <div>
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-emerald-600" />
-            Configurações do WhatsApp
+            Configuraciones do WhatsApp
           </h2>
           <p className="text-muted-foreground text-sm">
-            Producto, distribución e calificación inicial dos leads que entram pelo WhatsApp.
+            Producto, distribución e calificación inicial dos leads que entram por el WhatsApp.
           </p>
         </div>
         <Button onClick={handleSave} disabled={updateFunnel.isPending} className="gap-2">
           {updateFunnel.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          Salvar
+          Guardar
         </Button>
       </div>
 
@@ -81,7 +81,7 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Leads gerados serão vinculados a este producto e usarão su cérebro de IA.
+              Leads gerados serán vinculados a este producto e usarão su cérebro de IA.
             </p>
           </div>
 
@@ -174,7 +174,7 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Temperatura padrão</Label>
+              <Label>Temperatura predeterminado</Label>
               <Select value={formData.default_temperature} onValueChange={(v) => setFormData(p => ({ ...p, default_temperature: v }))}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -185,7 +185,7 @@ export function WhatsAppSettingsTab({ funnel }: Props) {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Etiquetas padrão (separadas por vírgula)</Label>
+              <Label>Etiquetas predeterminado (separadas por vírgula)</Label>
               <Input
                 value={formData.default_tags}
                 onChange={(e) => setFormData(p => ({ ...p, default_tags: e.target.value }))}

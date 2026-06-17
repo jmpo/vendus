@@ -50,9 +50,9 @@ export function ApiKeysManager() {
       });
 
       if (error) throw error;
-      toast.success('Conexão testada com éxito!');
+      toast.success('Conexión testada con éxito!');
     } catch (error) {
-      toast.error('Falha na conexão: ' + (error as Error).message);
+      toast.error('Fallo na conexión: ' + (error as Error).message);
     } finally {
       setTesting(null);
     }
@@ -72,7 +72,7 @@ export function ApiKeysManager() {
         <div>
           <h3 className="text-lg font-semibold">Chaves de API</h3>
           <p className="text-sm text-muted-foreground">
-            Configure as integraciones com serviços externos
+            Configure as integraciones con serviços externos
           </p>
         </div>
       </div>
@@ -146,7 +146,7 @@ export function ApiKeysManager() {
                       size="sm"
                       onClick={() => setEditingIntegration(integration.type)}
                     >
-                      {isConfigured ? 'Atualizar' : 'Configurar'}
+                      {isConfigured ? 'Actualizar' : 'Configurar'}
                     </Button>
                   </div>
                 </div>
@@ -171,7 +171,7 @@ export function ApiKeysManager() {
             <div className="relative">
               <Input
                 type={showKey ? 'text' : 'password'}
-                placeholder="Cole su chave de API aqui"
+                placeholder="Cole su chave de API acá"
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
               />
@@ -187,7 +187,7 @@ export function ApiKeysManager() {
             </div>
             
             <p className="text-xs text-muted-foreground">
-              A chave será armazenada de forma segura e apenas os últimos 4 caracteres serão visíveis.
+              A chave será armazenada de forma segura e solo os últimos 4 caracteres serán visíveis.
             </p>
           </div>
 
@@ -202,7 +202,7 @@ export function ApiKeysManager() {
               {updateIntegration.isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
               ) : null}
-              Salvar
+              Guardar
             </Button>
           </DialogFooter>
         </DialogContent>

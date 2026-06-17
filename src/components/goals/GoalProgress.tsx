@@ -84,7 +84,7 @@ export function GoalProgress({ productId }: GoalProgressProps) {
               )}
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">Meta del Período</h3>
+              <h3 className="font-semibold text-foreground">Meta del Periodo</h3>
               <p className="text-xs text-muted-foreground">
                 {format(new Date(goal.period_start), "dd MMM", { locale: ptBR })} - {format(new Date(goal.period_end), "dd MMM", { locale: ptBR })}
               </p>

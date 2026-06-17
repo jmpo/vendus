@@ -53,21 +53,21 @@ export const FlowBlockNode = memo(function FlowBlockNode({
   const getBlockPreview = () => {
     switch (block.type) {
       case 'message':
-        return block.data.content?.substring(0, 50) + (block.data.content && block.data.content.length > 50 ? '...' : '') || 'Mensaje vazia';
+        return block.data.content?.substring(0, 50) + (block.data.content && block.data.content.length > 50 ? '...' : '') || 'Mensaje vacía';
       case 'input':
         const inputType = INPUT_TYPES.find(t => t.type === block.data.input_type);
         return `Captura: ${inputType?.label || 'Texto'} → $${block.data.variable_name || 'variavel'}`;
       case 'buttons':
         const buttonCount = block.data.buttons?.length || 0;
-        return `${buttonCount} ${buttonCount === 1 ? 'botão' : 'botões'}`;
+        return `${buttonCount} ${buttonCount === 1 ? 'botón' : 'botones'}`;
       case 'ai_takeover':
         return 'Sofia assume a conversación';
       case 'handoff':
         return block.data.handoff_message?.substring(0, 40) || 'Transferir para agente';
       case 'tag':
-        return `Tag: ${block.data.tag_name || 'sem nombre'}`;
+        return `Tag: ${block.data.tag_name || 'sin nombre'}`;
       case 'video':
-        return block.data.video_title || block.data.video_url?.substring(0, 30) || 'Sem vídeo';
+        return block.data.video_title || block.data.video_url?.substring(0, 30) || 'Sin vídeo';
       case 'delay':
         return `Aguardar ${block.data.delay_seconds || 2}s`;
       default:

@@ -58,7 +58,7 @@ export function useDraftInstagramConnection() {
       return data as DraftInstagramResponse;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['instagram-connections'] }),
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao crear rascunho'),
+    onError: (e: any) => toast.error(e?.message ?? 'Fallo ao crear borrador'),
   });
 }
 
@@ -75,7 +75,7 @@ export function useSaveInstagramConnection() {
       qc.invalidateQueries({ queryKey: ['instagram-connections'] });
       toast.success('Conexión Instagram ativa');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao ativar'),
+    onError: (e: any) => toast.error(e?.message ?? 'Fallo ao ativar'),
   });
 }
 
@@ -90,9 +90,9 @@ export function useTestInstagramConnection() {
     onSuccess: (data: any) => {
       qc.invalidateQueries({ queryKey: ['instagram-connections'] });
       if (data?.ok) toast.success(`Conectado como @${data?.ig?.username ?? 'instagram'}`);
-      else toast.error(data?.error ?? 'Falha no teste');
+      else toast.error(data?.error ?? 'Fallo no teste');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha no teste'),
+    onError: (e: any) => toast.error(e?.message ?? 'Fallo no teste'),
   });
 }
 
@@ -107,6 +107,6 @@ export function useDeleteInstagramConnection() {
       qc.invalidateQueries({ queryKey: ['instagram-connections'] });
       toast.success('Conexión eliminada');
     },
-    onError: (e: any) => toast.error(e?.message ?? 'Falha ao eliminar'),
+    onError: (e: any) => toast.error(e?.message ?? 'Fallo ao eliminar'),
   });
 }

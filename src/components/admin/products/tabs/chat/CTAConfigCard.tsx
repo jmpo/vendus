@@ -36,14 +36,14 @@ const CTA_TYPES = [
   { value: 'checkout', label: 'Checkout / Compra', icon: ShoppingCart, color: 'bg-green-500' },
   { value: 'whatsapp', label: 'WhatsApp', icon: MessageCircle, color: 'bg-emerald-500' },
   { value: 'calendar', label: 'Agendar Reunión', icon: Calendar, color: 'bg-blue-500' },
-  { value: 'callback', label: 'Solicitar Ligação', icon: Phone, color: 'bg-orange-500' },
+  { value: 'callback', label: 'Solicitar Conexión', icon: Phone, color: 'bg-orange-500' },
   { value: 'video', label: 'Vídeo (YouTube/Vimeo)', icon: Play, color: 'bg-red-500' },
   { value: 'custom', label: 'Link Personalizado', icon: Link, color: 'bg-purple-500' },
 ] as const;
 
 const INTENT_LEVELS = [
   { value: 'high', label: 'Alta (pronto para comprar)', color: 'text-green-600' },
-  { value: 'medium', label: 'Média (interessado)', color: 'text-yellow-600' },
+  { value: 'medium', label: 'Media (interessado)', color: 'text-yellow-600' },
   { value: 'low', label: 'Baixa (explorando)', color: 'text-blue-600' },
 ] as const;
 
@@ -139,7 +139,7 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
           CTAs Inteligentes
         </CardTitle>
         <CardDescription>
-          Configure botões de acción que a IA puede enviar automaticamente durante a conversación
+          Configure botones de acción que a IA puede enviar automaticamente durante a conversación
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -167,13 +167,13 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
                       {cta.cta_type === 'whatsapp' 
                         ? cta.whatsapp_number 
                         : cta.cta_type === 'video'
-                        ? cta.video_url || 'Sem vídeo configurado'
-                        : cta.action_url || 'Sem URL configurada'}
+                        ? cta.video_url || 'Sin vídeo configurado'
+                        : cta.action_url || 'Sin URL configurada'}
                     </p>
                   </div>
                   
                   <Badge variant="outline" className="text-xs">
-                    {cta.intent_level === 'high' ? '🔥 Alta' : cta.intent_level === 'medium' ? '⚡ Média' : '💡 Baixa'}
+                    {cta.intent_level === 'high' ? '🔥 Alta' : cta.intent_level === 'medium' ? '⚡ Media' : '💡 Baixa'}
                   </Badge>
                   
                   <Switch
@@ -199,9 +199,9 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
         {(!ctas || ctas.length === 0) && !showAddForm && (
           <div className="text-center py-8 border-2 border-dashed rounded-lg">
             <ShoppingCart className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-            <h3 className="font-medium mb-1">Nenhum CTA configurado</h3>
+            <h3 className="font-medium mb-1">Ningún CTA configurado</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Adicione CTAs para a IA enviar botões interativos durante o chat
+              Agregá CTAs para a IA enviar botones interativos durante o chat
             </p>
           </div>
         )}
@@ -235,7 +235,7 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
               </div>
 
               <div className="space-y-2">
-                <Label>Nível de Intenção</Label>
+                <Label>Nível de Intención</Label>
                 <Select 
                   value={newCTA.intent_level} 
                   onValueChange={(v: any) => setNewCTA({ ...newCTA, intent_level: v })}
@@ -255,9 +255,9 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
             </div>
 
             <div className="space-y-2">
-              <Label>Texto do Botão</Label>
+              <Label>Texto do Botón</Label>
               <Input
-                placeholder="Ex: Garantir Minha Vaga 🛒"
+                placeholder="Ex: Garantir Mi Vaga 🛒"
                 value={newCTA.label}
                 onChange={(e) => setNewCTA({ ...newCTA, label: e.target.value })}
               />
@@ -268,7 +268,7 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
                 <div className="space-y-2">
                   <Label>Número do WhatsApp</Label>
                   <Input
-                    placeholder="5511999999999 (com código do país)"
+                    placeholder="5511999999999 (con código do país)"
                     value={newCTA.whatsapp_number}
                     onChange={(e) => setNewCTA({ ...newCTA, whatsapp_number: e.target.value })}
                   />
@@ -306,19 +306,19 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
               </div>
             ) : (
               <p className="text-sm text-muted-foreground bg-muted p-3 rounded">
-                💡 O botão "Solicitar Ligação" irá coletar os dados do visitante e crear um lead no CRM para que su equipo possa retornar a ligação.
+                💡 O botón "Solicitar Conexión" irá coletar os dados do visitante e crear um lead no CRM para que su equipo possa retornar a conexión.
               </p>
             )}
 
             <div className="space-y-2">
-              <Label>Palavras-gatilho (opcional)</Label>
+              <Label>Palabras-gatilho (opcional)</Label>
               <Input
-                placeholder="comprar, preço, valor, interessado (separadas por vírgula)"
+                placeholder="comprar, precio, valor, interessado (separadas por vírgula)"
                 value={newCTA.trigger_keywords}
                 onChange={(e) => setNewCTA({ ...newCTA, trigger_keywords: e.target.value })}
               />
               <p className="text-xs text-muted-foreground">
-                A IA usará essas palavras para identificar cuando mostrar este CTA
+                A IA usará essas palabras para identificar cuando mostrar este CTA
               </p>
             </div>
 
@@ -332,7 +332,7 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
                 ) : (
                   <Plus className="mr-2 h-4 w-4" />
                 )}
-                Adicionar CTA
+                Agregar CTA
               </Button>
               <Button variant="outline" onClick={() => setShowAddForm(false)}>
                 Cancelar
@@ -349,7 +349,7 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
             onClick={() => setShowAddForm(true)}
           >
             <Plus className="mr-2 h-4 w-4" />
-            Adicionar CTA
+            Agregar CTA
           </Button>
         )}
 
@@ -357,10 +357,10 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
           <h4 className="font-medium text-primary mb-2">💡 Como funciona</h4>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• A IA analisa a conversación e identifica a intenção del cliente</li>
-            <li>• Quando detecta alta intenção de compra, exibe botões de checkout</li>
-            <li>• Para dudas complexas, oferece WhatsApp ou ligação</li>
-            <li>• Os botões aparecem como opciones clicáveis no chat</li>
+            <li>• A IA analisa a conversación e identifica a intención del cliente</li>
+            <li>• Cuando detecta alta intención de compra, exibe botones de checkout</li>
+            <li>• Para dudas complexas, oferece WhatsApp ou conexión</li>
+            <li>• Os botones aparecem como opciones clicáveis no chat</li>
           </ul>
         </div>
       </CardContent>

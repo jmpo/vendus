@@ -127,12 +127,12 @@ export const DEFAULT_HUMANIZATION: HumanizationConfig = {
   reactions: {
     enabled: true,
     rules: [
-      { id: 'r-emoji', enabled: true, label: 'Lead respondeu só com emoji', type: 'message_type', message_type: 'emoji_only', action: 'context', context: 'O lead acabou de responder APENAS com emoji. Reaja de forma corta e natural (1 linha) e faça uma pregunta leve para destravar a conversación.' },
-      { id: 'r-audio', enabled: true, label: 'Lead mandou áudio', type: 'message_type', message_type: 'audio', action: 'context', context: 'O lead envió um áudio (usted recebeu a transcrição). Comente brevemente ("entendi su áudio…") antes de responder, soando humano.' },
+      { id: 'r-emoji', enabled: true, label: 'Lead respondeu só con emoji', type: 'message_type', message_type: 'emoji_only', action: 'context', context: 'O lead acabou de responder APENAS con emoji. Reaja de forma corta e natural (1 línea) e hacé uma pregunta leve para destravar a conversación.' },
+      { id: 'r-audio', enabled: true, label: 'Lead mandou audio', type: 'message_type', message_type: 'audio', action: 'context', context: 'O lead envió um audio (usted recebeu a transcripción). Comente brevemente ("entendi su audio…") antes de responder, soando humano.' },
       { id: 'r-sticker', enabled: true, label: 'Lead mandou figurinha', type: 'message_type', message_type: 'sticker', action: 'reply', reply: 'kkk boa 😄' },
       { id: 'r-bot-suspicion', enabled: true, label: 'Lead acha que é robô', type: 'keyword', match: 'any', keywords: ['é robô', 'é bot', 'é uma ia', 'voce é humano', 'é humano?'], action: 'context', context: 'O lead está desconfiado se usted é bot/IA. NÃO confirme nem negue mecanicamente — responda de forma humana e natural.' },
-      { id: 'r-busy', enabled: true, label: 'Lead disse que está ocupado', type: 'keyword', match: 'any', keywords: ['ocupado', 'sem tempo', 'después falo', 'ahora no', 'em reunión'], action: 'reply', reply: 'tranquilo! qual o melhor horario pra te chamar mais tarde?' },
-      { id: 'r-apology', enabled: true, label: 'Lead pediu desculpa pela demora', type: 'keyword', match: 'any', keywords: ['desculpa a demora', 'fue mal a demora', 'demorei pra responder'], action: 'context', context: 'O lead pediu desculpa pela demora. Acolha de forma leve ("imagina, sem stress") antes de continuar.' },
+      { id: 'r-busy', enabled: true, label: 'Lead disse que está ocupado', type: 'keyword', match: 'any', keywords: ['ocupado', 'sin tempo', 'después falo', 'ahora no', 'em reunión'], action: 'reply', reply: 'tranquilo! qual o mejor horario pra te chamar mais tarde?' },
+      { id: 'r-apology', enabled: true, label: 'Lead pediu desculpa por la demora', type: 'keyword', match: 'any', keywords: ['desculpa a demora', 'fue mal a demora', 'demorei pra responder'], action: 'context', context: 'O lead pediu desculpa por la demora. Acolha de forma leve ("imagina, sin stress") antes de continuar.' },
     ],
   },
 };
@@ -177,7 +177,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
     rules.push({
       id: `r-${Date.now()}`,
       enabled: true,
-      label: 'Nova reação',
+      label: 'Nueva reacción',
       type: 'keyword',
       keywords: [],
       match: 'any',
@@ -318,7 +318,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
             />
             <ToggleRow
               label="No responder de madrugada"
-              hint="Mensagens recebidas entre 0h e 6h son respondidas a partir das 8h"
+              hint="Mensajes recebidas entre 0h e 6h son respondidas a partir das 8h"
               checked={!!cfg.timing?.no_reply_dawn}
               onCheckedChange={(v) => setTiming({ no_reply_dawn: v })}
             />
@@ -352,9 +352,9 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               hintMap={{
                 1: '1 — Nunca quebra',
                 2: '2 — Só mensajes longas',
-                3: '3 — Equilibrado (2-3 bolhas)',
-                4: '4 — Quebra mucho (3-4 bolhas)',
-                5: '5 — Cada frase = uma bolha',
+                3: '3 — Equilibrado (2-3 burbujas)',
+                4: '4 — Quebra mucho (3-4 burbujas)',
+                5: '5 — Cada frase = uma burbuja',
               }}
             />
             <div className="grid grid-cols-2 gap-4">
@@ -388,17 +388,17 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               onChange={(v) => setStyle({ lowercase_prob: v })}
             />
             <PercentSlider
-              label="Probabilidad de pontuação relaxada"
+              label="Probabilidad de puntuación relaxada"
               value={cfg.style?.relaxed_punct_prob ?? 0.4}
               onChange={(v) => setStyle({ relaxed_punct_prob: v })}
             />
             <PercentSlider
-              label="Probabilidad de abreviação"
+              label="Probabilidad de abreviación"
               value={cfg.style?.abbrev_prob ?? 0.5}
               onChange={(v) => setStyle({ abbrev_prob: v })}
             />
             <div className="space-y-2">
-              <Label className="text-xs">Lista de abreviaciones (uma por linha, formato: original=abreviado)</Label>
+              <Label className="text-xs">Lista de abreviaciones (uma por línea, formato: original=abreviado)</Label>
               <Textarea
                 rows={5}
                 className="font-mono text-xs"
@@ -443,10 +443,10 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               >
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Nenhum</SelectItem>
+                  <SelectItem value="none">Ningún</SelectItem>
                   <SelectItem value="low">Pouco</SelectItem>
                   <SelectItem value="medium">Médio</SelectItem>
-                  <SelectItem value="high">Muito</SelectItem>
+                  <SelectItem value="high">Mucho</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -470,7 +470,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="neutral">Neutro nacional</SelectItem>
-                  <SelectItem value="paulista">Paulista (mano, tipo, então)</SelectItem>
+                  <SelectItem value="paulista">Paulista (mano, tipo, entonces)</SelectItem>
                   <SelectItem value="carioca">Carioca (cara, véi, mermão)</SelectItem>
                   <SelectItem value="nordestino">Nordestino (oxe, vixe, massa)</SelectItem>
                   <SelectItem value="sulista">Sulista (tchê, bah, guri)</SelectItem>
@@ -487,10 +487,10 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               placeholder="ex: show, massa, top, dahora"
             />
             <TagsInput
-              label="Interjeições de abertura"
+              label="Interjecciones de abertura"
               items={cfg.tics?.openers ?? []}
               onChange={(items) => setTics({ openers: items })}
-              placeholder="ex: opa, então, ó, eita, hmm"
+              placeholder="ex: opa, entonces, ó, eita, hmm"
             />
             <TagsInput
               label="Conectivos casuais"
@@ -503,17 +503,17 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               max={10}
               items={cfg.tics?.fillers ?? []}
               onChange={(items) => setTics({ fillers: items })}
-              placeholder="ex: deixa eu ver aqui, calma que vou te falar"
+              placeholder="ex: deixa eu ver acá, calma que vou te falar"
             />
           </CardContent>
         </Card>
 
-        {/* SECTION 6: Reações Contextuais */}
+        {/* SECTION 6: Reacciones Contextuais */}
         <Card className="mt-4">
           <CardHeader>
             <div className="flex items-center justify-between gap-4">
               <CardTitle className="text-base flex items-center gap-2">
-                <Zap className="h-4 w-4 text-primary" /> Reações Contextuais
+                <Zap className="h-4 w-4 text-primary" /> Reacciones Contextuais
               </CardTitle>
               <div className="flex items-center gap-2">
                 <Switch
@@ -521,18 +521,18 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
                   onCheckedChange={(v) => setReactions({ enabled: v })}
                 />
                 <Button type="button" size="sm" variant="outline" onClick={addRule}>
-                  <Plus className="h-4 w-4 mr-1" /> Nova regra
+                  <Plus className="h-4 w-4 mr-1" /> Nueva regla
                 </Button>
               </div>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              Detectadas ANTES da IA responder. Em "Reply direto", o agente envia o texto fixo (sem chamar IA). Em "Injetar contexto", a IA recebe a instrução e responde do jeito certo.
+              Detectadas ANTES da IA responder. Em "Reply direto", o agente envia o texto fixo (sin chamar IA). Em "Injetar contexto", a IA recebe a instrucción e responde do manera correcto.
             </p>
           </CardHeader>
           <CardContent className={cn('space-y-3', cfg.reactions?.enabled === false && 'opacity-50 pointer-events-none')}>
             {(cfg.reactions?.rules ?? []).length === 0 && (
               <div className="text-xs text-muted-foreground text-center py-6 border border-dashed rounded-md">
-                Nenhuma regra. Hacé clic em "Nova regra" para comenzar.
+                Ninguna regra. Hacé clic em "Nueva regla" para comenzar.
               </div>
             )}
             {(cfg.reactions?.rules ?? []).map((rule, idx) => (
@@ -763,7 +763,7 @@ function PreviewCard({ cfg }: { cfg: HumanizationConfig }) {
         </Button>
         {delays && (
           <div className="text-xs text-muted-foreground">
-            Espera inicial: {(delays.first / 1000).toFixed(1)}s · Entre bolhas: {delays.between.map((b) => (b / 1000).toFixed(1) + 's').join(' · ') || '—'}
+            Espera inicial: {(delays.first / 1000).toFixed(1)}s · Entre burbujas: {delays.between.map((b) => (b / 1000).toFixed(1) + 's').join(' · ') || '—'}
           </div>
         )}
         {bubbles.length > 0 && (
@@ -878,7 +878,7 @@ function ReactionRuleCard({
           <Select value={rule.type} onValueChange={(v) => onChange({ type: v as ReactionTriggerType })}>
             <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="keyword">Palavra-chave</SelectItem>
+              <SelectItem value="keyword">Palabra clave</SelectItem>
               <SelectItem value="message_type">Tipo de mensaje</SelectItem>
               <SelectItem value="inactive_hours">Tempo inativo</SelectItem>
             </SelectContent>
@@ -889,7 +889,7 @@ function ReactionRuleCard({
           <Select value={rule.action} onValueChange={(v) => onChange({ action: v as ReactionAction })}>
             <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="reply">Reply direto (sem IA)</SelectItem>
+              <SelectItem value="reply">Reply direto (sin IA)</SelectItem>
               <SelectItem value="context">Injetar contexto na IA</SelectItem>
             </SelectContent>
           </Select>
@@ -899,7 +899,7 @@ function ReactionRuleCard({
       {rule.type === 'keyword' && (
         <div className="space-y-2">
           <TagsInput
-            label="Palavras-chave (case-insensitive)"
+            label="Palabras-chave (case-insensitive)"
             items={rule.keywords ?? []}
             onChange={(items) => onChange({ keywords: items })}
             placeholder="ex: ocupado, robô, después falo"
@@ -909,7 +909,7 @@ function ReactionRuleCard({
             <Select value={rule.match ?? 'any'} onValueChange={(v) => onChange({ match: v as 'any' | 'all' })}>
               <SelectTrigger className="h-8 w-40"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="any">Qualquer (OR)</SelectItem>
+                <SelectItem value="any">Cualquier (OR)</SelectItem>
                 <SelectItem value="all">Todas (AND)</SelectItem>
               </SelectContent>
             </Select>
@@ -926,9 +926,9 @@ function ReactionRuleCard({
           >
             <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="audio">Áudio</SelectItem>
+              <SelectItem value="audio">Audio</SelectItem>
               <SelectItem value="sticker">Figurinha / Sticker</SelectItem>
-              <SelectItem value="emoji_only">Apenas emoji</SelectItem>
+              <SelectItem value="emoji_only">Solo emoji</SelectItem>
               <SelectItem value="image">Imagen</SelectItem>
               <SelectItem value="video">Vídeo</SelectItem>
             </SelectContent>
@@ -950,7 +950,7 @@ function ReactionRuleCard({
 
       <div className="space-y-1">
         <Label className="text-xs">
-          {rule.action === 'reply' ? 'Resposta enviada (texto exato)' : 'Instrução injetada na IA'}
+          {rule.action === 'reply' ? 'Respuesta enviado (texto exato)' : 'Instrucción injetada na IA'}
         </Label>
         <Textarea
           rows={2}
@@ -962,8 +962,8 @@ function ReactionRuleCard({
           }
           placeholder={
             rule.action === 'reply'
-              ? 'ex: tranquilo! qual o melhor horario pra te chamar?'
-              : 'ex: O lead está desconfiado. Respondé de forma humana, sem confirmar nem negar.'
+              ? 'ex: tranquilo! qual o mejor horario pra te chamar?'
+              : 'ex: O lead está desconfiado. Respondé de forma humana, sin confirmar nem negar.'
           }
         />
       </div>

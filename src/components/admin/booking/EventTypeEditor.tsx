@@ -67,7 +67,7 @@ const QUESTION_TYPES = [
   { value: 'textarea', label: 'Texto largo' },
   { value: 'email', label: 'E-mail' },
   { value: 'phone', label: 'Teléfono' },
-  { value: 'select', label: 'Seleção' },
+  { value: 'select', label: 'Selección' },
 ];
 
 export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEditorProps) {
@@ -347,7 +347,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
                 <div className="flex-1">
                   <span className="font-medium">Estándar (Calendario + Formulario)</span>
                   <p className="text-sm text-muted-foreground mt-0.5">
-                    Interfaz tradicional estilo Calendly com passos separados para seleção de data e preenchimento de dados.
+                    Interfaz tradicional estilo Calendly con passos separados para selección de data e preenchimento de dados.
                   </p>
                 </div>
               </label>
@@ -364,7 +364,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
                 <div className="flex-1">
                   <span className="font-medium">Conversacional (Chat Interactivo)</span>
                   <p className="text-sm text-muted-foreground mt-0.5">
-                    Interfaz moderna estilo TypeBot com preguntas uma a uma em formato de chat.
+                    Interfaz moderna estilo TypeBot con preguntas uma a uma em formato de chat.
                   </p>
                 </div>
               </label>
@@ -445,7 +445,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
               <Label className="text-base">Preguntas Personalizadas</Label>
               <Button type="button" variant="outline" size="sm" onClick={addQuestion}>
                 <Plus className="h-4 w-4 mr-1" />
-                Adicionar
+                Agregar
               </Button>
             </div>
 
@@ -483,7 +483,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
                           checked={question.required}
                           onCheckedChange={(checked) => updateQuestion(question.id, { required: checked })}
                         />
-                        <span className="text-sm text-muted-foreground">Obrigatório</span>
+                        <span className="text-sm text-muted-foreground">Obligatorio</span>
                       </div>
                     </div>
                     <Button
@@ -505,7 +505,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
             <div>
               <Label className="text-base">Publicar Evento</Label>
               <p className="text-sm text-muted-foreground">
-                Tornar este evento disponível para reservas
+                Tornar este evento disponible para reservas
               </p>
             </div>
             <Switch
@@ -520,7 +520,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
                 <NotificationsAutomationTab eventTypeId={eventType.id} />
               ) : (
                 <div className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
-                  Salve o tipo de evento primeiro para configurar confirmações e lembretes.
+                  Guardá o tipo de evento primero para configurar confirmações e lembretes.
                 </div>
               )}
             </TabsContent>
@@ -536,7 +536,7 @@ export function EventTypeEditor({ open, onOpenChange, eventType }: EventTypeEdit
               disabled={createEventType.isPending || updateEventType.isPending}
               className="w-full sm:w-auto"
             >
-              {createEventType.isPending || updateEventType.isPending ? 'Salvando...' : 'Salvar'}
+              {createEventType.isPending || updateEventType.isPending ? 'Salvando...' : 'Guardar'}
             </Button>
           </div>
         </form>

@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
         skipped++;
         continue;
       }
-      // Pausada / rascunho / completed → mantém na fila, reagenda 5min (pausa reversível)
+      // Pausada / borrador / completed → mantém na fila, reagenda 5min (pausa reversível)
       if (campaign.status !== "active") {
         await supabase
           .from("campaign_targets")

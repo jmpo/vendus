@@ -160,7 +160,7 @@ export function FlowListManager({ productId, onSelectFlow }: FlowListManagerProp
                 autoFocus
               />
               <Button onClick={handleCreateFlow} disabled={createFlow.isPending}>
-                Criar
+                Crear
               </Button>
               <Button variant="ghost" onClick={() => setIsCreating(false)}>
                 Cancelar
@@ -223,7 +223,7 @@ export function FlowListManager({ productId, onSelectFlow }: FlowListManagerProp
                           className="text-destructive"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
-                          Excluir
+                          Eliminar
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -263,7 +263,7 @@ export function FlowListManager({ productId, onSelectFlow }: FlowListManagerProp
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteFlow} className="bg-destructive text-destructive-foreground">
-              Excluir
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -87,9 +87,9 @@ export function AddTimeSlotDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Adicionar horários - {DAY_NAMES[dayOfWeek]}</DialogTitle>
+          <DialogTitle>Agregar horarios - {DAY_NAMES[dayOfWeek]}</DialogTitle>
           <DialogDescription>
-            Defina os intervalos de disponibilidade para este día
+            Defina os intervalos de disponibilidad para este día
           </DialogDescription>
         </DialogHeader>
 
@@ -154,7 +154,7 @@ export function AddTimeSlotDialog({
             onClick={handleAddSlot}
           >
             <Plus className="h-4 w-4 mr-2" />
-            Adicionar otro intervalo
+            Agregar otro intervalo
           </Button>
         </div>
 
@@ -166,7 +166,7 @@ export function AddTimeSlotDialog({
             onClick={handleSave} 
             disabled={slots.length === 0 || slots.some(s => s.start_time >= s.end_time) || isLoading}
           >
-            {isLoading ? 'Salvando...' : 'Salvar'}
+            {isLoading ? 'Salvando...' : 'Guardar'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -54,7 +54,7 @@ async function llmFallback(
 - Valor do negocio: ${context.deal_value ?? "n/a"}
 
 Últimas mensajes:
-${conversationSnippet || "(sem historial)"}
+${conversationSnippet || "(sin historial)"}
 
 Especialistas disponibles:
 ${

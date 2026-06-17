@@ -62,7 +62,7 @@ export function FlowBlockEditor({
   const addButton = () => {
     const newButton: FlowButton = {
       id: `btn_${Date.now()}`,
-      label: 'Novo botão',
+      label: 'Novo botón',
       emoji: '👉',
       action_type: 'next_block',
       next_block_id: null,
@@ -123,7 +123,7 @@ export function FlowBlockEditor({
                 rows={4}
               />
               <p className="text-xs text-muted-foreground">
-                Usa {"{{nombre}}"} para variáveis
+                Usa {"{{nombre}}"} para variables
               </p>
             </div>
             <div className="space-y-2">
@@ -161,7 +161,7 @@ export function FlowBlockEditor({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Nombre da Variável</Label>
+              <Label>Nombre da Variable</Label>
               <Input
                 value={localBlock.data.variable_name || ''}
                 onChange={(e) => handleChange({ variable_name: e.target.value.toLowerCase().replace(/\s/g, '_') })}
@@ -176,11 +176,11 @@ export function FlowBlockEditor({
               <Input
                 value={localBlock.data.placeholder || ''}
                 onChange={(e) => handleChange({ placeholder: e.target.value })}
-                placeholder="Escribí aqui..."
+                placeholder="Escribí acá..."
               />
             </div>
             <div className="space-y-2">
-              <Label>Validação</Label>
+              <Label>Validación</Label>
               <Select
                 value={localBlock.data.validation || 'none'}
                 onValueChange={(value) => handleChange({ validation: value as any })}
@@ -189,8 +189,8 @@ export function FlowBlockEditor({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Nenhuma</SelectItem>
-                  <SelectItem value="required">Obrigatório</SelectItem>
+                  <SelectItem value="none">Ninguna</SelectItem>
+                  <SelectItem value="required">Obligatorio</SelectItem>
                   <SelectItem value="email">E-mail válido</SelectItem>
                   <SelectItem value="phone">Teléfono válido</SelectItem>
                   <SelectItem value="cpf">CPF válido</SelectItem>
@@ -215,10 +215,10 @@ export function FlowBlockEditor({
             
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label>Botões</Label>
+                <Label>Botones</Label>
                 <Button variant="outline" size="sm" onClick={addButton}>
                   <Plus className="w-3 h-3 mr-1" />
-                  Adicionar
+                  Agregar
                 </Button>
               </div>
               
@@ -230,12 +230,12 @@ export function FlowBlockEditor({
                     onOpenChange={(open) => setExpandedButton(open ? btn.id : null)}
                   >
                     <div className="bg-muted rounded-lg overflow-hidden">
-                      {/* Header do Botão */}
+                      {/* Header do Botón */}
                       <CollapsibleTrigger asChild>
                         <div className="flex items-center gap-2 p-3 cursor-pointer hover:bg-muted/80">
                           <GripVertical className="w-4 h-4 text-muted-foreground" />
                           <span className="text-lg">{btn.emoji || '👉'}</span>
-                          <span className="flex-1 font-medium truncate">{btn.label || 'Novo botão'}</span>
+                          <span className="flex-1 font-medium truncate">{btn.label || 'Novo botón'}</span>
                           <span className="text-xs text-muted-foreground px-2 py-0.5 bg-background rounded">
                             {BUTTON_ACTION_TYPES.find(t => t.type === btn.action_type)?.label || 'Flujo'}
                           </span>
@@ -255,7 +255,7 @@ export function FlowBlockEditor({
                         </div>
                       </CollapsibleTrigger>
                       
-                      {/* Configurações do Botão */}
+                      {/* Configuraciones do Botón */}
                       <CollapsibleContent>
                         <div className="p-3 pt-0 space-y-3 border-t">
                           {/* Label e Emoji */}
@@ -270,11 +270,11 @@ export function FlowBlockEditor({
                               />
                             </div>
                             <div className="flex-1">
-                              <Label className="text-xs">Texto do Botão</Label>
+                              <Label className="text-xs">Texto do Botón</Label>
                               <Input
                                 value={btn.label}
                                 onChange={(e) => updateButton(idx, { label: e.target.value })}
-                                placeholder="Texto do botão"
+                                placeholder="Texto do botón"
                                 className="mt-1"
                               />
                             </div>
@@ -312,7 +312,7 @@ export function FlowBlockEditor({
                                   <SelectValue placeholder="Seleccioná..." />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="none">Nenhum (fin do flujo)</SelectItem>
+                                  <SelectItem value="none">Ningún (fin do flujo)</SelectItem>
                                   {otherBlocks.map((b) => (
                                     <SelectItem key={b.id} value={b.id}>
                                       {BLOCK_TYPES.find(t => t.type === b.type)?.label}: {b.id.substring(0, 8)}
@@ -330,7 +330,7 @@ export function FlowBlockEditor({
                                 <Input
                                   value={btn.url || ''}
                                   onChange={(e) => updateButton(idx, { url: e.target.value })}
-                                  placeholder="https://exemplo.com/checkout"
+                                  placeholder="https://ejemplo.com/checkout"
                                   className="mt-1"
                                 />
                               </div>
@@ -362,7 +362,7 @@ export function FlowBlockEditor({
                                 <Textarea
                                   value={btn.whatsapp_message || ''}
                                   onChange={(e) => updateButton(idx, { whatsapp_message: e.target.value })}
-                                  placeholder="Hola! Vim pelo chat do site..."
+                                  placeholder="Hola! Vim por el chat do site..."
                                   rows={2}
                                   className="mt-1"
                                 />
@@ -380,7 +380,7 @@ export function FlowBlockEditor({
                                 rows={2}
                                 className="mt-1"
                               />
-                              <p className="text-xs text-muted-foreground mt-1">Instruções extras que a IA receberá ao assumir</p>
+                              <p className="text-xs text-muted-foreground mt-1">Instrucciones extras que a IA receberá ao assumir</p>
                             </div>
                           )}
                           
@@ -404,11 +404,11 @@ export function FlowBlockEditor({
           <>
             <div className="p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg">
               <p className="text-sm text-orange-700 dark:text-orange-300">
-                🤖 A partir deste ponto, Sofia assume a conversación usando toda a base de conhecimento e os dados coletados no flujo.
+                🤖 A partir deste ponto, Sofia assume a conversación usando toda a base de conocimiento e os dados coletados no flujo.
               </p>
             </div>
             <div className="space-y-2">
-              <Label>Instruções Extras (opcional)</Label>
+              <Label>Instrucciones Extras (opcional)</Label>
               <Textarea
                 value={localBlock.data.ai_context_prompt || ''}
                 onChange={(e) => handleChange({ ai_context_prompt: e.target.value })}
@@ -418,7 +418,7 @@ export function FlowBlockEditor({
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <Label>Transferir variáveis</Label>
+                <Label>Transferir variables</Label>
                 <p className="text-xs text-muted-foreground">Enviar dados coletados para a IA</p>
               </div>
               <Switch
@@ -433,7 +433,7 @@ export function FlowBlockEditor({
         {localBlock.type === 'handoff' && (
           <>
             <div className="space-y-2">
-              <Label>Mensaje de Transferência</Label>
+              <Label>Mensaje de Transferencia</Label>
               <Textarea
                 value={localBlock.data.handoff_message || ''}
                 onChange={(e) => handleChange({ handoff_message: e.target.value })}
@@ -451,7 +451,7 @@ export function FlowBlockEditor({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="queue">Fila geral</SelectItem>
+                  <SelectItem value="queue">Fila general</SelectItem>
                   <SelectItem value="squad">Squad específico</SelectItem>
                   <SelectItem value="specific_user">Usuario específico</SelectItem>
                 </SelectContent>
@@ -530,7 +530,7 @@ export function FlowBlockEditor({
                 <SelectValue placeholder="Seleccioná..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">Nenhum (fin do flujo)</SelectItem>
+                <SelectItem value="none">Ningún (fin do flujo)</SelectItem>
                 {otherBlocks.map((b) => (
                   <SelectItem key={b.id} value={b.id}>
                     {BLOCK_TYPES.find(t => t.type === b.type)?.label}: {b.id.substring(0, 8)}

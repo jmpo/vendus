@@ -33,7 +33,7 @@ async function getAuthToken(organizationId: string, supabaseUrl: string, supabas
     .single();
 
   if (error || !settings) {
-    throw new Error("Configurações do Sankhya no encontradas");
+    throw new Error("Configuraciones do Sankhya no encontradas");
   }
 
   const config = (settings.settings as unknown) as SankhyaConfig;
@@ -64,7 +64,7 @@ async function getAuthToken(organizationId: string, supabaseUrl: string, supabas
   const token = authData.responseBody?.jsessionid?.$;
 
   if (!token) {
-    throw new Error("Token de sessão no devuelto");
+    throw new Error("Token de sesión no devuelto");
   }
 
   return { token, xToken: config.x_token, appKey: config.client_id };
@@ -115,7 +115,7 @@ serve(async (req: Request): Promise<Response> => {
       .single();
 
     if (!leadMapping) {
-      throw new Error("Lead no sincronizado con Sankhya. Sincronize primeiro.");
+      throw new Error("Lead no sincronizado con Sankhya. Sincronize primero.");
     }
 
     // Get Sankhya product ID if provided
@@ -150,7 +150,7 @@ serve(async (req: Request): Promise<Response> => {
             cabecalho: {
               CODPARC: { $: leadMapping.sankhya_id },
               DTNEG: { $: new Date().toISOString().split('T')[0] },
-              CODTIPOPER: { $: "1100" }, // Tipo de operação - ajustar conforme configuración del cliente
+              CODTIPOPER: { $: "1100" }, // Tipo de operación - ajustar conforme configuración del cliente
               CODTIPVENDA: { $: "0" },
               CODEMP: { $: "1" }, // Empresa defecto - ajustar conforme configuración
             },

@@ -107,7 +107,7 @@ export function TaskGenerationWidget({ productId, productName }: TaskGenerationW
             <CheckCircle2 className="h-6 w-6 text-success" />
           </div>
           <p className="text-sm text-muted-foreground text-center">
-            Todos os leads ya possuem tareas ativas!
+            Todos los leads ya possuem tareas ativas!
           </p>
         </CardContent>
       </Card>
@@ -119,17 +119,17 @@ export function TaskGenerationWidget({ productId, productName }: TaskGenerationW
       <CardHeader className="pb-3">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           <Wand2 className="h-5 w-5 text-primary" />
-          Gerar Tarefas Automáticas
+          Generar Tarefas Automáticas
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {leadsNeedingTasks.length} lead{leadsNeedingTasks.length > 1 ? 's' : ''} sem tareas pendentes
+            {leadsNeedingTasks.length} lead{leadsNeedingTasks.length > 1 ? 's' : ''} sin tareas pendentes
           </p>
           <div className="flex gap-2">
             <Button variant="ghost" size="sm" onClick={selectAll}>
-              Selecionar todos
+              Seleccionar todos
             </Button>
             {selectedLeads.size > 0 && (
               <Button variant="ghost" size="sm" onClick={clearSelection}>
@@ -166,7 +166,7 @@ export function TaskGenerationWidget({ productId, productName }: TaskGenerationW
                     </Badge>
                   </div>
                   <p className="text-xs text-muted-foreground truncate">
-                    {lead.company || (lead.products as any)?.name || 'Sem empresa'}
+                    {lead.company || (lead.products as any)?.name || 'Sin empresa'}
                   </p>
                 </div>
                 <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -188,7 +188,7 @@ export function TaskGenerationWidget({ productId, productName }: TaskGenerationW
           ) : (
             <>
               <Zap className="h-4 w-4 mr-2" />
-              Gerar {selectedLeads.size} tarea{selectedLeads.size !== 1 ? 's' : ''}
+              Generar {selectedLeads.size} tarea{selectedLeads.size !== 1 ? 's' : ''}
             </>
           )}
         </Button>

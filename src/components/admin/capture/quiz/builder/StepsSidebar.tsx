@@ -29,13 +29,13 @@ function stepLabel(b: FunnelBlock, fallback: number): string {
 
 /**
  * Sidebar esquerda — lista de etapas (1 FunnelBlock = 1 etapa visível).
- * Inspirada no padrão Inlead.
+ * Inspirada no predeterminado Inlead.
  */
 export function StepsSidebar({
   blocks, startBlockId, selectedBlockId,
   onSelect, onAddStep, onDelete, onDuplicate, onSetStart, onReorder,
 }: Props) {
-  // Ordena pela cadeia next_block_id (a partir do start)
+  // Ordena por la cadeia next_block_id (a partir do start)
   const ordered = useMemo(() => {
     const byId = new Map(blocks.map((b) => [b.id, b]));
     const visited = new Set<string>();
@@ -119,7 +119,7 @@ export function StepsSidebar({
                   <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                     <button
                       className="opacity-0 group-hover:opacity-100 h-5 w-5 rounded hover:bg-background/70 flex items-center justify-center transition-opacity"
-                      aria-label="Ações da etapa"
+                      aria-label="Acciones da etapa"
                     >
                       <span className="text-base leading-none text-muted-foreground">⋯</span>
                     </button>
@@ -135,7 +135,7 @@ export function StepsSidebar({
                       className="text-destructive"
                       onClick={(e) => { e.stopPropagation(); onDelete(b.id); }}
                     >
-                      <Trash2 className="h-3.5 w-3.5 mr-2" /> Excluir
+                      <Trash2 className="h-3.5 w-3.5 mr-2" /> Eliminar
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -150,7 +150,7 @@ export function StepsSidebar({
               className="w-full mt-2 py-6 text-xs text-muted-foreground border border-dashed border-border rounded-md hover:bg-muted/40"
             >
               <Plus className="h-3.5 w-3.5 mx-auto mb-1" />
-              Adicionar primeira etapa
+              Agregar primera etapa
             </button>
           )}
         </div>

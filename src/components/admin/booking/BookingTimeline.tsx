@@ -33,9 +33,9 @@ const ICON: Record<string, any> = {
 };
 
 const LABEL: Record<string, string> = {
-  confirmation_sent: "Confirmación enviada",
+  confirmation_sent: "Confirmación enviado",
   reminder_sent: "Recordatorio enviado",
-  recovery_sent: "Recuperación enviada",
+  recovery_sent: "Recuperación enviado",
   reply_received: "Respuesta del lead",
   notification_sent: "Notificación interna",
   status_changed: "Estado cambiado",

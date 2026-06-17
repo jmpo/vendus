@@ -121,7 +121,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Resposta imediata; processa em background
+    // Respuesta imediata; processa em background
     const processing = processScan(supabase, scan.id, organization_id, candidates, actions_config);
     // @ts-ignore EdgeRuntime
     if (typeof EdgeRuntime !== 'undefined') {
@@ -168,7 +168,7 @@ async function fetchCandidates(supabase: any, orgId: string, f: ScanFilters) {
   notIn('sector_id', f.exclude_sector_ids);
   notIn('channel', f.exclude_channels);
 
-  // Toggles "sem ..."
+  // Toggles "sin ..."
   if (f.require_no_sector) q = q.is('sector_id', null);
   if (f.require_no_assigned) q = q.is('assigned_user_id', null);
 
@@ -205,7 +205,7 @@ async function fetchCandidates(supabase: any, orgId: string, f: ScanFilters) {
       return true;
     });
   } else if (f.tag_ids?.length) {
-    // Conversas sin lead no podem ter tag
+    // Conversas sin lead no pueden ter tag
     convs = [];
   }
 
@@ -318,7 +318,7 @@ async function classifyConversation(supabase: any, orgId: string, conv: any, api
         conversation_id: conv.id, lead_id: conv.lead_id,
         classification: 'cold', score: 10,
         reason: 'Ningunoel mensaje del cliente — solo mensajes iniciais sin engajamento.',
-        signals: ['sem_resposta_cliente'],
+        signals: ['sin_respuesta_cliente'],
         suggested_action: 'Considerar arquivar ou tentar abordagem nova.',
         followup_message: '',
         lead_snapshot: await getLeadSnapshot(supabase, conv),

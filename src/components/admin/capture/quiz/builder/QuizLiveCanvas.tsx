@@ -31,7 +31,7 @@ function isColorDark(hex: string): boolean {
 
 /**
  * Canvas central — preview editável ao vivo.
- * Renderiza UMA etapa por vez no padrão inlead, com click-to-select e toolbar flutuante.
+ * Renderiza UMA etapa por vez no predeterminado inlead, con click-to-select e toolbar flutuante.
  */
 export function QuizLiveCanvas({
   funnel, blocks, selectedBlockId, startBlockId,
@@ -141,13 +141,13 @@ export function QuizLiveCanvas({
     </div>
   );
 
-  // ───── Render do bloco atual ─────
+  // ───── Render do bloco actual ─────
   if (!currentBlock) {
     return (
       <div className="h-full flex items-center justify-center bg-muted/30 p-6">
         <div className="text-center max-w-[300px]">
           <p className="text-sm text-muted-foreground">
-            Adicione a primeira etapa clicando em <span className="font-semibold text-foreground">+ Etapa</span> ou escolhendo um bloco na paleta.
+            Agregá a primera etapa clicando em <span className="font-semibold text-foreground">+ Etapa</span> ou escolhendo um bloco na paleta.
           </p>
         </div>
       </div>
@@ -257,7 +257,7 @@ export function QuizLiveCanvas({
               ))}
               {(currentBlock.data.options || []).length === 0 && (
                 <div className="text-xs text-center py-6 rounded-lg border border-dashed" style={{ color: mutedText, borderColor: subtleBorder }}>
-                  Adicione opciones no painel direito →
+                  Agregá opciones no painel direito →
                 </div>
               )}
             </div>
@@ -358,7 +358,7 @@ export function QuizLiveCanvas({
               {isDragOver && (
                 <div className="absolute inset-0 bg-primary/10 border-2 border-dashed border-primary rounded-[34px] flex items-center justify-center pointer-events-none">
                   <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-full shadow">
-                    Soltar para adicionar etapa
+                    Soltar para agregar etapa
                   </span>
                 </div>
               )}
@@ -383,7 +383,7 @@ export function QuizLiveCanvas({
             {isDragOver && (
               <div className="absolute inset-0 bg-primary/10 border-2 border-dashed border-primary rounded-xl flex items-center justify-center pointer-events-none">
                 <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-full shadow">
-                  Soltar para adicionar etapa
+                  Soltar para agregar etapa
                 </span>
               </div>
             )}
@@ -429,7 +429,7 @@ function EditableArea({
             type="button"
             onClick={(e) => { e.stopPropagation(); onDelete(); }}
             className="h-7 w-7 flex items-center justify-center hover:bg-black/10"
-            title="Excluir"
+            title="Eliminar"
           >
             <Trash2 className="h-3.5 w-3.5" />
           </button>

@@ -61,18 +61,18 @@ export function CopyDayDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Copiar horários de {DAY_NAMES[fromDay]}</DialogTitle>
+          <DialogTitle>Copiar horarios de {DAY_NAMES[fromDay]}</DialogTitle>
           <DialogDescription>
-            Seleccioná os días para dónde desea copiar os horários
+            Seleccioná os días para dónde desea copiar os horarios
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           {/* Preview of slots being copied */}
           <div className="bg-muted/50 rounded-lg p-3 space-y-1">
-            <p className="text-sm font-medium">Horários a copiar:</p>
+            <p className="text-sm font-medium">Horarios a copiar:</p>
             {fromSlots.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Nenhum horario configurado</p>
+              <p className="text-sm text-muted-foreground">Ningún horario configurado</p>
             ) : (
               fromSlots.map((slot, i) => (
                 <p key={i} className="text-sm text-muted-foreground">

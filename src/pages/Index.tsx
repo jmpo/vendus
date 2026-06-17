@@ -106,7 +106,7 @@ function InitialLoadingScreen() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 p-6 text-center">
       <Loader2 className="h-8 w-8 animate-spin text-primary" />
       <p className="text-sm text-muted-foreground">
-        {stuck ? 'Demorando mais que o esperado…' : 'Carregando sus productos…'}
+        {stuck ? 'Demorando mais que o esperado…' : 'Cargando sus productos…'}
       </p>
       {stuck && (
         <button
@@ -172,9 +172,9 @@ const Index = () => {
   const { data: materials = [], isLoading: loadingMaterials } = useMaterials(selectedProduct?.id);
 
   // As queries usam `placeholderData: []`, o que zera `isLoading` imediatamente
-  // mismo durante o primeiro fetch. Sem considerar `isFetching && !isFetched`,
+  // mismo durante o primero fetch. Sin considerar `isFetching && !isFetched`,
   // o EmptyState ("Aguardando liberação") piscava no refresh antes dos dados
-  // reais chegarem. Aqui mantemos a tela de loading até o primeiro fetch concluir.
+  // reais chegarem. Acá mantemos a tela de loading até o primero fetch concluir.
   const isLoading =
     productsQuery.isLoading ||
     assignedQuery.isLoading ||
@@ -184,7 +184,7 @@ const Index = () => {
 
   const products = useMemo(() => {
     const assignedList = (assignedProducts?.map(ap => ap.products).filter(Boolean) as DBProduct[]) || [];
-    // Admin/Manager/Super Admin → vê todos os productos da organización.
+    // Admin/Manager/Super Admin → vê todos los productos da organización.
     // Vendedor → vê só os productos atribuídos.
     if (isAdminOrManager) return (allProducts || []);
     return assignedList;
@@ -207,13 +207,13 @@ const Index = () => {
     }, 2500);
   }, [isMobile]);
 
-  // Auto-seleção: restaura o producto guardado, ou seleciona o primeiro disponível.
+  // Auto-selección: restaura o producto guardado, ou seleciona o primero disponible.
   useEffect(() => {
     if (products.length === 0 || selectedProduct) return;
     const savedId = savedProductIdRef.current;
     const saved = savedId ? products.find((p) => p.id === savedId) : null;
     setSelectedProductState(saved || products[0]);
-    // Só força product-dashboard se NÃO houver tab persistida.
+    // Só fuerza product-dashboard se NÃO houver tab persistida.
     const hasSavedTab = (() => {
       try { return !!sessionStorage.getItem('index:activeTab'); } catch { return false; }
     })();
@@ -259,16 +259,16 @@ const Index = () => {
       return { title: 'Meus Produtos', subtitle: 'Seleccioná um producto para comenzar' };
     }
     const map: Record<string, { title: string; subtitle: string }> = {
-      'product-dashboard': { title: 'Visão Geral', subtitle: selectedProduct.name },
+      'product-dashboard': { title: 'Visión General', subtitle: selectedProduct.name },
       'leads': { title: 'Pipeline de Leads', subtitle: selectedProduct.name },
       'inbox': { title: 'Conversas', subtitle: selectedProduct.name },
-      'tasks': { title: 'Minhas Tarefas', subtitle: selectedProduct.name },
+      'tasks': { title: 'Mis Tarefas', subtitle: selectedProduct.name },
       'goals': { title: 'Metas', subtitle: selectedProduct.name },
       'financial': { title: 'Financeiro', subtitle: selectedProduct.name },
       'bookings': { title: 'Agendamientos', subtitle: selectedProduct.name },
       'cadence': { title: 'Cadencia', subtitle: selectedProduct.name },
       'playbook': { title: 'Playbook', subtitle: selectedProduct.name },
-      'objections': { title: 'Objeções', subtitle: selectedProduct.name },
+      'objections': { title: 'Objeciones', subtitle: selectedProduct.name },
       'materials': { title: 'Materiales', subtitle: selectedProduct.name },
       'ai': { title: 'IA Copiloto', subtitle: selectedProduct.name },
     };
@@ -279,18 +279,18 @@ const Index = () => {
     return <InitialLoadingScreen />;
   }
 
-  // Primeiro acesso após remix: super admin vai direto ao painel global
-  // para concluir contraseña + configuración inicial. Após isso, flujo normal.
+  // Primero acesso após remix: super admin vai direto ao painel global
+  // para concluir contraseña + configuración inicial. Após eso, flujo normal.
   if (isSuperAdmin() && shouldForceSetup) {
     return <Navigate to="/super-admin" replace />;
   }
 
-  // Admin de empresa: por padrão redireciona ao painel administrativo.
+  // Admin de empresa: por defecto redireciona ao painel administrativo.
   // Exceção (NÃO redireciona, deixa o admin usar o app do vendedor):
   // Admin tiene productos atribuídos a ele (atua también como vendedor) —
   //   nesse caso o "Voltar ao App" no painel admin debe funcionar.
   // O onboarding guiado é renderizado dentro do /admin via OnboardingBanner,
-  // então no precisa mais bloquear o redirect aqui.
+  // entonces no precisa mais bloquear o redirect acá.
   const adminHasAssignedProducts =
     (assignedProducts?.length || 0) > 0;
   if (
@@ -307,7 +307,7 @@ const Index = () => {
     return <Navigate to="/super-admin" replace />;
   }
 
-  // Estado vazio - vendedor/manager sem productos atribuídos
+  // Estado vacío - vendedor/manager sin productos atribuídos
   if (products.length === 0) {
     return (
       <div className="min-h-screen bg-background">
@@ -432,7 +432,7 @@ const Index = () => {
               aria-hidden={!isActive}
               style={!isActive ? { display: 'none' } : undefined}
             >
-              {/* fallback={null} = sem spinner; useTransition mantém tela anterior visível */}
+              {/* fallback={null} = sin spinner; useTransition mantém tela anterior visível */}
               <Suspense fallback={<TabSkeleton />}>{renderTab(tab)}</Suspense>
             </div>
           );
@@ -441,7 +441,7 @@ const Index = () => {
     );
   };
 
-  // Modal de onboarding guiado (admin, primeira vez)
+  // Modal de onboarding guiado (admin, primera vez)
   const guidedModal = showGuided ? (
     <GuidedOnboarding
       open={showGuided}

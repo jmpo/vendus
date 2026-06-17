@@ -189,7 +189,7 @@ export function useTodayAgenda() {
         type: 'meeting',
         equipo: e.start_time,
         title: e.title || 'Reunión',
-        subtitle: e.leads?.name ? `Com ${e.leads.name}` : '',
+        subtitle: e.leads?.name ? `Con ${e.leads.name}` : '',
       }));
 
       const tasks: AgendaItem[] = (tasksRes.data ?? [])
@@ -227,7 +227,7 @@ export function useRecentLeads() {
 
       return (data ?? []).map((l: any) => ({
         id: l.id,
-        name: l.name || 'Sem nombre',
+        name: l.name || 'Sin nombre',
         company: l.company,
         channel: l.source,
         interest: null,

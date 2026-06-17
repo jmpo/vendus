@@ -14,7 +14,7 @@ export function formatWhatsAppText(input: string | null | undefined): string {
   if (!input) return '';
   let text = String(input);
 
-  // Preserva blocos de código (``` ... ```) e código inline (` ... `) durante a conversão
+  // Preserva blocos de código (``` ... ```) e código inline (` ... `) durante a conversión
   const codeBlocks: string[] = [];
   text = text.replace(/```[\s\S]*?```/g, (m) => {
     codeBlocks.push(m);
@@ -29,7 +29,7 @@ export function formatWhatsAppText(input: string | null | undefined): string {
   // Escapa caracteres markdown sensíveis fora de código (mantém * _ ~ que vamos converter)
   text = text.replace(/([\\\[\]()#>])/g, '\\$1');
 
-  // *bold* (apenas pares com conteúdo, não asteriscos isolados)
+  // *bold* (solo pares con contenido, no asteriscos isolados)
   text = text.replace(/(^|[\s(])\*([^\s*][^*\n]*?[^\s*]|\S)\*(?=[\s.,;:!?)]|$)/g, '$1**$2**');
 
   // _italic_  -> *italic*
@@ -38,7 +38,7 @@ export function formatWhatsAppText(input: string | null | undefined): string {
   // ~strike~ -> ~~strike~~
   text = text.replace(/(^|[\s(])~([^\s~][^~\n]*?[^\s~]|\S)~(?=[\s.,;:!?)]|$)/g, '$1~~$2~~');
 
-  // Auto-link URLs (que ainda não estejam em link markdown)
+  // Auto-link URLs (que aún no estejam em link markdown)
   text = text.replace(
     /(^|[\s])((?:https?:\/\/|www\.)[^\s<]+[^\s<.,;:!?)\]])/gi,
     (_m, pre, url) => `${pre}[${url}](${url.startsWith('http') ? url : 'https://' + url})`,
@@ -68,7 +68,7 @@ export function formatWhatsAppText(input: string | null | undefined): string {
 
 /**
  * Remove marcadores de formatação para previews em listas.
- * Colapsa quebras de linha e espaços.
+ * Colapsa quebras de línea e espaços.
  */
 export function truncatePreview(input: string | null | undefined, maxLen = 80): string {
   if (!input) return '';
@@ -85,7 +85,7 @@ export function truncatePreview(input: string | null | undefined, maxLen = 80): 
 }
 
 const MEDIA_LABEL: Record<string, string> = {
-  audio: '🎤 Áudio',
+  audio: '🎤 Audio',
   image: '📷 Foto',
   sticker: '💟 Figurinha',
   video: '🎬 Vídeo',
@@ -93,9 +93,9 @@ const MEDIA_LABEL: Record<string, string> = {
 };
 
 /**
- * Gera o preview da última mensagem para listas (Inbox, histórico).
- * Se a mensagem tem mídia anexada, mostra o tipo (📷 Foto, 🎤 Áudio…)
- * — opcionalmente combinado com a legenda/conteúdo.
+ * Gera o preview da última mensaje para listas (Inbox, historial).
+ * Se a mensaje tem mídia anexada, mostra o tipo (📷 Foto, 🎤 Audio…)
+ * — opcionalmente combinado con a legenda/contenido.
  */
 export function previewWithMedia(
   content: string | null | undefined,
@@ -145,7 +145,7 @@ export function formatSenderLabel(opts: {
   const { senderType, senderName, isOwnMessage, agentName } = opts;
   if (senderType === 'visitor') return senderName?.trim() || 'Visitante';
   if (senderType === 'bot') return `🤖 ${agentName?.trim() || senderName?.trim() || 'Agente IA'}`;
-  if (isOwnMessage) return 'Você';
+  if (isOwnMessage) return 'Usted';
   const name = senderName?.trim();
   if (!name) return 'Agente';
   const parts = name.split(/\s+/);

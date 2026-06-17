@@ -67,7 +67,7 @@ export function CaptureTemplatesSection() {
         <div>
           <h1 className="text-2xl font-semibold">Templates de Quiz</h1>
           <p className="text-sm text-muted-foreground">
-            Comece em 1 clique. Quizzes prontos com preguntas, scoring, ramificação e resultado ya configurados.
+            Comece em 1 clique. Quizzes prontos con preguntas, scoring, ramificação e resultado ya configurados.
           </p>
         </div>
       </div>

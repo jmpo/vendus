@@ -100,7 +100,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
     });
   };
 
-  // Quando seleciona um plan, pré-popula limites
+  // Cuando seleciona um plan, pré-popula limites
   const handleSelectPlan = (planId: string) => {
     const plan = activePlans?.find((p) => p.id === planId);
     setNewOrg((prev) => ({
@@ -114,7 +114,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
 
   const handleCreateOrg = async () => {
     if (!newOrg.name.trim() || !newOrg.email.trim()) {
-      toast.error('Preencha nombre e e-mail de la empresa');
+      toast.error('Completá nombre e e-mail de la empresa');
       return;
     }
 
@@ -170,7 +170,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
         entity_id: org.id,
       });
 
-      toast.success('Empresa creada com éxito!');
+      toast.success('Empresa creada con éxito!');
       setIsCreating(false);
       resetForm();
     } catch (error) {
@@ -209,8 +209,8 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
       
       toast.success(
         suspendingOrg.status === 'active' 
-          ? 'Empresa suspensa com éxito' 
-          : 'Empresa reativada com éxito'
+          ? 'Empresa suspensa con éxito' 
+          : 'Empresa reativada con éxito'
       );
       setSuspendingOrg(null);
     } catch (error) {
@@ -285,7 +285,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
         entity_id: editingOrg.id,
       });
       
-      toast.success('Empresa actualizada com éxito');
+      toast.success('Empresa actualizada con éxito');
       setEditingOrg(null);
     } catch (error) {
       console.error('Error updating org:', error);
@@ -392,7 +392,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
           <Card>
             <CardContent className="py-12 text-center">
               <Building2 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">Nenhuma empresa encontrada</p>
+              <p className="text-muted-foreground">Ninguna empresa encontrada</p>
             </CardContent>
           </Card>
         ) : (
@@ -413,7 +413,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">
                         {org.cnpj && `CNPJ: ${org.cnpj} | `}
-                        {org.email || 'Sem e-mail'}
+                        {org.email || 'Sin e-mail'}
                       </p>
                       <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
@@ -475,7 +475,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                         setDeletingOrg(org);
                         setDeleteConfirmName('');
                       }}
-                      title="Excluir empresa"
+                      title="Eliminar empresa"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -493,7 +493,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
           <DialogHeader>
             <DialogTitle>Editar Empresa</DialogTitle>
             <DialogDescription>
-              Atualize as información de la empresa
+              Actualizá as información de la empresa
             </DialogDescription>
           </DialogHeader>
           
@@ -538,7 +538,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                     setEditingOrg({
                       ...editingOrg,
                       plan_id: planId,
-                      // Pré-popula limites do plan apenas se no houver override manual
+                      // Pré-popula limites do plan solo se no houver override manual
                       max_users: plan?.max_users ?? editingOrg.max_users,
                       max_products: plan?.max_products ?? editingOrg.max_products,
                     });
@@ -551,18 +551,18 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                     <SelectItem value="none">Sin plan (personalizado)</SelectItem>
                     {activePlans?.map((plan) => (
                       <SelectItem key={plan.id} value={plan.id}>
-                        {plan.name} — {plan.max_users} usuarios · {plan.max_connections ?? 1} conexões
+                        {plan.name} — {plan.max_users} usuarios · {plan.max_connections ?? 1} conexiones
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  Selecionar um plan atualiza automaticamente os limites padrão. Usted puede sobrescrever abaixo.
+                  Seleccionar um plan atualiza automaticamente os limites predeterminado. Usted puede sobrescrever abaixo.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Máx. Usuários</Label>
+                  <Label>Máx. Usuarios</Label>
                   <Input
                     type="number"
                     value={editingOrg.max_users || 10}
@@ -579,10 +579,10 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Máx. Conexões WhatsApp (override do plan)</Label>
+                <Label>Máx. Conexiones WhatsApp (override do plan)</Label>
                 <Input
                   type="number"
-                  placeholder="Vazio = usar limite do plan"
+                  placeholder="Vacío = usar limite do plan"
                   value={editingOrg.max_connections ?? ''}
                   onChange={(e) => setEditingOrg({
                     ...editingOrg,
@@ -599,7 +599,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
               Cancelar
             </Button>
             <Button onClick={handleUpdateOrg} disabled={updateOrganization.isPending}>
-              {updateOrganization.isPending ? 'Salvando...' : 'Salvar'}
+              {updateOrganization.isPending ? 'Salvando...' : 'Guardar'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -643,7 +643,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
             </AlertDialogTitle>
             <AlertDialogDescription>
               {suspendingOrg?.status === 'active'
-                ? `Ao suspender "${suspendingOrg?.name}", todos os usuarios de la empresa perderão acesso até a reativação. Deseja continuar?`
+                ? `Ao suspender "${suspendingOrg?.name}", todos los usuarios de la empresa perderão acesso até a reativação. Deseja continuar?`
                 : `Reactivar "${suspendingOrg?.name}" devolverá o acesso aos usuarios. Deseja continuar?`}
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -663,11 +663,11 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
       <AlertDialog open={!!deletingOrg} onOpenChange={(open) => { if (!open) { setDeletingOrg(null); setDeleteConfirmName(''); } }}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir empresa permanentemente</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar empresa permanentemente</AlertDialogTitle>
             <AlertDialogDescription asChild>
               <div className="space-y-3">
                 <p className="text-destructive font-medium">
-                  Esta acción é irreversível. Todos os dados de la empresa (usuarios, leads, conversaciones, productos, integraciones) serão removidos.
+                  Esta acción é irreversível. Todos los dados de la empresa (usuarios, leads, conversaciones, productos, integraciones) serán removidos.
                 </p>
                 <p>
                   Para confirmar, digite o nombre exato de la empresa: <strong>{deletingOrg?.name}</strong>
@@ -699,7 +699,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
                 }
               }}
             >
-              {deleteOrganization.isPending ? 'Excluindo...' : 'Excluir permanentemente'}
+              {deleteOrganization.isPending ? 'Excluindo...' : 'Eliminar permanentemente'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

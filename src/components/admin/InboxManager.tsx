@@ -47,7 +47,7 @@ export function InboxManager() {
           )}
           <TabsTrigger value="reports" className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4" />
-            <span>Relatórios</span>
+            <span>Reportes</span>
           </TabsTrigger>
           {adminLike && (
             <TabsTrigger value="radar" className="flex items-center gap-2">

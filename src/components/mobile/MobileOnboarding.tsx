@@ -14,19 +14,19 @@ const slides = [
   {
     icon: Users,
     title: 'Sus leads, na palma da mão',
-    description: 'Gerencie todos os sus contactos de ventas em um único lugar, com kanban visual e actualizaciones em tempo real.',
+    description: 'Gerencie todos los sus contactos de ventas em um único lugar, con kanban visual e actualizaciones en tiempo real.',
     color: 'from-blue-500 to-cyan-500',
   },
   {
     icon: Bot,
-    title: 'IA que vende com usted',
-    description: 'Copiloto inteligente que sugere respuestas, quebra objeções e ayuda usted a fechar mais negocios.',
+    title: 'IA que vende con usted',
+    description: 'Copiloto inteligente que sugere respuestas, quebra objeciones e ayuda usted a fechar mais negocios.',
     color: 'from-purple-500 to-pink-500',
   },
   {
     icon: Target,
-    title: 'Metas em tempo real',
-    description: 'Acompanhe su progresso, compare com a equipo e celebre cada conquista no caminho para o topo.',
+    title: 'Metas en tiempo real',
+    description: 'Acompanhe su progresso, compare con a equipo e celebre cada conquista no camino para o topo.',
     color: 'from-orange-500 to-red-500',
   },
   {

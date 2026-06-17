@@ -96,7 +96,7 @@ export async function describeAIError(response: Response, providerLabel: string)
       : 'Créditos de IA esgotados. Adicione créditos na su cuenta Lovable.';
   }
   if (response.status === 401 || response.status === 403) {
-    return `Chave do provedor "${providerLabel}" inválida ou sin permiso. Verificá em Integrações → IA.`;
+    return `Chave do provedor "${providerLabel}" inválida ou sin permiso. Verificá em Integraciones → IA.`;
   }
   return `Error do provedor ${providerLabel} (${response.status}): ${text.slice(0, 200) || response.statusText}`;
 }

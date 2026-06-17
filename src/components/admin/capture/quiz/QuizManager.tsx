@@ -199,7 +199,7 @@ export function QuizManager() {
                       )}
                       <DropdownMenuItem className="text-destructive"
                         onClick={(e) => { e.stopPropagation(); setDeleteId(f.id); }}>
-                        <Trash2 className="h-4 w-4 mr-2" /> Excluir
+                        <Trash2 className="h-4 w-4 mr-2" /> Eliminar
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -252,7 +252,7 @@ export function QuizManager() {
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={() => { if (deleteId) deleteFunnel.mutate(deleteId); setDeleteId(null); }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Excluir
+              Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

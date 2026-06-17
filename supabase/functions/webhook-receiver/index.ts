@@ -726,7 +726,7 @@ async function executeAction(
     case 'apply_tags': {
       if (!existingLeadId) throw new Error('Nel lead to tag');
 
-      // Resolver organization_id del lead (necessário para resolver tags por nombre)
+      // Resolver organization_id del lead (necesario para resolver tags por nombre)
       const { data: leadRow } = await supabase
         .from('leads')
         .select('organization_id')
@@ -1225,7 +1225,7 @@ async function executeAction(
           .select('id')
           .single();
         if (createWidgetError || !createdWidget?.id) {
-          throw new Error(`Falha ao crear widget interno de outreach: ${createWidgetError?.message || 'sem id'}`);
+          throw new Error(`Falha ao crear widget interno de outreach: ${createWidgetError?.message || 'sin id'}`);
         }
         outreachWidget = createdWidget;
       }
@@ -1344,7 +1344,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
         const instance = instances?.[0];
 
         if (instErr || !instance) {
-          throw new Error(`Evolution Go: ninguna instância conectada encontrada para esta organización (${instErr?.message || 'sem registros'})`);
+          throw new Error(`Evolution Go: ninguna instância conectada encontrada para esta organización (${instErr?.message || 'sin registros'})`);
         }
 
         console.log(`[Webhook/AIOutreach] Sending via Evolution Go instance ${instance.name} (${instance.id}) to ${leadPhone}`);
@@ -1574,7 +1574,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
         }
       }
 
-      // 2. Determina o primeiro bloco
+      // 2. Determina o primero bloco
       const blocks: any[] = (funnel.flow_blocks as any[]) || [];
       const startBlockId: string | null = (funnel as any).start_block_id || blocks[0]?.id || null;
       const startBlock = blocks.find((b: any) => b.id === startBlockId) || blocks[0] || null;
@@ -1608,7 +1608,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
           .select('id')
           .single();
         if (createWidgetError || !createdWidget?.id) {
-          throw new Error(`Falha ao crear widget interno de outreach: ${createWidgetError?.message || 'sem id'}`);
+          throw new Error(`Falha ao crear widget interno de outreach: ${createWidgetError?.message || 'sin id'}`);
         }
         widgetRow = createdWidget;
       }

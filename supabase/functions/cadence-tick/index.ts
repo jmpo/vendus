@@ -1,5 +1,5 @@
 // Cron a cada 5min. Executa cadence_step_runs vencidos.
-// Para cada run: valida janela, condições, gerel mensaje via manual-outreach
+// Para cada run: valida janela, condiciones, gerel mensaje via manual-outreach
 // (que arma prompt con contexto + historial del lead) y agenda el próximo step.
 
 import { createServiceClient } from "../_shared/campaign-audience.ts";
@@ -197,7 +197,7 @@ Deno.serve(async (req) => {
           skipped++; continue;
         }
 
-        // Avalia condições da etapa
+        // Avalia condiciones da etapa
         const evalResult = await evaluateStepConditions(supabase, currentStep.conditions, enrollment.lead_id);
         if (!evalResult.ok) {
           await supabase.from("cadence_step_runs").update({ status: "skipped", skip_reason: evalResult.reason ?? "conditions", executed_at: new Date().toISOString() }).eq("id", run.id);

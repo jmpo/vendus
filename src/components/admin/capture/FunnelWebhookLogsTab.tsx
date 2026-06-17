@@ -53,7 +53,7 @@ export function FunnelWebhookLogsTab({ funnelId }: FunnelWebhookLogsTabProps) {
             size="sm"
             onClick={() => setFilter('success')}
           >
-            Sucesso
+            Éxito
           </Button>
           <Button
             variant={filter === 'error' ? 'default' : 'outline'}

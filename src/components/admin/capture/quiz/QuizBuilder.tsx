@@ -22,7 +22,7 @@ interface Props {
 }
 
 const statusConfig: Record<FunnelStatus, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-  draft: { label: 'Rascunho', variant: 'secondary' },
+  draft: { label: 'Borrador', variant: 'secondary' },
   active: { label: 'Ativo', variant: 'default' },
   paused: { label: 'Pausado', variant: 'outline' },
   archived: { label: 'Arquivado', variant: 'destructive' },
@@ -31,17 +31,17 @@ const statusConfig: Record<FunnelStatus, { label: string; variant: 'default' | '
 function validateQuiz(blocks: FunnelBlock[]): string[] {
   const warnings: string[] = [];
   if (!blocks || blocks.length === 0) {
-    warnings.push('Quiz vazio — adicione pelo menos uma pregunta.');
+    warnings.push('Quiz vacío — agregá por el menos uma pregunta.');
     return warnings;
   }
   const ids = new Set(blocks.map(b => b.id));
   const hasButtons = blocks.some(b => b.type === 'buttons');
   if (!hasButtons) {
-    warnings.push('Quiz sem preguntas de múltipla escolha — adicione um bloco "Botões".');
+    warnings.push('Quiz sin preguntas de múltipla elegí — agregá um bloco "Botones".');
   }
   const hasCapture = blocks.some(b => b.type === 'input' || b.type === 'quick_form' || b.type === 'create_lead');
   if (!hasCapture) {
-    warnings.push('Nenhum bloco de captura de lead — o resultado no será guardado.');
+    warnings.push('Ningún bloco de captura de lead — o resultado no será guardado.');
   }
   blocks.forEach(b => {
     const next = (b.data as any)?.next_block_id;
@@ -51,7 +51,7 @@ function validateQuiz(blocks: FunnelBlock[]): string[] {
     if (b.type === 'buttons') {
       const opts = (b.data as any)?.options || [];
       if (opts.length === 0) {
-        warnings.push(`Pergunta "${(b.data as any)?.label || b.id.slice(0, 6)}" sem opciones.`);
+        warnings.push(`Pergunta "${(b.data as any)?.label || b.id.slice(0, 6)}" sin opciones.`);
       }
     }
   });
@@ -103,7 +103,7 @@ export function QuizBuilder({ funnelId, onBack }: Props) {
   return (
     <TooltipProvider delayDuration={200}>
       <div className="h-full flex flex-col">
-        {/* Topbar slim unificada com tabs */}
+        {/* Topbar slim unificada con tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col min-h-0">
           <div className="flex items-center gap-2 h-11 px-1">
             <Tooltip>
@@ -122,9 +122,9 @@ export function QuizBuilder({ funnelId, onBack }: Props) {
 
             <TabsList className="h-9 grid grid-cols-5 max-w-2xl">
               <TabsTrigger value="flow" className="gap-1.5 h-7 px-2"><Workflow className="h-3.5 w-3.5" /><span className="hidden md:inline text-xs">Flujo</span></TabsTrigger>
-              <TabsTrigger value="appearance" className="gap-1.5 h-7 px-2"><Palette className="h-3.5 w-3.5" /><span className="hidden md:inline text-xs">Aparência</span></TabsTrigger>
+              <TabsTrigger value="appearance" className="gap-1.5 h-7 px-2"><Palette className="h-3.5 w-3.5" /><span className="hidden md:inline text-xs">Apariencia</span></TabsTrigger>
               <TabsTrigger value="integrations" className="gap-1.5 h-7 px-2"><Sparkles className="h-3.5 w-3.5" /><span className="hidden md:inline text-xs">CRM/IA</span></TabsTrigger>
-              <TabsTrigger value="share" className="gap-1.5 h-7 px-2"><Share2 className="h-3.5 w-3.5" /><span className="hidden md:inline text-xs">Compartilhar</span></TabsTrigger>
+              <TabsTrigger value="share" className="gap-1.5 h-7 px-2"><Share2 className="h-3.5 w-3.5" /><span className="hidden md:inline text-xs">Compartir</span></TabsTrigger>
               <TabsTrigger value="settings" className="gap-1.5 h-7 px-2"><Settings className="h-3.5 w-3.5" /><span className="hidden md:inline text-xs">Config</span></TabsTrigger>
             </TabsList>
 

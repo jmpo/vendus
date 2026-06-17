@@ -57,7 +57,7 @@ export function QuizCreateFromScratch({ open, onOpenChange, onCreated }: Props) 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Criar Quiz do Zero</DialogTitle>
+          <DialogTitle>Crear Quiz do Zero</DialogTitle>
           <DialogDescription>Configure o básico e abra o builder visual.</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
@@ -83,7 +83,7 @@ export function QuizCreateFromScratch({ open, onOpenChange, onCreated }: Props) 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSubmit} disabled={!productId || !name.trim() || createFunnel.isPending}>
-            {createFunnel.isPending ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Criando...</> : 'Criar e abrir builder'}
+            {createFunnel.isPending ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Criando...</> : 'Crear e abrir builder'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -57,7 +57,7 @@ interface FunnelBlockEditorProps {
   productId: string;
   onUpdate: (updates: Partial<FunnelBlock>) => void;
   onConnect: (targetBlockId: string | null) => void;
-  /** Quando true: oculta o seletor "Mostrar em" (canais) e usa terminologia "Etiqueta" no lugar de "Tag". */
+  /** Cuando true: oculta o seletor "Mostrar em" (canais) e usa terminologia "Etiqueta" no lugar de "Tag". */
   chatOnly?: boolean;
 }
 
@@ -320,7 +320,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
               <Input
                 value={block.data.placeholder || ''}
                 onChange={(e) => updateData('placeholder', e.target.value)}
-                placeholder="Escribí aqui..."
+                placeholder="Escribí acá..."
               />
             </div>
             <div className="flex items-center gap-2">
@@ -341,7 +341,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
               <Textarea
                 value={block.data.content || ''}
                 onChange={(e) => updateData('content', e.target.value)}
-                placeholder="Texto antes dos botões..."
+                placeholder="Texto antes dos botones..."
                 rows={2}
               />
             </div>
@@ -350,7 +350,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                 <Label>Opciones</Label>
                 <Button size="sm" variant="ghost" onClick={addOption}>
                   <Plus className="h-3 w-3 mr-1" />
-                  Adicionar
+                  Agregar
                 </Button>
               </div>
               <div className="space-y-2">
@@ -424,7 +424,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
         {/* AI Takeover Block - Expanded */}
         {block.type === 'ai_takeover' && (
           <div className="space-y-6">
-            {/* Seção 1: Seleção de Agente */}
+            {/* Sección 1: Selección de Agente */}
             <div className="space-y-3">
               <Label className="flex items-center gap-2">
                 <Bot className="h-4 w-4" />
@@ -439,7 +439,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
             
             <Separator />
             
-            {/* Seção 2: Contexto Adicional */}
+            {/* Sección 2: Contexto Adicional */}
             <div className="space-y-2">
               <Label>Contexto específico para este punto</Label>
               <Textarea
@@ -455,7 +455,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
             
             <Separator />
             
-            {/* Seção 3: Permissões Override (Collapsible) */}
+            {/* Sección 3: Permisos Override (Collapsible) */}
             <Collapsible>
               <CollapsibleTrigger className="flex items-center gap-2 w-full p-2 rounded-lg hover:bg-muted/50 transition-colors">
                 <Settings2 className="h-4 w-4" />
@@ -464,7 +464,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                 <ChevronDown className="h-4 w-4" />
               </CollapsibleTrigger>
               <CollapsibleContent className="space-y-4 pt-4">
-                {/* Pode hacer (adicional) */}
+                {/* Puede hacer (adicional) */}
                 <div className="space-y-2">
                   <Label className="text-xs text-muted-foreground">✅ Puede hacer (adicional)</Label>
                   <div className="space-y-1">
@@ -558,7 +558,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
             
             <Separator />
             
-            {/* Seção 4: Auto-Switch de Agente */}
+            {/* Sección 4: Auto-Switch de Agente */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
@@ -637,10 +637,10 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
             
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label>Saídas Possíveis</Label>
+                <Label>Saídas Posibles</Label>
                 <Button size="sm" variant="ghost" onClick={addAIOutput}>
                   <Plus className="h-3 w-3 mr-1" />
-                  Adicionar
+                  Agregar
                 </Button>
               </div>
               <div className="space-y-2">
@@ -693,7 +693,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
             <Textarea
               value={(block.data.ai_qualification_criteria || []).join('\n')}
               onChange={(e) => updateData('ai_qualification_criteria', e.target.value.split('\n').filter(Boolean))}
-              placeholder="Um critério por linha:&#10;Tem presupuesto acima de R$5.000&#10;Precisa da solución en hasta 30 días&#10;É decisor ou influenciador"
+              placeholder="Um critério por línea:&#10;Tem presupuesto acima de R$5.000&#10;Precisa da solución en hasta 30 días&#10;É decisor ou influenciador"
               rows={4}
             />
             <p className="text-xs text-muted-foreground">
@@ -709,7 +709,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
             <Textarea
               value={block.data.ai_context_prompt || ''}
               onChange={(e) => updateData('ai_context_prompt', e.target.value)}
-              placeholder="Resuma os principais pontos da conversación, incluindo: necesidad del cliente, objeções levantadas, próximos passos..."
+              placeholder="Resuma os principais pontos da conversación, incluindo: necesidad del cliente, objeciones levantadas, próximos passos..."
               rows={4}
             />
           </div>
@@ -722,7 +722,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
               <Label>Variantes</Label>
               <Button size="sm" variant="ghost" onClick={addABVariant}>
                 <Plus className="h-3 w-3 mr-1" />
-                Adicionar
+                Agregar
               </Button>
             </div>
             <div className="space-y-2">
@@ -775,7 +775,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
               ))}
             </div>
             <p className="text-xs text-muted-foreground">
-              Os pesos definem a probabilidade de cada caminho
+              Os pesos definem a probabilidade de cada camino
             </p>
           </div>
         )}
@@ -784,7 +784,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
         {block.type === 'condition' && (
           <>
             <div className="space-y-2">
-              <Label>Variável a avaliar</Label>
+              <Label>Variable a avaliar</Label>
               <Input
                 value={block.data.condition?.variable || ''}
                 onChange={(e) => updateData('condition', { ...block.data.condition, variable: e.target.value })}
@@ -868,7 +868,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
         {block.type === 'handoff' && (
           <>
             <div className="space-y-2">
-              <Label>Mensaje de Transferência</Label>
+              <Label>Mensaje de Transferencia</Label>
               <Textarea
                 value={block.data.handoff_message || ''}
                 onChange={(e) => updateData('handoff_message', e.target.value)}
@@ -885,9 +885,9 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
             <div className="space-y-2">
               <Label>Mensaje de Introdução</Label>
               <Textarea
-                value={block.data.schedule_message || 'Elegí o melhor horario para nossa conversación:'}
+                value={block.data.schedule_message || 'Elegí o mejor horario para nossa conversación:'}
                 onChange={(e) => updateData('schedule_message', e.target.value)}
-                placeholder="Elegí o melhor horario..."
+                placeholder="Elegí o mejor horario..."
                 rows={2}
               />
             </div>
@@ -900,7 +900,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
               />
               <p className="text-xs text-muted-foreground">
                 Configure tipos de evento em Agendamientos → Tipos de Evento.
-                Cole aqui o ID do evento deseado.
+                Cole acá o ID do evento deseado.
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -908,12 +908,12 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                 checked={block.data.schedule_use_lead_owner || false}
                 onCheckedChange={(v) => updateData('schedule_use_lead_owner', v)}
               />
-              <Label className="text-sm">Agendar com dono del lead</Label>
+              <Label className="text-sm">Agendar con dono del lead</Label>
             </div>
             <div className="space-y-2">
-              <Label>Mensaje de Sucesso</Label>
+              <Label>Mensaje de Éxito</Label>
               <Textarea
-                value={block.data.schedule_success_message || 'Perfeito! Su horario fue reservado. Usted receberá uma confirmação por e-mail.'}
+                value={block.data.schedule_success_message || 'Perfeito! Su horario fue reservado. Usted receberá uma confirmación por e-mail.'}
                 onChange={(e) => updateData('schedule_success_message', e.target.value)}
                 placeholder="Mensaje após agendar..."
                 rows={2}
@@ -926,7 +926,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
         {block.type === 'end' && (
           <>
             <div className="space-y-2">
-              <Label>Mensaje de Sucesso</Label>
+              <Label>Mensaje de Éxito</Label>
               <Textarea
                 value={block.data.success_message || ''}
                 onChange={(e) => updateData('success_message', e.target.value)}
@@ -989,7 +989,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                 <Input
                   value={block.data.video_url || ''}
                   onChange={(e) => updateData('video_url', e.target.value)}
-                  placeholder="https://player.exemplo.com/embed/..."
+                  placeholder="https://player.ejemplo.com/embed/..."
                 />
                 <p className="text-xs text-muted-foreground">URL direta do iframe/player</p>
               </div>
@@ -1018,7 +1018,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
               <Input
                 value={block.data.image_url || ''}
                 onChange={(e) => updateData('image_url', e.target.value)}
-                placeholder="https://exemplo.com/imagen.jpg"
+                placeholder="https://ejemplo.com/imagen.jpg"
               />
             </div>
             <div className="space-y-2">
@@ -1056,7 +1056,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
               <Input
                 value={block.data.link_title || ''}
                 onChange={(e) => updateData('link_title', e.target.value)}
-                placeholder="Hacé clic aqui para saber mais"
+                placeholder="Hacé clic acá para saber mais"
               />
             </div>
             <div className="space-y-2">
@@ -1103,7 +1103,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                   ...block.data.task_config, 
                   description_template: e.target.value 
                 })}
-                placeholder="Entrar em contacto com o lead..."
+                placeholder="Entrar em contacto con o lead..."
                 rows={2}
               />
             </div>
@@ -1129,10 +1129,10 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
               <Input
                 value={block.data.webhook_config?.url || ''}
                 onChange={(e) => updateWebhookConfig({ url: e.target.value })}
-                placeholder="https://api.exemplo.com/webhook"
+                placeholder="https://api.ejemplo.com/webhook"
               />
               <p className="text-xs text-muted-foreground">
-                Suporta variáveis: <code className="text-[10px] bg-muted px-1 rounded">{'{{nombre}}'}</code>, <code className="text-[10px] bg-muted px-1 rounded">{'{{email}}'}</code>, <code className="text-[10px] bg-muted px-1 rounded">{'{{phone}}'}</code>
+                Suporta variables: <code className="text-[10px] bg-muted px-1 rounded">{'{{nombre}}'}</code>, <code className="text-[10px] bg-muted px-1 rounded">{'{{email}}'}</code>, <code className="text-[10px] bg-muted px-1 rounded">{'{{phone}}'}</code>
               </p>
             </div>
             <div className="space-y-2">
@@ -1176,12 +1176,12 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                 ))}
               </div>
               <p className="text-xs text-muted-foreground">
-                Se ficar vazio, envia automaticamente todos os dados coletados.
+                Se ficar vacío, envia automaticamente todos los dados coletados.
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label>Quando disparar</Label>
+              <Label>Cuando disparar</Label>
               <Select
                 value={block.data.webhook_config?.trigger || 'on_block'}
                 onValueChange={(v) => updateWebhookConfig({ trigger: v as 'on_block' | 'on_complete' })}
@@ -1191,7 +1191,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="on_block">Durante o flujo (ao chegar no bloco)</SelectItem>
-                  <SelectItem value="on_complete">Ao concluir o embudo (com lead creado)</SelectItem>
+                  <SelectItem value="on_complete">Ao concluir o embudo (con lead creado)</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
@@ -1204,7 +1204,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                 checked={block.data.webhook_config?.wait_for_response === true}
                 onCheckedChange={(v) => updateWebhookConfig({ wait_for_response: v })}
               />
-              <Label className="text-sm">Aguardar respuesta antes de avançar</Label>
+              <Label className="text-sm">Aguardar respuesta antes de avanzar</Label>
             </div>
 
             <div className="space-y-2">
@@ -1220,7 +1220,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
 
         <Separator />
 
-        {/* Connection - para blocos que no têm saídas múltiplas */}
+        {/* Connection - para blocos que no têm saídas múltiples */}
         {!['end', 'buttons', 'ai_decide', 'ab_test', 'condition', 'handoff', 'ai_takeover'].includes(block.type) && (
           <div className="space-y-2">
             <Label className="flex items-center gap-2">
@@ -1235,7 +1235,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                 <SelectValue placeholder="Seleccioná..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">Nenhum (fin do flujo)</SelectItem>
+                <SelectItem value="none">Ningún (fin do flujo)</SelectItem>
                 {otherBlocks.map(b => (
                   <SelectItem key={b.id} value={b.id}>
                     {FUNNEL_BLOCK_PALETTE.find(p => p.type === b.type)?.label}: {b.data.content?.slice(0, 20) || '...'}

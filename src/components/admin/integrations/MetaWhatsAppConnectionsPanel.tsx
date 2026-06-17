@@ -18,7 +18,7 @@ function StatusBadge({ c }: { c: MetaWAConnection }) {
   if (c.status === 'active') return <Badge className="bg-emerald-500/15 text-emerald-700 border-emerald-500/30">Ativa</Badge>;
   if (c.status === 'error') return <Badge variant="destructive">Error</Badge>;
   if (c.status === 'revoked') return <Badge variant="outline">Revogada</Badge>;
-  if (c.status === 'draft') return <Badge variant="outline" className="border-amber-500/40 text-amber-700">Rascunho</Badge>;
+  if (c.status === 'draft') return <Badge variant="outline" className="border-amber-500/40 text-amber-700">Borrador</Badge>;
   return <Badge variant="secondary">Pendente</Badge>;
 }
 
@@ -51,19 +51,19 @@ export function MetaWhatsAppConnectionsPanel({ hideHeader, openWizard, onCloseWi
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-emerald-600" />
             <div>
-              <h3 className="font-medium">Conexões oficiais (Meta Cloud API)</h3>
+              <h3 className="font-medium">Conexiones oficiais (Meta Cloud API)</h3>
               <p className="text-xs text-muted-foreground">Sus credenciais ficam criptografadas e nunca saem desta empresa.</p>
             </div>
           </div>
           <Button onClick={() => { setEditing(null); setWizardInternal(true); }}>
-            <Plus className="h-4 w-4 mr-2" />Nova conexão
+            <Plus className="h-4 w-4 mr-2" />Nova conexión
           </Button>
         </div>
       )}
 
       {conns.length === 0 ? (
         <Card className="p-8 text-center text-sm text-muted-foreground">
-          Nenhuma conexão oficial aún. Hacé clic em "Nova conexão" para configurar.
+          Ninguna conexión oficial aún. Hacé clic em "Nova conexión" para configurar.
         </Card>
       ) : (
         <div className="space-y-3">
@@ -123,9 +123,9 @@ export function MetaWhatsAppConnectionsPanel({ hideHeader, openWizard, onCloseWi
       <AlertDialog open={!!toDelete} onOpenChange={(v) => !v && setToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remover conexão Meta?</AlertDialogTitle>
+            <AlertDialogTitle>Remover conexión Meta?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción remove "{toDelete?.display_name}" e todos os templates sincronizados. Mensagens ya recebidas continuam preservadas.
+              Esta acción remove "{toDelete?.display_name}" e todos los templates sincronizados. Mensajes ya recebidas continuam preservadas.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

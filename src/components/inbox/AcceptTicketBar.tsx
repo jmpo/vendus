@@ -27,7 +27,7 @@ interface AcceptTicketBarProps {
 
 /**
  * Barra de aceite exibida no rodapé cuando o atención está aguardando humano
- * e aún no tiene agente atribuído. Se houver mais de um sector disponível,
+ * e aún no tiene agente atribuído. Se houver mais de um sector disponible,
  * pede para el agente escolher antes de assumir.
  */
 export function AcceptTicketBar({ onAccept, loading }: AcceptTicketBarProps) {

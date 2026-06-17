@@ -45,7 +45,7 @@ export function MobileGoalsView({ userId, productId }: MobileGoalsViewProps) {
             <Target size={20} className="text-primary" />
           </div>
           <div>
-            <h3 className="font-semibold text-foreground">Meta do Mês</h3>
+            <h3 className="font-semibold text-foreground">Meta do Mes</h3>
             <p className="text-xs text-muted-foreground">Janeiro 2026</p>
           </div>
         </div>
@@ -84,7 +84,7 @@ export function MobileGoalsView({ userId, productId }: MobileGoalsViewProps) {
         <Card className="p-4 bg-card">
           <div className="flex items-center gap-2 mb-2">
             <Trophy size={16} className="text-yellow-500" />
-            <span className="text-xs text-muted-foreground">Posição</span>
+            <span className="text-xs text-muted-foreground">Posición</span>
           </div>
           <span className="text-2xl font-bold text-foreground">3º</span>
           <p className="text-xs text-muted-foreground">no ranking</p>
@@ -108,7 +108,7 @@ export function MobileGoalsView({ userId, productId }: MobileGoalsViewProps) {
       <Card className="p-4 bg-card">
         <div className="flex items-center gap-2 mb-4">
           <Trophy size={18} className="text-yellow-500" />
-          <h3 className="font-semibold text-foreground">Ranking do Mês</h3>
+          <h3 className="font-semibold text-foreground">Ranking do Mes</h3>
         </div>
 
         <div className="space-y-3">

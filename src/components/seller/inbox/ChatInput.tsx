@@ -205,7 +205,7 @@ export function ChatInput({
         resetUpload();
         if (onTyping) onTyping(false);
       } catch {
-        // toast ya disparado pelo useEffect
+        // toast ya disparado por el useEffect
       }
       return;
     }
@@ -218,7 +218,7 @@ export function ChatInput({
     textareaRef.current?.focus();
   };
 
-  // ---------- Áudio gravado ----------
+  // ---------- Audio gravado ----------
   const handleAudioConfirm = async (blob: Blob, durationMs: number) => {
     setIsRecording(false);
     const file = new File([blob], `audio-${Date.now()}.webm`, { type: blob.type || 'audio/webm' });
@@ -270,7 +270,7 @@ export function ChatInput({
         onChange={handleFileSelected}
       />
 
-      {/* Pré-visualização do anexo pendente */}
+      {/* Pré-visualización do anexo pendente */}
       {pending && (
         <MediaPreviewBar
           attachment={pending}
@@ -285,7 +285,7 @@ export function ChatInput({
         />
       )}
 
-      {/* Gravador de áudio inline */}
+      {/* Gravador de audio inline */}
       {showRecording ? (
         <AudioRecorder
           onConfirm={handleAudioConfirm}
@@ -487,7 +487,7 @@ export function ChatInput({
                           <Mic className="h-5 w-5" />
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent>Gravar áudio</TooltipContent>
+                      <TooltipContent>Gravar audio</TooltipContent>
                     </Tooltip>
                   </motion.div>
                 )}

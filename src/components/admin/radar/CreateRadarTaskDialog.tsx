@@ -52,7 +52,7 @@ export function CreateRadarTaskDialog({
 
   useEffect(() => {
     if (open) {
-      setTitle(defaultTitle || `Follow-up com ${lead.name}`);
+      setTitle(defaultTitle || `Follow-up con ${lead.name}`);
       setDescription(defaultDescription || '');
       setAssignee(user?.id || '');
       setPriority('high');
@@ -93,7 +93,7 @@ export function CreateRadarTaskDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Criar tarea</DialogTitle>
+          <DialogTitle>Crear tarea</DialogTitle>
           <DialogDescription>Atribua um follow-up para a equipo sobre {lead.name}.</DialogDescription>
         </DialogHeader>
 
@@ -117,7 +117,7 @@ export function CreateRadarTaskDialog({
             <div className="space-y-1">
               <Label className="text-xs">Responsável</Label>
               <Select value={assignee} onValueChange={setAssignee}>
-                <SelectTrigger><SelectValue placeholder="Selecionar..." /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Seleccionar..." /></SelectTrigger>
                 <SelectContent>
                   {(members || []).map((m: any) => (
                     <SelectItem key={m.id} value={m.id}>{m.full_name || m.email}</SelectItem>
@@ -132,7 +132,7 @@ export function CreateRadarTaskDialog({
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="low">Baixa</SelectItem>
-                  <SelectItem value="medium">Média</SelectItem>
+                  <SelectItem value="medium">Media</SelectItem>
                   <SelectItem value="high">Alta</SelectItem>
                   <SelectItem value="urgent">Urgente</SelectItem>
                 </SelectContent>
@@ -159,7 +159,7 @@ export function CreateRadarTaskDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSubmit} disabled={createTask.isPending}>
             {createTask.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            Criar tarea
+            Crear tarea
           </Button>
         </DialogFooter>
       </DialogContent>

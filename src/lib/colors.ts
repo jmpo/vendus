@@ -42,7 +42,7 @@ export function hexToHsl(hex: string): { h: number; s: number; l: number } | nul
 }
 
 /**
- * Retorna '#111827' (quase preto) ou '#ffffff' garantindo o melhor contraste
+ * Retorna '#111827' (quase preto) ou '#ffffff' garantindo o mejor contraste
  * sobre uma cor de fundo em HEX. Aceita "#rgb", "#rrggbb" e cores nomeadas básicas.
  */
 export function pickContrast(bg: string | undefined | null): string {

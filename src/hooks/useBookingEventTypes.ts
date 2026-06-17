@@ -213,7 +213,7 @@ export function useBookingEventTypes() {
   };
 }
 
-// Gerar slug a partir do nombre
+// Generar slug a partir do nombre
 export function generateSlug(name: string): string {
   return name
     .toLowerCase()

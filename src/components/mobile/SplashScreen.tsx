@@ -108,7 +108,7 @@ export function SplashScreen({ onComplete, minDuration = 2000 }: SplashScreenPro
               transition={{ delay: 1 }}
               className="text-xs text-white/80 text-center mt-3"
             >
-              Carregando...
+              Cargando...
             </motion.p>
           </motion.div>
         </motion.div>

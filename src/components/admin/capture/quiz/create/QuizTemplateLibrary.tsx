@@ -100,7 +100,7 @@ export function QuizTemplateLibrary({ open, onOpenChange, onCreated }: Props) {
         {/* Grid */}
         <div className="overflow-y-auto flex-1 -mx-1 px-1">
           {filtered.length === 0 ? (
-            <p className="text-center text-muted-foreground py-12">Nenhum template encontrado.</p>
+            <p className="text-center text-muted-foreground py-12">Ningún template encontrado.</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-2">
               {filtered.map((t) => (
@@ -128,7 +128,7 @@ export function QuizTemplateLibrary({ open, onOpenChange, onCreated }: Props) {
           )}
         </div>
 
-        {/* Modal de confirmação ao escolher */}
+        {/* Modal de confirmación ao escolher */}
         <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
           <DialogContent className="max-w-md">
             {selected && (
@@ -153,7 +153,7 @@ export function QuizTemplateLibrary({ open, onOpenChange, onCreated }: Props) {
                   <Button variant="outline" onClick={() => setSelected(null)}>Voltar</Button>
                   <Button onClick={handleUse} disabled={createFunnel.isPending || !productId || !name.trim()} className="gap-2">
                     {createFunnel.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}
-                    Criar quiz
+                    Crear quiz
                   </Button>
                 </DialogFooter>
               </>

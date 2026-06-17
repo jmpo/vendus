@@ -86,24 +86,24 @@ export function DisplayTab({ block, blocks, onUpdate }: Props) {
         <Select value={disp.device || 'all'} onValueChange={(v) => setDisp({ device: v as any })}>
           <SelectTrigger className="h-8 text-xs mt-1"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all" className="text-xs">Todos os dispositivos</SelectItem>
-            <SelectItem value="mobile" className="text-xs">Apenas mobile</SelectItem>
-            <SelectItem value="desktop" className="text-xs">Apenas desktop</SelectItem>
+            <SelectItem value="all" className="text-xs">Todos los dispositivos</SelectItem>
+            <SelectItem value="mobile" className="text-xs">Solo mobile</SelectItem>
+            <SelectItem value="desktop" className="text-xs">Solo desktop</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div className="border-t pt-3 space-y-2">
         <div className="flex items-center justify-between">
-          <Label className="text-xs font-semibold">Regras de exibição</Label>
+          <Label className="text-xs font-semibold">Regras de visualización</Label>
           <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={addRule}>
-            <Plus className="h-3 w-3 mr-1" /> adicionar regra
+            <Plus className="h-3 w-3 mr-1" /> agregar regra
           </Button>
         </div>
 
         {rules.length === 0 && (
           <p className="text-[11px] text-muted-foreground py-3 text-center border border-dashed rounded-md">
-            Sem regras — o bloco siempre aparece.
+            Sin regras — o bloco siempre aparece.
           </p>
         )}
 
@@ -124,7 +124,7 @@ export function DisplayTab({ block, blocks, onUpdate }: Props) {
             <div className="grid grid-cols-[1fr_auto] gap-1.5 items-start">
               <div className="space-y-1.5">
                 <Select value={r.source} onValueChange={(v) => updateRule(idx, { source: v })}>
-                  <SelectTrigger className="h-7 text-xs"><SelectValue placeholder="Variável" /></SelectTrigger>
+                  <SelectTrigger className="h-7 text-xs"><SelectValue placeholder="Variable" /></SelectTrigger>
                   <SelectContent>
                     {sources.map((s) => (
                       <SelectItem key={s.id} value={s.id} className="text-xs">{s.label}</SelectItem>
