@@ -1169,9 +1169,9 @@ async function executeAction(
     case 'ai_agent_outreach': {
       if (!existingLeadId) throw new Error('Nel lead for AI outreach');
 
-      const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+      const lovableApiKey = Deno.env.get('OPENAI_API_KEY');
       if (!lovableApiKey) {
-        return { lead_id: existingLeadId, skipped: true, reason: 'LOVABLE_API_KEY not configured' };
+        return { lead_id: existingLeadId, skipped: true, reason: 'OPENAI_API_KEY not configured' };
       }
 
       // Removed duplicate lovableApiKey check - already checked above
@@ -1282,14 +1282,14 @@ Valor do Deal: ${lead?.deal_value || 'No definido'}
 ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
 
       // 6. Call AI to generate message
-      const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${lovableApiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'google/gemini-2.5-flash',
+          model: 'gpt-4o-mini',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userPrompt },
@@ -1304,7 +1304,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
       }
 
       const aiData = await aiResponse.json();
-      await recordLovableUsage(supabase, webhook.organization_id, 'agent_chat', 'google/gemini-2.5-flash', aiData?.usage, 'webhook-receiver');
+      await recordLovableUsage(supabase, webhook.organization_id, 'agent_chat', 'gpt-4o-mini', aiData?.usage, 'webhook-receiver');
       const generatedMessage = aiData.choices?.[0]?.message?.content?.trim();
 
       if (!generatedMessage) {

@@ -1,0 +1,2 @@
+id,organization_id,full_name,email,avatar_url,phone,is_active,created_at,updated_at,booking_slug,booking_bio,recovery_whatsapp,work_start_time,work_end_time,farewell_message,default_theme,default_menu_state,default_connection_id,guided_onboarding_completed_at,guided_onboarding_skipped_at
+f6bca52d-c242-430e-a03b-e49785ca38f5,1955af5f-a628-4391-89ef-e56c996b23e9,Marcelo Pompa,pompa.07@gmail.com,,595991733685,t,2026-06-06 17:07:38.620338+00,2026-06-16 15:49:57.519566+00,,,,00:00:00,23:59:00,,system,open,,,2026-06-16 15:49:58.781+00

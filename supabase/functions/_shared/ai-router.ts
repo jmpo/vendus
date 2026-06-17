@@ -155,10 +155,13 @@ export async function resolveAIConfig(
     };
   }
 
-  // Fallback final: env LOVABLE_API_KEY (compat se pool lovable estiver vazio)
-  const envLovableConfig: ResolvedAIConfig = buildLovableConfig(envLovableKey, preferredModel || DEFAULT_MODEL, 'gateway');
+  // Fallback final: OpenAI directo (OPENAI_API_KEY). Compat: Lovable solo si no hay OpenAI.
+  const envOpenAIKey = Deno.env.get('OPENAI_API_KEY') || '';
+  const envFallbackConfig: ResolvedAIConfig = envOpenAIKey
+    ? buildOpenAIConfig(envOpenAIKey, 'gpt-4o-mini', 'gateway')
+    : buildLovableConfig(envLovableKey, preferredModel || DEFAULT_MODEL, 'gateway');
 
-  if (!organizationId) return envLovableConfig;
+  if (!organizationId) return envFallbackConfig;
 
   try {
     // 1) Roteamento configurado por la empresa (chave própria) tiene prioridade
@@ -209,7 +212,7 @@ export async function resolveAIConfig(
 
     // 4) Pool vazio
     if (plan.provider === 'lovable' && envLovableKey) {
-      return { ...envLovableConfig, model: preferredModel || routedModel || DEFAULT_MODEL };
+      return { ...envFallbackConfig, model: preferredModel || routedModel || DEFAULT_MODEL };
     }
     const err: any = new Error(
       `Pool da plataforma sin chaves ativas para "${plan.provider}". Peça ao Super Admin para registrar uma chave em Super Admin → IA da Plataforma.`,
@@ -219,7 +222,7 @@ export async function resolveAIConfig(
   } catch (err: any) {
     if (['AI_NO_CREDENTIAL', 'AI_PLAN_NO_PLATFORM', 'AI_POOL_EMPTY'].includes(err?.code)) throw err;
     console.warn('[ai-router] Lookup failed, using env Lovable default:', err);
-    return envLovableConfig;
+    return envFallbackConfig;
   }
 }
 

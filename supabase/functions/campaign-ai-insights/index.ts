@@ -9,7 +9,7 @@ const corsHeaders = {
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { recordLovableUsage } from "../_shared/ai-router.ts";
 
-const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    if (!LOVABLE_API_KEY) {
+    if (!OPENAI_API_KEY) {
       return new Response(JSON.stringify({ error: "AI Gateway no configurado" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -82,11 +82,11 @@ ${JSON.stringify(summary, null, 2)}
 Retorne JSON estrito no formato:
 { "insights": [ { "title": "...", "recommendation": "..." } ] }`;
 
-    const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const resp = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${LOVABLE_API_KEY}` },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${OPENAI_API_KEY}` },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "gpt-4o-mini",
         messages: [{ role: "user", content: prompt }],
         response_format: { type: "json_object" },
       }),
@@ -96,7 +96,7 @@ Retorne JSON estrito no formato:
       throw new Error(`Gateway: ${resp.status} ${txt}`);
     }
     const ai = await resp.json();
-    await recordLovableUsage(supabase, (campaign as any)?.organization_id, 'analysis_insights', 'google/gemini-2.5-flash', ai?.usage, 'campaign-ai-insights');
+    await recordLovableUsage(supabase, (campaign as any)?.organization_id, 'analysis_insights', 'gpt-4o-mini', ai?.usage, 'campaign-ai-insights');
     const content = ai.choices?.[0]?.message?.content ?? "{}";
     let parsed: any = { insights: [] };
     try { parsed = JSON.parse(content); } catch { /* leave default */ }

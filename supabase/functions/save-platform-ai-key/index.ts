@@ -22,15 +22,15 @@ async function verifyKey(provider: string, apiKey: string): Promise<{ ok: boolea
   try {
     if (provider === "lovable") {
       // Lovable Gateway: tenta listar models (header Lovable-API-Key).
-      const r = await fetch("https://ai.gateway.lovable.dev/v1/models", {
+      const r = await fetch("https://api.openai.com/v1/models", {
         headers: { "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "platform-pool" },
       });
       if (!r.ok && r.status !== 200) {
         // se 404 en ese endpoint, tenta um POST mínimo
-        const r2 = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        const r2 = await fetch("https://api.openai.com/v1/chat/completions", {
           method: "POST",
           headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
-          body: JSON.stringify({ model: "google/gemini-3-flash-preview", messages: [{ role: "user", content: "ping" }], max_tokens: 1 }),
+          body: JSON.stringify({ model: "gpt-4o-mini", messages: [{ role: "user", content: "ping" }], max_tokens: 1 }),
         });
         if (!r2.ok && ![200, 400].includes(r2.status)) {
           return { ok: false, error: `Lovable Gateway respondeu ${r2.status}: ${(await r2.text()).slice(0,200)}` };

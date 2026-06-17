@@ -23,11 +23,11 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+    const lovableApiKey = Deno.env.get('OPENAI_API_KEY');
 
     if (!lovableApiKey) {
       return new Response(
-        JSON.stringify({ error: 'LOVABLE_API_KEY no configurada' }),
+        JSON.stringify({ error: 'OPENAI_API_KEY no configurada' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -183,14 +183,14 @@ Retorne SOLO o JSON no formato especificado, sin explicações.`;
 
     console.log('Calling AI to generate funnel...');
 
-    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${lovableApiKey}`,
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'gpt-4o-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
@@ -224,7 +224,7 @@ Retorne SOLO o JSON no formato especificado, sin explicações.`;
     }
 
     const aiData = await aiResponse.json();
-    await recordLovableUsage(supabase, product?.organization_id, 'content_generation', 'google/gemini-2.5-flash', aiData?.usage, 'funnel-generate-ai');
+    await recordLovableUsage(supabase, product?.organization_id, 'content_generation', 'gpt-4o-mini', aiData?.usage, 'funnel-generate-ai');
     const aiContent = aiData.choices?.[0]?.message?.content;
 
     console.log('AI response received, parsing...');

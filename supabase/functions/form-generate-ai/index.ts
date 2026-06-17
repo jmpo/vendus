@@ -29,7 +29,7 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+    const lovableApiKey = Deno.env.get('OPENAI_API_KEY');
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -207,14 +207,14 @@ IMPORTANTE: O array debe conter exatamente ${num_questions} blocos de pregunta +
     console.log('Calling AI to generate form with enriched context...');
 
     // Call Lovable AI Gateway
-    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${lovableApiKey}`,
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'gpt-4o-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
@@ -234,7 +234,7 @@ IMPORTANTE: O array debe conter exatamente ${num_questions} blocos de pregunta +
     }
 
     const aiData = await aiResponse.json();
-    await recordLovableUsage(supabase, product?.organization_id, 'content_generation', 'google/gemini-2.5-flash', aiData?.usage, 'form-generate-ai');
+    await recordLovableUsage(supabase, product?.organization_id, 'content_generation', 'gpt-4o-mini', aiData?.usage, 'form-generate-ai');
     const aiContent = aiData.choices?.[0]?.message?.content;
 
     console.log('AI response received, parsing...');

@@ -1,0 +1,10 @@
+id,organization_id,capability,provider,model,prompt_tokens,completion_tokens,total_tokens,source,edge_function,created_at,platform_key_id,key_label
+16d75f1d-2bdf-4967-b132-e28d5fd70d0c,1955af5f-a628-4391-89ef-e56c996b23e9,agent_chat,lovable,google/gemini-3-flash-preview,5982,40,6022,platform,webchat-bot,2026-06-16 16:29:12.993213+00,,
+c3a6e528-6755-4f7d-90c2-a61e6d546cbc,1955af5f-a628-4391-89ef-e56c996b23e9,agent_chat,lovable,google/gemini-3-flash-preview,6185,32,6217,platform,webchat-bot,2026-06-16 16:30:30.515566+00,,
+0a57ece9-0c33-4326-b255-544217ad3945,1955af5f-a628-4391-89ef-e56c996b23e9,agent_chat,lovable,google/gemini-3-flash-preview,6322,20,6342,platform,webchat-bot,2026-06-16 16:31:17.16794+00,,
+78db5986-c8ff-4a53-8a46-067fc0bcd7f8,1955af5f-a628-4391-89ef-e56c996b23e9,agent_chat,lovable,google/gemini-3-flash-preview,6113,43,6156,platform,webchat-bot:followup,2026-06-16 16:31:21.264653+00,,
+95dd8d04-2782-42f3-b3d6-04866903da58,1955af5f-a628-4391-89ef-e56c996b23e9,agent_chat,lovable,google/gemini-3-flash-preview,6499,20,6519,platform,webchat-bot,2026-06-16 16:32:25.259776+00,,
+dd178f95-6b63-446f-852e-47eb333a36de,1955af5f-a628-4391-89ef-e56c996b23e9,agent_chat,lovable,google/gemini-3-flash-preview,6290,58,6348,platform,webchat-bot:followup,2026-06-16 16:32:28.141763+00,,
+cd920338-2aaf-469a-aba0-3139fe03a15c,1955af5f-a628-4391-89ef-e56c996b23e9,agent_chat,lovable,google/gemini-3-flash-preview,6637,20,6657,platform,webchat-bot,2026-06-16 16:34:24.53497+00,,
+3ec9de59-4921-454f-a3c8-8e155f0e7f06,1955af5f-a628-4391-89ef-e56c996b23e9,agent_chat,lovable,google/gemini-3-flash-preview,6428,62,6490,platform,webchat-bot:followup,2026-06-16 16:34:27.839682+00,,
+9fc0d5e6-2e43-4787-bf05-019d405de956,1955af5f-a628-4391-89ef-e56c996b23e9,agent_chat,lovable,google/gemini-3-flash-preview,6727,69,6796,platform,webchat-bot,2026-06-16 16:35:48.953309+00,,

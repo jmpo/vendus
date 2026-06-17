@@ -239,18 +239,18 @@ O QUE NUNCA FAZER
 - Recusar preguntas estratégicas de ventas alegando falta de información`;
 
     // Resolve provedor via roteamento da organización (OpenAI direta ou Lovable Gateway)
-    const cfg = await resolveAIConfig(supabase, organizationId, 'sales_copilot', 'google/gemini-2.5-flash');
+    const cfg = await resolveAIConfig(supabase, organizationId, 'sales_copilot', 'gpt-4o-mini');
     logAIConfig('sales-copilot', cfg);
 
     const doCall = async (useFallback = false) => {
       const callCfg = useFallback
         ? {
-            endpoint: 'https://ai.gateway.lovable.dev/v1/chat/completions',
+            endpoint: 'https://api.openai.com/v1/chat/completions',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${Deno.env.get('LOVABLE_API_KEY') ?? ''}`,
+              Authorization: `Bearer ${Deno.env.get('OPENAI_API_KEY') ?? ''}`,
             },
-            model: 'google/gemini-2.5-flash',
+            model: 'gpt-4o-mini',
           }
         : cfg;
       const payload = {

@@ -185,16 +185,16 @@ async function extractDocumentFaithfully(fileData: Blob, mimeType: string, filen
   
   console.log('[process-training-material] Document base64 length:', base64.length, 'type:', mimeType);
 
-  const apiKey = Deno.env.get('LOVABLE_API_KEY');
+  const apiKey = Deno.env.get('OPENAI_API_KEY');
   
-  const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+  const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: 'google/gemini-2.5-flash',
+      model: 'gpt-4o-mini',
       messages: [
         {
           role: 'system',
@@ -239,7 +239,7 @@ REGRAS ABSOLUTAS:
   }
 
   const aiData = await aiResponse.json();
-  if (supabase) await recordLovableUsage(supabase, organizationId, 'content_generation', 'google/gemini-2.5-flash', aiData?.usage, 'process-training-material');
+  if (supabase) await recordLovableUsage(supabase, organizationId, 'content_generation', 'gpt-4o-mini', aiData?.usage, 'process-training-material');
   const content = aiData.choices?.[0]?.message?.content || '';
   console.log('[process-training-material] Faithful extraction complete, length:', content.length);
   return content;

@@ -1,0 +1,2 @@
+id,organization_id,product_id,conversation_id,lead_id,from_agent_id,to_agent_id,matched_term,match_type,channel,created_at
+9f3616ff-24c4-44d1-b4f4-69b64264777c,1955af5f-a628-4391-89ef-e56c996b23e9,11111111-aaaa-4aaa-aaaa-000000000001,77beddde-0adf-4633-a60d-62fa08f082fc,2fd28c99-b854-4ea7-982e-85b143d73187,f099ee5c-79ae-4654-bac9-fe7dbca43136,5fd882ea-a6d3-4e67-8283-9b1ab17fa8fd,tool:transfer_to_agent,transfer_tool,,2026-06-16 16:35:49.902715+00

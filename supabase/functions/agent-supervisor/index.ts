@@ -2,7 +2,8 @@
 // Avalia regras de roteamento e, em fallback, usa LLM para decidir cuál especialista responde.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { recordLovableUsage } from "../_shared/ai-router.ts";
+import { recordAIUsage } from "../_shared/ai-router.ts";
+import { aiChat } from "../_shared/ai-call.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -35,8 +36,7 @@ async function llmFallback(
     description?: string;
   }>,
 ): Promise<{ specialist_id: string; reason: string } | null> {
-  const apiKey = Deno.env.get("LOVABLE_API_KEY");
-  if (!apiKey || specialists.length === 0) return null;
+  if (specialists.length === 0) return null;
 
   const conversationSnippet = (context.recent_messages ?? [])
     .slice(-6)
@@ -69,51 +69,47 @@ ${
   }`;
 
   try {
-    const resp = await fetch(
-      "https://ai.gateway.lovable.dev/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt },
-          ],
-          tools: [
-            {
-              type: "function",
-              function: {
-                name: "select_specialist",
-                description: "Seleciona o especialista que debe responder.",
-                parameters: {
-                  type: "object",
-                  properties: {
-                    specialist_id: {
-                      type: "string",
-                      description: "id do especialista escolhido",
-                    },
-                    reason: {
-                      type: "string",
-                      description: "Motivo corto (1 frase) da elegí",
-                    },
+    const { response: resp, config } = await aiChat({
+      supabase,
+      organizationId: context.organization_id,
+      capability: "analysis_insights",
+      model: "google/gemini-2.5-flash",
+      label: "agent-supervisor",
+      body: {
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        tools: [
+          {
+            type: "function",
+            function: {
+              name: "select_specialist",
+              description: "Seleciona o especialista que debe responder.",
+              parameters: {
+                type: "object",
+                properties: {
+                  specialist_id: {
+                    type: "string",
+                    description: "id do especialista escolhido",
                   },
-                  required: ["specialist_id", "reason"],
-                  additionalProperties: false,
+                  reason: {
+                    type: "string",
+                    description: "Motivo corto (1 frase) da elegí",
+                  },
                 },
+                required: ["specialist_id", "reason"],
+                additionalProperties: false,
               },
             },
-          ],
-          tool_choice: {
-            type: "function",
-            function: { name: "select_specialist" },
           },
-        }),
+        ],
+        tool_choice: {
+          type: "function",
+          function: { name: "select_specialist" },
+        },
       },
-    );
+    });
 
     if (!resp.ok) {
       console.error("LLM fallback failed:", resp.status, await resp.text());
@@ -121,7 +117,7 @@ ${
     }
 
     const json = await resp.json();
-    await recordLovableUsage(supabase, context.organization_id, 'analysis_insights', 'google/gemini-2.5-flash', json?.usage, 'agent-supervisor');
+    await recordAIUsage(supabase, context.organization_id, config, 'analysis_insights', json?.usage, 'agent-supervisor');
     const toolCall = json?.choices?.[0]?.message?.tool_calls?.[0];
     if (!toolCall) return null;
     const args = JSON.parse(toolCall.function.arguments);

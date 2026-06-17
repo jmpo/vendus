@@ -49,8 +49,8 @@ serve(async (req) => {
     const { product_id, agent_type, custom_context, scope, optimize_field, current_value } =
       await req.json() as AgentGenerationRequest;
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -257,14 +257,14 @@ ${orgSupportMaterials ? `📚 MATERIAIS DE SUPORTE GLOBAIS:\n${orgSupportMateria
         handoff_triggers: "Sugiere 3-5 situações em que o agente debe transferir para um humano.",
       };
 
-      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
+          model: "gpt-4o-mini",
           messages: [
             {
               role: "system",
@@ -323,7 +323,7 @@ Devuelve una versão otimizada que respeite o tipo del agente e o contexto real.
       }
 
       const data = await response.json();
-      await recordLovableUsage(supabase, organizationId, 'content_generation', 'google/gemini-2.5-flash', data?.usage, 'generate-agent-ai');
+      await recordLovableUsage(supabase, organizationId, 'content_generation', 'gpt-4o-mini', data?.usage, 'generate-agent-ai');
       const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
       if (toolCall?.function?.arguments) {
         const result = JSON.parse(toolCall.function.arguments);
@@ -398,14 +398,14 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (ya
       ? `Crea o agente ${agent_type.toUpperCase()} para el producto "${productCtx.name}" da ${orgName}. Usa o cérebro do producto (descripción, ICP, objeções, pitch) para personalizar o additional_prompt. Usa o template blindado como base.`
       : `Crea o agente ${agent_type.toUpperCase()} para la ${orgName}. Usa o template blindado como base.`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "gpt-4o-mini",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userInstruction },
@@ -541,7 +541,7 @@ NÃO retorne timing, splitting nem style — esses ficam no default do front (ya
     }
 
     const data = await response.json();
-    await recordLovableUsage(supabase, organizationId, 'content_generation', 'google/gemini-2.5-flash', data?.usage, 'generate-agent-ai');
+    await recordLovableUsage(supabase, organizationId, 'content_generation', 'gpt-4o-mini', data?.usage, 'generate-agent-ai');
     const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
 
     if (toolCall?.function?.arguments) {

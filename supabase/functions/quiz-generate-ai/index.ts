@@ -41,9 +41,9 @@ serve(async (req) => {
   }
 
   try {
-    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+    const lovableApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!lovableApiKey) {
-      return new Response(JSON.stringify({ error: 'LOVABLE_API_KEY no configurada' }),
+      return new Response(JSON.stringify({ error: 'OPENAI_API_KEY no configurada' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
@@ -155,11 +155,11 @@ ${context}
 
 Retorne SOLO o JSON.`;
 
-    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${lovableApiKey}` },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'gpt-4o-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
@@ -178,7 +178,7 @@ Retorne SOLO o JSON.`;
     }
 
     const aiData = await aiResponse.json();
-    await recordLovableUsage(supabase, billingOrgId, 'content_generation', 'google/gemini-2.5-flash', aiData?.usage, 'quiz-generate-ai');
+    await recordLovableUsage(supabase, billingOrgId, 'content_generation', 'gpt-4o-mini', aiData?.usage, 'quiz-generate-ai');
     const content = aiData.choices?.[0]?.message?.content || '';
 
     let cleanContent = content.trim();

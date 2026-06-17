@@ -93,11 +93,11 @@ Deno.serve(async (req) => {
     );
 
     // (provider WhatsApp eliminado — siempre Evolution Go)
-    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+    const lovableApiKey = Deno.env.get('OPENAI_API_KEY');
 
     if (!lovableApiKey) {
       return new Response(
-        JSON.stringify({ error: 'Missing LOVABLE_API_KEY' }),
+        JSON.stringify({ error: 'Missing OPENAI_API_KEY' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -252,14 +252,14 @@ Tentativa ${attemptNumber + 1} de ${maxFollowups}
 Genera umel mensaje de follow-up estratégica DIFERENTE das anteriores.`;
 
         // Call AI
-        const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+        const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${lovableApiKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'google/gemini-2.5-flash',
+            model: 'gpt-4o-mini',
             messages: [
               { role: 'system', content: systemPrompt },
               { role: 'user', content: userPrompt },
@@ -275,7 +275,7 @@ Genera umel mensaje de follow-up estratégica DIFERENTE das anteriores.`;
         }
 
         const aiData = await aiResponse.json();
-        await recordLovableUsage(supabase, item.organization_id, 'agent_chat', 'google/gemini-2.5-flash', aiData?.usage, 'ai-followup-cron');
+        await recordLovableUsage(supabase, item.organization_id, 'agent_chat', 'gpt-4o-mini', aiData?.usage, 'ai-followup-cron');
         const followupMessage = aiData.choices?.[0]?.message?.content?.trim();
 
         if (!followupMessage) {

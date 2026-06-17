@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY")!;
+    const lovableApiKey = Deno.env.get("OPENAI_API_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const {
@@ -204,14 +204,14 @@ Teléfono: ${leadPhone}
 Temperatura: ${lead?.temperature || "indefinida"}
 ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
 
-        const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${lovableApiKey}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model: "google/gemini-2.5-flash",
+            model: "gpt-4o-mini",
             messages: [
               { role: "system", content: systemPrompt },
               { role: "user", content: userPrompt },
@@ -225,7 +225,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
         }
 
         const aiData = await aiResponse.json();
-        await recordLovableUsage(supabase, organization_id, 'agent_chat', 'google/gemini-2.5-flash', aiData?.usage, 'manual-outreach');
+        await recordLovableUsage(supabase, organization_id, 'agent_chat', 'gpt-4o-mini', aiData?.usage, 'manual-outreach');
         const generatedMessage = aiData.choices?.[0]?.message?.content?.trim();
         if (!generatedMessage) {
           results.push({ leadId, error: "AI returned empty message" });

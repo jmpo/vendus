@@ -8,7 +8,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-const JUDGE_MODEL = "google/gemini-2.5-flash";
+const JUDGE_MODEL = "gpt-4o-mini";
 
 interface EvalRequest {
   conversation_id?: string;
@@ -35,7 +35,7 @@ async function judgeConversation(
   }Conversación:\n${transcript.slice(0, 12000)}`;
 
   const resp = await fetch(
-    "https://ai.gateway.lovable.dev/v1/chat/completions",
+    "https://api.openai.com/v1/chat/completions",
     {
       method: "POST",
       headers: {
@@ -219,8 +219,8 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
-    const apiKey = Deno.env.get("LOVABLE_API_KEY");
-    if (!apiKey) throw new Error("LOVABLE_API_KEY missing");
+    const apiKey = Deno.env.get("OPENAI_API_KEY");
+    if (!apiKey) throw new Error("OPENAI_API_KEY missing");
 
     const body = (await req.json().catch(() => ({}))) as EvalRequest;
 

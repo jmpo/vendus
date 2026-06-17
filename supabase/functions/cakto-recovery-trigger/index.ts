@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
-  const lovableApiKey = Deno.env.get('LOVABLE_API_KEY')!;
+  const lovableApiKey = Deno.env.get('OPENAI_API_KEY')!;
 
   let payload: { cakto_order_id?: string; organization_id?: string };
   try {
@@ -345,14 +345,14 @@ REGRAS DA MENSAGEM INICIAL:
 
   const userPrompt = `Genera el mensaje inicial de WhatsApp para esta situación. Cliente: ${order.customer_name || 'sem nombre'}. Teléfono: ${phone}.`;
 
-  const aiResp = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+  const aiResp = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${lovableApiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'google/gemini-2.5-flash',
+      model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
@@ -378,7 +378,7 @@ REGRAS DA MENSAGEM INICIAL:
   }
 
   const aiData = await aiResp.json();
-  await recordLovableUsage(supabase, organization_id, 'agent_chat', 'google/gemini-2.5-flash', aiData?.usage, 'cakto-recovery-trigger');
+  await recordLovableUsage(supabase, organization_id, 'agent_chat', 'gpt-4o-mini', aiData?.usage, 'cakto-recovery-trigger');
   const message: string | undefined = aiData.choices?.[0]?.message?.content?.trim();
   if (!message) {
     return json({ error: 'AI returned empty' }, 500);

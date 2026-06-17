@@ -23,12 +23,12 @@ interface EmbedPayload {
 }
 
 async function generateEmbedding(text: string): Promise<number[]> {
-  const apiKey = Deno.env.get("LOVABLE_API_KEY");
-  if (!apiKey) throw new Error("LOVABLE_API_KEY missing");
+  const apiKey = Deno.env.get("OPENAI_API_KEY");
+  if (!apiKey) throw new Error("OPENAI_API_KEY missing");
 
   // Lovable AI Gateway suporta endpoint de embeddings compatível con OpenAI
   const resp = await fetch(
-    "https://ai.gateway.lovable.dev/v1/embeddings",
+    "https://api.openai.com/v1/embeddings",
     {
       method: "POST",
       headers: {

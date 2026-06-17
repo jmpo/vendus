@@ -5,6 +5,8 @@
 import { resolveAIConfig, logAIConfig, prepareAIRequestBody, ResolvedAIConfig, AICapability } from './ai-router.ts';
 
 const LOVABLE_GATEWAY = 'https://ai.gateway.lovable.dev/v1/chat/completions';
+const OPENAI_CHAT_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
+const DEFAULT_OPENAI_MODEL = 'gpt-4o-mini';
 
 export interface AICallOptions {
   organizationId?: string | null;
@@ -21,15 +23,16 @@ export interface AICallOptions {
   supabase?: any;
 }
 
-async function lovableFallbackResponse(model: string, body: Record<string, any>) {
-  const lovableKey = Deno.env.get('LOVABLE_API_KEY') ?? '';
-  return await fetch(LOVABLE_GATEWAY, {
+async function openaiFallbackResponse(model: string, body: Record<string, any>) {
+  const openaiKey = Deno.env.get('OPENAI_API_KEY') ?? '';
+  const adapted = !model || model.includes('/') ? DEFAULT_OPENAI_MODEL : model;
+  return await fetch(OPENAI_CHAT_ENDPOINT, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${lovableKey}`,
+      Authorization: `Bearer ${openaiKey}`,
     },
-    body: JSON.stringify({ ...body, model }),
+    body: JSON.stringify({ ...body, model: adapted }),
   });
 }
 
@@ -53,15 +56,15 @@ export async function aiChat(opts: AICallOptions): Promise<{
   if (supabase && organizationId) {
     cfg = await resolveAIConfig(supabase, organizationId, capability, model);
   } else {
-    const lovableKey = Deno.env.get('LOVABLE_API_KEY') ?? '';
+    const openaiKey = Deno.env.get('OPENAI_API_KEY') ?? '';
     cfg = {
-      endpoint: LOVABLE_GATEWAY,
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${lovableKey}` },
-      model: model || 'google/gemini-3-flash-preview',
-      provider: 'lovable',
+      endpoint: OPENAI_CHAT_ENDPOINT,
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${openaiKey}` },
+      model: (!model || model.includes('/')) ? DEFAULT_OPENAI_MODEL : model,
+      provider: 'openai',
       source: 'gateway',
       allowFallback: false,
-      apiKey: lovableKey,
+      apiKey: openaiKey,
     };
   }
 
@@ -74,9 +77,9 @@ export async function aiChat(opts: AICallOptions): Promise<{
   });
 
   let usedFallback = false;
-  if (!response.ok && cfg.provider !== 'lovable' && cfg.allowFallback && response.status !== 429) {
-    console.warn(`[${label ?? 'ai-call'}] ${cfg.provider} returned ${response.status}, falling back to Lovable AI`);
-    response = await lovableFallbackResponse(model || 'google/gemini-3-flash-preview', body);
+  if (!response.ok && cfg.provider !== 'openai' && cfg.allowFallback && response.status !== 429) {
+    console.warn(`[${label ?? 'ai-call'}] ${cfg.provider} returned ${response.status}, falling back to OpenAI`);
+    response = await openaiFallbackResponse(model || DEFAULT_OPENAI_MODEL, body);
     usedFallback = true;
   }
 

@@ -104,21 +104,21 @@ async function extractWebsiteContent(url: string): Promise<{ title: string; cont
 
 // Usa Lovable AI to generate transcript summary for YouTube (since we can't get actual transcript)
 async function generateYouTubeSummary(videoInfo: any, videoId: string, productId?: string): Promise<string> {
-  const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+  const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
   
-  if (!LOVABLE_API_KEY) {
+  if (!OPENAI_API_KEY) {
     return `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}\n\nNota: Transcrição automática no disponible. Adicione manualmente os pontos-chave do vídeo.`;
   }
 
   try {
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
@@ -155,7 +155,7 @@ Formate de forma clara e estruturada para fácil edição.`
       if (productId) {
         const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
         const { data: prod } = await sb.from('products').select('organization_id').eq('id', productId).maybeSingle();
-        await recordLovableUsage(sb, prod?.organization_id, 'content_generation', 'google/gemini-2.5-flash', data?.usage, 'process-knowledge-source');
+        await recordLovableUsage(sb, prod?.organization_id, 'content_generation', 'gpt-4o-mini', data?.usage, 'process-knowledge-source');
       }
     } catch (_) { /* non-fatal */ }
     return data.choices?.[0]?.message?.content || `Vídeo: ${videoInfo.title}\nAutor: ${videoInfo.author_name}`;
