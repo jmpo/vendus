@@ -69,7 +69,7 @@ export function CadenceApiKeys({ orgId }: Props) {
   };
 
   const revoke = async (id: string) => {
-    if (!confirm('Revogar esta chave? Aplicações que usam ela deixarão de funcionar.')) return;
+    if (!confirm('Revogar esta chave? Aplicaciones que usam ela deixarão de funcionar.')) return;
     const { error } = await supabase.from('cadence_api_keys' as any)
       .update({ revoked_at: new Date().toISOString() }).eq('id', id);
     if (error) { toast.error(error.message); return; }

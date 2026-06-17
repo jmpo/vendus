@@ -128,7 +128,7 @@ export function QuizTemplateLibrary({ open, onOpenChange, onCreated }: Props) {
           )}
         </div>
 
-        {/* Modal de confirmación ao escolher */}
+        {/* Modal de confirmación ao elegir */}
         <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
           <DialogContent className="max-w-md">
             {selected && (

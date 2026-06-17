@@ -111,7 +111,7 @@ export function FormBlockMedia({ block, className }: FormBlockMediaProps) {
           <div className="flex items-center justify-center h-48 rounded-xl border-2 border-dashed bg-muted/30 text-muted-foreground">
             <p className="text-sm text-center">
               Cole a URL do YouTube, Vimeo ou Loom no editor.<br />
-              {url && <span className="text-xs text-destructive">URL no reconhecida.</span>}
+              {url && <span className="text-xs text-destructive">URL no reconocida.</span>}
             </p>
           </div>
         </div>

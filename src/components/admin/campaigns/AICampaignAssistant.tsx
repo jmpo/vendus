@@ -37,7 +37,7 @@ export function AICampaignAssistant({ campaignId }: { campaignId: string }) {
       <CardContent className="space-y-3">
         {!insights && !loading && (
           <p className="text-sm text-muted-foreground">
-            Hacé clic em "Analisar campaña" para receber recomendações sobre mejor horario, agente e contexto a partir dos dados reais.
+            Hacé clic em "Analisar campaña" para receber recomendaciones sobre mejor horario, agente e contexto a partir dos dados reais.
           </p>
         )}
         {summary && (

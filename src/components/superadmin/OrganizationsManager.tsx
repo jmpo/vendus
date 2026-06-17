@@ -643,7 +643,7 @@ export function OrganizationsManager({ onViewOrganization }: OrganizationsManage
             </AlertDialogTitle>
             <AlertDialogDescription>
               {suspendingOrg?.status === 'active'
-                ? `Ao suspender "${suspendingOrg?.name}", todos los usuarios de la empresa perderão acesso até a reativação. Deseja continuar?`
+                ? `Ao suspender "${suspendingOrg?.name}", todos los usuarios de la empresa perderão acesso até a reactivación. Deseja continuar?`
                 : `Reactivar "${suspendingOrg?.name}" devolverá o acesso aos usuarios. Deseja continuar?`}
             </AlertDialogDescription>
           </AlertDialogHeader>

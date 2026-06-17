@@ -429,7 +429,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
                 <div className="text-xs text-muted-foreground">
                   {Array.isArray(jsonPreview.can_do) ? `${jsonPreview.can_do.length} capacidades` : '—'}
                   {' · '}
-                  {Array.isArray(jsonPreview.cannot_do) ? `${jsonPreview.cannot_do.length} restrições` : '—'}
+                  {Array.isArray(jsonPreview.cannot_do) ? `${jsonPreview.cannot_do.length} restricciones` : '—'}
                 </div>
               </Card>
             )}
@@ -468,7 +468,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
             </Card>
 
             <p className="text-xs text-muted-foreground">
-              A IA lê o contenido e gera um borrador del agente (nombre, misión, regras, tom, gatilhos).
+              A IA lê o contenido e gera um borrador del agente (nombre, misión, regras, tom, disparadores).
               Usted revisa antes de guardar.
             </p>
           </TabsContent>

@@ -207,7 +207,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
               <div className="space-y-3">
                 <Label className="text-base font-medium">Descreva o contexto da su campaña</Label>
                 <Textarea
-                  placeholder="Ex: Quero calificar leads da campaña de Black Friday focando em igrejas que aún no tiene app propio e estão cansadas de pagar mensalidades altas..."
+                  placeholder="Ex: Quero calificar leads da campaña de Black Friday focando em igrejas que aún no tiene app propio e están cansadas de pagar mensalidades altas..."
                   value={userContext}
                   onChange={(e) => setUserContext(e.target.value)}
                   className="min-h-[140px] resize-none"
@@ -348,7 +348,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
               className="space-y-6 py-4"
             >
               <div className="space-y-3">
-                <Label className="text-base font-medium">Tom de comunicação</Label>
+                <Label className="text-base font-medium">Tom de comunicación</Label>
                 <div className="grid grid-cols-3 gap-2">
                   {tones.map((t) => (
                     <button

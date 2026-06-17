@@ -29,7 +29,7 @@ export function SystemHealth() {
       icon: Database 
     },
     { 
-      name: 'Autenticação', 
+      name: 'Autenticación', 
       status: 'operational', 
       uptime: 99.99, 
       latency: '35ms',

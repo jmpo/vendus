@@ -43,7 +43,7 @@ export function WhatsAppDisconnectedBanner() {
       <div className="flex-1 text-sm">
         <span className="font-medium text-destructive">WhatsApp desconectado.</span>{' '}
         <span className="text-foreground/80">
-          Mensajes automáticas de pós-venta e atención no estão siendo enviadas.
+          Mensajes automáticas de pós-venta e atención no están siendo enviadas.
           {canManage ? ' Reconecte a instância para retomar.' : ' Avise um admin.'}
         </span>
       </div>

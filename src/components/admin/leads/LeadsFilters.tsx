@@ -601,7 +601,7 @@ export function LeadsFilters({
                 )}
               </div>
 
-              {/* Exclusões */}
+              {/* Exclusiones */}
               <div className="space-y-3 rounded-md border border-destructive/30 bg-destructive/5 p-3">
                 <div className="flex items-center gap-2">
                   <X className="h-4 w-4 text-destructive" />

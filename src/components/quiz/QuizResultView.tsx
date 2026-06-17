@@ -244,7 +244,7 @@ export function QuizResultView({
                   style={{ backgroundColor: `${accent}10`, border: `1px solid ${accent}40` }}
                 >
                   <p className="text-[10px] uppercase tracking-wider font-semibold mb-1" style={{ color: accent }}>
-                    Recomendação
+                    Recomendación
                   </p>
                   <p className="text-sm font-medium text-foreground">{aiResult.oferta}</p>
                 </div>

@@ -85,7 +85,7 @@ export function MessageBubble({
   const [editContent, setEditContent] = useState(content);
   const [showActions, setShowActions] = useState(false);
 
-  // Deriva status real considerando metadata.delivery_status (mensajes WhatsApp falhas)
+  // Deriva status real considerando metadata.delivery_status (mensajes WhatsApp fallos)
   const deliveryStatus = (metadata as any)?.delivery_status as string | undefined;
   const deliveryError = (metadata as any)?.error as string | undefined;
   const effectiveStatus = deliveryStatus === 'failed' ? 'failed' : status;

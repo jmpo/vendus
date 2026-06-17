@@ -85,7 +85,7 @@ export function CompanySettings() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <Building2 className="h-4 w-4" /> Identificação
+            <Building2 className="h-4 w-4" /> Identificación
           </CardTitle>
           <CardDescription>Nombre e dados fiscais de la empresa.</CardDescription>
         </CardHeader>

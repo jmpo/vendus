@@ -42,7 +42,7 @@ export function SuperAdminRoute({ children }: SuperAdminRouteProps) {
   if (!user) return <Navigate to="/login" replace />;
 
   if (!isSuperAdmin) {
-    // Aguarda contagem para decidir entre "redirecionar" ou "oferecer auto-promoção"
+    // Aguarda contagem para decidir entre "redirecionar" ou "oferecer auto-promoción"
     if (countLoading) {
       return (
         <div className="min-h-screen bg-background flex items-center justify-center">
@@ -52,7 +52,7 @@ export function SuperAdminRoute({ children }: SuperAdminRouteProps) {
     }
 
     // Bootstrap: ningún super admin existe aún — esta é a primera pessoa entrando
-    // no painel após clonar o projeto. Oferecemos auto-promoção.
+    // no painel após clonar o projeto. Oferecemos auto-promoción.
     if ((superAdminCount ?? 0) === 0) {
       const promote = async () => {
         setPromoting(true);

@@ -152,7 +152,7 @@ export function WhatsAppConnectionTab({ funnel }: Props) {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Como funciona o gatilho</CardTitle>
+          <CardTitle className="text-base">Como funciona o disparador</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-2">
           <p>

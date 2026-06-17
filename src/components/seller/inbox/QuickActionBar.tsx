@@ -35,7 +35,7 @@ interface QuickActionBarProps {
   onSendFlow?: () => void;
   onSendCadence?: () => void;
   onAnalyze?: () => void;
-  /** Cria um evento de calendario (atalho rápido). */
+  /** Cria um evento de calendario (atajo rápido). */
   onCreateEvent?: () => void;
   /** Cria uma oportunidad de venta. Visível só con lead vinculado. */
   onCreateDeal?: () => void;

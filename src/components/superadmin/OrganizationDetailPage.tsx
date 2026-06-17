@@ -650,7 +650,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                 <div className="space-y-4 py-4">
                   <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
                     <p className="text-sm text-muted-foreground mb-2">
-                      Compartilhe este link con <strong>{createdInvite.email}</strong>:
+                      Compartí este link con <strong>{createdInvite.email}</strong>:
                     </p>
                     <div className="flex items-center gap-2">
                       <Input 
@@ -806,7 +806,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
 
                 {manageAction === 'confirm_email' && (
                   <p className="text-sm text-muted-foreground">
-                    Confirmar manualmente o email deste usuario, dispensando a verificação por link. Usa cuando o usuario no recebeu ou perdeu o email de validación.
+                    Confirmar manualmente o email deste usuario, dispensando a verificación por link. Usa cuando o usuario no recebeu ou perdeu o email de validación.
                   </p>
                 )}
 

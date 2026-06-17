@@ -208,7 +208,7 @@ export function ChatArea({
   // Group messages by date
   const groupedMessages = useMemo(() => {
     // Dedup visual: cuando a misma mensaje outbound aparece em duplicidade
-    // (ex.: burbuja "Agente" + burbuja "Agente IA", o eco "via aparelho"),
+    // (ex.: burbuja "Agente" + burbuja "Agente IA", o eco "via dispositivo"),
     // mantém solo UMA burbuja — a de maior prioridade visual.
     const WINDOW_MS = 5 * 60 * 1000;
     const normalize = (s: string | null | undefined) =>
@@ -266,7 +266,7 @@ export function ChatArea({
     return groups;
   }, [messages]);
 
-  // Auto-scroll suave: dispara só cuando muda o nº de mensajes o estado de digitação
+  // Auto-scroll suave: dispara só cuando muda o nº de mensajes o estado de tipeo
   useEffect(() => {
     if (scrollRef.current) {
       const scrollElement = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');

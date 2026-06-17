@@ -138,7 +138,7 @@ export function WhatsAppHumanizationSettings() {
             </Section>
 
             <Section
-              title="Indicador de digitação"
+              title="Indicador de tipeo"
               hint="Tempo simulado de 'digitando...' antes de cada balão."
             >
               <Pair>
@@ -175,7 +175,7 @@ export function WhatsAppHumanizationSettings() {
               />
               <Pair>
                 <Field
-                  label="Velocidade de digitação (chars/s)"
+                  label="Velocidade de tipeo (chars/s)"
                   hint="Predeterminado 28. Quanto maior, mais rápido digita."
                   value={form.presence_typing_chars_per_sec}
                   onChange={(v) => update('presence_typing_chars_per_sec', v)}
@@ -194,16 +194,16 @@ export function WhatsAppHumanizationSettings() {
             </Section>
 
             <Section
-              title="Anti-duplicação de respuestas"
+              title="Anti-duplicación de respuestas"
               hint="Bloqueia o envio de respuestas idênticas para a misma conversación em uma janela de tempo."
             >
               <Toggle
-                label="Ativar anti-duplicação"
+                label="Ativar anti-duplicación"
                 checked={form.ai_dedup_enabled}
                 onChange={(v) => update('ai_dedup_enabled', v)}
               />
               <Field
-                label="Janela anti-duplicação (ms)"
+                label="Janela anti-duplicación (ms)"
                 hint="Predeterminado 120000 ms (2 minutos)."
                 value={form.ai_dedup_window_ms}
                 onChange={(v) => update('ai_dedup_window_ms', v)}

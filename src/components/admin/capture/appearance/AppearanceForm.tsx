@@ -423,7 +423,7 @@ function QuizOptionsFields({ opts, setOpt }: { opts: QuizChannelOptions; setOpt:
         </Select>
       </div>
       <div className="space-y-1.5">
-        <Label>Transição entre preguntas</Label>
+        <Label>Transición entre preguntas</Label>
         <Select value={opts.transition} onValueChange={(v) => setOpt({ transition: v })}>
           <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>

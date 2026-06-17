@@ -52,7 +52,7 @@ export function PlatformAIKeysManager() {
           <p className="text-sm text-muted-foreground max-w-2xl mt-1">
             Registre las claves de IA que se compartirán entre las empresas con el plan "IA de la plataforma" activado.
             Usted puede registrar várias chaves do mismo provedor — o roteador distribui as llamadas por estratégia
-            (aleatório ponderado ou round-robin) conforme o plan escolher.
+            (aleatório ponderado ou round-robin) conforme o plan elegir.
           </p>
         </div>
         <Button onClick={() => { setEditing(null); setDialogOpen(true); }}>

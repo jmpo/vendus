@@ -175,7 +175,7 @@ export const QuizCategorizedPalette = memo(function QuizCategorizedPalette({ onA
   );
 });
 
-/** Aplica o preset escolhido sobre um FunnelBlock recém-creado. */
+/** Aplica o preset elegido sobre um FunnelBlock recém-creado. */
 export function applyPresetToBlockData(
   preset: string | undefined,
   data: Record<string, any>,

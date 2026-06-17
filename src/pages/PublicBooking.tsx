@@ -125,7 +125,7 @@ export default function PublicBooking() {
   const handleConversationalSubmit = async (data: BookingFormData) => {
     if (!eventType || !selectedDate) return;
 
-    // Horario fixo de Brasília (-03:00, sin horario de verão) — slots vêm em hora local BRT
+    // Horario fixo de Brasília (-03:00, sin horario de verán) — slots vêm em hora local BRT
     const startTime = `${format(selectedDate, 'yyyy-MM-dd')}T${data.selectedSlot.start}:00-03:00`;
     
     // Collect additional info
@@ -169,7 +169,7 @@ export default function PublicBooking() {
     e.preventDefault();
     if (!eventType || !selectedDate || !selectedSlot) return;
 
-    // Horario fixo de Brasília (-03:00, sin horario de verão) — slots vêm em hora local BRT
+    // Horario fixo de Brasília (-03:00, sin horario de verán) — slots vêm em hora local BRT
     const startTime = `${format(selectedDate, 'yyyy-MM-dd')}T${selectedSlot.start}:00-03:00`;
     
     // Collect additional info from custom questions

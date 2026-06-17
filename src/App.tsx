@@ -99,7 +99,7 @@ class RouteErrorBoundary extends Component<{ children: ReactNode }, { error: Err
               <AlertTriangle className="h-6 w-6 text-destructive" />
             </div>
             <div className="space-y-2">
-              <h1 className="text-lg font-semibold text-foreground">No foi posible cargar a aplicação</h1>
+              <h1 className="text-lg font-semibold text-foreground">No foi posible cargar a aplicación</h1>
               <p className="text-sm text-muted-foreground">A versión local ficou desatualizada. Recarregue para buscar a versión mais recente.</p>
             </div>
             <button
@@ -162,7 +162,7 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
-              {/* PWA / atalhos antigos pueden abrir em /index ou /home — redireciona */}
+              {/* PWA / atajos antigos pueden abrir em /index ou /home — redireciona */}
               <Route path="/index" element={<Navigate to="/" replace />} />
               <Route path="/home" element={<Navigate to="/" replace />} />
               <Route 

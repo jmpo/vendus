@@ -25,23 +25,23 @@ import type { DocPage } from "../types";
 
 export const superAdminPages: DocPage[] = [
   {
-    slug: "visao-geral",
+    slug: "visao-general",
     title: "O que é o modo white label",
-    description: "Você dono da plataforma, várias empresas como clientes, sua marca em tudo.",
+    description: "Usted dono da plataforma, várias empresas como clientes, tu marca em tudo.",
     track: "super-admin",
-    section: "Visão geral",
+    section: "Visión general",
     order: 1,
     content: (
       <>
-        <PageHero eyebrow="Super Admin" icon={Crown} title="Visão geral do white label" description="Você opera a plataforma sob sua marca. Cada cliente vê o Vendus como seu próprio sistema." />
+        <PageHero eyebrow="Super Admin" icon={Crown} title="Visión general do white label" description="Usted opera a plataforma sob tu marca. Cada cliente vê o Vendus como tu propio sistema." />
 
         <h2>O que muda</h2>
         <KeyValue
           rows={[
-            ["Marca", "Logo, cores (HSL), nome da plataforma e domínio próprio."],
-            ["Isolamento", "Cada empresa é uma organização totalmente isolada (RLS + organization_id)."],
-            ["Planos", "Você cria os planos e cobra. O Vendus aplica os limites."],
-            ["Suporte", "Você é o ponto de contato. A Central de Ajuda mostra sua marca."],
+            ["Marca", "Logo, cores (HSL), nome da plataforma e domínio propio."],
+            ["Isolamento", "Cada empresa é uma organización totalmente isolada (RLS + organization_id)."],
+            ["Planos", "Usted cria os planos e cobra. O Vendus aplica os limites."],
+            ["Suporte", "Usted é o ponto de contato. A Central de Ajuda mostra tu marca."],
           ]}
         />
 
@@ -65,12 +65,12 @@ export const superAdminPages: DocPage[] = [
       <>
         <PageHero eyebrow="Marca" icon={Palette} title="Identidade visual" />
         <h2>Onde configurar</h2>
-        <p><strong>/super-admin → Identidade Visual</strong>. Mudanças são aplicadas em tempo real para todos os usuários via <code>usePlatformBranding</code>.</p>
+        <p><strong>/super-admin → Identidade Visual</strong>. Mudanças são aplicadas en tiempo real para todos los usuarios via <code>usePlatformBranding</code>.</p>
 
-        <h2>O que você pode customizar</h2>
+        <h2>O que usted puede customizar</h2>
         <KeyValue
           rows={[
-            ["Nome da plataforma", "Substitui 'Vendus' em todos os lugares."],
+            ["Nome da plataforma", "Substitui 'Vendus' em todos los lugares."],
             ["Logo principal", "Header e tela de login. Recomendado SVG ou PNG transparente."],
             ["Favicon", "Aparece na aba do navegador e PWA."],
             ["Cor primária (HSL)", "Injetada em --primary. Use HSL ou hex; o sistema converte."],
@@ -82,8 +82,8 @@ export const superAdminPages: DocPage[] = [
           ]}
         />
 
-        <Callout type="warn" title="Cores devem ser HSL">
-          O Vendus usa HSL nas variáveis CSS para temas claro/escuro. Se você colar hex, o sistema converte — mas
+        <Callout type="warn" title="Cores deben ser HSL">
+          O Vendus usa HSL nas variables CSS para temas claro/escuro. Se usted colar hex, o sistema converte — mas
           o ideal é já enviar HSL para garantir contraste correto.
         </Callout>
       </>
@@ -93,7 +93,7 @@ export const superAdminPages: DocPage[] = [
   {
     slug: "planos",
     title: "Planos da plataforma",
-    description: "Criar planos com limites de leads, usuários, mensagens IA e integrações.",
+    description: "Crear planos com limites de leads, usuarios, mensajes IA e integraciones.",
     track: "super-admin",
     section: "Marca",
     order: 3,
@@ -104,10 +104,10 @@ export const superAdminPages: DocPage[] = [
         <KeyValue
           rows={[
             ["Leads ativos", "Quantos leads simultâneos cabem na base."],
-            ["Usuários da equipe", "Vendedores + admins."],
-            ["Mensagens de IA / mês", "Inclui tokens consumidos por agentes."],
-            ["Conversas / mês", "Soma de todos os canais."],
-            ["Integrações ativas", "Hotmart, Cakto, Sankhya, etc."],
+            ["Usuarios da equipe", "Vendedores + admins."],
+            ["Mensajes de IA / mês", "Inclui tokens consumidos por agentes."],
+            ["Conversas / mês", "Soma de todos los canais."],
+            ["Integraciones ativas", "Hotmart, Cakto, Sankhya, etc."],
             ["Funis ativos", "Captura."],
             ["E-mails / mês", "Massa + transacional."],
           ]}
@@ -115,8 +115,8 @@ export const superAdminPages: DocPage[] = [
 
         <h2>Como funciona o enforcement</h2>
         <p>
-          Ao atingir o limite, o Vendus mostra um banner pedindo upgrade e bloqueia novas criações (não apaga
-          existente). O fluxo de upgrade é via Stripe/Cakto/Hotmart (você escolhe).
+          Ao atingir o limite, o Vendus mostra um banner pedindo upgrade e bloqueia novas creaciones (no apaga
+          existente). O flujo de upgrade é via Stripe/Cakto/Hotmart (usted elige).
         </p>
       </>
     ),
@@ -124,22 +124,22 @@ export const superAdminPages: DocPage[] = [
 
   {
     slug: "empresas",
-    title: "Empresas (organizações)",
-    description: "Criar, suspender, mover e auditar empresas-cliente.",
+    title: "Empresas (organizaciones)",
+    description: "Crear, suspender, mover e auditar empresas-cliente.",
     track: "super-admin",
-    section: "Operação",
+    section: "Operación",
     order: 4,
     content: (
       <>
-        <PageHero eyebrow="Operação" icon={Building2} title="Empresas (organizações)" />
-        <h2>Criar uma empresa</h2>
+        <PageHero eyebrow="Operación" icon={Building2} title="Empresas (organizaciones)" />
+        <h2>Crear uma empresa</h2>
         <Steps>
           <Step title="/super-admin → Empresas → Nova">Nome, e-mail do admin inicial, plano.</Step>
-          <Step title="Convite automático">O admin recebe e-mail com link para definir senha.</Step>
+          <Step title="Convite automático">O admin recebe e-mail com link para definir contraseña.</Step>
           <Step title="Empresa criada">Tabelas isoladas, RLS aplicado, contadores zerados.</Step>
         </Steps>
 
-        <h2>Ações disponíveis</h2>
+        <h2>Acciones disponibles</h2>
         <ul>
           <li><strong>Suspender</strong>: bloqueia login mas mantém dados</li>
           <li><strong>Reativar</strong>: restaura acesso</li>
@@ -156,25 +156,25 @@ export const superAdminPages: DocPage[] = [
     title: "Servidor Evolution global",
     description: "Crie instâncias e atrele a empresas. Empresa escaneia o QR.",
     track: "super-admin",
-    section: "Operação",
+    section: "Operación",
     order: 5,
     content: (
       <>
-        <PageHero eyebrow="Operação" icon={Smartphone} title="Servidor Evolution global" />
+        <PageHero eyebrow="Operación" icon={Smartphone} title="Servidor Evolution global" />
         <p>
-          O servidor Evolution Go fica em <code>platform_settings</code> (global). Você cria instâncias e atrela
-          a empresas. Empresas <strong>não conseguem</strong> criar ou apagar instâncias (RLS bloqueia).
+          O servidor Evolution Go fica em <code>platform_settings</code> (global). Usted cria instâncias e atrela
+          a empresas. Empresas <strong>no conseguem</strong> crear ou apagar instâncias (RLS bloqueia).
         </p>
 
-        <h2>Fluxo</h2>
+        <h2>Flujo</h2>
         <Steps>
           <Step title="Configure o servidor uma vez">URL, API key, secret.</Step>
           <Step title="Crie uma instância para a empresa">Nome único (ex: cliente-acme-1).</Step>
-          <Step title="Atrele à organização">Modal de seleção.</Step>
+          <Step title="Atrele à organización">Modal de selección.</Step>
           <Step title="A empresa escaneia o QR">Modal com polling automático de status.</Step>
         </Steps>
 
-        <Callout type="warn" title="Empresa só vê suas próprias instâncias">
+        <Callout type="warn" title="Empresa só vê tus próprias instâncias">
           RLS aplicada em <code>evolution_instances</code> filtra por organization_id. Empresa A nunca vê instância
           da empresa B.
         </Callout>
@@ -185,28 +185,28 @@ export const superAdminPages: DocPage[] = [
   {
     slug: "credenciais",
     title: "Credenciais globais",
-    description: "Resend, Firecrawl, OpenAI override e outras chaves compartilhadas.",
+    description: "Resend, Firecrawl, OpenAI override e otras chaves compartilhadas.",
     track: "super-admin",
-    section: "Operação",
+    section: "Operación",
     order: 6,
     content: (
       <>
-        <PageHero eyebrow="Operação" icon={KeyRound} title="Credenciais globais" />
+        <PageHero eyebrow="Operación" icon={KeyRound} title="Credenciais globais" />
         <p>
-          Algumas integrações usam <strong>uma chave por plataforma</strong> (não por empresa). Configure em
-          /super-admin → Integrações Globais.
+          Algumas integraciones usam <strong>uma chave por plataforma</strong> (no por empresa). Configure em
+          /super-admin → Integraciones Globais.
         </p>
         <KeyValue
           rows={[
             ["Resend API key", "E-mails transacionais e em massa."],
             ["Firecrawl API key", "Crawler para Brain e catálogo."],
-            ["ElevenLabs API key", "Transcrição e voz."],
-            ["OpenAI override", "Empresa pode usar chave própria via org_ai_credentials (não consome créditos Lovable)."],
+            ["ElevenLabs API key", "Transcripción e voz."],
+            ["OpenAI override", "Empresa puede usar chave propia via org_ai_credentials (no consome créditos Lovable)."],
           ]}
         />
         <Callout type="info" title="Roteamento de IA inteligente">
-          Se uma empresa configurou <code>org_ai_credentials</code> + provider externo, a função <code>webchat-bot</code>
-          chama a API direto. Senão, usa o Lovable AI Gateway (consumindo créditos da plataforma).
+          Se uma empresa configurou <code>org_ai_credentials</code> + provider externo, a función <code>webchat-bot</code>
+          chama a API direto. Sino, usa o Lovable AI Gateway (consumindo créditos da plataforma).
         </Callout>
       </>
     ),
@@ -215,23 +215,23 @@ export const superAdminPages: DocPage[] = [
   {
     slug: "templates",
     title: "Templates globais",
-    description: "E-mail, agentes, funis e cadências reutilizáveis por todas as empresas.",
+    description: "E-mail, agentes, funis e cadências reutilizáveis por todas las empresas.",
     track: "super-admin",
-    section: "Operação",
+    section: "Operación",
     order: 7,
     content: (
       <>
-        <PageHero eyebrow="Operação" icon={Copy} title="Templates globais" />
+        <PageHero eyebrow="Operación" icon={Copy} title="Templates globais" />
         <p>
-          Crie templates que aparecem como "modelos" para todas as empresas-cliente. Eles copiam o template e
-          customizam — você atualiza o original sem afetar as cópias.
+          Crie templates que aparecem como "modelos" para todas las empresas-cliente. Eles copiam o template e
+          customizam — usted atualiza o original sin afetar as cópias.
         </p>
         <h2>Tipos suportados</h2>
         <ul>
           <li>Templates de e-mail (transacional e massa)</li>
           <li>Templates de agentes IA (persona + prompt + ferramentas)</li>
-          <li>Templates de funis (estruturas prontas: captação SaaS, recuperação carrinho, etc.)</li>
-          <li>Templates de cadências (5 passos, 7 passos, recuperação fria, etc.)</li>
+          <li>Templates de funis (estruturas prontas: captação SaaS, recuperación carrito, etc.)</li>
+          <li>Templates de cadências (5 passos, 7 passos, recuperación fria, etc.)</li>
         </ul>
       </>
     ),
@@ -240,20 +240,20 @@ export const superAdminPages: DocPage[] = [
   {
     slug: "auditoria",
     title: "Auditoria global",
-    description: "platform_audit_logs: tudo que aconteceu, quem fez, quando.",
+    description: "platform_audit_logs: tudo que aconteceu, quem fez, cuando.",
     track: "super-admin",
-    section: "Operação",
+    section: "Operación",
     order: 8,
     content: (
       <>
-        <PageHero eyebrow="Operação" icon={ShieldCheck} title="Auditoria global" />
+        <PageHero eyebrow="Operación" icon={ShieldCheck} title="Auditoria global" />
         <p>
-          A tabela <code>platform_audit_logs</code> registra: criação/suspensão de empresas, mudanças de plano,
-          impersonations (login como), reset de senha forçado, alteração de credenciais globais, exclusão de
+          A tabela <code>platform_audit_logs</code> registra: creación/suspensão de empresas, mudanças de plano,
+          impersonations (login como), reset de contraseña forçado, cambio de credenciais globais, exclusión de
           dados.
         </p>
         <Callout type="success" title="Compliance">
-          Filtros por empresa, ator, ação e período. Exportável em CSV para auditoria externa (LGPD, SOC 2).
+          Filtros por empresa, ator, acción e período. Exportável em CSV para auditoria externa (LGPD, SOC 2).
         </Callout>
       </>
     ),
@@ -261,27 +261,27 @@ export const superAdminPages: DocPage[] = [
 
   {
     slug: "notificacoes",
-    title: "Notificações administrativas",
-    description: "Alertas multicanal para você, dono da plataforma.",
+    title: "Notificaciones administrativas",
+    description: "Alertas multicanal para usted, dono da plataforma.",
     track: "super-admin",
-    section: "Operação",
+    section: "Operación",
     order: 9,
     content: (
       <>
-        <PageHero eyebrow="Operação" icon={Bell} title="Notificações administrativas" />
+        <PageHero eyebrow="Operación" icon={Bell} title="Notificaciones administrativas" />
         <p>
-          Tabela <code>admin_notifications</code> + Realtime + Resend. Você recebe alertas quando:
+          Tabela <code>admin_notifications</code> + Realtime + Resend. Usted recebe alertas cuando:
         </p>
         <ul>
           <li>Empresa próxima do limite do plano</li>
-          <li>Falha em integração crítica (Evolution caiu, Hotmart sem postback há 24h)</li>
+          <li>Fallo em integración crítica (Evolution caiu, Hotmart sin postback há 24h)</li>
           <li>Spike de uso de IA</li>
           <li>Nova empresa criada</li>
           <li>Pagamento recusado</li>
         </ul>
         <p>
-          Um <strong>agente IA do admin</strong> também envia resumos diários e identifica padrões
-          ("Empresa X dobrou volume essa semana").
+          Um <strong>agente IA do admin</strong> también envia resumos diários e identifica predeterminados
+          ("Empresa X dobrou volume esa semana").
         </p>
       </>
     ),
@@ -289,30 +289,30 @@ export const superAdminPages: DocPage[] = [
 
   {
     slug: "dominio",
-    title: "Domínio próprio",
-    description: "CNAME, SSL automático e e-mails do seu domínio.",
+    title: "Domínio propio",
+    description: "CNAME, SSL automático e e-mails do tu domínio.",
     track: "super-admin",
-    section: "Operação",
+    section: "Operación",
     order: 10,
     content: (
       <>
-        <PageHero eyebrow="Operação" icon={Globe} title="Domínio próprio" />
+        <PageHero eyebrow="Operación" icon={Globe} title="Domínio propio" />
         <h2>App</h2>
         <Steps>
-          <Step title="Em Project Settings → Domains, clique em Connect Domain">Insira seu domínio.</Step>
-          <Step title="Crie os registros DNS no seu registrador">A (185.158.133.1) + TXT (_lovable).</Step>
+          <Step title="Em Project Settings → Domains, clique em Connect Domain">Insira tu domínio.</Step>
+          <Step title="Crie os registros DNS no tu registrador">A (185.158.133.1) + TXT (_lovable).</Step>
           <Step title="SSL é provisionado automaticamente">Em até 72h, normalmente em minutos.</Step>
         </Steps>
 
         <h2>E-mail (envio)</h2>
         <p>
           Em <strong>Lovable Cloud → Emails</strong>, configure o domínio de envio. Configure SPF, DKIM e DMARC
-          conforme o painel mostra. Após verificação, e-mails saem como <code>vendas@suaempresa.com.br</code>.
+          conforme o painel mostra. Após verificación, e-mails saem como <code>vendas@suaempresa.com.br</code>.
         </p>
 
-        <h2>Docs (esta documentação)</h2>
+        <h2>Docs (esta documentación)</h2>
         <p>
-          Aponte <code>docs.suaempresa.com.br</code> para o mesmo projeto. Como o app é SPA, qualquer caminho cai
+          Aponte <code>docs.suaempresa.com.br</code> para o mismo projeto. Como o app é SPA, cualquier camino cai
           em <code>index.html</code> e o React Router resolve <code>/docs</code>.
         </p>
       </>
@@ -322,22 +322,22 @@ export const superAdminPages: DocPage[] = [
   {
     slug: "suporte",
     title: "Suporte e Central de Ajuda",
-    description: "Tickets, base de conhecimento e SLAs.",
+    description: "Tickets, base de conocimiento e SLAs.",
     track: "super-admin",
-    section: "Operação",
+    section: "Operación",
     order: 11,
     content: (
       <>
-        <PageHero eyebrow="Operação" icon={LifeBuoy} title="Suporte e Central de Ajuda" />
+        <PageHero eyebrow="Operación" icon={LifeBuoy} title="Suporte e Central de Ajuda" />
         <h2>Central de Ajuda interna</h2>
         <p>
           Acessível dentro do app por <code>/ajuda</code>. Artigos categorizados, busca, badge de "novidade" no menu
-          quando você publica algo.
+          cuando usted publica algo.
         </p>
         <h2>Tickets de suporte</h2>
         <p>
-          Vendedores e admins abrem tickets pela UI. Você recebe na sua caixa de tickets, responde, marca como
-          resolvido. SLA configurável (resposta em até X horas).
+          Vendedores e admins abrem tickets por la UI. Usted recebe na tu caixa de tickets, responde, marca como
+          resolvido. SLA configurável (respuesta em até X horas).
         </p>
       </>
     ),

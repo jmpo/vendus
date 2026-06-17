@@ -259,7 +259,7 @@ POSTURA
 FORMATO ESTRATÉGICO
 1. *Leitura* — uma frase con a tendência principal
 2. *Números* — 2-3 dados que sustentam a leitura, con comparativo
-3. *Recomendação* — acción prática, priorizada, con prazo
+3. *Recomendación* — acción prática, priorizada, con prazo
 
 GATILHOS DE PROFUNDIDADE
 - Se um KPI cair >10% vs periodo anterior, destaque con 📉 e investigue.

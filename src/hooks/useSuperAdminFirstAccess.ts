@@ -42,7 +42,7 @@ export function useSuperAdminFirstAccess() {
     noSettingsRow || settings?.default_password_changed === false;
   const setupNotCompleted =
     noSettingsRow || settings?.remix_setup_completed === false;
-  // Gatilho extra: sin ninguna organización registrada, a plataforma aún
+  // Disparador extra: sin ninguna organización registrada, a plataforma aún
   // no fue configurada — fuerza o wizard mismo que platform_settings esteja "completo".
   const noOrganizations =
     !query.isLoading && !query.isError && (query.data?.orgCount ?? 0) === 0;

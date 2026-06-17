@@ -332,7 +332,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
         </div>
       )}
 
-      {/* Master switch + identificação */}
+      {/* Master switch + identificación */}
       <Card className="border-primary/20 ring-1 ring-primary/10">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
@@ -670,7 +670,7 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
                       <Label className="text-sm font-medium">Erros consecutivos em agente IA</Label>
-                      <p className="text-xs text-muted-foreground">Alertar cuando um agente acumular X falhas em 30min</p>
+                      <p className="text-xs text-muted-foreground">Alertar cuando um agente acumular X fallos em 30min</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Input

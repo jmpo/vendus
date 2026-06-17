@@ -130,7 +130,7 @@ export function FormCanvas({
               </div>
               <h3 className="text-xl font-semibold mb-2">Comece a crear su formulario</h3>
               <p className="text-muted-foreground mb-6 max-w-md">
-                Arraste blocos da paleta ao lado ou use os atalhos abaixo para agregar preguntas
+                Arraste blocos da paleta ao lado ou use os atajos abaixo para agregar preguntas
               </p>
               <div className="flex gap-3">
                 <Button 

@@ -34,7 +34,7 @@ export default function Docs() {
   const trackObj = TRACKS.find((t) => t.id === track);
   if (!trackObj) return <Navigate to="/docs" replace />;
 
-  // /docs/:track → index da trilha
+  // /docs/:track → index da ruta
   if (!slug) return <TrackIndex trackId={track} />;
 
   // /docs/:track/:slug → contenido
@@ -63,7 +63,7 @@ function DocsHome() {
     <DocsLayout
       tracks={TRACKS}
       title="Documentación"
-      description={`Tudo sobre o ${platformName}: CRM omnichannel con IA. Trilhas por papel: vendedor, admin, super admin e desenvolvedor.`}
+      description={`Tudo sobre o ${platformName}: CRM omnichannel con IA. Rutas por papel: vendedor, admin, super admin e desenvolvedor.`}
       path="/docs"
     >
       {/* Hero */}
@@ -85,8 +85,8 @@ function DocsHome() {
           </div>
         </div>
 
-        {/* Trilhas */}
-        <h2 className="text-2xl font-bold text-foreground mb-1">Elegí a su trilha</h2>
+        {/* Rutas */}
+        <h2 className="text-2xl font-bold text-foreground mb-1">Elegí a su ruta</h2>
         <p className="text-muted-foreground mb-6">Documentación organizada por papel.</p>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -155,7 +155,7 @@ function TrackIndex({ trackId }: { trackId: string }) {
       description={track.description}
       path={`/docs/${trackId}`}
     >
-      <PageHero eyebrow="Trilha" icon={Icon} title={track.label} description={track.description} />
+      <PageHero eyebrow="Ruta" icon={Icon} title={track.label} description={track.description} />
 
       {track.sections.map((sec) => (
         <section key={sec.label}>
@@ -190,7 +190,7 @@ function Glossario() {
   const items = useMemo(() => {
     const conceitos = TRACKS.find((t) => t.id === "conceitos")!.sections.flatMap((s) => s.pages);
     const extras: Array<{ slug: string; title: string; description: string; track?: string }> = [
-      { slug: "spin", title: "SPIN Selling", description: "Framework de venta consultiva (Situação, Problema, Implicação, Necessidade)." },
+      { slug: "spin", title: "SPIN Selling", description: "Framework de venta consultiva (Situación, Problema, Implicação, Necessidade)." },
       { slug: "tma", title: "TMA — Tempo Médio de Atención" , description: "Indicador de eficiência operacional do equipo." },
       { slug: "tmr", title: "TMR — Tempo Médio de Respuesta", description: "Quanto demora a primera respuesta após mensaje del lead." },
       { slug: "sla", title: "SLA — Service Level Agreement", description: "Compromisso de prazo de atención ou respuesta." },
@@ -233,7 +233,7 @@ function Changelog() {
       date: "Junho de 2026",
       tag: "Novidade",
       items: [
-        "Documentación pública /docs con 4 trilhas (Vendedor, Admin, Super Admin, Dev) e busca cmd+K.",
+        "Documentación pública /docs con 4 rutas (Vendedor, Admin, Super Admin, Dev) e busca cmd+K.",
         "Radar de IA con acciones 1-clique (abrir conversación, chamar IA, atribuir, crear tarea).",
         "Preservação de historial ao trocar conexión Evolution.",
         "Cadências inteligentes con gerador IA e auto-stop por respuesta.",

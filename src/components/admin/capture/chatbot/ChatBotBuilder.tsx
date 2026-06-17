@@ -28,7 +28,7 @@ const statusConfig: Record<FunnelStatus, { label: string; variant: 'default' | '
   archived: { label: 'Arquivado', variant: 'destructive' },
 };
 
-// Validações pré-publicação específicas do ChatBot
+// Validações pré-publicación específicas do ChatBot
 function validateChatBot(blocks: FunnelBlock[]): string[] {
   const warnings: string[] = [];
   if (!blocks || blocks.length === 0) {

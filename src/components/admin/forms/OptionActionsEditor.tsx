@@ -155,7 +155,7 @@ export function OptionActionsEditor({ actions, onChange, allBlocks, currentBlock
       </PopoverTrigger>
       <PopoverContent className="w-96 p-0" align="end" sideOffset={6}>
         <div className="p-3 border-b">
-          <p className="text-sm font-semibold">Acciones ao escolher esta opción</p>
+          <p className="text-sm font-semibold">Acciones ao elegir esta opción</p>
           <p className="text-xs text-muted-foreground mt-0.5">
             Combine quantas acciones quiser. Executadas al enviar o formulario.
           </p>

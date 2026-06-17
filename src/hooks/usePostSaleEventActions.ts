@@ -11,7 +11,7 @@ export const POST_SALE_EVENT_TYPES = [
   { value: 'compra_aprovada', label: 'Compra Aprovada', description: 'Pago confirmado, entregar acceso' },
   { value: 'pix_gerado', label: 'PIX Generado', description: 'Lembrar e converter PIX pendente' },
   { value: 'boleto_gerado', label: 'Boleto Generado', description: 'Lembrar do boleto antes do vencimento' },
-  { value: 'carrinho_abandonado', label: 'Carrinho Abandonado', description: 'Recuperar checkout no finalizado' },
+  { value: 'carrito_abandonado', label: 'Carrito Abandonado', description: 'Recuperar checkout no finalizado' },
   { value: 'reembolso', label: 'Reembolso / Estorno', description: 'Gestionar cancelación e intento de retención' },
   { value: 'chargeback', label: 'Chargeback', description: 'Disputa de pago iniciada' },
   { value: 'assinatura_cancelada', label: 'Assinatura Cancelada', description: 'Recuperar assinante perdido' },

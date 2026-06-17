@@ -10,7 +10,7 @@ export const generateBookingSlug = (fullName: string): string => {
 };
 
 /**
- * Garante que o profile tenha um booking_slug.
+ * Garante que o profile tenga um booking_slug.
  * Se já existir, retorna; sino gera a partir do full_name (ou fallback)
  * checa unicidade e salva em profiles.
  */

@@ -14,10 +14,10 @@ export function DocsSidebar({ tracks, activeTrackId }: Props) {
   const active = useMemo(() => tracks.find((t) => t.id === activeTrackId) ?? tracks[0], [tracks, activeTrackId]);
 
   return (
-    <nav aria-label="Navegação da documentação" className="space-y-6">
+    <nav aria-label="Navegación da documentación" className="space-y-6">
       {/* Track selector */}
       <div>
-        <div className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Trilhas</div>
+        <div className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Rutas</div>
         <div className="grid gap-1">
           {tracks.map((t) => {
             const isActive = t.id === active.id;

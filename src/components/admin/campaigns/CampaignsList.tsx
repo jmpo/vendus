@@ -128,7 +128,7 @@ export function CampaignsList({
                     <Stat icon={<Users className="h-3.5 w-3.5" />} label="Público" value={audience || '—'} />
                     <Stat icon={<Send className="h-3.5 w-3.5" />} label="Disparados" value={`${dispatched}/${s.total || audience || 0}`} />
                     <Stat icon={<MessageCircle className="h-3.5 w-3.5 text-emerald-500" />} label="Respuestas" value={`${s.responded}${dispatched ? ` (${responseRate}%)` : ''}`} />
-                    <Stat icon={<AlertCircle className="h-3.5 w-3.5 text-destructive" />} label="Falhas" value={s.failed} />
+                    <Stat icon={<AlertCircle className="h-3.5 w-3.5 text-destructive" />} label="Fallos" value={s.failed} />
                   </div>
 
                   {s.total > 0 && (c.status === 'active' || c.status === 'paused' || c.status === 'completed') && (

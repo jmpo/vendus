@@ -54,7 +54,7 @@ export function FormPublish({ form }: FormPublishProps) {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>Status do Formulario</CardTitle>
-              <CardDescription>Estado actual e información de publicação</CardDescription>
+              <CardDescription>Estado actual e información de publicación</CardDescription>
             </div>
             <Badge variant={form.status === 'active' ? 'default' : 'secondary'} className="text-sm">
               {form.status === 'active' ? '🟢 Publicado' : 
@@ -67,7 +67,7 @@ export function FormPublish({ form }: FormPublishProps) {
           <div className="grid grid-cols-3 gap-4 text-center">
             <div className="p-4 bg-muted rounded-lg">
               <p className="text-2xl font-bold">{form.views_count || 0}</p>
-              <p className="text-sm text-muted-foreground">Visualizações</p>
+              <p className="text-sm text-muted-foreground">Visualizaciones</p>
             </div>
             <div className="p-4 bg-muted rounded-lg">
               <p className="text-2xl font-bold">{form.submissions_count || 0}</p>
@@ -129,7 +129,7 @@ export function FormPublish({ form }: FormPublishProps) {
               
               <div className="p-4 bg-muted rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  💡 <strong>Dica:</strong> Usa este link em campañas de email, posts em redes sociais ou compartilhe diretamente con sus leads.
+                  💡 <strong>Dica:</strong> Usa este link em campañas de email, posts em redes sociais ou compartí diretamente con sus leads.
                 </p>
               </div>
             </TabsContent>
@@ -191,12 +191,12 @@ export function FormPublish({ form }: FormPublishProps) {
       <Card>
         <CardHeader>
           <CardTitle>QR Code</CardTitle>
-          <CardDescription>Compartilhe o formulario em materiales impressos</CardDescription>
+          <CardDescription>Compartí o formulario em materiales impressos</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center gap-6">
           <div className="w-32 h-32 bg-muted rounded-lg flex items-center justify-center">
             <p className="text-xs text-muted-foreground text-center p-2">
-              QR Code será gerado após publicação
+              QR Code será gerado após publicación
             </p>
           </div>
           <div className="flex-1">

@@ -203,7 +203,7 @@ export function useProductAssignments(productId?: string) {
   return useQuery({
     queryKey: ['product-assignments', productId],
     queryFn: async () => {
-      // Resolve org context: super admins poderiam ver atribuições de
+      // Resolve org context: super admins poderiam ver asignaciones de
       // otras empresas; aplicamos defesa em profundidade no cliente.
       const { data: authData } = await supabase.auth.getUser();
       const uid = authData?.user?.id;

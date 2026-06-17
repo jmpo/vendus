@@ -504,7 +504,7 @@ function InstancesTable() {
             <AlertDialogDescription>
               O número{' '}
               <strong>{unlinking?.phone_number ? `+${unlinking.phone_number}` : 'actual'}</strong>{' '}
-              será eliminado desta instância e desaparecerá da lista de "Aparelhos conectados" no celular.
+              será eliminado desta instância e desaparecerá da lista de "Dispositivos conectados" no celular.
               Para reconectar (este ou otro número) será necesario escanear um novo QR Code.
             </AlertDialogDescription>
           </AlertDialogHeader>

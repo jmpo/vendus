@@ -39,7 +39,7 @@ export default function ResetPassword() {
       return;
     }
     if (password !== confirm) {
-      toast.error('As senhas no conferem');
+      toast.error('As contraseñas no conferem');
       return;
     }
     setLoading(true);

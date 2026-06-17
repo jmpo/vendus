@@ -15,7 +15,7 @@ import { conceitosPages } from "./content/conceitos";
 function groupBySection(pages: typeof vendedorPages) {
   const map = new Map<string, typeof vendedorPages>();
   for (const p of pages) {
-    const key = p.section ?? "Geral";
+    const key = p.section ?? "General";
     if (!map.has(key)) map.set(key, []);
     map.get(key)!.push(p);
   }
@@ -28,7 +28,7 @@ function groupBySection(pages: typeof vendedorPages) {
 export const TRACKS: DocTrack[] = [
   {
     id: "vendedor",
-    label: "Trilha do Vendedor",
+    label: "Ruta do Vendedor",
     short: "Vendedor",
     description: "Para SDRs, closers e atendentes que usam o Vendus no dia a dia.",
     icon: Headphones,
@@ -37,16 +37,16 @@ export const TRACKS: DocTrack[] = [
   },
   {
     id: "admin",
-    label: "Trilha do Admin",
+    label: "Ruta do Admin",
     short: "Admin",
-    description: "Para gestores que configuram a empresa, equipe, IA e integrações.",
+    description: "Para gestores que configuram a empresa, equipe, IA e integraciones.",
     icon: SettingsIcon,
     accent: "text-sky-500",
     sections: groupBySection(adminPages),
   },
   {
     id: "super-admin",
-    label: "Trilha do Super Admin",
+    label: "Ruta do Super Admin",
     short: "Super Admin",
     description: "Para donos da plataforma white label que gerenciam empresas e planos.",
     icon: Crown,
@@ -55,9 +55,9 @@ export const TRACKS: DocTrack[] = [
   },
   {
     id: "desenvolvedor",
-    label: "Trilha do Desenvolvedor",
+    label: "Ruta do Desenvolvedor",
     short: "Desenvolvedor",
-    description: "API, webhooks, edge functions e integrações técnicas.",
+    description: "API, webhooks, edge functions e integraciones técnicas.",
     icon: Code2,
     accent: "text-violet-500",
     sections: groupBySection(devPages),

@@ -51,7 +51,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
       <Card>
         <CardHeader>
           <CardTitle>Informaciones Básicas</CardTitle>
-          <CardDescription>Nombre, descripción e identificação do formulario</CardDescription>
+          <CardDescription>Nombre, descripción e identificación do formulario</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
@@ -95,7 +95,7 @@ export function FormSettings({ form, blocks = [], onUpdate }: FormSettingsProps)
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             {[
-              { value: 'manual', label: 'Manual', icon: Inbox, description: 'Leads entram sin atribuição' },
+              { value: 'manual', label: 'Manual', icon: Inbox, description: 'Leads entram sin asignación' },
               { value: 'user', label: 'Usuario Específico', icon: User, description: 'Siempre atribuir a um vendedor' },
               { value: 'squad', label: 'Squad', icon: Users, description: 'Distribuir para fila do equipo' },
               { value: 'round_robin', label: 'Round Robin', icon: Shuffle, description: 'Rotação automática entre vendedores' },

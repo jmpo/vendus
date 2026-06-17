@@ -115,11 +115,11 @@ export function AssignProductDialog({
       }
       
       await Promise.all(promises);
-      toast.success('Atribuições atualizadas con éxito!');
+      toast.success('Asignaciones atualizadas con éxito!');
       onOpenChange(false);
     } catch (error: any) {
       console.error('Error updating assignments:', error);
-      toast.error('Error ao actualizar atribuições');
+      toast.error('Error ao actualizar asignaciones');
     } finally {
       setSaving(false);
     }
@@ -233,7 +233,7 @@ export function AssignProductDialog({
           </Button>
           <Button onClick={handleSave} disabled={saving}>
             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Guardar Atribuições
+            Guardar Asignaciones
           </Button>
         </DialogFooter>
       </DialogContent>

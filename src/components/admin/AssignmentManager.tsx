@@ -66,7 +66,7 @@ export function AssignmentManager() {
       await unassignProduct.mutateAsync(assignmentId);
       toast.success('¡Asignación eliminada!');
     } catch (error) {
-      toast.error('Error ao eliminar atribuição');
+      toast.error('Error ao eliminar asignación');
     }
   };
 

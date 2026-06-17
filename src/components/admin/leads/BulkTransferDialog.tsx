@@ -81,7 +81,7 @@ export function BulkTransferDialog({
                 <SelectValue placeholder="Seleccioná um vendedor (opcional)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="unassigned">Remover atribuição</SelectItem>
+                <SelectItem value="unassigned">Remover asignación</SelectItem>
                 {teamMembers.map((member) => (
                   <SelectItem key={member.id} value={member.id}>
                     {member.full_name}

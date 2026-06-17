@@ -428,7 +428,7 @@ export function ChatSimulator({ widgetId, productId, agentConfig }: ChatSimulato
           <CardContent className="text-xs text-muted-foreground space-y-2">
             <p>• Pergunte sobre precios, funcionalidades e diferenciais</p>
             <p>• Teste objeciones comuns que clientes pueden ter</p>
-            <p>• Verifique se as respuestas estão coerentes</p>
+            <p>• Verifique se as respuestas están coerentes</p>
             <p>• Usa palabras de transferencia para testar handoff</p>
           </CardContent>
         </Card>

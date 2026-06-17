@@ -68,7 +68,7 @@ const PRESET_COLORS = [
   '#f97316', '#eab308', '#22c55e', '#14b8a6',
 ];
 
-// Estado compartilhado entre os passos do onboarding (referencias dos recursos criados)
+// Estado compartido entre os passos do onboarding (referencias dos recursos criados)
 interface OnboardingShared {
   productId: string | null;
   productName: string | null;
@@ -715,7 +715,7 @@ function WhatsAppStep({
                   />
                 </div>
                 <p className="text-sm text-center text-muted-foreground max-w-sm">
-                  Abra o WhatsApp → <strong>Configuraciones</strong> → <strong>Aparelhos conectados</strong> → <strong>Conectar aparelho</strong>.
+                  Abra o WhatsApp → <strong>Configuraciones</strong> → <strong>Dispositivos conectados</strong> → <strong>Conectar dispositivo</strong>.
                 </p>
                 <Badge variant="secondary">Aguardando leitura...</Badge>
               </>

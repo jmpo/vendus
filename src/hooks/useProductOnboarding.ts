@@ -21,7 +21,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     id: 'name',
     title: 'Como se chama su producto?',
-    subtitle: 'Ese será o nombre que sus vendedores verão.',
+    subtitle: 'Ese será o nombre que sus vendedores verán.',
     field: 'name',
     type: 'text',
     placeholder: 'Ex: Producto Pro, CRM Enterprise...',

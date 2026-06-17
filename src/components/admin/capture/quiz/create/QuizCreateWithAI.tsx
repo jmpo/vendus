@@ -140,7 +140,7 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label>Tom de comunicação</Label>
+              <Label>Tom de comunicación</Label>
               <Select value={tone} onValueChange={setTone}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -156,9 +156,9 @@ export function QuizCreateWithAI({ open, onOpenChange, onCreated }: Props) {
               <Select value={resultType} onValueChange={setResultType}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="classificacao">Classificação (frio/morno/quente)</SelectItem>
+                  <SelectItem value="classificacao">Clasificación (frio/morno/quente)</SelectItem>
                   <SelectItem value="diagnostico">Diagnóstico</SelectItem>
-                  <SelectItem value="recomendacao">Recomendação</SelectItem>
+                  <SelectItem value="recomendacao">Recomendación</SelectItem>
                   <SelectItem value="pontuacao">Puntuación simple</SelectItem>
                 </SelectContent>
               </Select>

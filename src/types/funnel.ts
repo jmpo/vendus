@@ -6,7 +6,7 @@
 // Status do funil
 export type FunnelStatus = 'draft' | 'active' | 'paused' | 'archived';
 
-// Canais de publicação
+// Canais de publicación
 export type FunnelChannel = 'chat' | 'form' | 'widget' | 'landing' | 'whatsapp';
 
 // Regras de distribución de leads
@@ -25,7 +25,7 @@ export type ExperienceBlockType =
   | 'link'         // Link clicável
   | 'delay';       // Pausa/timing
 
-// Tipo de incorporação de vídeo
+// Tipo de incorporación de vídeo
 export type VideoType = 'youtube' | 'vimeo' | 'embed' | 'custom_html';
 
 // Categoria: CAPTURA (coletar dados)
@@ -41,7 +41,7 @@ export type AIBlockType =
   | 'ai_summarize'   // IA resume contexto
   | 'agent_switch';  // Trocar agente ativo
 
-// Categoria: LÓGICA (decisões do sistema)
+// Categoria: LÓGICA (decisiones do sistema)
 export type LogicBlockType = 
   | 'condition'    // Se/Entonces
   | 'ab_test'      // Teste A/B aleatório
@@ -193,7 +193,7 @@ export interface FunnelBlockData {
   cta_emoji?: string;         // Emoji opcional no final do CTA
   show_duration?: boolean;    // Exibe badge "⏳ Duración de X..."
   duration_label?: string;    // Texto da duración (ex: "2min para responder")
-  show_logo?: boolean;        // Sobrescreve exibição de logo no topo da tela
+  show_logo?: boolean;        // Sobrescreve visualización de logo no topo da tela
   
   
   // Input
@@ -312,7 +312,7 @@ export interface FunnelBlockData {
     align?: 'left' | 'center' | 'right';
   };
 
-  /** Regras de exibição do bloco (delay, dispositivo, condicional). */
+  /** Regras de visualización do bloco (delay, dispositivo, condicional). */
   block_display?: {
     delay_seconds?: number;
     device?: 'all' | 'mobile' | 'desktop';
@@ -417,7 +417,7 @@ export interface Funnel {
   organization_id: string;
   product_id: string;
   
-  // Identificação
+  // Identificación
   name: string;
   description?: string | null;
   slug: string;
@@ -654,7 +654,7 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
     type: 'ai_decide', 
     label: 'IA Decide Camino', 
     icon: '🧠', 
-    description: 'IA escolhe próximo passo', 
+    description: 'IA elige próximo passo', 
     category: 'ai',
     color: 'bg-orange-500'
   },
@@ -683,7 +683,7 @@ export const FUNNEL_BLOCK_PALETTE: BlockPaletteItem[] = [
     color: 'bg-orange-500'
   },
   
-  // ===== LÓGICA (Decisões do sistema) =====
+  // ===== LÓGICA (Decisiones do sistema) =====
   { 
     type: 'condition', 
     label: 'Se / Entonces', 
@@ -812,7 +812,7 @@ export const CATEGORY_LABELS: Record<BlockCategory, { label: string; description
   experience: { label: 'Experiencia', description: 'O que o lead vê' },
   capture: { label: 'Captura', description: 'Coletar dados' },
   ai: { label: 'IA', description: 'Inteligência artificial' },
-  logic: { label: 'Lógica', description: 'Decisões do sistema' },
+  logic: { label: 'Lógica', description: 'Decisiones do sistema' },
   action: { label: 'Acciones', description: 'O que o sistema faz' },
   integration: { label: 'Integraciones', description: 'Sistemas externos' },
 };

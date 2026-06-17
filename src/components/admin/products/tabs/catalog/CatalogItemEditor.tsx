@@ -171,7 +171,7 @@ export function CatalogItemEditor({ productId, item, open, onClose }: Props) {
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTag(); } }}
-                placeholder="destaque, novo, promoção"
+                placeholder="destaque, novo, promoción"
               />
               <Button type="button" variant="outline" onClick={addTag}>Add</Button>
             </div>

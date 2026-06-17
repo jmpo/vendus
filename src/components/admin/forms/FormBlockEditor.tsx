@@ -929,8 +929,8 @@ export function FormBlockEditor({
                 />
                 {(localBlock.block_settings as any)?.url && (
                   toEmbedUrl((localBlock.block_settings as any).url)
-                    ? <p className="text-xs text-emerald-600">✓ URL reconhecida</p>
-                    : <p className="text-xs text-destructive">URL no reconhecida</p>
+                    ? <p className="text-xs text-emerald-600">✓ URL reconocida</p>
+                    : <p className="text-xs text-destructive">URL no reconocida</p>
                 )}
                 <div className="space-y-2">
                   <Label className="text-xs">Orientação</Label>

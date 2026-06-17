@@ -311,7 +311,7 @@ export function CTAConfigCard({ productId }: CTAConfigCardProps) {
             )}
 
             <div className="space-y-2">
-              <Label>Palabras-gatilho (opcional)</Label>
+              <Label>Palabras-disparador (opcional)</Label>
               <Input
                 placeholder="comprar, precio, valor, interessado (separadas por vírgula)"
                 value={newCTA.trigger_keywords}

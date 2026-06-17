@@ -153,7 +153,7 @@ export function CaptureAnalyticsSection() {
         <>
           {/* KPIs */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <KPI icon={<Eye className="h-4 w-4" />} label="Visualizações" value={totalViews} color="text-blue-500" />
+            <KPI icon={<Eye className="h-4 w-4" />} label="Visualizaciones" value={totalViews} color="text-blue-500" />
             <KPI icon={<CheckCircle2 className="h-4 w-4" />} label="Conclusões" value={stats.total} color="text-emerald-500" />
             <KPI icon={<TrendingUp className="h-4 w-4" />} label="Conversión" value={`${stats.conversionRate.toFixed(1)}%`} color="text-purple-500" />
             <KPI icon={<Activity className="h-4 w-4" />} label="Score médio" value={stats.avgScore} color="text-orange-500" />

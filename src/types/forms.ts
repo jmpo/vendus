@@ -277,7 +277,7 @@ export const BLOCK_CONFIGS: BlockConfig[] = [
 
 /**
  * Converte URL do YouTube/Vimeo/Loom para URL de embed.
- * Retorna null se no reconhecer o formato.
+ * Retorna null se no reconocer o formato.
  */
 export function toEmbedUrl(raw: string, opts?: { autoplay?: boolean }): string | null {
   if (!raw) return null;

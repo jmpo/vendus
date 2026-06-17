@@ -93,7 +93,7 @@ export function CommissionsChart({ commissions, isLoading }: CommissionsChartPro
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-primary" />
-            Comissões por Mes
+            Comisiones por Mes
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -113,7 +113,7 @@ export function CommissionsChart({ commissions, isLoading }: CommissionsChartPro
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-primary" />
-            Comissões por Mes
+            Comisiones por Mes
           </CardTitle>
           <span className="text-sm text-muted-foreground">
             Total: <span className="font-medium text-foreground">{formatCurrency(totalCommissions)}</span>

@@ -491,7 +491,7 @@ export function PlatformSettings() {
                 </div>
                 <div className="flex items-center justify-between pt-2">
                   <div>
-                    <Label>Mostrar Estatísticas</Label>
+                    <Label>Mostrar Estadísticas</Label>
                     <p className="text-xs text-muted-foreground">Cards de métricas no login</p>
                   </div>
                   <Switch
@@ -614,7 +614,7 @@ export function PlatformSettings() {
               <CardHeader>
                 <CardTitle>Meta Tags</CardTitle>
                 <CardDescription>
-                  Como a plataforma aparece em buscadores e pré-visualizações
+                  Como a plataforma aparece em buscadores e pré-visualizaciones
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -673,7 +673,7 @@ export function PlatformSettings() {
               <CardHeader>
                 <CardTitle>OG Image</CardTitle>
                 <CardDescription>
-                  Imagen mostrada cuando o link é compartilhado no WhatsApp, LinkedIn, etc.
+                  Imagen mostrada cuando o link é compartido no WhatsApp, LinkedIn, etc.
                 </CardDescription>
               </CardHeader>
               <CardContent>

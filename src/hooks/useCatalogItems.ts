@@ -118,7 +118,7 @@ export function useCatalogSync() {
     onSuccess: (data: any) => {
       toast({
         title: 'Sincronización completada',
-        description: `${data.items_created || 0} novos · ${data.items_updated || 0} actualizados · ${data.items_failed || 0} falhas`,
+        description: `${data.items_created || 0} novos · ${data.items_updated || 0} actualizados · ${data.items_failed || 0} fallos`,
       });
     },
     onError: (e: any) => toast({ title: 'Error en la sincronización', description: e.message, variant: 'destructive' }),

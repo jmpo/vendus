@@ -36,7 +36,7 @@ export const CAPABILITY_LABELS: Record<AICapability, { title: string; desc: stri
   audio_transcription:  { title: 'Transcripción de audio',    desc: 'Conversión de áudios em texto (Whisper)' },
   image_vision:         { title: 'Leitura de imagens',      desc: 'Análise de fotos e prints recebidos' },
   content_generation:   { title: 'Generación de contenido',     desc: 'Creación de funis, formularios, agentes, objeciones' },
-  analysis_insights:    { title: 'Análise e insights',      desc: 'Avaliação de conversaciones, supervisão e reportes' },
+  analysis_insights:    { title: 'Análise e insights',      desc: 'Evaluación de conversaciones, supervisão e reportes' },
   embeddings:           { title: 'Memória semântica',       desc: 'Embeddings para busca contextual em conversaciones' },
 };
 

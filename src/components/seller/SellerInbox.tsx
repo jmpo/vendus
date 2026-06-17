@@ -163,7 +163,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   }, [selectedProductFilter]);
 
   // Producto do header/rota NÃO filtra a inbox — afeta solo dashboards.
-  // A inbox só é filtrada por producto cuando o usuario escolhe explicitamente
+  // A inbox só é filtrada por producto cuando o usuario elige explicitamente
   // dentro do drawer "Filtros".
   const inboxFilters: InboxBackendFilters = useMemo(() => {
     return {
@@ -633,7 +633,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         }
         // Add message directly to cache for instant update.
         // Substitui a burbuja otimista (id === client_temp_id) por la versión real
-        // — evita duplicação visual no agente que acabou de enviar.
+        // — evita duplicación visual no agente que acabou de enviar.
         queryClient.setQueryData(['webchat-conversation', conversationId], (old: any) => {
           if (!old) return old;
           const incoming = payload.payload;
@@ -824,7 +824,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   // e a visibilidade por permisos. Acá só repassamos a lista para a UI.
   const visibleConversations = filteredConversations;
 
-  // Nombre do producto atualmente filtrado (para exibição na faixa) — usa só o
+  // Nombre do producto atualmente filtrado (para visualización na faixa) — usa só o
   // producto da rota como sugerencia visual; no há más "trava" de producto.
   const activeProductName = useMemo(() => {
     if (!selectedProductFilter) return null;

@@ -351,7 +351,7 @@ export function CampaignWizard({
         <CardContent className="space-y-3">
           <div>
             <Label>Nombre de la campaña *</Label>
-            <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ex: Reativação Live Vendus" />
+            <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ex: Reactivación Live Vendus" />
           </div>
           <div>
             <Label>Descripción</Label>
@@ -456,7 +456,7 @@ export function CampaignWizard({
         </CardContent>
       </Card>
 
-      {/* 3. Exclusões */}
+      {/* 3. Exclusiones */}
       <Card className="border-destructive/30">
         <CardHeader><CardTitle className="text-base">3. Quem NÃO debe receber?</CardTitle></CardHeader>
         <CardContent className="space-y-4">
@@ -781,7 +781,7 @@ export function CampaignWizard({
               rows={2}
               value={form.post_response_actions.note ?? ''}
               onChange={(e) => setForm({ ...form, post_response_actions: { ...form.post_response_actions, note: e.target.value } })}
-              placeholder="Ex: Lead respondeu à campaña de reativação — verificar contexto."
+              placeholder="Ex: Lead respondeu à campaña de reactivación — verificar contexto."
             />
           </div>
           <Separator />

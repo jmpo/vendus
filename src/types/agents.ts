@@ -117,7 +117,7 @@ export interface ProductAgent {
   allowed_event_type_ids?: string[];
   // Usuarios extras que recebem notificación cuando a IA confirma uma reunión.
   booking_notification_user_ids?: string[];
-  // Se true, notifica todos los admins da organização ao confirmar.
+  // Se true, notifica todos los admins da organización ao confirmar.
   booking_notify_org_admins?: boolean;
   // Configuraciones exclusivas do Agente Admin Executivo (persistidas em auto_notification_settings)
   monitored_product_ids?: string[];
@@ -236,16 +236,16 @@ export const AGENT_TEMPLATES: Record<AgentType, AgentTemplate> = {
     handoff_triggers: [
       'Problema no resolvido após 3 tentativas',
       'Cliente insatisfeito',
-      'Solicitação de reembolso',
+      'Solicitud de reembolso',
     ],
     tone_style: 'friendly',
     message_style: 'detailed',
   },
   financial: {
     name: 'Financeiro',
-    description: 'Lida con cobranças e questões financeiras',
+    description: 'Lida con cobranças e cuestiones financeiras',
     icon: '💰',
-    primary_objective: 'Lidar con questões financeiras e cobranças de forma profissional',
+    primary_objective: 'Lidar con cuestiones financeiras e cobranças de forma profissional',
     can_do: [
       'Informar sobre faturas',
       'Enviar boletos e links de pagamento',
@@ -258,7 +258,7 @@ export const AGENT_TEMPLATES: Record<AgentType, AgentTemplate> = {
       'Fazer estornos',
     ],
     handoff_triggers: [
-      'Solicitação de negociação de dívida',
+      'Solicitud de negociação de dívida',
       'Disputa de cobrança',
       'Cancelamento de servicio',
     ],
@@ -267,9 +267,9 @@ export const AGENT_TEMPLATES: Record<AgentType, AgentTemplate> = {
   },
   admin: {
     name: 'Administrativo',
-    description: 'Auxilia em questões administrativas',
+    description: 'Auxilia em cuestiones administrativas',
     icon: '📋',
-    primary_objective: 'Auxiliar em questões administrativas e direcionamentos',
+    primary_objective: 'Auxiliar em cuestiones administrativas e direcionamentos',
     can_do: [
       'Responder sobre processos',
       'Direcionar para áreas corretas',
@@ -277,12 +277,12 @@ export const AGENT_TEMPLATES: Record<AgentType, AgentTemplate> = {
       'Agendar reuniones',
     ],
     cannot_do: [
-      'Tomar decisões finais',
+      'Tomar decisiones finais',
       'Alterar cadastros',
-      'Aprovar solicitações',
+      'Aprovar solicitudes',
     ],
     handoff_triggers: [
-      'Solicitação que requer aprobación',
+      'Solicitud que requer aprobación',
       'Reclamação formal',
     ],
     tone_style: 'formal',

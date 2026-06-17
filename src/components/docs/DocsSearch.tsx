@@ -47,12 +47,12 @@ export function DocsSearch({ tracks }: Props) {
         className="flex h-9 w-full items-center gap-2 rounded-lg border border-border bg-card px-3 text-sm text-muted-foreground transition-colors hover:border-primary/30 hover:text-foreground md:w-72"
       >
         <Search className="h-4 w-4" />
-        <span className="flex-1 text-left">Buscar na documentação...</span>
+        <span className="flex-1 text-left">Buscar na documentación...</span>
         <kbd className="hidden sm:inline rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] font-mono">⌘K</kbd>
       </button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Buscar páginas, conceitos, integrações..." />
+        <CommandInput placeholder="Buscar páginas, conceitos, integraciones..." />
         <CommandList>
           <CommandEmpty>Nada encontrado.</CommandEmpty>
           {groups.map(({ track, pages }) => (

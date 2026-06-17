@@ -71,7 +71,7 @@ export function AppearanceTab({ block, onUpdate }: Props) {
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <Field label="Proporção de imagens">
+            <Field label="Proporción de imagens">
               <Select value={ap.image_ratio || 'auto'} onValueChange={(v) => setAp({ image_ratio: v as any })}>
                 <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>

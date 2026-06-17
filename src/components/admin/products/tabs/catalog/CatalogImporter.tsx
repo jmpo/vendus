@@ -96,7 +96,7 @@ export function CatalogImporter({ productId }: Props) {
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
           <FileSpreadsheet className="h-4 w-4" />
-          Importar planilha (CSV)
+          Importar planilla (CSV)
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

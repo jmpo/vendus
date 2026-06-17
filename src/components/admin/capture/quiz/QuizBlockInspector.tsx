@@ -359,7 +359,7 @@ export function QuizBlockInspector({
 
                 {!hasOptions && (
                   <p className="text-xs text-muted-foreground text-center py-3">
-                    Agregá opciones para el lead escolher
+                    Agregá opciones para el lead elegir
                   </p>
                 )}
               </div>

@@ -52,7 +52,7 @@ const f = {
   CaptureAnalyticsSection: () => import('@/components/admin/capture/channels/CaptureAnalyticsSection').then(m => ({ default: m.CaptureAnalyticsSection })),
 };
 
-// Lazy components (con retry + cache compartilhado para prefetch).
+// Lazy components (con retry + cache compartido para prefetch).
 const OperationCenter = lazyWithRetry(f.OperationCenter);
 const TeamManager = lazyWithRetry(f.TeamManager);
 const FinancialDashboard = lazyWithRetry(f.FinancialDashboard);
@@ -172,8 +172,8 @@ export default function Admin() {
   }
 
   const handleSectionChange = useCallback((id: string) => {
-    // Garante que o chunk começa a descargar antes da transição (caso aún
-    // no tenha sido prefechado).
+    // Garante que o chunk começa a descargar antes da transición (caso aún
+    // no tenga sido prefechado).
     prefetchAdminSection(id);
     // Mantém ?tab=... na URL para que reload preserve a sección actual.
     const next = new URLSearchParams(searchParams);

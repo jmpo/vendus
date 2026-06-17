@@ -255,7 +255,7 @@ export function TransferConversationModal({
         updateData.assigned_user_id = null;
         updateData.current_agent_id = selectedAgentId;
         updateData.status = 'bot_active';
-        // Marca conversación como em atención por el agente escolhido para que o
+        // Marca conversación como em atención por el agente elegido para que o
         // orquestador no tente re-rotear (coluna é NOT NULL).
         updateData.orchestrator_state = 'em_atendimento';
       }
@@ -499,7 +499,7 @@ export function TransferConversationModal({
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                A conversación se pondrá na fila do sector escolhido e ficará disponible para cualquier agente do sector assumir.
+                A conversación se pondrá na fila do sector elegido e ficará disponible para cualquier agente do sector assumir.
               </p>
             </div>
           )}
@@ -569,7 +569,7 @@ export function TransferConversationModal({
               </ScrollArea>
               <p className="text-xs text-muted-foreground">
                 {hasAdminInList
-                  ? 'Agentes 🔒 Admin son privados do gestor — use solo para teste o intervenção. A conversación volta ao modo IA con o agente escolhido.'
+                  ? 'Agentes 🔒 Admin son privados do gestor — use solo para teste o intervenção. A conversación volta ao modo IA con o agente elegido.'
                   : 'A conversación volta ao modo IA con este agente assumindo o atención.'}
               </p>
             </div>

@@ -220,7 +220,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
   },
   {
     id: 'email',
-    label: 'E-mail & Comunicação',
+    label: 'E-mail & Comunicación',
     icon: Mail,
     description: 'Envio transacional, templates e campañas',
     items: [

@@ -30,7 +30,7 @@ export const mockProducts: Product[] = [
     name: 'IsiChat WL',
     description: 'Plataforma de atendimento multicanal white label',
     pitch15s: 'IsiChat unifica WhatsApp, Instagram e Telegram em um só lugar. Atenda mais, venda mais.',
-    pitch30s: 'Tus clientes estão em todo lugar. WhatsApp, Instagram, Telegram, e-mail. O IsiChat White Label centraliza tudo, con automatizaciones inteligentes, chatbots e reportes. Tu marca, tu plataforma, tu controle total.',
+    pitch30s: 'Tus clientes están em todo lugar. WhatsApp, Instagram, Telegram, e-mail. O IsiChat White Label centraliza tudo, con automatizaciones inteligentes, chatbots e reportes. Tu marca, tu plataforma, tu controle total.',
     pitch2min: 'O IsiChat White Label é a plataforma de atendimento omnichannel que tus equipes precisam. Centralize conversas de WhatsApp Business, Instagram DM, Telegram e e-mail. Configure chatbots sin código, crie flujos de automatización, distribua atendimentos entre equipes e acompanhe métricas en tiempo real. Tudo eso con tu identidade visual. Ideal para agências, consultorias e empresas que querem oferecer atendimento profissional aos tus clientes.',
     icp: 'Agências de marketing digital e consultorias con 20+ clientes ativos',
     differentials: [
@@ -85,7 +85,7 @@ export const mockCadence: CadenceDay[] = [
         id: '1-1',
         type: 'message',
         variant: 'short',
-        content: 'Oi [NOME]! 👋 Vi que usted trabalha con [SEGMENTO]. Tengo algo que puede dobrar a retención dos tus clientes. Posso te mostrar em 2 minutos?'
+        content: 'Oi [NOME]! 👋 Vi que usted trabaja con [SEGMENTO]. Tengo algo que puede dobrar a retención dos tus clientes. Posso te mostrar em 2 minutos?'
       },
       {
         id: '1-2',
@@ -202,7 +202,7 @@ export const mockObjections: Objection[] = [
     category: 'timing',
     whatTheySay: 'No é o momento certo',
     whatTheyMean: 'Tengo otras prioridades ou preciso de mais informaciones',
-    suggestedResponse: 'Faz total sentido priorizar. Posso perguntar: o que precisaria mudar pro momento ficar certo? É questão de budget, time interno ou estratégia?',
+    suggestedResponse: 'Faz total sentido priorizar. Posso perguntar: o que precisaria mudar pro momento ficar certo? É cuestión de budget, time interno ou estratégia?',
     followUpQuestion: 'Ustedes têm uma data específica em mente pra revisitar eso?'
   },
   {
@@ -287,7 +287,7 @@ export const mockMaterials: Material[] = [
   },
   {
     id: 'banner-promo',
-    name: 'Banner Promoção Q3',
+    name: 'Banner Promoción Q3',
     type: 'banner',
     url: '/materials/promo-q3.png',
     tags: ['closing'],

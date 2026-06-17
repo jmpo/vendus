@@ -3,7 +3,7 @@ import { lazy, ComponentType } from 'react';
 /**
  * Cache de imports já iniciados (deduplicação).
  * Garante que o mismo módulo nunca seja baixado 2x e que o `prefetch`
- * compartilhe o mismo Promise do `lazy`.
+ * compartí o mismo Promise do `lazy`.
  */
 const importCache = new Map<unknown, Promise<unknown>>();
 
@@ -58,7 +58,7 @@ export function prefetch(factory: () => Promise<unknown>): void {
 
 /**
  * Agenda um callback para rodar cuando o browser estiver ocioso.
- * Útil para prefetch sin competir con renderização inicial.
+ * Útil para prefetch sin competir con renderización inicial.
  */
 export function onIdle(cb: () => void, timeout = 2000): void {
   if (typeof window === 'undefined') return;

@@ -111,7 +111,7 @@ export async function fetchPlatformBranding(): Promise<PlatformSettings | null> 
  *    do banco — fue por eso que cambios feitas no painel Super Admin
  *    paravam de aparecer ("travadas" em uma versión antiga).
  *  - O `localStorage` continua siendo usado como fallback visual imediato
- *    solo para evitar flash, lido em sync na primera renderização.
+ *    solo para evitar flash, lido em sync na primera renderización.
  */
 export function usePlatformBranding() {
   const { data: settings } = useQuery({

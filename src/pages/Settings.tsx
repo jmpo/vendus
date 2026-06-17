@@ -63,7 +63,7 @@ export default function Settings() {
     e.preventDefault();
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      toast.error('As senhas no coincidem');
+      toast.error('As contraseñas no coincidem');
       return;
     }
 
@@ -230,7 +230,7 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Smartphone size={20} />
-                  Autenticação de Dois Fatores (2FA)
+                  Autenticación de Dois Fatores (2FA)
                 </CardTitle>
                 <CardDescription>
                   Agregá uma camada extra de segurança à su cuenta
@@ -245,7 +245,7 @@ export default function Settings() {
                     <div>
                       <p className="font-medium">Status do 2FA</p>
                       <p className="text-sm text-muted-foreground">
-                        Proteja su cuenta con autenticação em dois fatores
+                        Proteja su cuenta con autenticación em dois fatores
                       </p>
                     </div>
                   </div>

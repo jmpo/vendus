@@ -194,7 +194,7 @@ export function WebChatReportsTab() {
         <CardHeader>
           <CardTitle>Mais Reportes (Em Breve)</CardTitle>
           <CardDescription>
-            Estatísticas avançadas serán adicionadas nas próximas versiones
+            Estadísticas avançadas serán adicionadas nas próximas versiones
           </CardDescription>
         </CardHeader>
         <CardContent>

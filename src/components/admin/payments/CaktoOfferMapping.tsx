@@ -100,7 +100,7 @@ export function CaktoOfferMapping() {
         </h3>
         <p className="text-sm text-muted-foreground">
           Vincule cada oferta da Cakto (front-end, order bump, upsell...) ao producto do CRM. Eso ativa as
-          métricas por producto na tela inicial e a atribuição da equipo.
+          métricas por producto na tela inicial e a asignación da equipo.
         </p>
       </div>
 

@@ -305,7 +305,7 @@ export function AIQualityPanel() {
           {evals.length === 0 && (
             <Card>
               <CardContent className="p-6 text-center text-sm text-muted-foreground">
-                Ninguna avaliação aún. Hacé clic em "Evaluar últimas 24h" para generar.
+                Ninguna evaluación aún. Hacé clic em "Evaluar últimas 24h" para generar.
               </CardContent>
             </Card>
           )}

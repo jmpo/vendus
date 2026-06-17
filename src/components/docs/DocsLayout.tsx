@@ -18,7 +18,7 @@ interface Props {
   title: string;
   description?: string;
   children: ReactNode;
-  /** Caminho atual para SEO canonical e og:url */
+  /** Camino actual para SEO canonical e og:url */
   path: string;
 }
 
@@ -44,8 +44,8 @@ function upsertLink(rel: string, href: string) {
 export function DocsLayout({ tracks, activeTrackId, title, description, children, path }: Props) {
   const contentRef = useRef<HTMLElement>(null);
   const { platformName } = usePlatformName();
-  const fullTitle = `${title} · Documentação ${platformName}`;
-  const desc = description ?? `Documentação oficial do ${platformName}: CRM omnichannel com IA, atendimento, captura de leads, automações e integrações.`;
+  const fullTitle = `${title} · Documentación ${platformName}`;
+  const desc = description ?? `Documentación oficial do ${platformName}: CRM omnichannel com IA, atendimento, captura de leads, automatizaciones e integraciones.`;
   const { pathname } = useLocation();
 
   // Reset scroll on route change
@@ -194,7 +194,7 @@ function DocsFooter() {
           <div className="font-bold text-foreground">{platformName}</div>
           <p className="mt-2 text-sm text-muted-foreground">CRM Omnichannel com IA para times de vendas.</p>
         </div>
-        <FooterCol title="Documentação" links={[
+        <FooterCol title="Documentación" links={[
           { to: "/docs/vendedor", label: "Para vendedores" },
           { to: "/docs/admin", label: "Para admins" },
           { to: "/docs/super-admin", label: "Para super admins" },
@@ -211,7 +211,7 @@ function DocsFooter() {
         ]} />
       </div>
       <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} {platformName}. Todos os direitos reservados.
+        © {new Date().getFullYear()} {platformName}. Todos los direitos reservados.
       </div>
     </footer>
   );

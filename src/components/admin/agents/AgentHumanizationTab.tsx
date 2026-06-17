@@ -874,7 +874,7 @@ function ReactionRuleCard({
 
       <div className="grid grid-cols-2 gap-2">
         <div className="space-y-1">
-          <Label className="text-xs">Gatilho</Label>
+          <Label className="text-xs">Disparador</Label>
           <Select value={rule.type} onValueChange={(v) => onChange({ type: v as ReactionTriggerType })}>
             <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
             <SelectContent>

@@ -102,7 +102,7 @@ function tplEvento() {
     captureName(),
     captureWhatsapp(),
     block('buttons', {
-      label: 'Usted já trabalha con o tema do evento?',
+      label: 'Usted já trabaja con o tema do evento?',
       variable_name: 'experiencia',
       options: [
         { id: '1', letter: 'A', label: 'Sim, atuo há mais de 1 ano', score: 30, tag: 'avancado' },
@@ -155,7 +155,7 @@ function tplDiagnosticoComercial() {
     block('buttons', { label: 'Usa CRM?', variable_name: 'crm',
       options: [
         { id: '1', letter: 'A', label: 'No', score: 0 },
-        { id: '2', letter: 'B', label: 'Sim, planilha', score: 10 },
+        { id: '2', letter: 'B', label: 'Sim, planilla', score: 10 },
         { id: '3', letter: 'C', label: 'Sim, ferramenta dedicada', score: 25, tag: 'crm-ok' },
       ] }),
     block('buttons', { label: 'Faz follow-up estruturado?', variable_name: 'followup',
@@ -209,7 +209,7 @@ function tplDiagnosticoAgencia() {
     block('end', {
       content: '🏢 Diagnóstico da agência pronto!',
       result_tiers: STD_TIERS_3(
-        ['Agência Operacional', 'Agência em Transição', 'Agência Pronta para Plataforma'],
+        ['Agência Operacional', 'Agência em Transición', 'Agência Pronta para Plataforma'],
         ['#f97316', '#3b82f6', '#10b981'],
         ['Foco em construir processos.', 'Estruturando recorrência e equipe.', 'Pronta para escalar con plataforma.'],
       ),
@@ -241,7 +241,7 @@ function tplDiagnosticoMarketing() {
     block('buttons', { label: 'Mede conversión?', variable_name: 'metrica',
       options: [
         { id: '1', letter: 'A', label: 'No', score: 0 },
-        { id: '2', letter: 'B', label: 'Planilhas', score: 10 },
+        { id: '2', letter: 'B', label: 'Planillas', score: 10 },
         { id: '3', letter: 'C', label: 'Dashboard en tiempo real', score: 25 },
       ] }),
     captureName(), captureWhatsapp(),
@@ -354,7 +354,7 @@ function tplMaturidadeDigital() {
     block('buttons', { label: 'Usa CRM?', variable_name: 'crm',
       options: [
         { id: '1', letter: 'A', label: 'No', score: 0 },
-        { id: '2', letter: 'B', label: 'Planilha', score: 10 },
+        { id: '2', letter: 'B', label: 'Planilla', score: 10 },
         { id: '3', letter: 'C', label: 'Sim', score: 25 },
       ] }),
     block('buttons', { label: 'Usa automatizaciones?', variable_name: 'auto',
@@ -422,7 +422,7 @@ function tplClinicas() {
       options: [
         { id: '1', letter: 'A', label: 'Estética', score: 15, tag: 'estetica' },
         { id: '2', letter: 'B', label: 'Saúde', score: 20, tag: 'saude' },
-        { id: '3', letter: 'C', label: 'Avaliação', score: 10, tag: 'avaliacao' },
+        { id: '3', letter: 'C', label: 'Evaluación', score: 10, tag: 'avaliacao' },
       ] }),
     block('buttons', { label: 'Há quanto tempo tem esa necessidade?', variable_name: 'tempo',
       options: [
@@ -448,7 +448,7 @@ function tplClinicas() {
       result_tiers: STD_TIERS_3(
         ['Baixa Urgência', 'Media Urgência', 'Alta Urgência'],
         ['#94a3b8', '#3b82f6', '#ef4444'],
-        ['Vamos te informar con calma.', 'Vamos agendar avaliação.', 'Atendimento prioritário hoje.'],
+        ['Vamos te informar con calma.', 'Vamos agendar evaluación.', 'Atendimento prioritário hoje.'],
       ),
     }),
   );
@@ -483,7 +483,7 @@ function tplInfoprodutos() {
       ] }),
     captureName(), captureEmail(),
     block('end', {
-      content: '🎓 Tu trilha de aprendizado está pronta!',
+      content: '🎓 Tu ruta de aprendizado está pronta!',
       result_tiers: STD_TIERS_3(
         ['Iniciante', 'Intermediário', 'Avançado'],
         ['#f97316', '#3b82f6', '#10b981'],
@@ -558,7 +558,7 @@ export const CATEGORY_LABELS: Record<QuizCategory, string> = {
   negocios: 'Negocios',
   nichos: 'Nichos',
   qualificacao: 'Calificación',
-  recomendacao: 'Recomendação',
+  recomendacao: 'Recomendación',
   educacional: 'Educacional',
 };
 

@@ -18,7 +18,7 @@ type CalloutType = "info" | "warn" | "tip" | "danger" | "success";
 const CALLOUT: Record<CalloutType, { icon: any; cls: string; label: string }> = {
   info:    { icon: Info,          cls: "border-sky-500/30 bg-sky-500/5 text-sky-700 dark:text-sky-300",       label: "Nota" },
   tip:     { icon: Lightbulb,     cls: "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300", label: "Dica" },
-  warn:    { icon: AlertTriangle, cls: "border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300",label: "Atenção" },
+  warn:    { icon: AlertTriangle, cls: "border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300",label: "Atención" },
   danger:  { icon: ShieldAlert,   cls: "border-red-500/30 bg-red-500/5 text-red-700 dark:text-red-300",       label: "Crítico" },
   success: { icon: Check,         cls: "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300", label: "Boa prática" },
 };

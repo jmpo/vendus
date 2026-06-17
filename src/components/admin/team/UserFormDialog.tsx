@@ -470,7 +470,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
             {!isEdit ? (
               <p className="text-sm text-muted-foreground text-center py-8">
                 Permisos poderão ser configuradas após crear o usuario.<br />
-                Defaults serán aplicadas automaticamente conforme o perfil escolhido.
+                Defaults serán aplicadas automaticamente conforme o perfil elegido.
               </p>
             ) : !permissions ? (
               <div className="text-center py-8 space-y-3">
@@ -551,7 +551,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="text-sm font-semibold">Notificaciones neste Aparelho (Push)</h4>
+                  <h4 className="text-sm font-semibold">Notificaciones neste Dispositivo (Push)</h4>
                   <div className="p-4 border rounded-lg text-center space-y-2">
                     <p className="text-xs text-muted-foreground">
                       Receba notificaciones mismo con o navegador cerrado ou minimizado.

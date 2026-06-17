@@ -486,7 +486,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                   </div>
                   <div className="flex gap-2">
                     <Input
-                      placeholder="Ex: Falar de promoção especial"
+                      placeholder="Ex: Falar de promoción especial"
                       className="text-xs"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
@@ -957,7 +957,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
               />
             </div>
             <div className="space-y-2">
-              <Label>Tipo de Incorporação</Label>
+              <Label>Tipo de Incorporación</Label>
               <Select
                 value={block.data.video_type || 'youtube'}
                 onValueChange={(v) => updateData('video_type', v)}
@@ -968,7 +968,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                 <SelectContent>
                   <SelectItem value="youtube">YouTube</SelectItem>
                   <SelectItem value="vimeo">Vimeo</SelectItem>
-                  <SelectItem value="embed">Incorporação (iframe URL)</SelectItem>
+                  <SelectItem value="embed">Incorporación (iframe URL)</SelectItem>
                   <SelectItem value="custom_html">HTML / JavaScript</SelectItem>
                 </SelectContent>
               </Select>
@@ -1004,7 +1004,7 @@ export function FunnelBlockEditor({ block, blocks, productId, onUpdate, onConnec
                   rows={6}
                   className="font-mono text-xs"
                 />
-                <p className="text-xs text-muted-foreground">Cole o código de incorporação completo</p>
+                <p className="text-xs text-muted-foreground">Cole o código de incorporación completo</p>
               </div>
             )}
           </>

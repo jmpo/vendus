@@ -36,7 +36,7 @@ export function CatalogManager({ productId }: CatalogManagerProps) {
           </TabsTrigger>
           <TabsTrigger value="import">
             <Upload className="h-4 w-4 mr-2" />
-            Importar planilha
+            Importar planilla
           </TabsTrigger>
           <TabsTrigger value="sync">
             <Globe className="h-4 w-4 mr-2" />
@@ -151,7 +151,7 @@ export function CatalogManager({ productId }: CatalogManagerProps) {
                 <Sparkles className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
                 <h3 className="font-semibold mb-1">Catálogo vacío</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Agregá itens manualmente, importe planilha ou sincronize con um site.
+                  Agregá itens manualmente, importe planilla ou sincronize con um site.
                 </p>
                 <Button onClick={() => setCreatingNew(true)}>
                   <Plus className="h-4 w-4 mr-2" />

@@ -49,7 +49,7 @@ export function useSuperAdminSetupChecklist() {
         {
           id: 'plans',
           label: 'Planos comerciais',
-          description: 'Tenha por el menos 1 plan ativo registrado.',
+          description: 'Tenga por el menos 1 plan ativo registrado.',
           done: (plansRes.count ?? 0) > 0,
           required: true,
           navigateTo: 'plans',

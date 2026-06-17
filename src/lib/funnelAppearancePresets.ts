@@ -23,7 +23,7 @@ export interface AppearancePreset {
 }
 
 // -----------------------------------------------------
-// Definição dos presets
+// Definición dos presets
 // -----------------------------------------------------
 export const APPEARANCE_PRESETS: AppearancePreset[] = [
   // ============ PADRÃO INLEAD ============
@@ -383,7 +383,7 @@ export const APPEARANCE_PRESETS: AppearancePreset[] = [
 ];
 
 // -----------------------------------------------------
-// Aplicação de preset
+// Aplicación de preset
 // -----------------------------------------------------
 
 /**

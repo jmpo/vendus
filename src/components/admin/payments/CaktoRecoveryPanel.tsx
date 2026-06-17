@@ -66,7 +66,7 @@ export function CaktoRecoveryPanel() {
               <CardTitle>Recuperación Automática de Ventas</CardTitle>
               <CardDescription className="mt-1">
                 Cuando a Cakto enviar um evento (Pix gerado, pago, reembolso),
-                o agente escolhido envia uma mensaje no WhatsApp del cliente — sin
+                o agente elegido envia uma mensaje no WhatsApp del cliente — sin
                 usted precisar hacer nada.
               </CardDescription>
             </div>
@@ -112,7 +112,7 @@ export function CaktoRecoveryPanel() {
             <div className="space-y-3 rounded-lg border p-4">
               <ToggleRow
                 title="Checkout abandonado"
-                description="Cliente gerou Pix/boleto mas aún no pagou. Recupera carrinho abandonado."
+                description="Cliente gerou Pix/boleto mas aún no pagou. Recupera carrito abandonado."
                 checked={draft.trigger_on_abandoned}
                 onChange={(v) => update('trigger_on_abandoned', v)}
               />
@@ -124,7 +124,7 @@ export function CaktoRecoveryPanel() {
               />
               <ToggleRow
                 title="Reembolso / Chargeback"
-                description="Cliente pediu reembolso. Tenta entender, recuperar a relação e propor alternativa."
+                description="Cliente pediu reembolso. Tenta entender, recuperar a relación e propor alternativa."
                 checked={draft.trigger_on_refunded}
                 onChange={(v) => update('trigger_on_refunded', v)}
               />

@@ -89,7 +89,7 @@ export function useTriggerEvaluation() {
       toast.success(
         data?.evaluated != null
           ? `${data.evaluated} conversaciones avaliadas`
-          : 'Avaliação disparada',
+          : 'Evaluación disparada',
       );
     },
     onError: (e: any) => toast.error(e.message ?? 'Fallo ao avaliar'),

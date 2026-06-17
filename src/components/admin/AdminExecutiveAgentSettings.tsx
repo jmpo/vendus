@@ -169,7 +169,7 @@ export function AdminExecutiveAgentSettings() {
         </div>
       </div>
 
-      {/* Master switch + identificação */}
+      {/* Master switch + identificación */}
       <Card className="border-primary/20 ring-1 ring-primary/10">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
