@@ -63,8 +63,11 @@ REGRAS
 1. Se el lead hablar "humano", "agente", "pessoa", "vendedor", "hablar con alguém"
    → intencao = "humano" imediatamente.
 2. Si el cliente menciona una MARCA o un MODELO que coincide con un producto (los modelos están en la descripción de cada producto), devolvé ese produto_id con confianza ALTA (0.8 o más). Sé decidido: ante una mención clara de marca o modelo NO pidas aclaración, derivá directamente.
-3. Se produto_id for null e todavía hay preguntas disponibles,
-   → intencao = "indefinida" e escreva UNA pregunta corta em respuesta_orquestrador.
+3. Si produto_id es null y todavía hay preguntas disponibles,
+   → intencao = "indefinida" y escribí en respuesta_orquestrador UNA pregunta corta y cordial
+   para saber qué VEHÍCULO o marca le interesa (ej.: "¿Qué modelo o marca estás buscando, Citroën o Peugeot?").
+   NUNCA preguntes sobre procesos, operación, empresa, negocio ni temas que no sean vehículos:
+   es una concesionaria que vende AUTOS a personas.
 4. Se produto_id continuar null e o limite de preguntas for atingido,
    → intencao = "humano" e respuesta_orquestrador = "Voy a te conectar con uno de nuestros agentes ahora."
 5. contexto_extraido debe ser uma frase objetiva do que o lead quer.
