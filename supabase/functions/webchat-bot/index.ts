@@ -767,15 +767,16 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    // Tomamos los ÚLTIMOS 80 mensajes (no los primeros): en conversaciones largas lo que
-    // vale es lo RECIENTE. Traemos descendente (más nuevo primero) y reinvertimos a orden
-    // cronológico para que el modelo lea la conversación actual, no el historial viejo.
+    // Tomamos los ÚLTIMOS 40 mensajes (no los primeros): en conversaciones largas lo que
+    // vale es lo RECIENTE. 40 (≈20 turnos) cubre de sobra el contexto útil y consume la mitad
+    // de tokens que 80. Traemos descendente (más nuevo primero) y reinvertimos a orden cronológico.
+    const HISTORY_LIMIT = 40;
     const { data: messagesDesc } = await supabase
       .from('webchat_messages')
       .select('*')
       .eq('conversation_id', body.conversation_id)
       .order('created_at', { ascending: false })
-      .limit(80);
+      .limit(HISTORY_LIMIT);
     const messages = (messagesDesc || []).reverse();
 
     const conversationHistory = (messages || []).map(msg => {
@@ -2236,7 +2237,13 @@ Ejemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
 
 ⚠️ FORMATO DA RESPOSTA:
 - Máximo 2 líneas por burbuja. 1 pregunta por turno. Podés quebrar em até 3 mensajes curtas e naturais (el sistema entrega cada burbuja separada).
-- Límite total: ${maxLength} caracteres somando todas las burbujas.
+- 📋 LISTAS DE VEHÍCULOS (EXCEPCIÓN AL LÍMITE DE LÍNEAS): cuando muestres VARIOS modelos/vehículos disponibles, listá cada uno en su PROPIA LÍNEA (con salto de línea real), numerado y con el nombre en *negrita*, todo en UNA sola burbuja. NUNCA los pongas seguidos en una línea corrida tipo "1. X 2. Y 3. Z". Ejemplo CORRECTO:
+Tenemos estos disponibles 👇
+1. *Peugeot 2008 Allure 1.0T CVT* — Usado 2026
+2. *Peugeot 208* — 0km
+3. *Peugeot 3008 SUV* — 0km
+¿Cuál te interesa o querés más detalles de alguno?
+- Límite total: ${maxLength} caracteres somando todas las burbujas (las listas de vehículos pueden superarlo si hace falta para que se lean ordenadas).
 - ANTES de responder, releia el historial e verifique: ya preguntesi eso? Já usei essa frase? Já cobri esse assunto?
 - SIEMPRE termine con pregunta de retorno que AVANÇA a conversación
 - NUNCA repita saudações, emojis ou frases ya usadas en esta conversación
@@ -2452,7 +2459,7 @@ Ejemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
             .limit(1)
             .maybeSingle();
           if (existingBooking) {
-            const _bDate = new Date(existingBooking.start_time).toLocaleString('es-PY', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+            const _bDate = new Date(existingBooking.start_time).toLocaleString('es-PY', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12: false });
             existingBookingPrompt = `\n\n⚠️ EL CLIENTE YA TIENE UNA CITA AGENDADA: "${existingBooking.title}" el ${_bDate}.
 - Si el cliente PREGUNTA cuándo es su cita, qué fecha tiene, o te pide que se la recuerdes → respondé SIEMPRE de inmediato y directo: "Tu ${existingBooking.title} está agendado para el ${_bDate}". Eso NO es repetir de más, es responder lo que te preguntó. NUNCA respondas esa pregunta con otra pregunta ni con una vaguedad como "¿algún detalle a ajustar?".
 - Cuando surja el tema de CAMBIAR el horario, recordá la cita una vez y confirmá que quiere modificarla. Apenas confirme, NO repitas el recordatorio: AVANZÁ.
@@ -3016,6 +3023,7 @@ REGRAS DE USO:
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
+            hour12: false,
             timeZone: 'America/Sao_Paulo',
           });
           const meta = convMeeting.meeting_metadata as any;
@@ -3205,7 +3213,7 @@ REGRAS DE USO:
         const identityRail =
           `\n\n=== REGRAS CRÍTICAS DE IDENTIDADE E HONESTIDADE (NO QUEBRAR) ===\n` +
           `1. Vos sos EXCLUSIVAMENTE "${fixedAgentName}". Mantené SIEMPRE este nombre, papel e empresa.\n` +
-          `2. Mensajes anteriores nel historial pueden ter sido escritas por OUTRO agente que cuidou del cliente antes. IGNORE personas, ofertas, productos ou nomes próprios mencionados en esas mensajes passadas se conflitarem con a su identidade atual.\n` +
+          `2. Mensajes anteriores en el historial pueden haber sido escritos por OTRO asesor que atendió al cliente antes. Mantené SIEMPRE tu identidad y tu marca/producto, pero NO ignores lo que el cliente expresó que busca o necesita: tenelo en cuenta para dar CONTINUIDAD a la conversación. Si el cliente se refiere a un vehículo o producto de OTRA marca que vende otro asesor (ej.: venía viendo un Peugeot y vos sos de Citroën), reconocelo con naturalidad ("Vi que estabas viendo el [modelo]...") y ofrecé conectarlo con ese especialista o mostrarle una alternativa equivalente de TU marca. NUNCA actúes como si no supieras de qué te está hablando.\n` +
           `3. Se el cliente preguntar su nombre, responda SOLO con "${fixedAgentName}".\n` +
           `4. NUNCA finjas que escuchaste un audio o viste una imagen. Se a últimel mensaje del cliente for un placeholder do tipo "🎙️ [Audio recibido — no pude transcribir...]" ou "🖼️ [Imagen recibida — no pude analizar...]", responda DICIENDO QUE TUVO PROBLEMA TÉCNICO PARA ESCUCHAR/VER e pedile al cliente que reenvíe o describa en texto. NO inventes contenido.\n` +
           `5. Cuando el mensaje comenzar con "🎙️ Audio del cliente (transcrito):" ou "🖼️ Imagen del cliente:", essa É el mensaje real del cliente — trate como tal.\n`;
@@ -3246,7 +3254,7 @@ REGRAS DE USO:
               fbRail = `\n\n📣 CONTEXTO DEL ANUNCIO (Meta/Facebook Ads) — USALO SIEMPRE:\nEste cliente llegó desde el anuncio "${_fbm.facebook_ad_name || ''}"${_fbm.facebook_campaign_name ? ` (campaña: ${_fbm.facebook_campaign_name})` : ''}${_ans ? ` y completó un formulario con estos datos:\n${_ans}` : ''}.\nYA SABÉS lo que busca: hacé referencia a eso de forma natural y NUNCA le preguntes algo que ya respondió en el formulario.`;
             }
             if (_bk) {
-              const _bkDate = new Date(_bk.start_time).toLocaleString('es-PY', { timeZone: 'America/Sao_Paulo', weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+              const _bkDate = new Date(_bk.start_time).toLocaleString('es-PY', { timeZone: 'America/Sao_Paulo', weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12: false });
               bookingRail = `\n\n🗓️ CITA ACTUAL DEL CLIENTE: "${_bk.title}" agendada para el ${_bkDate}. Si el cliente pregunta cuándo es su cita, qué fecha tiene o pide que se la recuerdes → respondé DIRECTO: "Tu ${_bk.title} está agendado para el ${_bkDate}". NUNCA respondas eso con otra pregunta ni con vaguedades.`;
             }
           }
@@ -4105,7 +4113,7 @@ REGRAS DE USO:
                     // === Notificaciones internas para la equipo ===
                     try {
                       const formattedDateNotif = startTime.toLocaleDateString('es-PY', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'America/Sao_Paulo' });
-                      const formattedTimeNotif = startTime.toLocaleTimeString('es-PY', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
+                      const formattedTimeNotif = startTime.toLocaleTimeString('es-PY', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/Sao_Paulo' });
                       const agentNameNotif = activeAgent?.name || 'IA';
                       const recipientIds = new Set<string>();
 
@@ -4158,7 +4166,7 @@ REGRAS DE USO:
                     
                     // Format confirmation for AI to relay
                     const formattedDate = startTime.toLocaleDateString('es-PY', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Sao_Paulo' });
-                    const formattedTime = startTime.toLocaleTimeString('es-PY', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
+                    const formattedTime = startTime.toLocaleTimeString('es-PY', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/Sao_Paulo' });
                     
                     if (emailSent) {
                       responseContent = `✅ ¡Reunión agendada con éxito!\n\n📅 ${formattedDate} a las ${formattedTime}\n📧 Confirmación enviada a ${args.guest_email}\n\n¿Te puedo ayudar con algo más?`;

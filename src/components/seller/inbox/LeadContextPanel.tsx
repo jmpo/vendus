@@ -443,7 +443,7 @@ export function LeadContextPanel({
                         <p className="text-xs font-medium text-foreground">{b.title}</p>
                         <p className="text-xs text-muted-foreground flex items-center gap-1.5">
                           <Clock className="h-3 w-3 flex-shrink-0" />
-                          {new Date(b.start_time).toLocaleString('es-PY', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
+                          {new Date(b.start_time).toLocaleString('es-PY', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12: false })}
                         </p>
                         {b.location && (
                           <p className="text-xs text-muted-foreground flex items-center gap-1.5">

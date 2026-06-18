@@ -241,6 +241,11 @@ export function splitIntoBubbles(text: string, cfg: SplittingConfig = {}): strin
   if (aggr === 1) return [t];
   if (aggr === 2 && t.length <= 200) return [t];
 
+  // Si el texto contiene una LISTA (2+ ítems numerados o con viñeta), NO la fragmentamos:
+  // una lista de vehículos/opciones se lee mucho mejor entera, en una sola burbuja.
+  const listItemCount = (t.match(/^\s*(?:\d+[.)]|[•\-*])\s+/gm) || []).length;
+  if (listItemCount >= 2) return [t];
+
   // Tamaño-alvo por burbuja conforme aggressiveness (estilo WhatsApp).
   const targetLen = aggr >= 5 ? 100 : aggr === 4 ? 140 : aggr === 3 ? 180 : 220;
 
