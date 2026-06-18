@@ -40,7 +40,7 @@ function capitalize(s: string): string {
 }
 
 /**
- * Retorna o primero nombre del lead (capitalizado), ou null se o input
+ * Retorna el primero nombre del lead (capitalizado), ou null se o input
  * parecer nombre de empresa / razón social / lixo.
  */
 export function extractFirstName(raw?: string | null): string | null {

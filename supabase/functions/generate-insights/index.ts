@@ -200,7 +200,7 @@ Responda SOLO no formato JSON abaixo, sin texto adicional:
     if (!response.ok) {
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: "Límite de solicitudes excedido. Probá novamente em algunos segundos." }),
+          JSON.stringify({ error: "Límite de solicitudes excedido. Probá de nuevo em algunos segundos." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -236,7 +236,7 @@ Responda SOLO no formato JSON abaixo, sin texto adicional:
       insights = [
         {
           title: "Análise em andamento",
-          insight: "No fue posible gerar insights automáticos no momento. Probá novamente.",
+          insight: "No fue posible gerar insights automáticos no momento. Probá de nuevo.",
           type: "tip",
           priority: "low"
         }

@@ -184,7 +184,7 @@ async function processJob(supabase: any, job: any, siteUrl: string) {
       ? await supabase.from("booking_reminders").select("*").eq("id", job.reminder_id).maybeSingle()
       : { data: null } as any;
     waText = renderTemplate(reminder?.message_template || DEFAULT_TEMPLATES.reminder_whatsapp, vars);
-    emailSubject = renderTemplate(reminder?.email_subject || `Lembrete: {{nome_evento}} às {{hora}}`, vars);
+    emailSubject = renderTemplate(reminder?.email_subject || `Lembrete: {{nome_evento}} a las {{hora}}`, vars);
     emailBody = waText.replace(/\n/g, "<br>");
   } else if (job.kind === "recovery") {
     waText = renderTemplate(settings?.recovery_message || DEFAULT_TEMPLATES.recovery_whatsapp, vars);

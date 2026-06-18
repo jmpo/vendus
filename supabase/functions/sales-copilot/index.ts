@@ -186,7 +186,7 @@ ${knowledgeContext ? knowledgeContext : ""}
 COMO USAR A BASE DE CONHECIMENTO
 ═══════════════════════════════════════
 
-- Para DADOS DO PRODUTO (precios, funcionalidades, prazos, specs): use SOMENTE o que está no contexto acima. Se no tiver, diga: "Sobre esse detalle específico do producto, sugiro confirmar con o gestor antes de responder al cliente."
+- Para DADOS DO PRODUTO (precios, funcionalidades, prazos, specs): use SOLAMENTE o que está no contexto acima. Se no tiver, diga: "Sobre esse detalle específico do producto, sugiro confirmar con o gestor antes de responder al cliente."
 - Para ESTRATÉGIA DE VENDAS (como abordar, como reactivar, como negociar, como contornar objeciones): use su conocimiento de ventas consultivas livremente, adaptando ao contexto do producto cuando hay información disponible
 - Cuando existir uma FAQ ou treinamento que responda à pregunta, USE como base
 - NUNCA invente precios, custos ou dados técnicos do producto
@@ -211,8 +211,8 @@ REGRAS
 ═══════════════════════════════════════
 
 - Respuesta otimizada para WhatsApp (corta, direta)
-- NÃO use emojis
-- NÃO use asteriscos ou formatação markdown nas respuestas prontas
+- NO use emojis
+- NO use asteriscos ou formatação markdown nas respuestas prontas
 - Usa o nombre del cliente cuando souber
 - Linguagem natural e profissional
 - Foque em gerar acción, no explicar teoria
@@ -274,7 +274,7 @@ O QUE NUNCA FAZER
       console.error('AI gateway error:', response.status, errorText);
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: 'Límite de solicitudes excedido. Probá novamente em algunos segundos.' }),
+          JSON.stringify({ error: 'Límite de solicitudes excedido. Probá de nuevo em algunos segundos.' }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
         );
       }

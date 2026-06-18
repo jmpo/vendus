@@ -1,4 +1,4 @@
-// Reprocessa um pedido Cakto ya guardado em `cakto_orders`, rodando novamente o
+// Reprocessa um pedido Cakto ya guardado em `cakto_orders`, rodando de nuevo o
 // pipeline de provisionamento (plano + usuario admin). Idempotente.
 
 import { buildAdminClient, provisionFromOrder } from '../_shared/cakto-plan-provisioning.ts';

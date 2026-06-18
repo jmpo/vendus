@@ -142,7 +142,7 @@ Deno.serve(async (req) => {
 Tipo de catálogo: ${catalogType}.
 ${CATALOG_SCHEMAS[catalogType] || CATALOG_SCHEMAS.generico}
 Siempre devuelvas precio como número (sin R$, sin pontos de milhar). Se no encontrar, retorne null.
-images: array de URLs absolutas das fotos do item.`,
+images: array de URLs absolutas das fotos del ítem.`,
               },
               {
                 role: "user",

@@ -132,7 +132,7 @@ Deno.serve(async (req) => {
         is_fuzzy_match: isFuzzyMatch,
         // Mensaje que o agente puede usar literalmente cuando no achou exato
         agent_hint: isAlternativeMatch
-          ? "No encontrei exatamente o que el cliente pediu, mas tengo essas opciones similares. Apresente como alternativas, sin dizer 'no tengo'."
+          ? "No encontrei exatamente o que el cliente pediu, mas tengo essas opciones similares. Presentá como alternativas, sin dizer 'no tengo'."
           : isFuzzyMatch
           ? "Encontrei estas opciones aproximadas (puede ter sido error de digitação del cliente). Confirme se es o que ele queria."
           : null,

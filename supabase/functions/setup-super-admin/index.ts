@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    // Trava de segurança: só permite se NÃO existe ningún super_admin
+    // Trava de segurança: só permite se NO existe ningún super_admin
     const { data: existing, error: checkErr } = await admin
       .from("user_roles")
       .select("user_id")

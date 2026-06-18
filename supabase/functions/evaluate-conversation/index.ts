@@ -28,7 +28,7 @@ async function judgeConversation(
   const systemPrompt =
     `Vos sos um avaliador especialista de conversaciones de ventas. ` +
     `Analiza la conversación e pontue de 0 a 100 cada dimensão. ` +
-    `Sé crítico e objetivo. Responda SOLO via tool call.`;
+    `Sé crítico e objetivo. Responda SOLO vila herramienta call.`;
 
   const userPrompt = `${
     agentName ? `Agente: ${agentName}\n\n` : ""

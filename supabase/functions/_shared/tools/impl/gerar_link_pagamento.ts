@@ -22,7 +22,7 @@ export const gerarLinkPagamentoTool: ToolDefinition = {
       payment_method: {
         type: 'string',
         enum: ['pix', 'credit_card', 'any'],
-        description: 'Método de pago preferido. "any" deixa o cliente escolher.',
+        description: 'Método de pago preferido. "any" deixa el cliente escolher.',
       },
     },
     required: ['product_id'],

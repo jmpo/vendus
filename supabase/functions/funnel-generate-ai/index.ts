@@ -93,7 +93,7 @@ Problemas que resolve: ${product.problems_solved || 'N/A'}
     const toneDescriptions: Record<string, string> = {
       formal: 'Usá lenguaje formal y profesional. Evitá modismos.',
       informal: 'Usá lenguaje amigable y distendido, como una conversación casual. Los emojis son bienvenidos.',
-      technical: 'Usá términos técnicos relevantes. Sé preciso y objetivo.',
+      technical: 'Usá términos técnicos relevantes. Sé necesito y objetivo.',
     };
 
     const systemPrompt = `Vos sos um especialista em crear funis de captación de leads de alta conversión.
@@ -139,7 +139,7 @@ REGRAS DE CONEXÃO:
 - Bloques lineales: usá "next_block_id" en el bloque para apuntar al próximo
 - Blocos buttons: cada option tiene su propio "next_block_id" (ramificação)
 - Bloques score/tag: son invisibles, conectalos al próximo bloque visible vía next_block_id
-- Blocos end: NÃO têm next_block_id (son terminais)
+- Blocos end: NO têm next_block_id (son terminais)
 - Genera IDs usando formato UUID v4
 
 REGRAS DE POSIÇÃO (X/Y no canvas):
@@ -206,7 +206,7 @@ Retorne SOLO o JSON no formato especificado, sin explicaciones.`;
       
       if (aiResponse.status === 429) {
         return new Response(
-          JSON.stringify({ error: 'Límite de solicitudes excedido. Probá novamente em algunos segundos.' }),
+          JSON.stringify({ error: 'Límite de solicitudes excedido. Probá de nuevo em algunos segundos.' }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
@@ -242,7 +242,7 @@ Retorne SOLO o JSON no formato especificado, sin explicaciones.`;
     } catch (parseError) {
       console.error('Failed to parse AI response:', aiContent);
       return new Response(
-        JSON.stringify({ error: 'Error ao processar respuesta da IA. Probá novamente.' }),
+        JSON.stringify({ error: 'Error ao processar respuesta da IA. Probá de nuevo.' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

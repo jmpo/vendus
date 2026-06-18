@@ -893,7 +893,7 @@ Deno.serve(async (req) => {
       const remoteIsLid = remoteJid.includes("@lid");
       const lidJid = norm.lidJid || (remoteIsLid ? remoteJid : undefined);
       const lidId = lidJid ? lidJid.split("@")[0].split(":")[0] : undefined;
-      // Se só temos @lid (sin teléfono real resolvido), NÃO derivamos um "teléfono" do LID.
+      // Se só temos @lid (sin teléfono real resolvido), NO derivamos um "teléfono" do LID.
       const remotePhone = remoteIsLid ? "" : remoteJid.split("@")[0].split(":")[0].replace(/\D/g, "");
       const instancePhone = (instance.phone_number || "").replace(/\D/g, "");
       const remotePhoneCandidates = remotePhone ? phoneVariantsBR(remotePhone) : [];
@@ -1189,9 +1189,9 @@ Deno.serve(async (req) => {
       // Estratégia tolerante a troca de instância:
       //   1) Tenta encontrar conversación abierta con a MESMA instância.
       //   2) Se no encontrar, busca cualquier conversación abierta do mismo (org, teléfono, whatsapp)
-      //      sin filtrar instância — assim PRESERVAMOS o historial do contato mismo
+      //      sin filtrar instância — assim PRESERVAMOS el historial do contato mismo
       //      cuando o número es reconectado/migrado para otra instância.
-      // NÃO fechamos conversaciones duplicadas automaticamente: o historial del agente
+      // NO fechamos conversaciones duplicadas automaticamente: el historial del agente
       // nunca puede sumir por trás dele. Se hay duplicatas, o agente cierra
       // manualmente cuando quiser.
       let conversationId: string | null = null;
@@ -1298,7 +1298,7 @@ Deno.serve(async (req) => {
 
         const inTriageStates =
           orchActive &&
-          (stateAfterReset === null || stateAfterReset === "triagem" || stateAfterReset === "aguardando_menu");
+          (stateAfterReset === null || stateAfterReset === "triagem" || stateAfterReset === "esperándo_menu");
 
         const updatePayload: any = {
           evolution_instance_id: instance.id,
@@ -2468,7 +2468,7 @@ Deno.serve(async (req) => {
             agentId = instanceLockAgent.id;
             if (instanceLockAgent.product_id) resolvedProductId = instanceLockAgent.product_id;
             // Se la conversación ya está con OUTRO agente ATIVO da misma org (típico
-            // después handoff Maria→Sonia), respeite — NÃO force voltar pro instance lock.
+            // después handoff Maria→Sonia), respeite — NO force voltar pro instance lock.
             // Só sobrescribe se current_agent_id for null/inválido.
             const currentAgentId = (conv as any).current_agent_id || null;
             if (currentAgentId && currentAgentId !== agentId) {
@@ -2501,7 +2501,7 @@ Deno.serve(async (req) => {
             const orchActiveBot = !!(orchCfgBot?.is_enabled && orchCfgBot?.orchestrator_agent_id);
             const convOrchState = (conv as any).orchestrator_state || null;
             orchOwnsConversation =
-              orchActiveBot && (convOrchState === null || convOrchState === "triagem" || convOrchState === "aguardando_menu");
+              orchActiveBot && (convOrchState === null || convOrchState === "triagem" || convOrchState === "esperándo_menu");
 
             if (!orchOwnsConversation) {
               agentId = (conv as any).current_agent_id || null;
@@ -2677,7 +2677,7 @@ Deno.serve(async (req) => {
               body: JSON.stringify({
                 conversation_id: conversationId,
                 // Send aggregated content so the agent sees the full thought
-                // (e.g. "Boa noite\nTodo bien?\nQuiero ver imóveis") at once.
+                // (e.g. "Boa noite\nTodo bien?\nQuiero ver vehículos") at once.
                 message: aggregatedMessage,
                 product_id: productIdForBot,
                 visitor_name: (conv as any).visitor_name || senderName,

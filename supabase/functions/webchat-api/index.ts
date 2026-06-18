@@ -397,7 +397,7 @@ serve(async (req) => {
             if (profiles) {
               const notifications = profiles.map((p: { id: string }) => ({
                 user_id: p.id,
-                title: 'Novla conversación aguardando atención',
+                title: 'Novla conversación esperándo atención',
                 message: `Visitante ${conversation.visitor_name || 'anônimo'} solicitou atención humano`,
                 type: 'opportunity',
                 action_url: '/admin?section=webchat',
@@ -599,7 +599,7 @@ serve(async (req) => {
       if (profiles) {
         const notifications = profiles.map((p: { id: string }) => ({
           user_id: p.id,
-          title: 'Novla conversación aguardando atención',
+          title: 'Novla conversación esperándo atención',
           message: `Visitante ${conversation.visitor_name || 'anônimo'} solicitou atención humano`,
           type: 'opportunity',
           action_url: '/admin?section=webchat',

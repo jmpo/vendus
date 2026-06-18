@@ -173,7 +173,7 @@ Deno.serve(async (req) => {
           ? `MODO: CONVERSA INTENCIONAL
 - Genera SOLO uma abertura corta (1–2 líneas, no máx. 25 palabras).
 - Hacé UNA pregunta provocativa referenciando el evento (ex.: "Vi que usted gerou um Pix, conseguiu finalizar?").
-- NÃO entregue Pix, link, código, instrucciones ou dados del evento ahora — só preguntes.
+- NO entregue Pix, link, código, instrucciones ou dados del evento ahora — só preguntes.
 - Esperá la respuesta del lead antes de ofrecer cualquier detalle.`
           : `MODO: MENSAGEM DIRETA
 - Genera umel mensaje completa, mas em no máx. 2 parágrafos curtos.
@@ -185,7 +185,7 @@ MISSÃO: ${agent.primary_objective}
 TOM DE VOZ: ${agent.tone_style || "Consultivo"}
 ESTILO DE MENSAGEM: ${agent.message_style || "Curta e objetiva"}
 ${agent.can_do?.length ? `O QUE VOS PODE FAZER:\n${agent.can_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
-${agent.cannot_do?.length ? `O QUE VOS NÃO PODE FAZER:\n${agent.cannot_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
+${agent.cannot_do?.length ? `O QUE VOS NO PODE FAZER:\n${agent.cannot_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
 ${knowledgeContext ? `CONHECIMENTO DO PRODUTO:\n${knowledgeContext}` : ""}
 ${objective ? `OBJETIVO DESTA ABORDAGEM: ${objective}` : ""}
 ${extra_context ? `CONTEXTO ADICIONAL: ${extra_context}` : ""}
@@ -193,7 +193,7 @@ ${eventCtxLines ? `CONTEXTO DO EVENTO:\n${eventCtxLines}` : ""}
 ${modeRules}
 REGRAS GERAIS:
 - Genera SOLO el mensaje, sin explicaciones ou prefixos.
-- Sé natural e humano, NÃO pareça um bot. Sin clichés ("espero que esteja bem", etc.).
+- Sé natural e humano, NO pareça um bot. Sin clichés ("espero que esteja bem", etc.).
 - Personalize con as información del lead.
 - WhatsApp: sin markdown, sin HTML.`;
 

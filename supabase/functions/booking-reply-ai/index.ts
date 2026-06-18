@@ -18,7 +18,7 @@ const TOOLS = [
     type: "function",
     function: {
       name: "confirm_booking",
-      description: "Confirma a reunión cuando el lead aceita o horario atual.",
+      description: "Confirma a reunión cuando el lead aceita el horario atual.",
       parameters: { type: "object", properties: {}, additionalProperties: false },
     },
   },
@@ -26,13 +26,13 @@ const TOOLS = [
     type: "function",
     function: {
       name: "reschedule_booking",
-      description: "Reagenda a reunión para um novo horario proposto pelel lead.",
+      description: "Reagenda a reunión para um novel horario proposto pelel lead.",
       parameters: {
         type: "object",
         properties: {
           new_start_iso: {
             type: "string",
-            description: "Novo horario em ISO 8601 con timezone (ex: 2026-06-13T16:00:00-03:00).",
+            description: "Novel horario em ISO 8601 con timezone (ex: 2026-06-13T16:00:00-03:00).",
           },
         },
         required: ["new_start_iso"],
@@ -109,7 +109,7 @@ Contexto da reunión:
 
 Su tarea: interpretar a respuesta del lead e llamar UMA tool apropriada:
 - Se confirma/aceita → confirm_booking
-- Se pede otro horario específico → reschedule_booking(new_start_iso) — converta data/hora natural para ISO 8601 con offset -03:00 (Brasília). NÃO invente: se no der pra inferir data exata, prefira propose_followup.
+- Se pede otrel horario específico → reschedule_booking(new_start_iso) — converta data/hora natural para ISO 8601 con offset -03:00 (Brasília). NO invente: se no der pra inferir data exata, prefira propose_followup.
 - Se cancela definitivamente → cancel_booking
 - Se diz "no posso ahora, me chama después/semana que vem/mes que vem" → propose_followup(when_iso) con data aproximada
 
@@ -169,7 +169,7 @@ Siempre execute UMA tool. Después escreva uma respuesta corta e gentil para env
       replyText = toolResult.reply || choice?.content || replyText;
     } catch (e: any) {
       console.error("[booking-reply-ai] tool exec failed:", e?.message || e);
-      replyText = "Tive um problema para processar ahora. ¿Podés reformular?";
+      replyText = "Tive un problema para processar ahora. ¿Podés reformular?";
     }
   } else if (choice?.content) {
     replyText = String(choice.content).trim();
@@ -247,7 +247,7 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
     }
 
     const niceWhen = newStart.toLocaleString("es-PY", { timeZone: booking.timezone || "America/Sao_Paulo", dateStyle: "short", timeStyle: "short" });
-    return { reply: `Anotei o novo horario: ${niceWhen} 📅 Em breve te confirmo!` };
+    return { reply: `Anotei o novel horario: ${niceWhen} 📅 Em breve te confirmo!` };
   }
 
   if (intent === "propose_followup" && args?.when_iso) {
@@ -283,7 +283,7 @@ async function executeIntent(supabase: any, booking: any, intent: string, args: 
         .eq("id", booking.id);
 
       const niceWhen = when.toLocaleString("es-PY", { timeZone: booking.timezone || "America/Sao_Paulo", dateStyle: "short" });
-      return { reply: `Sin problema! Voy a te llamar de novo em ${niceWhen} 📞` };
+      return { reply: `Sin problema! Voy a te llamar de nuevo em ${niceWhen} 📞` };
     }
   }
 

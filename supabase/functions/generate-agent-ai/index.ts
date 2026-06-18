@@ -344,16 +344,16 @@ Devuelve una versión otimizada que respeite o tipo del agente e o contexto real
 🎯 TIPO DE AGENTE A CRIAR: ${agent_type.toUpperCase()}
 📋 MISSÃO DESTE TIPO: ${mission}
 
-⚠️ REGRA CRÍTICA: Vos sostá criando um agente do tipo "${agent_type}" — ele NÃO puede agir como otro tipo.
+⚠️ REGRA CRÍTICA: Vos sostá criando um agente do tipo "${agent_type}" — ele NO puede agir como otro tipo.
 ${isAdmin ? '- Admin: Chief of Staff INTERNO. NUNCA tenta vender, agendar reunión con o admin, ou tratá-lo comel lead.' : ''}
 ${isOrchestrator ? '- Orquestrador: SOLO classifica e roteia. NUNCA explica producto, NUNCA dá precio, NUNCA negocia.' : ''}
 ${isSupport ? '- Suporte: Resolve dudas técnicas. NUNCA vende producto adicional. Usa SOLO materiais cadastrados.' : ''}
 ${agent_type === 'sdr' ? '- SDR: Qualifica e identifica intención. NUNCA dá precio fechado, NUNCA data venta — passa para Closer. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que el cliente pedir material visual — esse es o canal oficial. NUNCA invente bloqueios como "no posso enviar por acá", "off-market", "restricción de segurança".' : ''}
-${agent_type === 'closer' ? '- Closer: Apresenta oferta e data. NUNCA dá descuento sin política autorizada. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO direto no WhatsApp cuando o cliente pedir — no desvia, no inventa restricción.' : ''}
+${agent_type === 'closer' ? '- Closer: Apresenta oferta e data. NUNCA dá descuento sin política autorizada. ENVIA fotos/vídeos/PDFs/links do CATÁLOGO direto no WhatsApp cuando el cliente pedir — no desvia, no inventa restricción.' : ''}
 ${agent_type === 'financial' ? '- Financeiro: Lida con boletos/NF/cobrança. NUNCA negocia dívida sin autorização.' : ''}
 ${agent_type === 'custom' ? '- Custom: Se for foco comercial, ENVIA fotos/vídeos/PDFs/links do CATÁLOGO siempre que pedido — canal oficial de mídia.' : ''}
 
-🧱 TEMPLATE BASE BLINDADO (use COMO ponto de partida do additional_prompt — adapte/expanda mas NÃO desconfigure as regras críticas):
+🧱 TEMPLATE BASE BLINDADO (use COMO ponto de partida do additional_prompt — adapte/expanda mas NO desconfigure as regras críticas):
 \`\`\`
 ${blueprintTemplate}
 \`\`\`
@@ -384,7 +384,7 @@ PRINCÍPIOS DE DESIGN:
   • Suporte: regra keyword "urgente/parou/no funciona" → context de priorização.
   • Admin/Orchestrator/Financial: puede omitir humanization OU mandar reactions.enabled=false.
 
-NÃO retorne timing, splitting nem style — esses ficam no default do front (ya curados).`;
+NO retorne timing, splitting nem style — esses ficam no default do front (ya curados).`;
 
     const userInstruction = isAdmin
       ? `Crea o agente Chief of Staff (admin executivo) ${adminName ? `para ${adminName}` : ''} da ${orgName}. O additional_prompt DEVE conter o EXECUTIVE_KERNEL completo do template, con nombre do admin e productos da organización preenchidos. Tom executivo, mensajes curtas (4 líneas), nunca vendedor.`

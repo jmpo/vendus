@@ -140,7 +140,7 @@ Garantia: ${product.guarantee || 'N/A'}
     const toneDescriptions = {
       formal: 'Usa lenguaje formal e profissional, adequada para B2B corporativo. Evita modismos e mantené tom respeitoso.',
       informal: 'Usa lenguaje amigable e descontraída, como una conversación casual. Sé cálido e empático.',
-      technical: 'Usa termos técnicos relevantes ao sector, assumindo conocimiento prévio. Sé preciso e objetivo.',
+      technical: 'Usa termos técnicos relevantes ao sector, assumindo conocimiento prévio. Sé necesito e objetivo.',
     };
 
     // Build enhanced system prompt
@@ -187,7 +187,7 @@ TIPOS DE BLOCOS VÁLIDOS (use SOLO estes valores em block_type):
 - scale: Escala numérica — IMPORTANTE: coloque a configuración em "options" como objeto {"min":1,"max":10,"min_label":"...","max_label":"..."}
 - end_screen: Pantalla final/agradecimiento (SIEMPRE el último bloque)
 
-NÃO use "name", "company" ou "thank_you_screen" como block_type — esses valores son inválidos.
+NO use "name", "company" ou "thank_you_screen" como block_type — esses valores son inválidos.
 
 FORMATO DE RESPOSTA (JSON ARRAY puro, sin markdown):
 [

@@ -45,7 +45,7 @@ async function llmFallback(
 
   const systemPrompt =
     `Vos sos um supervisor de IA que roteia conversaciones para el agente especialista mais adequado. ` +
-    `Analiza o contexto e elegí UM especialista da lista. Responde solo via tool call.`;
+    `Analiza o contexto e elegí UM especialista da lista. Responde solo vila herramienta call.`;
 
   const userPrompt = `Contexto:
 - Canal: ${context.channel ?? "desconocido"}

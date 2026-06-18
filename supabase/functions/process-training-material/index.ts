@@ -203,9 +203,9 @@ async function extractDocumentFaithfully(fileData: Blob, mimeType: string, filen
 REGRAS ABSOLUTAS:
 1. Extraia TODO o texto do documento de forma FIEL e COMPLETA
 2. Mantené a estrutura original (títulos, subtítulos, parágrafos, listas, tabelas)
-3. NÃO resuma, NÃO altere, NÃO omita NENHUMA parte do texto
-4. NÃO adicione comentários, interpretações ou análises
-5. NÃO reorganize o contenido - mantené a ordem original
+3. NO resuma, NO altere, NO omita NENHUMA parte do texto
+4. NO adicione comentários, interpretações ou análises
+5. NO reorganize o contenido - mantené a ordem original
 6. Se hay tabelas, reproduza-as em formato legível
 7. Se hay imagens con texto (OCR), extraia o texto fielmente
 8. Retorne SOLO o texto extraído, nada mais`

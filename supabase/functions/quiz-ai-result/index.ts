@@ -85,7 +85,7 @@ Retorne SOLO um JSON válido con este formato exato:
       const errText = await aiResp.text();
       console.error('[quiz-ai-result] AI error:', aiResp.status, errText);
       return new Response(JSON.stringify({
-        error: aiResp.status === 429 ? 'Límite de uso da IA atingido. Probá novamente em instantes.'
+        error: aiResp.status === 429 ? 'Límite de uso da IA atingido. Probá de nuevo en instantes.'
           : aiResp.status === 402 ? 'Créditos de IA esgotados.'
           : 'Fallo ao gerar resultado IA.',
       }), { status: aiResp.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });

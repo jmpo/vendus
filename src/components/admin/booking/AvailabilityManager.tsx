@@ -262,11 +262,11 @@ export function AvailabilityManager() {
                           slots.map((slot) => (
                             <div key={slot.id} className="flex items-center gap-2 flex-wrap">
                               <Select
-                                value={slot.start_time}
-                                onValueChange={(v) => updateTimeSlot.mutate({ 
-                                  id: slot.id, 
-                                  start_time: v, 
-                                  end_time: slot.end_time 
+                                value={slot.start_time?.slice(0, 5)}
+                                onValueChange={(v) => updateTimeSlot.mutate({
+                                  id: slot.id,
+                                  start_time: v,
+                                  end_time: slot.end_time
                                 })}
                               >
                                 <SelectTrigger className="w-[90px] h-8 text-xs">
@@ -280,11 +280,11 @@ export function AvailabilityManager() {
                               </Select>
                               <span className="text-muted-foreground text-xs">-</span>
                               <Select
-                                value={slot.end_time}
-                                onValueChange={(v) => updateTimeSlot.mutate({ 
-                                  id: slot.id, 
-                                  start_time: slot.start_time, 
-                                  end_time: v 
+                                value={slot.end_time?.slice(0, 5)}
+                                onValueChange={(v) => updateTimeSlot.mutate({
+                                  id: slot.id,
+                                  start_time: slot.start_time,
+                                  end_time: v
                                 })}
                               >
                                 <SelectTrigger className="w-[90px] h-8 text-xs">

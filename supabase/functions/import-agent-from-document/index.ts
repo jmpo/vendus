@@ -200,7 +200,7 @@ Crea a configuración completa del agente baseada nisso.`;
       const txt = await aiResp.text();
       console.error("AI gateway error", aiResp.status, txt);
       if (aiResp.status === 429) {
-        return new Response(JSON.stringify({ error: "Límite de uso de IA atingido. Probá novamente em algunos minutos." }), {
+        return new Response(JSON.stringify({ error: "Límite de uso de IA atingido. Probá de nuevo em algunos minutos." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }

@@ -811,7 +811,7 @@ async function executeAction(
         .single();
 
       if (!lead?.email) {
-        return { lead_id: existingLeadId, skipped: true, reason: 'Lead has no email' };
+        return { lead_id: existingLeadId, skipped: true, reason: 'Lead has nel email' };
       }
 
       // Get organization name for sender and variables
@@ -901,7 +901,7 @@ async function executeAction(
       ]);
 
       if (!seller?.email) {
-        return { lead_id: existingLeadId, skipped: true, reason: 'Seller has no email' };
+        return { lead_id: existingLeadId, skipped: true, reason: 'Seller has nel email' };
       }
 
       const orgName = org?.name || 'CRM';
@@ -1258,7 +1258,7 @@ TOM DE VOZ: ${agent.tone_style || 'Consultivo'}
 ESTILO DE MENSAGEM: ${agent.message_style || 'Curta e objetiva'}
 
 ${agent.can_do?.length ? `O QUE VOS PODE FAZER:\n${agent.can_do.map((c: any) => `- ${c}`).join('\n')}` : ''}
-${agent.cannot_do?.length ? `O QUE VOS NÃO PODE FAZER:\n${agent.cannot_do.map((c: any) => `- ${c}`).join('\n')}` : ''}
+${agent.cannot_do?.length ? `O QUE VOS NO PODE FAZER:\n${agent.cannot_do.map((c: any) => `- ${c}`).join('\n')}` : ''}
 
 ${knowledgeContext ? `CONHECIMENTO DO PRODUTO:\n${knowledgeContext}` : ''}
 
@@ -1267,7 +1267,7 @@ ${config.ai_extra_context ? `CONTEXTO ADICIONAL: ${config.ai_extra_context}` : '
 
 REGRAS:
 - Genera SOLO el mensaje, sin explicaciones ou prefixos
-- Sé natural e humano, NÃO pareça um bot
+- Sé natural e humano, NO pareça um bot
 - Personalize con as información del lead
 - A mensaje debe ser para WhatsApp (corta, direta, sin formatação HTML)
 - Termine con uma pregunta ou CTA claro`;
@@ -1574,7 +1574,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
         }
       }
 
-      // 2. Determina o primero bloco
+      // 2. Determina el primero bloco
       const blocks: any[] = (funnel.flow_blocks as any[]) || [];
       const startBlockId: string | null = (funnel as any).start_block_id || blocks[0]?.id || null;
       const startBlock = blocks.find((b: any) => b.id === startBlockId) || blocks[0] || null;
@@ -1715,7 +1715,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ''}`;
             throw new Error(`Fallo al enviar primeirel mensaje: ${errMsg}`);
           }
 
-          // Salvel mensaje outbound no historial
+          // Salvel mensaje outbound nel historial
           await supabase.from('webchat_messages').insert({
             conversation_id: conversation.id,
             content: messageText,

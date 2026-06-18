@@ -1,10 +1,10 @@
-// Consulta o historial del cliente: compras anteriores (Cakto), interações, deals em aberto.
+// Consulta el historial del cliente: compras anteriores (Cakto), interações, deals em aberto.
 import type { ToolDefinition } from '../types.ts';
 
 export const consultarHistoricoClienteTool: ToolDefinition = {
   name: 'consultar_historico_cliente',
   description:
-    'Consulta o historial completo del lead atual: compras anteriores via Cakto, deals em aberto, número de interações. Usa ANTES de hacer ofertas para personalizar (ex: ofrecer upsell se ya es cliente, ou descuento se abandueñou checkout).',
+    'Consulta el historial completo del lead atual: compras anteriores via Cakto, deals em aberto, número de interações. Usa ANTES de hacer ofertas para personalizar (ex: ofrecer upsell se ya es cliente, ou descuento se abandueñou checkout).',
   categories: ['crm'],
   estimated_cost_cents: 0,
   parameters: {

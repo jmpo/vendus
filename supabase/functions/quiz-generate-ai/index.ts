@@ -122,9 +122,9 @@ REGRAS:
 - Usa lenguaje natural, sin clichés.
 - Score total possível ~100-150 pontos distribuídos entre as opciones.
 - Cada bloco tiene campo "variable_name" único (ex: q1, q2, faturamento, urgencia).
-- NÃO inclua next_block_id (o cliente conecta linearmente).
-- NÃO inclua "id" nos blocos (o cliente gera).
-- NÃO use markdown, retorne SOLO JSON puro.
+- NO inclua next_block_id (el cliente conecta linearmente).
+- NO inclua "id" nos blocos (el cliente gera).
+- NO use markdown, retorne SOLO JSON puro.
 
 FORMATO DE RESPOSTA (JSON):
 {
@@ -189,7 +189,7 @@ Retorne SOLO o JSON.`;
     try { parsed = JSON.parse(cleanContent); }
     catch (e) {
       console.error('Parse fail', content);
-      return new Response(JSON.stringify({ error: 'Respuesta da IA inválida. Probá novamente.' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ error: 'Respuesta da IA inválida. Probá de nuevo.' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     if (!parsed.blocks || !Array.isArray(parsed.blocks) || parsed.blocks.length === 0) {
