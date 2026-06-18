@@ -783,9 +783,9 @@ serve(async (req) => {
       const metadata = msg.metadata as any;
       if (metadata?.scheduling_context?.action === 'slots_offered') {
         const slots = metadata.scheduling_context.suggestions;
-        base.content += `\n[CONTEXTO INTERNO - NO REPITA ISSO AO CLIENTE: Horarios ya ofrecidos: ${
+        base.content += `\n[CONTEXTO INTERNO - NO LO REPITAS AL CLIENTE: Horarios ya ofrecidos: ${
           slots.map((s: any) => `${s.date} ${s.time}`).join(', ')
-        }. event_type_id: ${metadata.scheduling_context.event_type_id}, schedule_user_id: ${metadata.scheduling_context.schedule_user_id}. Se el cliente confirmar un horario, use schedule_meeting INMEDIATAMENTE. NO llamá check_available_slots de nuevo.]`;
+        }. event_type_id: ${metadata.scheduling_context.event_type_id}, schedule_user_id: ${metadata.scheduling_context.schedule_user_id}. Si el cliente confirma UNO DE ESOS horarios, usá schedule_meeting. PERO si pide otro día u horario distinto (ej.: "el lunes", "a las 10"), o quiere cambiar/reagendar su cita, SÍ tenés que llamar check_available_slots de nuevo con ese día para ofrecerle horarios reales. NUNCA respondas de forma vaga, ni le pidas enviar la info "por otro medio", ni le pidas el email cuando lo que pregunta es disponibilidad: primero verificá con check_available_slots y ofrecé horarios concretos.]`;
       }
       return base;
     });
@@ -2441,7 +2441,12 @@ Ejemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
 - Usa a frase exata (ou variação natural): "Para reservar ese horario y enviarte la confirmación, ¿cuál es tu mejor email?"
 - NUNCA use emails inventados como "ejemplo.com", "cliente@email.com", etc. Se no tiene el email real, PERGUNTE.`;
 
-        systemPrompt += `\n\n📅 AGENDAMIENTO (seguí el orden — NO te saltes pasos):
+        const _hoy = new Date();
+        const _hoyLabel = _hoy.toLocaleDateString('es-PY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const _hoyISO = _hoy.toISOString().split('T')[0];
+        systemPrompt += `\n\n📆 HOY ES: ${_hoyLabel}. Si el cliente pide un día de la semana (ej.: "el lunes", "el viernes"), pasá ese día en el parámetro target_weekday de check_available_slots — el sistema calcula la fecha exacta y te devuelve solo los horarios de ESE día. Si el cliente NO especifica un día, no pases target_weekday.
+
+📅 AGENDAMIENTO (seguí el orden — NO te saltes pasos):
 Tenés 2 herramientas:
 1. check_available_slots: consulta los horarios REALMENTE disponibles.
 2. schedule_meeting: agenda la reunión con el cliente.
@@ -2481,7 +2486,8 @@ ${leadDataPrompt}
             parameters: {
               type: "object",
               properties: {
-                days_ahead: { type: "number", description: "Cuántos días hacia adelante verificar (por defecto 7, máximo 14). Si el cliente pide un día puntual (ej.: el lunes), usá un valor suficiente para alcanzarlo." }
+                days_ahead: { type: "number", description: "Cuántos días hacia adelante verificar (por defecto 7, máximo 14)." },
+                target_weekday: { type: "string", enum: ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"], description: "Si el cliente pide un día de la semana (ej.: 'el lunes', 'el viernes'), pasá el nombre del día acá en minúsculas. El sistema calcula la próxima fecha de ese día y devuelve SOLO horarios de ese día." }
               },
               required: []
             }
@@ -3464,7 +3470,19 @@ REGRAS DE USO:
             } else if (toolCall.function.name === 'check_available_slots' && scheduleUserId) {
               try {
                 const args = JSON.parse(toolCall.function.arguments);
-                const daysAhead = Math.min(args.days_ahead || 7, 14);
+                let daysAhead = Math.min(args.days_ahead || 7, 14);
+                // El modelo pasa el NOMBRE del día; el código calcula la próxima fecha (más confiable)
+                let targetDate: string | null = null;
+                const _wdMap: Record<string, number> = { 'domingo': 0, 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, 'jueves': 4, 'viernes': 5, 'sábado': 6, 'sabado': 6 };
+                const _wd = typeof args.target_weekday === 'string' ? _wdMap[args.target_weekday.toLowerCase().trim()] : undefined;
+                if (_wd !== undefined) {
+                  const _t = new Date();
+                  for (let i = 1; i <= 14; i++) {
+                    const _c = new Date(_t); _c.setDate(_t.getDate() + i);
+                    if (_c.getDay() === _wd) { targetDate = _c.toISOString().split('T')[0]; break; }
+                  }
+                  daysAhead = 14; // asegurar alcanzar el día pedido
+                }
                 console.log('[webchat-bot] Checking available slots for next', daysAhead, 'days');
 
                 // ============================================================
@@ -3570,6 +3588,8 @@ REGRAS DE USO:
                     const checkDate = new Date(today);
                     checkDate.setDate(today.getDate() + d);
                     const dateStr = checkDate.toISOString().split('T')[0];
+                    // Si el cliente pidió un día puntual, procesá SOLO ese día
+                    if (targetDate && dateStr !== targetDate) continue;
                     const dayOfWeek = checkDate.getDay();
 
                     // Skip if today and already past business hours
