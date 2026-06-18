@@ -3528,12 +3528,12 @@ REGRAS DE USO:
                     // and letting a small inline schedule_meeting trigger run.
                     skipSlotSearch = true;
                   } else if (!guestEmail) {
-                    responseContent = 'Pra eu trabar esse horario para vos, cuál tu mejor email pra mandar a confirmación?';
+                    responseContent = 'Para reservar ese horario, ¿cuál es tu mejor email para enviarte la confirmación?';
                     skipSlotSearch = true;
                   } else {
                     // Have email but couldn't match slot text → ask short clarification
-                    const opts = offered.map((s: any, i: number) => `${i + 1}) ${s.dateLabel || s.date} a las ${s.time}`).join(' ou ');
-                    responseContent = `Qual de esos prefere: ${opts}?`;
+                    const opts = offered.map((s: any, i: number) => `${i + 1}) ${s.dateLabel || s.date} a las ${s.time}`).join(' o ');
+                    responseContent = `¿Cuál de estos preferís: ${opts}?`;
                     skipSlotSearch = true;
                   }
                 }
@@ -3698,17 +3698,17 @@ REGRAS DE USO:
                     console.log('[webchat-bot] Saved scheduling metadata with', suggestions.length, 'suggestions');
 
                     // Build a natural response for the AI to relay
-                    let slotsInfo = '📅 HORÁRIOS DISPONÍVEIS ENCONTRADOS:\n';
+                    let slotsInfo = '📅 HORARIOS DISPONIBLES ENCONTRADOS:\n';
                     suggestions.forEach((s, i) => {
-                      slotsInfo += `\nOpção ${i + 1}: ${s.dateLabel} a las ${s.time} (${s.period === 'morning' ? 'mañana' : 'tarde'}) [data: ${s.date}]`;
+                      slotsInfo += `\nOpción ${i + 1}: ${s.dateLabel} a las ${s.time} (${s.period === 'morning' ? 'mañana' : 'tarde'}) [data: ${s.date}]`;
                     });
-                    slotsInfo += '\n\nPresentá esses horarios al cliente de forma natural e estratégica. NO mostrá o formato de data técnico (YYYY-MM-DD).';
+                    slotsInfo += '\n\nPresentá estos horarios al cliente de forma natural y estratégica. Mostrá la fecha en lenguaje natural (por ejemplo: lunes 22), nunca el formato técnico (YYYY-MM-DD). Si el cliente pidió un día puntual, ofrecé horarios de ESE día.';
 
                     // FIX 3: slim follow-up prompt — drop emailEnforcement, anti-CTAs etc.
                     // We only want a clean "present these slots and ask which one" reply.
                     const slimAgentName = activeAgent?.name || 'Assistente';
                     const slimAgentPersona = activeAgent?.personality || 'consultivo, claro e cordial';
-                    const slimFollowUpSystem = `Vos sos ${slimAgentName}. Tom: ${slimAgentPersona}.\n\nPresentá os horarios encontrados de forma natural, corta (no máximo 2 líneas) e preguntes cuál el cliente prefere. NUNCA preguntes el email de nuevo — usted ya tiene ou pedirá después. NUNCA diga "dejame ver la agenda" — usted acabou de ver. NUNCA invente otros horarios además dos fornecidos.`;
+                    const slimFollowUpSystem = `Vos sos ${slimAgentName}. Tom: ${slimAgentPersona}.\n\nPresentá los horarios encontrados de forma natural y corta (máximo 2 líneas) y preguntá cuál prefiere el cliente. RESPETÁ el día que pidió el cliente: si pidió un día puntual, ofrecé horarios de ESE día. NUNCA preguntes el email de nuevo — ya lo tenés o lo pedirás después. NUNCA diga "dejame ver la agenda" — acabás de verla. NUNCA inventes otros horarios además de los encontrados.`;
 
                     // Make a follow-up call to the AI with the slot info
                     const followUpResponse = await fetch(aiConfig.endpoint, {
@@ -3736,7 +3736,7 @@ REGRAS DE USO:
                       responseContent = suggestions.map((s, i) => 
                         `Opción ${i + 1}: ${s.dateLabel} a las ${s.time}`
                       ).join('\n');
-                      responseContent = `Encontrei esses horarios disponibles:\n\n${responseContent}\n\nQual funciona mejor para vos?`;
+                      responseContent = `Encontré estos horarios disponibles:\n\n${responseContent}\n\n¿Cuál te queda mejor?`;
                     }
                   }
                 }
@@ -3844,7 +3844,7 @@ REGRAS DE USO:
 
                     if (calendarInsertError || !calendarEvent) {
                       console.error('[webchat-bot] calendar_events insert failed:', calendarInsertError);
-                      responseContent = 'Tive un problema técnico para trabar esse horario en lla agenda. Podés dar 1 minutinho que eu confirmo con a equipo?';
+                      responseContent = 'Tuve un problema técnico para reservar ese horario en la agenda. ¿Me das un minuto que lo confirmo con el equipo?';
                       try {
                         await supabase.from('notifications').insert({
                           organization_id: hostProfile.organization_id,
@@ -4504,8 +4504,8 @@ REGRAS DE USO:
               const originalContent = responseContent;
               const needsEmail = !leadContext?.email;
               responseContent = needsEmail
-                ? 'Deixa eu confirmar la agenda aquí rapidinho antes de fechar con usted. Podés passar tu mejor email para mandar a confirmación?'
-                : 'Deixa eu confirmar la agenda aquí rapidinho antes de trabar el horario. Só um instante…';
+                ? 'Dejame confirmar la agenda rapidísimo antes de cerrar. ¿Me pasás tu mejor email para enviarte la confirmación?'
+                : 'Dejame confirmar la agenda rapidísimo antes de reservar el horario. Un instante…';
               
               // Log attempt for audit
               try {
