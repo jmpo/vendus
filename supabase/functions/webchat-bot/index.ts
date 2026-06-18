@@ -3260,7 +3260,28 @@ REGRAS DE USO:
           }
         } catch (_e) { /* noop */ }
 
-        const finalSystemPrompt = systemPrompt + fbRail + bookingRail + identityRail;
+        // 📅 Disponibilidad real (días/horarios) — para que el agente NO ofrezca ni acepte días/horas
+        // que no se atienden, y NO diga "voy a verificar" para un día cerrado (ej.: domingo).
+        let availabilityRail = '';
+        try {
+          if (scheduleUserId) {
+            const { data: _avail } = await supabase
+              .from('user_availability')
+              .select('day_of_week, start_time, end_time')
+              .eq('user_id', scheduleUserId)
+              .eq('is_available', true)
+              .order('day_of_week');
+            if (_avail && _avail.length) {
+              const _dn = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+              const _open = new Set(_avail.map((a: any) => a.day_of_week));
+              const _byDay = _avail.map((a: any) => `${_dn[a.day_of_week]} de ${String(a.start_time).slice(0, 5)} a ${String(a.end_time).slice(0, 5)}`).join(', ');
+              const _closed = [0, 1, 2, 3, 4, 5, 6].filter((d) => !_open.has(d)).map((d) => _dn[d]);
+              availabilityRail = `\n\n📅 DÍAS Y HORARIOS EN QUE SE ATIENDE: ${_byDay}.${_closed.length ? ` NO se atiende los: ${_closed.join(', ')}.` : ''}\nSi el cliente pide un día u horario FUERA de esto, NO digas "voy a verificar": decíselo al instante y con amabilidad (ej.: "los ${_closed[0] || 'domingos'} no atendemos, pero te puedo coordinar otro día") y ofrecé un día válido. Solo usá la herramienta de horarios cuando el día pedido SÍ esté dentro de los días que se atienden.`;
+            }
+          }
+        } catch (_e) { /* noop */ }
+
+        const finalSystemPrompt = systemPrompt + fbRail + bookingRail + availabilityRail + identityRail;
 
         const requestBody: any = {
           model: agentModel,

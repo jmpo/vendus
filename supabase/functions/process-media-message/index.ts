@@ -84,8 +84,8 @@ async function transcribeAudio(
   const fd = new FormData();
   fd.append("file", blob, `audio.${ext}`);
   fd.append("model", "whisper-1");
-  // Español es o idioma esperado da maior parte das mensajes; whisper auto-detecta se vier otro.
-  fd.append("language", "pt");
+  // Español es el idioma esperado de la mayoría de los mensajes (Paraguay/LatAm).
+  fd.append("language", "es");
   fd.append("response_format", "text");
 
   const res = await fetch("https://api.openai.com/v1/audio/transcriptions", {
