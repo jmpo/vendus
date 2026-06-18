@@ -2420,6 +2420,25 @@ Ejemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
       }
 
       if (canSchedule && scheduleUserId) {
+        // Recordatorio de cita existente: si el lead ya tiene una cita futura activa
+        let existingBookingPrompt = '';
+        if (convInit?.lead_id) {
+          const { data: existingBooking } = await supabase
+            .from('calendar_events')
+            .select('title, start_time')
+            .eq('lead_id', convInit.lead_id)
+            .eq('event_type', 'booking')
+            .neq('status', 'cancelled')
+            .gte('start_time', new Date().toISOString())
+            .order('start_time', { ascending: true })
+            .limit(1)
+            .maybeSingle();
+          if (existingBooking) {
+            const _bDate = new Date(existingBooking.start_time).toLocaleString('es-PY', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+            existingBookingPrompt = `\n\n⚠️ EL CLIENTE YA TIENE UNA CITA AGENDADA: "${existingBooking.title}" el ${_bDate}. Si pregunta por horarios, pide cambiar la fecha o quiere agendar de nuevo, PRIMERO recordale amablemente su cita actual ("Veo que ya tenés agendado tu ${existingBooking.title} para el ${_bDate}") y preguntá si quiere MODIFICARLA. Si confirma que sí, seguí el flujo de agendamiento normal (el sistema reagenda solo, cancelando la anterior). NUNCA agendes una segunda cita sin antes aclarar que ya tiene una.`;
+          }
+        }
+
         // Inject lead data into scheduling prompt if available
         let leadDataPrompt = '';
         if (leadContext) {
@@ -2428,7 +2447,7 @@ Ejemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
           if (leadContext.email) knownData.push(`Email: ${leadContext.email}`);
           if (leadContext.phone) knownData.push(`Teléfono: ${leadContext.phone}`);
           if (knownData.length > 0) {
-            leadDataPrompt = `\n\nDADOS DO CLIENTE YA CONHECIDOS (use no schedule_meeting SEM preguntar de nuevo):\n- ${knownData.join('\n- ')}`;
+            leadDataPrompt = `\n\nDATOS DEL CLIENTE YA CONOCIDOS (usalos en schedule_meeting SIN volver a preguntar):\n- ${knownData.join('\n- ')}`;
           }
         }
 
@@ -2470,7 +2489,7 @@ FLUJO OBLIGATORIO (preguntar la preferencia ANTES de ofrecer):
 2. El cliente responde su preferencia → (si falta el email, pedirlo) → llamar check_available_slots
 3. Ofrecer 1-2 horarios reales de ese día/franja
 4. El cliente confirma un horario → llamar schedule_meeting con (nombre, email REAL, fecha, hora)
-5. El sistema responde éxito → el texto de confirmación aparece automáticamente${emailEnforcementPrompt}
+5. El sistema responde éxito → el texto de confirmación aparece automáticamente${existingBookingPrompt}${emailEnforcementPrompt}
 ${leadDataPrompt}
 
 🛑 ANTI-REPETICIÓN:

@@ -2217,6 +2217,10 @@ Deno.serve(async (req) => {
 
       // ---- BOT TRIGGER ----
       // If conversation is in bot_active mode, run the funnel engine OR delegate to webchat-bot.
+      // ⚙️ PROCESADO EN BACKGROUND (EdgeRuntime.waitUntil): respondemos a Evolution de
+      // inmediato para que NO corte la conexión por timeout mientras el bot/OpenAI y los
+      // delays de humanización corren. Esto elimina la intermitencia del "de repente no responde".
+      EdgeRuntime.waitUntil((async () => {
       try {
         const { data: conv } = await supabase
           .from("webchat_conversations")
@@ -2876,9 +2880,10 @@ Deno.serve(async (req) => {
         // Siempre libera o lock por conversación (best-effort)
         try { await releaseConversationLock(supabase, conversationId); } catch (_) { /* noop */ }
       }
+      })()); // fin del procesamiento en background
 
-
-      return new Response(JSON.stringify({ ok: true }), {
+      // Respondemos a Evolution YA: el bot sigue procesando en background sin riesgo de timeout.
+      return new Response(JSON.stringify({ ok: true, processing: "background" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
