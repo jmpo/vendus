@@ -2454,8 +2454,8 @@ Ejemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
           if (existingBooking) {
             const _bDate = new Date(existingBooking.start_time).toLocaleString('es-PY', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
             existingBookingPrompt = `\n\n⚠️ EL CLIENTE YA TIENE UNA CITA AGENDADA: "${existingBooking.title}" el ${_bDate}.
-- Recordásela UNA SOLA VEZ, la primera vez que surja el tema de cambiar de horario.
-- APENAS el cliente confirme que quiere cambiarla, NO vuelvas a repetir el recordatorio ni a preguntar si quiere modificarla: ya lo sabés, AVANZÁ.
+- Si el cliente PREGUNTA cuándo es su cita, qué fecha tiene, o te pide que se la recuerdes → respondé SIEMPRE de inmediato y directo: "Tu ${existingBooking.title} está agendado para el ${_bDate}". Eso NO es repetir de más, es responder lo que te preguntó. NUNCA respondas esa pregunta con otra pregunta ni con una vaguedad como "¿algún detalle a ajustar?".
+- Cuando surja el tema de CAMBIAR el horario, recordá la cita una vez y confirmá que quiere modificarla. Apenas confirme, NO repitas el recordatorio: AVANZÁ.
 - Si el cliente ya te dio un día y una hora concretos (ej.: "el lunes a las 14"), NO des más vueltas: llamá schedule_meeting de una con ese día y hora (ya tenés su email). El sistema reagenda solo, cancelando la cita anterior.
 - Solo si el horario que pide no está disponible, ofrecé alternativas de ESE día. Nunca repreguntes lo que el cliente ya respondió.`;
           }
@@ -3210,28 +3210,49 @@ REGRAS DE USO:
           `4. NUNCA finjas que escuchaste un audio o viste una imagen. Se a últimel mensaje del cliente for un placeholder do tipo "🎙️ [Audio recibido — no pude transcribir...]" ou "🖼️ [Imagen recibida — no pude analizar...]", responda DICIENDO QUE TUVO PROBLEMA TÉCNICO PARA ESCUCHAR/VER e pedile al cliente que reenvíe o describa en texto. NO inventes contenido.\n` +
           `5. Cuando el mensaje comenzar con "🎙️ Audio del cliente (transcrito):" ou "🖼️ Imagen del cliente:", essa É el mensaje real del cliente — trate como tal.\n`;
 
-        // 📣 Contexto de Meta/Facebook Ads (formulario + anuncio) — GARANTIZADO en el prompt
-        // final, sin importar el path. Lo carga directo del lead de la conversación.
+        // 📣🗓️ Contexto GARANTIZADO en el prompt final (sin importar el path del flujo):
+        //   - Anuncio/formulario de Meta Ads (si el lead vino de FB)
+        //   - Cita agendada del lead (para responder/reagendar sin divagar)
+        // Resuelve el lead_id UNA sola vez y reusa lo ya cargado en leadContext (menos queries).
         let fbRail = '';
+        let bookingRail = '';
         try {
+          let _lid: string | null = (leadContext && (leadContext as any).id) || leadId || null;
           let _fbm: any = (leadContext && (leadContext as any).metadata) || null;
           let _origin: string | null = (leadContext && (leadContext as any).lead_origin) || null;
-          if ((!_fbm || !_origin) && body.conversation_id) {
+          if (!_lid && body.conversation_id) {
             const { data: _cl } = await supabase.from('webchat_conversations').select('lead_id').eq('id', body.conversation_id).maybeSingle();
-            if (_cl?.lead_id) {
-              const { data: _ld } = await supabase.from('leads').select('lead_origin, metadata').eq('id', _cl.lead_id).maybeSingle();
+            _lid = _cl?.lead_id || null;
+          }
+          if (_lid) {
+            if (!_fbm || !_origin) {
+              const { data: _ld } = await supabase.from('leads').select('lead_origin, metadata').eq('id', _lid).maybeSingle();
               if (_ld) { _fbm = _ld.metadata; _origin = _ld.lead_origin; }
             }
-          }
-          if (_fbm && (_origin === 'facebook_ads' || _fbm.facebook_ad_id)) {
-            const _ans = Array.isArray(_fbm.raw_field_data)
-              ? _fbm.raw_field_data.map((f: any) => `  • ${f.name}: ${(f.values || []).join(', ')}`).join('\n')
-              : '';
-            fbRail = `\n\n📣 CONTEXTO DEL ANUNCIO (Meta/Facebook Ads) — USALO SIEMPRE:\nEste cliente llegó desde el anuncio "${_fbm.facebook_ad_name || ''}"${_fbm.facebook_campaign_name ? ` (campaña: ${_fbm.facebook_campaign_name})` : ''}${_ans ? ` y completó un formulario con estos datos:\n${_ans}` : ''}.\nYA SABÉS lo que busca: hacé referencia a eso de forma natural y NUNCA le preguntes algo que ya respondió en el formulario.`;
+            const { data: _bk } = await supabase
+              .from('calendar_events')
+              .select('title, start_time')
+              .eq('lead_id', _lid)
+              .eq('event_type', 'booking')
+              .neq('status', 'cancelled')
+              .gte('start_time', new Date().toISOString())
+              .order('start_time', { ascending: true })
+              .limit(1)
+              .maybeSingle();
+            if (_fbm && (_origin === 'facebook_ads' || _fbm.facebook_ad_id)) {
+              const _ans = Array.isArray(_fbm.raw_field_data)
+                ? _fbm.raw_field_data.map((f: any) => `  • ${f.name}: ${(f.values || []).join(', ')}`).join('\n')
+                : '';
+              fbRail = `\n\n📣 CONTEXTO DEL ANUNCIO (Meta/Facebook Ads) — USALO SIEMPRE:\nEste cliente llegó desde el anuncio "${_fbm.facebook_ad_name || ''}"${_fbm.facebook_campaign_name ? ` (campaña: ${_fbm.facebook_campaign_name})` : ''}${_ans ? ` y completó un formulario con estos datos:\n${_ans}` : ''}.\nYA SABÉS lo que busca: hacé referencia a eso de forma natural y NUNCA le preguntes algo que ya respondió en el formulario.`;
+            }
+            if (_bk) {
+              const _bkDate = new Date(_bk.start_time).toLocaleString('es-PY', { timeZone: 'America/Sao_Paulo', weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+              bookingRail = `\n\n🗓️ CITA ACTUAL DEL CLIENTE: "${_bk.title}" agendada para el ${_bkDate}. Si el cliente pregunta cuándo es su cita, qué fecha tiene o pide que se la recuerdes → respondé DIRECTO: "Tu ${_bk.title} está agendado para el ${_bkDate}". NUNCA respondas eso con otra pregunta ni con vaguedades.`;
+            }
           }
         } catch (_e) { /* noop */ }
 
-        const finalSystemPrompt = systemPrompt + fbRail + identityRail;
+        const finalSystemPrompt = systemPrompt + fbRail + bookingRail + identityRail;
 
         const requestBody: any = {
           model: agentModel,
