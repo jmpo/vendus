@@ -159,6 +159,10 @@ Deno.serve(async (req) => {
               .eq('id', integration.id);
             
             console.log('Lead created successfully:', lead.id);
+
+            // 🚀 Primer contacto automático por WhatsApp (Evolution). La IA toma la
+            // conversación con el contexto del anuncio y el formulario ya cargado.
+            await triggerFirstContact(supabase, integration, lead);
           }
         }
       }
@@ -268,10 +272,131 @@ async function createLeadFromFacebook(
       content: `Lead capturado via Facebook Lead Ads`,
       metadata: { type: 'facebook_lead_capture' }
     });
-    
+
     return lead;
   } catch (error) {
     console.error('Exception creating lead:', error);
     return null;
+  }
+}
+
+// Primer contacto automático: crea una conversación de WhatsApp y envía un saludo por
+// Evolution. La IA continúa desde ahí (webchat-bot ya inyecta el contexto del anuncio/formulario).
+async function triggerFirstContact(supabase: any, integration: any, lead: any) {
+  try {
+    if (integration.auto_first_contact === false) {
+      console.log('[fb-leads] auto_first_contact desactivado, no se contacta');
+      return;
+    }
+    const phone = String(lead.phone || '').replace(/\D/g, '');
+    if (!phone) {
+      console.log('[fb-leads] lead sin teléfono, no se puede contactar');
+      return;
+    }
+
+    // Instancia de WhatsApp (Evolution) conectada de la organización
+    const { data: instance } = await supabase
+      .from('evolution_instances')
+      .select('id, instance_id')
+      .eq('organization_id', integration.organization_id)
+      .eq('status', 'connected')
+      .limit(1)
+      .maybeSingle();
+    if (!instance) {
+      console.log('[fb-leads] sin instancia de WhatsApp conectada, no se contacta');
+      return;
+    }
+
+    // Agente del producto (default/primero activo) que conducirá la conversación
+    const { data: agent } = await supabase
+      .from('product_agents')
+      .select('id, name')
+      .eq('organization_id', integration.organization_id)
+      .eq('product_id', integration.product_id)
+      .eq('is_active', true)
+      .order('is_default', { ascending: false })
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    // No duplicar: si ya hay conversación para este teléfono, reusarla
+    const { data: existingConv } = await supabase
+      .from('webchat_conversations')
+      .select('id')
+      .eq('organization_id', integration.organization_id)
+      .eq('visitor_phone', phone)
+      .limit(1)
+      .maybeSingle();
+
+    let conversationId: string | null = existingConv?.id || null;
+    if (!conversationId) {
+      const { data: conv, error: convErr } = await supabase
+        .from('webchat_conversations')
+        .insert({
+          organization_id: integration.organization_id,
+          channel: 'whatsapp',
+          visitor_name: lead.name || null,
+          visitor_phone: phone,
+          visitor_id: `wa-${phone}`,
+          evolution_instance_id: instance.id,
+          lead_id: lead.id,
+          current_agent_id: agent?.id || null,
+          product_id: integration.product_id,
+          status: 'bot_active',
+          orchestrator_state: 'em_atendimento',
+          welcome_sent_at: new Date().toISOString(),
+        })
+        .select('id')
+        .single();
+      if (convErr) {
+        console.error('[fb-leads] error creando conversación:', convErr.message);
+        return;
+      }
+      conversationId = conv.id;
+    }
+
+    // Saludo personalizado (mensaje custom de la integración, o uno generado con el contexto)
+    const meta = (lead.metadata as any) || {};
+    const firstName = String(lead.name || '').trim().split(/\s+/)[0] || '';
+    const adRef = meta.facebook_ad_name || integration.products?.name || '';
+    const agentName = agent?.name || '';
+    let greeting: string = integration.first_contact_message || '';
+    if (greeting.trim()) {
+      greeting = greeting
+        .split('{nombre}').join(firstName)
+        .split('{anuncio}').join(adRef)
+        .split('{agente}').join(agentName);
+    } else {
+      greeting = `¡Hola${firstName ? ' ' + firstName : ''}! 👋${agentName ? ` Soy ${agentName}.` : ''} Vi que dejaste tus datos en nuestro anuncio${adRef ? ` sobre ${adRef}` : ''}. ¿Te gustaría que te cuente más y coordinemos una visita o un test drive?`;
+    }
+
+    // Enviar por Evolution
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const sendRes = await fetch(`${supabaseUrl}/functions/v1/evolution-send`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${serviceKey}`, apikey: serviceKey },
+      body: JSON.stringify({
+        organization_id: integration.organization_id,
+        instance_id: instance.id,
+        type: 'text',
+        to: phone,
+        payload: { text: greeting },
+      }),
+    });
+
+    // Reflejar el saludo en el inbox
+    await supabase.from('webchat_messages').insert({
+      conversation_id: conversationId,
+      direction: 'outbound',
+      sender_type: 'bot',
+      content: greeting,
+      message_type: 'text',
+      metadata: { source: 'facebook_lead_first_contact', ad: adRef },
+    });
+
+    console.log('[fb-leads] primer contacto enviado a', phone, '| send status:', sendRes.status);
+  } catch (e: any) {
+    console.error('[fb-leads] triggerFirstContact exception:', e?.message || String(e));
   }
 }

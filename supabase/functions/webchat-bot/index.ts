@@ -767,12 +767,16 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    const { data: messages } = await supabase
+    // Tomamos los ÚLTIMOS 80 mensajes (no los primeros): en conversaciones largas lo que
+    // vale es lo RECIENTE. Traemos descendente (más nuevo primero) y reinvertimos a orden
+    // cronológico para que el modelo lea la conversación actual, no el historial viejo.
+    const { data: messagesDesc } = await supabase
       .from('webchat_messages')
       .select('*')
       .eq('conversation_id', body.conversation_id)
-      .order('created_at', { ascending: true })
+      .order('created_at', { ascending: false })
       .limit(80);
+    const messages = (messagesDesc || []).reverse();
 
     const conversationHistory = (messages || []).map(msg => {
       const base = {
@@ -2125,7 +2129,7 @@ serve(async (req) => {
           leadId = convLead.lead_id;
           const { data: lead } = await supabase
             .from('leads')
-            .select('id, name, email, phone, temperature, tags, deal_value, company, source, custom_fields, current_stage_id, assigned_to, product_id')
+            .select('id, name, email, phone, temperature, tags, deal_value, company, source, custom_fields, current_stage_id, assigned_to, product_id, metadata, lead_origin')
             .eq('id', convLead.lead_id)
             .maybeSingle();
           
@@ -2172,6 +2176,20 @@ serve(async (req) => {
 - Ya es CLIENTE: ${isCustomer ? 'SIM' : 'NÃO'}`;
             if (lead.custom_fields && Object.keys(lead.custom_fields).length > 0) {
               systemPrompt += `\n- Campos personalizados: ${JSON.stringify(lead.custom_fields)}`;
+            }
+
+            // 📣 Contexto de Meta/Facebook Lead Ads: respuestas del formulario + anuncio de origen.
+            // Permite que la IA salude personalizado y entienda qué buscaba el cliente.
+            const _fbMeta = (lead.metadata as any) || {};
+            if (lead.lead_origin === 'facebook_ads' || _fbMeta.facebook_ad_id) {
+              const _formAnswers = Array.isArray(_fbMeta.raw_field_data)
+                ? _fbMeta.raw_field_data.map((f: any) => `  • ${f.name}: ${(f.values || []).join(', ')}`).join('\n')
+                : '';
+              systemPrompt += `\n\n📣 ESTE LEAD VINO DE UN ANUNCIO (Meta/Facebook Ads):
+- Anuncio: ${_fbMeta.facebook_ad_name || 'No informado'}
+- Campaña: ${_fbMeta.facebook_campaign_name || 'No informada'}${_formAnswers ? `\n- Respuestas que dejó en el formulario:\n${_formAnswers}` : ''}
+
+Usá esta info para PERSONALIZAR la conversación: el cliente mostró interés por ese anuncio y ya te dejó esos datos. Hacé referencia a lo que buscaba (de forma natural, sin sonar invasivo) y avanzá. NUNCA le vuelvas a preguntar lo que ya respondió en el formulario.`;
             }
 
             if (isCustomer) {
@@ -2422,11 +2440,11 @@ Ejemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
       if (canSchedule && scheduleUserId) {
         // Recordatorio de cita existente: si el lead ya tiene una cita futura activa
         let existingBookingPrompt = '';
-        if (convInit?.lead_id) {
+        if (leadId) {
           const { data: existingBooking } = await supabase
             .from('calendar_events')
             .select('title, start_time')
-            .eq('lead_id', convInit.lead_id)
+            .eq('lead_id', leadId)
             .eq('event_type', 'booking')
             .neq('status', 'cancelled')
             .gte('start_time', new Date().toISOString())
@@ -2435,7 +2453,11 @@ Ejemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
             .maybeSingle();
           if (existingBooking) {
             const _bDate = new Date(existingBooking.start_time).toLocaleString('es-PY', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
-            existingBookingPrompt = `\n\n⚠️ EL CLIENTE YA TIENE UNA CITA AGENDADA: "${existingBooking.title}" el ${_bDate}. Si pregunta por horarios, pide cambiar la fecha o quiere agendar de nuevo, PRIMERO recordale amablemente su cita actual ("Veo que ya tenés agendado tu ${existingBooking.title} para el ${_bDate}") y preguntá si quiere MODIFICARLA. Si confirma que sí, seguí el flujo de agendamiento normal (el sistema reagenda solo, cancelando la anterior). NUNCA agendes una segunda cita sin antes aclarar que ya tiene una.`;
+            existingBookingPrompt = `\n\n⚠️ EL CLIENTE YA TIENE UNA CITA AGENDADA: "${existingBooking.title}" el ${_bDate}.
+- Recordásela UNA SOLA VEZ, la primera vez que surja el tema de cambiar de horario.
+- APENAS el cliente confirme que quiere cambiarla, NO vuelvas a repetir el recordatorio ni a preguntar si quiere modificarla: ya lo sabés, AVANZÁ.
+- Si el cliente ya te dio un día y una hora concretos (ej.: "el lunes a las 14"), NO des más vueltas: llamá schedule_meeting de una con ese día y hora (ya tenés su email). El sistema reagenda solo, cancelando la cita anterior.
+- Solo si el horario que pide no está disponible, ofrecé alternativas de ESE día. Nunca repreguntes lo que el cliente ya respondió.`;
           }
         }
 
@@ -2524,10 +2546,11 @@ ${leadDataPrompt}
                 guest_name: { type: "string", description: "Nombre completo del cliente" },
                 guest_email: { type: "string", description: "Email del cliente" },
                 guest_phone: { type: "string", description: "Teléfono (opcional)" },
-                preferred_date: { type: "string", description: "Fecha YYYY-MM-DD" },
-                preferred_time: { type: "string", description: "Horario HH:MM" }
+                preferred_date: { type: "string", description: "Fecha YYYY-MM-DD. Si pasás target_weekday, este campo se ignora." },
+                preferred_time: { type: "string", description: "Horario HH:MM" },
+                target_weekday: { type: "string", enum: ["lunes","martes","miércoles","jueves","viernes","sábado","domingo"], description: "Si el cliente confirmó un DÍA DE LA SEMANA (ej.: 'el lunes'), pasá el nombre del día acá: el sistema calcula la fecha exacta del próximo día con ese nombre. Es MÁS confiable que preferred_date — al reagendar, usá SIEMPRE el día NUEVO que pidió el cliente, nunca el de la cita anterior." }
               },
-              required: ["guest_name", "guest_email", "preferred_date", "preferred_time"]
+              required: ["guest_name", "guest_email", "preferred_time"]
             }
           }
         });
@@ -3187,7 +3210,28 @@ REGRAS DE USO:
           `4. NUNCA finjas que escuchaste un audio o viste una imagen. Se a últimel mensaje del cliente for un placeholder do tipo "🎙️ [Audio recibido — no pude transcribir...]" ou "🖼️ [Imagen recibida — no pude analizar...]", responda DICIENDO QUE TUVO PROBLEMA TÉCNICO PARA ESCUCHAR/VER e pedile al cliente que reenvíe o describa en texto. NO inventes contenido.\n` +
           `5. Cuando el mensaje comenzar con "🎙️ Audio del cliente (transcrito):" ou "🖼️ Imagen del cliente:", essa É el mensaje real del cliente — trate como tal.\n`;
 
-        const finalSystemPrompt = systemPrompt + identityRail;
+        // 📣 Contexto de Meta/Facebook Ads (formulario + anuncio) — GARANTIZADO en el prompt
+        // final, sin importar el path. Lo carga directo del lead de la conversación.
+        let fbRail = '';
+        try {
+          let _fbm: any = (leadContext && (leadContext as any).metadata) || null;
+          let _origin: string | null = (leadContext && (leadContext as any).lead_origin) || null;
+          if ((!_fbm || !_origin) && body.conversation_id) {
+            const { data: _cl } = await supabase.from('webchat_conversations').select('lead_id').eq('id', body.conversation_id).maybeSingle();
+            if (_cl?.lead_id) {
+              const { data: _ld } = await supabase.from('leads').select('lead_origin, metadata').eq('id', _cl.lead_id).maybeSingle();
+              if (_ld) { _fbm = _ld.metadata; _origin = _ld.lead_origin; }
+            }
+          }
+          if (_fbm && (_origin === 'facebook_ads' || _fbm.facebook_ad_id)) {
+            const _ans = Array.isArray(_fbm.raw_field_data)
+              ? _fbm.raw_field_data.map((f: any) => `  • ${f.name}: ${(f.values || []).join(', ')}`).join('\n')
+              : '';
+            fbRail = `\n\n📣 CONTEXTO DEL ANUNCIO (Meta/Facebook Ads) — USALO SIEMPRE:\nEste cliente llegó desde el anuncio "${_fbm.facebook_ad_name || ''}"${_fbm.facebook_campaign_name ? ` (campaña: ${_fbm.facebook_campaign_name})` : ''}${_ans ? ` y completó un formulario con estos datos:\n${_ans}` : ''}.\nYA SABÉS lo que busca: hacé referencia a eso de forma natural y NUNCA le preguntes algo que ya respondió en el formulario.`;
+          }
+        } catch (_e) { /* noop */ }
+
+        const finalSystemPrompt = systemPrompt + fbRail + identityRail;
 
         const requestBody: any = {
           model: agentModel,
@@ -3814,9 +3858,21 @@ REGRAS DE USO:
                 }
                 
                 if (eventType) {
+                  // Si el cliente dio el día por NOMBRE, el código calcula la fecha (más confiable que el modelo,
+                  // que se confunde sobre todo al reagendar mezclando el día viejo con el nuevo).
+                  let resolvedDate: string = args.preferred_date;
+                  const _wdMapS: Record<string, number> = { 'domingo': 0, 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, 'jueves': 4, 'viernes': 5, 'sábado': 6, 'sabado': 6 };
+                  const _wdS = typeof args.target_weekday === 'string' ? _wdMapS[args.target_weekday.toLowerCase().trim()] : undefined;
+                  if (_wdS !== undefined) {
+                    const _tS = new Date();
+                    for (let i = 1; i <= 14; i++) {
+                      const _cS = new Date(_tS); _cS.setDate(_tS.getDate() + i);
+                      if (_cS.getDay() === _wdS) { resolvedDate = _cS.toISOString().split('T')[0]; break; }
+                    }
+                  }
                   // Combine date and time into ISO string — BRT offset (-03:00) explicit
                   // so a string like "14:00" stays as 14:00 BRT (17:00 UTC) and NOT as 14:00 UTC (11:00 BRT).
-                  const startTime = new Date(`${args.preferred_date}T${args.preferred_time}:00-03:00`);
+                  const startTime = new Date(`${resolvedDate}T${args.preferred_time}:00-03:00`);
                   const endTime = new Date(startTime.getTime() + eventType.duration_minutes * 60000);
                   
                   // Get user's org
@@ -4084,7 +4140,7 @@ REGRAS DE USO:
                     const formattedTime = startTime.toLocaleTimeString('es-PY', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
                     
                     if (emailSent) {
-                      responseContent = `✅ Reunión agendada con éxito!\n\n📅 ${formattedDate} a las ${formattedTime}\n📧 Confirmación enviada para ${args.guest_email}\n\nPuedo ajudar con mais alguna coisa?`;
+                      responseContent = `✅ ¡Reunión agendada con éxito!\n\n📅 ${formattedDate} a las ${formattedTime}\n📧 Confirmación enviada a ${args.guest_email}\n\n¿Te puedo ayudar con algo más?`;
                     } else {
                       responseContent = `✅ Reunión agendada con éxito!\n\n📅 ${formattedDate} a las ${formattedTime}\n\n⚠️ Tuve un problema al enviar el email automático a ${args.guest_email}. Nuestro equipo te va a enviar la confirmación manualmente en instantes.`;
                       // Notify internal team
