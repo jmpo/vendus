@@ -2481,7 +2481,7 @@ ${leadDataPrompt}
             parameters: {
               type: "object",
               properties: {
-                days_ahead: { type: "number", description: "Quantos días à frente verificar (defecto 3, máximo 7)" }
+                days_ahead: { type: "number", description: "Cuántos días hacia adelante verificar (por defecto 7, máximo 14). Si el cliente pide un día puntual (ej.: el lunes), usá un valor suficiente para alcanzarlo." }
               },
               required: []
             }
@@ -3464,7 +3464,7 @@ REGRAS DE USO:
             } else if (toolCall.function.name === 'check_available_slots' && scheduleUserId) {
               try {
                 const args = JSON.parse(toolCall.function.arguments);
-                const daysAhead = Math.min(args.days_ahead || 3, 7);
+                const daysAhead = Math.min(args.days_ahead || 7, 14);
                 console.log('[webchat-bot] Checking available slots for next', daysAhead, 'days');
 
                 // ============================================================
@@ -3811,6 +3811,26 @@ REGRAS DE USO:
                         .eq('id', leadId)
                         .maybeSingle();
                       resolvedProductId = leadRow?.product_id || null;
+                    }
+
+                    // Reagendamiento: cancelar las citas FUTURAS activas del mismo lead
+                    // antes de crear la nueva, para no duplicar (cambiar fecha = reagendar).
+                    if (leadId) {
+                      try {
+                        const { data: cancelledRows } = await supabase
+                          .from('calendar_events')
+                          .update({ status: 'cancelled' })
+                          .eq('lead_id', leadId)
+                          .eq('event_type', 'booking')
+                          .neq('status', 'cancelled')
+                          .gte('start_time', new Date().toISOString())
+                          .select('id');
+                        if (cancelledRows && cancelledRows.length) {
+                          console.log('[webchat-bot] 🔄 Reagendamiento: canceladas', cancelledRows.length, 'citas previas del lead');
+                        }
+                      } catch (reErr) {
+                        console.warn('[webchat-bot] cancel previous bookings failed (non-fatal):', reErr);
+                      }
                     }
 
                     const { data: calendarEvent, error: calendarInsertError } = await supabase

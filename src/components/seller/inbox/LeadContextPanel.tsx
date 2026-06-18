@@ -35,6 +35,7 @@ import {
 } from '@/hooks/useLeadTags';
 import { useSetConversationSector } from '@/hooks/useWebChat';
 import { useSectors } from '@/hooks/useSectors';
+import { useLeadBooking } from '@/hooks/useLeadBooking';
 import { toast } from '@/hooks/use-toast';
 
 interface Lead {
@@ -134,6 +135,7 @@ export function LeadContextPanel({
 
   // Lead tags (only if a lead is linked)
   const { data: leadTagAssignments = [] } = useLeadTagsForLead(lead?.id || undefined);
+  const { data: leadBookings = [] } = useLeadBooking(lead?.id);
   const leadTags = leadTagAssignments.map((a) => a.tag).filter(Boolean);
 
   return (
@@ -428,6 +430,31 @@ export function LeadContextPanel({
                   </div>
                 )}
               </div>
+
+              {leadBookings.length > 0 && (
+                <>
+                  <Separator />
+                  <div className="space-y-2">
+                    <h5 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                      <Calendar className="h-3 w-3" /> Cita agendada
+                    </h5>
+                    {leadBookings.map((b) => (
+                      <div key={b.id} className="rounded-lg border border-primary/30 bg-primary/5 p-2.5 space-y-1">
+                        <p className="text-xs font-medium text-foreground">{b.title}</p>
+                        <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                          <Clock className="h-3 w-3 flex-shrink-0" />
+                          {new Date(b.start_time).toLocaleString('es-PY', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                        {b.location && (
+                          <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                            <MapPin className="h-3 w-3 flex-shrink-0" /> {b.location === 'in_person' ? 'Presencial' : b.location}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
 
               <Separator />
 
