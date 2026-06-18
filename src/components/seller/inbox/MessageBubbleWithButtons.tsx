@@ -20,6 +20,7 @@ export interface CatalogCardData {
   currency?: string | null;
   url?: string | null;
   thumbnail_url?: string | null;
+  images?: string[] | null;
   attributes?: Record<string, any>;
 }
 
@@ -195,9 +196,9 @@ export function MessageBubbleWithButtons({
         {/* Catalog Card */}
         {messageType === 'catalog_card' && catalogItem && (
           <div className="rounded-2xl overflow-hidden border bg-card shadow-sm max-w-sm">
-            {catalogItem.thumbnail_url && (
+            {(catalogItem.thumbnail_url || catalogItem.images?.[0]) && (
               <img
-                src={catalogItem.thumbnail_url}
+                src={catalogItem.thumbnail_url || catalogItem.images?.[0] || ''}
                 alt={catalogItem.title}
                 className="w-full h-40 object-cover"
                 loading="lazy"

@@ -470,7 +470,9 @@ LO QUE NUNCA DEBÉS HACER
 - Dar toda la información de una vez — dale de a poco, una cosa por mensaje
 - Repetir cualquier elemento del historial (saludos, emojis, frases)
 - Usar más de 1 emoji por mensaje
-- Ignorar lo que ya fue discutido/acordado en la conversación`;
+- Ignorar lo que ya fue discutido/acordado en la conversación
+- Escribir en PORTUGUÉS: respondé SIEMPRE en español, NUNCA en portugués (aunque el historial o ejemplos estén en portugués)
+- Escribir mensajes en nombre del cliente o que parezcan dichos por él: vos sos el VENDEDOR, hablás solo como vendedor y nunca redactás lo que diría el cliente`;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {

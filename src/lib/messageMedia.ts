@@ -10,6 +10,26 @@ import type { MediaPayload, MediaKind } from '@/components/seller/inbox/MediaAtt
 export function extractMedia(metadata: any): MediaPayload | null {
   if (!metadata || typeof metadata !== 'object') return null;
 
+  // Catalog card: muestra la primera imagen del item (thumbnail o images[0])
+  if (metadata.catalog_item && typeof metadata.catalog_item === 'object') {
+    const ci = metadata.catalog_item;
+    const url = ci.thumbnail_url || (Array.isArray(ci.images) ? ci.images[0] : null);
+    if (typeof url === 'string' && url.startsWith('http')) {
+      return {
+        kind: 'image',
+        url,
+        mime: null,
+        filename: null,
+        size_bytes: null,
+        duration_ms: null,
+        width: null,
+        height: null,
+        caption: null,
+        thumbnail_url: null,
+      };
+    }
+  }
+
   // Formato canônico
   if (metadata.media && typeof metadata.media === 'object') {
     const m = metadata.media;
