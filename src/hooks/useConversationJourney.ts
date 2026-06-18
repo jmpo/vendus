@@ -22,7 +22,7 @@ export function useConversationJourney(conversationId: string | null) {
     queryFn: async (): Promise<JourneyEvent[]> => {
       if (!conversationId) return [];
 
-      const [transfersRes, eventsRes] = await Promise.all([
+      const [transfersRes, eventsRes, agentLogsRes] = await Promise.all([
         supabase
           .from('conversation_transfers')
           .select(`
@@ -38,6 +38,16 @@ export function useConversationJourney(conversationId: string | null) {
             id, created_at, action,
             from_user:from_user_id(id, full_name, avatar_url),
             to_user:to_user_id(id, full_name, avatar_url)
+          `)
+          .eq('conversation_id', conversationId)
+          .order('created_at', { ascending: false }),
+        // Traspasos entre AGENTES de IA (orquestador → closer, closer → closer)
+        supabase
+          .from('agent_activation_logs')
+          .select(`
+            id, created_at, match_type,
+            from_agent:from_agent_id(id, name),
+            to_agent:to_agent_id(id, name)
           `)
           .eq('conversation_id', conversationId)
           .order('created_at', { ascending: false }),
@@ -62,7 +72,18 @@ export function useConversationJourney(conversationId: string | null) {
         to_user: e.to_user,
       }));
 
-      return [...transfers, ...events].sort(
+      const agentSwitches: JourneyEvent[] = (agentLogsRes.data || [])
+        .filter((a: any) => a.from_agent?.id && a.to_agent?.id && a.from_agent.id !== a.to_agent.id)
+        .map((a: any) => ({
+        id: `ag-${a.id}`,
+        type: 'agent_switch',
+        action: 'agent_changed',
+        created_at: a.created_at,
+        from_user: a.from_agent ? { id: a.from_agent.id, full_name: a.from_agent.name, avatar_url: null } : null,
+        to_user: a.to_agent ? { id: a.to_agent.id, full_name: a.to_agent.name, avatar_url: null } : null,
+      }));
+
+      return [...transfers, ...events, ...agentSwitches].sort(
         (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
       );
     },

@@ -1399,6 +1399,20 @@ serve(async (req) => {
                   product_id: result.produto_id,
                 })
                 .eq('id', body.conversation_id);
+              // Registra el traspaso orquestador → especialista para la Jornada (best-effort)
+              try {
+                await supabase.from('agent_activation_logs').insert({
+                  organization_id: convInit.organization_id,
+                  product_id: result.produto_id,
+                  conversation_id: body.conversation_id,
+                  lead_id: convInit.lead_id || null,
+                  from_agent_id: orchConfig.orchestrator_agent_id,
+                  to_agent_id: routedAgent.id,
+                  matched_term: 'orchestrator_route',
+                  match_type: 'orchestrator',
+                  channel: null,
+                });
+              } catch (_) { /* non-fatal */ }
             } else {
               // No agent at all → human
               await supabase
@@ -2213,7 +2227,7 @@ Ejemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
 🚫 PROHIBIDO INVENTAR ENTREGÁVEIS:
 - NÃO prometa enviar "depoimento", "case", "vídeo", "PDF", "ficha", "folleto", "material", "link", "depoimentos", "prova social" se o cliente NÃO pediu, OU se usted no tiene a tool/catálogo correspondente disponible.
 - NÃO escreva colchetes con nomes de archivos/links inventados (ex: "[Depoimento: ...]", "[Vídeo acá]", "[Link]"). Se for enviar mídia, use a tool send_catalog_item / send_video. Se no tiene, NÃO ofrezcas.
-- Em transferencia: hacé a despedida corta e profissional. NÃO crie etapa intermediária ("vou te mandar um material e ya te conecto") se no fue pedido. Solo transferí.`;
+- En transferencia: hacé una despedida corta y profesional. NÃO crie etapa intermediária ("vou te mandar um material e ya te conecto") se no fue pedido. Solo transferí.`;
 
       // Build tools array for CTA buttons, video, and schedule_meeting
       const videoCTAs = productCTAs.filter(c => c.cta_type === 'video');
@@ -2424,7 +2438,7 @@ Ejemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
           : `\n\n🚨 EMAIL OBRIGATÓRIO ANTES DE AGENDAR:
 - Usted AINDA NÃO tiene o email del cliente.
 - ANTES de ofrecer cualquier horario ou llamar schedule_meeting, usted NECESITÁS recolectar o email real.
-- Usa a frase exata (ou variação natural): "Pra eu trabar esse horario e te mandar a confirmación, cuál es o mejor email su?"
+- Usa a frase exata (ou variação natural): "Para reservar ese horario y enviarte la confirmación, ¿cuál es tu mejor email?"
 - NUNCA use emails inventados como "ejemplo.com", "cliente@email.com", etc. Se no tiene o email real, PERGUNTE.`;
 
         systemPrompt += `\n\n📅 AGENDAMENTO ESTRATÉGICO AUTOMÁTICO:
@@ -2892,7 +2906,7 @@ ${leadDataPrompt}
             });
 
             systemPrompt += `\n\n📦 CATÁLOGO PESQUISÁVEL DISPONÍVEL (CANAL OFICIAL DE ENVIO DE MÍDIA):
-Usted tiene acesso a um catálogo de ítems (imóveis/productos) con busca semântica e mídia rica (fotos, vídeos, PDFs, link).
+Tenés acceso a un catálogo de ítems (vehículos) con búsqueda semántica y multimedia (fotos, vídeos, PDFs, link).
 Esse catálogo es o CANAL OFICIAL para entregar fotos, vídeos, fichas e links en este WhatsApp.
 
 🚨 REGRAS PRIORITÁRIAS — VIOLAÇÃO É ERRO GRAVE:
@@ -2906,7 +2920,7 @@ REGRAS DE USO:
 2. Cliente pede mídia/link diretamente sobre algo identificável → search_catalog imediato e después send_catalog_item no item correto (no preguntes "qual?" se ya es óbvio por lel mensaje)
 3. Apresente no MÁXIMO 3 opciones en texto corto e estratégico cuando hay múltiples resultados
 4. NUNCA invente ítems — só fale de ítems devueltos por search_catalog
-5. Cada item tiene flags has_video e has_document. Cuando relevante, OFEREÇA: "Tenho fotos, vídeo do tour e a ficha. Quiero te mandar todo ou comenzar por las fotos?"
+5. Cada item tiene flags has_video e has_document. Cuando relevante, OFEREÇA: "Tengo fotos, video y la ficha. ¿Te mando todo o empezamos por las fotos?"
 6. send_catalog_item: por defecto envía FOTO + título + precio + link. Usa include_videos=true se cliente pediu video/tour/demostración. Usa include_documents=true se pediu ficha/folleto/specs/PDF/brochure/planta.
 7. Escale con bueno senso: foto → (se interés) vídeo → (se precisar) documento. Mas se o cliente pediu "manda tudo", mande tudo.
 8. Múltiples ítems: um por vez, aguardando reação entre envios.
@@ -3352,7 +3366,7 @@ REGRAS DE USO:
                         const fallbackItem = items.find((i: any) => i.id === sendArgs.item_id) || items[0];
                         responseContent = fallbackItem?.url
                           ? `Acá está: ${fallbackItem.title} — ${fallbackItem.url}`
-                          : 'Houve um problema al enviar. Puedo te mandar o link manualmente?';
+                          : 'Hubo un problema al enviar. ¿Te mando el link manualmente?';
                       } else {
                         const sent = sendData as any;
                         console.log('[webchat-bot] 📦 chained catalog item sent:', sent?.delivered, sent?.delivery_channel, sent?.sent_counts);
@@ -3361,10 +3375,10 @@ REGRAS DE USO:
                         if (counts.images) parts.push(`${counts.images} foto${counts.images > 1 ? 's' : ''}`);
                         if (counts.videos) parts.push(`${counts.videos} vídeo`);
                         if (counts.documents) parts.push(`${counts.documents} documento`);
-                        const summary = parts.length > 0 ? parts.join(' + ') : 'os detalles';
+                        const summary = parts.length > 0 ? parts.join(' + ') : 'los detalles';
                         responseContent = sent?.delivered
-                          ? `Acabei de te mandar ${summary} de ${sent?.item?.title || 'o imóvel'}. O que achou?`
-                          : `Acá está: ${sent?.item?.title || 'item'}${sent?.item?.url ? ` — ${sent.item.url}` : ''}. O que achou?`;
+                          ? `Te acabo de enviar ${summary} de ${sent?.item?.title || 'el vehículo'}. ¿Qué te parece?`
+                          : `Acá está: ${sent?.item?.title || 'item'}${sent?.item?.url ? ` — ${sent.item.url}` : ''}. ¿Qué te parece?`;
                       }
                     } catch (chainErr) {
                       console.error('[webchat-bot] chain send_catalog_item exception:', chainErr);
@@ -3396,10 +3410,10 @@ REGRAS DE USO:
                         if (counts.images) parts.push(`${counts.images} foto${counts.images > 1 ? 's' : ''}`);
                         if (counts.videos) parts.push(`${counts.videos} vídeo`);
                         if (counts.documents) parts.push(`${counts.documents} documento`);
-                        const summary = parts.length > 0 ? parts.join(' + ') : 'os detalles';
+                        const summary = parts.length > 0 ? parts.join(' + ') : 'los detalles';
                         responseContent = sent?.delivered
-                          ? `Acabei de te mandar ${summary} de ${topItem.title}. O que achou?`
-                          : `Acá está: ${topItem.title}${topItem.url ? ` — ${topItem.url}` : ''}. O que achou?`;
+                          ? `Te acabo de enviar ${summary} de ${topItem.title}. ¿Qué te parece?`
+                          : `Acá está: ${topItem.title}${topItem.url ? ` — ${topItem.url}` : ''}. ¿Qué te parece?`;
                       } catch (e) {
                         console.error('[webchat-bot] fallback direct send failed:', e);
                       }
@@ -3407,7 +3421,7 @@ REGRAS DE USO:
                   }
                 } else {
                   responseContent = items.length === 0
-                    ? 'No encontrei ítems con esses critérios. Querés ajustar a busca?'
+                    ? 'No encontré opciones con esos criterios. ¿Querés ajustar la búsqueda?'
                     : `Encontré ${items.length} ${items.length === 1 ? 'opción' : 'opciones'} para vos. ¿Querés que te envíe los detalles?`;
                 }
               } catch (catErr) {
@@ -3418,7 +3432,7 @@ REGRAS DE USO:
               try {
                 const args = JSON.parse(toolCall.function.arguments || '{}');
                 if (!args.item_id) {
-                  responseContent = choice.message?.content || 'Puedo te enviar mais detalles? Confirma cuál te interesa?';
+                  responseContent = choice.message?.content || '¿Puedo enviarte más detalles? ¿Confirmás cuál te interesa?';
                 } else {
                   const { data: sendData, error: sendErr } = await supabase.functions.invoke('send-catalog-item', {
                     body: {
@@ -3432,7 +3446,7 @@ REGRAS DE USO:
 
                   if (sendErr) {
                     console.error('[webchat-bot] send_catalog_item error:', sendErr);
-                    responseContent = 'Houve um problema al enviar o item. Puedo te mandar o link manualmente?';
+                    responseContent = 'Hubo un problema al enviar el ítem. ¿Te mando el link manualmente?';
                   } else {
                     const sent = sendData as any;
                     console.log('[webchat-bot] 📦 catalog item sent:', sent?.delivered, sent?.delivery_channel, sent?.sent_counts);
@@ -3441,10 +3455,10 @@ REGRAS DE USO:
                     if (counts.images) parts.push(`${counts.images} foto${counts.images > 1 ? 's' : ''}`);
                     if (counts.videos) parts.push(`${counts.videos} vídeo`);
                     if (counts.documents) parts.push(`${counts.documents} documento`);
-                    const summary = parts.length > 0 ? parts.join(' + ') : 'os detalles';
+                    const summary = parts.length > 0 ? parts.join(' + ') : 'los detalles';
                     responseContent = sent?.delivered
-                      ? `Acabei de te mandar ${summary}. O que achou?`
-                      : `Acá está: ${sent?.item?.title || 'item'}${sent?.item?.url ? ` — ${sent.item.url}` : ''}. O que achou?`;
+                      ? `Te acabo de enviar ${summary}. ¿Qué te parece?`
+                      : `Acá está: ${sent?.item?.title || 'item'}${sent?.item?.url ? ` — ${sent.item.url}` : ''}. ¿Qué te parece?`;
                   }
                 }
               } catch (catErr) {
@@ -3669,7 +3683,7 @@ REGRAS DE USO:
                   }
 
                   if (suggestions.length === 0) {
-                    responseContent = 'Infelizmente no encontrei horarios disponibles nos próximos días. Puedo verificar otras opciones para usted?';
+                    responseContent = 'Lamentablemente no encontré horarios disponibles en los próximos días. ¿Querés que verifique otras opciones?';
                   } else {
                     // Save scheduling context as metadata for persistence
                     schedulingMetadata = {
@@ -4017,7 +4031,7 @@ REGRAS DE USO:
                     if (emailSent) {
                       responseContent = `✅ Reunión agendada con éxito!\n\n📅 ${formattedDate} às ${formattedTime}\n📧 Confirmación enviada para ${args.guest_email}\n\nPuedo ajudar con mais alguna coisa?`;
                     } else {
-                      responseContent = `✅ Reunión agendada con éxito!\n\n📅 ${formattedDate} às ${formattedTime}\n\n⚠️ Tive um problema ao disparar o email automático para ${args.guest_email}. Nosso time va te enviar a confirmación manualmente em instantes.`;
+                      responseContent = `✅ Reunión agendada con éxito!\n\n📅 ${formattedDate} às ${formattedTime}\n\n⚠️ Tuve un problema al enviar el email automático a ${args.guest_email}. Nuestro equipo te va a enviar la confirmación manualmente en instantes.`;
                       // Notify internal team
                       try {
                         await supabase.from('notifications').insert({

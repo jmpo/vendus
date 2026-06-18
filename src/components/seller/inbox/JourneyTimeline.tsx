@@ -13,6 +13,7 @@ const actionLabels: Record<string, { label: string; icon: any }> = {
   auto_assigned: { label: 'Asignado automáticamente', icon: UserPlus },
   unassigned: { label: 'Devuelto a la fila', icon: UserMinus },
   transferred: { label: 'Transfirió', icon: Repeat },
+  agent_changed: { label: 'Derivó (IA)', icon: ArrowRight },
 };
 
 export function JourneyTimeline({ conversationId }: JourneyTimelineProps) {
