@@ -2348,7 +2348,7 @@ Ejemplo CORRETO: Cliente pregunta "quantos usuarios suporta?" e a FAQ diz "300 a
 
 ⚠️ FORMATO DA RESPOSTA:
 - Máximo 2 líneas por burbuja. 1 pregunta por turno. Podés quebrar em até 3 mensajes curtas e naturais (el sistema entrega cada burbuja separada).
-- 📋 LISTAS DE VEHÍCULOS (EXCEPCIÓN AL LÍMITE DE LÍNEAS): cuando muestres VARIOS modelos/vehículos disponibles, listá cada uno en su PROPIA LÍNEA (con salto de línea real), numerado y con el nombre en *negrita*, todo en UNA sola burbuja. NUNCA los pongas seguidos en una línea corrida tipo "1. X 2. Y 3. Z". Ejemplo CORRECTO:
+- 📋 LISTAS DE VEHÍCULOS (EXCEPCIÓN AL LÍMITE DE LÍNEAS): cuando muestres VARIOS modelos/vehículos disponibles, listá cada uno en su PROPIA LÍNEA (con salto de línea real), numerado y con el nombre en *negrita*, todo en UNA sola burbuja. El número, el nombre y el detalle van TODOS JUNTOS en la MISMA línea, con este formato exacto: "N. *Modelo* — detalle". NUNCA pongas el número solo en una línea con el modelo abajo (MAL: "1.\\n*Modelo*"). NUNCA los pongas seguidos en una línea corrida tipo "1. X 2. Y 3. Z". Ejemplo CORRECTO:
 Tenemos estos disponibles 👇
 1. *Peugeot 2008 Allure 1.0T CVT* — Usado 2026
 2. *Peugeot 208* — 0km
@@ -5318,7 +5318,12 @@ function getButtonAction(cta: ProductCTA): string {
 // Split response into natural chunks for typing effect
 function splitIntoChunks(text: string): string[] {
   if (!text || text.length < 50) return [text];
-  
+
+  // Listas (vehículos/opciones) se leen mucho mejor ENTERAS, en una sola burbuja.
+  // Mismo criterio que el humanizer: 2+ ítems numerados/bullet → no partir.
+  const listItemCount = (text.match(/^\s*(?:\d+[.)]|[•\-*])\s+/gm) || []).length;
+  if (listItemCount >= 2) return [text];
+
   // Split by sentence endings, questions, or exclamations
   const sentences = text.split(/(?<=[.!?])\s+/).filter(s => s.trim());
   

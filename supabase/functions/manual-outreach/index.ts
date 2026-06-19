@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
       mode?: 'direct' | 'conversational';
       force_when_human?: boolean;
       instance_id?: string;
-      connection_type?: 'evolution' | 'meta_whatsapp';
+      connection_type?: 'evolution' | 'meta_whatsapp' | 'zernio';
       template_config?: { template_id: string; variable_mapping?: Record<string, any> } | null;
     };
     const {
@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
       template_config,
     } = body;
     let instance_id: string | undefined = body.instance_id;
-    let connection_type: 'evolution' | 'meta_whatsapp' = body.connection_type ?? 'evolution';
+    let connection_type: 'evolution' | 'meta_whatsapp' | 'zernio' = body.connection_type ?? 'evolution';
 
     if (!lead_ids?.length || !agent_id) {
       return new Response(JSON.stringify({ error: "Missing lead_ids or agent_id" }), {
@@ -199,6 +199,18 @@ Deno.serve(async (req) => {
           continue;
         }
 
+        // Template Zernio (identificado por NAME + language, no por template_id de Meta).
+        // Primer nombre del lead para rellenar {{1}} por defecto.
+        const leadFirstName = (lead?.name ? String(lead.name).trim().split(/\s+/)[0] : '') || 'Hola';
+        const zernioTemplate = connection_type === 'zernio' && template_config && (template_config as any).zernio_template_name
+          ? {
+              name: (template_config as any).zernio_template_name,
+              language: (template_config as any).zernio_template_language || 'es',
+              // Variables de la plantilla: si no vienen explícitas, rellena {{1}} con el primer nombre.
+              params: (template_config as any).params ?? (template_config as any).template_params ?? [leadFirstName],
+            }
+          : null;
+
         // === Guard Meta: fora da janela 24h sem template = bloqueia antes da IA ===
         const useTemplate = !!(template_config?.template_id && connection_type === 'meta_whatsapp');
         if (connection_type === 'meta_whatsapp' && !useTemplate) {
@@ -249,6 +261,7 @@ Deno.serve(async (req) => {
               current_agent_id: agent_id,
               meta_connection_id: connection_type === 'meta_whatsapp' ? instance_id : null,
               evolution_instance_id: connection_type === 'evolution' ? instance_id : null,
+              zernio_connection_id: connection_type === 'zernio' ? instance_id : null,
               metadata: convMeta,
             })
             .select("id")
@@ -264,6 +277,7 @@ Deno.serve(async (req) => {
           const patch: Record<string, unknown> = { current_agent_id: agent_id };
           if (connection_type === 'meta_whatsapp') patch.meta_connection_id = instance_id;
           if (connection_type === 'evolution') patch.evolution_instance_id = instance_id;
+          if (connection_type === 'zernio') patch.zernio_connection_id = instance_id;
           const baseMeta = ((existingConv.metadata as any) || {});
           let mergedMeta: any = null;
           if (event_context && (event_context as any).campaign_id) {
@@ -397,6 +411,27 @@ Temperatura: ${lead?.temperature || "indefinida"}`;
             }
             sent = true;
             if (i < bubbles.length - 1) await new Promise((r) => setTimeout(r, 800));
+          }
+        } else if (connection_type === 'zernio') {
+          // Zernio: template (reenganche fuera de 24h) o texto libre (dentro de ventana).
+          // zernio-send registra y enruta; fuera de ventana sin template devuelve OUT_OF_WINDOW.
+          if (zernioTemplate) {
+            const r = await supabase.functions.invoke('zernio-send', {
+              body: { connection_id: instance_id, organization_id, conversation_id: conversationId, to: leadPhone, type: 'template', template: zernioTemplate },
+            });
+            const ok = !r.error && (r.data as any)?.ok !== false && !(r.data as any)?.error;
+            if (!ok) { lastError = r.error?.message || (r.data as any)?.error || 'zernio template send failed'; console.error('[ManualOutreach] zernio template failed:', lastError); }
+            else sent = true;
+          } else {
+            for (let i = 0; i < bubbles.length; i++) {
+              const r = await supabase.functions.invoke('zernio-send', {
+                body: { connection_id: instance_id, organization_id, conversation_id: conversationId, to: leadPhone, type: 'text', text: bubbles[i] },
+              });
+              const ok = !r.error && (r.data as any)?.ok !== false && !(r.data as any)?.error;
+              if (!ok) { lastError = r.error?.message || (r.data as any)?.error || 'zernio send failed'; console.error('[ManualOutreach] zernio send failed:', lastError); break; }
+              sent = true;
+              if (i < bubbles.length - 1) await new Promise((r) => setTimeout(r, 800));
+            }
           }
         } else {
           // Evolution: send + logamos a mensagem nós mesmos

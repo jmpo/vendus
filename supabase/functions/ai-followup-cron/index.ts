@@ -1,5 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { recordLovableUsage } from '../_shared/ai-router.ts';
+import { sendWhatsAppForConversation } from '../_shared/whatsapp-router.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -356,27 +357,47 @@ Gere uma mensagem de follow-up estratégica DIFERENTE das anteriores.`;
           continue;
         }
 
-        // Send via Evolution Go (auto-resolve instância conectada)
+        // Enviar por la conexión REAL de la conversa (Evolution / Meta / Zernio) vía router.
+        // Sin conversación vinculada, fallback a Evolution Go (legacy, auto-resolve instancia).
         let sendSuccess = false;
         try {
-          const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
-            body: {
-              organization_id: item.organization_id,
-              type: 'text',
+          if (item.conversation_id) {
+            const { data: convRow } = await supabase
+              .from('webchat_conversations')
+              .select('id, organization_id, meta_connection_id, evolution_instance_id, zernio_connection_id, visitor_phone')
+              .eq('id', item.conversation_id)
+              .maybeSingle();
+            const sendRes = await sendWhatsAppForConversation({
+              supabase,
+              conversation: convRow ?? { id: item.conversation_id, organization_id: item.organization_id, visitor_phone: phone },
               to: phone,
-              payload: { text: followupMessage },
-            },
-          });
-          sendSuccess = !sendErr && (sendData as any)?.ok !== false;
-          if (!sendSuccess) {
-            console.error(`[FollowupCron] Evolution send failed for ${item.id}:`, sendErr || sendData);
-            await releaseForRetry(`Evolution send failed: ${JSON.stringify(sendErr || sendData).slice(0, 500)}`);
-            failed++;
-            continue;
+              text: followupMessage,
+            });
+            sendSuccess = !!sendRes?.ok;
+            if (!sendSuccess) {
+              const reason = sendRes?.error === 'OUT_OF_WINDOW'
+                ? 'Fuera de ventana 24h — requiere template (follow-up oficial)'
+                : (sendRes?.error || 'router send failed');
+              console.error(`[FollowupCron] router send failed for ${item.id}:`, reason);
+              await releaseForRetry(`router send failed: ${reason}`);
+              failed++;
+              continue;
+            }
+          } else {
+            const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
+              body: { organization_id: item.organization_id, type: 'text', to: phone, payload: { text: followupMessage } },
+            });
+            sendSuccess = !sendErr && (sendData as any)?.ok !== false;
+            if (!sendSuccess) {
+              console.error(`[FollowupCron] evolution fallback failed for ${item.id}:`, sendErr || sendData);
+              await releaseForRetry(`evolution fallback failed: ${JSON.stringify(sendErr || sendData).slice(0, 500)}`);
+              failed++;
+              continue;
+            }
           }
         } catch (e) {
-          console.error(`[FollowupCron] Evolution send exception for ${item.id}:`, e);
-          await releaseForRetry(`Evolution send exception: ${e instanceof Error ? e.message : String(e)}`);
+          console.error(`[FollowupCron] send exception for ${item.id}:`, e);
+          await releaseForRetry(`send exception: ${e instanceof Error ? e.message : String(e)}`);
           failed++;
           continue;
         }

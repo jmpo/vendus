@@ -52,7 +52,7 @@ Deno.serve(async (req: Request) => {
   // Confirma membership da org
   const { data: belongs } = await sbAdmin.rpc('user_belongs_to_organization', {
     _user_id: userId,
-    _organization_id: organization_id,
+    _org_id: organization_id,
   });
   if (!belongs) return json({ error: 'forbidden' }, 403);
 

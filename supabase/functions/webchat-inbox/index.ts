@@ -598,7 +598,7 @@ serve(async (req) => {
       // Verify agent has access to conversation
       const { data: conversation, error: convError } = await supabase
         .from('webchat_conversations')
-        .select('id, assigned_user_id, status, channel, visitor_phone, evolution_instance_id, meta_connection_id, instagram_connection_id, ig_sender_id')
+        .select('id, assigned_user_id, status, channel, visitor_phone, evolution_instance_id, meta_connection_id, zernio_connection_id, instagram_connection_id, ig_sender_id')
         .eq('id', body.conversation_id)
         .eq('organization_id', orgId)
         .single();
@@ -676,7 +676,8 @@ serve(async (req) => {
           // Auto-resolve evolution_instance_id APENAS quando a conversa NÃO veio pela Meta.
           let evoInstanceId = conversation.evolution_instance_id as string | null;
           const metaConnId = (conversation as any).meta_connection_id as string | null;
-          if (!metaConnId && !evoInstanceId) {
+          const zernioConnId = (conversation as any).zernio_connection_id as string | null;
+          if (!metaConnId && !evoInstanceId && !zernioConnId) {
             const { data: inst } = await supabase
               .from('evolution_instances')
               .select('id')
@@ -701,6 +702,7 @@ serve(async (req) => {
             organization_id: orgId,
             meta_connection_id: metaConnId,
             evolution_instance_id: evoInstanceId,
+            zernio_connection_id: zernioConnId,
             visitor_phone: conversation.visitor_phone,
           };
 

@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sendWhatsAppForConversation } from "../_shared/whatsapp-router.ts";
 
 declare const OffscreenCanvas: {
   new (width: number, height: number): {
@@ -109,7 +110,7 @@ Deno.serve(async (req) => {
     // Load conversation context
     const { data: conv, error: convErr } = await supabase
       .from("webchat_conversations")
-      .select("id, organization_id, channel, lead_id, evolution_instance_id, visitor_phone")
+      .select("id, organization_id, channel, lead_id, evolution_instance_id, meta_connection_id, zernio_connection_id, visitor_phone")
       .eq("id", body.conversation_id)
       .maybeSingle();
 
@@ -416,16 +417,77 @@ Deno.serve(async (req) => {
           lastProviderError,
         );
       }
+    } else if (
+      channel === "whatsapp" && phone &&
+      ((conv as any).meta_connection_id || (conv as any).zernio_connection_id) &&
+      imageList.length > 0
+    ) {
+      // === WhatsApp delivery vía router (Meta Cloud API o Zernio) ===
+      // Meta/Zernio aceptan URL pública directamente (la descargan ellos), así que
+      // no necesitamos la conversión webp/base64 del camino Evolution.
+      const routerConv = {
+        id: conv.id,
+        organization_id: conv.organization_id,
+        meta_connection_id: (conv as any).meta_connection_id ?? null,
+        evolution_instance_id: conv.evolution_instance_id ?? null,
+        zernio_connection_id: (conv as any).zernio_connection_id ?? null,
+        visitor_phone: phone,
+      };
+      const sendViaRouter = async (
+        kind: "image" | "video" | "document",
+        url: string,
+        cap: string,
+        filename?: string,
+      ): Promise<boolean> => {
+        try {
+          const res = await sendWhatsAppForConversation({
+            supabase,
+            conversation: routerConv,
+            to: phone!,
+            text: cap || undefined,
+            media: { kind, url, caption: cap || undefined, filename },
+          });
+          if (!res.ok) { lastProviderError = res.error || `router_${res.provider}_failed`; }
+          else { deliveryChannel = res.provider; }
+          return res.ok;
+        } catch (e: any) {
+          lastProviderError = `router_exception:${e?.message || e}`;
+          return false;
+        }
+      };
+
+      const okMain = await sendViaRouter("image", imageList[0], caption);
+      if (okMain) {
+        delivered = true;
+        sentCounts.images++;
+        if (sendExtraImages) {
+          for (const img of imageList.slice(1, 3)) {
+            await sleep(DELAY_MS);
+            if (await sendViaRouter("image", img, "")) sentCounts.images++;
+          }
+        }
+        if (sendVideos && videos[0]) {
+          await sleep(DELAY_MS);
+          if (await sendViaRouter("video", videos[0], `🎬 Vídeo: ${item.title}`)) sentCounts.videos++;
+        }
+        if (sendDocuments && documents[0]?.url) {
+          await sleep(DELAY_MS);
+          const doc = documents[0];
+          if (await sendViaRouter("document", doc.url, "", doc.name || `${item.title}.pdf`)) sentCounts.documents++;
+        }
+      } else {
+        console.error("[send-catalog-item] FAILED via router. error:", lastProviderError);
+      }
     } else if (channel === "whatsapp") {
-      // Diagnóstico claro do motivo de no tentar Evolution
+      // Diagnóstico claro do motivo de no enviar
       lastProviderError = !phone
         ? "missing_phone"
-        : !conv.evolution_instance_id
-        ? "missing_evolution_instance"
+        : !(conv.evolution_instance_id || (conv as any).meta_connection_id || (conv as any).zernio_connection_id)
+        ? "missing_connection"
         : imageList.length === 0
         ? "no_images_in_catalog_item"
         : "unknown";
-      console.warn("[send-catalog-item] skipping Evolution delivery:", lastProviderError);
+      console.warn("[send-catalog-item] skipping delivery:", lastProviderError);
     }
 
     // === Persist message in history ===
@@ -461,6 +523,17 @@ Deno.serve(async (req) => {
 
     if (msgErr) {
       console.error("[send-catalog-item] persist error:", msgErr);
+    }
+
+    // Broadcast realtime → el inbox muestra la tarjeta del catálogo al instante.
+    if (msg) {
+      try {
+        const ch = supabase.channel(`conversation:${conv.id}`);
+        await ch.send({ type: "broadcast", event: "new_message", payload: msg });
+        await supabase.removeChannel(ch);
+      } catch (e) {
+        console.error("[send-catalog-item] broadcast non-fatal:", e);
+      }
     }
 
     // Log action — success reflects REAL delivery on WhatsApp channel

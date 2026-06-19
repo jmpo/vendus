@@ -9,6 +9,7 @@ export type WAConversation = {
   organization_id?: string | null;
   meta_connection_id?: string | null;
   evolution_instance_id?: string | null;
+  zernio_connection_id?: string | null;
   visitor_phone?: string | null;
 };
 
@@ -22,7 +23,7 @@ export type WAMedia = {
 
 export type WARouterResult = {
   ok: boolean;
-  provider: 'meta' | 'evolution' | 'none';
+  provider: 'meta' | 'evolution' | 'zernio' | 'none';
   error?: string;
   message?: string;
   raw?: unknown;
@@ -49,16 +50,18 @@ export async function sendWhatsAppForConversation(
   const { supabase, conversation } = input;
   const to = normalizePhoneBR(input.to || conversation.visitor_phone || '');
 
-  // Prioridade: Meta (oficial) tem preferência se ambos por acaso estiverem setados.
-  const provider: 'meta' | 'evolution' | 'none' =
+  // Prioridade: Meta (oficial) > Evolution > Zernio. Respeita a conexão de origem.
+  const provider: 'meta' | 'evolution' | 'zernio' | 'none' =
     conversation.meta_connection_id ? 'meta'
       : conversation.evolution_instance_id ? 'evolution'
-        : 'none';
+        : conversation.zernio_connection_id ? 'zernio'
+          : 'none';
 
   console.log(
     `[wa-router] provider=${provider} conv=${conversation.id ?? '-'} ` +
     `meta_conn=${conversation.meta_connection_id ?? '-'} ` +
-    `evo_inst=${conversation.evolution_instance_id ?? '-'} to=${to}`,
+    `evo_inst=${conversation.evolution_instance_id ?? '-'} ` +
+    `zernio_conn=${conversation.zernio_connection_id ?? '-'} to=${to}`,
   );
 
   if (provider === 'none') {
@@ -66,8 +69,28 @@ export async function sendWhatsAppForConversation(
       ok: false,
       provider,
       error: 'NO_CONNECTION',
-      message: 'Conversa sem conexão WhatsApp vinculada (Meta ou Evolution).',
+      message: 'Conversa sem conexão WhatsApp vinculada (Meta, Evolution ou Zernio).',
     };
+  }
+
+  if (provider === 'zernio') {
+    const { data, error } = await supabase.functions.invoke('zernio-send', {
+      body: {
+        connection_id: conversation.zernio_connection_id,
+        organization_id: conversation.organization_id,
+        conversation_id: conversation.id,
+        to,
+        type: input.media ? input.media.kind : 'text',
+        text: input.text,
+        media: input.media,
+      },
+    });
+    const ok = !error && (data as any)?.ok !== false;
+    if (!ok) {
+      console.error('[wa-router] zernio-send FAILED:', JSON.stringify({ error, data }).slice(0, 500));
+      return { ok: false, provider, error: error?.message || (data as any)?.error || 'zernio-send failed', raw: data };
+    }
+    return { ok: true, provider, raw: data };
   }
 
   if (provider === 'meta') {

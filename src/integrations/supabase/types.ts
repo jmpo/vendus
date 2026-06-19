@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -833,8 +833,11 @@ export type Database = {
           created_at: string
           error_message: string | null
           extra_context: string | null
+          followup_attempt_hints: Json | null
           followup_enabled: boolean
           followup_interval_hours: number | null
+          followup_intervals_minutes: number[] | null
+          followup_kind: string | null
           followup_steps: Json | null
           followups_sent: number
           id: string
@@ -858,8 +861,11 @@ export type Database = {
           created_at?: string
           error_message?: string | null
           extra_context?: string | null
+          followup_attempt_hints?: Json | null
           followup_enabled?: boolean
           followup_interval_hours?: number | null
+          followup_intervals_minutes?: number[] | null
+          followup_kind?: string | null
           followup_steps?: Json | null
           followups_sent?: number
           id?: string
@@ -883,8 +889,11 @@ export type Database = {
           created_at?: string
           error_message?: string | null
           extra_context?: string | null
+          followup_attempt_hints?: Json | null
           followup_enabled?: boolean
           followup_interval_hours?: number | null
+          followup_intervals_minutes?: number[] | null
+          followup_kind?: string | null
           followup_steps?: Json | null
           followups_sent?: number
           id?: string
@@ -4202,11 +4211,13 @@ export type Database = {
           app_secret: string | null
           assigned_squad_id: string | null
           assigned_user_id: string | null
+          auto_first_contact: boolean
           created_at: string | null
           default_tags: string[] | null
           default_temperature: string | null
           distribution_rule: string | null
           field_mapping: Json | null
+          first_contact_message: string | null
           id: string
           is_active: boolean | null
           last_lead_received_at: string | null
@@ -4223,11 +4234,13 @@ export type Database = {
           app_secret?: string | null
           assigned_squad_id?: string | null
           assigned_user_id?: string | null
+          auto_first_contact?: boolean
           created_at?: string | null
           default_tags?: string[] | null
           default_temperature?: string | null
           distribution_rule?: string | null
           field_mapping?: Json | null
+          first_contact_message?: string | null
           id?: string
           is_active?: boolean | null
           last_lead_received_at?: string | null
@@ -4244,11 +4257,13 @@ export type Database = {
           app_secret?: string | null
           assigned_squad_id?: string | null
           assigned_user_id?: string | null
+          auto_first_contact?: boolean
           created_at?: string | null
           default_tags?: string[] | null
           default_temperature?: string | null
           distribution_rule?: string | null
           field_mapping?: Json | null
+          first_contact_message?: string | null
           id?: string
           is_active?: boolean | null
           last_lead_received_at?: string | null
@@ -6852,6 +6867,8 @@ export type Database = {
           min_confidence: number
           orchestrator_agent_id: string | null
           organization_id: string
+          reclassify_in_conversation: boolean
+          reclassify_min_confidence: number
           updated_at: string
         }
         Insert: {
@@ -6863,6 +6880,8 @@ export type Database = {
           min_confidence?: number
           orchestrator_agent_id?: string | null
           organization_id: string
+          reclassify_in_conversation?: boolean
+          reclassify_min_confidence?: number
           updated_at?: string
         }
         Update: {
@@ -6874,6 +6893,8 @@ export type Database = {
           min_confidence?: number
           orchestrator_agent_id?: string | null
           organization_id?: string
+          reclassify_in_conversation?: boolean
+          reclassify_min_confidence?: number
           updated_at?: string
         }
         Relationships: [
@@ -6911,6 +6932,7 @@ export type Database = {
           cakto_customer_email: string | null
           cakto_subscription_id: string | null
           cnpj: string | null
+          conversion_currency: string | null
           created_at: string
           email: string | null
           features: Json | null
@@ -6952,6 +6974,7 @@ export type Database = {
           cakto_customer_email?: string | null
           cakto_subscription_id?: string | null
           cnpj?: string | null
+          conversion_currency?: string | null
           created_at?: string
           email?: string | null
           features?: Json | null
@@ -6993,6 +7016,7 @@ export type Database = {
           cakto_customer_email?: string | null
           cakto_subscription_id?: string | null
           cnpj?: string | null
+          conversion_currency?: string | null
           created_at?: string
           email?: string | null
           features?: Json | null
@@ -7137,6 +7161,8 @@ export type Database = {
       pipeline_stages: {
         Row: {
           color: string | null
+          conversion_event: string | null
+          conversion_value: number | null
           created_at: string
           description: string | null
           id: string
@@ -7148,6 +7174,8 @@ export type Database = {
         }
         Insert: {
           color?: string | null
+          conversion_event?: string | null
+          conversion_value?: number | null
           created_at?: string
           description?: string | null
           id?: string
@@ -7159,6 +7187,8 @@ export type Database = {
         }
         Update: {
           color?: string | null
+          conversion_event?: string | null
+          conversion_value?: number | null
           created_at?: string
           description?: string | null
           id?: string
@@ -8128,6 +8158,16 @@ export type Database = {
           enable_image_vision: boolean
           end_conversation_triggers: string[] | null
           evolution_instance_id: string | null
+          followup_attempt_hints: Json
+          followup_channels: string[]
+          followup_enabled: boolean
+          followup_extra_instructions: string | null
+          followup_intervals_minutes: number[]
+          followup_max_attempts: number
+          followup_respect_business_hours: boolean
+          followup_stop_on_booking: boolean
+          followup_stop_on_human: boolean
+          followup_tone: string
           handoff_delay_seconds: number
           handoff_include_summary: boolean
           handoff_incoming_message: string | null
@@ -8201,6 +8241,16 @@ export type Database = {
           enable_image_vision?: boolean
           end_conversation_triggers?: string[] | null
           evolution_instance_id?: string | null
+          followup_attempt_hints?: Json
+          followup_channels?: string[]
+          followup_enabled?: boolean
+          followup_extra_instructions?: string | null
+          followup_intervals_minutes?: number[]
+          followup_max_attempts?: number
+          followup_respect_business_hours?: boolean
+          followup_stop_on_booking?: boolean
+          followup_stop_on_human?: boolean
+          followup_tone?: string
           handoff_delay_seconds?: number
           handoff_include_summary?: boolean
           handoff_incoming_message?: string | null
@@ -8274,6 +8324,16 @@ export type Database = {
           enable_image_vision?: boolean
           end_conversation_triggers?: string[] | null
           evolution_instance_id?: string | null
+          followup_attempt_hints?: Json
+          followup_channels?: string[]
+          followup_enabled?: boolean
+          followup_extra_instructions?: string | null
+          followup_intervals_minutes?: number[]
+          followup_max_attempts?: number
+          followup_respect_business_hours?: boolean
+          followup_stop_on_booking?: boolean
+          followup_stop_on_human?: boolean
+          followup_tone?: string
           handoff_delay_seconds?: number
           handoff_include_summary?: boolean
           handoff_incoming_message?: string | null
@@ -8846,6 +8906,7 @@ export type Database = {
           guarantee: string | null
           icp: string | null
           id: string
+          is_active: boolean
           knowledge_base: string | null
           logo_url: string | null
           name: string
@@ -8878,6 +8939,7 @@ export type Database = {
           guarantee?: string | null
           icp?: string | null
           id?: string
+          is_active?: boolean
           knowledge_base?: string | null
           logo_url?: string | null
           name: string
@@ -8910,6 +8972,7 @@ export type Database = {
           guarantee?: string | null
           icp?: string | null
           id?: string
+          is_active?: boolean
           knowledge_base?: string | null
           logo_url?: string | null
           name?: string
@@ -9460,33 +9523,48 @@ export type Database = {
       }
       scheduled_messages: {
         Row: {
-          content: string
+          content: string | null
           conversation_id: string | null
           created_at: string | null
           created_by: string | null
           id: string
+          media_duration_ms: number | null
+          media_filename: string | null
+          media_kind: string | null
+          media_mime: string | null
+          media_url: string | null
           organization_id: string | null
           scheduled_at: string
           sent_at: string | null
           status: string | null
         }
         Insert: {
-          content: string
+          content?: string | null
           conversation_id?: string | null
           created_at?: string | null
           created_by?: string | null
           id?: string
+          media_duration_ms?: number | null
+          media_filename?: string | null
+          media_kind?: string | null
+          media_mime?: string | null
+          media_url?: string | null
           organization_id?: string | null
           scheduled_at: string
           sent_at?: string | null
           status?: string | null
         }
         Update: {
-          content?: string
+          content?: string | null
           conversation_id?: string | null
           created_at?: string | null
           created_by?: string | null
           id?: string
+          media_duration_ms?: number | null
+          media_filename?: string | null
+          media_kind?: string | null
+          media_mime?: string | null
+          media_url?: string | null
           organization_id?: string | null
           scheduled_at?: string
           sent_at?: string | null
@@ -10333,6 +10411,7 @@ export type Database = {
           organization_id: string
           updated_at: string | null
           user_id: string
+          view_ai_agents_tab: boolean
           view_all_contacts: boolean | null
           view_all_kanban_cards: boolean | null
           view_all_schedules: boolean | null
@@ -10355,6 +10434,7 @@ export type Database = {
           organization_id: string
           updated_at?: string | null
           user_id: string
+          view_ai_agents_tab?: boolean
           view_all_contacts?: boolean | null
           view_all_kanban_cards?: boolean | null
           view_all_schedules?: boolean | null
@@ -10377,6 +10457,7 @@ export type Database = {
           organization_id?: string
           updated_at?: string | null
           user_id?: string
+          view_ai_agents_tab?: boolean
           view_all_contacts?: boolean | null
           view_all_kanban_cards?: boolean | null
           view_all_schedules?: boolean | null
@@ -10707,6 +10788,8 @@ export type Database = {
           flow_source: string | null
           flow_variables: Json | null
           id: string
+          ig_sender_id: string | null
+          instagram_connection_id: string | null
           last_inbound_at: string | null
           last_message_at: string | null
           last_message_content: string | null
@@ -10747,6 +10830,8 @@ export type Database = {
           visitor_whatsapp: string | null
           welcome_sent_at: string | null
           widget_id: string | null
+          zernio_connection_id: string | null
+          zernio_conversation_id: string | null
         }
         Insert: {
           accepted_at?: string | null
@@ -10769,6 +10854,8 @@ export type Database = {
           flow_source?: string | null
           flow_variables?: Json | null
           id?: string
+          ig_sender_id?: string | null
+          instagram_connection_id?: string | null
           last_inbound_at?: string | null
           last_message_at?: string | null
           last_message_content?: string | null
@@ -10809,6 +10896,8 @@ export type Database = {
           visitor_whatsapp?: string | null
           welcome_sent_at?: string | null
           widget_id?: string | null
+          zernio_connection_id?: string | null
+          zernio_conversation_id?: string | null
         }
         Update: {
           accepted_at?: string | null
@@ -10831,6 +10920,8 @@ export type Database = {
           flow_source?: string | null
           flow_variables?: Json | null
           id?: string
+          ig_sender_id?: string | null
+          instagram_connection_id?: string | null
           last_inbound_at?: string | null
           last_message_at?: string | null
           last_message_content?: string | null
@@ -10871,6 +10962,8 @@ export type Database = {
           visitor_whatsapp?: string | null
           welcome_sent_at?: string | null
           widget_id?: string | null
+          zernio_connection_id?: string | null
+          zernio_conversation_id?: string | null
         }
         Relationships: [
           {
@@ -10941,6 +11034,13 @@ export type Database = {
             columns: ["widget_id"]
             isOneToOne: false
             referencedRelation: "webchat_widgets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "webchat_conversations_zernio_connection_id_fkey"
+            columns: ["zernio_connection_id"]
+            isOneToOne: false
+            referencedRelation: "zernio_connections"
             referencedColumns: ["id"]
           },
         ]
@@ -11340,6 +11440,7 @@ export type Database = {
           app_id: string | null
           app_secret_encrypted: string | null
           business_account_name: string | null
+          conversions_dataset_id: string | null
           created_at: string
           created_by: string | null
           default_reengagement_template_id: string | null
@@ -11363,6 +11464,7 @@ export type Database = {
           app_id?: string | null
           app_secret_encrypted?: string | null
           business_account_name?: string | null
+          conversions_dataset_id?: string | null
           created_at?: string
           created_by?: string | null
           default_reengagement_template_id?: string | null
@@ -11386,6 +11488,7 @@ export type Database = {
           app_id?: string | null
           app_secret_encrypted?: string | null
           business_account_name?: string | null
+          conversions_dataset_id?: string | null
           created_at?: string
           created_by?: string | null
           default_reengagement_template_id?: string | null
@@ -11528,6 +11631,56 @@ export type Database = {
           },
           {
             foreignKeyName: "whatsapp_meta_webhook_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      zernio_connections: {
+        Row: {
+          account_id: string
+          api_key_encrypted: string
+          created_at: string
+          display_name: string | null
+          id: string
+          organization_id: string
+          phone_number: string | null
+          status: string
+          updated_at: string
+          webhook_secret: string | null
+          webhook_subscribed_at: string | null
+        }
+        Insert: {
+          account_id: string
+          api_key_encrypted: string
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          organization_id: string
+          phone_number?: string | null
+          status?: string
+          updated_at?: string
+          webhook_secret?: string | null
+          webhook_subscribed_at?: string | null
+        }
+        Update: {
+          account_id?: string
+          api_key_encrypted?: string
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          organization_id?: string
+          phone_number?: string | null
+          status?: string
+          updated_at?: string
+          webhook_secret?: string | null
+          webhook_subscribed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "zernio_connections_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -11910,11 +12063,16 @@ export type Database = {
       }
       inbox_count_conversations: {
         Args: {
+          p_agent_ids?: string[]
           p_assigned_user_ids?: string[]
           p_channel?: string
+          p_channels?: string[]
+          p_evolution_ids?: string[]
           p_include_no_product?: boolean
           p_include_no_sector?: boolean
           p_include_unassigned?: boolean
+          p_instagram_ids?: string[]
+          p_meta_ids?: string[]
           p_product_ids?: string[]
           p_search?: string
           p_sector_ids?: string[]
@@ -11922,6 +12080,7 @@ export type Database = {
           p_user_id: string
         }
         Returns: {
+          agents: number
           attending: number
           resolved: number
           waiting: number
@@ -11929,13 +12088,18 @@ export type Database = {
       }
       inbox_list_conversations: {
         Args: {
+          p_agent_ids?: string[]
           p_assigned_user_ids?: string[]
           p_channel?: string
+          p_channels?: string[]
           p_cursor_last_message_at?: string
+          p_evolution_ids?: string[]
           p_include_no_product?: boolean
           p_include_no_sector?: boolean
           p_include_unassigned?: boolean
+          p_instagram_ids?: string[]
           p_limit?: number
+          p_meta_ids?: string[]
           p_product_ids?: string[]
           p_search?: string
           p_sector_ids?: string[]
@@ -11959,6 +12123,7 @@ export type Database = {
           effective_product_name: string
           evolution_instance_id: string
           id: string
+          instagram_connection_id: string
           last_message_at: string
           last_message_content: string
           last_message_created_at: string
@@ -11969,6 +12134,7 @@ export type Database = {
           lead_name: string
           lead_phone: string
           lead_product_id: string
+          meta_connection_id: string
           needs_human: boolean
           organization_id: string
           product_id: string

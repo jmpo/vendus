@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 
 interface Stage {
@@ -15,7 +16,18 @@ interface Stage {
   is_won: boolean | null;
   is_lost: boolean | null;
   description: string | null;
+  conversion_event?: string | null;
+  conversion_value?: number | null;
 }
+
+const CONVERSION_EVENTS = [
+  { value: 'none', label: 'Ninguno' },
+  { value: 'LeadSubmitted', label: 'Lead (LeadSubmitted)' },
+  { value: 'Purchase', label: 'Venta (Purchase)' },
+  { value: 'InitiateCheckout', label: 'Inicio de checkout' },
+  { value: 'AddToCart', label: 'Agregar al carrito' },
+  { value: 'ViewContent', label: 'Vio contenido' },
+];
 
 export interface StageEditFormRef {
   getData: () => Partial<Stage> & { id?: string };
@@ -53,6 +65,8 @@ export const StageEditForm = forwardRef<StageEditFormRef, StageEditFormProps>(({
   const [color, setColor] = useState(stage?.color || STAGE_COLORS[0]);
   const [isWon, setIsWon] = useState(stage?.is_won || false);
   const [isLost, setIsLost] = useState(stage?.is_lost || false);
+  const [conversionEvent, setConversionEvent] = useState(stage?.conversion_event || 'none');
+  const [conversionValue, setConversionValue] = useState<string>(stage?.conversion_value != null ? String(stage.conversion_value) : '');
 
   useEffect(() => {
     if (stage) {
@@ -61,12 +75,16 @@ export const StageEditForm = forwardRef<StageEditFormRef, StageEditFormProps>(({
       setColor(stage.color || STAGE_COLORS[0]);
       setIsWon(stage.is_won || false);
       setIsLost(stage.is_lost || false);
+      setConversionEvent(stage.conversion_event || 'none');
+      setConversionValue(stage.conversion_value != null ? String(stage.conversion_value) : '');
     } else {
       setName('');
       setDescription('');
       setColor(STAGE_COLORS[0]);
       setIsWon(false);
       setIsLost(false);
+      setConversionEvent('none');
+      setConversionValue('');
     }
   }, [stage]);
 
@@ -78,6 +96,8 @@ export const StageEditForm = forwardRef<StageEditFormRef, StageEditFormProps>(({
         color,
         is_won: isWon,
         is_lost: isLost,
+        conversion_event: conversionEvent === 'none' ? null : conversionEvent,
+        conversion_value: conversionValue.trim() ? Number(conversionValue) : null,
       };
 
       if (isNew) {
@@ -190,6 +210,34 @@ export const StageEditForm = forwardRef<StageEditFormRef, StageEditFormProps>(({
               onCheckedChange={handleLostChange}
             />
           </div>
+        </div>
+
+        {/* Evento de conversión a Meta (per-cliente). Al entrar un lead a esta etapa se dispara. */}
+        <div className="space-y-1.5 sm:space-y-2 pt-1 border-t mt-1">
+          <Label className="text-sm">Evento de conversión (Meta Ads)</Label>
+          <p className="text-[11px] text-muted-foreground -mt-1">
+            Cuando un lead entra a esta etapa, se envía este evento a Meta (atribución de anuncios). Dejalo en "Ninguno" si no querés rastrear esta etapa.
+          </p>
+          <Select value={conversionEvent} onValueChange={setConversionEvent}>
+            <SelectTrigger className="h-9 sm:h-10"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {CONVERSION_EVENTS.map((e) => (
+                <SelectItem key={e.value} value={e.value}>{e.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {(conversionEvent === 'Purchase' || conversionEvent === 'InitiateCheckout' || conversionEvent === 'AddToCart') && (
+            <div className="space-y-1 pt-1">
+              <Label className="text-xs">Valor (opcional)</Label>
+              <Input
+                type="number"
+                value={conversionValue}
+                onChange={(e) => setConversionValue(e.target.value)}
+                placeholder="Ej: 15000 (si lo dejás vacío, usa el monto del negocio ganado)"
+                className="h-9"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -20,6 +20,7 @@ import { TagFormDialog } from '@/components/admin/tags/TagFormDialog';
 import { CadencePicker } from '@/components/admin/cadences/CadencePicker';
 import { type VariableMapping } from '@/components/admin/meta/TemplatePicker';
 import { MultiTemplatePicker, type CampaignMetaTemplateConfig } from '@/components/admin/meta/MultiTemplatePicker';
+import { ZernioCampaignTemplatePicker } from './ZernioCampaignTemplatePicker';
 
 function normalizeMetaTemplateConfig(raw: any): CampaignMetaTemplateConfig {
   if (!raw || typeof raw !== 'object') {
@@ -103,7 +104,7 @@ const OPERATORS_BY_TYPE: Record<string, { value: string; label: string }[]> = {
 // Evolution usa 'connected'; Meta WhatsApp Cloud usa 'active'.
 function isInstanceReady(i: { connection_type?: string; status?: string }) {
   if (!i) return false;
-  if (i.connection_type === 'meta_whatsapp') return i.status === 'active';
+  if (i.connection_type === 'meta_whatsapp' || i.connection_type === 'zernio') return i.status === 'active';
   return i.status === 'connected';
 }
 
@@ -144,7 +145,7 @@ export function CampaignWizard({
     inline_context: '',
     context_distribution: 'random',
     instance_strategy: 'all',
-    instance_distribution: [] as Array<{ instance_id: string; connection_type: 'evolution' | 'meta_whatsapp'; weight: number }>,
+    instance_distribution: [] as Array<{ instance_id: string; connection_type: 'evolution' | 'meta_whatsapp' | 'zernio'; weight: number }>,
     speed_preset: 'recommended',
     schedule_type: 'now',
     scheduled_at: '',
@@ -168,11 +169,12 @@ export function CampaignWizard({
     if (!orgId) return;
     (async () => {
       const sb = supabase as any;
-      const [a, p, evo, meta] = await Promise.all([
+      const [a, p, evo, meta, zernio] = await Promise.all([
         sb.from('product_agents').select('id, name, product_id, is_active').eq('organization_id', orgId).eq('is_active', true),
         sb.from('products').select('id, name, status').eq('organization_id', orgId).order('name'),
         sb.from('evolution_instances').select('id, name, phone_number, status').eq('organization_id', orgId),
         sb.from('whatsapp_meta_connections').select('id, display_name, phone_number, status').eq('organization_id', orgId),
+        sb.from('zernio_connections').select('id, display_name, phone_number, status').eq('organization_id', orgId),
       ]);
       setAgents(a.data ?? []);
       setProducts(p.data ?? []);
@@ -190,6 +192,13 @@ export function CampaignWizard({
           phone_number: i.phone_number,
           status: i.status,
           connection_type: 'meta_whatsapp' as const,
+        })),
+        ...((zernio.data ?? []) as any[]).map((i) => ({
+          id: i.id,
+          name: i.display_name,
+          phone_number: i.phone_number,
+          status: i.status,
+          connection_type: 'zernio' as const,
         })),
       ];
       setInstances(unified);
@@ -630,7 +639,7 @@ export function CampaignWizard({
             {instances.filter(isInstanceReady).map((i) => {
               const isManual = form.instance_strategy === 'manual';
               const sel = form.instance_distribution.some((x) => x.instance_id === i.id);
-              const typeLabel = i.connection_type === 'meta_whatsapp' ? 'API Oficial' : 'Evolution';
+              const typeLabel = i.connection_type === 'meta_whatsapp' ? 'API Oficial' : i.connection_type === 'zernio' ? 'Zernio' : 'Evolution';
               return (
                 <div key={i.id} className="flex items-center gap-3 p-2 border rounded">
                   {isManual && (
@@ -679,6 +688,32 @@ export function CampaignWizard({
           </CardContent>
         </Card>
       )}
+
+      {/* 5c. Plantilla Zernio (WhatsApp Oficial vía Zernio) */}
+      {(() => {
+        const zConns = instances.filter((i) => i.connection_type === 'zernio' && isInstanceReady(i));
+        const selectedZ = form.instance_distribution.find((x) => x.connection_type === 'zernio');
+        const zConnId = selectedZ?.instance_id ?? zConns[0]?.id;
+        if (zConns.length === 0 || !zConnId) return null;
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">5c. Plantilla (WhatsApp Oficial vía Zernio)</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <p className="text-xs text-muted-foreground">
+                Para una primera abordagem por Zernio (fuera de la ventana de 24h) se requiere una plantilla aprobada. Elegí una:
+              </p>
+              <ZernioCampaignTemplatePicker
+                organizationId={orgId}
+                connectionId={zConnId}
+                value={(form.meta_template_config as any)?.zernio ?? null}
+                onChange={(v) => setForm({ ...form, meta_template_config: { ...form.meta_template_config, zernio: v } as any })}
+              />
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* 6. Velocidade */}
 

@@ -223,6 +223,9 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
   const fromNorm = normalizePhoneBR(fromRaw) ?? fromRaw;
   const metaMsgId = String(msg.id ?? '');
   const contactName = contacts?.[0]?.profile?.name ?? null;
+  // Click-to-WhatsApp: Meta envía referral.ctwa_clid en el 1er mensaje tras el click del anuncio.
+  // Lo guardamos para atribuir conversiones (CAPI) más tarde.
+  const ctwaClid = msg?.referral?.ctwa_clid ?? msg?.referral?.ctwaClid ?? null;
 
   // 1) localizar conversa ATIVA desta caixa Meta específica
   //    - filtra por meta_connection_id para nunca invadir outra caixa (Evolution/IG/outra Meta)
@@ -241,6 +244,14 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
   let conversationId: string;
   if (existing && existing.length > 0) {
     conversationId = existing[0].id;
+    // Captura el ctwa_clid del anuncio si llega y aún no está guardado (merge en metadata).
+    if (ctwaClid) {
+      const { data: cur } = await sb.from('webchat_conversations').select('metadata').eq('id', conversationId).maybeSingle();
+      const meta = (cur?.metadata as any) || {};
+      if (!meta.ctwa_clid) {
+        await sb.from('webchat_conversations').update({ metadata: { ...meta, ctwa_clid: ctwaClid } }).eq('id', conversationId);
+      }
+    }
     await sb.from('webchat_conversations')
       .update({
         last_inbound_at: new Date().toISOString(),
@@ -272,6 +283,7 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
         meta_connection_id: conn.id,
         last_inbound_at: new Date().toISOString(),
         last_message_at: new Date().toISOString(),
+        ...(ctwaClid ? { metadata: { ctwa_clid: ctwaClid } } : {}),
       })
       .select('id')
       .single();

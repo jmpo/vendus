@@ -18,8 +18,13 @@ import {
   useDeletePipelineStage,
 } from '@/hooks/usePipelineMutations';
 import { supabase } from '@/integrations/supabase/client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
+
+const CONVERSION_CURRENCIES = ['USD', 'PYG', 'ARS', 'BRL', 'MXN', 'CLP', 'COP', 'UYU', 'EUR'];
 
 interface Stage {
   id: string;
@@ -29,6 +34,8 @@ interface Stage {
   is_won: boolean | null;
   is_lost: boolean | null;
   description?: string | null;
+  conversion_event?: string | null;
+  conversion_value?: number | null;
 }
 
 interface StageManagerDialogProps {
@@ -60,6 +67,26 @@ export function StageManagerDialog({
   const createStage = useCreatePipelineStage();
   const updateStage = useUpdatePipelineStage();
   const deleteStage = useDeletePipelineStage();
+
+  // Moneda de conversiones (a nivel organización) — para los eventos Purchase a Meta.
+  const { profile } = useAuth();
+  const orgId = profile?.organization_id;
+  const queryClient = useQueryClient();
+  const { data: convCurrency } = useQuery({
+    queryKey: ['org-conversion-currency', orgId],
+    enabled: !!orgId && open,
+    queryFn: async () => {
+      const { data } = await supabase.from('organizations').select('conversion_currency').eq('id', orgId).maybeSingle();
+      return (data as any)?.conversion_currency ?? 'USD';
+    },
+  });
+  const updateCurrency = async (cur: string) => {
+    if (!orgId) return;
+    const { error } = await supabase.from('organizations').update({ conversion_currency: cur } as any).eq('id', orgId);
+    if (error) { toast.error('No se pudo guardar la moneda'); return; }
+    queryClient.setQueryData(['org-conversion-currency', orgId], cur);
+    toast.success(`Moneda de conversiones: ${cur}`);
+  };
 
   // Fetch lead counts per stage
   const { data: leadCounts = {} } = useQuery({
@@ -166,7 +193,9 @@ export function StageManagerDialog({
           color: data.color,
           is_won: data.is_won,
           is_lost: data.is_lost,
-        });
+          conversion_event: (data as any).conversion_event ?? null,
+          conversion_value: (data as any).conversion_value ?? null,
+        } as any);
         toast.success('Etapa actualizada!');
       } else {
         // Create new
@@ -178,7 +207,9 @@ export function StageManagerDialog({
           order_index: data.order_index || localStages.length + 1,
           is_won: data.is_won || false,
           is_lost: data.is_lost || false,
-        });
+          conversion_event: (data as any).conversion_event ?? null,
+          conversion_value: (data as any).conversion_value ?? null,
+        } as any);
         toast.success('Etapa creada!');
       }
 
@@ -228,8 +259,18 @@ export function StageManagerDialog({
             )}
           </DialogTitle>
           <DialogDescription className="text-sm">
-            Configure as etapas do su embudo de ventas
+            Configurá las etapas de tu embudo de ventas. En cada etapa podés definir el evento de conversión que se envía a Meta Ads.
           </DialogDescription>
+          <div className="flex items-center gap-2 pt-1">
+            <Label className="text-xs text-muted-foreground whitespace-nowrap">Moneda de conversiones:</Label>
+            <Select value={convCurrency ?? 'USD'} onValueChange={updateCurrency}>
+              <SelectTrigger className="h-8 w-28 text-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {CONVERSION_CURRENCIES.map((c) => (<SelectItem key={c} value={c}>{c}</SelectItem>))}
+              </SelectContent>
+            </Select>
+            <span className="text-[11px] text-muted-foreground hidden sm:inline">(para eventos Purchase enviados a Meta)</span>
+          </div>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto -mx-6 px-6 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full">
