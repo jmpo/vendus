@@ -64,15 +64,23 @@ Deno.serve(async (req: Request) => {
     if (!name || !category || !language) return json({ error: 'name, category y language requeridos' }, 400);
     if (!/^[a-z][a-z0-9_]*$/.test(name)) return json({ error: 'name inválido: minúsculas, letras/números/_ y debe empezar con letra' }, 400);
 
-    // Construir components si no vienen ya armados
+    // Construir components si no vienen ya armados.
+    // Zernio espera type en MINÚSCULAS (body/header/footer/buttons) — NO el formato de Meta.
+    // Las variables {{n}} requieren un EJEMPLO (example.body_text) o Meta rechaza.
     let comps = components;
     if (!comps) {
       comps = [];
-      if (header_text) comps.push({ type: 'HEADER', format: 'TEXT', text: header_text });
-      comps.push({ type: 'BODY', text: body_text || '' });
-      if (footer_text) comps.push({ type: 'FOOTER', text: footer_text });
+      if (header_text) comps.push({ type: 'header', format: 'TEXT', text: header_text });
+      const txt = body_text || '';
+      const varCount = new Set([...txt.matchAll(/\{\{(\d+)\}\}/g)].map((m: any) => m[1])).size;
+      const bodyComp: Record<string, unknown> = { type: 'body', text: txt };
+      if (varCount > 0) {
+        bodyComp.example = { body_text: [Array.from({ length: varCount }, (_, i) => `Ejemplo${i + 1}`)] };
+      }
+      comps.push(bodyComp);
+      if (footer_text) comps.push({ type: 'footer', text: footer_text });
       if (Array.isArray(buttons) && buttons.length > 0) {
-        comps.push({ type: 'BUTTONS', buttons });
+        comps.push({ type: 'buttons', buttons });
       }
     }
 

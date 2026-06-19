@@ -64,11 +64,19 @@ Deno.serve(async (req: Request) => {
   try {
     if (event === 'message.received') {
       const m = payload?.message ?? {};
-      if (m.direction === 'incoming') await handleInbound(sb, conn, payload);
+      if (m.direction === 'incoming') {
+        // Respondemos 200 al instante y procesamos en segundo plano (IA + envío de respuestas).
+        // Evita que Zernio marque el webhook como "failed" por timeout y reintente.
+        EdgeRuntime.waitUntil(
+          handleInbound(sb, conn, payload).catch((e) => console.error('[zernio-webhook] handleInbound bg error', e)),
+        );
+      }
     } else if (event === 'message.delivered' || event === 'message.read' || event === 'message.failed') {
       const id = String(payload?.message?.platformMessageId ?? payload?.message?.id ?? '');
       const status = event === 'message.delivered' ? 'delivered' : event === 'message.read' ? 'read' : 'failed';
       if (id) await sb.from('webchat_messages').update({ delivery_status: status }).eq('metadata->>zernio_message_id', id);
+    } else if (event.startsWith('whatsapp.template')) {
+      await handleTemplateStatus(sb, conn, payload);
     }
   } catch (e) {
     console.error('[zernio-webhook] error', e);
@@ -222,6 +230,58 @@ async function handleInbound(sb: any, conn: any, payload: any) {
   } catch (e) {
     console.error('[zernio-webhook] webchat-bot invoke error', e);
   }
+}
+
+// Estado de plantillas (aprobada/rechazada) → notifica al equipo.
+// La primera plantilla aprobada de la org recibe una notificación especial de felicitación.
+async function handleTemplateStatus(sb: any, conn: any, payload: any) {
+  const t = payload?.template ?? payload?.data ?? payload?.message_template ?? payload ?? {};
+  const rawStatus = String(t.status ?? t.event ?? payload?.status ?? '').toUpperCase();
+  const name = t.name ?? t.template_name ?? t.templateName ?? t.display_name ?? 'tu plantilla';
+  const reason = t.rejected_reason ?? t.reason ?? t.rejection_reason ?? null;
+
+  let approved: boolean | null = null;
+  if (rawStatus.includes('APPROV')) approved = true;
+  else if (rawStatus.includes('REJECT') || rawStatus.includes('DECLIN')) approved = false;
+  if (approved === null) return; // PENDING u otro → no notificamos
+
+  // ¿Es la PRIMERA plantilla aprobada de esta organización?
+  let isFirst = false;
+  if (approved) {
+    const { data: org } = await sb.from('organizations').select('first_template_approved_at').eq('id', conn.organization_id).maybeSingle();
+    if (org && !org.first_template_approved_at) {
+      isFirst = true;
+      await sb.from('organizations').update({ first_template_approved_at: new Date().toISOString() }).eq('id', conn.organization_id);
+    }
+  }
+
+  // Destinatarios: admins/super_admins de la org
+  const recipients = new Set<string>();
+  const { data: admins } = await sb.from('user_roles')
+    .select('user_id, profiles!inner(organization_id)')
+    .in('role', ['admin', 'super_admin'])
+    .eq('profiles.organization_id', conn.organization_id);
+  (admins || []).forEach((a: any) => a.user_id && recipients.add(a.user_id));
+  if (recipients.size === 0) return;
+
+  const title = approved
+    ? (isFirst ? '🎉🥳 ¡Felicidades por tu primera plantilla aprobada!' : '✅ Plantilla aprobada')
+    : '❌ Plantilla rechazada';
+  const message = approved
+    ? (isFirst
+        ? `¡Felicitaciones! Tu primera plantilla "${name}" fue aprobada por Meta 🚀. Ya podés reenganchar clientes fuera de las 24h y lanzar campañas. ¡A vender!`
+        : `La plantilla "${name}" fue aprobada por Meta. Ya está disponible para campañas y follow-ups.`)
+    : `La plantilla "${name}" fue rechazada por Meta${reason ? `: ${reason}` : ''}. Editala y reenviala a revisión.`;
+
+  const rows = Array.from(recipients).map((uid) => ({
+    organization_id: conn.organization_id,
+    user_id: uid,
+    title,
+    message,
+    type: 'opportunity' as any,
+    metadata: { kind: 'template_status', template: name, approved, first: isFirst, source: 'zernio' },
+  }));
+  await sb.from('notifications').insert(rows);
 }
 
 function bytesToBase64(bytes: Uint8Array): string {
