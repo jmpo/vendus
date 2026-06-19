@@ -103,7 +103,7 @@ export function WebhookEditor({ webhookId, onBack }: WebhookEditorProps) {
       <div className="text-center py-12">
         <p className="text-muted-foreground">Webhook no encontrado</p>
         <Button variant="outline" onClick={onBack} className="mt-4">
-          Voltar
+          Volver
         </Button>
       </div>
     );

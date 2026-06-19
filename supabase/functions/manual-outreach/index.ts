@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { splitIntoBubbles } from "../_shared/humanizer.ts";
 import { recordLovableUsage } from "../_shared/ai-router.ts";
+import { resolveAgentSendConnection } from "../_shared/agent-connection.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -15,20 +16,10 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const lovableApiKey = Deno.env.get("OPENAI_API_KEY")!;
+    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const {
-      lead_ids,
-      agent_id,
-      organization_id,
-      objective,
-      extra_context,
-      event_context,
-      mode = 'direct',
-      force_when_human = false,
-      instance_id,
-    }: {
+    const body = await req.json() as {
       lead_ids: string[];
       agent_id: string;
       organization_id: string;
@@ -38,7 +29,22 @@ Deno.serve(async (req) => {
       mode?: 'direct' | 'conversational';
       force_when_human?: boolean;
       instance_id?: string;
-    } = await req.json();
+      connection_type?: 'evolution' | 'meta_whatsapp';
+      template_config?: { template_id: string; variable_mapping?: Record<string, any> } | null;
+    };
+    const {
+      lead_ids,
+      agent_id,
+      organization_id,
+      objective,
+      extra_context,
+      event_context,
+      mode = 'direct',
+      force_when_human = false,
+      template_config,
+    } = body;
+    let instance_id: string | undefined = body.instance_id;
+    let connection_type: 'evolution' | 'meta_whatsapp' = body.connection_type ?? 'evolution';
 
     if (!lead_ids?.length || !agent_id) {
       return new Response(JSON.stringify({ error: "Missing lead_ids or agent_id" }), {
@@ -56,7 +62,26 @@ Deno.serve(async (req) => {
 
     if (!agent) throw new Error("Agent not found");
 
-    // Resolve widget ativo da organización (necesario para crear conversación no inbox)
+    // 🔒 Resolve conexão (sem fallback silencioso para default da org)
+    if (!instance_id) {
+      const resolved = await resolveAgentSendConnection(supabase, agent_id);
+      if (!resolved) {
+        console.error(`[ManualOutreach] Agente ${agent_id} sem conexão WhatsApp vinculada.`);
+        return new Response(
+          JSON.stringify({
+            error: 'Agente sem conexão WhatsApp vinculada. Configure uma conexão (Evolution ou API Oficial) nas opções do agente.',
+          }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+      instance_id = resolved.connection_id;
+      connection_type = resolved.connection_type;
+      console.log(`[ManualOutreach] usando connection_type=${connection_type} connection_id=${instance_id} (origem: agent-resolver, label=${resolved.label})`);
+    } else {
+      console.log(`[ManualOutreach] usando connection_type=${connection_type} connection_id=${instance_id} (origem: explicit)`);
+    }
+
+    // Resolve widget para a conversa
     let outreachWidgetId: string | null = null;
     {
       const { data: existingWidget } = await supabase
@@ -72,21 +97,15 @@ Deno.serve(async (req) => {
       } else {
         const { data: createdWidget, error: createWidgetErr } = await supabase
           .from("webchat_widgets")
-          .insert({
-            organization_id,
-            name: "Outreach (automático)",
-            is_active: true,
-          })
+          .insert({ organization_id, name: "Outreach (automático)", is_active: true })
           .select("id")
           .single();
-        if (createWidgetErr) {
-          console.error("[ManualOutreach] Fallo ao crear widget interno:", createWidgetErr);
-        }
+        if (createWidgetErr) console.error("[ManualOutreach] Falha ao criar widget interno:", createWidgetErr);
         outreachWidgetId = createdWidget?.id ?? null;
       }
     }
 
-    // Get knowledge
+    // Knowledge para prompt
     const { data: knowledgeSources } = await supabase
       .from("ai_knowledge_base")
       .select("title, content, category")
@@ -98,17 +117,21 @@ Deno.serve(async (req) => {
       .map((k: any) => `[${k.category}] ${k.title}: ${k.content}`)
       .join("\n\n");
 
-
     const results: any[] = [];
 
     for (const leadId of lead_ids) {
       try {
-        // Get lead
         const { data: lead } = await supabase
           .from("leads")
-          .select("name, email, phone, metadata, temperature, deal_value")
+          .select("name, email, phone, metadata, temperature, deal_value, whatsapp_opt_in")
           .eq("id", leadId)
           .single();
+
+        // Opt-out guard: lead pediu para sair → não envia mais nada
+        if ((lead as any)?.whatsapp_opt_in === false) {
+          results.push({ leadId, skipped: true, reason: 'OPTED_OUT', code: 'OPTED_OUT' });
+          continue;
+        }
 
         let leadPhone = lead?.phone?.replace(/\D/g, "");
         if (!leadPhone) {
@@ -117,8 +140,18 @@ Deno.serve(async (req) => {
         }
         if (!leadPhone.startsWith("55")) leadPhone = "55" + leadPhone;
 
-        // Dedupe: skip if there's already an active outreach for this (lead, agent)
-        // OR if the same agent already messaged this lead in the last 24h.
+        // Conversa existente?
+        const { data: existingConv } = await supabase
+          .from("webchat_conversations")
+          .select("id, status, metadata")
+          .eq("lead_id", leadId)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        // Dedupe outreach recente — só bloqueia se a janela 24h do WhatsApp estiver
+        // realmente aberta (mensagem anterior entregue). Se a tentativa anterior falhou
+        // (janela nunca abriu / expirou), permite novo disparo.
         const { data: existingOutreach } = await supabase
           .from("ai_outreach_queue")
           .select("id, last_outreach_at, status")
@@ -133,156 +166,74 @@ Deno.serve(async (req) => {
           const lastAt = existingOutreach.last_outreach_at ? new Date(existingOutreach.last_outreach_at).getTime() : 0;
           const hoursSince = (Date.now() - lastAt) / 3600000;
           if (hoursSince < 24) {
-            console.log(`[ManualOutreach] Dedupe: lead ${leadId} ya tiene outreach del agente ${agent_id} há ${hoursSince.toFixed(1)}h — pulando.`);
-            results.push({ leadId, skipped: true, reason: "Outreach ativo recente para este agente" });
-            continue;
+            let windowOpen = false;
+            if (existingConv?.id) {
+              const { data: ok } = await supabase.rpc('is_within_24h_window', { _conversation_id: existingConv.id });
+              windowOpen = !!ok;
+            }
+
+            let lastMsgFailed = false;
+            if (existingConv?.id) {
+              const { data: lastMsg } = await supabase
+                .from("webchat_messages")
+                .select("delivery_status, sender_type")
+                .eq("conversation_id", existingConv.id)
+                .in("sender_type", ["agent", "ai", "system"])
+                .order("created_at", { ascending: false })
+                .limit(1)
+                .maybeSingle();
+              lastMsgFailed = lastMsg?.delivery_status === 'failed';
+            }
+
+            if (windowOpen && !lastMsgFailed) {
+              console.log(`[ManualOutreach] Dedupe: lead ${leadId} já tem outreach do agente ${agent_id} há ${hoursSince.toFixed(1)}h e janela 24h está aberta — pulando.`);
+              results.push({ leadId, skipped: true, reason: "Outreach ativo recente para este agente" });
+              continue;
+            }
+            console.log(`[ManualOutreach] Dedupe bypass: lead ${leadId} outreach há ${hoursSince.toFixed(1)}h mas janela 24h fechada (windowOpen=${windowOpen}, lastMsgFailed=${lastMsgFailed}) — permitindo novo disparo.`);
           }
         }
 
-        // Reuse existing conversation for this lead+phone if present
-        const { data: existingConv } = await supabase
-          .from("webchat_conversations")
-          .select("id, status")
-          .eq("lead_id", leadId)
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .maybeSingle();
-
-        // If conversation is already with a human, do NOT send AI outreach
-        // (a menos que o caller force — usado em automatizaciones pós-venta críticas)
         if (existingConv && !force_when_human && (existingConv.status === "human_active" || existingConv.status === "waiting_human")) {
           results.push({ leadId, skipped: true, reason: `Conversation in ${existingConv.status}` });
           continue;
         }
 
-        // Build lead context from metadata
-        const leadMetadata = (lead?.metadata || {}) as Record<string, any>;
-        const customFields = leadMetadata.custom_fields || {};
-        const formResponses = Object.entries(customFields)
-          .map(([key, val]) => `- ${key}: ${val}`)
-          .join("\n");
-
-        // Generate AI message
-        const eventCtxLines = event_context
-          ? Object.entries(event_context)
-              .map(([k, v]) => `- ${k}: ${v}`)
-              .join("\n")
-          : "";
-
-        const modeRules = mode === 'conversational'
-          ? `MODO: CONVERSA INTENCIONAL
-- Genera SOLO uma abertura corta (1–2 líneas, no máx. 25 palabras).
-- Hacé UNA pregunta provocativa referenciando el evento (ex.: "Vi que usted gerou um Pix, conseguiu finalizar?").
-- NO entregue Pix, link, código, instrucciones ou dados del evento ahora — só preguntes.
-- Esperá la respuesta del lead antes de ofrecer cualquier detalle.`
-          : `MODO: MENSAGEM DIRETA
-- Genera umel mensaje completa, mas em no máx. 2 parágrafos curtos.
-- Se hay Pix/link, coloque cada uno em línea propia, sin texto extra junto.
-- Sin despedidas longas. Termine con UNA pregunta ou CTA claro.`;
-
-        const systemPrompt = `Vos sos ${agent.name}, um agente de ${agent.agent_type} de la empresa.
-MISSÃO: ${agent.primary_objective}
-TOM DE VOZ: ${agent.tone_style || "Consultivo"}
-ESTILO DE MENSAGEM: ${agent.message_style || "Curta e objetiva"}
-${agent.can_do?.length ? `O QUE VOS PODE FAZER:\n${agent.can_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
-${agent.cannot_do?.length ? `O QUE VOS NO PODE FAZER:\n${agent.cannot_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
-${knowledgeContext ? `CONHECIMENTO DO PRODUTO:\n${knowledgeContext}` : ""}
-${objective ? `OBJETIVO DESTA ABORDAGEM: ${objective}` : ""}
-${extra_context ? `CONTEXTO ADICIONAL: ${extra_context}` : ""}
-${eventCtxLines ? `CONTEXTO DO EVENTO:\n${eventCtxLines}` : ""}
-${modeRules}
-REGRAS GERAIS:
-- Genera SOLO el mensaje, sin explicaciones ou prefixos.
-- Sé natural e humano, NO pareça um bot. Sin clichés ("espero que esteja bem", etc.).
-- Personalize con as información del lead.
-- WhatsApp: sin markdown, sin HTML.`;
-
-        const userPrompt = `Genera el mensaje de primeira abordagem via WhatsApp para este lead:
-Nombre: ${lead?.name || "Lead"}
-Email: ${lead?.email || "No informado"}
-Teléfono: ${leadPhone}
-Temperatura: ${lead?.temperature || "indefinida"}
-${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
-
-        const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${lovableApiKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "gpt-4o-mini",
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user", content: userPrompt },
-            ],
-          }),
-        });
-
-        if (!aiResponse.ok) {
-          results.push({ leadId, error: `AI failed: ${aiResponse.status}` });
-          continue;
-        }
-
-        const aiData = await aiResponse.json();
-        await recordLovableUsage(supabase, organization_id, 'agent_chat', 'gpt-4o-mini', aiData?.usage, 'manual-outreach');
-        const generatedMessage = aiData.choices?.[0]?.message?.content?.trim();
-        if (!generatedMessage) {
-          results.push({ leadId, error: "AI returned empty message" });
-          continue;
-        }
-
-        console.log(`[ManualOutreach] (${mode}) -> ${lead?.name} (${leadPhone}): ${generatedMessage.slice(0, 80)}...`);
-
-        // Quebra em hasta 2 burbujas curtas (regra defecto WhatsApp do projeto)
-        const bubbles = mode === 'conversational'
-          ? [generatedMessage] // ya forçamos corto no prompt
-          : splitIntoBubbles(generatedMessage, { maxChunks: 2, targetCharsPerChunk: 280 });
-
-        let sent = false;
-        for (let i = 0; i < bubbles.length; i++) {
-          try {
-            const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
-              body: {
-                organization_id,
-                instance_id,
-                type: 'text',
-                to: leadPhone,
-                payload: { text: bubbles[i] },
-              },
+        // === Guard Meta: fora da janela 24h sem template = bloqueia antes da IA ===
+        const useTemplate = !!(template_config?.template_id && connection_type === 'meta_whatsapp');
+        if (connection_type === 'meta_whatsapp' && !useTemplate) {
+          let withinWindow = false;
+          if (existingConv?.id) {
+            const { data: ok } = await supabase.rpc('is_within_24h_window', { _conversation_id: existingConv.id });
+            withinWindow = !!ok;
+          }
+          if (!withinWindow) {
+            results.push({
+              leadId,
+              error: 'API Oficial fora da janela 24h. Selecione um template HSM aprovado para abrir conversa.',
+              code: 'OUT_OF_WINDOW_NEEDS_TEMPLATE',
             });
-            const okThis = !sendErr && (sendData as any)?.ok !== false;
-            if (!okThis) {
-              console.error(`[ManualOutreach] Evolution send failed for ${leadPhone}:`, sendErr || sendData);
-              if (i === 0) sent = false;
-              break;
-            }
-            sent = true;
-            if (i < bubbles.length - 1) await new Promise((r) => setTimeout(r, 800));
-          } catch (e) {
-            console.error(`[ManualOutreach] Evolution send exception for ${leadPhone}:`, e);
-            break;
+            continue;
           }
         }
 
-        if (!sent) {
-          results.push({ leadId, error: "WhatsApp send failed (sin instância conectada?)" });
-          continue;
-        }
-
-        // Reuse existing conversation if any; otherwise create new
-        const convMetadata: Record<string, unknown> = {
-          ai_outreach: true,
-          manual_trigger: true,
-          outreach_mode: mode,
-        };
-        if (mode === 'conversational' && event_context && Object.keys(event_context).length > 0) {
-          convMetadata.pending_payment_data = event_context;
-          convMetadata.pending_payment_objective = objective || null;
-        }
-
-        let conversation = existingConv ? { id: existingConv.id } : null;
-        if (!conversation) {
+        // === Cria/recupera conversa ANTES do envio para sempre aparecer no Inbox ===
+        let conversationId: string | null = existingConv?.id ?? null;
+        if (!conversationId) {
+          const convMeta: Record<string, unknown> = {
+            ai_outreach: true,
+            manual_trigger: true,
+            outreach_mode: useTemplate ? 'template' : mode,
+            created_via: 'manual_outreach',
+          };
+          // Persistir campaign_id para que respostas (botões HSM) consigam aplicar button_actions
+          if (event_context && (event_context as any).campaign_id) {
+            convMeta.campaign_id = (event_context as any).campaign_id;
+          }
+          if (mode === 'conversational' && event_context && Object.keys(event_context).length > 0) {
+            convMeta.pending_payment_data = event_context;
+            convMeta.pending_payment_objective = objective || null;
+          }
           const { data: newConv, error: convErr } = await supabase
             .from("webchat_conversations")
             .insert({
@@ -296,47 +247,199 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
               status: "bot_active",
               lead_id: leadId,
               current_agent_id: agent_id,
-              metadata: { ...convMetadata, created_via: "manual_outreach" },
+              meta_connection_id: connection_type === 'meta_whatsapp' ? instance_id : null,
+              evolution_instance_id: connection_type === 'evolution' ? instance_id : null,
+              metadata: convMeta,
             })
-            .select()
+            .select("id")
             .single();
           if (convErr || !newConv) {
             console.error(`[ManualOutreach] Conversation insert failed for lead ${leadId}:`, convErr);
             results.push({ leadId, error: `conversation insert failed: ${convErr?.message || "unknown"}` });
             continue;
           }
-          conversation = newConv;
-        } else if (mode === 'conversational' && convMetadata.pending_payment_data) {
-          // Mescla payload pendente em conversación ya existente
-          const { data: convRow } = await supabase
-            .from('webchat_conversations')
-            .select('metadata')
-            .eq('id', existingConv!.id)
-            .maybeSingle();
-          const merged = { ...((convRow?.metadata as any) || {}), ...convMetadata };
-          await supabase
-            .from('webchat_conversations')
-            .update({ metadata: merged, current_agent_id: agent_id })
-            .eq('id', existingConv!.id);
+          conversationId = newConv.id;
+        } else {
+          // Garante vínculo da conexão na conversa existente
+          const patch: Record<string, unknown> = { current_agent_id: agent_id };
+          if (connection_type === 'meta_whatsapp') patch.meta_connection_id = instance_id;
+          if (connection_type === 'evolution') patch.evolution_instance_id = instance_id;
+          const baseMeta = ((existingConv.metadata as any) || {});
+          let mergedMeta: any = null;
+          if (event_context && (event_context as any).campaign_id) {
+            mergedMeta = { ...baseMeta, campaign_id: (event_context as any).campaign_id };
+          }
+          if (mode === 'conversational' && event_context && Object.keys(event_context).length > 0) {
+            mergedMeta = { ...(mergedMeta ?? baseMeta), pending_payment_data: event_context, pending_payment_objective: objective || null };
+          }
+          if (mergedMeta) patch.metadata = mergedMeta;
+          await supabase.from('webchat_conversations').update(patch).eq('id', conversationId);
         }
 
-        if (conversation) {
-          for (const part of bubbles) {
-            const { error: msgErr } = await supabase.from("webchat_messages").insert({
-              conversation_id: conversation.id,
-              content: part,
+        // === Gera mensagem (texto livre) OU prepara template ===
+        let bubbles: string[] = [];
+        if (!useTemplate) {
+          const eventCtxLines = event_context
+            ? Object.entries(event_context).map(([k, v]) => `- ${k}: ${v}`).join("\n")
+            : "";
+
+          const modeRules = mode === 'conversational'
+            ? `MODO: CONVERSA INTENCIONAL
+- Gere APENAS uma abertura curta (1–2 linhas, no máx. 25 palavras).
+- Faça UMA pergunta provocativa referenciando o evento.
+- NÃO entregue Pix, link, código ou dados do evento agora — só pergunte.`
+            : `MODO: MENSAGEM DIRETA
+- Gere uma mensagem completa em no máx. 2 parágrafos curtos.
+- Se houver Pix/link, coloque cada um em linha própria.
+- Termine com UMA pergunta ou CTA claro.`;
+
+          const systemPrompt = `Você é ${agent.name}, um agente de ${agent.agent_type} da empresa.
+MISSÃO: ${agent.primary_objective}
+TOM DE VOZ: ${agent.tone_style || "Consultivo"}
+ESTILO DE MENSAGEM: ${agent.message_style || "Curta e objetiva"}
+${agent.can_do?.length ? `O QUE VOCÊ PODE FAZER:\n${agent.can_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
+${agent.cannot_do?.length ? `O QUE VOCÊ NÃO PODE FAZER:\n${agent.cannot_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
+${knowledgeContext ? `CONHECIMENTO DO PRODUTO:\n${knowledgeContext}` : ""}
+${objective ? `OBJETIVO DESTA ABORDAGEM: ${objective}` : ""}
+${extra_context ? `CONTEXTO ADICIONAL: ${extra_context}` : ""}
+${eventCtxLines ? `CONTEXTO DO EVENTO:\n${eventCtxLines}` : ""}
+${modeRules}
+REGRAS GERAIS:
+- Gere APENAS a mensagem, sem explicações ou prefixos.
+- Seja natural e humano, sem clichês.
+- WhatsApp: sem markdown, sem HTML.`;
+
+          const userPrompt = `Gere a mensagem de primeira abordagem via WhatsApp para este lead:
+Nome: ${lead?.name || "Lead"}
+Email: ${lead?.email || "Não informado"}
+Telefone: ${leadPhone}
+Temperatura: ${lead?.temperature || "indefinida"}`;
+
+          const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${lovableApiKey}`, "Content-Type": "application/json" },
+            body: JSON.stringify({
+              model: "google/gemini-2.5-flash",
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: userPrompt },
+              ],
+            }),
+          });
+
+          if (!aiResponse.ok) {
+            await logFailedMessage(supabase, conversationId, `[falha IA ${aiResponse.status}]`, `AI failed: ${aiResponse.status}`);
+            results.push({ leadId, error: `AI failed: ${aiResponse.status}`, conversationId });
+            continue;
+          }
+
+          const aiData = await aiResponse.json();
+          await recordLovableUsage(supabase, organization_id, 'agent_chat', 'google/gemini-2.5-flash', aiData?.usage, 'manual-outreach');
+          const generatedMessage = aiData.choices?.[0]?.message?.content?.trim();
+          if (!generatedMessage) {
+            await logFailedMessage(supabase, conversationId, '[IA retornou vazio]', 'AI returned empty message');
+            results.push({ leadId, error: "AI returned empty message", conversationId });
+            continue;
+          }
+
+          bubbles = mode === 'conversational'
+            ? [generatedMessage]
+            : splitIntoBubbles(generatedMessage, { maxChunks: 2, targetCharsPerChunk: 280 });
+        }
+
+        console.log(`[ManualOutreach] (${useTemplate ? 'template' : mode}) -> ${lead?.name} (${leadPhone}) conv=${conversationId}`);
+
+        // === ENVIO ===
+        let sent = false;
+        let lastError: string | null = null;
+
+        if (useTemplate) {
+          const r = await supabase.functions.invoke('meta-whatsapp-send', {
+            body: {
+              organization_id,
+              connection_id: instance_id,
+              conversation_id: conversationId,
+              to: leadPhone,
+              type: 'template',
+              template: {
+                template_id: template_config!.template_id,
+                variable_mapping: template_config!.variable_mapping ?? {},
+                lead_id: leadId,
+                context: [objective, extra_context].filter(Boolean).join('\n'),
+              },
+            },
+          });
+          const ok = !r.error && (r.data as any)?.ok !== false && !(r.data as any)?.error;
+          if (!ok) {
+            lastError = r.error?.message || (r.data as any)?.error || 'template send failed';
+            // meta-whatsapp-send já loga falha quando recebe conversation_id; só garante fallback
+            console.error('[ManualOutreach] template send failed', lastError);
+          } else {
+            sent = true;
+          }
+        } else if (connection_type === 'meta_whatsapp') {
+          for (let i = 0; i < bubbles.length; i++) {
+            const r = await supabase.functions.invoke('meta-whatsapp-send', {
+              body: {
+                organization_id,
+                connection_id: instance_id,
+                conversation_id: conversationId,
+                to: leadPhone,
+                type: 'text',
+                text: bubbles[i],
+              },
+            });
+            const ok = !r.error && (r.data as any)?.ok !== false && !(r.data as any)?.error;
+            if (!ok) {
+              lastError = r.error?.message || (r.data as any)?.error || 'meta send failed';
+              console.error(`[ManualOutreach] meta send failed:`, lastError);
+              break;
+            }
+            sent = true;
+            if (i < bubbles.length - 1) await new Promise((r) => setTimeout(r, 800));
+          }
+        } else {
+          // Evolution: send + logamos a mensagem nós mesmos
+          for (let i = 0; i < bubbles.length; i++) {
+            const r = await supabase.functions.invoke('evolution-send', {
+              body: {
+                organization_id,
+                instance_id,
+                type: 'text',
+                to: leadPhone,
+                payload: { text: bubbles[i] },
+              },
+            });
+            const ok = !r.error && (r.data as any)?.ok !== false && !(r.data as any)?.error;
+            if (!ok) {
+              lastError = r.error?.message || (r.data as any)?.error || 'evolution send failed';
+              console.error(`[ManualOutreach] evolution send failed:`, lastError);
+              await logFailedMessage(supabase, conversationId, bubbles[i], lastError);
+              break;
+            }
+            await supabase.from("webchat_messages").insert({
+              conversation_id: conversationId,
+              content: bubbles[i],
               sender_type: "bot",
               direction: "outbound",
+              delivery_status: "sent",
               metadata: { outreach_mode: mode },
             });
-            if (msgErr) {
-              console.error(`[ManualOutreach] Message insert failed for conv ${conversation.id}:`, msgErr);
-            }
+            sent = true;
+            if (i < bubbles.length - 1) await new Promise((r) => setTimeout(r, 800));
           }
         }
 
+        if (!sent) {
+          // Garante registro visível de falha mesmo para o caminho Meta
+          if (connection_type === 'meta_whatsapp' && !useTemplate && bubbles[0]) {
+            await logFailedMessage(supabase, conversationId, bubbles[0], lastError || 'send failed');
+          }
+          results.push({ leadId, error: lastError || "WhatsApp send failed", conversationId });
+          continue;
+        }
 
-        // Update existing outreach OR create a new one (respects unique partial index)
+        // Atualiza/insere outreach_queue
         if (existingOutreach) {
           await supabase.from("ai_outreach_queue").update({
             objective: objective || "Abordagem manual retroativa",
@@ -344,20 +447,20 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
             last_outreach_at: new Date().toISOString(),
             next_followup_at: new Date(Date.now() + 24 * 3600000).toISOString(),
             status: "sent",
-            conversation_id: conversation?.id ?? null,
+            conversation_id: conversationId,
           }).eq("id", existingOutreach.id);
         } else {
           await supabase.from("ai_outreach_queue").insert({
             organization_id,
             lead_id: leadId,
-            conversation_id: conversation?.id,
+            conversation_id: conversationId,
             product_id: agent.product_id,
             agent_id,
             objective: objective || "Abordagem manual retroativa",
             extra_context: extra_context ?? null,
             lead_data: { name: lead?.name, email: lead?.email, phone: leadPhone },
             status: "sent",
-            followup_enabled: true,
+            followup_enabled: !useTemplate,
             followup_interval_hours: 24,
             max_followups: 2,
             followup_steps: [{ delay_hours: 24 }, { delay_hours: 48 }],
@@ -370,7 +473,7 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
           });
         }
 
-        results.push({ leadId, name: lead?.name, sent: true, conversationId: conversation?.id });
+        results.push({ leadId, name: lead?.name, sent: true, conversationId, via: useTemplate ? 'template' : connection_type });
       } catch (err) {
         results.push({ leadId, error: String(err) });
       }
@@ -386,3 +489,19 @@ ${formResponses ? `\nRespostas do Formulário:\n${formResponses}` : ""}`;
     });
   }
 });
+
+async function logFailedMessage(supabase: any, conversationId: string | null, content: string, errorMsg: string) {
+  if (!conversationId) return;
+  try {
+    await supabase.from("webchat_messages").insert({
+      conversation_id: conversationId,
+      content,
+      sender_type: "bot",
+      direction: "outbound",
+      delivery_status: "failed",
+      metadata: { error: errorMsg, source: 'manual-outreach' },
+    });
+  } catch (e) {
+    console.error('[ManualOutreach] failed to log failed message:', e);
+  }
+}

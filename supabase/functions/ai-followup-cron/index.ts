@@ -7,11 +7,11 @@ const corsHeaders = {
 };
 
 // Default timezone for business-hour calculations.
-// Brazil-only product → Son Paulo. Override with org-level setting later if needed.
+// Brazil-only product → São Paulo. Override with org-level setting later if needed.
 const TZ = 'America/Sao_Paulo';
 
 function getZonedParts(date: Date): { dayOfWeek: number; minutes: number } {
-  // Usa Intl to extract weekday/hour/minute in the target TZ
+  // Use Intl to extract weekday/hour/minute in the target TZ
   const fmt = new Intl.DateTimeFormat('en-US', {
     timeZone: TZ,
     weekday: 'short',
@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // (provider WhatsApp eliminado — siempre Evolution Go)
+    // (provider WhatsApp removido — sempre Evolution Go)
     const lovableApiKey = Deno.env.get('OPENAI_API_KEY');
 
     if (!lovableApiKey) {
@@ -108,7 +108,7 @@ Deno.serve(async (req) => {
     const { data: pendingFollowups, error: fetchError } = await supabase
       .from('ai_outreach_queue')
       .select('*')
-      .eq('status', 'sent')
+      .in('status', ['sent', 'scheduled'])
       .eq('followup_enabled', true)
       .lte('next_followup_at', nowIso)
       .order('next_followup_at', { ascending: true })
@@ -133,8 +133,42 @@ Deno.serve(async (req) => {
 
     for (const item of pendingFollowups) {
       try {
+        const { data: claimed, error: claimError } = await supabase
+          .from('ai_outreach_queue')
+          .update({ status: 'processing' })
+          .eq('id', item.id)
+          .in('status', ['sent', 'scheduled'])
+          .lte('next_followup_at', nowIso)
+          .eq('followups_sent', item.followups_sent)
+          .select('id')
+          .maybeSingle();
+
+        if (claimError || !claimed) {
+          console.log(`[FollowupCron] Skipping ${item.id}, already claimed or no longer due`);
+          continue;
+        }
+
+        const releaseForRetry = async (message: string) => {
+          await supabase
+            .from('ai_outreach_queue')
+            .update({
+              status: 'sent',
+              error_message: message,
+              next_followup_at: new Date(Date.now() + 15 * 60000).toISOString(),
+            })
+            .eq('id', item.id);
+        };
+
         const steps: Array<{ delay_hours: number; instruction?: string }> = item.followup_steps || [];
-        const maxFollowups = steps.length > 0 ? steps.length : (item.max_followups || 3);
+        const intervalsMin: number[] = Array.isArray(item.followup_intervals_minutes)
+          ? item.followup_intervals_minutes
+          : [];
+        const hints: Array<{ attempt: number; hint: string }> = Array.isArray(item.followup_attempt_hints)
+          ? item.followup_attempt_hints
+          : [];
+        const maxFollowups = intervalsMin.length > 0
+          ? intervalsMin.length
+          : (steps.length > 0 ? steps.length : (item.max_followups || 3));
         const businessStart = item.business_hours_start || '09:00';
         const businessEnd = item.business_hours_end || '18:00';
         const businessDays: number[] = item.business_days || [1, 2, 3, 4, 5];
@@ -153,13 +187,14 @@ Deno.serve(async (req) => {
           const nextBizTime = adjustToBusinessHours(now, businessStart, businessEnd, businessDays);
           await supabase
             .from('ai_outreach_queue')
-            .update({ next_followup_at: nextBizTime.toISOString() })
+            .update({ status: 'sent', next_followup_at: nextBizTime.toISOString() })
             .eq('id', item.id);
           console.log(`[FollowupCron] Outside business hours, rescheduled ${item.id} to ${nextBizTime.toISOString()}`);
           continue;
         }
 
-        // Check if lead replied OR if a human took over the conversation
+        // Check if lead replied after the last agent/bot message OR if the conversation closed.
+        // Older inbound messages must not cancel a newly scheduled agent-silence follow-up.
         if (item.conversation_id) {
           const { data: convInfo } = await supabase
             .from('webchat_conversations')
@@ -167,20 +202,41 @@ Deno.serve(async (req) => {
             .eq('id', item.conversation_id)
             .maybeSingle();
 
-          if (convInfo?.status === 'human_active' || convInfo?.status === 'waiting_human') {
+          if (convInfo?.status === 'closed') {
             await supabase
               .from('ai_outreach_queue')
               .update({ status: 'completed', followup_enabled: false, next_followup_at: null })
               .eq('id', item.id);
-            console.log(`[FollowupCron] Human took over conv ${item.conversation_id}, stopping follow-ups for ${item.id}`);
+            console.log(`[FollowupCron] Conversation ${item.conversation_id} closed, stopping follow-ups for ${item.id}`);
             continue;
           }
+
+          if (item.followup_kind !== 'agent_silence' && (convInfo?.status === 'human_active' || convInfo?.status === 'waiting_human')) {
+            await supabase
+              .from('ai_outreach_queue')
+              .update({ status: 'completed', followup_enabled: false, next_followup_at: null })
+              .eq('id', item.id);
+            console.log(`[FollowupCron] Human took over conv ${item.conversation_id}, stopping non-agent follow-up for ${item.id}`);
+            continue;
+          }
+
+          const { data: lastOutbound } = await supabase
+            .from('webchat_messages')
+            .select('created_at')
+            .eq('conversation_id', item.conversation_id)
+            .in('sender_type', ['bot', 'agent'])
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+          const repliedAfter = lastOutbound?.created_at || item.created_at;
 
           const { data: inboundMessages } = await supabase
             .from('webchat_messages')
             .select('id')
             .eq('conversation_id', item.conversation_id)
             .eq('sender_type', 'visitor')
+            .gt('created_at', repliedAfter)
             .limit(1);
 
           if (inboundMessages && inboundMessages.length > 0) {
@@ -202,6 +258,7 @@ Deno.serve(async (req) => {
 
         if (!agent) {
           console.error(`[FollowupCron] Agent ${item.agent_id} not found`);
+          await releaseForRetry(`Agent ${item.agent_id} not found`);
           continue;
         }
 
@@ -226,30 +283,34 @@ Deno.serve(async (req) => {
         const attemptNumber = item.followups_sent + 1;
         const isLastAttempt = attemptNumber >= maxFollowups;
 
+        const currentHint = hints.find((h) => h.attempt === attemptNumber)?.hint || stepInstruction;
+
         // Build follow-up prompt
-        const systemPrompt = `Vos sos ${agent.name}, um agente de ${agent.agent_type}.
+        const systemPrompt = `Você é ${agent.name}, um agente de ${agent.agent_type}.
 TOM DE VOZ: ${agent.tone_style || 'Consultivo'}
 ESTILO: ${agent.message_style || 'Curta e objetiva'}
+TOM DA RETOMADA: ${agent.followup_tone || 'warm'}
 OBJETIVO: ${item.objective || agent.primary_objective}
 ${item.extra_context ? `CONTEXTO: ${item.extra_context}` : ''}
+${agent.followup_extra_instructions ? `DIRETRIZES EXTRAS: ${agent.followup_extra_instructions}` : ''}
 
 REGRAS:
-- Genera SOLO el mensaje, sin explicaciones
-- Sé natural e humano
-- Mensaje para WhatsApp (corta, direta)
-- DIFERENTE das mensajes anteriores
-${stepInstruction ? `- INSTRUÇÃO ESPECÍFICA PARA ESTE FOLLOW-UP: ${stepInstruction}` : ''}
-${isLastAttempt ? '- Esta es a ÚLTIMA tentativa. Crea urgência sutil sin ser agressivo.' : ''}`;
+- Gere APENAS a mensagem, sem explicações
+- Cite o nome do lead quando fizer sentido, de forma natural
+- Mensagem curta para WhatsApp/Instagram (1-2 linhas)
+- DIFERENTE das mensagens anteriores e contextual ao que já foi falado
+${currentHint ? `- INTENÇÃO DESTA TENTATIVA: ${currentHint}` : ''}
+${isLastAttempt ? '- Esta é a ÚLTIMA tentativa. Ofereça uma alternativa (ligação, material, falar depois).' : ''}`;
 
-        const userPrompt = `Usted ya envió ${item.followups_sent + 1} mensajes para este lead sin respuesta.
+        const userPrompt = `Você já enviou ${item.followups_sent + 1} mensagens para este lead sem resposta.
 
-Historial:
+Histórico:
 ${previousMessages.join('\n')}
 
 Lead: ${item.lead_data?.name || 'Lead'}
-Tentativa ${attemptNumber + 1} de ${maxFollowups}
+Tentativa ${attemptNumber} de ${maxFollowups}
 
-Genera umel mensaje de follow-up estratégica DIFERENTE das anteriores.`;
+Gere uma mensagem de follow-up estratégica DIFERENTE das anteriores.`;
 
         // Call AI
         const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -270,6 +331,7 @@ Genera umel mensaje de follow-up estratégica DIFERENTE das anteriores.`;
         if (!aiResponse.ok) {
           const errText = await aiResponse.text();
           console.error(`[FollowupCron] AI error for ${item.id}:`, aiResponse.status, errText);
+          await releaseForRetry(`AI error ${aiResponse.status}: ${errText.slice(0, 500)}`);
           failed++;
           continue;
         }
@@ -280,6 +342,7 @@ Genera umel mensaje de follow-up estratégica DIFERENTE das anteriores.`;
 
         if (!followupMessage) {
           console.error(`[FollowupCron] Empty AI response for ${item.id}`);
+          await releaseForRetry('Empty AI response');
           failed++;
           continue;
         }
@@ -288,6 +351,7 @@ Genera umel mensaje de follow-up estratégica DIFERENTE das anteriores.`;
         const phone = item.lead_data?.phone;
         if (!phone) {
           console.error(`[FollowupCron] No phone for ${item.id}`);
+          await releaseForRetry('No phone in lead_data');
           failed++;
           continue;
         }
@@ -306,11 +370,13 @@ Genera umel mensaje de follow-up estratégica DIFERENTE das anteriores.`;
           sendSuccess = !sendErr && (sendData as any)?.ok !== false;
           if (!sendSuccess) {
             console.error(`[FollowupCron] Evolution send failed for ${item.id}:`, sendErr || sendData);
+            await releaseForRetry(`Evolution send failed: ${JSON.stringify(sendErr || sendData).slice(0, 500)}`);
             failed++;
             continue;
           }
         } catch (e) {
           console.error(`[FollowupCron] Evolution send exception for ${item.id}:`, e);
+          await releaseForRetry(`Evolution send exception: ${e instanceof Error ? e.message : String(e)}`);
           failed++;
           continue;
         }
@@ -333,10 +399,18 @@ Genera umel mensaje de follow-up estratégica DIFERENTE das anteriores.`;
 
         let nextFollowupAt: string | null = null;
         if (!isNowComplete) {
+          const minutesFromNew = intervalsMin[newFollowupsSent];
           const nextStep = steps[newFollowupsSent];
-          const delayHours = nextStep?.delay_hours || (item.followup_interval_hours || 24);
-          const rawNext = new Date(Date.now() + delayHours * 3600000);
-          nextFollowupAt = adjustToBusinessHours(rawNext, businessStart, businessEnd, businessDays).toISOString();
+          const delayMs = (typeof minutesFromNew === 'number' && minutesFromNew > 0)
+            ? minutesFromNew * 60000
+            : (nextStep?.delay_hours || item.followup_interval_hours || 24) * 3600000;
+          const rawNext = new Date(Date.now() + delayMs);
+          const respectHours = item.followup_kind === 'agent_silence'
+            ? !!(agent.followup_respect_business_hours ?? true)
+            : true;
+          nextFollowupAt = respectHours
+            ? adjustToBusinessHours(rawNext, businessStart, businessEnd, businessDays).toISOString()
+            : rawNext.toISOString();
         }
 
         await supabase
@@ -353,6 +427,15 @@ Genera umel mensaje de follow-up estratégica DIFERENTE das anteriores.`;
         processed++;
       } catch (itemError: any) {
         console.error(`[FollowupCron] Error processing ${item.id}:`, itemError);
+        await supabase
+          .from('ai_outreach_queue')
+          .update({
+            status: 'sent',
+            error_message: itemError?.message || String(itemError),
+            next_followup_at: new Date(Date.now() + 15 * 60000).toISOString(),
+          })
+          .eq('id', item.id)
+          .eq('status', 'processing');
         failed++;
       }
     }

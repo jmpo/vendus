@@ -1,4 +1,4 @@
-// Inicia uma campaña: resolve público (snapshot), insere targets,
+// Inicia uma campanha: resolve público (snapshot), insere targets,
 // sorteia contexto + número, calcula scheduled_for por preset de velocidade.
 // POST { campaign_id }
 
@@ -66,44 +66,90 @@ Deno.serve(async (req) => {
     }
 
     // Resolve público (snapshot)
-    const { leadIds, total, excluded } = await resolveAudience(
+    const audience = await resolveAudience(
       supabase,
       campaign.organization_id,
       (campaign.audience_filters ?? {}) as CampaignFilters,
       (campaign.exclusion_filters ?? {}) as CampaignFilters,
     );
+    let { leadIds } = audience;
+    const { total } = audience;
+    let { excluded } = audience;
 
-    // Resolve instâncias disponibles
-    let instances: any[] = [];
-    if (campaign.instance_strategy === "manual" && Array.isArray(campaign.instance_distribution) && campaign.instance_distribution.length) {
-      const ids = (campaign.instance_distribution as any[]).map((i: any) => i.instance_id).filter(Boolean);
-      if (ids.length) {
-        const { data } = await supabase
+    // Opt-out guard: remove leads que pediram para sair (whatsapp_opt_in=false)
+    if (leadIds.length) {
+      const { data: optedOut } = await supabase
+        .from('leads')
+        .select('id')
+        .in('id', leadIds)
+        .eq('whatsapp_opt_in', false);
+      const optedSet = new Set(((optedOut ?? []) as any[]).map((r) => r.id));
+      if (optedSet.size) {
+        leadIds = leadIds.filter((id) => !optedSet.has(id));
+        excluded = (excluded ?? 0) + optedSet.size;
+        console.log(`[campaign-start] ${optedSet.size} lead(s) excluído(s) por opt-out`);
+      }
+    }
+
+    // Resolve instâncias disponíveis (Evolution + Meta WhatsApp)
+    let instances: Array<{ id: string; status: string; connection_type: 'evolution' | 'meta_whatsapp'; weight: number }> = [];
+    const distItems = Array.isArray(campaign.instance_distribution) ? (campaign.instance_distribution as any[]) : [];
+
+    if (campaign.instance_strategy === "manual" && distItems.length) {
+      const evoIds = distItems
+        .filter((i) => (i.connection_type ?? 'evolution') === 'evolution')
+        .map((i) => i.instance_id)
+        .filter(Boolean);
+      const metaIds = distItems
+        .filter((i) => i.connection_type === 'meta_whatsapp')
+        .map((i) => i.instance_id)
+        .filter(Boolean);
+
+      const [{ data: evos }, { data: metas }] = await Promise.all([
+        evoIds.length
+          ? supabase.from("evolution_instances").select("id, status").in("id", evoIds)
+          : Promise.resolve({ data: [] as any[] }),
+        metaIds.length
+          ? supabase.from("whatsapp_meta_connections").select("id, status").in("id", metaIds)
+          : Promise.resolve({ data: [] as any[] }),
+      ]);
+
+      const findWeight = (id: string) => distItems.find((x) => x.instance_id === id)?.weight ?? 1;
+      instances = [
+        ...((evos ?? []) as any[])
+          .filter((i) => i.status === "connected")
+          .map((i) => ({ id: i.id, status: i.status, connection_type: 'evolution' as const, weight: findWeight(i.id) })),
+        ...((metas ?? []) as any[])
+          .filter((i) => i.status === "active")
+          .map((i) => ({ id: i.id, status: i.status, connection_type: 'meta_whatsapp' as const, weight: findWeight(i.id) })),
+      ];
+    } else {
+      const [{ data: evos }, { data: metas }] = await Promise.all([
+        supabase
           .from("evolution_instances")
           .select("id, status")
-          .in("id", ids);
-        instances = (data ?? []).filter((i: any) => i.status === "connected").map((i: any) => ({
-          ...i,
-          weight: (campaign.instance_distribution as any[]).find((x: any) => x.instance_id === i.id)?.weight ?? 1,
-        }));
-      }
-    } else {
-      const { data } = await supabase
-        .from("evolution_instances")
-        .select("id, status")
-        .eq("organization_id", campaign.organization_id)
-        .eq("status", "connected");
-      instances = (data ?? []).map((i: any) => ({ ...i, weight: 1 }));
+          .eq("organization_id", campaign.organization_id)
+          .eq("status", "connected"),
+        supabase
+          .from("whatsapp_meta_connections")
+          .select("id, status")
+          .eq("organization_id", campaign.organization_id)
+          .eq("status", "active"),
+      ]);
+      instances = [
+        ...((evos ?? []) as any[]).map((i) => ({ id: i.id, status: i.status, connection_type: 'evolution' as const, weight: 1 })),
+        ...((metas ?? []) as any[]).map((i) => ({ id: i.id, status: i.status, connection_type: 'meta_whatsapp' as const, weight: 1 })),
+      ];
     }
 
     if (!instances.length) {
       return new Response(
-        JSON.stringify({ error: "Ninguno número WhatsApp conectado para envio" }),
+        JSON.stringify({ error: "Nenhum número WhatsApp conectado para envio" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
-    // Resolve contextos disponibles
+    // Resolve contextos disponíveis
     const contextEntries: Array<{ text: string; id?: string; weight: number }> = [];
     const declared = Array.isArray(campaign.contexts) ? (campaign.contexts as any[]) : [];
     for (const c of declared) {
@@ -127,7 +173,7 @@ Deno.serve(async (req) => {
       }
     }
     if (!contextEntries.length) {
-      // fallback: nombre da campaña como contexto mínimo
+      // fallback: nome da campanha como contexto mínimo
       contextEntries.push({ text: campaign.description ?? campaign.name, weight: 1 });
     }
 
@@ -181,6 +227,7 @@ Deno.serve(async (req) => {
         context_used: ctx.text,
         context_id: ctx.id ?? null,
         instance_id: inst.id,
+        connection_type: inst.connection_type,
         scheduled_for: scheduledFor,
       });
     }
@@ -198,7 +245,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Atualiza campaña
+    // Atualiza campanha
     await supabase
       .from("campaigns")
       .update({

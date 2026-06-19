@@ -19,7 +19,7 @@ function StatusBadge({ c }: { c: MetaWAConnection }) {
   if (c.status === 'error') return <Badge variant="destructive">Error</Badge>;
   if (c.status === 'revoked') return <Badge variant="outline">Revogada</Badge>;
   if (c.status === 'draft') return <Badge variant="outline" className="border-amber-500/40 text-amber-700">Borrador</Badge>;
-  return <Badge variant="secondary">Pendente</Badge>;
+  return <Badge variant="secondary">Pendiente</Badge>;
 }
 
 interface MetaWhatsAppConnectionsPanelProps {

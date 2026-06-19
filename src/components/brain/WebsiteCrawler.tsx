@@ -503,7 +503,7 @@ export function WebsiteCrawler({ productId }: WebsiteCrawlerProps) {
                                 </span>
                               )}
                               {link.status === 'pending' && (
-                                <Badge variant="secondary" className="text-xs">Pendente</Badge>
+                                <Badge variant="secondary" className="text-xs">Pendiente</Badge>
                               )}
                               {link.status === 'scraping' && (
                                 <Badge variant="outline" className="text-xs">

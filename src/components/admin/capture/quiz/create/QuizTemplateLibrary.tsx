@@ -150,7 +150,7 @@ export function QuizTemplateLibrary({ open, onOpenChange, onCreated }: Props) {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setSelected(null)}>Voltar</Button>
+                  <Button variant="outline" onClick={() => setSelected(null)}>Volver</Button>
                   <Button onClick={handleUse} disabled={createFunnel.isPending || !productId || !name.trim()} className="gap-2">
                     {createFunnel.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}
                     Crear quiz

@@ -31,6 +31,7 @@ import {
   MessageCircle,
   Crown,
   Calendar,
+  Repeat,
 } from 'lucide-react';
 import {
   ProductAgent,
@@ -57,9 +58,14 @@ import { AgentOrchestratorRoutingTab } from './AgentOrchestratorRoutingTab';
 import { supabase } from '@/integrations/supabase/client';
 import { useProducts } from '@/hooks/useProducts';
 import { useEvolutionInstances } from '@/hooks/useEvolutionInstances';
-import { Globe, Package, Smartphone, Compass, BookOpen, Hand } from 'lucide-react';
+import { useMetaWAConnections } from '@/hooks/useMetaWhatsApp';
+import { useInstagramConnections } from '@/hooks/useInstagramConnections';
+import { useAgentConnections } from '@/hooks/useProductAgents';
+import { Globe, Package, Smartphone, Compass, BookOpen, Hand, Instagram, BadgeCheck } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { AgentWelcomeMenuTab } from './AgentWelcomeMenuTab';
 import { AgentHumanizationTab, DEFAULT_HUMANIZATION } from './AgentHumanizationTab';
+import { AgentFollowupTab } from './AgentFollowupTab';
 
 interface AgentEditorProps {
   open: boolean;
@@ -68,7 +74,7 @@ interface AgentEditorProps {
   productId: string | null;
   onSave: (agent: Partial<ProductAgent>) => void;
   isLoading?: boolean;
-  /** When true, opens directly on the "Ejecutivo" tab (admin only). */
+  /** When true, opens directly on the "Executivo" tab (admin only). */
   openOnExecutiveTab?: boolean;
 }
 
@@ -83,7 +89,7 @@ const DEFAULT_AGENT: Partial<ProductAgent> = {
   end_conversation_triggers: [],
   tone_style: 'friendly',
   message_style: 'balanced',
-  // ai_model eliminado — modelo ahora vem de org_ai_routing (Integraciones > Enrutamiento de IA)
+  // ai_model removido — modelo agora vem de org_ai_routing (Integrações > Roteamento de IA)
   always_end_with_question: true,
   additional_prompt: '',
   required_phrases: [],
@@ -137,6 +143,9 @@ export function AgentEditor({
   const { isGenerating, generateAgent, optimizeField } = useGenerateAgentAI();
   const { data: products } = useProducts();
   const { data: evolutionInstances } = useEvolutionInstances();
+  const { data: metaConnections } = useMetaWAConnections();
+  const { data: instagramConnections } = useInstagramConnections();
+  const { data: existingConnections } = useAgentConnections(agent?.id);
 
   // Global agent types are forced to no product
   const GLOBAL_TYPES: AgentType[] = ['admin', 'support', 'financial', 'orchestrator'];
@@ -160,21 +169,30 @@ export function AgentEditor({
     }
   }, [agent, productId, open, openOnExecutiveTab]);
 
+  // Hydrate `dedicated_connections` once the existing connections load (edit mode)
+  useEffect(() => {
+    if (agent?.id && existingConnections) {
+      setFormData((prev) => ({ ...prev, dedicated_connections: existingConnections }));
+    } else if (!agent?.id) {
+      setFormData((prev) => ({ ...prev, dedicated_connections: prev.dedicated_connections ?? [] }));
+    }
+  }, [agent?.id, existingConnections]);
+
   const runGenerateWithAI = async (contextOverride?: string) => {
     if (!formData.agent_type) {
-      toast.error('Seleccione el tipo de agente primero');
+      toast.error('Seleccioná o tipo de agente primeiro');
       setActiveTab('identity');
       return;
     }
-    // Para tipos globales (admin/support/financial), permite generar SIN producto
-    // Para SDR/Closer/CS/custom, exige producto
+    // Para tipos globais (admin/support/financial), permite gerar SEM produto
+    // Para SDR/Closer/CS/custom, exige produto
     if (!formData.product_id && !isGlobalType(formData.agent_type)) {
-      toast.error('Seleccione un producto antes de generar con IA');
+      toast.error('Seleccioná um produto antes de gerar com IA');
       setActiveTab('identity');
       return;
     }
 
-    // Pasa null cuando es global — la edge function va a cargar contexto org-wide
+    // Passa null quando é global — edge function vai carregar contexto org-wide
     const result = await generateAgent(
       formData.product_id || null,
       formData.agent_type,
@@ -205,17 +223,17 @@ export function AgentEditor({
         agent_type: prev.agent_type,
         product_id: prev.product_id ?? null,
       }));
-      toast.success('¡Agente generado! Revise las configuraciones y ajuste si es necesario.');
+      toast.success('Agente gerado! Revise as configurações e ajuste se necessário.');
     }
   };
 
   const handleGenerateWithAI = async () => {
     if (!formData.agent_type) {
-      toast.error('Seleccione el tipo de agente primero');
+      toast.error('Seleccioná o tipo de agente primeiro');
       setActiveTab('identity');
       return;
     }
-    // Siempre abre o dialog para o usuario poder somar contexto externo ao conocimiento interno
+    // Sempre abre o dialog para o usuário poder somar contexto externo ao conhecimento interno
     setContextDialogOpen(true);
   };
 
@@ -226,15 +244,15 @@ export function AgentEditor({
     setCustomContext('');
   };
 
-  // Lista lo que falta para crear (usado en el header y en la validación del clic)
+  // Lista o que está faltando para criar (usado no header e na validação do clique)
   const missingFields: string[] = [];
-  if (!formData.name?.trim()) missingFields.push('nombre');
-  if (!isGlobalType(formData.agent_type) && !formData.product_id) missingFields.push('producto');
+  if (!formData.name?.trim()) missingFields.push('nome');
+  if (!isGlobalType(formData.agent_type) && !formData.product_id) missingFields.push('produto');
 
   const handleOptimizeField = async (field: keyof ProductAgent) => {
     const currentValue = formData[field];
     if (!currentValue || (Array.isArray(currentValue) && currentValue.length === 0)) {
-      toast.error('Complete el campo antes de optimizar');
+      toast.error('Preencha o campo antes de otimizar');
       return;
     }
 
@@ -251,7 +269,7 @@ export function AgentEditor({
         ...prev,
         [field]: result.optimized,
       }));
-      toast.success(result.reasoning || '¡Campo optimizado!');
+      toast.success(result.reasoning || 'Campo otimizado!');
     }
     setOptimizingField(null);
   };
@@ -303,7 +321,7 @@ export function AgentEditor({
 
   const handleSave = () => {
     if (!formData.name?.trim()) {
-      toast.error('Dê um nombre al agente');
+      toast.error('Dê um nome ao agente');
       setActiveTab('identity');
       setTimeout(() => {
         const el = document.getElementById('name') as HTMLInputElement | null;
@@ -313,17 +331,17 @@ export function AgentEditor({
       return;
     }
     if (!isGlobalType(formData.agent_type) && !formData.product_id) {
-      toast.error('Seleccione un producto o cambie el tipo a Administrativo/Soporte/Financiero (globales)');
+      toast.error('Seleccioná um produto ou mude o tipo para Administrativo/Suporte/Financeiro (globais)');
       setActiveTab('identity');
       return;
     }
-    // Fallback: garante objetivo mínimo para custom/admin sin template
+    // Fallback: garante objetivo mínimo para custom/admin sem template
     const payload = {
       ...formData,
       primary_objective:
         formData.primary_objective?.trim() ||
         (isGlobalType(formData.agent_type)
-          ? `Atender e direcionar conversaciones em escopo ${AGENT_TYPE_LABELS[formData.agent_type as AgentType]}.`
+          ? `Atender e direcionar conversas em escopo ${AGENT_TYPE_LABELS[formData.agent_type as AgentType]}.`
           : 'Atender o lead conforme o objetivo definido.'),
     };
     onSave(payload);
@@ -342,9 +360,9 @@ export function AgentEditor({
         .update({ updated_at: new Date().toISOString() })
         .eq('id', agent.id);
       
-      toast.success('¡Agente reentrenado! Los cambios ya están activos.');
+      toast.success('Agente retreinado! As alterações já estão ativas.');
     } catch (err) {
-      toast.error('Error al reentrenar al agente');
+      toast.error('Erro ao retreinar o agente');
     } finally {
       setIsRetraining(false);
     }
@@ -361,7 +379,7 @@ export function AgentEditor({
               <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                 <Bot className="h-4 w-4 text-primary" />
               </div>
-              {isEditing ? 'Editar Agente' : 'Crear Nuevo Agente'}
+              {isEditing ? 'Editar Agente' : 'Criar Novo Agente'}
             </DialogTitle>
             {!isEditing && (
               <Button
@@ -377,7 +395,7 @@ export function AgentEditor({
                   <Wand2 className="h-4 w-4 text-violet-600" />
                 )}
                 <span className="text-violet-700 dark:text-violet-300">
-                  {isGenerating ? 'Generando...' : 'Generar con IA'}
+                  {isGenerating ? 'Gerando...' : 'Gerar com IA'}
                 </span>
               </Button>
             )}
@@ -385,10 +403,10 @@ export function AgentEditor({
           {!isEditing && missingFields.length > 0 && (
             <div className="flex items-center gap-2 mt-2">
               <Badge variant="destructive" className="text-xs font-normal">
-                Faltan: {missingFields.join(', ')}
+                Faltam: {missingFields.join(', ')}
               </Badge>
               <span className="text-xs text-muted-foreground">
-                Complete para crear el agente
+                Preencha para criar o agente
               </span>
             </div>
           )}
@@ -401,11 +419,11 @@ export function AgentEditor({
               <TabsList className="inline-flex h-auto w-max gap-1">
                 <TabsTrigger value="identity" className="text-xs whitespace-nowrap">
                   <Bot className="h-3 w-3 mr-1" />
-                  Identidad
+                  Identidade
                 </TabsTrigger>
                 <TabsTrigger value="tone" className="text-xs whitespace-nowrap">
                   <MessageSquare className="h-3 w-3 mr-1" />
-                  Personalidad
+                  Personalidade
                 </TabsTrigger>
                 <TabsTrigger value="objective" className="text-xs whitespace-nowrap">
                   <Target className="h-3 w-3 mr-1" />
@@ -413,41 +431,41 @@ export function AgentEditor({
                 </TabsTrigger>
                 <TabsTrigger value="executive" className="text-xs whitespace-nowrap">
                   <Crown className="h-3 w-3 mr-1" />
-                  Ejecutivo
+                  Executivo
                 </TabsTrigger>
                 <TabsTrigger value="test" className="text-xs whitespace-nowrap" disabled={!isEditing}>
                   <MessageCircle className="h-3 w-3 mr-1" />
-                  Historial y Prueba
+                  Histórico & Teste
                 </TabsTrigger>
               </TabsList>
             ) : isOrchestrator ? (
               // Orchestrator: classifier-only tabs + welcome/menu
               <TabsList className="inline-flex h-auto w-max gap-1">
                 <TabsTrigger value="identity" className="text-xs whitespace-nowrap">
-                  <Bot className="h-3 w-3 mr-1" />Identidad
+                  <Bot className="h-3 w-3 mr-1" />Identidade
                 </TabsTrigger>
                 <TabsTrigger value="objective" className="text-xs whitespace-nowrap">
                   <Target className="h-3 w-3 mr-1" />Objetivo
                 </TabsTrigger>
                 <TabsTrigger value="welcome" className="text-xs whitespace-nowrap">
-                  <Hand className="h-3 w-3 mr-1" />Bienvenida
+                  <Hand className="h-3 w-3 mr-1" />Boas-vindas
                 </TabsTrigger>
                 <TabsTrigger value="routing" className="text-xs whitespace-nowrap">
-                  <Compass className="h-3 w-3 mr-1" />Enrutamiento
+                  <Compass className="h-3 w-3 mr-1" />Roteamento
                 </TabsTrigger>
                 <TabsTrigger value="channels" className="text-xs whitespace-nowrap">
-                  <Zap className="h-3 w-3 mr-1" />Canales
+                  <Zap className="h-3 w-3 mr-1" />Canais
                 </TabsTrigger>
                 <TabsTrigger value="test" className="text-xs whitespace-nowrap" disabled={!isEditing}>
-                  <MessageCircle className="h-3 w-3 mr-1" />Probar
+                  <MessageCircle className="h-3 w-3 mr-1" />Testar
                 </TabsTrigger>
               </TabsList>
             ) : (
-              // Standard agent: full editor (adds Soporte tab when type=support)
+              // Standard agent: full editor (adds Suporte tab when type=support)
               <TabsList className="inline-flex h-auto w-max gap-1">
                 <TabsTrigger value="identity" className="text-xs whitespace-nowrap">
                   <Bot className="h-3 w-3 mr-1" />
-                  Identidad
+                  Identidade
                 </TabsTrigger>
                 <TabsTrigger value="objective" className="text-xs whitespace-nowrap">
                   <Target className="h-3 w-3 mr-1" />
@@ -455,15 +473,19 @@ export function AgentEditor({
                 </TabsTrigger>
                 <TabsTrigger value="behavior" className="text-xs whitespace-nowrap">
                   <Settings2 className="h-3 w-3 mr-1" />
-                  Reglas
+                  Regras
                 </TabsTrigger>
                 <TabsTrigger value="tone" className="text-xs whitespace-nowrap">
                   <MessageSquare className="h-3 w-3 mr-1" />
-                  Tono
+                  Tom
                 </TabsTrigger>
                 <TabsTrigger value="humanization" className="text-xs whitespace-nowrap">
                   <Sparkles className="h-3 w-3 mr-1" />
-                  Humanización
+                  Humanização
+                </TabsTrigger>
+                <TabsTrigger value="followup" className="text-xs whitespace-nowrap">
+                  <Repeat className="h-3 w-3 mr-1" />
+                  Follow-up
                 </TabsTrigger>
                 <TabsTrigger value="tools" className="text-xs whitespace-nowrap">
                   <Wrench className="h-3 w-3 mr-1" />
@@ -471,16 +493,16 @@ export function AgentEditor({
                 </TabsTrigger>
                 <TabsTrigger value="scheduling" className="text-xs whitespace-nowrap">
                   <Calendar className="h-3 w-3 mr-1" />
-                  Agendamiento
+                  Agendamento
                 </TabsTrigger>
                 <TabsTrigger value="channels" className="text-xs whitespace-nowrap">
                   <Zap className="h-3 w-3 mr-1" />
-                  Canales
+                  Canais
                 </TabsTrigger>
                 {isSupport && (
                   <TabsTrigger value="support" className="text-xs whitespace-nowrap">
                     <BookOpen className="h-3 w-3 mr-1" />
-                    Soporte
+                    Suporte
                   </TabsTrigger>
                 )}
                 <TabsTrigger value="training" className="text-xs whitespace-nowrap" disabled={!isEditing}>
@@ -489,7 +511,7 @@ export function AgentEditor({
                 </TabsTrigger>
                 <TabsTrigger value="test" className="text-xs whitespace-nowrap" disabled={!isEditing}>
                   <MessageCircle className="h-3 w-3 mr-1" />
-                  Probar
+                  Testar
                 </TabsTrigger>
               </TabsList>
             )}
@@ -502,7 +524,7 @@ export function AgentEditor({
                 <div className="space-y-2">
                   <Label>Tipo de Agente</Label>
                   <p className="text-xs text-muted-foreground">
-                    Seleccioná o tipo e clique em "Generar con IA" para crear automaticamente
+                    Seleccioná o tipo e clique em "Gerar com IA" para criar automaticamente
                   </p>
                   <div className="grid grid-cols-3 gap-2">
                     {(Object.keys(AGENT_TEMPLATES) as AgentType[]).map((type) => {
@@ -526,13 +548,13 @@ export function AgentEditor({
                   </div>
                 </div>
 
-                {/* Vínculo: Global vs Producto */}
+                {/* Vínculo: Global vs Produto */}
                 <div className="space-y-2">
                   <Label>Vínculo</Label>
                   <p className="text-xs text-muted-foreground">
                     {isGlobalType(formData.agent_type)
-                      ? 'Los tipos administrativos siempre son globales (atienden toda la organización).'
-                      : 'Elegí si este agente atiende toda la organización o solo un producto.'}
+                      ? 'Tipos administrativos sempre são globais (atendem toda a organização).'
+                      : 'Escolha se este agente atende toda a organização ou apenas um produto.'}
                   </p>
                   <div className="grid grid-cols-2 gap-2">
                     <button
@@ -548,7 +570,7 @@ export function AgentEditor({
                       <Globe className="h-4 w-4 text-primary shrink-0" />
                       <div>
                         <div className="text-sm font-medium">Global</div>
-                        <div className="text-xs text-muted-foreground">Sin producto</div>
+                        <div className="text-xs text-muted-foreground">Sem produto</div>
                       </div>
                     </button>
                     <button
@@ -566,7 +588,7 @@ export function AgentEditor({
                       <Package className="h-4 w-4 text-primary shrink-0" />
                       <div>
                         <div className="text-sm font-medium">Específico</div>
-                        <div className="text-xs text-muted-foreground">De um producto</div>
+                        <div className="text-xs text-muted-foreground">De um produto</div>
                       </div>
                     </button>
                   </div>
@@ -582,12 +604,12 @@ export function AgentEditor({
                             !formData.product_id && 'border-destructive ring-1 ring-destructive/40'
                           )}
                         >
-                          <SelectValue placeholder="Seleccioná um producto" />
+                          <SelectValue placeholder="Seleccioná um produto" />
                         </SelectTrigger>
                         <SelectContent>
                           {products?.length === 0 && (
                             <div className="px-2 py-3 text-xs text-muted-foreground">
-                              Ningún producto registrado. Creá un producto primero.
+                              Nenhum produto cadastrado. Crie um produto primeiro.
                             </div>
                           )}
                           {products?.map((p) => (
@@ -602,7 +624,7 @@ export function AgentEditor({
                       </Select>
                       {!formData.product_id && (
                         <p className="text-xs text-destructive flex items-center gap-1">
-                          ↑ Seleccioná qué producto va a atender este agente
+                          ↑ Seleccioná qual produto este agente vai atender
                         </p>
                       )}
                     </div>
@@ -610,22 +632,22 @@ export function AgentEditor({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="name">Nombre do Agente</Label>
+                  <Label htmlFor="name">Nome do Agente</Label>
                   <Input
                     id="name"
                     value={formData.name || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="Ex: SDR Calificador"
+                    placeholder="Ex: SDR Qualificador"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Descripción (opcional)</Label>
+                  <Label htmlFor="description">Descrição (opcional)</Label>
                   <Textarea
                     id="description"
                     value={formData.description || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder="Breve descripción del agente..."
+                    placeholder="Breve descrição do agente..."
                     rows={2}
                   />
                 </div>
@@ -638,7 +660,7 @@ export function AgentEditor({
                     <div>
                       <Label htmlFor="objective">Objetivo Principal</Label>
                       <p className="text-xs text-muted-foreground">
-                        Qual é a principal misión deste agente?
+                        Qual é a principal missão deste agente?
                       </p>
                     </div>
                     <Button
@@ -660,7 +682,7 @@ export function AgentEditor({
                     id="objective"
                     value={formData.primary_objective || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, primary_objective: e.target.value }))}
-                    placeholder="Ex: Calificar leads e derivar para o closer cuando houver interesse real"
+                    placeholder="Ex: Qualificar leads e encaminhar para o closer quando houver interesse real"
                     rows={3}
                   />
                 </div>
@@ -670,10 +692,10 @@ export function AgentEditor({
                     <div>
                       <Label htmlFor="additional_prompt">
                         <Sparkles className="h-3 w-3 inline mr-1" />
-                        Prompt Complementario (opcional)
+                        Prompt Complementar (opcional)
                       </Label>
                       <p className="text-xs text-muted-foreground">
-                        Instrucciones adicionales además del Cerebro del Producto
+                        Instruções adicionais além do Cérebro do Produto
                       </p>
                     </div>
                     <div className="flex items-center gap-1">
@@ -693,18 +715,18 @@ export function AgentEditor({
                         <SelectContent>
                           {formData.agent_type === 'admin' ? (
                             <>
-                              <SelectItem value="admin_executive">Ejecutivo direto</SelectItem>
+                              <SelectItem value="admin_executive">Executivo direto</SelectItem>
                               <SelectItem value="admin_strategic">Consultor estratégico</SelectItem>
                               <SelectItem value="admin_auditor">Auditor crítico</SelectItem>
-                              <SelectItem value="admin_coach">Coach da equipo</SelectItem>
+                              <SelectItem value="admin_coach">Coach da equipe</SelectItem>
                             </>
                           ) : (
                             <>
-                              <SelectItem value="orchestrator">Orquestador</SelectItem>
+                              <SelectItem value="orchestrator">Orquestrador</SelectItem>
                               <SelectItem value="sdr">SDR</SelectItem>
                               <SelectItem value="closer">Closer</SelectItem>
                               <SelectItem value="cs">Customer Success</SelectItem>
-                              <SelectItem value="support">Soporte</SelectItem>
+                              <SelectItem value="support">Suporte</SelectItem>
                               <SelectItem value="financial">Financeiro</SelectItem>
                             </>
                           )}
@@ -730,11 +752,11 @@ export function AgentEditor({
                     id="additional_prompt"
                     value={formData.additional_prompt || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, additional_prompt: e.target.value }))}
-                    placeholder="Instrucciones específicas para este agente... Usá {{product_name}}, {{organization_name}} y otras variables."
+                    placeholder="Instruções específicas para este agente... Use {{product_name}}, {{organization_name}} e outras variáveis."
                     rows={6}
                   />
                   <p className="text-xs text-muted-foreground">
-                    Variables disponibles: <code>{'{{organization_name}}'}</code>, <code>{'{{product_name}}'}</code>, <code>{'{{agent_name}}'}</code>, <code>{'{{orchestrator_context}}'}</code>, <code>{'{{product_benefits}}'}</code>, <code>{'{{product_plans}}'}</code>, <code>{'{{product_prices}}'}</code>, <code>{'{{product_guarantee}}'}</code>
+                    Variáveis disponíveis: <code>{'{{organization_name}}'}</code>, <code>{'{{product_name}}'}</code>, <code>{'{{agent_name}}'}</code>, <code>{'{{orchestrator_context}}'}</code>, <code>{'{{product_benefits}}'}</code>, <code>{'{{product_plans}}'}</code>, <code>{'{{product_prices}}'}</code>, <code>{'{{product_guarantee}}'}</code>
                   </p>
                 </div>
               </TabsContent>
@@ -747,129 +769,129 @@ export function AgentEditor({
                 />
 
                 <ArrayField
-                  label="Lo que puede hacer"
+                  label="O que pode fazer"
                   items={formData.can_do || []}
                   onAdd={(v) => handleArrayAdd('can_do', v)}
                   onRemove={(i) => handleArrayRemove('can_do', i)}
-                  placeholder="Ej: Hacer preguntas de calificación"
+                  placeholder="Ex: Fazer perguntas de qualificação"
                 />
 
                 <ArrayField
-                  label="Lo que NO puede hacer"
+                  label="O que NÃO pode fazer"
                   items={formData.cannot_do || []}
                   onAdd={(v) => handleArrayAdd('cannot_do', v)}
                   onRemove={(i) => handleArrayRemove('cannot_do', i)}
-                  placeholder="Ex: Falar de precio cerrado"
+                  placeholder="Ex: Falar de preço fechado"
                 />
 
                 <ArrayField
-                  label="Cuando passar para humano"
+                  label="Quando passar para humano"
                   items={formData.handoff_triggers || []}
                   onAdd={(v) => handleArrayAdd('handoff_triggers', v)}
                   onRemove={(i) => handleArrayRemove('handoff_triggers', i)}
-                  placeholder="Ex: Lead pede para falar con humano"
+                  placeholder="Ex: Lead pede para falar com humano"
                 />
 
                 <ArrayField
-                  label="Cuando cerrar conversación"
+                  label="Quando encerrar conversa"
                   items={formData.end_conversation_triggers || []}
                   onAdd={(v) => handleArrayAdd('end_conversation_triggers', v)}
                   onRemove={(i) => handleArrayRemove('end_conversation_triggers', i)}
-                  placeholder="Ex: Lead confirma que no tiene interesse"
+                  placeholder="Ex: Lead confirma que não tem interesse"
                 />
 
-                {/* === Transferencia entre agentes === */}
+                {/* === Transferência entre agentes === */}
                 <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-4">
                   <div className="flex items-start gap-2">
                     <Sparkles className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                     <div className="flex-1">
-                      <h4 className="text-sm font-semibold">Transferencia entre agentes</h4>
+                      <h4 className="text-sm font-semibold">Transferência entre agentes</h4>
                       <p className="text-xs text-muted-foreground">
-                        Mensajes enviadas automaticamente cuando este agente transfere
-                        a conversación, ou cuando ele assume uma conversación de otro agente.
+                        Mensajes enviadas automaticamente quando este agente transfere
+                        a conversa, ou quando ele assume uma conversa de outro agente.
                       </p>
                     </div>
                   </div>
 
-                  {/* Alcance de transferencia — depende de si el agente está vinculado a un producto o es global */}
+                  {/* Escopo de transferência — depende se o agente está vinculado a um produto ou é global */}
                   {formData.product_id ? (
                     <div className="rounded-md border border-amber-500/50 bg-amber-500/10 p-3 text-xs text-amber-700 dark:text-amber-400 flex items-start gap-2">
                       <span className="text-base leading-none mt-0.5">🔒</span>
                       <div>
-                        <strong>Agente vinculado a un producto.</strong> Este agente solo
-                        podrá transferir conversaciones a otros agentes del <strong>mismo producto</strong>{' '}
-                        o a agentes <strong>globales</strong> (Admin / Orquestador). Los intentos de
-                        transferencia cruzada entre productos son bloqueados por el sistema.
+                        <strong>Agente vinculado a um produto.</strong> Este agente só
+                        poderá transferir conversas para outros agentes do <strong>mesmo produto</strong>{' '}
+                        ou para agentes <strong>globais</strong> (Admin / Orquestrador). Tentativas de
+                        transferência cruzada entre produtos são bloqueadas pelo sistema.
                       </div>
                     </div>
                   ) : (
                     <div className="rounded-md border border-emerald-500/50 bg-emerald-500/10 p-3 text-xs text-emerald-700 dark:text-emerald-400 flex items-start gap-2">
                       <span className="text-base leading-none mt-0.5">🌐</span>
                       <div>
-                        <strong>Agente global.</strong> Este agente puede rotear conversaciones
-                        para cualquier agente da organización (entre productos diferentes).
+                        <strong>Agente global.</strong> Este agente pode rotear conversas
+                        para qualquer agente da organização (entre produtos diferentes).
                       </div>
                     </div>
                   )}
 
-                  {/* Aviso cuando ambos campos de handoff están vacíos — sin esto, la transferencia sale muda */}
+                  {/* Aviso quando ambos os campos de handoff estão vazios — sem isso, a transferência sai muda */}
                   {!formData.handoff_outgoing_message?.trim() &&
                     !formData.handoff_incoming_message?.trim() && (
                       <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-xs text-destructive flex items-start gap-2">
                         <span className="text-base leading-none mt-0.5">⚠️</span>
                         <div>
-                          <strong>Ningún mensaje de transferencia configurado.</strong>{' '}
-                          Sin despedida y sin presentación, el cambio de agente ocurre en silencio
-                          y el lead puede quedar perdido. Completá al menos uno de los campos de abajo.
+                          <strong>Nenhuma mensagem de transferência configurada.</strong>{' '}
+                          Sem despedida e sem apresentação, a troca de agente acontece em silêncio
+                          e o lead pode ficar perdido. Preencha pelo menos um dos campos abaixo.
                         </div>
                       </div>
                     )}
 
                   <div className="space-y-2">
                     <Label className="text-xs">
-                      Mensaje al transferir <span className="text-muted-foreground">(despedida)</span>
+                      Mensaje ao transferir <span className="text-muted-foreground">(despedida)</span>
                     </Label>
                     <Textarea
                       value={formData.handoff_outgoing_message ?? ''}
                       onChange={(e) =>
                         setFormData((prev) => ({ ...prev, handoff_outgoing_message: e.target.value }))
                       }
-                      placeholder="Ej: ¡Perfecto {{nombre}}! Te voy a transferir con {{proximo_agente}}, que va a darle continuidad a tu atención. Un momento…"
+                      placeholder="Ex: Perfeito {{nome}}! Vou te transferir para a {{proximo_agente}}, que vai dar continuidade no seu atendimento. Um momento…"
                       rows={3}
                       className="text-sm"
                     />
                     <p className="text-xs text-muted-foreground">
-                      Variables: <code>{'{{nombre}}'}</code>, <code>{'{{producto}}'}</code>,{' '}
+                      Variáveis: <code>{'{{nome}}'}</code>, <code>{'{{produto}}'}</code>,{' '}
                       <code>{'{{proximo_agente}}'}</code>
                     </p>
                   </div>
 
                   <div className="space-y-2">
                     <Label className="text-xs">
-                      Mensaje al asumir <span className="text-muted-foreground">(presentación automática)</span>
+                      Mensaje ao assumir <span className="text-muted-foreground">(apresentação automática)</span>
                     </Label>
                     <Textarea
                       value={formData.handoff_incoming_message ?? ''}
                       onChange={(e) =>
                         setFormData((prev) => ({ ...prev, handoff_incoming_message: e.target.value }))
                       }
-                      placeholder="Ej: Hola {{nombre}}, soy Ana, responsable del comercial de {{producto}}. Vi que estabas hablando con {{agente_anterior}} sobre {{resumen}}. ¿Podemos seguir por acá?"
+                      placeholder="Ex: Olá {{nome}}, aqui é a Ana, responsável pelo comercial do {{produto}}. Vi que você estava falando com a {{agente_anterior}} sobre {{resumo}}. Podemos seguir por aqui?"
                       rows={4}
                       className="text-sm"
                     />
                     <p className="text-xs text-muted-foreground">
-                      Variables: <code>{'{{nombre}}'}</code>, <code>{'{{producto}}'}</code>,{' '}
-                      <code>{'{{agente_anterior}}'}</code>, <code>{'{{resumen}}'}</code>
+                      Variáveis: <code>{'{{nome}}'}</code>, <code>{'{{produto}}'}</code>,{' '}
+                      <code>{'{{agente_anterior}}'}</code>, <code>{'{{resumo}}'}</code>
                     </p>
                     <p className="text-xs text-muted-foreground italic">
-                      Este mensaje se dispara automáticamente después del retraso configurado,
-                      aunque el lead no responda.
+                      Esta mensagem é disparada automaticamente após o atraso configurado,
+                      mesmo que o lead não responda.
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-2">
-                      <Label className="text-xs">Retraso de la presentación (segundos)</Label>
+                      <Label className="text-xs">Atraso da apresentação (segundos)</Label>
                       <Input
                         type="number"
                         min={0}
@@ -884,12 +906,12 @@ export function AgentEditor({
                         className="text-sm"
                       />
                       <p className="text-xs text-muted-foreground">
-                        Tiempo entre la despedida y el saludo del nuevo agente.
+                        Tempo entre a despedida e a saudação do novo agente.
                       </p>
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-xs">Retraso entre mensajes (segundos)</Label>
+                      <Label className="text-xs">Atraso entre mensagens (segundos)</Label>
                       <Input
                         type="number"
                         min={0}
@@ -904,16 +926,16 @@ export function AgentEditor({
                         className="text-sm"
                       />
                       <p className="text-xs text-muted-foreground">
-                        Pausa natural entre mensajes consecutivas deste agente.
+                        Pausa natural entre mensagens consecutivas deste agente.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between pt-1">
                     <div>
-                      <Label className="text-xs">Incluir resumen da conversación anterior</Label>
+                      <Label className="text-xs">Incluir resumo da conversa anterior</Label>
                       <p className="text-xs text-muted-foreground">
-                        Gera um resumen corto e disponibiliza como <code>{'{{resumen}}'}</code>.
+                        Gera um resumo curto e disponibiliza como <code>{'{{resumo}}'}</code>.
                       </p>
                     </div>
                     <Switch
@@ -929,7 +951,7 @@ export function AgentEditor({
               {/* Tab: Tone */}
               <TabsContent value="tone" className="mt-0 space-y-4">
                 <div className="space-y-2">
-                  <Label>Estilo de Tono</Label>
+                  <Label>Estilo de Tom</Label>
                   <Select
                     value={formData.tone_style}
                     onValueChange={(v) => setFormData(prev => ({ ...prev, tone_style: v as ToneStyle }))}
@@ -948,7 +970,7 @@ export function AgentEditor({
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Tamaño das Mensajes</Label>
+                  <Label>Tamanho das Mensajes</Label>
                   <Select
                     value={formData.message_style}
                     onValueChange={(v) => setFormData(prev => ({ ...prev, message_style: v as MessageStyle }))}
@@ -968,17 +990,17 @@ export function AgentEditor({
 
                 <div className="rounded-md border border-dashed bg-muted/30 p-3">
                   <p className="text-xs text-muted-foreground">
-                    💡 El <strong>modelo de IA</strong> usado por los agentes de conversación se define en{' '}
-                    <strong>Configuraciones → Integraciones → Enrutamiento de IA</strong> (capacidad
-                    "Agentes de conversación") y vale para toda la organización.
+                    💡 O <strong>modelo de IA</strong> usado pelos agentes de conversa é definido em{' '}
+                    <strong>Configuración → Integrações → Roteamento de IA</strong> (capacidade
+                    "Agentes de conversa") e vale para toda a organização.
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between py-2">
                   <div>
-                    <Label>Siempre terminar con pregunta?</Label>
+                    <Label>Sempre terminar com pergunta?</Label>
                     <p className="text-xs text-muted-foreground">
-                      Estimula o lead a continuar a conversación
+                      Estimula o lead a continuar a conversa
                     </p>
                   </div>
                   <Switch
@@ -1000,7 +1022,7 @@ export function AgentEditor({
                   items={formData.prohibited_phrases || []}
                   onAdd={(v) => handleArrayAdd('prohibited_phrases', v)}
                   onRemove={(i) => handleArrayRemove('prohibited_phrases', i)}
-                  placeholder="Ex: Infelizmente no podemos..."
+                  placeholder="Ex: Infelizmente não podemos..."
                 />
               </TabsContent>
 
@@ -1009,6 +1031,14 @@ export function AgentEditor({
                 <AgentHumanizationTab
                   value={(formData.humanization as any) ?? null}
                   onChange={(next) => setFormData((p) => ({ ...p, humanization: next as any }))}
+                />
+              </TabsContent>
+
+              {/* Tab: Follow-up */}
+              <TabsContent value="followup" className="mt-0">
+                <AgentFollowupTab
+                  formData={formData}
+                  onChange={(updates) => setFormData((prev) => ({ ...prev, ...updates }))}
                 />
               </TabsContent>
 
@@ -1031,83 +1061,129 @@ export function AgentEditor({
               {/* Tab: Channels */}
               <TabsContent value="channels" className="mt-0 space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  Defina dónde este agente estará disponible para atuar
+                  Defina onde este agente estará disponível para atuar
                 </p>
 
-                {/* Conexión WhatsApp dedicada */}
-                <div className="space-y-2 p-3 rounded-lg border border-primary/30 bg-primary/5">
-                  <div className="flex items-center gap-2">
-                    <Smartphone className="h-4 w-4 text-primary" />
-                    <Label className="text-sm font-medium">Conexión WhatsApp dedicada</Label>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Se selecionada, este agente <strong>só responderá</strong> mensajes recebidas neste número de WhatsApp.
-                    Útil para aislar atención por número (ej.: Ana atiende en el número X, Sofia en el Y).
-                  </p>
-                  <Select
-                    value={formData.evolution_instance_id || '__any__'}
-                    onValueChange={(v) =>
-                      setFormData((prev) => ({
+                {/* Conexiones dedicadas multi-canal */}
+                {(() => {
+                  const dedicated = formData.dedicated_connections ?? [];
+                  const isSelected = (type: string, id: string) =>
+                    dedicated.some((c) => c.type === type && c.id === id);
+                  const toggle = (type: 'evolution' | 'meta_whatsapp' | 'instagram', id: string) => {
+                    setFormData((prev) => {
+                      const list = prev.dedicated_connections ?? [];
+                      const exists = list.some((c) => c.type === type && c.id === id);
+                      const next = exists
+                        ? list.filter((c) => !(c.type === type && c.id === id))
+                        : [...list, { type, id }];
+                      // Mantém o campo legado em sync (1ª Evolution selecionada)
+                      const firstEvo = next.find((c) => c.type === 'evolution');
+                      return {
                         ...prev,
-                        evolution_instance_id: v === '__any__' ? null : v,
-                      }))
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Cualquier conexión (predeterminada)" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="__any__">
+                        dedicated_connections: next,
+                        evolution_instance_id: firstEvo?.id ?? null,
+                      };
+                    });
+                  };
+
+                  const renderRow = (
+                    type: 'evolution' | 'meta_whatsapp' | 'instagram',
+                    id: string,
+                    label: string,
+                    connected: boolean,
+                    Icon: any,
+                  ) => (
+                    <label
+                      key={`${type}:${id}`}
+                      className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted/40 cursor-pointer text-sm"
+                    >
+                      <Checkbox
+                        checked={isSelected(type, id)}
+                        onCheckedChange={() => toggle(type, id)}
+                      />
+                      <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="truncate">{label}</span>
+                      <span
+                        className={cn(
+                          'ml-auto h-2 w-2 rounded-full',
+                          connected ? 'bg-success' : 'bg-muted-foreground',
+                        )}
+                        title={connected ? 'Conectado' : 'Desconectado'}
+                      />
+                    </label>
+                  );
+
+                  return (
+                    <div className="space-y-3 p-3 rounded-lg border border-primary/30 bg-primary/5">
+                      <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
-                          <Globe className="h-3.5 w-3.5" />
-                          <span>Cualquier conexión (predeterminada)</span>
+                          <Smartphone className="h-4 w-4 text-primary" />
+                          <Label className="text-sm font-medium">Conexiones dedicadas</Label>
                         </div>
-                      </SelectItem>
-                      {(evolutionInstances || []).map((inst) => {
-                        const connected = inst.status === 'connected' || inst.status === 'paired';
-                        return (
-                          <SelectItem key={inst.id} value={inst.id}>
-                            <div className="flex items-center gap-2">
-                              <Smartphone className="h-3.5 w-3.5" />
-                              <span>
-                                {inst.name}
-                                {inst.phone_number ? ` — ${inst.phone_number}` : ''}
-                              </span>
-                              <span
-                                className={cn(
-                                  'ml-auto h-2 w-2 rounded-full',
-                                  connected ? 'bg-success' : 'bg-muted-foreground'
-                                )}
-                                title={connected ? 'Conectado' : 'Desconectado'}
-                              />
-                            </div>
-                          </SelectItem>
-                        );
-                      })}
-                      {(!evolutionInstances || evolutionInstances.length === 0) && (
-                        <div className="px-2 py-3 text-xs text-muted-foreground">
-                          Ninguna conexión de WhatsApp registrada.
+                        <Badge variant="secondary" className="text-xs">
+                          {dedicated.length === 0
+                            ? 'Qualquer conexão (padrão)'
+                            : `${dedicated.length} selecionada(s)`}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Seleccioná uma ou mais conexões para que este agente <strong>só responda</strong> mensagens
+                        recebidas nelas. Funciona para WhatsApp (QR), WhatsApp Oficial Meta e Instagram.
+                        Deixe tudo desmarcado para atender em qualquer conexão.
+                      </p>
+
+                      {/* WhatsApp via QR (Evolution) */}
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground uppercase tracking-wide pl-1">
+                          <Smartphone className="h-3 w-3" />
+                          WhatsApp (QR)
                         </div>
-                      )}
-                    </SelectContent>
-                  </Select>
-                  {formData.evolution_instance_id &&
-                    (() => {
-                      const inst = evolutionInstances?.find(
-                        (i) => i.id === formData.evolution_instance_id
-                      );
-                      const connected =
-                        inst && (inst.status === 'connected' || inst.status === 'paired');
-                      if (inst && !connected) {
-                        return (
-                          <p className="text-xs text-destructive">
-                            ⚠️ Esta conexión está desconectada. Reconectá para que el agente opere.
-                          </p>
-                        );
-                      }
-                      return null;
-                    })()}
-                </div>
+                        {(evolutionInstances || []).map((inst) => {
+                          const connected = inst.status === 'connected' || inst.status === 'paired';
+                          const label = `${inst.name}${inst.phone_number ? ` — ${inst.phone_number}` : ''}`;
+                          return renderRow('evolution', inst.id, label, connected, Smartphone);
+                        })}
+                        {(!evolutionInstances || evolutionInstances.length === 0) && (
+                          <p className="text-xs text-muted-foreground pl-6">Nenhuma conexão WhatsApp via QR cadastrada.</p>
+                        )}
+                      </div>
+
+                      {/* WhatsApp Oficial Meta */}
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground uppercase tracking-wide pl-1">
+                          <BadgeCheck className="h-3 w-3" />
+                          WhatsApp Oficial (Meta)
+                        </div>
+                        {(metaConnections || []).map((conn: any) => {
+                          const connected = conn.status === 'active';
+                          const phone = conn.phone_number || conn.phone_number_id || '';
+                          const label = `${conn.display_name}${phone ? ` — ${phone}` : ''}`;
+                          return renderRow('meta_whatsapp', conn.id, label, connected, BadgeCheck);
+                        })}
+                        {(!metaConnections || metaConnections.length === 0) && (
+                          <p className="text-xs text-muted-foreground pl-6">Nenhuma conexão WhatsApp Oficial Meta cadastrada.</p>
+                        )}
+                      </div>
+
+                      {/* Instagram Direct */}
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground uppercase tracking-wide pl-1">
+                          <Instagram className="h-3 w-3" />
+                          Instagram Direct
+                        </div>
+                        {(instagramConnections || []).map((conn: any) => {
+                          const connected = conn.status === 'active';
+                          const handle = conn.ig_username || conn.ig_business_account_id || '';
+                          const label = `${conn.display_name}${handle ? ` — @${handle.replace(/^@/, '')}` : ''}`;
+                          return renderRow('instagram', conn.id, label, connected, Instagram);
+                        })}
+                        {(!instagramConnections || instagramConnections.length === 0) && (
+                          <p className="text-xs text-muted-foreground pl-6">Nenhuma conexão Instagram cadastrada.</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 <div className="space-y-3">
                   {(Object.entries(CHANNEL_LABELS) as [keyof typeof CHANNEL_LABELS, string][]).map(
@@ -1125,14 +1201,14 @@ export function AgentEditor({
 
               </TabsContent>
 
-              {/* Tab: Executive (solo para tipo admin) */}
+              {/* Tab: Executive (apenas para tipo admin) */}
               {formData.agent_type === 'admin' && (
                 <TabsContent value="executive" className="mt-0">
                   <AdminExecutivePanel compact />
                 </TabsContent>
               )}
 
-              {/* Tab: Support materials (solo para tipo support) */}
+              {/* Tab: Support materials (apenas para tipo support) */}
               {isSupport && (
                 <TabsContent value="support" className="mt-0">
                   <AgentSupportTab
@@ -1143,7 +1219,7 @@ export function AgentEditor({
                 </TabsContent>
               )}
 
-              {/* Tab: Routing matrix (solo para tipo orchestrator) */}
+              {/* Tab: Routing matrix (apenas para tipo orchestrator) */}
               {isOrchestrator && (
                 <TabsContent value="routing" className="mt-0">
                   <AgentOrchestratorRoutingTab
@@ -1170,8 +1246,8 @@ export function AgentEditor({
                 ) : (
                   <div className="text-center py-8 text-muted-foreground">
                     <GraduationCap className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                    <p className="font-medium">Guardá el agente primero</p>
-                    <p className="text-sm">O treinamento estará disponible após crear o agente</p>
+                    <p className="font-medium">Salve o agente primeiro</p>
+                    <p className="text-sm">O treinamento estará disponível após criar o agente</p>
                   </div>
                 )}
               </TabsContent>
@@ -1188,8 +1264,8 @@ export function AgentEditor({
                 ) : (
                   <div className="text-center py-8 text-muted-foreground">
                     <MessageCircle className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                    <p className="font-medium">Guardá el agente primero</p>
-                    <p className="text-sm">O teste estará disponible após crear o agente</p>
+                    <p className="font-medium">Salve o agente primeiro</p>
+                    <p className="text-sm">O teste estará disponível após criar o agente</p>
                   </div>
                 )}
               </TabsContent>
@@ -1222,16 +1298,16 @@ export function AgentEditor({
             <Button 
               onClick={handleSave} 
               disabled={isLoading}
-              title={missingFields.length > 0 ? `Faltan: ${missingFields.join(', ')}` : undefined}
+              title={missingFields.length > 0 ? `Faltam: ${missingFields.join(', ')}` : undefined}
             >
               {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              {isEditing ? 'Guardar' : 'Crear Agente'}
+              {isEditing ? 'Guardar' : 'Criar Agente'}
             </Button>
           </div>
         </div>
       </DialogContent>
 
-      {/* Dialog: contexto del agente personalizado */}
+      {/* Dialog: contexto do agente personalizado */}
       <Dialog open={contextDialogOpen} onOpenChange={(o) => { setContextDialogOpen(o); if (!o) setCustomContext(''); }}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
@@ -1242,12 +1318,12 @@ export function AgentEditor({
           </DialogHeader>
           <div className="space-y-3 py-2">
             <p className="text-sm text-muted-foreground">
-              Describí detalles específicos de este agente (público objetivo, restricciones, tono, disparadores especiales). La IA va a combinar esto con el conocimiento del producto y de la empresa. Dejá en blanco para generar solo con el contexto interno.
+              Descreva detalhes específicos desse agente (público-alvo, restrições, tom, gatilhos especiais). A IA vai combinar isso com o conhecimento do produto e da empresa. Deixe em branco para gerar apenas com o contexto interno.
             </p>
             <Textarea
               value={customContext}
               onChange={(e) => setCustomContext(e.target.value)}
-              placeholder="Ex: foque em leads frios vindos do Instagram, evite falar de precio por mensaje, seja mais consultivo..."
+              placeholder="Ex: foque em leads frios vindos do Instagram, evite falar de preço por mensagem, seja mais consultivo..."
               rows={8}
               autoFocus
             />
@@ -1262,7 +1338,7 @@ export function AgentEditor({
               className="gap-2"
             >
               {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-              {isGenerating ? 'Generando...' : 'Generar Agente'}
+              {isGenerating ? 'Gerando...' : 'Gerar Agente'}
             </Button>
           </div>
         </DialogContent>

@@ -1,5 +1,5 @@
 // Cron 1/min. Pega targets vencidos e invoca manual-outreach por lead.
-// Respeita janela horária da recorrência e status da campaña (active).
+// Respeita janela horária da recorrência e status da campanha (active).
 
 import { createServiceClient } from "../_shared/campaign-audience.ts";
 
@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
 
     const { data: targets } = await supabase
       .from("campaign_targets")
-      .select("id, campaign_id, lead_id, organization_id, instance_id, context_used, attempts")
+      .select("id, campaign_id, lead_id, organization_id, instance_id, connection_type, context_used, attempts")
       .eq("status", "queued")
       .lte("scheduled_for", new Date().toISOString())
       .limit(MAX_PER_TICK);
@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Cache de campañas usadas en este tick
+    // Cache de campanhas usadas neste tick
     const campaignCache = new Map<string, any>();
     let processed = 0;
     let skipped = 0;
@@ -60,22 +60,23 @@ Deno.serve(async (req) => {
       if (!campaign) {
         const { data } = await supabase
           .from("campaigns")
-          .select("id, status, agent_id, schedule_type, recurrence, name, post_cadence_id")
+          .select("id, status, agent_id, schedule_type, recurrence, name, post_cadence_id, meta_template_config")
           .eq("id", t.campaign_id)
           .maybeSingle();
         if (data) campaignCache.set(t.campaign_id, data);
         campaign = data;
       }
-      // Campaña no existe ou fue explicitamente cancelada → cancela target
+
+      // Campanha não existe ou foi explicitamente cancelada → cancela target
       if (!campaign || campaign.status === "cancelled" || campaign.status === "archived") {
         await supabase
           .from("campaign_targets")
-          .update({ status: "cancelled", error: "Campaña cancelada" })
+          .update({ status: "cancelled", error: "Campanha cancelada" })
           .eq("id", t.id);
         skipped++;
         continue;
       }
-      // Pausada / borrador / completed → mantém na fila, reagenda 5min (pausa reversível)
+      // Pausada / rascunho / completed → mantém na fila, reagenda 5min (pausa reversível)
       if (campaign.status !== "active") {
         await supabase
           .from("campaign_targets")
@@ -107,6 +108,34 @@ Deno.serve(async (req) => {
         continue;
       }
 
+      // Opt-out guard: revalida no momento do envio (lead pode ter pedido sair depois do enfileiramento)
+      try {
+        const { data: leadRow } = await supabase
+          .from('leads')
+          .select('whatsapp_opt_in')
+          .eq('id', t.lead_id)
+          .maybeSingle();
+        if ((leadRow as any)?.whatsapp_opt_in === false) {
+          await supabase
+            .from('campaign_targets')
+            .update({ status: 'cancelled', error: 'whatsapp_opt_out' })
+            .eq('id', t.id);
+          skipped++;
+          continue;
+        }
+      } catch (_) { /* segue */ }
+
+      // Sorteia template (formato novo: templates[]; legado: template_id)
+      let chosenTemplate: any = null;
+      const cfg = (campaign as any).meta_template_config ?? null;
+      if (t.connection_type === 'meta_whatsapp' && cfg) {
+        if (Array.isArray(cfg.templates) && cfg.templates.length) {
+          chosenTemplate = cfg.templates[Math.floor(Math.random() * cfg.templates.length)];
+        } else if (cfg.template_id) {
+          chosenTemplate = { template_id: cfg.template_id, variable_mapping: cfg.variable_mapping ?? {} };
+        }
+      }
+
       try {
         const resp = await fetch(`${supabaseUrl}/functions/v1/manual-outreach`, {
           method: "POST",
@@ -118,12 +147,19 @@ Deno.serve(async (req) => {
             lead_ids: [t.lead_id],
             agent_id: campaign.agent_id,
             organization_id: t.organization_id,
-            objective: `Campaña: ${campaign.name}`,
+            objective: `Campanha: ${campaign.name}`,
             extra_context: t.context_used,
             mode: "direct",
             instance_id: t.instance_id,
-            event_context: { campaign_id: campaign.id, campaign_target_id: t.id },
+            connection_type: t.connection_type ?? 'evolution',
+            template_config: chosenTemplate,
+            event_context: {
+              campaign_id: campaign.id,
+              campaign_target_id: t.id,
+              template_id: chosenTemplate?.template_id ?? null,
+            },
           }),
+
         });
 
         const body = await resp.json().catch(() => ({}));
@@ -178,7 +214,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Marca campañas como completed se no há mais targets queued
+    // Marca campanhas como completed se não há mais targets queued
     const campaignIds = Array.from(campaignCache.keys());
     for (const cid of campaignIds) {
       const { count } = await supabase

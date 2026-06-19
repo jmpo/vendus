@@ -1,49 +1,83 @@
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import {
-  useOperationKpis,
+  useHealthKpis,
   useOperationPriorities,
-  useTodayAgenda,
-  useRecentLeads,
+  useTeamPerformance,
+  useRealtimeOps,
+  useLeadsAtRisk,
+  useAIRadarInsights,
 } from '@/hooks/useOperationCenter';
-import { OperationKpiCards } from './OperationKpiCards';
+import { HealthKpiRow } from './HealthKpiRow';
 import { PrioritiesCard } from './PrioritiesCard';
-import { TodayAgendaCard } from './TodayAgendaCard';
-import { RecentLeadsTable } from './RecentLeadsTable';
-import { AiInsightsCard } from './AiInsightsCard';
+import { TeamPerformanceTable } from './TeamPerformanceTable';
+import { RealtimeOpsCard } from './RealtimeOpsCard';
+import { LeadsAtRiskTable } from './LeadsAtRiskTable';
+import { AIRadarCard } from './AIRadarCard';
+import { LeadDetailPage } from '@/components/lead/LeadDetailPage';
 
 export function OperationCenter() {
   const [, setSearchParams] = useSearchParams();
-  const { data: kpis } = useOperationKpis();
+  const { data: kpis } = useHealthKpis();
   const { data: priorities } = useOperationPriorities();
-  const { data: agenda } = useTodayAgenda();
-  const { data: recentLeads } = useRecentLeads();
+  const { data: team } = useTeamPerformance();
+  const { data: realtime } = useRealtimeOps();
+  const { data: atRisk } = useLeadsAtRisk();
+  const { data: insights } = useAIRadarInsights();
+
+  const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
 
   const handleNavigate = (section: string) => {
     setSearchParams({ tab: section }, { replace: true });
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Central de Operación</h1>
+        <h1 className="text-2xl font-bold text-foreground">Central de Operação</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Leads, atenciones y acciones importantes en tiempo real.
+          Visão em tempo real da operação comercial da sua equipe.
         </p>
       </div>
 
-      <OperationKpiCards kpis={kpis} onNavigate={handleNavigate} />
+      {/* Linha 1 */}
+      <HealthKpiRow kpis={kpis} onNavigate={handleNavigate} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <PrioritiesCard data={priorities} onNavigate={handleNavigate} />
-        <TodayAgendaCard items={agenda} onNavigate={handleNavigate} />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <RecentLeadsTable leads={recentLeads} onNavigate={handleNavigate} />
+      {/* Linhas 2 + 3 + 6 */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div className="lg:col-span-3">
+          <PrioritiesCard data={priorities} onNavigate={handleNavigate} />
         </div>
-        <AiInsightsCard kpis={kpis} priorities={priorities} />
+        <div className="lg:col-span-6">
+          <TeamPerformanceTable rows={team} onNavigate={handleNavigate} />
+        </div>
+        <div className="lg:col-span-3">
+          <AIRadarCard items={insights} onNavigate={handleNavigate} />
+        </div>
       </div>
+
+      {/* Linha 4 */}
+      <RealtimeOpsCard data={realtime} />
+
+      {/* Linha 5 */}
+      <LeadsAtRiskTable rows={atRisk} onResolve={setSelectedLeadId} />
+
+      <Dialog open={!!selectedLeadId} onOpenChange={() => setSelectedLeadId(null)}>
+        <DialogContent className="max-w-4xl h-[90vh] flex flex-col overflow-hidden p-0">
+          <VisuallyHidden>
+            <DialogTitle>Detalhes do Lead</DialogTitle>
+          </VisuallyHidden>
+          {selectedLeadId && (
+            <LeadDetailPage
+              leadId={selectedLeadId}
+              onBack={() => setSelectedLeadId(null)}
+              isAdminView={true}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

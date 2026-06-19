@@ -404,7 +404,7 @@ export function ReportsManager() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Comisiones Pendentes</p>
+                    <p className="text-sm text-muted-foreground">Comisiones Pendientes</p>
                     <p className="text-2xl font-bold mt-1">
                       {formatCurrency(kpis?.pendingCommissions || 0)}
                     </p>

@@ -236,7 +236,7 @@ export function ImportLeadsDialog({ open, onOpenChange, products, squads, onDone
         <DialogFooter>
           {step === 'map' && (
             <>
-              <Button variant="outline" onClick={() => setStep('upload')}>Voltar</Button>
+              <Button variant="outline" onClick={() => setStep('upload')}>Volver</Button>
               <Button onClick={importNow}>Importar {rows.length} leads</Button>
             </>
           )}

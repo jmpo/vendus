@@ -236,7 +236,7 @@ export function CadenceWizard({ orgId, cadenceId, onClose }: Props) {
   return (
     <div className="p-4 md:p-6 space-y-4 max-w-5xl mx-auto">
       <div className="flex items-center justify-between">
-        <Button variant="ghost" size="sm" onClick={onClose}><ArrowLeft className="h-4 w-4 mr-2" /> Voltar</Button>
+        <Button variant="ghost" size="sm" onClick={onClose}><ArrowLeft className="h-4 w-4 mr-2" /> Volver</Button>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => save(false)} disabled={saving}>
             <Save className="h-4 w-4 mr-2" /> Guardar borrador

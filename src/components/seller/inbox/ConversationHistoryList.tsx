@@ -20,8 +20,8 @@ const channelIcon: Record<string, any> = {
 
 const statusLabel: Record<string, string> = {
   bot_active: 'Bot',
-  waiting_human: 'Em fila',
-  human_active: 'Atendendo',
+  waiting_human: 'En fila',
+  human_active: 'Atendiendo',
   closed: 'Encerrado',
 };
 

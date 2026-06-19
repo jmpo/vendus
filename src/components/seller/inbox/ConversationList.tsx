@@ -1,5 +1,8 @@
 import { useState, useMemo } from 'react';
-import { Search, Filter, Globe, MessageCircle, Instagram, Mail, Phone, Plus, Volume2, VolumeX, User, Bot } from 'lucide-react';
+import { Search, Filter, Globe, MessageCircle, Instagram, Mail, Phone, Plus, User, Bot, BadgeCheck } from 'lucide-react';
+import { NotificationSoundPopover } from './NotificationSoundPopover';
+import type { NotificationSoundControls } from '@/hooks/useNotificationSound';
+import { resolveProvider, PROVIDER_LABEL, type ConvProvider } from '@/lib/conversationProvider';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +36,9 @@ export interface Conversation {
   sector_color?: string;
   tag_ids?: string[];
   current_agent_name?: string | null;
+  evolution_instance_id?: string | null;
+  meta_connection_id?: string | null;
+  instagram_connection_id?: string | null;
 }
 
 interface ConversationListProps {
@@ -45,28 +51,43 @@ interface ConversationListProps {
   onOpenFilters?: () => void;
   activeFilterCount?: number;
   onNewConversation?: () => void;
-  soundEnabled?: boolean;
-  onToggleSound?: () => void;
-  /** Mostra o nombre del agente em cada card (modo Admin). */
+  soundControls?: NotificationSoundControls;
+  /** Mostra o nome do atendente em cada card (modo Admin). */
   showAssignedUser?: boolean;
   headerLabel?: string;
-  /** Substitui o botón de filtro predeterminado (usado para ancorar popover). */
+  /** Substitui o botão de filtro padrão (usado para ancorar popover). */
   filtersSlot?: React.ReactNode;
   /** Aba ativa controlada (backend filtra por status). */
   activeTab?: StatusTab;
   onTabChange?: (tab: StatusTab) => void;
   /** Contadores totais por aba vindos do backend. */
-  tabCounts?: { attending: number; waiting: number; resolved: number };
+  tabCounts?: { attending: number; agents: number; waiting: number; resolved: number };
+  /** Mostra a aba "Agentes" (somente quando o usuário tem permissão). */
+  showAgentsTab?: boolean;
 }
 
-type StatusTab = 'attending' | 'waiting' | 'resolved';
+type StatusTab = 'attending' | 'agents' | 'waiting' | 'resolved';
 
-const channelIcons: Record<string, React.ReactNode> = {
-  webchat: <Globe className="h-3 w-3" />,
-  whatsapp: <Phone className="h-3 w-3" />,
-  instagram: <Instagram className="h-3 w-3" />,
-  email: <Mail className="h-3 w-3" />,
+const providerIcon: Record<ConvProvider, React.ReactNode> = {
+  webchat: <Globe className="h-2.5 w-2.5" />,
+  whatsapp_evolution: <Phone className="h-2.5 w-2.5" />,
+  whatsapp_meta: <Phone className="h-2.5 w-2.5" />,
+  instagram: <Instagram className="h-2.5 w-2.5" />,
+  email: <Mail className="h-2.5 w-2.5" />,
+  sms: <Phone className="h-2.5 w-2.5" />,
+  unknown: <Globe className="h-2.5 w-2.5" />,
 };
+
+const providerAvatarBadgeClass: Record<ConvProvider, string> = {
+  webchat: 'bg-primary text-primary-foreground',
+  whatsapp_evolution: 'bg-emerald-500 text-white',
+  whatsapp_meta: 'bg-[#0866FF] text-white',
+  instagram: 'bg-gradient-to-tr from-purple-500 to-pink-500 text-white',
+  email: 'bg-sky-500 text-white',
+  sms: 'bg-purple-500 text-white',
+  unknown: 'bg-muted text-muted-foreground',
+};
+
 
 export function ConversationList({
   conversations,
@@ -78,13 +99,13 @@ export function ConversationList({
   onOpenFilters,
   activeFilterCount = 0,
   onNewConversation,
-  soundEnabled,
-  onToggleSound,
+  soundControls,
   showAssignedUser = false,
   filtersSlot,
   activeTab: activeTabProp,
   onTabChange,
   tabCounts,
+  showAgentsTab = false,
 }: ConversationListProps) {
   const [internalSearch, setInternalSearch] = useState('');
   const [internalTab, setInternalTab] = useState<StatusTab>('attending');
@@ -94,7 +115,7 @@ export function ConversationList({
     else setInternalTab(t);
   };
 
-  // Usa busca externa solo se houver valor; de lo contrario, usa a interna (digitada na toolbar)
+  // Usa busca externa apenas se houver valor; caso contrário, usa a interna (digitada na toolbar)
   const search = (externalSearch && externalSearch.length > 0) ? externalSearch : internalSearch;
   const showResolved = externalShowResolved ?? false;
 
@@ -143,22 +164,25 @@ export function ConversationList({
     return Array.from(map.values());
   }, [conversations]);
 
-  // Contadores: usar os do backend (totais reais por aba) cuando vierem; caso
+  // Contadores: usar os do backend (totais reais por aba) quando vierem; caso
   // contrário, calcular a partir do que está em tela.
-  // "Atendendo" = humano. "Aguardando" inclui IA atendendo (bot_active) +
-  // sin ninguém (waiting_human) — em ambos os casos, aún no há humano.
+  // "Atendiendo" = humano. "Esperando" inclui IA atendendo (bot_active) +
+  // sem ninguém (waiting_human) — em ambos os casos, ainda não há humano.
   const counts = useMemo(() => {
     if (tabCounts) return tabCounts;
     return {
       attending: dedupedConversations.filter((c) => c.status === 'human_active').length,
+      agents: dedupedConversations.filter(
+        (c) => c.status === 'bot_active' || (c.status === 'waiting_human' && !!c.current_agent_name),
+      ).length,
       waiting: dedupedConversations.filter(
-        (c) => c.status === 'waiting_human' || c.status === 'bot_active',
+        (c) => c.status === 'waiting_human' && !c.current_agent_name,
       ).length,
       resolved: dedupedConversations.filter((c) => c.status === 'closed').length,
     };
   }, [dedupedConversations, tabCounts]);
 
-  // O backend ya filtra por status conforme a aba selecionada. Acá só aplicamos
+  // O backend já filtra por status conforme a aba selecionada. Aqui só aplicamos
   // a busca local opcional (digitada na toolbar deste componente).
   const filteredConversations = useMemo(() => {
     let filtered = dedupedConversations;
@@ -189,20 +213,20 @@ export function ConversationList({
     return 'V';
   };
 
-  // Fecha BR como na referencia: hoy → "HH:mm", ayer → "Ayer",
-  // misma semana → "EEE HH:mm", más antigo → "dd/MM/yyyy".
+  // Data BR como na referência: hoje → "HH:mm", ontem → "Ontem",
+  // mesma semana → "EEE HH:mm", mais antigo → "dd/MM/yyyy".
   const formatDate = (date: string | null) => {
     if (!date) return '';
     const d = new Date(date);
     if (Number.isNaN(d.getTime())) return '';
     if (isToday(d)) return format(d, 'HH:mm');
-    if (isYesterday(d)) return 'Ayer';
+    if (isYesterday(d)) return 'Ontem';
     const diff = Math.abs(differenceInDays(new Date(), d));
     if (diff < 7) return format(d, 'EEE HH:mm', { locale: ptBR });
     return format(d, 'dd/MM/yyyy');
   };
 
-  // Encurta nomes mucho longos preservando o inicio + sufixo entre parênteses
+  // Encurta nomes muito longos preservando o início + sufixo entre parênteses
   // ex.: "Allan Savaris - Agência Tabuleiro (LGND)" → "Allan Savaris - Agência..."
   const shortenName = (name: string, max = 32) => {
     if (name.length <= max) return name;
@@ -237,7 +261,7 @@ export function ConversationList({
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
           <Input
-            placeholder="Buscar conversación..."
+            placeholder="Buscar conversaciónción..."
             value={internalSearch}
             onChange={(e) => setInternalSearch(e.target.value)}
             className="pl-8 h-9 bg-muted/40 border-0"
@@ -245,20 +269,8 @@ export function ConversationList({
           />
         </div>
 
-        {onToggleSound && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onToggleSound}>
-                {soundEnabled ? (
-                  <Volume2 className="h-4 w-4 text-primary" />
-                ) : (
-                  <VolumeX className="h-4 w-4 text-muted-foreground" />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{soundEnabled ? 'Som ativado' : 'Som desativado'}</TooltipContent>
-          </Tooltip>
-        )}
+        {soundControls && <NotificationSoundPopover controls={soundControls} />}
+
 
         {onNewConversation && (
           <Tooltip>
@@ -267,14 +279,14 @@ export function ConversationList({
                 <Plus className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Nueva conversación</TooltipContent>
+            <TooltipContent>Nova conversa</TooltipContent>
           </Tooltip>
         )}
       </div>
 
-      {/* Tabs pílula — limpas, sin barra verde sólida */}
+      {/* Tabs pílula — limpas, sem barra verde sólida */}
       <div className="px-2 py-2 border-b bg-background">
-        <div className="grid grid-cols-3 gap-1 p-1 bg-muted/40 rounded-lg">
+        <div className={cn('grid gap-1 p-1 bg-muted/40 rounded-lg', showAgentsTab ? 'grid-cols-3' : 'grid-cols-2')}>
           <TabButton
             label="Atendiendo"
             count={counts.attending}
@@ -282,24 +294,27 @@ export function ConversationList({
             onClick={() => setActiveTab('attending')}
             badgeVariant="success"
           />
+          {showAgentsTab && (
+            <TabButton
+              label="Agentes"
+              count={counts.agents}
+              active={activeTab === 'agents'}
+              onClick={() => setActiveTab('agents')}
+              badgeVariant="muted"
+            />
+          )}
           <TabButton
-            label="En espera"
+            label="En Fila"
             count={counts.waiting}
             active={activeTab === 'waiting'}
             onClick={() => setActiveTab('waiting')}
             badgeVariant="danger"
           />
-          <TabButton
-            label="Resueltos"
-            count={counts.resolved}
-            active={activeTab === 'resolved'}
-            onClick={() => setActiveTab('resolved')}
-            badgeVariant="muted"
-          />
         </div>
       </div>
 
-      {/* Lista de conversaciones */}
+
+      {/* Lista de conversas */}
       <ScrollArea className="flex-1 bg-muted/20">
         {isLoading ? (
           <div className="p-4 space-y-3">
@@ -319,30 +334,30 @@ export function ConversationList({
             <p className="text-sm font-medium">Ninguna conversación</p>
             <p className="text-xs mt-1">
               {activeTab === 'waiting'
-                ? 'No hay conversaciones esperando atención'
+                ? 'No hay conversas aguardando atendimento'
+                : activeTab === 'agents'
+                ? 'Ninguna conversación com agente IA'
                 : activeTab === 'resolved'
-                ? 'Ninguna atención resuelta'
+                ? 'Nenhum atendimento resolvido'
                 : 'Sin conversaciones en esta pestaña'}
             </p>
           </div>
         ) : (
           <div className="bg-background">
             {filteredConversations.map((conv) => {
-              const channelLabel =
-                conv.channel === 'whatsapp' ? 'WhatsApp'
-                : conv.channel === 'instagram' ? 'Instagram'
-                : conv.channel === 'email' ? 'Email'
-                : conv.channel === 'webchat' ? 'Webchat'
-                : conv.channel;
+              const provider = resolveProvider(conv);
+              const channelLabel = PROVIDER_LABEL[provider] ?? conv.channel;
               const channelClass =
-                conv.channel === 'whatsapp'
+                provider === 'whatsapp_evolution'
                   ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'
-                  : conv.channel === 'instagram'
+                  : provider === 'whatsapp_meta'
+                  ? 'bg-[#0866FF]/10 text-[#0866FF] dark:text-[#4d94ff] border-[#0866FF]/40'
+                  : provider === 'instagram'
                   ? 'bg-pink-500/10 text-pink-700 dark:text-pink-400 border-pink-500/30'
-                  : conv.channel === 'email'
+                  : provider === 'email'
                   ? 'bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/30'
                   : 'bg-primary/10 text-primary border-primary/30';
-              const preview = previewWithMedia(conv.last_message, conv.last_message_metadata, 80);
+              const preview = previewWithMedia(conv.last_message, conv.last_message_metadata, 60);
               return (
               <button
                 key={conv.id}
@@ -353,8 +368,8 @@ export function ConversationList({
                   selectedId === conv.id && 'bg-accent/40 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:bg-emerald-500 before:rounded-r',
                 )}
               >
-                <div className="flex gap-3 items-start">
-                  {/* Avatar — usa foto real se disponible */}
+                <div className="@container flex gap-3 items-start">
+                  {/* Avatar — usa foto real se disponível */}
                   <div className="relative flex-shrink-0">
                     <Avatar className="h-11 w-11">
                       {conv.visitor_avatar_url && (
@@ -369,23 +384,28 @@ export function ConversationList({
                         {getInitials(conv.visitor_name, conv.visitor_phone)}
                       </AvatarFallback>
                     </Avatar>
-                    <div
-                      className={cn(
-                        'absolute -bottom-0.5 -right-0.5 h-5 w-5 rounded-full flex items-center justify-center border-2 border-background',
-                        conv.channel === 'whatsapp'
-                          ? 'bg-emerald-500 text-white'
-                          : conv.channel === 'instagram'
-                          ? 'bg-gradient-to-tr from-purple-500 to-pink-500 text-white'
-                          : 'bg-primary text-primary-foreground',
-                      )}
-                    >
-                      {channelIcons[conv.channel] || <Globe className="h-2.5 w-2.5" />}
-                    </div>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          className={cn(
+                            'absolute -bottom-0.5 -right-0.5 h-5 w-5 rounded-full flex items-center justify-center border-2 border-background',
+                            providerAvatarBadgeClass[provider],
+                          )}
+                        >
+                          {providerIcon[provider]}
+                          {provider === 'whatsapp_meta' && (
+                            <BadgeCheck className="absolute -top-1 -right-1 h-3 w-3 text-[#0866FF] fill-background" strokeWidth={2.5} />
+                          )}
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">{channelLabel}</TooltipContent>
+                    </Tooltip>
                   </div>
 
-                  {/* Contenido (líneas: nombre / preview / tags) */}
-                  <div className="flex-1 min-w-0">
-                    {/* Línea 1: nombre (encurtado para siempre caber) */}
+
+                  {/* Conteúdo (linhas: nome / preview / tags) */}
+                  <div className="flex-1 min-w-0 overflow-hidden">
+                    {/* Linha 1: nome (encurtado para sempre caber) */}
                     <div className="min-w-0">
                       <span
                         className={cn(
@@ -398,28 +418,29 @@ export function ConversationList({
                       </span>
                     </div>
 
-                    {/* Línea 2: preview da última mensaje real */}
+                    {/* Linha 2: preview da última mensagem real */}
                     <p
                       className={cn(
-                        'text-[13px] truncate mt-1 min-w-0',
+                        'text-[13px] truncate mt-1 min-w-0 w-full overflow-hidden',
                         conv.unread_count > 0
                           ? 'text-foreground font-medium'
                           : 'text-muted-foreground',
                       )}
+                      title={typeof preview === 'string' ? preview : undefined}
                     >
                       {preview || (
                         <span className="italic opacity-70">
-                          {conv.last_message_at ? 'Mensaje no disponible' : 'Sin mensajes aún'}
+                          {conv.last_message_at ? 'Mensaje indisponível' : 'Sem mensagens ainda'}
                         </span>
                       )}
                     </p>
 
-                    {/* Línea 3: tags (sector + producto + agente) */}
+                    {/* Linha 3: tags (setor + produto + atendente) */}
                     {(conv.sector_name || conv.product_name || (showAssignedUser && conv.assigned_user_name) || conv.current_agent_name) && (
-                      <div className="flex items-center gap-1 flex-wrap mt-1.5 min-w-0">
+                      <div className="flex items-center gap-1 flex-nowrap overflow-hidden mt-1.5 min-w-0">
                         {conv.sector_name && (
                           <Badge
-                            className="h-4 px-1.5 text-[10px] border font-medium max-w-[120px] truncate"
+                            className="h-4 px-1.5 text-[10px] border font-medium max-w-[90px] truncate flex-shrink-0"
                             style={{
                               backgroundColor: conv.sector_color ? `${conv.sector_color}1a` : undefined,
                               color: conv.sector_color || undefined,
@@ -433,16 +454,16 @@ export function ConversationList({
                         {conv.product_name && (
                           <Badge
                             variant="outline"
-                            className="h-4 px-1.5 text-[10px] font-medium max-w-[140px] truncate bg-muted/40"
+                            className="hidden @[240px]:inline-flex h-4 px-1.5 text-[10px] font-medium max-w-[110px] truncate bg-muted/40 min-w-0"
                             title={conv.product_name}
                           >
-                            {conv.product_name}
+                            <span className="truncate">{conv.product_name}</span>
                           </Badge>
                         )}
                         {showAssignedUser && conv.assigned_user_name ? (
                           <Badge
                             variant="secondary"
-                            className="h-4 px-1.5 text-[10px] flex items-center gap-1 max-w-[140px]"
+                            className="h-4 px-1.5 text-[10px] flex items-center gap-1 max-w-[120px] flex-shrink-0"
                             title={conv.assigned_user_name}
                           >
                             <User className="h-2.5 w-2.5 flex-shrink-0" />
@@ -450,7 +471,7 @@ export function ConversationList({
                           </Badge>
                         ) : conv.current_agent_name ? (
                           <Badge
-                            className="h-4 px-1.5 text-[10px] flex items-center gap-1 border bg-emerald-500/10 text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10 max-w-[160px]"
+                            className="h-4 px-1.5 text-[10px] flex items-center gap-1 border bg-emerald-500/10 text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10 max-w-[130px] flex-shrink-0"
                             title={`${conv.current_agent_name} · IA`}
                           >
                             <Bot className="h-2.5 w-2.5 flex-shrink-0" />
@@ -461,8 +482,8 @@ export function ConversationList({
                     )}
                   </div>
 
-                  {/* Coluna direita fixa: data + canal + badge de no-lidas */}
-                  <div className="flex flex-col items-end gap-1 flex-shrink-0 pl-1">
+                  {/* Coluna direita fixa: data + canal + badge de não-lidas */}
+                  <div className="flex flex-col items-end gap-1 flex-shrink-0 pl-1 max-w-[72px]">
                     <span
                       className={cn(
                         'text-[11px] whitespace-nowrap font-medium leading-none',
@@ -471,15 +492,6 @@ export function ConversationList({
                     >
                       {formatDate(conv.last_message_at)}
                     </span>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        'h-4 px-1.5 text-[9px] font-semibold uppercase tracking-wide border whitespace-nowrap',
-                        channelClass,
-                      )}
-                    >
-                      {channelLabel}
-                    </Badge>
                     {conv.unread_count > 0 && (
                       <Badge className="h-5 min-w-[22px] px-1.5 text-[11px] rounded-full bg-emerald-500 hover:bg-emerald-500 text-white">
                         {conv.unread_count}
@@ -525,13 +537,13 @@ function TabButton({
       {count > 0 && (
         <span
           className={cn(
-            'inline-flex items-center justify-center h-4 min-w-[18px] px-1 rounded-full text-[10px] font-bold',
+            'inline-flex items-center justify-center h-4 min-w-[20px] px-1.5 rounded-full text-[10px] font-bold',
             badgeVariant === 'success' && 'bg-emerald-500 text-white',
             badgeVariant === 'danger' && 'bg-red-500 text-white',
             badgeVariant === 'muted' && 'bg-muted text-muted-foreground',
           )}
         >
-          {count > 99 ? '99+' : count}
+          {count}
         </span>
       )}
     </button>

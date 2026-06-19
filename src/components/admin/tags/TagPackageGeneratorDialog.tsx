@@ -11,7 +11,7 @@ import { useTagAutomations } from '@/hooks/useLeadTags';
 const PACKAGE_PREVIEW = [
   { name: 'PIX Generado',           color: '#EAB308', removed: true,  desc: 'Aplicada cuando el cliente genera PIX. Eliminada al confirmar el pago.' },
   { name: 'Boleto Generado',        color: '#3B82F6', removed: true,  desc: 'Aplicada cuando genera boleto. Eliminada al confirmar el pago.' },
-  { name: 'Aguardando Pago', color: '#F97316', removed: true,  desc: 'Aplicada con PIX o Boleto. Eliminada al confirmar.' },
+  { name: 'Esperando Pago', color: '#F97316', removed: true,  desc: 'Aplicada con PIX o Boleto. Eliminada al confirmar.' },
   { name: 'Checkout Abandonado',  color: '#6B7280', removed: true,  desc: 'Aplicada si abandona. Eliminada si vuelve y compra.' },
   { name: 'Cliente',              color: '#22C55E', removed: false, desc: 'Aplicada en la compra. PERMANENTE para el historial.' },
   { name: 'Reembolso',            color: '#EF4444', removed: false, desc: 'Aplicada en reembolso. PERMANENTE para el historial.' },

@@ -245,7 +245,7 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
             ) : (
               <Alert>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <AlertTitle>Aguardando a Meta validar...</AlertTitle>
+                <AlertTitle>Esperando a Meta validar...</AlertTitle>
                 <AlertDescription className="text-sm">
                   Cuando usted clicar em "Verificar e guardar" no Meta, a confirmación aparece acá automaticamente.
                 </AlertDescription>
@@ -313,7 +313,7 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
             <div className="rounded-md border p-3 space-y-1.5 text-sm">
               <div className="flex justify-between"><span className="text-muted-foreground">Webhook</span>
                 {webhookOk ? <Badge className="bg-green-500/15 text-green-700 border-green-500/30">Verificado por la Meta</Badge>
-                : <Badge variant="secondary">Pendente</Badge>}
+                : <Badge variant="secondary">Pendiente</Badge>}
               </div>
               <div className="flex justify-between"><span className="text-muted-foreground">App ID</span><span className="font-mono text-xs">{form.app_id}</span></div>
               <div className="flex justify-between"><span className="text-muted-foreground">Page ID</span><span className="font-mono text-xs">{form.fb_page_id}</span></div>
@@ -333,7 +333,7 @@ export function InstagramWizard({ open, onClose, editing }: Props) {
 
         <DialogFooter className="gap-2">
           {step > 1 && step < 5 && (
-            <Button variant="outline" onClick={() => setStep(step - 1)}>Voltar</Button>
+            <Button variant="outline" onClick={() => setStep(step - 1)}>Volver</Button>
           )}
           {step === 1 && <Button onClick={() => setStep(2)}>Avanzar</Button>}
           {step === 2 && (

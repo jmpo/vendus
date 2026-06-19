@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MessageSquare, BarChart3, LayoutGrid, Sparkles } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { WebChatInbox } from './webchat/WebChatInbox';
 import { WebChatReportsTab } from './webchat/WebChatReportsTab';
 import { AttendancePanel } from './webchat/AttendancePanel';
@@ -8,9 +7,19 @@ import { RadarPanel } from './radar/RadarPanel';
 import { useMyPermissions } from '@/hooks/useUserPermissions';
 import { useAuth } from '@/hooks/useAuth';
 
-export function InboxManager() {
-  const [activeTab, setActiveTab] = useState('inbox');
-  const [pendingConversationId, setPendingConversationId] = useState<string | null>(null);
+type SubSection = 'chat' | 'panel' | 'radar' | 'reports';
+
+interface InboxManagerProps {
+  section?: SubSection;
+}
+
+const PENDING_KEY = 'inbox:pendingConversationId';
+
+export function InboxManager({ section = 'chat' }: InboxManagerProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [pendingConversationId, setPendingConversationId] = useState<string | null>(() => {
+    try { return sessionStorage.getItem(PENDING_KEY); } catch { return null; }
+  });
   const { data: perms } = useMyPermissions();
   const { isAdmin, isSuperAdmin } = useAuth();
 
@@ -21,65 +30,37 @@ export function InboxManager() {
     !!perms?.view_other_users_conversations ||
     !!perms?.view_other_queues_conversations;
 
+  // Limpa o pending quando o chat consome o id
+  useEffect(() => {
+    if (section === 'chat' && !pendingConversationId) {
+      try { sessionStorage.removeItem(PENDING_KEY); } catch {}
+    }
+  }, [section, pendingConversationId]);
+
   const handleOpenConversation = (id: string) => {
+    try { sessionStorage.setItem(PENDING_KEY, id); } catch {}
     setPendingConversationId(id);
-    setActiveTab('inbox');
+    const next = new URLSearchParams(searchParams);
+    next.set('tab', 'inbox-chat');
+    setSearchParams(next, { replace: true });
   };
 
-  return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold">Atendimentos</h1>
-        <p className="text-sm text-muted-foreground">Central de conversaciones do chat do site</p>
-      </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="inline-flex">
-          <TabsTrigger value="inbox" className="flex items-center gap-2">
-            <MessageSquare className="h-4 w-4" />
-            <span>Inbox</span>
-          </TabsTrigger>
-          {canSeePanel && (
-            <TabsTrigger value="panel" className="flex items-center gap-2">
-              <LayoutGrid className="h-4 w-4" />
-              <span>Painel</span>
-            </TabsTrigger>
-          )}
-          <TabsTrigger value="reports" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            <span>Reportes</span>
-          </TabsTrigger>
-          {adminLike && (
-            <TabsTrigger value="radar" className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4" />
-              <span>Radar IA</span>
-            </TabsTrigger>
-          )}
-        </TabsList>
-
-        <TabsContent value="inbox" className="space-y-4">
-          <WebChatInbox
-            pendingConversationId={pendingConversationId}
-            onConversationSelected={() => setPendingConversationId(null)}
-          />
-        </TabsContent>
-
-        {canSeePanel && (
-          <TabsContent value="panel" className="space-y-4">
-            <AttendancePanel onOpenConversation={handleOpenConversation} />
-          </TabsContent>
-        )}
-
-        <TabsContent value="reports" className="space-y-4">
-          <WebChatReportsTab />
-        </TabsContent>
-
-        {adminLike && (
-          <TabsContent value="radar" className="space-y-4">
-            <RadarPanel onOpenConversation={handleOpenConversation} />
-          </TabsContent>
-        )}
-      </Tabs>
-    </div>
-  );
+  switch (section) {
+    case 'chat':
+      return (
+        <WebChatInbox
+          pendingConversationId={pendingConversationId}
+          onConversationSelected={() => setPendingConversationId(null)}
+        />
+      );
+    case 'panel':
+      return canSeePanel ? <AttendancePanel onOpenConversation={handleOpenConversation} /> : null;
+    case 'radar':
+      return adminLike ? <RadarPanel onOpenConversation={handleOpenConversation} /> : null;
+    case 'reports':
+      return <WebChatReportsTab />;
+    default:
+      return null;
+  }
 }

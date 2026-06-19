@@ -33,8 +33,51 @@ serve(async (req) => {
     let processed = 0;
     let failed = 0;
 
+    // Helper: resolve simple variables based on conversation visitor name
+    const greet = () => {
+      const h = new Date().getHours();
+      if (h < 12) return "Bom dia";
+      if (h < 18) return "Boa tarde";
+      return "Boa noite";
+    };
+    const resolveVars = async (content: string, conversationId: string) => {
+      if (!content.includes("{")) return content;
+      let name = "";
+      try {
+        const { data: conv } = await supabase
+          .from("webchat_conversations")
+          .select("visitor_name")
+          .eq("id", conversationId)
+          .maybeSingle();
+        name = (conv?.visitor_name as string) || "";
+      } catch (_) {}
+      const first = (name || "").trim().split(/\s+/)[0] || "";
+      const now = new Date();
+      const data = now.toLocaleDateString("pt-BR");
+      const hora = now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+      return content
+        .replace(/\{primeiro_nome\}/gi, first)
+        .replace(/\{nome\}/gi, name)
+        .replace(/\{saudacao\}/gi, greet())
+        .replace(/\{data\}/gi, data)
+        .replace(/\{hora\}/gi, hora);
+    };
+
     for (const msg of pendingMessages) {
       try {
+        const rawContent = (msg.content as string | null) ?? "";
+        const resolvedContent = await resolveVars(rawContent, msg.conversation_id as string);
+        const hasMedia = !!(msg as any).media_url && !!(msg as any).media_kind;
+        const media = hasMedia
+          ? {
+              kind: (msg as any).media_kind,
+              url: (msg as any).media_url,
+              mime: (msg as any).media_mime ?? undefined,
+              filename: (msg as any).media_filename ?? undefined,
+              caption: resolvedContent || undefined,
+              durationMs: (msg as any).media_duration_ms ?? undefined,
+            }
+          : undefined;
         // Send message via webchat-inbox
         const inboxUrl = `${supabaseUrl}/functions/v1/webchat-inbox`;
         const sendResponse = await fetch(inboxUrl, {
@@ -46,11 +89,14 @@ serve(async (req) => {
           body: JSON.stringify({
             action: "send",
             conversationId: msg.conversation_id,
-            content: msg.content,
+            content: hasMedia ? (resolvedContent || "") : resolvedContent,
+            media,
             senderType: "agent",
-            senderName: "Mensaje Agendada",
+            senderName: "Mensagem Agendada",
+            actorUserId: (msg as any).created_by ?? null,
           }),
         });
+
 
         if (sendResponse.ok) {
           await supabase

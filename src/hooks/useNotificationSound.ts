@@ -1,55 +1,100 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+type Channel = 'message' | 'queue';
+
+const KEYS = {
+  master: 'notif_master_enabled',
+  message: 'notif_volume_message',
+  queue: 'notif_volume_queue',
+};
+
+function readNum(key: string, fallback: number): number {
+  if (typeof window === 'undefined') return fallback;
+  const raw = localStorage.getItem(key);
+  if (raw == null) return fallback;
+  const n = Number(raw);
+  if (Number.isNaN(n)) return fallback;
+  return Math.min(1, Math.max(0, n));
+}
+
+function readBool(key: string, fallback: boolean): boolean {
+  if (typeof window === 'undefined') return fallback;
+  const raw = localStorage.getItem(key);
+  if (raw == null) return fallback;
+  return raw !== 'false';
+}
 
 export function useNotificationSound() {
-  const [isEnabled, setIsEnabled] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    return localStorage.getItem('notification_sound_enabled') !== 'false';
-  });
+  const [masterEnabled, setMasterEnabled] = useState(() => readBool(KEYS.master, true));
+  const [messageVolume, setMessageVolume] = useState(() => readNum(KEYS.message, 0.8));
+  const [queueVolume, setQueueVolume] = useState(() => readNum(KEYS.queue, 1));
 
-  // Persist preference
-  useEffect(() => {
-    localStorage.setItem('notification_sound_enabled', isEnabled.toString());
-  }, [isEnabled]);
+  useEffect(() => { localStorage.setItem(KEYS.master, String(masterEnabled)); }, [masterEnabled]);
+  useEffect(() => { localStorage.setItem(KEYS.message, String(messageVolume)); }, [messageVolume]);
+  useEffect(() => { localStorage.setItem(KEYS.queue, String(queueVolume)); }, [queueVolume]);
 
-  // Generate notification sound using Web Audio API
-  const playNotification = useCallback(() => {
-    if (!isEnabled) return;
+  const play = useCallback((channel: Channel) => {
+    if (!masterEnabled) return;
+    const vol = channel === 'message' ? messageVolume : queueVolume;
+    if (vol <= 0) return;
 
     try {
-      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-      if (!AudioContext) return;
+      const Ctx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
 
-      const audioContext = new AudioContext();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+      const t0 = ctx.currentTime;
 
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-
-      // Pleasant notification sound - two-tone chime
-      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-      oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
-      oscillator.frequency.setValueAtTime(1200, audioContext.currentTime + 0.15);
-
-      // Fade out
-      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.35);
-
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.35);
-
-      // Clean up after sound finishes
-      setTimeout(() => {
-        audioContext.close();
-      }, 500);
+      if (channel === 'message') {
+        // Bipe curto de 2 tons (sutil)
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, t0);
+        osc.frequency.setValueAtTime(1175, t0 + 0.09);
+        gain.gain.setValueAtTime(0.0001, t0);
+        gain.gain.exponentialRampToValueAtTime(0.35 * vol, t0 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.28);
+        osc.start(t0);
+        osc.stop(t0 + 0.3);
+        setTimeout(() => ctx.close(), 450);
+      } else {
+        // Sino de 3 tons ascendentes (mais marcante — chamada da fila)
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(660, t0);
+        osc.frequency.setValueAtTime(880, t0 + 0.18);
+        osc.frequency.setValueAtTime(1318, t0 + 0.36);
+        gain.gain.setValueAtTime(0.0001, t0);
+        gain.gain.exponentialRampToValueAtTime(0.45 * vol, t0 + 0.03);
+        gain.gain.setValueAtTime(0.45 * vol, t0 + 0.5);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.85);
+        osc.start(t0);
+        osc.stop(t0 + 0.9);
+        setTimeout(() => ctx.close(), 1100);
+      }
     } catch (e) {
       console.warn('Audio playback not supported:', e);
     }
-  }, [isEnabled]);
+  }, [masterEnabled, messageVolume, queueVolume]);
 
-  const toggleSound = useCallback(() => {
-    setIsEnabled(prev => !prev);
-  }, []);
+  const playMessage = useCallback(() => play('message'), [play]);
+  const playQueue = useCallback(() => play('queue'), [play]);
 
-  return { playNotification, isEnabled, setIsEnabled, toggleSound };
+  const anySoundOn = masterEnabled && (messageVolume > 0 || queueVolume > 0);
+
+  return {
+    masterEnabled,
+    setMasterEnabled,
+    messageVolume,
+    setMessageVolume,
+    queueVolume,
+    setQueueVolume,
+    playMessage,
+    playQueue,
+    anySoundOn,
+  };
 }
+
+export type NotificationSoundControls = ReturnType<typeof useNotificationSound>;

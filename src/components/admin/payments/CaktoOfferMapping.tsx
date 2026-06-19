@@ -233,7 +233,7 @@ function OfferTable({
             ) : o.product_id ? (
               <Badge variant="default" className="text-[10px]">OK</Badge>
             ) : (
-              <Badge variant="secondary" className="text-[10px]">Pendente</Badge>
+              <Badge variant="secondary" className="text-[10px]">Pendiente</Badge>
             )}
           </div>
         </div>

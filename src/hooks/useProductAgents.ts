@@ -65,28 +65,74 @@ export function useProductAgent(agentId: string) {
   });
 }
 
-// Fields that belong to auto_notification_settings, NOT to product_agents.
-// They must be stripped before insert/update on product_agents to avoid
-// "column does not exist" errors. They are persisted separately via
-// useSaveAutoNotificationSettings inside AdminExecutivePanel.
-const NON_AGENT_FIELDS_PREFIXES = ['admin_', 'daily_summary', 'weekly_', 'realtime_alerts', 'alert_'];
-const NON_AGENT_FIELDS_EXACT = new Set([
-  'monitored_product_ids',
-  'summary_kpis',
-  // Campos relacionais vindos de selects con join (ex.: all-agents -> product:products)
-  // no existem na tabela product_agents e precisam ser ignorados no save.
-  'product',
+// Whitelist of real columns in product_agents (source of truth = DB).
+// Any field outside this set is dropped before insert/update to avoid
+// "column does not exist" errors when extra UI state leaks into formData.
+const PRODUCT_AGENTS_COLUMNS = new Set<string>([
+  'id', 'organization_id', 'product_id', 'created_by', 'created_at', 'updated_at',
+  'name', 'description', 'avatar_url', 'agent_type', 'primary_objective',
+  'can_do', 'cannot_do', 'handoff_triggers', 'end_conversation_triggers',
+  'tone_style', 'message_style', 'always_end_with_question', 'additional_prompt',
+  'required_phrases', 'prohibited_phrases',
+  'auto_tag_leads', 'default_tags',
+  'can_update_pipeline', 'can_create_tasks', 'can_schedule_meetings',
+  'can_apply_tags', 'can_update_lead', 'can_send_emails', 'can_send_materials',
+  'can_trigger_flows', 'can_transfer', 'can_notify', 'can_add_notes',
+  'can_start_cadence', 'can_qualify',
+  'tool_configs',
+  'active_in_funnels', 'active_in_chat', 'active_in_widget', 'active_in_inbox',
+  'active_in_copilot', 'active_in_whatsapp', 'active_in_instagram', 'active_in_facebook',
+  'is_active', 'is_default',
+  'activation_keywords', 'activation_phrases', 'activation_priority', 'activation_scope',
+  'takeover_on_match', 'evolution_instance_id', 'humanization',
+  'allowed_event_type_ids', 'default_schedule_user_id',
+  'booking_notification_user_ids', 'booking_notify_org_admins',
+  'enable_audio_transcription', 'enable_image_vision',
+  'handoff_delay_seconds', 'handoff_include_summary',
+  'handoff_incoming_message', 'handoff_outgoing_message',
+  'message_delay_seconds',
+  'quick_menu_intro', 'quick_menu_invalid_message', 'quick_menu_mode', 'quick_menu_options',
+  'welcome_enabled', 'welcome_message',
+  // Follow-up automático por agente
+  'followup_enabled', 'followup_max_attempts', 'followup_intervals_minutes',
+  'followup_tone', 'followup_extra_instructions', 'followup_respect_business_hours',
+  'followup_stop_on_human', 'followup_stop_on_booking', 'followup_channels',
+  'followup_attempt_hints',
 ]);
 
-function stripNonAgentFields<T extends Record<string, unknown>>(payload: T): Partial<T> {
+function pickAgentFields<T extends Record<string, unknown>>(payload: T): Partial<T> {
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(payload)) {
-    if (NON_AGENT_FIELDS_EXACT.has(k)) continue;
-    if (NON_AGENT_FIELDS_PREFIXES.some((p) => k.startsWith(p))) continue;
-    out[k] = v;
+    if (PRODUCT_AGENTS_COLUMNS.has(k)) out[k] = v;
   }
   return out as Partial<T>;
 }
+
+// Back-compat alias (older code references this name)
+const stripNonAgentFields = pickAgentFields;
+
+/**
+ * Sincroniza a tabela product_agent_connections com a lista vinda do form.
+ * Faz delete-all + insert para simplicidade (lista pequena).
+ */
+async function syncAgentConnections(
+  agentId: string,
+  organizationId: string,
+  connections?: Array<{ type: 'evolution' | 'meta_whatsapp' | 'instagram'; id: string }>
+) {
+  if (!connections) return; // undefined = não mexer
+  await supabase.from('product_agent_connections').delete().eq('agent_id', agentId);
+  if (connections.length === 0) return;
+  const rows = connections.map((c) => ({
+    agent_id: agentId,
+    connection_type: c.type,
+    connection_id: c.id,
+    organization_id: organizationId,
+  }));
+  const { error } = await supabase.from('product_agent_connections').insert(rows);
+  if (error) console.error('[syncAgentConnections] insert error', error);
+}
+
 
 export function useCreateAgent() {
   const queryClient = useQueryClient();
@@ -171,17 +217,25 @@ export function useCreateAgent() {
         .single();
 
       if (error) throw error;
+      // Sync multi-channel dedicated connections (transient field)
+      await syncAgentConnections(
+        data.id,
+        data.organization_id,
+        (agentRaw as any).dedicated_connections
+      );
       return data as ProductAgent;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['product-agents', data.product_id] });
       queryClient.invalidateQueries({ queryKey: ['all-agents'] });
-      toast.success('Agente creado con éxito!');
+      queryClient.invalidateQueries({ queryKey: ['agent-connections', data.id] });
+      toast.success('Agente criado com sucesso!');
     },
-    onError: (error) => {
-      console.error('Error creating agent:', error);
-      toast.error('Error al crear agente');
+    onError: (error: any) => {
+      console.error('Error creating agent:', error?.message, error?.code, error?.details, error?.hint, error);
+      toast.error(`Erro ao criar agente: ${error?.message || 'desconhecido'}`);
     },
+
   });
 }
 
@@ -199,18 +253,25 @@ export function useUpdateAgent() {
         .single();
 
       if (error) throw error;
+      await syncAgentConnections(
+        data.id,
+        data.organization_id,
+        (updatesRaw as any).dedicated_connections
+      );
       return data as ProductAgent;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['product-agents', data.product_id] });
       queryClient.invalidateQueries({ queryKey: ['product-agent', data.id] });
       queryClient.invalidateQueries({ queryKey: ['all-agents'] });
-      toast.success('Agente actualizado con éxito!');
+      queryClient.invalidateQueries({ queryKey: ['agent-connections', data.id] });
+      toast.success('Agente atualizado com sucesso!');
     },
-    onError: (error) => {
-      console.error('Error updating agent:', error);
-      toast.error('Error al actualizar agente');
+    onError: (error: any) => {
+      console.error('Error updating agent:', error?.message, error?.code, error?.details, error?.hint, error);
+      toast.error(`Erro ao atualizar agente: ${error?.message || 'desconhecido'}`);
     },
+
   });
 }
 
@@ -230,11 +291,11 @@ export function useDeleteAgent() {
     onSuccess: ({ productId }) => {
       queryClient.invalidateQueries({ queryKey: ['product-agents', productId] });
       queryClient.invalidateQueries({ queryKey: ['all-agents'] });
-      toast.success('Agente eliminado con éxito!');
+      toast.success('Agente excluído com sucesso!');
     },
     onError: (error) => {
       console.error('Error deleting agent:', error);
-      toast.error('Error al eliminar agente');
+      toast.error('Erro ao excluir agente');
     },
   });
 }
@@ -263,11 +324,11 @@ export function useSetDefaultAgent() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['product-agents', data.product_id] });
-      toast.success('¡Agente establecido como predeterminado!');
+      toast.success('Agente definido como padrão!');
     },
     onError: (error) => {
       console.error('Error setting default agent:', error);
-      toast.error('Error al definir agente predeterminado');
+      toast.error('Erro ao definir agente padrão');
     },
   });
 }
@@ -298,7 +359,30 @@ export function useToggleAgentStatus() {
     },
     onError: (error) => {
       console.error('Error toggling agent status:', error);
-      toast.error('Error al cambiar status del agente');
+      toast.error('Erro ao alterar status do agente');
     },
+  });
+}
+
+/**
+ * Carrega as conexões dedicadas (multi-canal) de um agente.
+ * Vazio = agente atende em qualquer conexão.
+ */
+export function useAgentConnections(agentId?: string | null) {
+  return useQuery({
+    queryKey: ['agent-connections', agentId],
+    queryFn: async () => {
+      if (!agentId) return [] as Array<{ type: 'evolution' | 'meta_whatsapp' | 'instagram'; id: string }>;
+      const { data, error } = await supabase
+        .from('product_agent_connections')
+        .select('connection_type, connection_id')
+        .eq('agent_id', agentId);
+      if (error) throw error;
+      return (data || []).map((r: any) => ({
+        type: r.connection_type as 'evolution' | 'meta_whatsapp' | 'instagram',
+        id: r.connection_id as string,
+      }));
+    },
+    enabled: !!agentId,
   });
 }

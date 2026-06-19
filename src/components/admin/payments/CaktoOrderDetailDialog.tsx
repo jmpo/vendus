@@ -24,8 +24,8 @@ interface Props {
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
   paid: { label: 'Pago', className: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
   refunded: { label: 'Reembolsado', className: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
-  pending: { label: 'Pendente', className: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
-  waiting_payment: { label: 'Aguardando', className: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
+  pending: { label: 'Pendiente', className: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
+  waiting_payment: { label: 'Esperando', className: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
   chargeback: { label: 'Chargeback', className: 'bg-destructive/10 text-destructive border-destructive/20' },
   cancelled: { label: 'Cancelado', className: 'bg-muted text-muted-foreground border-border' },
 };

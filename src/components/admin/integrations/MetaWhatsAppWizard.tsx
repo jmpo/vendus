@@ -382,7 +382,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
                   </Alert>
                 ) : (
                   <p className="text-xs text-muted-foreground">
-                    Aguardando a Meta validar o webhook… clique em "Ya configurei o webhook" para continuar
+                    Esperando a Meta validar o webhook… clique em "Ya configurei o webhook" para continuar
                     mismo así.
                   </p>
                 )}
@@ -535,7 +535,7 @@ export function MetaWhatsAppWizard({ open, onClose, editing }: Props) {
         <DialogFooter className="gap-2">
           {step > 1 && step < 5 && (!editing || editing.status === 'draft') && (
             <Button variant="outline" onClick={() => setStep(step - 1)}>
-              Voltar
+              Volver
             </Button>
           )}
 

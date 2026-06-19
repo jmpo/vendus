@@ -58,6 +58,10 @@ interface ChatAreaProps {
   visitorPhone?: string | null;
   visitorAvatarUrl?: string | null;
   channel: string;
+  /** Identificadores opcionais para distinguir provedor (Evolution / Meta / Instagram). */
+  metaConnectionId?: string | null;
+  instagramConnectionId?: string | null;
+  evolutionInstanceId?: string | null;
   status: string;
   messages: Message[];
   isLoading?: boolean;
@@ -65,26 +69,26 @@ interface ChatAreaProps {
   isTyping?: boolean;
   productName?: string;
   currentUserId?: string;
-  /** Cuando true, exibe a barra "Aceptar Atención" no rodapé em vez do composer */
+  /** Quando true, exibe a barra "Aceitar Atención" no rodapé em vez do composer */
   needsAccept?: boolean;
-  /** Callback acionado cuando o agente clica em "Aceptar Atención" */
+  /** Callback acionado quando o agente clica em "Aceitar Atención" */
   onAcceptTicket?: (squadId?: string) => Promise<void> | void;
   isAccepting?: boolean;
-  /** Modo espectador: admin vendo conversación de otro agente. Esconde composer e mostra banner. */
+  /** Modo espectador: admin vendo conversa de outro agente. Esconde composer e mostra banner. */
   viewerMode?: boolean;
-  /** Nombre del agente que está atendendo atualmente — exibido no banner de espectador */
+  /** Nome do agente que está atendendo atualmente — exibido no banner de espectador */
   attendantName?: string | null;
-  /** Callback acionado cuando admin clica em "Assumir conversación" */
+  /** Callback acionado quando admin clica em "Assumir conversa" */
   onTakeover?: () => void;
-  /** Identificador corto exibido no header (ex.: #6145) */
+  /** Identificador curto exibido no header (ex.: #6145) */
   ticketCode?: string;
-  /** Nombre do sector atribuído — exibido no subtítulo do header */
+  /** Nome do setor atribuído — exibido no subtítulo do header */
   sectorName?: string;
-  /** Cor do sector — usada como acento no header */
+  /** Cor do setor — usada como acento no header */
   sectorColor?: string;
-  /** Nombre del agente IA actual atendendo a conversación (ex.: "Ana") */
+  /** Nome do agente IA atual atendendo a conversa (ex.: "Ana") */
   currentAgentName?: string | null;
-  /** ID del lead vinculado — usado para cargar etiquetas del lead no header */
+  /** ID do lead vinculado — usado para carregar etiquetas do lead no header */
   leadId?: string | null;
   onSendMessage: (content: string, replyToMessageId?: string, media?: import('./MediaAttachment').MediaPayload) => void;
   onEditMessage?: (messageId: string, newContent: string) => void;
@@ -111,13 +115,13 @@ interface ChatAreaProps {
   onSendCadence?: () => void;
   onAnalyze?: () => void;
   onScheduleMessage?: () => void;
-  /** Cria um evento de calendario associado à conversación/lead. */
+  /** Cria um evento de calendário associado à conversa/lead. */
   onCreateEvent?: () => void;
-  /** Cria uma oportunidad (deal). Disponible solo con lead vinculado. */
+  /** Cria uma oportunidade (deal). Disponível apenas com lead vinculado. */
   onCreateDeal?: () => void;
-  /** Abre os "Dados do Contacto" (no mobile, abre o drawer). */
+  /** Abre os "Dados do Contato" (no mobile, abre o drawer). */
   onViewLead?: () => void;
-  /** Move o lead para um novo etapa do embudo (popover rápido). */
+  /** Move o lead para um novo estágio do funil (popover rápido). */
   onMoveStageQuick?: (stageId: string) => void;
   pipelineStages?: { id: string; name: string; color: string | null }[];
   currentStageId?: string | null;
@@ -125,9 +129,9 @@ interface ChatAreaProps {
   onTyping?: (isTyping: boolean) => void;
   /** Whether the visitor is currently connected/online on the channel. */
   peerOnline?: boolean;
-  /** Abre o seletor de catálogo (envia producto rico no chat). */
+  /** Abre o seletor de catálogo (envia produto rico no chat). */
   onPickCatalog?: () => void;
-  /** Abre o dialog de generación de link de pago. */
+  /** Abre o dialog de geração de link de pagamento. */
   onSendPaymentLink?: () => void;
 }
 
@@ -137,6 +141,9 @@ export function ChatArea({
   visitorPhone,
   visitorAvatarUrl,
   channel,
+  metaConnectionId,
+  instagramConnectionId,
+  evolutionInstanceId,
   status,
   messages,
   isLoading,
@@ -199,17 +206,17 @@ export function ChatArea({
   const [replyToMessage, setReplyToMessage] = useState<{ id: string; content: string; senderType: string } | null>(null);
   const [forwardMessageId, setForwardMessageId] = useState<string | null>(null);
 
-  // Reacciones por emoji (realtime)
+  // Reações por emoji (realtime)
   const { summarize: summarizeReactions, react: reactToMessage } = useMessageReactions(conversationId);
 
-  // Etiquetas del lead (carregadas só cuando há lead vinculado)
+  // Etiquetas do lead (carregadas só quando há lead vinculado)
   const { data: leadTagAssignments = [] } = useLeadTagsForLead(leadId || undefined);
 
   // Group messages by date
   const groupedMessages = useMemo(() => {
-    // Dedup visual: cuando a misma mensaje outbound aparece em duplicidade
-    // (ex.: burbuja "Agente" + burbuja "Agente IA", o eco "via dispositivo"),
-    // mantém solo UMA burbuja — a de maior prioridade visual.
+    // Dedup visual: quando a mesma mensagem outbound aparece em duplicidade
+    // (ex.: bolha "Agente" + bolha "Agente IA", ou eco "via aparelho"),
+    // mantém apenas UMA bolha — a de maior prioridade visual.
     const WINDOW_MS = 5 * 60 * 1000;
     const normalize = (s: string | null | undefined) =>
       (s || '').trim().replace(/\s+/g, ' ').toLowerCase();
@@ -218,12 +225,12 @@ export function ChatArea({
     const isOutbound = (m: any) =>
       m?.direction === 'outbound' || m?.sender_type === 'agent' || m?.sender_type === 'bot';
 
-    // Prioridade: 1) agent (verde) 2) plataforma (no-device) 3) device 4) bot/IA
+    // Prioridade: 1) agent (verde) 2) plataforma (não-device) 3) device 4) bot/IA
     const priority = (m: any): number => {
       if (m?.sender_type === 'agent' && !isFromDevice(m)) return 4;
       if (m?.sender_type === 'agent' && isFromDevice(m)) return 2;
       if (m?.sender_type === 'bot') return 1;
-      // outbound desconocido — trata como plataforma
+      // outbound desconhecido — trata como plataforma
       return 3;
     };
 
@@ -244,7 +251,7 @@ export function ChatArea({
         // duplicata — esconde a de menor prioridade
         const loser = priority(a) >= priority(b) ? b : a;
         hidden.add(loser.id);
-        if (loser.id === a.id) break; // a fue escondido, segue p/ siguiente i
+        if (loser.id === a.id) break; // a foi escondido, segue p/ próximo i
       }
     }
 
@@ -266,7 +273,7 @@ export function ChatArea({
     return groups;
   }, [messages]);
 
-  // Auto-scroll suave: dispara só cuando muda o nº de mensajes o estado de tipeo
+  // Auto-scroll suave: dispara só quando muda o nº de mensagens ou estado de digitação
   useEffect(() => {
     if (scrollRef.current) {
       const scrollElement = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
@@ -276,11 +283,11 @@ export function ChatArea({
     }
   }, [messages.length, isTyping]);
 
-  // Helper: formata o label do separador de día (Hoy, Ayer, día da semana, o data completa)
+  // Helper: formata o label do separador de dia (Hoy, Ontem, dia da semana, ou data completa)
   const formatDayLabel = (dateStr: string) => {
     const d = new Date(dateStr);
     if (isToday(d)) return 'Hoy';
-    if (isYesterday(d)) return 'Ayer';
+    if (isYesterday(d)) return 'Ontem';
     const diff = differenceInDays(new Date(), d);
     if (diff < 7) return format(d, 'EEEE', { locale: ptBR });
     return format(d, "d 'de' MMMM", { locale: ptBR });
@@ -335,10 +342,10 @@ export function ChatArea({
 
   const getStatusText = () => {
     switch (status) {
-      case 'active': return 'Conversación activa';
-      case 'waiting': return 'Esperando atención';
-      case 'bot_active': return 'Atendiendo con IA';
-      case 'closed': return 'Conversación finalizada';
+      case 'active': return 'Conversa ativa';
+      case 'waiting': return 'Esperando atendimento';
+      case 'bot_active': return 'Atención por IA';
+      case 'closed': return 'Conversa encerrada';
       default: return status;
     }
   };
@@ -353,24 +360,29 @@ export function ChatArea({
     }
   };
 
-  // Acento do sector no header (pequena barra colorida + chip do sector)
+  // Acento do setor no header (pequena barra colorida + chip do setor)
   const headerAccent = sectorColor || 'hsl(var(--primary))';
 
-  // Status dinâmico do header mobile (Online / Digitando / Última interacción)
+  // Status dinâmico do header mobile (Online / Digitando / Última interação)
   const lastMessageAt = messages.length > 0 ? messages[messages.length - 1].created_at : null;
   const mobileStatusLine = isTyping
-    ? 'Escribiendo…'
+    ? 'Digitando…'
     : peerOnline
-    ? 'En línea'
+    ? 'Online'
     : lastMessageAt
-    ? `Última interacción: ${format(new Date(lastMessageAt), "HH:mm")}`
+    ? `Última interação: ${format(new Date(lastMessageAt), "HH:mm")}`
     : getStatusText();
 
   return (
     <div className="w-full h-full min-w-0 flex flex-col bg-background overflow-hidden">
       {/* ─────────── Header MOBILE (compacto) ─────────── */}
       {isMobile && (
-        <div className="h-14 px-2 border-b border-border flex items-center gap-2 bg-background min-w-0">
+        <div
+          className="flex-shrink-0 sticky top-0 z-30 bg-background border-b border-border min-w-0"
+          style={{ paddingTop: 'env(safe-area-inset-top)' }}
+          data-no-pull-to-refresh
+        >
+        <div className="h-14 px-2 flex items-center gap-2 min-w-0">
           {showBackButton && (
             <Button variant="ghost" size="icon" className="h-9 w-9 -ml-1 flex-shrink-0" onClick={onBack}>
               <ChevronLeft className="h-5 w-5" />
@@ -414,18 +426,18 @@ export function ChatArea({
               </Button>
             )}
             {status !== 'closed' && onTransfer && (
-              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onTransfer} aria-label="Asignar responsable">
+              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onTransfer} aria-label="Atribuir responsável">
                 <UserCircle className="h-[18px] w-[18px]" />
               </Button>
             )}
             {status !== 'closed' && onClose && (
-              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onClose} aria-label="Archivar / Finalizar">
+              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={onClose} aria-label="Arquivar / Encerrar">
                 <Archive className="h-[18px] w-[18px]" />
               </Button>
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Más">
+                <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Mais">
                   <MoreVertical className="h-[18px] w-[18px]" />
                 </Button>
               </DropdownMenuTrigger>
@@ -433,19 +445,19 @@ export function ChatArea({
                 {(status === 'bot_active' || status === 'waiting') && onResume && (
                   <DropdownMenuItem onClick={onResume} disabled={isResuming}>
                     <Play className="h-4 w-4 mr-2" />
-                    Retomar atención
+                    Retomar atendimento
                   </DropdownMenuItem>
                 )}
                 {status === 'human_active' && onActivateBot && (
                   <DropdownMenuItem onClick={onActivateBot} disabled={isActivatingBot}>
                     <Bot className="h-4 w-4 mr-2" />
-                    Activar IA
+                    Ativar IA
                   </DropdownMenuItem>
                 )}
                 {onReturnToQueue && status !== 'closed' && (
                   <DropdownMenuItem onClick={onReturnToQueue} disabled={isReturning}>
                     <Undo2 className="h-4 w-4 mr-2" />
-                    Devolver a la fila
+                    Devolver à fila
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem>
@@ -460,16 +472,17 @@ export function ChatArea({
                 {status === 'closed' && onReopen && (
                   <DropdownMenuItem onClick={onReopen} disabled={isReopening}>
                     <RotateCcw className="h-4 w-4 mr-2" />
-                    Reabrir conversación
+                    Reabrir conversa
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
+        </div>
       )}
 
-      {/* ─────────── Header DESKTOP (mantém o layout antigo, más información) ─────────── */}
+      {/* ─────────── Header DESKTOP (mantém o layout antigo, mais informações) ─────────── */}
       {!isMobile && (
       <div
         className="h-16 min-w-0 flex-shrink-0 px-3 sm:px-4 border-b border-border flex items-center justify-between bg-background relative gap-2 overflow-hidden"
@@ -503,12 +516,20 @@ export function ChatArea({
                 {visitorName || 'Visitante'}
               </span>
               {peerOnline && (
-                <span className="relative flex h-2 w-2 flex-shrink-0" title="Online ahora">
+                <span className="relative flex h-2 w-2 flex-shrink-0" title="Online agora">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-60" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
                 </span>
               )}
-              <ChannelBadge channel={channel} size="sm" />
+              <ChannelBadge
+                conversation={{
+                  channel,
+                  meta_connection_id: metaConnectionId,
+                  instagram_connection_id: instagramConnectionId,
+                  evolution_instance_id: evolutionInstanceId,
+                }}
+                size="sm"
+              />
             </div>
             <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground min-w-0 truncate">
               {ticketCode && (
@@ -525,7 +546,7 @@ export function ChatArea({
               )}
             </div>
 
-            {/* Línea de Tags: sector + etiquetas del lead */}
+            {/* Linha de Tags: setor + etiquetas do lead */}
             {(sectorName || currentAgentName || leadTagAssignments.length > 0) && (
               <div className="flex items-center gap-1 mt-1 flex-wrap">
                 {sectorName && (
@@ -591,7 +612,7 @@ export function ChatArea({
                   Reabrir
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Reabrir conversación</TooltipContent>
+              <TooltipContent>Reabrir conversa</TooltipContent>
             </Tooltip>
           )}
 
@@ -603,7 +624,7 @@ export function ChatArea({
                   Retomar
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Retomar atención humano</TooltipContent>
+              <TooltipContent>Retomar atendimento humano</TooltipContent>
             </Tooltip>
           )}
 
@@ -636,7 +657,7 @@ export function ChatArea({
                       <Undo2 className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Devolver a la fila</TooltipContent>
+                  <TooltipContent>Devolver à fila</TooltipContent>
                 </Tooltip>
               )}
             </>
@@ -648,7 +669,7 @@ export function ChatArea({
                 <UserCircle className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Dados do Contacto</TooltipContent>
+            <TooltipContent>Dados do Contato</TooltipContent>
           </Tooltip>
 
           <DropdownMenu>
@@ -670,13 +691,13 @@ export function ChatArea({
               {status !== 'closed' && onClose && (
                 <DropdownMenuItem onClick={onClose} className="text-destructive">
                   <X className="h-4 w-4 mr-2" />
-                  Finalizar conversación
+                  Encerrar conversa
                 </DropdownMenuItem>
               )}
               {status === 'closed' && onReopen && (
                 <DropdownMenuItem onClick={onReopen}>
                   <RotateCcw className="h-4 w-4 mr-2" />
-                  Reabrir conversación
+                  Reabrir conversa
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
@@ -709,8 +730,8 @@ export function ChatArea({
             </div>
           ) : messages.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              <p className="text-sm">Ninguna mensaje aún</p>
-              <p className="text-xs mt-1">Enviá uma mensaje para iniciar</p>
+              <p className="text-sm">Nenhuma mensagem ainda</p>
+              <p className="text-xs mt-1">Envie uma mensagem para iniciar</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -770,38 +791,32 @@ export function ChatArea({
         </div>
       </ScrollArea>
 
-      {/* Footer — Aceitar atención OU modo espectador OU composer OU encerrada */}
+      {/* Footer — Aceitar atendimento OU modo espectador OU composer OU encerrada */}
       {needsAccept && onAcceptTicket ? (
         <AcceptTicketBar onAccept={onAcceptTicket} loading={!!isAccepting} />
       ) : viewerMode ? (
             <div className="border-t border-border bg-amber-50 dark:bg-amber-950/30 px-4 py-3 flex items-center justify-between gap-3 flex-shrink-0 min-w-0">
           <div className="text-sm">
             <span className="font-medium text-amber-900 dark:text-amber-200">
-              Estás visualizando esta atención{attendantName ? ` de ${attendantName}` : ''}.
+              Você está visualizando este atendimento{attendantName ? ` de ${attendantName}` : ''}.
             </span>
-            <p className="text-xs text-amber-700 dark:text-amber-300">Para responder, assuma a conversación.</p>
+            <p className="text-xs text-amber-700 dark:text-amber-300">Para responder, assuma a conversa.</p>
           </div>
           {onTakeover && (
             <Button size="sm" variant="default" onClick={onTakeover}>
-              Assumir conversación
+              Assumir conversa
             </Button>
           )}
         </div>
       ) : status !== 'closed' ? (
         <>
-          {/* QuickActionBar só no desktop — mobile ganha más área útil para mensajes */}
+          {/* QuickActionBar só no desktop — mobile ganha mais área útil para mensagens */}
           {!isMobile && (
             <QuickActionBar
-              onSuggestReply={onAiSuggest ? handleAiSuggest : undefined}
-              isSuggestingReply={isSuggestingReply}
               onScheduleFollowup={onScheduleFollowup}
-              onMarkHot={onMarkHot}
-              onSendFlow={onSendFlow}
               onSendCadence={onSendCadence}
-              onAnalyze={onAnalyze}
               onCreateEvent={onCreateEvent}
               onCreateDeal={onCreateDeal}
-              onViewLead={onViewLead}
               onMoveStageQuick={onMoveStageQuick}
               pipelineStages={pipelineStages}
               currentStageId={currentStageId}
@@ -842,7 +857,7 @@ export function ChatArea({
       ) : (
         <div className="p-3 border-t border-border bg-muted/30 flex-shrink-0">
           <div className="flex items-center justify-center gap-2">
-            <span className="text-xs text-muted-foreground">Conversación finalizada</span>
+            <span className="text-xs text-muted-foreground">Conversa encerrada</span>
             {onReopen && (
               <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={onReopen} disabled={isReopening}>
                 <RotateCcw className="h-3 w-3" />

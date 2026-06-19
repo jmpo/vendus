@@ -47,7 +47,7 @@ export function CampaignDetail({
     cancelled: 'Cancelada',
   };
   const countLabel: Record<string, string> = {
-    queued: 'Em fila',
+    queued: 'En fila',
     sending: 'Enviando',
     sent: 'Enviadas',
     responded: 'Respondidas',
@@ -56,7 +56,7 @@ export function CampaignDetail({
     cancelled: 'Canceladas',
   };
   const targetStatusLabel: Record<string, string> = {
-    queued: 'Em fila',
+    queued: 'En fila',
     sending: 'Enviando',
     sent: 'Enviado',
     responded: 'Respondeu',
@@ -68,7 +68,7 @@ export function CampaignDetail({
   return (
     <div className="p-4 md:p-6 space-y-4 max-w-5xl mx-auto">
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" onClick={onBack}><ArrowLeft className="h-4 w-4 mr-2" />Voltar</Button>
+        <Button variant="ghost" size="sm" onClick={onBack}><ArrowLeft className="h-4 w-4 mr-2" />Volver</Button>
         <h1 className="flex-1 font-semibold truncate">{campaign.name}</h1>
         <Badge>{statusLabel[campaign.status] ?? campaign.status}</Badge>
         {(campaign.status === 'active' || campaign.status === 'paused') && (

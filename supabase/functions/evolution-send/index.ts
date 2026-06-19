@@ -27,14 +27,34 @@ interface SendBody {
   payload: Record<string, any>;
 }
 
+// Timeout duro: si el servidor de Evolution Go no responde (p. ej. la sesión de
+// WhatsApp está caída/desconectada), el send se cuelga indefinidamente. Abortamos
+// a los 20s y devolvemos un error claro en vez de bloquear toda la cadena de envío.
+const EVO_TIMEOUT_MS = 20000;
+
 async function evoFetch(url: string, apikey: string, path: string, body: any) {
   const fullUrl = `${url}${path}`;
   console.log(`[evolution-send] POST ${path} body=${JSON.stringify(body).slice(0, 300)}`);
-  const res = await fetch(fullUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", apikey },
-    body: JSON.stringify(body),
-  });
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), EVO_TIMEOUT_MS);
+  let res: Response;
+  try {
+    res = await fetch(fullUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey },
+      body: JSON.stringify(body),
+      signal: ctrl.signal,
+    });
+  } catch (e) {
+    clearTimeout(timer);
+    const aborted = (e as Error)?.name === "AbortError";
+    const msg = aborted
+      ? `Sin respuesta de WhatsApp tras ${EVO_TIMEOUT_MS / 1000}s — la conexión podría estar desconectada (reconectá el número).`
+      : `Fallo de red al contactar Evolution Go: ${String(e)}`;
+    console.error(`[evolution-send] ${msg} path=${path}`);
+    return { ok: false, status: aborted ? 504 : 502, body: { error: msg } };
+  }
+  clearTimeout(timer);
   const text = await res.text();
   let parsed: any;
   try {

@@ -31,7 +31,7 @@ const CHANNELS = [
 ];
 
 const STATUSES = [
-  { id: 'waiting_human', label: 'Aguardando' },
+  { id: 'waiting_human', label: 'Esperando' },
   { id: 'human_active', label: 'Em atención' },
   { id: 'bot_active', label: 'Con IA' },
 ];

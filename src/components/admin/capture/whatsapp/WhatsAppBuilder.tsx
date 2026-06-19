@@ -84,7 +84,7 @@ export function WhatsAppBuilder({ funnelId, onBack }: Props) {
     return (
       <div className="text-center py-12">
         <p className="text-muted-foreground">Flujo no encontrado</p>
-        <Button variant="outline" onClick={onBack} className="mt-4">Voltar</Button>
+        <Button variant="outline" onClick={onBack} className="mt-4">Volver</Button>
       </div>
     );
   }

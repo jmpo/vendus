@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, Bot, MessageSquare, Menu } from 'lucide-react';
+import { LayoutDashboard, Kanban, CalendarDays, MessageSquare, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useHaptics } from '@/hooks/useHaptics';
 import { motion } from 'framer-motion';
@@ -12,11 +12,11 @@ interface MobileBottomNavProps {
 }
 
 const navItems = [
-  { id: 'product-dashboard', label: 'Inicio', icon: LayoutDashboard },
-  { id: 'leads', label: 'Leads', icon: Users },
+  { id: 'product-dashboard', label: 'Home', icon: LayoutDashboard },
   { id: 'inbox', label: 'Conversaciones', icon: MessageSquare },
-  { id: 'ai', label: 'IA', icon: Bot },
-  { id: 'more', label: 'Más', icon: Menu },
+  { id: 'bookings', label: 'Agenda', icon: CalendarDays },
+  { id: 'leads', label: 'Pipeline', icon: Kanban },
+  { id: 'more', label: 'Mais', icon: Menu },
 ];
 
 export function MobileBottomNav({ activeTab, onTabChange, onMoreClick, hasProduct }: MobileBottomNavProps) {
@@ -37,7 +37,7 @@ export function MobileBottomNav({ activeTab, onTabChange, onMoreClick, hasProduc
       <div className="flex items-center justify-around h-16 px-2">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activeTab === item.id || (item.id === 'more' && ['calendar', 'tasks', 'cadence', 'playbook', 'objections', 'materials', 'financial'].includes(activeTab));
+          const isActive = activeTab === item.id || (item.id === 'more' && ['ai', 'tasks', 'cadence', 'playbook', 'objections', 'materials', 'financial', 'goals'].includes(activeTab));
           const isDisabled = !hasProduct && item.id !== 'more';
 
           return (

@@ -1,13 +1,18 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
+import { useMyPermissions } from '@/hooks/useUserPermissions';
 import { useWebChatConversations, useWebChatConversationCounts, useWebChatConversation, useSendAgentMessage, useCloseConversation, useReopenConversation, useReturnToQueue, useResumeConversation, useActivateBot, useEditMessage, useDeleteMessage, useStarMessage, useForwardMessage, useAssignConversation, type InboxBackendFilters } from '@/hooks/useWebChat';
 import { useEvolutionInstances } from '@/hooks/useEvolutionInstances';
+import { useMetaWAConnections } from '@/hooks/useMetaWhatsApp';
+import { useInstagramConnections } from '@/hooks/useInstagramConnections';
+import { resolveProvider } from '@/lib/conversationProvider';
 import { useAssignedProducts, useProducts } from '@/hooks/useProducts';
 import { useNotificationSound } from '@/hooks/useNotificationSound';
 import { supabase } from '@/integrations/supabase/client';
 import { ConversationList, Conversation } from './inbox/ConversationList';
 import { ChatArea, Message } from './inbox/ChatArea';
+
 import { LeadContextPanel } from './inbox/LeadContextPanel';
 import { TransferConversationModal } from './inbox/TransferConversationModal';
 import { InboxMetricsHeader } from './inbox/InboxMetricsHeader';
@@ -40,34 +45,56 @@ interface SellerInboxProps {
   productId?: string;
   pendingConversationId?: string | null;
   onConversationSelected?: () => void;
-  /** "admin" exibe TODAS as conversaciones da org e libera filtros por usuario/cerrar em massa */
+  /** "admin" exibe TODAS as conversas da org e libera filtros por usuário/encerrar em massa */
   mode?: 'seller' | 'admin';
+  /** Notifica o pai sempre que houver (ou deixar de haver) conversa selecionada — usado no mobile para tela cheia. */
+  onConversationOpenChange?: (open: boolean) => void;
 }
 
-export function SellerInbox({ productId, pendingConversationId, onConversationSelected, mode = 'seller' }: SellerInboxProps) {
+export function SellerInbox({ productId, pendingConversationId, onConversationSelected, mode = 'seller', onConversationOpenChange }: SellerInboxProps) {
   const isAdminMode = mode === 'admin';
   const { user, profile, roles } = useAuth();
   const isAdminRole = roles?.includes('admin') || roles?.includes('super_admin');
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
-  const { playNotification, isEnabled: soundEnabled, toggleSound } = useNotificationSound();
+  const soundControls = useNotificationSound();
+  const { playMessage, playQueue } = soundControls;
   const { data: evolutionInstances } = useEvolutionInstances();
+  const { data: metaConnections } = useMetaWAConnections();
+  const { data: instagramConnections } = useInstagramConnections();
 
   /**
-   * Resolve label da conexión DO BOT (no o teléfono del lead).
-   * - WhatsApp: instância Evolution vinculada à conversación, o a predeterminado da org.
-   * - Otros canais: nombre do canal.
+   * Resolve label da conexão DE ORIGEM (Evolution QR, Meta Cloud ou Instagram)
+   * usada na conversa. Nunca cai em fallback para "instância padrão" — se a
+   * conversa não tem conexão vinculada, mostramos apenas o nome do canal,
+   * evitando rótulos enganosos como mostrar Evolution numa conversa Meta.
    */
   const buildConnectionLabel = useCallback((conv: any): string | null => {
     if (!conv) return null;
-    const ch: string = conv.channel || '';
-    if (ch === 'whatsapp') {
-      const list = evolutionInstances || [];
-      const inst =
-        list.find((i: any) => i.id === conv.evolution_instance_id) ||
-        list.find((i: any) => i.is_default) ||
-        list[0];
+    const provider = resolveProvider(conv);
+
+    if (provider === 'whatsapp_meta') {
+      const conn = (metaConnections || []).find((c: any) => c.id === conv.meta_connection_id);
+      if (conn) {
+        const display = conn.display_name || 'WhatsApp Oficial';
+        const phone = conn.phone_number ? ` · +${conn.phone_number}` : '';
+        return `${display}${phone}`;
+      }
+      return 'WhatsApp Oficial';
+    }
+
+    if (provider === 'instagram') {
+      const conn = (instagramConnections || []).find((c: any) => c.id === conv.instagram_connection_id);
+      if (conn) {
+        const handle = conn.ig_username ? `@${conn.ig_username}` : (conn.display_name || 'Instagram');
+        return handle;
+      }
+      return 'Instagram';
+    }
+
+    if (provider === 'whatsapp_evolution') {
+      const inst = (evolutionInstances || []).find((i: any) => i.id === conv.evolution_instance_id);
       if (inst) {
         const display = (inst.metadata as any)?.display_name || inst.name;
         const phone = inst.phone_number ? ` · +${inst.phone_number}` : '';
@@ -75,17 +102,26 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       }
       return 'WhatsApp';
     }
+
+    if (provider === 'webchat') return 'Site';
+    const ch: string = conv.channel || '';
     if (!ch) return null;
     return ch.charAt(0).toUpperCase() + ch.slice(1);
-  }, [evolutionInstances]);
+  }, [evolutionInstances, metaConnections, instagramConnections]);
+
   
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
-  // Painel "Dados do Contacto": no mobile siempre começa cerrado (chat aparece primero);
-  // no desktop fica aberto por defecto. Mantemos sincronizado con o breakpoint.
+  // Painel "Dados do Contato": no mobile sempre começa fechado (chat aparece primeiro);
+  // no desktop fica aberto por padrão. Mantemos sincronizado com o breakpoint.
   const [showPanel, setShowPanel] = useState(false);
   useEffect(() => {
     setShowPanel(!isMobile);
   }, [isMobile]);
+
+  // Notifica o pai sobre abertura/fechamento da conversa (usado para tela cheia no mobile).
+  useEffect(() => {
+    onConversationOpenChange?.(!!selectedConversation);
+  }, [selectedConversation, onConversationOpenChange]);
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [acceptDialog, setAcceptDialog] = useState<{ open: boolean; isTakeover: boolean; previousAssigneeName?: string | null }>({
     open: false,
@@ -107,7 +143,10 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const [showPaymentLink, setShowPaymentLink] = useState(false);
   const [showFiltersDrawer, setShowFiltersDrawer] = useState(false);
   const [filters, setFilters] = useState<InboxFiltersState>(defaultInboxFilters);
-  const [activeTab, setActiveTab] = useState<'attending' | 'waiting' | 'resolved'>('attending');
+  const [activeTab, setActiveTab] = useState<'attending' | 'agents' | 'waiting' | 'resolved'>('attending');
+  const { data: myPermissions } = useMyPermissions();
+  const canSeeAgentsTab = roles?.includes('super_admin')
+    || !!myPermissions?.view_ai_agents_tab;
 
   const assignMutation = useAssignConversation();
 
@@ -120,14 +159,14 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     enabled: !!selectedConversation?.id,
   });
 
-  // Productos atribuídos ao vendedor — fonte para o seletor
+  // Produtos atribuídos ao vendedor — fonte para o seletor
   const { data: assignedProductsData } = useAssignedProducts(user?.id || '');
   const assignedProducts = useMemo(
     () => (assignedProductsData?.map((ap: any) => ap.products).filter(Boolean) || []),
     [assignedProductsData]
   );
 
-  // Filtro de producto: prioridade — localStorage > productId vindo da rota > null
+  // Filtro de produto: prioridade — localStorage > productId vindo da rota > null
   const [selectedProductFilter, setSelectedProductFilter] = useState<string | null>(() => {
     try {
       const stored = localStorage.getItem('inbox.selectedProductId');
@@ -136,15 +175,15 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     return productId ?? null;
   });
 
-  // Cuando o productId vindo do contexto muda, atualiza o filtro
+  // Quando o productId vindo do contexto muda, atualiza o filtro
   useEffect(() => {
     if (productId) {
       setSelectedProductFilter(productId);
     }
   }, [productId]);
 
-  // Auto-corrección: se o filtro persistido no bate con ninguno producto atribuído
-  // (e no estamos em admin), limpa para evitar lista vacía "fantasma".
+  // Auto-correção: se o filtro persistido não bate com nenhum produto atribuído
+  // (e não estamos em admin), limpa para evitar lista vazia "fantasma".
   useEffect(() => {
     if (isAdminMode) return;
     if (!selectedProductFilter) return;
@@ -155,28 +194,35 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     }
   }, [assignedProducts, selectedProductFilter, isAdminMode]);
 
-  // Persistir elegí
+  // Persistir escolha
   useEffect(() => {
     try {
       localStorage.setItem('inbox.selectedProductId', selectedProductFilter ?? 'null');
     } catch {}
   }, [selectedProductFilter]);
 
-  // Producto do header/rota NÃO filtra a inbox — afeta solo dashboards.
-  // A inbox só é filtrada por producto cuando o usuario elige explicitamente
+  // Produto do header/rota NÃO filtra a inbox — afeta apenas dashboards.
+  // A inbox só é filtrada por produto quando o usuário escolhe explicitamente
   // dentro do drawer "Filtros".
   const inboxFilters: InboxBackendFilters = useMemo(() => {
+    // Quando o toggle "Mostrar finalizados" está ativo no drawer, ele sobrescreve
+    // a aba — sempre lista conversas encerradas.
+    const effectiveTab = filters.showResolved ? 'resolved' : activeTab;
     return {
-      tab: activeTab,
+      tab: effectiveTab,
       product_ids: filters.selectedProductIds.length ? filters.selectedProductIds : undefined,
       sector_ids: filters.selectedSectorIds.length ? filters.selectedSectorIds : undefined,
       assigned_user_ids: isAdminMode && filters.selectedUserIds.length ? filters.selectedUserIds : undefined,
       tag_ids: filters.selectedTagIds.length ? filters.selectedTagIds : undefined,
+      channels: filters.selectedChannels.length ? filters.selectedChannels : undefined,
+      connections: filters.selectedConnections.length ? filters.selectedConnections : undefined,
+      agent_ids: (isAdminMode || canSeeAgentsTab) && filters.selectedAgentIds.length ? filters.selectedAgentIds : undefined,
       search: filters.search || undefined,
     };
-  }, [activeTab, filters, isAdminMode]);
+  }, [activeTab, filters, isAdminMode, canSeeAgentsTab]);
 
-  // Filtros para os contadores (sin `tab`, para totalizar todas las abas)
+
+  // Filtros para os contadores (sem `tab`, para totalizar todas as abas)
   const countsFilters = useMemo(() => {
     const { tab, ...rest } = inboxFilters;
     return rest;
@@ -190,8 +236,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     selectedConversation?.id || ''
   );
 
-  // Se a conversación selecionada retornar 404/403 (apagada, transferida, fora do escopo),
-  // limpa a selección e atualiza a lista em vez de deixar a tela em estado de error.
+  // Se a conversa selecionada retornar 404/403 (apagada, transferida, fora do escopo),
+  // limpa a seleção e atualiza a lista em vez de deixar a tela em estado de erro.
   useEffect(() => {
     const status = (conversationError as any)?.status;
     if (!status || (status !== 404 && status !== 403)) return;
@@ -203,8 +249,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     refetchConversations();
     if (status === 403) {
       toast({
-        title: 'Sin acceso a esta conversación',
-        description: 'Pertenece a otra organización o fue transferida.',
+        title: 'Sem acesso a esta conversa',
+        description: 'Ela pertence a outra organização ou foi transferida.',
         variant: 'destructive',
       });
     }
@@ -223,7 +269,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const starMessageMutation = useStarMessage();
   const forwardMessageMutation = useForwardMessage();
 
-  // Mapa global de productos da org (para resolver o nombre cuando vier só del lead)
+  // Mapa global de produtos da org (para resolver o nome quando vier só do lead)
   const { data: allProducts = [] } = useProducts();
   const productNameById = useMemo(() => {
     const m = new Map<string, string>();
@@ -235,7 +281,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const conversations: Conversation[] = useMemo(
     () =>
       (conversationsData || []).map((conv: any) => {
-        // Producto efetivo: override manual da conversación > producto del lead vinculado > producto do widget
+        // Produto efetivo: override manual da conversa > produto do lead vinculado > produto do widget
         const effectiveProductId =
           conv.product_id
           || conv.leads?.product_id
@@ -256,8 +302,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
           channel: conv.channel || 'webchat',
           status: conv.status,
           unread_count: conv.unread_count_agents || conv.unread_count || 0,
-          // Prefere o timestamp da última mensaje real (vinda do historial via RPC),
-          // caindo para last_message_at da conversación em conversaciones sin mensajes.
+          // Prefere o timestamp da última mensagem real (vinda do histórico via RPC),
+          // caindo para last_message_at da conversa em conversas sem mensagens.
           last_message_at:
             (conv as any).last_message_created_at
             || conv.last_message_at
@@ -277,18 +323,21 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
           current_agent_id: conv.current_agent_id || null,
           current_agent_name: conv.current_agent?.name || null,
           current_agent_avatar: conv.current_agent?.avatar_url || null,
+          evolution_instance_id: conv.evolution_instance_id || null,
+          meta_connection_id: conv.meta_connection_id || null,
+          instagram_connection_id: conv.instagram_connection_id || null,
         } as any;
       }),
     [conversationsData, productNameById],
   );
 
-  // Backend ya entrega filtrado/paginado/visibilidade — no refiltrar client-side.
+  // Backend já entrega filtrado/paginado/visibilidade — não refiltrar client-side.
   const filteredConversations = conversations;
 
   // Auto-select pending conversation from navigation.
-  // Se a conversación estiver na lista, seleciona direto. De lo contrario (ex: vinda do
-  // Radar IA, fora dos filtros actuales), busca o stub no banco e seleciona — o
-  // hook useWebChatConversation(id) carrega o restante dos detalles.
+  // Se a conversa estiver na lista, seleciona direto. Caso contrário (ex: vinda do
+  // Radar IA, fora dos filtros atuais), busca o stub no banco e seleciona — o
+  // hook useWebChatConversation(id) carrega o restante dos detalhes.
   const pendingHandledRef = useRef<string | null>(null);
   useEffect(() => {
     if (!pendingConversationId) return;
@@ -302,22 +351,22 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       return;
     }
 
-    // Fallback: fetch direto. Só roda se a lista ya carregou (evita race con a
-    // primera carga dónde a conversación estaria presente).
+    // Fallback: fetch direto. Só roda se a lista já carregou (evita race com a
+    // primeira carga onde a conversa estaria presente).
     if (loadingConversations) return;
 
     pendingHandledRef.current = pendingConversationId;
     (async () => {
       const { data, error } = await supabase
         .from('webchat_conversations')
-        .select('id, visitor_name, visitor_email, visitor_phone, visitor_avatar_url, channel, status, lead_id, product_id, sector_id, assigned_user_id, last_message_at, evolution_instance_id')
+        .select('id, visitor_name, visitor_email, visitor_phone, visitor_avatar_url, channel, status, lead_id, product_id, sector_id, assigned_user_id, last_message_at, evolution_instance_id, meta_connection_id, instagram_connection_id')
         .eq('id', pendingConversationId)
         .maybeSingle();
 
       if (error || !data) {
         toast({
-          title: 'Conversación no disponible',
-          description: 'No fue posible abrir esta conversación en este contexto.',
+          title: 'Conversa não disponível',
+          description: 'Não foi possível abrir esta conversa neste contexto.',
           variant: 'destructive',
         });
         onConversationSelected?.();
@@ -338,7 +387,10 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         product_id: data.product_id ?? null,
         sector_id: data.sector_id ?? null,
         assigned_user_id: data.assigned_user_id ?? null,
-      };
+        evolution_instance_id: (data as any).evolution_instance_id ?? null,
+        meta_connection_id: (data as any).meta_connection_id ?? null,
+        instagram_connection_id: (data as any).instagram_connection_id ?? null,
+      } as any;
       setSelectedConversation(stub);
       onConversationSelected?.();
     })();
@@ -399,7 +451,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     if (!linkedLead?.id) return;
     await supabase.from('leads').update({ current_stage_id: stageId }).eq('id', linkedLead.id);
     queryClient.invalidateQueries({ queryKey: ['linked-lead', selectedConversation?.lead_id] });
-    toast({ title: 'Etapa actualizado' });
+    toast({ title: 'Estágio atualizado' });
   }, [linkedLead?.id, selectedConversation?.lead_id, queryClient, toast]);
 
   // AI suggestion handler (defined after messages below)
@@ -445,7 +497,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     const lastMessages = messages.slice(-5).map(m => `${m.sender_type}: ${m.content}`).join('\n');
     const { data, error } = await supabase.functions.invoke('sales-copilot', {
       body: {
-        question: `Baseado na conversación abaixo, sugira uma respuesta profissional para o visitante. Sé direto e estratégico.\n\nConversa:\n${lastMessages}\n\nSugira a mejor respuesta para enviar ahora:`,
+        question: `Baseado na conversa abaixo, sugira uma resposta profissional para o visitante. Seja direto e estratégico.\n\nConversa:\n${lastMessages}\n\nSugira a melhor resposta para enviar agora:`,
         organizationId: profile.organization_id,
       },
     });
@@ -471,7 +523,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     } catch (error) {
       toast({
         title: 'Error al enviar',
-        description: 'No fue posible enviar a mensaje.',
+        description: 'No se pudo enviar el mensaje.',
         variant: 'destructive',
       });
     }
@@ -483,7 +535,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       await editMessageMutation.mutateAsync({ message_id: messageId, new_content: newContent });
       toast({ title: 'Mensaje editada' });
     } catch {
-      toast({ title: 'Error ao editar', variant: 'destructive' });
+      toast({ title: 'Erro ao editar', variant: 'destructive' });
     }
   };
 
@@ -492,7 +544,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       await deleteMessageMutation.mutateAsync({ message_id: messageId });
       toast({ title: 'Mensaje apagada' });
     } catch {
-      toast({ title: 'Error ao apagar', variant: 'destructive' });
+      toast({ title: 'Erro ao apagar', variant: 'destructive' });
     }
   };
 
@@ -500,7 +552,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     try {
       await starMessageMutation.mutateAsync({ message_id: messageId });
     } catch {
-      toast({ title: 'Error ao favoritar', variant: 'destructive' });
+      toast({ title: 'Erro ao favoritar', variant: 'destructive' });
     }
   };
 
@@ -509,7 +561,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       await forwardMessageMutation.mutateAsync({ message_id: messageId, target_conversation_id: targetConversationId });
       toast({ title: 'Mensaje encaminhada' });
     } catch {
-      toast({ title: 'Error ao derivar', variant: 'destructive' });
+      toast({ title: 'Erro ao encaminhar', variant: 'destructive' });
     }
   };
 
@@ -521,13 +573,13 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       await closeConversation.mutateAsync(selectedConversation.id);
       setSelectedConversation(null);
       toast({
-        title: 'Conversación encerrada',
-        description: 'A conversación fue encerrada con éxito.',
+        title: 'Conversa encerrada',
+        description: 'A conversa foi encerrada com sucesso.',
       });
     } catch (error) {
       toast({
-        title: 'Error',
-        description: 'No fue posible cerrar a conversación.',
+        title: 'Erro',
+        description: 'Não foi possível encerrar a conversa.',
         variant: 'destructive',
       });
     }
@@ -538,8 +590,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     if (!selectedConversation) return;
     try {
       await reopenConversation.mutateAsync(selectedConversation.id);
-      toast({ title: 'Conversación reaberta' });
-    } catch { toast({ title: 'Error', description: 'No fue posible reabrir.', variant: 'destructive' }); }
+      toast({ title: 'Conversa reaberta' });
+    } catch { toast({ title: 'Erro', description: 'Não foi possível reabrir.', variant: 'destructive' }); }
   };
 
   // Handle return to queue
@@ -549,7 +601,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       await returnToQueueMutation.mutateAsync(selectedConversation.id);
       setSelectedConversation(null);
       toast({ title: 'Devolvida à fila' });
-    } catch { toast({ title: 'Error', description: 'No fue posible devolver.', variant: 'destructive' }); }
+    } catch { toast({ title: 'Erro', description: 'Não foi possível devolver.', variant: 'destructive' }); }
   };
 
   // Handle resume
@@ -557,16 +609,16 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     if (!selectedConversation) return;
     try {
       await resumeConversation.mutateAsync(selectedConversation.id);
-      toast({ title: 'Atención retomada' });
-    } catch { toast({ title: 'Error', description: 'No fue posible retomar.', variant: 'destructive' }); }
+      toast({ title: 'Atención retomado' });
+    } catch { toast({ title: 'Erro', description: 'Não foi possível retomar.', variant: 'destructive' }); }
   };
 
   const handleActivateBot = async () => {
     if (!selectedConversation) return;
     try {
       await activateBotMutation.mutateAsync(selectedConversation.id);
-      toast({ title: 'Bot ativado', description: 'A IA vai enviar uma mensaje estratégica.' });
-    } catch { toast({ title: 'Error', description: 'No fue posible ativar o bot.', variant: 'destructive' }); }
+      toast({ title: 'Bot activado', description: 'La IA enviará un mensaje estratégico.' });
+    } catch { toast({ title: 'Erro', description: 'Não foi possível ativar o bot.', variant: 'destructive' }); }
   };
 
   // Handle transfer
@@ -576,11 +628,11 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   };
 
   // Global subscription for conversation list updates.
-  // Removido o filtro `assigned_user_id=eq.${user.id}` para que mudanças em conversaciones
-  // no atribuídas (em fila, IA) o de otros vendedores también atualizem a lista.
-  // RLS ya garante que só recebemos eventos de conversaciones que podemos ver.
-  // 🔧 IMPORTANTE: a tabela é actualizada a cada mensaje (last_message_at,
-  // unread_count_agents). Sin debounce eso causa chuva de refetch e o
+  // Removido o filtro `assigned_user_id=eq.${user.id}` para que mudanças em conversas
+  // não atribuídas (em fila, IA) ou de outros vendedores também atualizem a lista.
+  // RLS já garante que só recebemos eventos de conversas que podemos ver.
+  // 🔧 IMPORTANTE: a tabela é atualizada a cada mensagem (last_message_at,
+  // unread_count_agents). Sem debounce isso causa chuva de refetch e o
   // "sistema girando". Agrupamos os eventos em janelas de 1.5s.
   const refetchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scheduleListRefetch = useCallback(() => {
@@ -590,6 +642,11 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       refetchConversations();
     }, 1500);
   }, [refetchConversations]);
+
+  // Mantém último estado conhecido por conversa para detectar transições.
+  const convStateRef = useRef<Map<string, { status: string | null; agent: string | null; lastAt: string | null; assigned: string | null }>>(new Map());
+  const selectedIdRef = useRef<string | null>(null);
+  useEffect(() => { selectedIdRef.current = selectedConversation?.id ?? null; }, [selectedConversation?.id]);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -603,7 +660,38 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
           schema: 'public',
           table: 'webchat_conversations',
         },
-        () => {
+        (payload: any) => {
+          const row = payload.new || payload.old;
+          if (row?.id) {
+            const prev = convStateRef.current.get(row.id);
+            const next = {
+              status: row.status ?? null,
+              agent: row.current_agent_id ?? null,
+              lastAt: row.last_message_at ?? null,
+              assigned: row.assigned_user_id ?? null,
+            };
+
+            // 🔔 Nova mensagem em conversa atribuída a mim (qualquer status humano),
+            // mas evita duplicar quando já estou com ela selecionada (broadcast cuida disso).
+            if (
+              payload.eventType === 'UPDATE' &&
+              next.assigned === user.id &&
+              next.lastAt &&
+              prev?.lastAt !== next.lastAt &&
+              selectedIdRef.current !== row.id
+            ) {
+              playMessage();
+            }
+
+            // 🔔 Novo lead na fila: status=waiting_human, sem agente IA, transição
+            const isQueueNow = next.status === 'waiting_human' && !next.agent;
+            const wasQueueBefore = prev?.status === 'waiting_human' && !prev?.agent;
+            if (isQueueNow && !wasQueueBefore) {
+              playQueue();
+            }
+
+            convStateRef.current.set(row.id, next);
+          }
           scheduleListRefetch();
         }
       )
@@ -616,7 +704,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         refetchDebounceRef.current = null;
       }
     };
-  }, [user?.id, scheduleListRefetch]);
+  }, [user?.id, scheduleListRefetch, playMessage, playQueue]);
 
   // Subscription for selected conversation messages - uses Broadcast for realtime
   useEffect(() => {
@@ -629,20 +717,20 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       .on('broadcast', { event: 'new_message' }, (payload) => {
         // Play sound if message is from visitor
         if (payload.payload?.sender_type === 'visitor') {
-          playNotification();
+          playMessage();
         }
         // Add message directly to cache for instant update.
-        // Substitui a burbuja otimista (id === client_temp_id) por la versión real
-        // — evita duplicación visual no agente que acabou de enviar.
+        // Substitui a bolha otimista (id === client_temp_id) pela versão real
+        // — evita duplicação visual no agente que acabou de enviar.
         queryClient.setQueryData(['webchat-conversation', conversationId], (old: any) => {
           if (!old) return old;
           const incoming = payload.payload;
           const msgs = old.messages || [];
 
-          // Ya existe por el ID real → ignora
+          // Já existe pelo ID real → ignora
           if (msgs.some((m: any) => m.id === incoming?.id)) return old;
 
-          // Existe uma temp con mismo client_temp_id → substitui no lugar
+          // Existe uma temp com mesmo client_temp_id → substitui no lugar
           const tempId = incoming?.client_temp_id;
           if (tempId) {
             const tempIdx = msgs.findIndex(
@@ -666,21 +754,21 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         }
       })
       .on('broadcast', { event: 'conversation_updated' }, () => {
-        // Mudança de producto / lead vinculado / etiqueta — recarrega detalle e lista
+        // Mudança de produto / lead vinculado / etiqueta — recarrega detalhe e lista
         queryClient.invalidateQueries({ queryKey: ['webchat-conversation', conversationId] });
         queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
       })
       .subscribe();
 
-    // NOTA: No escutamos `postgres_changes` em `webchat_messages` acá de propósito.
-    // O broadcast `new_message` acima ya entrega cada mensaje nova exatamente uma vez
+    // NOTA: Não escutamos `postgres_changes` em `webchat_messages` aqui de propósito.
+    // O broadcast `new_message` acima já entrega cada mensagem nova exatamente uma vez
     // (tanto inbound do whatsapp-webhook quanto outbound do webchat-inbox emitem o
     // broadcast). Escutar postgres_changes em paralelo causava DUPLICAÇÃO visual das
-    // mensajes no Inbox.
+    // mensagens no Inbox.
 
-    // Postgres changes — a propia conversación selecionada (status, sector, assigned_user, etc.)
-    // Garante que reabrir / cerrar / transferir / aceitar reflitam imediatamente,
-    // mismo cuando a acción vem de otro agente o de uma edge function.
+    // Postgres changes — a própria conversa selecionada (status, sector, assigned_user, etc.)
+    // Garante que reabrir / encerrar / transferir / aceitar reflitam imediatamente,
+    // mesmo quando a ação vem de outro agente ou de uma edge function.
     const conversationChannel = supabase
       .channel(`conversation-row:${conversationId}`)
       .on(
@@ -706,9 +794,9 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       supabase.removeChannel(broadcastChannel);
       supabase.removeChannel(conversationChannel);
     };
-  }, [selectedConversation?.id, queryClient, playNotification]);
+  }, [selectedConversation?.id, queryClient, playMessage]);
 
-  // Realtime para el lead vinculado — etapa, temperatura, deal_value etc.
+  // Realtime para o lead vinculado — estágio, temperatura, deal_value etc.
   useEffect(() => {
     const leadId = selectedConversation?.lead_id;
     if (!leadId) return;
@@ -738,6 +826,44 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const showList = isMobile ? !selectedConversation : true;
   const showChat = isMobile ? !!selectedConversation : true;
 
+  // Desktop: resizable list panel width (% of container)
+  const [listPanelWidth, setListPanelWidth] = useState<number>(() => {
+    if (typeof window === 'undefined') return 30;
+    const stored = Number(localStorage.getItem('inbox.listPanelWidth'));
+    return stored >= 18 && stored <= 45 ? stored : 30;
+  });
+  const layoutRef = useRef<HTMLDivElement>(null);
+  const draggingRef = useRef(false);
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      if (!draggingRef.current || !layoutRef.current) return;
+      const rect = layoutRef.current.getBoundingClientRect();
+      const pct = ((e.clientX - rect.left) / rect.width) * 100;
+      const clamped = Math.max(18, Math.min(45, pct));
+      setListPanelWidth(clamped);
+    };
+    const onUp = () => {
+      if (draggingRef.current) {
+        draggingRef.current = false;
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        try { localStorage.setItem('inbox.listPanelWidth', String(listPanelWidth)); } catch {}
+      }
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+  }, [listPanelWidth]);
+  const startDrag = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    draggingRef.current = true;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  }, []);
+
   const handleAcceptTicket = useCallback(async (sectorId?: string) => {
     if (!selectedConversation) return;
     const conv: any = (conversationDetail?.conversation as any) || selectedConversation;
@@ -754,7 +880,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       const detailKey = ['webchat-conversation', selectedConversation.id];
       const previousDetail = queryClient.getQueryData<any>(detailKey);
 
-      // Patch otimista do detalle — desbloqueia o composer instantaneamente
+      // Patch otimista do detalhe — desbloqueia o composer instantaneamente
       const nowIso = new Date().toISOString();
       if (previousDetail?.conversation && user?.id) {
         queryClient.setQueryData(detailKey, {
@@ -772,7 +898,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         });
       }
 
-      // Usa the new edge function action so server-side enforces sector membership.
+      // Use the new edge function action so server-side enforces sector membership.
       try {
         const { data, error } = await supabase.functions.invoke('webchat-inbox', {
           body: {
@@ -783,7 +909,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         });
         if (error) throw error;
         if (data?.error) throw new Error(data.error);
-        toast({ title: 'Atención aceptada' });
+        toast({ title: 'Atención aceito' });
         queryClient.invalidateQueries({ queryKey: detailKey, refetchType: 'active' });
         refetchConversations();
       } catch (e: any) {
@@ -791,7 +917,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         if (previousDetail !== undefined) {
           queryClient.setQueryData(detailKey, previousDetail);
         }
-        toast({ title: 'Error ao aceitar', description: e?.message, variant: 'destructive' });
+        toast({ title: 'Erro ao aceitar', description: e?.message, variant: 'destructive' });
       }
     }
   }, [selectedConversation, conversationDetail, toast, refetchConversations, queryClient, user?.id]);
@@ -809,7 +935,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const handleCloseAllTickets = useCallback(async () => {
     const open = filteredConversations.filter(c => c.status !== 'closed');
     await Promise.allSettled(open.map(c => closeConversation.mutateAsync(c.id)));
-    toast({ title: `${open.length} atenciones encerrados` });
+    toast({ title: `${open.length} atendimentos encerrados` });
     refetchConversations();
   }, [filteredConversations, closeConversation, toast, refetchConversations]);
 
@@ -818,37 +944,49 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     (filters.selectedSectorIds.length > 0 ? 1 : 0) +
     (filters.selectedUserIds.length > 0 ? 1 : 0) +
     (filters.selectedProductIds.length > 0 ? 1 : 0) +
+    (filters.selectedChannels.length > 0 ? 1 : 0) +
+    (filters.selectedConnections.length > 0 ? 1 : 0) +
+    ((isAdminMode || canSeeAgentsTab) && filters.selectedAgentIds.length > 0 ? 1 : 0) +
     (filters.showResolved ? 1 : 0);
 
-  // Backend ya aplica todos los filtros (producto/sector/usuario/etiqueta/busca/aba)
-  // e a visibilidade por permisos. Acá só repassamos a lista para a UI.
+
+  // Backend já aplica todos os filtros (produto/setor/usuário/etiqueta/busca/aba)
+  // e a visibilidade por permissões. Aqui só repassamos a lista para a UI.
   const visibleConversations = filteredConversations;
 
-  // Nombre do producto atualmente filtrado (para visualización na faixa) — usa só o
-  // producto da rota como sugerencia visual; no há más "trava" de producto.
+  // Nome do produto atualmente filtrado (para exibição na faixa) — usa só o
+  // produto da rota como sugestão visual; não há mais "trava" de produto.
   const activeProductName = useMemo(() => {
     if (!selectedProductFilter) return null;
     const p = assignedProducts.find((p: any) => p.id === selectedProductFilter);
     return p?.name || null;
   }, [selectedProductFilter, assignedProducts]);
 
-  const showProductBanner = false; // Producto da rota/header no trava más a inbox
+  const showProductBanner = false; // Produto da rota/header não trava mais a inbox
 
   if (loadingConversations) {
     return (
-      <div className="h-[calc(100dvh-8rem)] flex items-center justify-center">
+      <div className="h-[calc(100dvh-7rem)] flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
+  // No mobile com conversa selecionada (tela cheia), usamos 100dvh — header/bottomnav somem no MobileLayout.
+  const rootHeightClass = isMobile && selectedConversation
+    ? 'h-[100dvh]'
+    : 'h-[calc(100dvh-7rem)]';
   return (
-    <div className="h-[calc(100dvh-8rem)] flex flex-col rounded-lg border border-border overflow-hidden bg-background">
+    <div className={cn(rootHeightClass, 'flex flex-col rounded-lg border border-border overflow-hidden bg-background')}>
 
-      <div className="flex-1 flex min-w-0 overflow-hidden">
+
+      <div ref={layoutRef} className="flex-1 flex min-w-0 overflow-hidden">
         {/* Conversation List with new look */}
         {showList && (
-          <div className={cn('flex-shrink-0 overflow-hidden', isMobile ? 'w-full' : 'w-[340px]')}>
+          <div
+            className={cn('overflow-hidden', isMobile ? 'w-full flex-shrink-0' : 'h-full')}
+            style={!isMobile ? { width: `${listPanelWidth}%` } : undefined}
+          >
             <ConversationList
               conversations={visibleConversations}
               selectedId={selectedConversation?.id || null}
@@ -858,13 +996,13 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
               externalShowResolved={filters.showResolved}
               activeFilterCount={activeFilterCount}
               onNewConversation={() => setShowStartConversation(true)}
-              soundEnabled={soundEnabled}
-              onToggleSound={toggleSound}
+              soundControls={soundControls}
               showAssignedUser={isAdminMode}
               headerLabel={isAdminMode ? 'Atenciones · Admin' : 'Atenciones'}
               activeTab={activeTab}
               onTabChange={setActiveTab}
               tabCounts={tabCounts}
+              showAgentsTab={canSeeAgentsTab}
               filtersSlot={
                 <InboxFiltersDrawer
                   open={showFiltersDrawer}
@@ -872,6 +1010,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
                   filters={filters}
                   onFiltersChange={setFilters}
                   isAdmin={isAdminMode}
+                  canFilterByAgent={isAdminMode || canSeeAgentsTab}
                   onCloseAllTickets={isAdminMode ? handleCloseAllTickets : undefined}
                   trigger={
                     <Button
@@ -894,6 +1033,18 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
           </div>
         )}
 
+        {/* Resizable divider — desktop only */}
+        {!isMobile && showList && showChat && (
+          <div
+            role="separator"
+            aria-orientation="vertical"
+            onMouseDown={startDrag}
+            className="group relative w-1 flex-shrink-0 cursor-col-resize bg-border hover:bg-primary/50 active:bg-primary transition-colors"
+            title="Arraste para redimensionar"
+          >
+            <div className="absolute inset-y-0 -left-1 -right-1" />
+          </div>
+        )}
 
         {/* Chat Area */}
         {showChat && (
@@ -904,6 +1055,9 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
               visitorPhone={selectedConversation?.visitor_phone}
               visitorAvatarUrl={(conversationDetail?.conversation as any)?.visitor_avatar_url || (selectedConversation as any)?.visitor_avatar_url || null}
               channel={selectedConversation?.channel || 'webchat'}
+              metaConnectionId={(conversationDetail?.conversation as any)?.meta_connection_id || (selectedConversation as any)?.meta_connection_id || null}
+              instagramConnectionId={(conversationDetail?.conversation as any)?.instagram_connection_id || (selectedConversation as any)?.instagram_connection_id || null}
+              evolutionInstanceId={(conversationDetail?.conversation as any)?.evolution_instance_id || (selectedConversation as any)?.evolution_instance_id || null}
               status={(conversationDetail?.conversation as any)?.status || selectedConversation?.status || 'active'}
               messages={messages}
               isLoading={loadingDetail}
@@ -958,10 +1112,10 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
               onAiSuggest={handleAiSuggest}
               onScheduleFollowup={() => setShowScheduleFollowup(true)}
               onMarkHot={async () => {
-                if (!linkedLead?.id) { toast({ title: 'Sin lead vinculado' }); return; }
+                if (!linkedLead?.id) { toast({ title: 'Sem lead vinculado' }); return; }
                 await supabase.from('leads').update({ temperature: 'hot' }).eq('id', linkedLead.id);
                 queryClient.invalidateQueries({ queryKey: ['linked-lead'] });
-                toast({ title: '🔥 Lead marcado como caliente' });
+                toast({ title: '🔥 Lead marcado como quente' });
               }}
               onSendFlow={() => setShowSendFlow(true)}
               onSendCadence={() => setShowSendCadence(true)}
@@ -1132,7 +1286,9 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
             open={showScheduleMessage}
             onOpenChange={setShowScheduleMessage}
             conversationId={selectedConversation.id}
+            visitorName={selectedConversation.visitor_name}
           />
+
           <ScheduleFollowupDialog
             open={showScheduleFollowup}
             onOpenChange={setShowScheduleFollowup}
@@ -1146,7 +1302,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
             conversationId={selectedConversation.id}
           />
 
-          {/* Crear evento de calendario direto da conversación */}
+          {/* Criar evento de calendário direto da conversa */}
           <EventModal
             open={showCreateEvent}
             onOpenChange={setShowCreateEvent}
@@ -1154,7 +1310,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
             defaultProductId={linkedLead?.product_id || selectedConversation.product_id || undefined}
           />
 
-          {/* Crear oportunidad direto da conversación (somente con lead vinculado) */}
+          {/* Criar oportunidade direto da conversa (somente com lead vinculado) */}
           {linkedLead?.id && profile?.organization_id && (
             <DealModal
               isOpen={showCreateDeal}

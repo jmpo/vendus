@@ -137,6 +137,7 @@ type Normalized =
       messageId: string;
       content: string;
       media?: MediaInfo;
+      contacts?: SharedContact[];
     }
   | { kind: "connection"; instance: string; state: "open" | "connecting" | "close"; phone?: string }
   | { kind: "qrcode"; instance: string; qr: string }
@@ -187,6 +188,45 @@ function normalizeQrString(value: any): string | null {
   }
 
   return raw;
+}
+
+// ─── Tarjetas de contacto (vCard) ────────────────────────────────────────────
+// WhatsApp envía los contactos compartidos como contactMessage / contactsArrayMessage,
+// con el contacto serializado en formato vCard (.vcf). Sin esto el mensaje llega vacío.
+type SharedContact = { name: string; phone: string; raw_vcard: string | null };
+
+function parseVCard(vcard: string): { name: string; phone: string } {
+  const v = String(vcard || "");
+  const name = (
+    v.match(/\bFN[^:\r\n]*:(.+)/)?.[1] ||
+    v.match(/\bN[^:\r\n]*:(.+)/)?.[1] ||
+    ""
+  ).trim();
+  // WhatsApp suele incluir waid (número internacional sin '+') además del TEL formateado.
+  const waid = v.match(/waid=(\d+)/)?.[1];
+  const tel = v.match(/\bTEL[^:\r\n]*:([^\r\n]+)/)?.[1]?.trim();
+  const phone = tel || (waid ? `+${waid}` : "");
+  return { name, phone };
+}
+
+function extractContacts(message: any): SharedContact[] {
+  if (!message) return [];
+  const out: SharedContact[] = [];
+  const push = (c: any) => {
+    if (!c) return;
+    const p = c.vcard ? parseVCard(c.vcard) : { name: "", phone: "" };
+    out.push({ name: p.name || c.displayName || "Contacto", phone: p.phone, raw_vcard: c.vcard || null });
+  };
+  push(message.contactMessage);
+  const arr = message.contactsArrayMessage;
+  if (Array.isArray(arr?.contacts)) arr.contacts.forEach(push);
+  return out;
+}
+
+function contactsToText(contacts: SharedContact[]): string {
+  if (!contacts.length) return "";
+  const parts = contacts.map((c) => (c.phone ? `${c.name} (${c.phone})` : c.name));
+  return `📇 [Contacto compartido] ${parts.join(", ")}`;
 }
 
 function normalizePayload(payload: any): Normalized | null {
@@ -289,6 +329,7 @@ function normalizePayload(payload: any): Normalized | null {
     if (!msg) return null;
     const key = msg.key || {};
     const media = extractMedia(msg.message);
+    const contacts = extractContacts(msg.message);
     return {
       kind: "message",
       instance,
@@ -301,6 +342,7 @@ function normalizePayload(payload: any): Normalized | null {
         msg.message?.extendedTextMessage?.text ||
         msg.message?.imageMessage?.caption ||
         msg.message?.videoMessage?.caption ||
+        contactsToText(contacts) ||
         (msg.message?.audioMessage ? "[audio]" : "") ||
         (msg.message?.imageMessage ? "[imagen]" : "") ||
         (msg.message?.videoMessage ? "[vídeo]" : "") ||
@@ -308,6 +350,7 @@ function normalizePayload(payload: any): Normalized | null {
         msg.body ||
         "",
       media,
+      contacts: contacts.length ? contacts : undefined,
     };
   }
 
@@ -347,11 +390,13 @@ function normalizePayload(payload: any): Normalized | null {
     const remoteJid = altPhoneJid || rawRemoteJid;
     const lidJid = rawRemoteJid.includes("@lid") ? rawRemoteJid : (altJidCandidates.find((j: any) => typeof j === "string" && j.includes("@lid")) as string | undefined);
 
+    const contacts = extractContacts(message);
     const content =
       message.conversation ||
       message.extendedTextMessage?.text ||
       message.imageMessage?.caption ||
       message.videoMessage?.caption ||
+      contactsToText(contacts) ||
       (message.audioMessage ? "[audio]" : "") ||
       (message.imageMessage ? "[imagen]" : "") ||
       (message.videoMessage ? "[vídeo]" : "") ||
@@ -370,6 +415,7 @@ function normalizePayload(payload: any): Normalized | null {
       messageId: info.ID || info.id || "",
       content,
       media,
+      contacts: contacts.length ? contacts : undefined,
     };
   }
 
@@ -1973,6 +2019,7 @@ Deno.serve(async (req) => {
           sender_name: senderName,
           ...(mediaMeta ? { media: mediaMeta } : {}),
           ...(processedKind ? { multimodal_processed: processedKind } : {}),
+          ...(norm.contacts?.length ? { contacts: norm.contacts } : {}),
         },
       };
 

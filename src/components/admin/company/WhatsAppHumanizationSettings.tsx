@@ -120,7 +120,7 @@ export function WhatsAppHumanizationSettings() {
               <Pair>
                 <Field
                   label="Janela de agrupamento (ms)"
-                  hint="Predeterminado 3000 ms. Recomendado: 2000–4000."
+                  hint="Por defecto 3000 ms. Recomendado: 2000–4000."
                   value={form.ai_grouping_window_ms}
                   onChange={(v) => update('ai_grouping_window_ms', v)}
                   min={0}
@@ -128,7 +128,7 @@ export function WhatsAppHumanizationSettings() {
                 />
                 <Field
                   label="Tempo máximo de espera (ms)"
-                  hint="Limite absoluto. Predeterminado 8000 ms."
+                  hint="Limite absoluto. Por defecto 8000 ms."
                   value={form.ai_grouping_max_ms}
                   onChange={(v) => update('ai_grouping_max_ms', v)}
                   min={2000}
@@ -138,8 +138,8 @@ export function WhatsAppHumanizationSettings() {
             </Section>
 
             <Section
-              title="Indicador de tipeo"
-              hint="Tempo simulado de 'digitando...' antes de cada balão."
+              title="Indicador de escritura"
+              hint="Tiempo simulado de 'escribiendo...' antes de cada burbuja."
             >
               <Pair>
                 <Field
@@ -160,31 +160,31 @@ export function WhatsAppHumanizationSettings() {
             </Section>
 
             <Section
-              title="Presença real no WhatsApp"
-              hint="Dispara o status de 'digitando...' e 'gravando audio...' que aparece no celular del cliente, en tiempo real (via Evolution Go)."
+              title="Presencia real en WhatsApp"
+              hint="Dispara el estado de 'escribiendo...' y 'grabando audio...' que aparece en el celular del cliente, en tiempo real (via Evolution Go)."
             >
               <Toggle
-                label="Mostrar 'digitando...' real"
+                label="Mostrar 'escribiendo...' real"
                 checked={form.presence_enabled}
                 onChange={(v) => update('presence_enabled', v)}
               />
               <Toggle
-                label="Mostrar 'gravando audio...' cuando IA enviar audio"
+                label="Mostrar 'grabando audio...' cuando la IA envíe audio"
                 checked={form.presence_recording_enabled}
                 onChange={(v) => update('presence_recording_enabled', v)}
               />
               <Pair>
                 <Field
-                  label="Velocidade de tipeo (chars/s)"
-                  hint="Predeterminado 28. Quanto maior, mais rápido digita."
+                  label="Velocidad de escritura (chars/s)"
+                  hint="Por defecto 28. Cuanto mayor, más rápido escribe."
                   value={form.presence_typing_chars_per_sec}
                   onChange={(v) => update('presence_typing_chars_per_sec', v)}
                   min={5}
                   max={120}
                 />
                 <Field
-                  label="Variação aleatória (%)"
-                  hint="Predeterminado 15%. Adiciona naturalidade."
+                  label="Variación aleatoria (%)"
+                  hint="Por defecto 15%. Agrega naturalidad."
                   value={form.presence_jitter_pct}
                   onChange={(v) => update('presence_jitter_pct', v)}
                   min={0}
@@ -204,7 +204,7 @@ export function WhatsAppHumanizationSettings() {
               />
               <Field
                 label="Janela anti-duplicación (ms)"
-                hint="Predeterminado 120000 ms (2 minutos)."
+                hint="Por defecto 120000 ms (2 minutos)."
                 value={form.ai_dedup_window_ms}
                 onChange={(v) => update('ai_dedup_window_ms', v)}
                 min={5000}

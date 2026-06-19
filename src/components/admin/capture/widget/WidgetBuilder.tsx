@@ -92,7 +92,7 @@ export function WidgetBuilder({ funnelId, onBack }: Props) {
     return (
       <div className="text-center py-12">
         <p className="text-muted-foreground">Widget no encontrado</p>
-        <Button variant="outline" onClick={onBack} className="mt-4">Voltar</Button>
+        <Button variant="outline" onClick={onBack} className="mt-4">Volver</Button>
       </div>
     );
   }

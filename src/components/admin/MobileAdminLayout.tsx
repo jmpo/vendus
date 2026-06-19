@@ -114,7 +114,7 @@ export function MobileAdminLayout({
                         className="w-full justify-start text-muted-foreground"
                       >
                         <ArrowLeft className="h-4 w-4 mr-2" />
-                        Voltar ao App
+                        Volver ao App
                       </Button>
                     </NavLink>
                   </div>

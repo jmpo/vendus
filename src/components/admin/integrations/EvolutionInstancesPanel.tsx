@@ -34,7 +34,7 @@ import { PresenceTestButton } from './PresenceTestButton';
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
     connected: { label: 'Conectado', variant: 'default' },
-    qr_pending: { label: 'Aguardando QR', variant: 'secondary' },
+    qr_pending: { label: 'Esperando QR', variant: 'secondary' },
     paired: { label: 'Pareado', variant: 'default' },
     disconnected: { label: 'Desconectado', variant: 'outline' },
   };

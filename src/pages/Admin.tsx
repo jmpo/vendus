@@ -52,7 +52,7 @@ const f = {
   CaptureAnalyticsSection: () => import('@/components/admin/capture/channels/CaptureAnalyticsSection').then(m => ({ default: m.CaptureAnalyticsSection })),
 };
 
-// Lazy components (con retry + cache compartido para prefetch).
+// Lazy components (com retry + cache compartilhado para prefetch).
 const OperationCenter = lazyWithRetry(f.OperationCenter);
 const TeamManager = lazyWithRetry(f.TeamManager);
 const FinancialDashboard = lazyWithRetry(f.FinancialDashboard);
@@ -92,7 +92,7 @@ const CaptureResultsSection = lazyWithRetry(f.CaptureResultsSection);
 const CaptureAnalyticsSection = lazyWithRetry(f.CaptureAnalyticsSection);
 
 /**
- * Mapa: id da sección → factory de import. Usado por el prefetch on-hover
+ * Mapa: id da seção → factory de import. Usado pelo prefetch on-hover
  * (AdminSidebar/MobileAdminLayout chamam `prefetchSection(id)`).
  */
 const sectionFactories: Record<string, () => Promise<unknown>> = {
@@ -101,11 +101,15 @@ const sectionFactories: Record<string, () => Promise<unknown>> = {
   pipeline: f.KanbanBoard,
   calendar: f.CalendarManager,
   inbox: f.InboxManager,
+  'inbox-chat': f.InboxManager,
+  'inbox-panel': f.InboxManager,
+  'inbox-radar': f.InboxManager,
+  'inbox-reports': f.InboxManager,
   agents: f.AgentsManager,
   
   team: f.TeamManager,
   products: f.ProductListPage,
-  reports: f.ReportsManager,
+  operation: f.OperationCenter,
   financial: f.FinancialDashboard,
   notifications: f.NotificationManager,
   webhooks: f.WebhooksManager,
@@ -145,12 +149,12 @@ export default function Admin() {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
-  // Cache de secciones ya visitadas — mantemos elas montadas (solo escondidas)
+  // Cache de seções já visitadas — mantemos elas montadas (apenas escondidas)
   // para que a 2ª visita seja instantânea.
   const visitedRef = useRef<Set<string>>(new Set([activeSection]));
   visitedRef.current.add(activeSection);
 
-  // Sincroniza tab da URL → estado (permite navegación programática via ?tab=plan)
+  // Sincroniza tab da URL → estado (permite navegação programática via ?tab=plan)
   useEffect(() => {
     const tab = searchParams.get('tab');
     if (tab && tab !== activeSection) {
@@ -159,8 +163,8 @@ export default function Admin() {
     }
   }, [searchParams, activeSection]);
 
-  // Prefetch agressivo: así que o app carrega, baixamos no idle todas las
-  // secciones principais. O usuario sente "clicou, abriu".
+  // Prefetch agressivo: assim que o app carrega, baixamos no idle todas as
+  // seções principais. O usuário sente "clicou, abriu".
   useEffect(() => {
     onIdle(() => {
       Object.values(f).forEach((factory) => prefetch(factory));
@@ -172,10 +176,10 @@ export default function Admin() {
   }
 
   const handleSectionChange = useCallback((id: string) => {
-    // Garante que o chunk começa a descargar antes da transición (caso aún
-    // no tenga sido prefechado).
+    // Garante que o chunk começa a baixar antes da transição (caso ainda
+    // não tenha sido prefechado).
     prefetchAdminSection(id);
-    // Mantém ?tab=... na URL para que reload preserve a sección actual.
+    // Mantém ?tab=... na URL para que reload preserve a seção atual.
     const next = new URLSearchParams(searchParams);
     next.set('tab', id);
     setSearchParams(next, { replace: true });
@@ -190,7 +194,7 @@ export default function Admin() {
     setSelectedProductId(null);
   };
 
-  // Renderiza o contenido de UMA sección específica.
+  // Renderiza o conteúdo de UMA seção específica.
   const renderSection = (sectionId: string) => {
     if (sectionId === 'products' && selectedProductId) {
       return (
@@ -211,12 +215,16 @@ export default function Admin() {
       case 'leads': return <LeadsManager />;
       case 'pipeline': return <KanbanBoard />;
       case 'calendar': return <CalendarManager />;
-      case 'inbox': return <InboxManager />;
+      case 'inbox': return <InboxManager key="chat" section="chat" />;
+      case 'inbox-chat': return <InboxManager key="chat" section="chat" />;
+      case 'inbox-panel': return <InboxManager key="panel" section="panel" />;
+      case 'inbox-radar': return <InboxManager key="radar" section="radar" />;
+      case 'inbox-reports': return <InboxManager key="reports" section="reports" />;
       case 'agents': return <AgentsManager />;
       
       case 'team': return <TeamManager />;
       case 'products': return <ProductListPage onProductSelect={handleProductSelect} />;
-      case 'reports': return <ReportsManager />;
+      case 'operation': return <OperationCenter />;
       case 'financial': return <FinancialDashboard />;
       case 'notifications': return <NotificationManager />;
       case 'webhooks': return <WebhooksManager />;
@@ -250,8 +258,8 @@ export default function Admin() {
     }
   };
 
-  // Renderiza TODAS as secciones ya visitadas, escondendo as inativas.
-  // Resultado: revisitar uma sección é instantâneo (componente segue montado).
+  // Renderiza TODAS as seções já visitadas, escondendo as inativas.
+  // Resultado: revisitar uma seção é instantâneo (componente segue montado).
   const renderContent = () => (
     <>
       {Array.from(visitedRef.current).map((sectionId) => {
@@ -259,15 +267,15 @@ export default function Admin() {
         return (
           <div
             key={sectionId}
-            // `hidden` remove do flujo visual mas mantém o componente montado.
+            // `hidden` remove do fluxo visual mas mantém o componente montado.
             hidden={!isActive}
-            // Aria para acessibilidade cuando a sección está oculta.
+            // Aria para acessibilidade quando a seção está oculta.
             aria-hidden={!isActive}
             style={!isActive ? { display: 'none' } : undefined}
           >
             <SectionErrorBoundary sectionName={sectionId}>
               {/* fallback={null} = nunca mostra spinner; useTransition mantém
-                  a tela anterior visível mientras o chunk novo baixa. */}
+                  a tela anterior visível enquanto o chunk novo baixa. */}
               <Suspense fallback={null}>{renderSection(sectionId)}</Suspense>
             </SectionErrorBoundary>
           </div>
@@ -296,7 +304,7 @@ export default function Admin() {
       />
       <main className="flex-1 overflow-auto">
         <OnboardingBanner />
-        <div className="p-6">
+        <div className={activeSection.startsWith('inbox') ? 'px-4 pt-4 pb-4' : 'p-6'}>
           {renderContent()}
         </div>
       </main>

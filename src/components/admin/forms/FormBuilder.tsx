@@ -125,7 +125,7 @@ export function FormBuilder({ formId, onClose }: FormBuilderProps) {
     return (
       <div className="text-center py-12">
         <p className="text-muted-foreground">Formulario no encontrado</p>
-        <Button variant="link" onClick={onClose}>Voltar</Button>
+        <Button variant="link" onClick={onClose}>Volver</Button>
       </div>
     );
   }

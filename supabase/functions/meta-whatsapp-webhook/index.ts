@@ -1,13 +1,15 @@
 // meta-whatsapp-webhook
 // Receiver público da Meta Cloud API.
 // GET: handshake (?hub.mode=subscribe + verify_token).
-// POST: eventos (mensajes, status). Valida X-Hub-Signature-256.
+// POST: eventos (mensagens, status). Valida X-Hub-Signature-256.
 // verify_jwt = false (público — segurança via verify_token + HMAC).
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { hmacSha256Hex, timingSafeEqual } from '../_shared/meta-graph.ts';
 import { decryptSecret } from '../_shared/meta-crypto.ts';
 import { normalizePhoneBR } from '../_shared/phone.ts';
+import { isOptOutMessage, markLeadOptOut } from '../_shared/optin-guard.ts';
+
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -45,7 +47,7 @@ Deno.serve(async (req: Request) => {
       return new Response('bad request', { status: 400 });
     }
     const sb = supa();
-    // Resolve por path id (preferido) ou por el propio token (retrocompat).
+    // Resolve por path id (preferido) ou pelo próprio token (retrocompat).
     let connRow: { id: string; webhook_verify_token: string } | null = null;
     if (pathConnectionId) {
       const { data } = await sb
@@ -67,7 +69,7 @@ Deno.serve(async (req: Request) => {
       console.log('[verify] reject', { has_path_id: !!pathConnectionId });
       return new Response('forbidden', { status: 403 });
     }
-    // Marca que a Meta validou o webhook de esta conexión.
+    // Marca que a Meta validou o webhook desta conexão.
     await sb
       .from('whatsapp_meta_connections')
       .update({ webhook_subscribed_at: new Date().toISOString() })
@@ -84,7 +86,7 @@ Deno.serve(async (req: Request) => {
 
   const sb = supa();
 
-  // Cuando a URL carrega o connection_id, resolve uma vez e usa o mismo
+  // Quando a URL carrega o connection_id, resolve uma vez e usa o mesmo
   // App Secret para validar a assinatura de TODO o payload (preferido).
   let pinnedConn: any = null;
   if (pathConnectionId) {
@@ -127,7 +129,7 @@ Deno.serve(async (req: Request) => {
       const value = change?.value ?? {};
       const phoneNumberId = value?.metadata?.phone_number_id;
 
-      // Resolve conexión: pinned (path) tiene prioridade; fallback por phone_number_id.
+      // Resolve conexão: pinned (path) tem prioridade; fallback por phone_number_id.
       let conn: any = pinnedConn;
       if (!conn) {
         if (!phoneNumberId) continue;
@@ -150,7 +152,7 @@ Deno.serve(async (req: Request) => {
       }
 
 
-      // valida assinatura HMAC (solo no camino fallback — pinnedConn ya validou).
+      // valida assinatura HMAC (apenas no caminho fallback — pinnedConn já validou).
       if (!pinnedConn) {
         try {
           const sig = req.headers.get('x-hub-signature-256') ?? '';
@@ -175,7 +177,7 @@ Deno.serve(async (req: Request) => {
       }
 
 
-      // mensajes recibídas
+      // mensagens recebidas
       const contacts = Array.isArray(value.contacts) ? value.contacts : [];
       const messages = Array.isArray(value.messages) ? value.messages : [];
       for (const msg of messages) {
@@ -212,7 +214,7 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  // Siempre 200 — Meta reenvía se receber cualquier otro código
+  // Sempre 200 — Meta reenvia se receber qualquer outro código
   return new Response('ok', { status: 200, headers: { ...corsHeaders, 'Content-Type': 'text/plain' } });
 });
 
@@ -222,14 +224,17 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
   const metaMsgId = String(msg.id ?? '');
   const contactName = contacts?.[0]?.profile?.name ?? null;
 
-  // 1) localizar/abrir conversación por (org, channel='whatsapp', visitor_phone_normalized)
+  // 1) localizar conversa ATIVA desta caixa Meta específica
+  //    - filtra por meta_connection_id para nunca invadir outra caixa (Evolution/IG/outra Meta)
+  //    - ignora conversas encerradas: nova mensagem após "Resolvido" abre conversa nova
   const { data: existing } = await sb
     .from('webchat_conversations')
     .select('id, status, lead_id')
     .eq('organization_id', conn.organization_id)
     .eq('channel', 'whatsapp')
+    .eq('meta_connection_id', conn.id)
     .eq('visitor_phone_normalized', fromNorm)
-    .order('status', { ascending: true })
+    .neq('status', 'closed')
     .order('last_message_at', { ascending: false, nullsFirst: false })
     .limit(1);
 
@@ -238,15 +243,14 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
     conversationId = existing[0].id;
     await sb.from('webchat_conversations')
       .update({
-        meta_connection_id: conn.id,
         last_inbound_at: new Date().toISOString(),
         last_message_at: new Date().toISOString(),
-        closed_at: null,
         ...(contactName ? { visitor_name: contactName } : {}),
       })
       .eq('id', conversationId);
+
   } else {
-    // encontrar widget ativo da org (compat con webchat schema)
+    // achar widget ativo da org (compat com webchat schema)
     const { data: widget } = await sb
       .from('webchat_widgets')
       .select('id')
@@ -275,10 +279,10 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
     conversationId = created.id;
   }
 
-  // 2) extrair contenido
+  // 2) extrair conteúdo
   const { content, contentType, metadata } = await extractContent(msg, conn);
 
-  // 3) inserir mensaje (idempotente por meta_message_id)
+  // 3) inserir mensagem (idempotente por meta_message_id)
   const { error: msgErr } = await sb.from('webchat_messages').insert({
     conversation_id: conversationId,
     direction: 'inbound',
@@ -300,11 +304,128 @@ async function handleInboundMessage(sb: any, conn: any, msg: any, contacts: any[
     processed: true,
   });
 
-  // 5) disparar webchat-bot (fire-and-forget)
+  // 4.5) Campaign button_actions: se for resposta a botão de template, aplica etiqueta/opt-out
+  //      configurados na campanha de origem (resolvida via webchat_conversations.metadata.campaign_id).
+  let optOutFromButton = false;
   try {
-    await sb.functions.invoke('webchat-bot', {
-      body: { conversation_id: conversationId, trigger: 'inbound_whatsapp_meta' },
+    const buttonPayload = (metadata as any)?.payload ?? (metadata as any)?.interactive?.button_reply?.id ?? null;
+    const isButtonReply = !!buttonPayload || msg.type === 'button' || msg.type === 'interactive';
+    if (isButtonReply && content) {
+      const { data: convRow } = await sb
+        .from('webchat_conversations').select('lead_id, metadata').eq('id', conversationId).maybeSingle();
+      const campaignId = (convRow as any)?.metadata?.campaign_id ?? null;
+      const leadId = (convRow as any)?.lead_id ?? null;
+      if (campaignId) {
+        const { data: campRow } = await sb
+          .from('campaigns').select('meta_template_config').eq('id', campaignId).maybeSingle();
+        const cfg = (campRow as any)?.meta_template_config ?? null;
+        const actions = (cfg?.button_actions ?? {}) as Record<string, { tag_id?: string | null; opt_out?: boolean }>;
+        // Matching: exato pelo texto do botão (case-insensitive) ou pelo payload
+        const key = Object.keys(actions).find((k) =>
+          k.toLowerCase() === String(content).trim().toLowerCase() ||
+          (buttonPayload && k.toLowerCase() === String(buttonPayload).toLowerCase()),
+        );
+        const action = key ? actions[key] : null;
+        if (action) {
+          if (action.tag_id && leadId) {
+            try {
+              await sb.from('lead_tag_assignments').upsert(
+                { lead_id: leadId, tag_id: action.tag_id, source: 'webhook' },
+                { onConflict: 'lead_id,tag_id', ignoreDuplicates: true },
+              );
+            } catch (e) { console.error('[campaign button tag] insert error', e); }
+          }
+          if (action.opt_out && leadId) {
+            await markLeadOptOut(sb, leadId, conn.organization_id);
+            optOutFromButton = true;
+          }
+          await sb.from('whatsapp_meta_webhook_logs').insert({
+            connection_id: conn.id,
+            organization_id: conn.organization_id,
+            event_type: 'campaign_button_action',
+            payload: { lead_id: leadId, campaign_id: campaignId, button: content, applied: action },
+            processed: true,
+          });
+        }
+      }
+    }
+  } catch (e) { console.error('[campaign button action] error', e); }
+
+  // 4.6) Opt-out detection (soft opt-in): se for botão "Sair da lista" ou texto equivalente,
+  //      marca lead, cancela cadências/campanhas e envia confirmação. NÃO chama o bot.
+  try {
+    const buttonPayload = (metadata as any)?.payload ?? (metadata as any)?.interactive?.button_reply?.id ?? null;
+    if (optOutFromButton || isOptOutMessage(content, buttonPayload)) {
+      // resolve lead vinculado à conversa (se houver)
+      const { data: convRow } = await sb
+        .from('webchat_conversations').select('lead_id').eq('id', conversationId).maybeSingle();
+      const leadId = (convRow as any)?.lead_id ?? null;
+      if (leadId && !optOutFromButton) await markLeadOptOut(sb, leadId, conn.organization_id);
+
+      // Confirmação ao usuário
+      try {
+        await sb.functions.invoke('meta-whatsapp-send', {
+          body: {
+            connection_id: conn.id,
+            organization_id: conn.organization_id,
+            conversation_id: conversationId,
+            to: fromNorm,
+            type: 'text',
+            text: 'Você foi removido(a) da nossa lista. Não enviaremos mais mensagens automáticas. Se quiser voltar, é só responder por aqui.',
+          },
+        });
+      } catch (e) { console.error('[opt-out confirmation] send error', e); }
+
+      await sb.from('whatsapp_meta_webhook_logs').insert({
+        connection_id: conn.id,
+        organization_id: conn.organization_id,
+        event_type: 'opt_out',
+        payload: { lead_id: leadId, button: buttonPayload, text: content },
+        processed: true,
+      });
+      return; // não dispara webchat-bot
+    }
+  } catch (e) { console.error('[opt-out detection] error', e); }
+
+  // 5) disparar webchat-bot e despachar resposta via meta-whatsapp-send
+  try {
+
+    // Para áudio, usamos a transcrição (Whisper) como mensagem para o bot
+    // para que a IA realmente "ouça" o que foi dito.
+    const transcription = (metadata as any)?.transcription as string | undefined;
+    const botMessage = transcription && transcription.trim().length > 0
+      ? transcription
+      : (content && content.trim().length > 0 ? content : `[${contentType || 'mensagem'}]`);
+    const { data: botRes } = await sb.functions.invoke('webchat-bot', {
+      body: {
+        conversation_id: conversationId,
+        message: botMessage,
+        visitor_name: contactName ?? fromNorm,
+        channel: 'whatsapp',
+        trigger: 'inbound_whatsapp_meta',
+      },
     });
+    const chunks: string[] = Array.isArray((botRes as any)?.chunks)
+      ? (botRes as any).chunks
+      : ((botRes as any)?.response ? [(botRes as any).response] : []);
+    for (const chunk of chunks) {
+      if (!chunk || typeof chunk !== 'string') continue;
+      try {
+        await sb.functions.invoke('meta-whatsapp-send', {
+          body: {
+            connection_id: conn.id,
+            organization_id: conn.organization_id,
+            conversation_id: conversationId,
+            to: fromNorm,
+            type: 'text',
+            text: chunk,
+          },
+        });
+      } catch (sendErr) {
+        console.error('meta-whatsapp-send error', sendErr);
+      }
+      await new Promise((r) => setTimeout(r, 800));
+    }
   } catch (e) {
     console.error('webchat-bot invoke error', e);
   }
@@ -326,7 +447,15 @@ async function extractContent(msg: any, conn: any): Promise<{ content: string; c
     return { content: `📍 ${l.name ?? ''} ${l.address ?? ''}`.trim() || `${l.latitude},${l.longitude}`, contentType: 'text', metadata: { ...baseMeta, location: l } };
   }
   if (type === 'contacts') {
-    return { content: '📇 Contato compartilhado', contentType: 'text', metadata: { ...baseMeta, contacts: msg.contacts } };
+    const raw = Array.isArray(msg.contacts) ? msg.contacts : [];
+    const norm = raw.map((c: any) => {
+      const name = c?.name?.formatted_name || [c?.name?.first_name, c?.name?.last_name].filter(Boolean).join(' ') || 'Contato';
+      const phoneObj = Array.isArray(c?.phones) ? c.phones[0] : null;
+      let phone = (phoneObj?.wa_id || phoneObj?.phone || '').replace(/[^\d+]/g, '');
+      if (phone.startsWith('+')) phone = phone.slice(1);
+      return { name, phone, raw_vcard: null };
+    });
+    return { content: '📇 Contato compartilhado', contentType: 'contact', metadata: { ...baseMeta, contacts: norm } };
   }
   if (type === 'reaction') {
     return { content: msg.reaction?.emoji ?? '', contentType: 'text', metadata: { ...baseMeta, reaction: msg.reaction } };
@@ -338,12 +467,78 @@ async function extractContent(msg: any, conn: any): Promise<{ content: string; c
     try {
       const accessToken = await decryptSecret(conn.access_token_encrypted);
       const downloaded = await downloadAndStoreMedia(conn, mediaSpec.id, mediaSpec.mime_type, accessToken);
-      const ct = type === 'image' ? 'image' : (type === 'audio' || type === 'voice') ? 'audio' : 'file';
-      return {
-        content: downloaded.url ?? `[${type}]`,
-        contentType: ct,
-        metadata: { ...baseMeta, media: { id: mediaSpec.id, mime: mediaSpec.mime_type, storage_path: downloaded.path, caption: mediaSpec.caption ?? null } },
+
+      const isAudio = type === 'audio' || type === 'voice';
+      const kind = type === 'image' ? 'image'
+        : isAudio ? 'audio'
+        : type === 'video' ? 'video'
+        : type === 'sticker' ? 'sticker'
+        : 'document';
+      const ct = kind === 'image' ? 'image'
+        : kind === 'audio' ? 'audio'
+        : kind === 'video' ? 'video'
+        : 'file';
+
+      const labelByKind: Record<string, string> = {
+        audio: '[áudio]', image: '[imagem]', video: '[vídeo]', document: '[documento]', sticker: '[figurinha]',
       };
+      const caption = (mediaSpec.caption ?? '').toString().trim();
+      const shortContent = caption || labelByKind[kind] || `[${type}]`;
+
+      const meta: Record<string, any> = {
+        ...baseMeta,
+        media: {
+          url: downloaded.url,
+          kind,
+          mime: downloaded.mime ?? mediaSpec.mime_type ?? null,
+          storage_path: downloaded.path,
+          caption: mediaSpec.caption ?? null,
+          filename: mediaSpec.filename ?? null,
+          size_bytes: downloaded.bytes?.byteLength ?? null,
+        },
+      };
+
+      // Áudio/voz → Whisper. Imagem → Vision. Ambos via process-media-message
+      // usando a chave OpenAI da empresa (passamos organization_id).
+      if ((isAudio || kind === 'image') && downloaded.bytes) {
+        try {
+          const b64 = bytesToBase64(downloaded.bytes);
+          const sb = supa();
+          const mediaKind: 'audio' | 'image' = isAudio ? 'audio' : 'image';
+          const { data: tRes } = await sb.functions.invoke('process-media-message', {
+            body: {
+              kind: mediaKind,
+              base64: b64,
+              mime: downloaded.mime ?? mediaSpec.mime_type ?? (isAudio ? 'audio/ogg' : 'image/jpeg'),
+              caption: mediaSpec.caption ?? undefined,
+              organization_id: conn.organization_id,
+            },
+          });
+          const txt = (tRes as any)?.text ? String((tRes as any).text).trim() : '';
+          if (txt) {
+            if (mediaKind === 'audio') {
+              meta.transcription = `🎙️ Áudio do cliente (transcrito): ${txt}`;
+            } else {
+              const cap = (mediaSpec.caption ?? '').toString().trim();
+              meta.transcription = cap
+                ? `🖼️ Imagem (legenda: "${cap}"): ${txt}`
+                : `🖼️ Imagem do cliente: ${txt}`;
+            }
+          } else {
+            meta.transcription = mediaKind === 'audio'
+              ? '🎙️ [Áudio recebido — não consegui transcrever. Peça ao cliente para reenviar ou descrever em texto.]'
+              : '🖼️ [Imagem recebida — não consegui analisar o conteúdo. Peça para reenviar ou descrever.]';
+            console.warn(`[meta-whatsapp-webhook] media NOT processed (${mediaKind}); fallback placeholder`);
+          }
+        } catch (tErr) {
+          console.warn('[meta-whatsapp-webhook] media processing failed:', (tErr as any)?.message ?? tErr);
+          meta.transcription = isAudio
+            ? '🎙️ [Áudio recebido — não consegui transcrever.]'
+            : '🖼️ [Imagem recebida — não consegui analisar.]';
+        }
+      }
+
+      return { content: shortContent, contentType: ct, metadata: meta };
     } catch (e) {
       console.error('media download error', e);
       return { content: `[${type}]`, contentType: 'text', metadata: { ...baseMeta, media: { id: mediaSpec.id, error: String(e) } } };
@@ -353,7 +548,7 @@ async function extractContent(msg: any, conn: any): Promise<{ content: string; c
   return { content: `[${type}]`, contentType: 'text', metadata: baseMeta };
 }
 
-async function downloadAndStoreMedia(conn: any, mediaId: string, _mime: string, accessToken: string): Promise<{ url: string | null; path: string }> {
+async function downloadAndStoreMedia(conn: any, mediaId: string, _mime: string, accessToken: string): Promise<{ url: string | null; path: string; mime: string; bytes: Uint8Array }> {
   const meta = await fetch(`https://graph.facebook.com/v21.0/${mediaId}`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   }).then((r) => r.json());
@@ -368,7 +563,16 @@ async function downloadAndStoreMedia(conn: any, mediaId: string, _mime: string, 
   const { error } = await sb.storage.from('whatsapp-meta-media').upload(path, buf, { contentType, upsert: true });
   if (error) throw error;
   const { data: signed } = await sb.storage.from('whatsapp-meta-media').createSignedUrl(path, 60 * 60 * 24 * 7);
-  return { url: signed?.signedUrl ?? null, path };
+  return { url: signed?.signedUrl ?? null, path, mime: contentType, bytes: buf };
+}
+
+function bytesToBase64(bytes: Uint8Array): string {
+  let binary = '';
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode.apply(null, Array.from(bytes.subarray(i, i + chunk)) as any);
+  }
+  return btoa(binary);
 }
 
 function guessExt(mime: string): string {

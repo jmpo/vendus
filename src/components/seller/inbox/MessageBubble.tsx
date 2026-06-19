@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { ContactCardBubble } from '@/components/chat/ContactCardBubble';
 import ReactMarkdown from 'react-markdown';
 import { motion } from 'framer-motion';
 import {
@@ -85,7 +86,7 @@ export function MessageBubble({
   const [editContent, setEditContent] = useState(content);
   const [showActions, setShowActions] = useState(false);
 
-  // Deriva status real considerando metadata.delivery_status (mensajes WhatsApp fallos)
+  // Deriva status real considerando metadata.delivery_status (mensagens WhatsApp falhas)
   const deliveryStatus = (metadata as any)?.delivery_status as string | undefined;
   const deliveryError = (metadata as any)?.error as string | undefined;
   const effectiveStatus = deliveryStatus === 'failed' ? 'failed' : status;
@@ -101,7 +102,7 @@ export function MessageBubble({
               <span className="inline-flex"><AlertCircle className="h-3.5 w-3.5 text-destructive" /></span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-xs">
-              <p className="text-xs font-medium">Fallo al enviar</p>
+              <p className="text-xs font-medium">Falha ao enviar</p>
               {deliveryError && <p className="text-xs opacity-80 mt-1">{deliveryError}</p>}
             </TooltipContent>
           </Tooltip>
@@ -194,13 +195,13 @@ export function MessageBubble({
               {onForward && (
                 <DropdownMenuItem onClick={() => onForward(id)}>
                   <Forward className="h-4 w-4 mr-2" />
-                  Reenviar
+                  Encaminhar
                 </DropdownMenuItem>
               )}
               {onStar && (
                 <DropdownMenuItem onClick={() => onStar(id)}>
                   <Star className={cn("h-4 w-4 mr-2", isStarred && "fill-yellow-400 text-yellow-400")} />
-                  {isStarred ? 'Quitar favorito' : 'Marcar como favorito'}
+                  {isStarred ? 'Desfavoritar' : 'Favoritar'}
                 </DropdownMenuItem>
               )}
               {isOwnMessage && onEdit && (
@@ -215,7 +216,7 @@ export function MessageBubble({
               {!isVisitor && onDelete && (
                 <DropdownMenuItem onClick={() => onDelete(id)} className="text-destructive">
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Eliminar
+                  Apagar
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
@@ -262,11 +263,11 @@ export function MessageBubble({
         {forwardedFrom && !isDeleted && (
           <p className="text-[10px] opacity-60 mb-1 flex items-center gap-1">
             <Forward className="h-3 w-3" />
-            Reenviada
+            Encaminhada
           </p>
         )}
 
-        {/* Sender name (oculto cuando for a propia mensaje del agente — reduz ruído visual) */}
+        {/* Sender name (oculto quando for a própria mensagem do agente — reduz ruído visual) */}
         {!isVisitor && isFirstInGroup && !isDeleted && !isOwnMessage && (
           <p className="text-[10px] opacity-70 mb-1 font-medium">
             {formatSenderLabel({
@@ -327,18 +328,23 @@ export function MessageBubble({
           </div>
         ) : (
           <>
+            {Array.isArray((metadata as any)?.contacts) && (metadata as any).contacts.length > 0 && (
+              <div className="mb-1">
+                <ContactCardBubble contacts={(metadata as any).contacts} />
+              </div>
+            )}
             {media && (
               <div className={cn(content && content.trim() ? 'mb-2' : '')}>
                 <MediaAttachment media={media} isOwn={!isVisitor && !isBot} />
               </div>
             )}
-            {content && content.trim() && !(media && media.caption === content) && (
+            {content && content.trim() && !(media && media.caption === content) && !(Array.isArray((metadata as any)?.contacts) && (metadata as any).contacts.length > 0) && (
               <MessageMarkdown content={content} isVisitor={isVisitor} />
             )}
           </>
         )}
 
-        {/* Equipo and status */}
+        {/* Time and status */}
         {!isEditing && (
           <div
             className={cn(
@@ -390,7 +396,7 @@ export function MessageBubble({
 }
 
 /**
- * Renderiza contenido da mensaje con formatação WhatsApp -> Markdown.
+ * Renderiza conteúdo da mensagem com formatação WhatsApp -> Markdown.
  * Restringe os elementos permitidos para evitar HTML arbitrário.
  */
 function MessageMarkdown({ content, isVisitor }: { content: string; isVisitor: boolean }) {

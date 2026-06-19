@@ -30,6 +30,7 @@ const f = {
   AIChat: () => import('@/components/ai/AIChat').then(m => ({ default: m.AIChat })),
   LeadsKanban: () => import('@/components/seller/LeadsKanban').then(m => ({ default: m.LeadsKanban })),
   TaskCenter: () => import('@/components/seller/TaskCenter').then(m => ({ default: m.TaskCenter })),
+  ActivityCenter: () => import('@/components/seller/activity/ActivityCenter').then(m => ({ default: m.ActivityCenter })),
   FinancialPanel: () => import('@/components/seller/FinancialPanel').then(m => ({ default: m.FinancialPanel })),
   SellerInbox: () => import('@/components/seller/SellerInbox').then(m => ({ default: m.SellerInbox })),
   SellerBookings: () => import('@/components/seller/SellerBookings').then(m => ({ default: m.SellerBookings })),
@@ -37,6 +38,7 @@ const f = {
   MobileProductDashboard: () => import('@/components/mobile/MobileProductDashboard').then(m => ({ default: m.MobileProductDashboard })),
   MobileKanban: () => import('@/components/mobile/MobileKanban').then(m => ({ default: m.MobileKanban })),
   MobileTaskList: () => import('@/components/mobile/MobileTaskList').then(m => ({ default: m.MobileTaskList })),
+  MobileActivityCenter: () => import('@/components/mobile/MobileActivityCenter').then(m => ({ default: m.MobileActivityCenter })),
   MobileGoalsView: () => import('@/components/mobile/MobileGoalsView').then(m => ({ default: m.MobileGoalsView })),
 };
 
@@ -46,7 +48,7 @@ const ObjectionsView = lazy(f.ObjectionsView);
 const MaterialsView = lazy(f.MaterialsView);
 const AIChat = lazy(f.AIChat);
 const LeadsKanban = lazy(f.LeadsKanban);
-const TaskCenter = lazy(f.TaskCenter);
+const ActivityCenter = lazy(f.ActivityCenter);
 const FinancialPanel = lazy(f.FinancialPanel);
 const SellerInbox = lazy(f.SellerInbox);
 const SellerBookings = lazy(f.SellerBookings);
@@ -54,6 +56,7 @@ const ProductDashboard = lazy(f.ProductDashboard);
 const MobileProductDashboard = lazy(f.MobileProductDashboard);
 const MobileKanban = lazy(f.MobileKanban);
 const MobileTaskList = lazy(f.MobileTaskList);
+const MobileActivityCenter = lazy(f.MobileActivityCenter);
 const MobileGoalsView = lazy(f.MobileGoalsView);
 
 // Mapa tab → factory(s) para prefetch on-hover.
@@ -61,7 +64,7 @@ const tabFactories: Record<string, Array<() => Promise<unknown>>> = {
   'product-dashboard': [f.ProductDashboard, f.MobileProductDashboard],
   leads: [f.LeadsKanban, f.MobileKanban],
   inbox: [f.SellerInbox],
-  tasks: [f.TaskCenter, f.MobileTaskList],
+  tasks: [f.ActivityCenter, f.TaskCenter, f.MobileActivityCenter, f.MobileTaskList],
   goals: [f.MobileGoalsView],
   financial: [f.FinancialPanel],
   bookings: [f.SellerBookings],
@@ -106,14 +109,14 @@ function InitialLoadingScreen() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 p-6 text-center">
       <Loader2 className="h-8 w-8 animate-spin text-primary" />
       <p className="text-sm text-muted-foreground">
-        {stuck ? 'Demorando mais que o esperado…' : 'Cargando sus productos…'}
+        {stuck ? 'Demorando mais que o esperado…' : 'Carregando seus produtos…'}
       </p>
       {stuck && (
         <button
           onClick={() => window.location.reload()}
           className="text-sm font-medium text-primary underline-offset-4 hover:underline"
         >
-          Intentar novamente
+          Tentar novamente
         </button>
       )}
     </div>
@@ -155,6 +158,7 @@ const Index = () => {
     } catch { /* noop */ }
   }, []);
   const [pendingConversationId, setPendingConversationId] = useState<string | null>(null);
+  const [inboxConversationOpen, setInboxConversationOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [, startTransition] = useTransition();
   const { toast } = useToast();
@@ -172,9 +176,9 @@ const Index = () => {
   const { data: materials = [], isLoading: loadingMaterials } = useMaterials(selectedProduct?.id);
 
   // As queries usam `placeholderData: []`, o que zera `isLoading` imediatamente
-  // mismo durante o primero fetch. Sin considerar `isFetching && !isFetched`,
-  // o EmptyState ("Aguardando liberação") piscava no refresh antes dos dados
-  // reais chegarem. Acá mantemos a tela de loading até o primero fetch concluir.
+  // mesmo durante o primeiro fetch. Sem considerar `isFetching && !isFetched`,
+  // o EmptyState ("Esperando liberação") piscava no refresh antes dos dados
+  // reais chegarem. Aqui mantemos a tela de loading até o primeiro fetch concluir.
   const isLoading =
     productsQuery.isLoading ||
     assignedQuery.isLoading ||
@@ -184,13 +188,13 @@ const Index = () => {
 
   const products = useMemo(() => {
     const assignedList = (assignedProducts?.map(ap => ap.products).filter(Boolean) as DBProduct[]) || [];
-    // Admin/Manager/Super Admin → vê todos los productos da organización.
-    // Vendedor → vê só os productos atribuídos.
+    // Admin/Manager/Super Admin → vê todos os produtos da organização.
+    // Vendedor → vê só os produtos atribuídos.
     if (isAdminOrManager) return (allProducts || []);
     return assignedList;
   }, [assignedProducts, allProducts, isAdminOrManager]);
 
-  // Cache de tabs ya visitadas — mantemos montadas para revisita instantânea.
+  // Cache de tabs já visitadas — mantemos montadas para revisita instantânea.
   const visitedRef = useRef<Set<string>>(new Set([activeTab]));
   visitedRef.current.add(activeTab);
 
@@ -207,13 +211,13 @@ const Index = () => {
     }, 2500);
   }, [isMobile]);
 
-  // Auto-selección: restaura o producto guardado, ou seleciona o primero disponible.
+  // Auto-seleção: restaura o produto salvo, ou seleciona o primeiro disponível.
   useEffect(() => {
     if (products.length === 0 || selectedProduct) return;
     const savedId = savedProductIdRef.current;
     const saved = savedId ? products.find((p) => p.id === savedId) : null;
     setSelectedProductState(saved || products[0]);
-    // Só fuerza product-dashboard se NÃO houver tab persistida.
+    // Só força product-dashboard se NÃO houver tab persistida.
     const hasSavedTab = (() => {
       try { return !!sessionStorage.getItem('index:activeTab'); } catch { return false; }
     })();
@@ -232,7 +236,8 @@ const Index = () => {
     setActiveTab('products');
   }, []);
 
-  const handleNavigate = useCallback((tab: string) => {
+  const handleNavigate = useCallback((tab: string, payload?: { conversationId?: string; leadId?: string }) => {
+    if (payload?.conversationId) setPendingConversationId(payload.conversationId);
     prefetchIndexTab(tab);
     startTransition(() => setActiveTab(tab));
   }, []);
@@ -246,26 +251,26 @@ const Index = () => {
       setPendingConversationId(data.conversation_id);
       setActiveTab('inbox');
       toast({
-        title: data.is_new ? 'Conversación creada' : 'Conversación encontrada',
+        title: data.is_new ? 'Conversa criada' : 'Conversa encontrada',
         description: 'Abrindo no inbox...',
       });
     } catch (err: any) {
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      toast({ title: 'Erro', description: err.message, variant: 'destructive' });
     }
   }, [toast]);
 
   const headerInfo = useMemo(() => {
     if (!selectedProduct) {
-      return { title: 'Meus Produtos', subtitle: 'Seleccioná um producto para comenzar' };
+      return { title: 'Meus Produtos', subtitle: 'Seleccioná um produto para começar' };
     }
     const map: Record<string, { title: string; subtitle: string }> = {
-      'product-dashboard': { title: 'Visión General', subtitle: selectedProduct.name },
+      'product-dashboard': { title: 'Resumen', subtitle: selectedProduct.name },
       'leads': { title: 'Pipeline de Leads', subtitle: selectedProduct.name },
-      'inbox': { title: 'Conversas', subtitle: selectedProduct.name },
-      'tasks': { title: 'Mis Tarefas', subtitle: selectedProduct.name },
+      'inbox': { title: 'Conversaciones', subtitle: selectedProduct.name },
+      'tasks': { title: 'Tareas', subtitle: 'Tareas, follow-ups, ligações e mais' },
       'goals': { title: 'Metas', subtitle: selectedProduct.name },
       'financial': { title: 'Financeiro', subtitle: selectedProduct.name },
-      'bookings': { title: 'Agendamientos', subtitle: selectedProduct.name },
+      'bookings': { title: 'Agenda', subtitle: selectedProduct.name },
       'cadence': { title: 'Cadencia', subtitle: selectedProduct.name },
       'playbook': { title: 'Playbook', subtitle: selectedProduct.name },
       'objections': { title: 'Objeciones', subtitle: selectedProduct.name },
@@ -279,18 +284,18 @@ const Index = () => {
     return <InitialLoadingScreen />;
   }
 
-  // Primero acesso após remix: super admin vai direto ao painel global
-  // para concluir contraseña + configuración inicial. Após eso, flujo normal.
+  // Primeiro acesso após remix: super admin vai direto ao painel global
+  // para concluir senha + configuração inicial. Após isso, fluxo normal.
   if (isSuperAdmin() && shouldForceSetup) {
     return <Navigate to="/super-admin" replace />;
   }
 
-  // Admin de empresa: por defecto redireciona ao painel administrativo.
+  // Admin de empresa: por padrão redireciona ao painel administrativo.
   // Exceção (NÃO redireciona, deixa o admin usar o app do vendedor):
-  // Admin tiene productos atribuídos a ele (atua también como vendedor) —
-  //   nesse caso o "Voltar ao App" no painel admin debe funcionar.
+  // Admin tem produtos atribuídos a ele (atua também como vendedor) —
+  //   nesse caso o "Volver ao App" no painel admin deve funcionar.
   // O onboarding guiado é renderizado dentro do /admin via OnboardingBanner,
-  // entonces no precisa mais bloquear o redirect acá.
+  // então não precisa mais bloquear o redirect aqui.
   const adminHasAssignedProducts =
     (assignedProducts?.length || 0) > 0;
   if (
@@ -307,11 +312,11 @@ const Index = () => {
     return <Navigate to="/super-admin" replace />;
   }
 
-  // Estado vacío - vendedor/manager sin productos atribuídos
+  // Estado vazio - vendedor/manager sem produtos atribuídos
   if (products.length === 0) {
     return (
       <div className="min-h-screen bg-background">
-        <Header title={platformName} subtitle="Bienvenido" />
+        <Header title={platformName} subtitle="Bem-vindo" />
         <EmptyState />
       </div>
     );
@@ -351,14 +356,19 @@ const Index = () => {
             productId={selectedProduct.id}
             pendingConversationId={pendingConversationId}
             onConversationSelected={() => setPendingConversationId(null)}
+            onConversationOpenChange={setInboxConversationOpen}
           />
         );
 
       case 'tasks':
         return isMobile ? (
-          <MobileTaskList userId={user?.id || ''} productId={selectedProduct.id} />
+          <MobileActivityCenter
+            userId={user?.id || ''}
+            productId={selectedProduct.id}
+            productName={selectedProduct.name}
+          />
         ) : (
-          <TaskCenter
+          <ActivityCenter
             userId={user?.id || ''}
             productId={selectedProduct.id}
             productName={selectedProduct.name}
@@ -418,21 +428,23 @@ const Index = () => {
     }
   };
 
-  // Renderiza TODAS as tabs ya visitadas, escondendo as inativas → revisita instantânea.
+  // Renderiza TODAS as tabs já visitadas, escondendo as inativas → revisita instantânea.
   const renderContent = () => {
     if (!selectedProduct) return <SectionLoader />;
     return (
       <>
         {Array.from(visitedRef.current).map((tab) => {
           const isActive = tab === activeTab;
+          const isInboxFullBleed = tab === 'inbox' && isMobile && inboxConversationOpen;
           return (
             <div
               key={tab}
               hidden={!isActive}
               aria-hidden={!isActive}
               style={!isActive ? { display: 'none' } : undefined}
+              className={isActive && isInboxFullBleed ? 'h-full' : undefined}
             >
-              {/* fallback={null} = sin spinner; useTransition mantém tela anterior visível */}
+              {/* fallback={null} = sem spinner; useTransition mantém tela anterior visível */}
               <Suspense fallback={<TabSkeleton />}>{renderTab(tab)}</Suspense>
             </div>
           );
@@ -441,7 +453,7 @@ const Index = () => {
     );
   };
 
-  // Modal de onboarding guiado (admin, primera vez)
+  // Modal de onboarding guiado (admin, primeira vez)
   const guidedModal = showGuided ? (
     <GuidedOnboarding
       open={showGuided}
@@ -453,6 +465,7 @@ const Index = () => {
 
   // Mobile Layout
   if (isMobile) {
+    const fullBleed = activeTab === 'inbox' && inboxConversationOpen;
     return (
       <>
         {guidedModal}
@@ -465,8 +478,9 @@ const Index = () => {
           products={products}
           selectedProduct={selectedProduct}
           onSelectProduct={handleSelectProduct}
+          fullBleed={fullBleed}
         >
-          <div className="p-4">{renderContent()}</div>
+          <div className={fullBleed ? 'h-full' : 'p-4'}>{renderContent()}</div>
         </MobileLayout>
       </>
     );

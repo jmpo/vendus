@@ -35,7 +35,7 @@ interface MobileMoreMenuProps {
 }
 
 const quickActions = [
-  { icon: Phone, label: 'Llamar', color: 'bg-green-500/20 text-green-500', action: 'call' },
+  { icon: Phone, label: 'Ligar', color: 'bg-green-500/20 text-green-500', action: 'call' },
   { icon: Mail, label: 'Email', color: 'bg-blue-500/20 text-blue-500', action: 'email' },
   { icon: BarChart3, label: 'Stats', color: 'bg-purple-500/20 text-purple-500', action: 'financial' },
   { icon: Target, label: 'Meta', color: 'bg-orange-500/20 text-orange-500', action: 'goals' },
@@ -48,7 +48,7 @@ const menuItems = [
   { id: 'playbook', label: 'Playbook', icon: BookOpen, color: 'text-green-400' },
   { id: 'objections', label: 'Objeciones', icon: MessageSquare, color: 'text-yellow-400' },
   { id: 'materials', label: 'Materiales', icon: FileText, color: 'text-purple-400' },
-  { id: 'financial', label: 'Financiero', icon: DollarSign, color: 'text-emerald-400' },
+  
 ];
 
 export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProduct }: MobileMoreMenuProps) {
@@ -69,12 +69,12 @@ export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProdu
       case 'call':
         // Open phone dialer
         window.location.href = 'tel:';
-        toast.info('Seleccioná un lead para llamar', { description: 'Andá a la lista de leads primero' });
+        toast.info('Seleccioná um lead para ligar', { description: 'Acesse a lista de leads primeiro' });
         break;
       case 'email':
         // Open email app
         window.location.href = 'mailto:';
-        toast.info('Seleccioná un lead para enviar email', { description: 'Andá a la lista de leads primero' });
+        toast.info('Seleccioná um lead para enviar email', { description: 'Acesse a lista de leads primeiro' });
         break;
       case 'financial':
         onTabChange('financial');
@@ -132,7 +132,7 @@ export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProdu
         </div>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto overscroll-contain">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain">
           <SheetHeader className="px-6 pb-4">
             {/* User info */}
             <div className="flex items-center gap-4">
@@ -140,7 +140,7 @@ export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProdu
                 <User size={24} className="text-primary-foreground" />
               </div>
               <div className="flex-1 text-left">
-                <p className="font-semibold text-foreground">{profile?.full_name || 'Usuario'}</p>
+                <p className="font-semibold text-foreground">{profile?.full_name || 'Usuário'}</p>
                 <p className="text-sm text-muted-foreground">{profile?.email}</p>
               </div>
             </div>
@@ -226,7 +226,7 @@ export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProdu
               <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
                 <User size={20} className="text-blue-400" />
               </div>
-              <span className="flex-1 text-left font-medium">Mi Perfil</span>
+              <span className="flex-1 text-left font-medium">Meu Perfil</span>
               <ChevronRight size={18} className="text-muted-foreground" />
             </button>
 
@@ -260,7 +260,7 @@ export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProdu
                 <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
                   <Shield size={20} className="text-amber-400" />
                 </div>
-                <span className="flex-1 text-left font-medium">Panel Admin</span>
+                <span className="flex-1 text-left font-medium">Painel Admin</span>
                 <ChevronRight size={18} className="text-muted-foreground" />
               </button>
             )}
@@ -287,7 +287,7 @@ export function MobileMoreMenu({ open, onClose, activeTab, onTabChange, hasProdu
               <div className="h-10 w-10 rounded-xl bg-destructive/10 flex items-center justify-center">
                 <LogOut size={20} />
               </div>
-              <span className="flex-1 text-left font-medium">Cerrar sesión</span>
+              <span className="flex-1 text-left font-medium">Sair</span>
             </button>
           </div>
         </div>

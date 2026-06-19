@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Sparkles, Loader2, Bot, Phone } from 'lucide-react';
+import { Sparkles, Loader2, Bot, Phone, BadgeCheck, Smartphone, Settings2, AlertTriangle, Info } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useProductAgents, useAllAgents } from '@/hooks/useProductAgents';
+import { useAgentConnections, pickAutoConnection } from '@/hooks/useAgentConnections';
+import { useLeadWAWindow } from '@/hooks/useLeadWAWindow';
+import { TemplatePicker, type VariableMapping } from '@/components/admin/meta/TemplatePicker';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -41,12 +44,12 @@ interface CallWithAIDialogProps {
 }
 
 const OBJECTIVE_PRESETS = [
-  { value: 'agendar', label: 'Programar reunión', text: 'Programar una reunión con el lead.' },
-  { value: 'retomar', label: 'Retomar conversación', text: 'Retomar la conversación donde se quedó y dar continuidad a la atención.' },
-  { value: 'calificar', label: 'Calificar (BANT)', text: 'Calificar al lead usando BANT (presupuesto, autoridad, necesidad, plazo).' },
-  { value: 'oferta', label: 'Presentar oferta', text: 'Presentar la oferta principal y conducir al cierre.' },
-  { value: 'recuperar', label: 'Recuperar carrito', text: 'Recuperar carrito abandonado y ayudar a finalizar la compra.' },
-  { value: 'custom', label: 'Otro (escribir)', text: '' },
+  { value: 'agendar', label: 'Agendar reunião', text: 'Agendar uma reunião com o lead.' },
+  { value: 'retomar', label: 'Retomar conversa', text: 'Retomar a conversa de onde parou e dar continuidade ao atendimento.' },
+  { value: 'qualificar', label: 'Qualificar (BANT)', text: 'Qualificar o lead usando BANT (orçamento, autoridade, necessidade, prazo).' },
+  { value: 'oferta', label: 'Apresentar oferta', text: 'Apresentar a oferta principal e conduzir para o fechamento.' },
+  { value: 'recuperar', label: 'Recuperar carrinho', text: 'Recuperar carrinho abandonado e ajudar a finalizar a compra.' },
+  { value: 'custom', label: 'Outro (escrever)', text: '' },
 ];
 
 export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext, initialObjective }: CallWithAIDialogProps) {
@@ -55,18 +58,45 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
   const productAgentsQuery = useProductAgents(lead.product_id || '');
   const allAgentsQuery = useAllAgents();
 
-  // Se o lead tiene producto, usa agentes do producto; sino fallback p/ todos da org.
+  // Se o lead tem produto, usa agentes do produto; senão fallback p/ todos da org.
   const agents = lead.product_id ? productAgentsQuery.data : allAgentsQuery.data;
   const loadingAgents = lead.product_id ? productAgentsQuery.isLoading : allAgentsQuery.isLoading;
 
   const [agentId, setAgentId] = useState<string>('');
+  const [connectionChoice, setConnectionChoice] = useState<string>('auto'); // 'auto' | `${type}:${id}`
   const [objectivePreset, setObjectivePreset] = useState<string>('retomar');
   const [customObjective, setCustomObjective] = useState(initialObjective || '');
   const [extraContext, setExtraContext] = useState(initialExtraContext || '');
   const [mode, setMode] = useState<'direct' | 'conversational'>('direct');
   const [isSending, setIsSending] = useState(false);
+  const [templateValue, setTemplateValue] = useState<{ template_id: string | null; variable_mapping: VariableMapping }>({ template_id: null, variable_mapping: {} });
 
-  // Cuando reabre con novo contexto inicial, sobrescreve.
+  const connectionsQuery = useAgentConnections(agentId);
+  const connections = connectionsQuery.data;
+  const autoPick = useMemo(() => pickAutoConnection(connections), [connections]);
+  const windowQuery = useLeadWAWindow(lead.id);
+
+  // Conexión "ativa" para a UI: explícita ou auto.
+  const activeConn = useMemo(() => {
+    if (connectionChoice && connectionChoice !== 'auto') {
+      const [t, id] = connectionChoice.split(':');
+      return connections?.find((c) => c.id === id && c.type === t) ?? null;
+    }
+    return autoPick;
+  }, [connectionChoice, connections, autoPick]);
+
+  const isMeta = activeConn?.type === 'meta_whatsapp';
+  const needsTemplate = isMeta && !windowQuery.data?.withinWindow;
+
+  // Restaura escolha salva do localStorage por agente
+  useEffect(() => {
+    if (!agentId) return;
+    const saved = typeof window !== 'undefined' ? window.localStorage.getItem(`callWithAI:conn:${agentId}`) : null;
+    if (saved) setConnectionChoice(saved);
+    else setConnectionChoice('auto');
+  }, [agentId]);
+
+  // Quando reabre com novo contexto inicial, sobrescreve.
   useEffect(() => {
     if (open && initialExtraContext) setExtraContext(initialExtraContext);
     if (open && initialObjective) {
@@ -75,7 +105,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
     }
   }, [open, initialExtraContext, initialObjective]);
 
-  // Pré-seleciona agente predeterminado / primero ativo
+  // Pré-seleciona agente padrão / primeiro ativo
   useEffect(() => {
     if (!agents?.length) return;
     if (agentId && agents.some((a) => a.id === agentId)) return;
@@ -96,15 +126,15 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
 
   const handleSubmit = async () => {
     if (!profile?.organization_id) {
-      toast.error('Sesión inválida.');
+      toast.error('Sessão inválida.');
       return;
     }
     if (!lead.phone) {
-      toast.error('Lead sin teléfono registrado.');
+      toast.error('Lead sem telefone cadastrado.');
       return;
     }
     if (!agentId) {
-      toast.error('Seleccione un agente de IA.');
+      toast.error('Seleccioná um agente de IA.');
       return;
     }
 
@@ -112,8 +142,37 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
     const objective = objectivePreset === 'custom' ? customObjective.trim() : preset?.text || '';
 
     if (!objective) {
-      toast.error('Defina un objetivo para la IA.');
+      toast.error('Defina um objetivo para a IA.');
       return;
+    }
+
+    // Resolve canal escolhido
+    let instance_id: string | undefined;
+    let connection_type: 'evolution' | 'meta_whatsapp' | undefined;
+    if (connectionChoice && connectionChoice !== 'auto') {
+      const [t, id] = connectionChoice.split(':');
+      if ((t === 'evolution' || t === 'meta_whatsapp') && id) {
+        const picked = connections?.find((c) => c.id === id && c.type === t);
+        if (picked && !picked.connected) {
+          toast.error(`Conexión "${picked.label}" está desconectada. Reconecte ou escolha outra.`);
+          return;
+        }
+        instance_id = id;
+        connection_type = t;
+      }
+    }
+
+    // Resolve canal efetivo (para validar template)
+    const effectiveType = connection_type ?? activeConn?.type;
+    const requiresTemplate = effectiveType === 'meta_whatsapp' && !windowQuery.data?.withinWindow;
+    if (requiresTemplate && !templateValue.template_id) {
+      toast.error('Seleccioná um template HSM aprovado (exigido pela API Oficial fora da janela 24h).');
+      return;
+    }
+
+    // Persiste preferência
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(`callWithAI:conn:${agentId}`, connectionChoice);
     }
 
     setIsSending(true);
@@ -126,6 +185,11 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
           objective,
           extra_context: extraContext.trim() || undefined,
           mode,
+          instance_id,
+          connection_type,
+          template_config: requiresTemplate
+            ? { template_id: templateValue.template_id, variable_mapping: templateValue.variable_mapping }
+            : undefined,
         },
       });
 
@@ -133,11 +197,11 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
 
       const result = Array.isArray((data as any)?.results) ? (data as any).results[0] : null;
       if (result?.skipped) {
-        toast.info(`La IA no se activó: ${result.reason || 'ya existe un outreach reciente'}`);
+        toast.info(`IA não disparou: ${result.reason || 'já existe outreach recente'}`);
       } else if (result?.error) {
-        toast.error(`Error: ${result.error}`);
+        toast.error(`Erro: ${result.error}`);
       } else {
-        toast.success(`La IA inició contacto con ${lead.name}.`);
+        toast.success(`IA iniciou contato com ${lead.name}.`);
       }
 
       queryClient.invalidateQueries({ queryKey: ['interactions', lead.id] });
@@ -145,12 +209,12 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
       queryClient.invalidateQueries({ queryKey: ['lead', lead.id] });
       onOpenChange(false);
     } catch (err: any) {
-      console.error('[CallWithAI] error:', err);
-      const msg = err?.message || 'Error al iniciar la atención con IA.';
+      console.error('[CallWithAI] erro:', err);
+      const msg = err?.message || 'Erro ao iniciar atendimento com IA.';
       if (msg.includes('402')) {
-        toast.error('Sin créditos de IA. Agregue créditos en las configuraciones.');
+        toast.error('Sem créditos de IA. Adicione créditos nas configurações.');
       } else if (msg.includes('429')) {
-        toast.error('Demasiadas solicitudes. Intente nuevamente en unos instantes.');
+        toast.error('Muitas requisições. Tente novamente em instantes.');
       } else {
         toast.error(msg);
       }
@@ -161,14 +225,14 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Llamar con IA
+            Chamar com IA
           </DialogTitle>
           <DialogDescription>
-            La IA se pondrá en contacto y conducirá la atención de forma autónoma.
+            A IA entrará em contato e conduzirá o atendimento de forma autônoma.
           </DialogDescription>
         </DialogHeader>
 
@@ -208,7 +272,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
                         <span className="text-xs text-muted-foreground capitalize">· {a.agent_type}</span>
                       )}
                       {a.is_default && (
-                        <span className="text-xs text-primary">· predeterminado</span>
+                        <span className="text-xs text-primary">· padrão</span>
                       )}
                     </div>
                   </SelectItem>
@@ -217,10 +281,88 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
             </Select>
             {!loadingAgents && !agents?.length && (
               <p className="text-xs text-destructive">
-                Ningún agente de IA configurado{lead.product_id ? ' para este producto' : ''}.
+                Ningún agente de IA configurado{lead.product_id ? ' para este produto' : ''}.
               </p>
             )}
           </div>
+
+          {/* Enviar por (conexão WhatsApp) */}
+          <div className="space-y-2">
+            <Label>Enviar por</Label>
+            <Select
+              value={connectionChoice}
+              onValueChange={setConnectionChoice}
+              disabled={!agentId || connectionsQuery.isLoading}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={connectionsQuery.isLoading ? 'Carregando conexões...' : 'Seleccioná o canal'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="auto">
+                  <div className="flex items-center gap-2">
+                    <Settings2 className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span>Automático</span>
+                    <span className="text-xs text-muted-foreground">· recomendado pelo agente</span>
+                  </div>
+                </SelectItem>
+                {connections?.map((c) => {
+                  const Icon = c.type === 'meta_whatsapp' ? BadgeCheck : Smartphone;
+                  const tag = c.type === 'meta_whatsapp' ? 'API Oficial' : 'QR Code';
+                  return (
+                    <SelectItem
+                      key={`${c.type}:${c.id}`}
+                      value={`${c.type}:${c.id}`}
+                      disabled={!c.connected}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className={`h-3.5 w-3.5 ${c.type === 'meta_whatsapp' ? 'text-emerald-600' : 'text-muted-foreground'}`} />
+                        <span className="truncate max-w-[160px]">{c.label}</span>
+                        {c.phone && <span className="text-xs text-muted-foreground">· {c.phone}</span>}
+                        <span className="text-xs text-muted-foreground">· {tag}</span>
+                        {!c.connected && <span className="text-xs text-destructive">· desconectado</span>}
+                      </div>
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+            {agentId && !connectionsQuery.isLoading && !connections?.length && (
+              <p className="text-xs text-destructive flex items-center gap-1">
+                <AlertTriangle className="h-3 w-3" />
+                Agente sem conexão WhatsApp vinculada. Configure nas opções do agente.
+              </p>
+            )}
+            {connectionChoice === 'auto' && autoPick && (
+              <p className="text-xs text-muted-foreground">
+                → usará <span className="font-medium">{autoPick.label}</span>
+                {autoPick.phone && <> · {autoPick.phone}</>}
+                {' '}({autoPick.type === 'meta_whatsapp' ? 'API Oficial' : 'QR Code'})
+              </p>
+            )}
+          </div>
+
+          {/* Template HSM (API Oficial fora da janela 24h) */}
+          {needsTemplate && activeConn && (
+            <div className="space-y-2 rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3">
+              <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                <Info className="h-3.5 w-3.5 mt-0.5 text-emerald-600 shrink-0" />
+                <span>
+                  API Oficial: a Meta exige <strong>template HSM aprovado</strong> para abrir conversa
+                  {windowQuery.data?.hasConversation ? ' (última mensagem do lead há mais de 24h)' : ' (sem histórico recente com este lead)'}.
+                  Após a resposta, a IA continua o atendimento em texto livre dentro da janela 24h.
+                </span>
+              </div>
+              <TemplatePicker
+                organizationId={profile?.organization_id ?? null}
+                connectionIds={[activeConn.id]}
+                value={templateValue}
+                onChange={setTemplateValue}
+                required
+                label="Template HSM"
+                helperText="Apenas templates aprovados pela Meta para esta conexão."
+              />
+            </div>
+          )}
 
           {/* Objetivo */}
           <div className="space-y-2">
@@ -241,7 +383,7 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
               <Input
                 value={customObjective}
                 onChange={(e) => setCustomObjective(e.target.value)}
-                placeholder="Ej: Invitar al webinar del jueves."
+                placeholder="Ex: Convidar para o webinar de quinta-feira."
               />
             )}
           </div>
@@ -252,34 +394,36 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
             <Textarea
               value={extraContext}
               onChange={(e) => setExtraContext(e.target.value)}
-              placeholder="Ej: El lead pidió que se le contacte mañana sobre el plan anual con descuento."
+              placeholder="Ex: Lead pediu para retornar amanhã sobre plano anual com desconto."
               rows={3}
             />
           </div>
 
-          {/* Modo */}
-          <div className="space-y-2">
-            <Label>Modo de contacto</Label>
-            <RadioGroup value={mode} onValueChange={(v) => setMode(v as 'direct' | 'conversational')} className="grid grid-cols-2 gap-2">
-              <label className={`flex items-start gap-2 p-3 rounded-lg border cursor-pointer transition-colors ${mode === 'direct' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}>
-                <RadioGroupItem value="direct" className="mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium">Directo</p>
-                  <p className="text-xs text-muted-foreground">Ya dispara el abordaje inicial.</p>
-                </div>
-              </label>
-              <label className={`flex items-start gap-2 p-3 rounded-lg border cursor-pointer transition-colors ${mode === 'conversational' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}>
-                <RadioGroupItem value="conversational" className="mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium">Conversacional</p>
-                  <p className="text-xs text-muted-foreground">Conduce con preguntas exploratorias.</p>
-                </div>
-              </label>
-            </RadioGroup>
-          </div>
+          {/* Modo (oculto quando exigir template HSM) */}
+          {!needsTemplate && (
+            <div className="space-y-2">
+              <Label>Modo de contato</Label>
+              <RadioGroup value={mode} onValueChange={(v) => setMode(v as 'direct' | 'conversational')} className="grid grid-cols-2 gap-2">
+                <label className={`flex items-start gap-2 p-3 rounded-lg border cursor-pointer transition-colors ${mode === 'direct' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}>
+                  <RadioGroupItem value="direct" className="mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium">Direto</p>
+                    <p className="text-xs text-muted-foreground">Já dispara a abordagem inicial.</p>
+                  </div>
+                </label>
+                <label className={`flex items-start gap-2 p-3 rounded-lg border cursor-pointer transition-colors ${mode === 'conversational' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}>
+                  <RadioGroupItem value="conversational" className="mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium">Conversacional</p>
+                    <p className="text-xs text-muted-foreground">Conduz com perguntas exploratórias.</p>
+                  </div>
+                </label>
+              </RadioGroup>
+            </div>
+          )}
 
           <p className="text-xs text-muted-foreground border-l-2 border-primary/40 pl-3">
-            La IA continuará la atención y hará seguimientos automáticos respetando el horario comercial. La conversación aparecerá en el Inbox.
+            A IA continuará o atendimento e fará follow-ups automáticos respeitando o horário comercial. A conversa aparecerá no Inbox.
           </p>
         </div>
 
@@ -287,9 +431,9 @@ export function CallWithAIDialog({ open, onOpenChange, lead, initialExtraContext
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSending}>
             Cancelar
           </Button>
-          <Button onClick={handleSubmit} disabled={isSending || !agentId || !lead.phone} className="gap-2">
+          <Button onClick={handleSubmit} disabled={isSending || !agentId || !lead.phone || (needsTemplate && !templateValue.template_id)} className="gap-2">
             {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-            Iniciar atención con IA
+            Iniciar atendimento com IA
           </Button>
         </DialogFooter>
       </DialogContent>

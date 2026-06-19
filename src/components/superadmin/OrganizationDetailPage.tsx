@@ -552,7 +552,7 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
                 <div className="space-y-3">
                   <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                     <Clock className="h-4 w-4" />
-                    Convites Pendentes
+                    Convites Pendientes
                   </h4>
                   {pendingInvitations.map((invite: any) => (
                     <div 

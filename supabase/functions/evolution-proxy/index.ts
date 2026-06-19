@@ -713,79 +713,100 @@ Deno.serve(async (req) => {
         });
       }
 
-      // Strategy:
-      // 1) Check current connection state on the server.
-      //    - connected/open => already connected, just sync DB and return.
-      //    - qr present     => store the SERVER QR exactly as returned now.
-      //    - otherwise      => POST /instance/connect to trigger a fresh QR.
-      // Never force logout here: it invalidates the active QR/session cycle on
-      // Evolution Go and makes the panel show a QR that WhatsApp no longer accepts.
+      // Estrategia (servidor Evolution Go actual, verificado en vivo):
+      //  - El QR NO viene inline en /instance/connect, y GET /instance/{uuid} responde 404.
+      //  - La fuente fiable del QR es GET /instance/all → item.qrcode.
+      //  - Tras 5 QR sin escanear el server marca "QR code limit reached" y deja de rotar QRs;
+      //    además a veces purga la instancia. En ambos casos recreamos la instancia (mismo
+      //    nombre, token nuevo) para obtener un QR fresco, y actualizamos el uuid/token en la DB.
+      let curUuid = uuid;
+      let curToken = instanceToken;
+      const webhookUrl = `${supabaseUrl}/functions/v1/evolution-webhook`;
 
-      // (1) Check current state
-      try {
-        const info = await evoFetch(
-          config,
-          `/instance/${uuid}`,
-          { method: "GET" },
-          instanceToken,
+      const getServerItem = async (u: string): Promise<any | null> => {
+        const r = await evoFetch(config, "/instance/all", { method: "GET" });
+        if (!r.ok) return null;
+        const list: any[] = Array.isArray(r.body) ? r.body : (r.body?.data ?? r.body?.instances ?? []);
+        return list.find((it: any) => (it?.id ?? it?.instanceId ?? it?.uuid) === u) ?? null;
+      };
+
+      const recreateOnServer = async (): Promise<boolean> => {
+        const newToken = crypto.randomUUID();
+        const cr = await evoFetch(config, "/instance/create", {
+          method: "POST",
+          body: JSON.stringify({ name: inst.name, token: newToken }),
+        });
+        const created = cr.body?.data ?? cr.body?.instance ?? cr.body ?? {};
+        const newUuid = created?.id ?? created?.instanceId ?? created?.uuid ?? null;
+        if (!cr.ok || !newUuid) {
+          console.error(`[connect_instance] recreate failed status=${cr.status}`, cr.body);
+          return false;
+        }
+        curUuid = newUuid;
+        curToken = created?.token ?? created?.hash?.apikey ?? newToken;
+        await supabase
+          .from("evolution_instances")
+          .update({
+            instance_id: curUuid,
+            instance_token: curToken,
+            metadata: { ...meta, instance_uuid: curUuid, recreated_at: new Date().toISOString() },
+          })
+          .eq("id", inst.id);
+        console.log(`[connect_instance] recreated uuid=${curUuid}`);
+        return true;
+      };
+
+      // (1) Estado actual en el servidor
+      let item = await getServerItem(curUuid);
+      const limitReached = !!item?.disconnect_reason &&
+        String(item.disconnect_reason).toLowerCase().includes("limit");
+
+      if (item?.connected === true) {
+        await supabase
+          .from("evolution_instances")
+          .update({ status: "connected", qr_code: null, qr_code_updated_at: null, last_connected_at: new Date().toISOString() })
+          .eq("id", inst.id);
+        return new Response(
+          JSON.stringify({ ok: true, qr_code: null, already_connected: true }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } },
         );
-        const state = info?.body?.connectionStatus ?? info?.body?.connection ?? info?.body?.status ?? null;
-        if (info.ok && (state === "open" || info?.body?.connected === true)) {
-          await supabase
-            .from("evolution_instances")
-            .update({
-              status: "connected",
-              qr_code: null,
-              qr_code_updated_at: null,
-              last_connected_at: new Date().toISOString(),
-            })
-            .eq("id", inst.id);
-          return new Response(
-            JSON.stringify({ ok: true, qr_code: null, already_connected: true }),
-            { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-          );
-        }
-        const existingQr = extractQr(info?.body);
-        if (info.ok && existingQr) {
-          await supabase
-            .from("evolution_instances")
-            .update({
-              status: "qr_pending",
-              qr_code: existingQr,
-              qr_code_updated_at: new Date().toISOString(),
-              webhook_subscribed: true,
-            })
-            .eq("id", inst.id);
-          return new Response(
-            JSON.stringify({ ok: true, qr_code: existingQr, reused_server_qr: true }),
-            { headers: { ...corsHeaders, "Content-Type": "application/json" } },
-          );
-        }
-      } catch (e) {
-        console.warn(`[connect_instance] info check failed (continuing): ${e}`);
       }
 
-      // Clear stale QR locally before asking Evolution Go for a new one.
+      // Purgada del server o límite de QR alcanzado → recrear para QR fresco
+      if (!item || limitReached) {
+        await recreateOnServer();
+        item = null;
+      } else {
+        // Hay un QR fresco listo → reutilizarlo
+        const qr0 = extractQr(item.qrcode ?? item.qr ?? item);
+        if (qr0) {
+          await supabase
+            .from("evolution_instances")
+            .update({ status: "qr_pending", qr_code: qr0, qr_code_updated_at: new Date().toISOString(), webhook_subscribed: true })
+            .eq("id", inst.id);
+          return new Response(
+            JSON.stringify({ ok: true, qr_code: qr0, reused_server_qr: true }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          );
+        }
+      }
+
+      // Limpia QR viejo local antes de pedir uno nuevo.
       await supabase
         .from("evolution_instances")
-        .update({
-          status: "qr_pending",
-          qr_code: null,
-          qr_code_updated_at: null,
-        })
+        .update({ status: "qr_pending", qr_code: null, qr_code_updated_at: null })
         .eq("id", inst.id);
 
-      // Connect — this triggers QRCode/QRCODE_UPDATED webhook and may also return QR inline.
-      const webhookUrl = `${supabaseUrl}/functions/v1/evolution-webhook`;
+      // Connect — dispara la sesión; el QR queda en /instance/all (y llega por webhook QRCODE).
       const res = await evoFetch(
         config,
         `/instance/connect`,
         {
           method: "POST",
-          headers: { instanceId: uuid },
+          headers: { instanceId: curUuid },
           body: JSON.stringify({ webhookUrl, subscribe: ["ALL"], immediate: true }),
         },
-        instanceToken,
+        curToken,
       );
 
       if (!res.ok) {
@@ -797,20 +818,17 @@ Deno.serve(async (req) => {
 
       let qrString = extractQr(res.body);
 
-      // (5) If QR not inline, poll the instance state up to ~6s — Evolution Go often
-      //     returns the QR inside GET /instance/{uuid} a second after connect.
+      // El QR de este servidor no viene inline → poll /instance/all hasta ~9s.
       if (!qrString) {
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 6; i++) {
           await new Promise((r) => setTimeout(r, 1500));
           try {
-            const info = await evoFetch(config, `/instance/${uuid}`, { method: "GET" }, instanceToken);
-            const found = extractQr(info?.body);
-            if (found) {
-              qrString = found;
-              break;
-            }
+            const it = await getServerItem(curUuid);
+            if (it?.connected === true) { qrString = null; break; }
+            const q = extractQr(it?.qrcode ?? it?.qr ?? it);
+            if (q) { qrString = q; break; }
           } catch (e) {
-            console.warn(`[connect_instance] poll info error: ${e}`);
+            console.warn(`[connect_instance] poll list error: ${e}`);
           }
         }
       }

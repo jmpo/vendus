@@ -18,7 +18,7 @@ function StatusBadge({ c }: { c: InstagramConnection }) {
   if (c.status === 'error') return <Badge variant="destructive">Error</Badge>;
   if (c.status === 'revoked') return <Badge variant="outline">Revogada</Badge>;
   if (c.status === 'draft') return <Badge variant="secondary">Borrador</Badge>;
-  return <Badge variant="secondary">Pendente</Badge>;
+  return <Badge variant="secondary">Pendiente</Badge>;
 }
 
 interface Props {
@@ -102,7 +102,7 @@ export function InstagramConnectionsPanel({ hideHeader, openWizard, onCloseWizar
           <AlertDialogHeader>
             <AlertDialogTitle>Remover conexión Instagram?</AlertDialogTitle>
             <AlertDialogDescription>
-              Remove "{toDelete?.display_name}". Conversas e mensajes ya recebidas continuam preservadas.
+              Remove "{toDelete?.display_name}". Conversaciones e mensajes ya recebidas continuam preservadas.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

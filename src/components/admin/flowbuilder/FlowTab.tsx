@@ -29,7 +29,7 @@ export function FlowTab({ productId }: FlowTabProps) {
         <div className="space-y-4">
           <Button variant="ghost" onClick={() => setSelectedFlowId(null)}>
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar para lista
+            Volver para lista
           </Button>
           <div className="text-center text-muted-foreground py-8">
             Flujo no encontrado

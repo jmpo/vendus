@@ -15,6 +15,7 @@ import {
   Package,
   Users,
   CheckSquare,
+  Activity,
   ArrowLeft,
   DollarSign,
   Shield,
@@ -39,14 +40,13 @@ interface SidebarProps {
   onCollapsedChange?: (collapsed: boolean) => void;
 }
 
-// Menú cuando hay producto seleccionado
+// Menu quando tem produto selecionado
 const productNavItems = [
   { id: 'product-dashboard', label: 'Resumen', icon: LayoutDashboard },
   { id: 'leads', label: 'Pipeline', icon: Users },
   { id: 'inbox', label: 'Conversaciones', icon: MessageSquare },
-  { id: 'tasks', label: 'Tareas', icon: CheckSquare },
+  { id: 'tasks', label: 'Tareas', icon: Activity },
   { id: 'bookings', label: 'Agenda', icon: CalendarCheck },
-  { id: 'financial', label: 'Financiero', icon: DollarSign },
   { id: 'cadence', label: 'Cadencia', icon: Calendar },
   { id: 'playbook', label: 'Playbook', icon: BookOpen },
   { id: 'objections', label: 'Objeciones', icon: MessageSquareWarning },
@@ -100,7 +100,7 @@ export function Sidebar({
         </Button>
       </div>
 
-      {/* Product badge eliminado — troca de producto ahora é feita por el dropdown no header */}
+      {/* Product badge removido — troca de produto agora é feita pelo dropdown no header */}
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
@@ -134,20 +134,20 @@ export function Sidebar({
           );
         })}
 
-        {/* Lista de productos atribuídos cuando ningún está seleccionado */}
+        {/* Lista de produtos atribuídos quando nenhum está selecionado */}
         {!selectedProduct && !collapsed && (
           <div className="px-1 py-2">
             {assignedProducts.length === 0 ? (
               <div className="px-3 py-8 text-center">
                 <Package className="h-8 w-8 mx-auto text-muted-foreground/50 mb-3" />
                 <p className="text-sm text-muted-foreground">
-                  Ningún producto asignado
+                  Nenhum produto atribuído
                 </p>
               </div>
             ) : (
               <>
                 <p className="px-3 mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Mis Productos
+                  Meus Produtos
                 </p>
                 <div className="space-y-1">
                   {assignedProducts.map((product) => (
@@ -189,7 +189,7 @@ export function Sidebar({
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
           >
             <Shield size={20} />
-            {!collapsed && <span className="text-sm">Panel Admin</span>}
+            {!collapsed && <span className="text-sm">Painel Admin</span>}
           </Link>
         )}
         <Link

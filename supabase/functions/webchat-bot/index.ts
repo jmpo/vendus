@@ -81,6 +81,101 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// ─── Escalamiento a humano (unificado) ───────────────────────────────────────
+// Único punto de verdad para cuando la IA suelta el lead: lo manda a la fila,
+// limpia el agente IA, ETIQUETA al lead ("Requiere humano") y AVISA al equipo.
+// Lo usan TANTO el orquestador (intención=humano) como el agente (transfer_to_human),
+// para que el escalamiento sea idéntico sin importar quién lo detecte.
+async function escalateToHuman(
+  supabase: any,
+  opts: {
+    conversationId: string;
+    leadId?: string | null;
+    organizationId?: string | null;
+    reason?: string | null;
+    productId?: string | null;
+    source: string;
+  },
+) {
+  const { conversationId, reason, productId, source } = opts;
+  let leadId = opts.leadId ?? null;
+  let organizationId = opts.organizationId ?? null;
+
+  // Resolver organización/lead si no vinieron en los args
+  if (!organizationId || !leadId) {
+    const { data: conv } = await supabase
+      .from('webchat_conversations')
+      .select('organization_id, lead_id')
+      .eq('id', conversationId)
+      .maybeSingle();
+    organizationId = organizationId || conv?.organization_id || null;
+    leadId = leadId || conv?.lead_id || null;
+  }
+
+  // 1) A la fila: suelta el agente IA y marca que necesita humano
+  await supabase
+    .from('webchat_conversations')
+    .update({
+      status: 'waiting_human',
+      current_agent_id: null,
+      assigned_user_id: null,
+      needs_human: true,
+    })
+    .eq('id', conversationId);
+
+  // 2) Etiqueta "Requiere humano" en el lead (crea la etiqueta si no existe)
+  if (leadId && organizationId) {
+    try {
+      let { data: tag } = await supabase
+        .from('lead_tags')
+        .select('id')
+        .eq('organization_id', organizationId)
+        .ilike('name', 'Requiere humano')
+        .maybeSingle();
+      if (!tag) {
+        const { data: created } = await supabase
+          .from('lead_tags')
+          .insert({ organization_id: organizationId, name: 'Requiere humano', color: '#ef4444', is_automatic: true })
+          .select('id')
+          .maybeSingle();
+        tag = created;
+      }
+      if (tag?.id) {
+        await supabase
+          .from('lead_tag_assignments')
+          .upsert({ lead_id: leadId, tag_id: tag.id, source: 'ai_handoff' }, { onConflict: 'lead_id,tag_id' });
+      }
+    } catch (tagErr) {
+      console.warn('[webchat-bot] handoff tag failed:', tagErr);
+    }
+  }
+
+  // 3) Avisar a admins/super_admins de la organización
+  if (organizationId) {
+    try {
+      const recipients = new Set<string>();
+      const { data: admins } = await supabase
+        .from('user_roles')
+        .select('user_id, profiles!inner(organization_id)')
+        .in('role', ['admin', 'super_admin'])
+        .eq('profiles.organization_id', organizationId);
+      (admins || []).forEach((a: any) => a.user_id && recipients.add(a.user_id));
+      const rows = Array.from(recipients).map((uid) => ({
+        organization_id: organizationId,
+        user_id: uid,
+        title: '🔴 Cliente necesita atención humana',
+        message: `La IA derivó una conversación a la fila${reason ? `: ${reason}` : ''}. Tomala desde el inbox (pestaña "En Fila").`,
+        type: 'urgency' as any,
+        product_id: productId || null,
+        metadata: { conversation_id: conversationId, reason: reason || null, source },
+      }));
+      if (rows.length > 0) await supabase.from('notifications').insert(rows);
+    } catch (notifErr) {
+      console.warn('[webchat-bot] handoff notify failed:', notifErr);
+    }
+  }
+}
+
 // ─── Handoff helpers ────────────────────────────────────────────────────────
 const DEFAULT_HANDOFF_OUTGOING =
   'Perfecto, {{nombre}}. Voy a continuar con tu consulta para ayudarte mejor.';
@@ -1309,14 +1404,30 @@ serve(async (req) => {
               .from('webchat_conversations')
               .update({
                 orchestrator_state: 'humano',
-                needs_human: true,
                 detected_intent: result.intencao,
                 orchestrator_context: result.contexto_extraido,
               })
               .eq('id', body.conversation_id);
 
+            // Escalamiento unificado: a la fila + etiqueta + aviso al equipo
+            const escalReason =
+              typeof result.contexto_extraido === 'string'
+                ? result.contexto_extraido
+                : (result.contexto_extraido?.motivo ||
+                  (result.intencao === 'humano'
+                    ? 'Cliente solicitó atención humana'
+                    : 'No se pudo clasificar la consulta'));
+            await escalateToHuman(supabase, {
+              conversationId: body.conversation_id,
+              leadId: convInit.lead_id,
+              organizationId: convInit.organization_id,
+              reason: escalReason,
+              productId: result.produto_id || body.product_id || null,
+              source: 'orchestrator',
+            });
+
             orchestratorEarlyResponse = {
-              content: result.respuesta_orquestrador || 'Voy a te conectar con uno de nuestros agentes ahora.',
+              content: result.respuesta_orquestrador || 'Te conecto con uno de nuestros asesores ahora mismo.',
               needsHuman: true,
             };
           }
@@ -2767,7 +2878,7 @@ ${leadDataPrompt}
             type: "function",
             function: {
               name: "transfer_to_human",
-              description: "Transferir conversación para atención humano.",
+              description: "Derivar la conversación a un humano (la IA se DETIENE y el caso pasa a la fila para que lo tome un vendedor; además se etiqueta y se avisa al equipo). USALA cuando: el cliente pide hablar con una persona/vendedor/encargado; está claramente frustrado, enojado o molesto; hay un reclamo o queja seria; pide algo que NO podés resolver o que requiere decisión humana; o cualquier situación delicada donde insistir empeoraría. Ante la duda con un cliente ofuscado, derivá.",
               parameters: {
                 type: "object",
                 properties: {
@@ -2777,7 +2888,7 @@ ${leadDataPrompt}
               }
             }
           });
-          agentToolPrompts.push('- transfer_to_agent/transfer_to_human: Escale cuando necesario');
+          agentToolPrompts.push('- transfer_to_human: SIEMPRE que el cliente se muestre frustrado/enojado, pida hablar con una persona, haga un reclamo, o pida algo que NO podés resolver → derivá con transfer_to_human (la conversación se detiene, pasa a la fila, se etiqueta "Requiere humano" y se avisa al equipo). NUNCA insistas ni des vueltas con un cliente ofuscado.\n- transfer_to_agent: solo para derivar a otro agente especialista (otra marca/producto).');
         }
 
         if (activeAgent.can_notify) {
@@ -2942,7 +3053,7 @@ ${leadDataPrompt}
               type: "function",
               function: {
                 name: "send_catalog_item",
-                description: "Enviar UN ítem del catálogo al cliente. Por defecto envía solo FOTO + título + precio + link. Usá include_videos=true SOLO si el cliente pidió video/tour/demostración. Usá include_documents=true SOLO si el cliente pidió ficha/folleto/specs/brochure/PDF. Solo llamala después de que el cliente CONFIRME interés en un ítem específico devuelto por search_catalog. NO envíes múltiples ítems automáticamente — preguntá antes.",
+                description: "Enviar UN ítem del catálogo al cliente (foto + título + precio + link). Usá include_videos=true si el cliente pidió video/tour/demostración. Usá include_documents=true si pidió ficha/folleto/PDF. Llamala apenas el cliente pida fotos/video/material, O cuando presentes un modelo concreto que le interesó. Enviá UN ítem por vez (no varios de golpe), pero NO esperes confirmaciones de más: si el cliente quiere ver el vehículo, enviá la foto YA, en el mismo turno.",
                 parameters: {
                   type: "object",
                   properties: {
@@ -2958,13 +3069,15 @@ ${leadDataPrompt}
 
             systemPrompt += `\n\n📦 CATÁLOGO PESQUISÁVEL DISPONÍVEL (CANAL OFICIAL DE ENVIO DE MÍDIA):
 Tenés acceso a un catálogo de ítems (vehículos) con búsqueda semántica y multimedia (fotos, vídeos, PDFs, link).
-Esse catálogo es o CANAL OFICIAL para entregar fotos, vídeos, fichas e links en este WhatsApp.
+Este catálogo es el CANAL OFICIAL para entregar fotos, videos, fichas y links en este WhatsApp.
 
-🚨 REGRAS PRIORITÁRIAS — VIOLAÇÃO É ERRO GRAVE:
-- Se el cliente pedir FOTO, VÍDEO, PDF, FICHA, LINK, SITE, TOUR, PLANTA, FOLDER, BROCHURA, IMAGENS, MATERIAL → usted DEVE llamar search_catalog (se todavía no souber cuál item) e em seguida send_catalog_item. Sin rodeios.
-- PROHIBIDO inventar bloqueios. NO diga "no posso enviar por acá", "el sistema restringe", "é off-market", "no está aberto ao público", "precisa de registro prévio", "vou alinhar con especialista", "no tengo acesso", "no está disponible publicamente" se NO hay regra explícita registrada. Se el ítem está no catálogo e ativo, ele PODE e DEVE ser enviado.
-- Vos solo podés negar envío si: (a) search_catalog devolvió 0 ítems compatibles, OU (b) hay instrucción explícita registrada prohibiéndolo. Em cualquier otro caso, ENVIÁ.
-- Se el cliente pediu só "el link", llamá send_catalog_item normalmente — el link oficial va junto, ou responda con a URL del ítem devuelto por search_catalog.
+🚨 REGLAS PRIORITARIAS — INCUMPLIRLAS ES ERROR GRAVE:
+- Si el cliente pide FOTO, VIDEO, FICHA, FOLLETO, LINK, IMÁGENES, TOUR o MATERIAL → DEBÉS llamar search_catalog (si todavía no sabés cuál ítem) e INMEDIATAMENTE send_catalog_item para enviárselo EN EL MISMO TURNO. Sin rodeos. NUNCA digas "te las envío", "ahora te paso las fotos" o "te las mando enseguida" sin enviarlas ya: el cliente quiere verlas AL INSTANTE.
+- Apenas presentes o recomiendes un modelo, enviá su foto con send_catalog_item (no solo lo describas en texto): una foto vende más que mil palabras.
+- Si el cliente pide VIDEO, tour o demostración → usá send_catalog_item con include_videos=true.
+- PROHIBIDO inventar bloqueos. NUNCA digas "no puedo enviar por acá", "el sistema restringe", "está off-market", "no está abierto al público", "necesita registro previo", "voy a coordinar con un especialista" ni "no tengo acceso" si NO hay una regla explícita registrada. Si el ítem está en el catálogo y activo, PODÉS y DEBÉS enviarlo.
+- Solo podés negar el envío si: (a) search_catalog devolvió 0 ítems compatibles, o (b) hay una instrucción explícita que lo prohíbe. En cualquier otro caso, ENVIÁ.
+- Si el cliente pidió solo "el link", llamá send_catalog_item igual — el link oficial va incluido.
 
 REGRAS DE USO:
 1. Cliente descreve o que procura (sin pedir mídia todavía) → search_catalog con query + filtros relevantes
@@ -4472,13 +4585,14 @@ REGRAS DE USO:
                   }
                   } // end else (alreadyOnTarget guard)
                 } else if (toolName === 'transfer_to_human') {
-                  // IA larga el lead: limpa agente IA, marca needs_human e devolve à fila do sector
-                  await supabase.from('webchat_conversations').update({
-                    status: 'waiting_human',
-                    current_agent_id: null,
-                    assigned_user_id: null,
-                    needs_human: true,
-                  }).eq('id', body.conversation_id);
+                  // IA suelta el lead → fila + etiqueta + aviso (escalamiento unificado).
+                  await escalateToHuman(supabase, {
+                    conversationId: body.conversation_id,
+                    leadId,
+                    reason: args.reason || null,
+                    productId: body.product_id || null,
+                    source: 'transfer_to_human',
+                  });
                   await logAction(true, { reason: args.reason });
                   responseContent = choice.message?.content || 'Te transfiero con un agente. ¡Esperá un momento!';
                 } else if (toolName === 'notify_team') {

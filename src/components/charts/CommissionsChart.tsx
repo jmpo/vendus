@@ -176,7 +176,7 @@ export function CommissionsChart({ commissions, isLoading }: CommissionsChartPro
               <Area
                 type="monotone"
                 dataKey="pending"
-                name="Pendente"
+                name="Pendiente"
                 stackId="1"
                 stroke="hsl(38 92% 50%)"
                 fill="url(#colorPending)"
@@ -198,7 +198,7 @@ export function CommissionsChart({ commissions, isLoading }: CommissionsChartPro
           </div>
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-[hsl(38_92%_50%)]" />
-            <span className="text-xs text-muted-foreground">Pendente</span>
+            <span className="text-xs text-muted-foreground">Pendiente</span>
           </div>
         </div>
       </CardContent>

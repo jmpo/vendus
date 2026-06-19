@@ -395,7 +395,7 @@ export function FormAIGenerator({ open, onOpenChange, productId, productName, on
           {step > 1 && (
             <Button variant="outline" onClick={() => setStep(s => s - 1)} disabled={isGenerating}>
               <ChevronLeft className="h-4 w-4 mr-1" />
-              Voltar
+              Volver
             </Button>
           )}
           

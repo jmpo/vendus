@@ -30,6 +30,7 @@ import {
   Code2,
   ListChecks,
   Filter,
+  Activity,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -47,24 +48,34 @@ export interface AdminMenuGroup {
   items: AdminMenuItem[];
 }
 
-// Items fijos (siempre visibles, sin accordion)
+// Itens fixos (sempre visíveis, sem accordion)
 export const fixedItems: AdminMenuItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'inbox', label: 'Atenciones', icon: MessageSquare },
   { id: 'pipeline', label: 'Pipeline', icon: LayoutGrid },
   { id: 'leads', label: 'Leads', icon: Target },
   { id: 'calendar', label: 'Agenda', icon: CalendarDays },
 ];
 
-// Grupos en accordion
+// Grupos em accordion
 export const menuGroups: AdminMenuGroup[] = [
   {
+    id: 'inbox',
+    label: 'Atenciones',
+    icon: MessageSquare,
+    items: [
+      { id: 'inbox-chat', label: 'Chat', icon: MessageSquare },
+      { id: 'inbox-panel', label: 'Painel', icon: LayoutGrid },
+      { id: 'inbox-radar', label: 'Radar IA', icon: Sparkles },
+      { id: 'inbox-reports', label: 'Reportes', icon: BarChart3 },
+    ],
+  },
+  {
     id: 'automation',
-    label: 'Automatización e IA',
+    label: 'Automatización & IA',
     icon: Sparkles,
     items: [
       { id: 'agents', label: 'Agentes IA', icon: Bot },
-      { id: 'campaigns', label: 'Campañas Inteligentes', icon: Megaphone },
+      { id: 'campaigns', label: 'Campanhas Inteligentes', icon: Megaphone },
       { id: 'cadences', label: 'Cadencias Inteligentes', icon: Sparkles },
       { id: 'webhooks', label: 'Webhooks', icon: Webhook },
     ],
@@ -75,13 +86,13 @@ export const menuGroups: AdminMenuGroup[] = [
     icon: Filter,
     items: [
       { id: 'capture-quiz', label: 'Quiz', icon: ListChecks },
-      { id: 'capture-forms', label: 'Formularios', icon: FileText },
+      { id: 'capture-forms', label: 'Formulários', icon: FileText },
       { id: 'capture-chatbot', label: 'ChatBot', icon: MessageCircle },
       { id: 'capture-widget', label: 'Widget', icon: Code2 },
       { id: 'capture-whatsapp', label: 'WhatsApp', icon: MessageSquare },
-      { id: 'capture-templates', label: 'Plantillas', icon: LayoutGrid },
+      { id: 'capture-templates', label: 'Templates', icon: LayoutGrid },
       { id: 'capture-results', label: 'Resultados', icon: Target },
-      { id: 'capture-analytics', label: 'Analítica', icon: BarChart3 },
+      { id: 'capture-analytics', label: 'Analytics', icon: BarChart3 },
     ],
   },
   {
@@ -89,12 +100,12 @@ export const menuGroups: AdminMenuGroup[] = [
     label: 'Gestión',
     icon: Briefcase,
     items: [
-      { id: 'products', label: 'Productos', icon: Package },
-      { id: 'sectors', label: 'Sectores', icon: SlidersHorizontal },
+      { id: 'products', label: 'Negócios', icon: Package },
+      { id: 'sectors', label: 'Setores', icon: SlidersHorizontal },
       { id: 'team', label: 'Equipos', icon: Users },
-      { id: 'reports', label: 'Reportes', icon: BarChart3 },
-      { id: 'financial', label: 'Financiero', icon: DollarSign },
-      { id: 'payments', label: 'Pagos', icon: Banknote },
+      { id: 'operation', label: 'Central de Operação', icon: Activity },
+      { id: 'financial', label: 'Financeiro', icon: DollarSign },
+      { id: 'payments', label: 'Pagamentos', icon: Banknote },
     ],
   },
   {
@@ -103,15 +114,15 @@ export const menuGroups: AdminMenuGroup[] = [
     icon: Settings,
     items: [
       { id: 'connections', label: 'Conexiones', icon: Plug },
-      { id: 'integrations', label: 'Integraciones', icon: Settings },
-      { id: 'quick-replies', label: 'Respuestas Rápidas', icon: MessageSquare },
+      { id: 'integrations', label: 'Integrações', icon: Settings },
+      { id: 'quick-replies', label: 'Respostas Rápidas', icon: MessageSquare },
       { id: 'custom-fields', label: 'Campos personalizados', icon: FileText },
       { id: 'tags', label: 'Etiquetas', icon: Tag },
-      { id: 'notifications', label: 'Notificaciones', icon: Bell },
-      { id: 'schedules', label: 'Horarios', icon: Clock },
+      { id: 'notifications', label: 'Notificações', icon: Bell },
+      { id: 'schedules', label: 'Horários', icon: Clock },
       { id: 'company', label: 'Empresa', icon: Building2 },
-      { id: 'plan', label: 'Plan', icon: CreditCard },
-      { id: 'support', label: 'Soporte', icon: LifeBuoy },
+      { id: 'plan', label: 'Plano', icon: CreditCard },
+      { id: 'support', label: 'Suporte', icon: LifeBuoy },
     ],
   },
 ];
@@ -121,7 +132,7 @@ export const allMenuItems: AdminMenuItem[] = [
   ...menuGroups.flatMap((g) => g.items),
 ];
 
-// Helper: encontra o id do grupo que contém a sección ativa (para abrir o accordion)
+// Helper: encontra o id do grupo que contém a seção ativa (para abrir o accordion)
 export function findGroupIdForSection(sectionId: string): string | undefined {
   return menuGroups.find((g) => g.items.some((i) => i.id === sectionId))?.id;
 }

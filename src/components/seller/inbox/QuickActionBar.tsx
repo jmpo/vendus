@@ -1,17 +1,13 @@
 import {
-  Calendar,
-  Flame,
   LinkIcon,
-  Sparkles,
   Workflow,
   CalendarDays,
-  BarChart3,
   CalendarPlus,
   DollarSign,
   Route,
-  ExternalLink,
   Package,
   CreditCard,
+  ListTodo,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,41 +23,28 @@ import {
 import { cn } from '@/lib/utils';
 
 interface QuickActionBarProps {
+  /** Cria uma nova tarefa para o vendedor (entra em "Minhas Tareas"). */
   onScheduleFollowup?: () => void;
-  onMarkHot?: () => void;
-  
-  onSuggestReply?: () => void;
-  isSuggestingReply?: boolean;
-  onSendFlow?: () => void;
   onSendCadence?: () => void;
-  onAnalyze?: () => void;
-  /** Cria um evento de calendario (atajo rápido). */
+  /** Cria um evento de calendário (atalho rápido). */
   onCreateEvent?: () => void;
-  /** Cria uma oportunidad de venta. Visível só con lead vinculado. */
+  /** Cria uma oportunidade de venda. Visível só com lead vinculado. */
   onCreateDeal?: () => void;
-  /** Abre os "Dados do Contacto" / detalle del lead. */
-  onViewLead?: () => void;
-  /** Move o lead para otro etapa do embudo — opcional. */
+  /** Move o lead para outro estágio do funil — opcional. */
   onMoveStageQuick?: (stageId: string) => void;
   pipelineStages?: { id: string; name: string; color: string | null }[];
   currentStageId?: string | null;
-  /** Abre seletor de producto do catálogo para enviar como mensaje rica. */
+  /** Abre seletor de produto do catálogo para enviar como mensagem rica. */
   onPickCatalog?: () => void;
-  /** Abre dialog de generar/enviar link de pago. */
+  /** Abre dialog de gerar/enviar link de pagamento. */
   onSendPaymentLink?: () => void;
 }
 
 export function QuickActionBar({
   onScheduleFollowup,
-  onMarkHot,
-  onSuggestReply,
-  isSuggestingReply,
-  onSendFlow,
   onSendCadence,
-  onAnalyze,
   onCreateEvent,
   onCreateDeal,
-  onViewLead,
   onMoveStageQuick,
   pipelineStages = [],
   currentStageId,
@@ -72,24 +55,6 @@ export function QuickActionBar({
 
   return (
     <div className="flex w-full max-w-full min-w-0 flex-shrink-0 items-center gap-1 overflow-x-auto px-3 py-1.5 border-t border-border bg-muted/20">
-      {onSuggestReply && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 text-xs gap-1.5 text-primary hover:text-primary shrink-0"
-              onClick={onSuggestReply}
-              disabled={isSuggestingReply}
-            >
-              <Sparkles className={cn('h-3.5 w-3.5', isSuggestingReply && 'animate-spin')} />
-              Sugerir Respuesta IA
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Generar sugerencia con IA baseada no contexto</TooltipContent>
-        </Tooltip>
-      )}
-
       {onPickCatalog && (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -103,7 +68,7 @@ export function QuickActionBar({
               Catálogo
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Enviar producto do catálogo no chat</TooltipContent>
+          <TooltipContent>Enviar produto do catálogo no chat</TooltipContent>
         </Tooltip>
       )}
 
@@ -120,7 +85,7 @@ export function QuickActionBar({
               Cobrar
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Generar e enviar link de pago</TooltipContent>
+          <TooltipContent>Gerar e enviar link de pagamento</TooltipContent>
         </Tooltip>
       )}
 
@@ -137,7 +102,7 @@ export function QuickActionBar({
               Novo Evento
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Crear evento na agenda ya vinculado a este lead</TooltipContent>
+          <TooltipContent>Criar evento na agenda já vinculado a este lead</TooltipContent>
         </Tooltip>
       )}
 
@@ -145,11 +110,11 @@ export function QuickActionBar({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="ghost" size="sm" className="h-7 text-xs gap-1.5 shrink-0" onClick={onScheduleFollowup}>
-              <Calendar className="h-3.5 w-3.5" />
-              Follow-up
+              <ListTodo className="h-3.5 w-3.5" />
+              Tareas
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Agendar tarea de follow-up</TooltipContent>
+          <TooltipContent>Criar nova tarefa para você</TooltipContent>
         </Tooltip>
       )}
 
@@ -166,7 +131,7 @@ export function QuickActionBar({
               Oportunidade
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Registrar uma nova oportunidad (deal)</TooltipContent>
+          <TooltipContent>Registrar uma nova oportunidade no pipeline</TooltipContent>
         </Tooltip>
       )}
 
@@ -205,43 +170,6 @@ export function QuickActionBar({
         </Popover>
       )}
 
-      {onMarkHot && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1.5 text-orange-500 hover:text-orange-600 shrink-0" onClick={onMarkHot}>
-              <Flame className="h-3.5 w-3.5" />
-              Quente
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Marcar lead como quente</TooltipContent>
-        </Tooltip>
-      )}
-
-
-      {onViewLead && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1.5 shrink-0" onClick={onViewLead}>
-              <ExternalLink className="h-3.5 w-3.5" />
-              Ver Lead
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Abrir os dados completos del lead</TooltipContent>
-        </Tooltip>
-      )}
-
-      {onSendFlow && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1.5 shrink-0" onClick={onSendFlow}>
-              <Workflow className="h-3.5 w-3.5" />
-              Flujo
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Enviar flujo para o visitante</TooltipContent>
-        </Tooltip>
-      )}
-
       {onSendCadence && (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -250,19 +178,7 @@ export function QuickActionBar({
               Cadencia
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Iniciar cadencia para el lead</TooltipContent>
-        </Tooltip>
-      )}
-
-      {onAnalyze && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1.5 shrink-0" onClick={onAnalyze}>
-              <BarChart3 className="h-3.5 w-3.5" />
-              Analisar
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Analisar conversación con IA</TooltipContent>
+          <TooltipContent>Iniciar cadência para o lead</TooltipContent>
         </Tooltip>
       )}
     </div>

@@ -119,7 +119,7 @@ export function TaskGenerationWidget({ productId, productName }: TaskGenerationW
       <CardHeader className="pb-3">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           <Wand2 className="h-5 w-5 text-primary" />
-          Generar Tarefas Automáticas
+          Generar Tareas Automáticas
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

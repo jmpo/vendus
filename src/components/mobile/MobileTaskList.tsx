@@ -42,7 +42,7 @@ export function MobileTaskList({ userId, productId }: MobileTaskListProps) {
     
     const date = new Date(dueDate);
     
-    if (isToday(date)) return { label: 'Hoje', color: 'text-primary' };
+    if (isToday(date)) return { label: 'Hoy', color: 'text-primary' };
     if (isTomorrow(date)) return { label: 'Amanhã', color: 'text-yellow-500' };
     if (isPast(date)) return { label: 'Atrasada', color: 'text-destructive' };
     

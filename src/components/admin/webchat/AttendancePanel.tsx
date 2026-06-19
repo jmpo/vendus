@@ -46,7 +46,7 @@ export function AttendancePanel({ onOpenConversation }: Props) {
       {/* Header */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h2 className="text-lg font-bold">Painel de Atendimentos</h2>
+          <h2 className="text-lg font-bold">Painel de Atenciones</h2>
           <p className="text-xs text-muted-foreground flex items-center gap-1.5">
             <Wifi className="h-3 w-3 text-emerald-500" />
             Actualización en tiempo real

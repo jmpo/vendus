@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sendWhatsAppForConversation } from "../_shared/whatsapp-router.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -41,17 +42,31 @@ serve(async (req) => {
     }
 
     const token = authHeader.replace('Bearer ', '');
-    // Verifica a assinatura criptográfica do JWT via Supabase (no decodificar manualmente).
+
+    // Parse body once (downstream code re-uses it)
+    let bodyParsed: any = {};
+    try { bodyParsed = await req.clone().json(); } catch (_) { /* GET or empty */ }
+
+    // Verifica a assinatura criptográfica do JWT via Supabase (não decodificar manualmente).
     let user: { id: string; email: string } | null = null;
-    try {
-      const { data: claimsData, error: claimsErr } = await supabase.auth.getClaims(token);
-      if (!claimsErr && claimsData?.claims?.sub) {
-        user = {
-          id: claimsData.claims.sub as string,
-          email: (claimsData.claims.email as string) || '',
-        };
+
+    // Internal/system call: service_role key bypasses JWT and acts on behalf of actorUserId
+    if (token === supabaseKey) {
+      const actorId = (bodyParsed?.actorUserId || bodyParsed?.created_by) as string | undefined;
+      if (actorId) {
+        user = { id: actorId, email: '' };
       }
-    } catch (_) { /* token inválido */ }
+    } else {
+      try {
+        const { data: claimsData, error: claimsErr } = await supabase.auth.getClaims(token);
+        if (!claimsErr && claimsData?.claims?.sub) {
+          user = {
+            id: claimsData.claims.sub as string,
+            email: (claimsData.claims.email as string) || '',
+          };
+        }
+      } catch (_) { /* token inválido */ }
+    }
 
     if (!user?.id) {
       return new Response(
@@ -86,10 +101,10 @@ serve(async (req) => {
     let roles: any = null;
     try {
       const [pRes, rRes]: any = await Promise.all([
-        fetchWithRetry(() => supabase.from('profiles').select('organization_id').eq('id', user!.id).single(), 'profiles'),
+        fetchWithRetry(() => supabase.rpc('get_user_organization', { _user_id: user!.id }), 'profiles'),
         fetchWithRetry(() => supabase.from('user_roles').select('role').eq('user_id', user!.id), 'user_roles'),
       ]);
-      profile = pRes?.data;
+      profile = pRes?.data ? { organization_id: pRes.data } : null;
       roles = rRes?.data;
     } catch (e) {
       console.error('[webchat-inbox] DB unavailable (upstream):', (e as Error).message);
@@ -110,7 +125,7 @@ serve(async (req) => {
     const orgId = profile?.organization_id || null;
 
     // Helper para parsear listas de UUID/strings via querystring (vírgula-separada).
-    // Suporta valores especiais: __none__ (sin producto/sector), unassigned (sin agente).
+    // Suporta valores especiais: __none__ (sem produto/setor), unassigned (sem atendente).
     const parseIdList = (raw: string | null): { ids: string[] | null; includeNone: boolean; includeUnassigned: boolean } => {
       if (!raw) return { ids: null, includeNone: false, includeUnassigned: false };
       const parts = raw.split(',').map(s => s.trim()).filter(Boolean);
@@ -121,16 +136,33 @@ serve(async (req) => {
       return { ids: ids.length ? ids : null, includeNone, includeUnassigned };
     };
 
-    // ACTION: List conversations (via RPC: filtros + permisos aplicados no SQL)
+    // ACTION: List conversations (via RPC: filtros + permissões aplicados no SQL)
     if (action === 'conversations') {
       const tabRaw = (url.searchParams.get('tab') || 'attending').toLowerCase();
-      const tab = ['attending', 'waiting', 'resolved', 'all'].includes(tabRaw) ? tabRaw : 'attending';
+      const tab = ['attending', 'agents', 'waiting', 'resolved', 'all'].includes(tabRaw) ? tabRaw : 'attending';
 
       const { ids: productIds, includeNone: includeNoProduct } = parseIdList(url.searchParams.get('product_ids'));
       const { ids: sectorIds, includeNone: includeNoSector } = parseIdList(url.searchParams.get('sector_ids'));
       const { ids: assignedUserIds, includeUnassigned } = parseIdList(url.searchParams.get('assigned_user_ids'));
       const { ids: tagIds } = parseIdList(url.searchParams.get('tag_ids'));
       const channel = url.searchParams.get('channel');
+      const channelsRaw = url.searchParams.get('channels');
+      const channels = channelsRaw ? channelsRaw.split(',').map(s => s.trim()).filter(Boolean) : null;
+      const connectionsRaw = url.searchParams.get('connections');
+      const evolutionIds: string[] = [];
+      const metaIds: string[] = [];
+      const instagramIds: string[] = [];
+      if (connectionsRaw) {
+        for (const part of connectionsRaw.split(',').map(s => s.trim()).filter(Boolean)) {
+          const [prov, id] = part.split(':');
+          if (!id) continue;
+          if (prov === 'evolution') evolutionIds.push(id);
+          else if (prov === 'meta') metaIds.push(id);
+          else if (prov === 'instagram') instagramIds.push(id);
+        }
+      }
+      const agentIdsRaw = url.searchParams.get('agent_ids');
+      const agentIds = agentIdsRaw ? agentIdsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
       const search = url.searchParams.get('search');
       const cursor = url.searchParams.get('cursor');
       const limitRaw = parseInt(url.searchParams.get('limit') || '50', 10);
@@ -150,7 +182,15 @@ serve(async (req) => {
         p_search: search || null,
         p_cursor_last_message_at: cursor || null,
         p_limit: limit,
-      });
+        p_channels: channels && channels.length ? channels : null,
+        p_evolution_ids: evolutionIds.length ? evolutionIds : null,
+        p_meta_ids: metaIds.length ? metaIds : null,
+        p_instagram_ids: instagramIds.length ? instagramIds : null,
+        p_agent_ids: agentIds.length ? agentIds : null,
+      } as any);
+
+
+
 
       if (error) {
         console.error('[webchat-inbox] inbox_list_conversations error:', error);
@@ -160,7 +200,7 @@ serve(async (req) => {
         );
       }
 
-      // Reagrupa em formato compatível con o frontend (objetos aninhados).
+      // Reagrupa em formato compatível com o frontend (objetos aninhados).
       const conversations = (rows || []).map((r: any) => ({
         id: r.id,
         organization_id: r.organization_id,
@@ -172,6 +212,8 @@ serve(async (req) => {
         current_agent_id: r.current_agent_id,
         sector_id: r.sector_id,
         evolution_instance_id: r.evolution_instance_id,
+        meta_connection_id: r.meta_connection_id,
+        instagram_connection_id: r.instagram_connection_id,
         status: r.status,
         channel: r.channel,
         needs_human: r.needs_human,
@@ -187,7 +229,7 @@ serve(async (req) => {
         visitor_whatsapp: r.visitor_whatsapp,
         accepted_at: r.accepted_at,
         accepted_by: r.accepted_by,
-        // Últimel mensaje real de la conversación (vinda del historial via RPC)
+        // Última mensagem real da conversa (vinda do histórico via RPC)
         last_message: r.last_message_content ?? null,
         last_message_metadata: r.last_message_metadata ?? null,
         last_message_sender_type: r.last_message_sender_type ?? null,
@@ -275,6 +317,23 @@ serve(async (req) => {
       const { ids: assignedUserIds, includeUnassigned } = parseIdList(url.searchParams.get('assigned_user_ids'));
       const { ids: tagIds } = parseIdList(url.searchParams.get('tag_ids'));
       const channel = url.searchParams.get('channel');
+      const channelsRaw = url.searchParams.get('channels');
+      const channels = channelsRaw ? channelsRaw.split(',').map(s => s.trim()).filter(Boolean) : null;
+      const connectionsRaw = url.searchParams.get('connections');
+      const evolutionIds: string[] = [];
+      const metaIds: string[] = [];
+      const instagramIds: string[] = [];
+      if (connectionsRaw) {
+        for (const part of connectionsRaw.split(',').map(s => s.trim()).filter(Boolean)) {
+          const [prov, id] = part.split(':');
+          if (!id) continue;
+          if (prov === 'evolution') evolutionIds.push(id);
+          else if (prov === 'meta') metaIds.push(id);
+          else if (prov === 'instagram') instagramIds.push(id);
+        }
+      }
+      const agentIdsRaw = url.searchParams.get('agent_ids');
+      const agentIds = agentIdsRaw ? agentIdsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
       const search = url.searchParams.get('search');
 
       const { data: countRows, error } = await supabase.rpc('inbox_count_conversations', {
@@ -288,7 +347,13 @@ serve(async (req) => {
         p_tag_ids: tagIds,
         p_channel: channel || null,
         p_search: search || null,
-      });
+        p_channels: channels && channels.length ? channels : null,
+        p_evolution_ids: evolutionIds.length ? evolutionIds : null,
+        p_meta_ids: metaIds.length ? metaIds : null,
+        p_instagram_ids: instagramIds.length ? instagramIds : null,
+        p_agent_ids: agentIds.length ? agentIds : null,
+      } as any);
+
 
       if (error) {
         console.error('[webchat-inbox] inbox_count_conversations error:', error);
@@ -298,10 +363,11 @@ serve(async (req) => {
         );
       }
 
-      const c = (countRows && countRows[0]) || { attending: 0, waiting: 0, resolved: 0 };
+      const c = (countRows && countRows[0]) || { attending: 0, agents: 0, waiting: 0, resolved: 0 };
       return new Response(
         JSON.stringify({
           attending: Number(c.attending) || 0,
+          agents: Number(c.agents) || 0,
           waiting: Number(c.waiting) || 0,
           resolved: Number(c.resolved) || 0,
         }),
@@ -320,12 +386,12 @@ serve(async (req) => {
         );
       }
 
-      // 1) Carrega la conversación SEM joins (evita falhas por relacionamento ambíguo)
+      // 1) Carrega a conversa SEM joins (evita falhas por relacionamento ambíguo)
       const convQuery = supabase
         .from('webchat_conversations')
         .select('*')
         .eq('id', conversationId);
-      // Super admin puede acceder conversaciones de cualquier organización
+      // Super admin pode acessar conversas de qualquer organização
       if (orgId) convQuery.eq('organization_id', orgId);
 
       const [convRes, msgsRes] = await Promise.all([
@@ -338,7 +404,7 @@ serve(async (req) => {
           .limit(200)
       ]);
 
-      // Error real de banco != "no encontrado". Loga e devolve 500 con causa clara.
+      // Erro real de banco != "não encontrado". Loga e devolve 500 com causa clara.
       if (convRes.error) {
         console.error('[webchat-inbox] conversation query error:', conversationId, convRes.error);
         return new Response(
@@ -352,7 +418,7 @@ serve(async (req) => {
 
       const conversation: any = convRes.data;
       if (!conversation) {
-        // Podés ser que exista mas esteja fora do escopo do usuario. Verifica sin filtro de org.
+        // Pode ser que exista mas esteja fora do escopo do usuário. Verifica sem filtro de org.
         const probe = await supabase
           .from('webchat_conversations')
           .select('id')
@@ -370,7 +436,7 @@ serve(async (req) => {
         );
       }
 
-      // Sector-based gate (no-admin): misma regra usada na listagem
+      // Sector-based gate (não-admin): mesma regra usada na listagem
       if (!isSuperAdmin) {
         const [{ data: userRoles }, { data: userPerms }, { data: userSectorRows }] = await Promise.all([
           supabase.from('user_roles').select('role').eq('user_id', user.id),
@@ -401,7 +467,7 @@ serve(async (req) => {
         }
       }
 
-      // 2) Hidrata joins de forma defensiva (cualquier fala queda null en vez de tirar la conversación)
+      // 2) Hidrata joins de forma defensiva (qualquer falha vira null em vez de derrubar a conversa)
       const [widgetRes, assignedRes, agentRes, leadRes, sectorRes, productOverrideRes] = await Promise.all([
         conversation.widget_id
           ? supabase.from('webchat_widgets').select('id, name, primary_color, product_id, products(id, name)').eq('id', conversation.widget_id).maybeSingle()
@@ -429,7 +495,7 @@ serve(async (req) => {
       conversation.leads = leadRes?.data || null;
       conversation.sectors = sectorRes?.data || null;
 
-      // Producto efetivo: override manual de la conversación > producto del lead vinculado > producto do widget
+      // Produto efetivo: override manual da conversa > produto do lead vinculado > produto do widget
       const effectiveProduct =
         productOverrideRes?.data
           || (leadRes?.data?.product_id ? { id: leadRes.data.product_id, name: null } : null)
@@ -439,7 +505,7 @@ serve(async (req) => {
 
       const messages = (msgsRes.data || []).reverse();
 
-      // Reset unread count em background (no bloqueia a respuesta)
+      // Reset unread count em background (não bloqueia a resposta)
       supabase
         .from('webchat_conversations')
         .update({ unread_count_agents: 0 })
@@ -482,7 +548,7 @@ serve(async (req) => {
       // Log previous assignee if transferring
       const previousAssignee = conversation.assigned_user_id;
 
-      // Assign conversation (allow reassignment) — agente único: limpa IA
+      // Assign conversation (allow reassignment) — atendente único: limpa IA
       const { error: updateError } = await supabase
         .from('webchat_conversations')
         .update({
@@ -520,7 +586,7 @@ serve(async (req) => {
     if (action === 'send' && req.method === 'POST') {
       const body = await req.json();
 
-      // Aceita texto puro OU mídia. Se vier mídia, content puede ser '' (caption).
+      // Aceita texto puro OU mídia. Se vier mídia, content pode ser '' (caption).
       const hasMedia = body.media && typeof body.media === 'object' && body.media.url && body.media.kind;
       if (!body.conversation_id || (!body.content && !hasMedia)) {
         return new Response(
@@ -532,7 +598,7 @@ serve(async (req) => {
       // Verify agent has access to conversation
       const { data: conversation, error: convError } = await supabase
         .from('webchat_conversations')
-        .select('id, assigned_user_id, status, channel, visitor_phone, evolution_instance_id, instagram_connection_id, ig_sender_id')
+        .select('id, assigned_user_id, status, channel, visitor_phone, evolution_instance_id, meta_connection_id, instagram_connection_id, ig_sender_id')
         .eq('id', body.conversation_id)
         .eq('organization_id', orgId)
         .single();
@@ -544,7 +610,7 @@ serve(async (req) => {
         );
       }
 
-      // Auto-assign if not assigned — agente único: limpa IA
+      // Auto-assign if not assigned — atendente único: limpa IA
       if (!conversation.assigned_user_id) {
         await supabase
           .from('webchat_conversations')
@@ -600,15 +666,17 @@ serve(async (req) => {
         })
         .eq('id', body.conversation_id);
 
-      // If channel is whatsapp, route via Evolution Go
+      // If channel is whatsapp, route via the CONVERSATION's own connection
+      // (Meta Cloud API ou Evolution Go). Nunca cair em instância "default".
       if (conversation.channel === 'whatsapp' && conversation.visitor_phone) {
         try {
           let phone = conversation.visitor_phone.replace(/\D/g, '');
           if (!phone.startsWith('55')) phone = '55' + phone;
 
-          // Auto-resolve evolution_instance_id se aún no vinculada
+          // Auto-resolve evolution_instance_id APENAS quando a conversa NÃO veio pela Meta.
           let evoInstanceId = conversation.evolution_instance_id as string | null;
-          if (!evoInstanceId) {
+          const metaConnId = (conversation as any).meta_connection_id as string | null;
+          if (!metaConnId && !evoInstanceId) {
             const { data: inst } = await supabase
               .from('evolution_instances')
               .select('id')
@@ -628,78 +696,50 @@ serve(async (req) => {
             }
           }
 
-          if (evoInstanceId) {
-            console.log('[webchat-inbox] Routing via Evolution Go - phone:', phone, 'instance_id:', evoInstanceId, 'message_id:', message.id, 'has_media:', hasMedia);
+          const routerConv = {
+            id: conversation.id,
+            organization_id: orgId,
+            meta_connection_id: metaConnId,
+            evolution_instance_id: evoInstanceId,
+            visitor_phone: conversation.visitor_phone,
+          };
 
-            // Monta payload conforme o tipo (mídia x texto)
-            let evoBody: Record<string, unknown>;
-            if (hasMedia) {
-              const m = body.media;
-              // TODOS os tipos de mídia (audio, image, video, document, sticker) usam /send/media.
-              // O servidor Evolution Go no expõe /send/audio — audio precisa ir como media con type=audio.
-              evoBody = {
-                organization_id: orgId,
-                instance_id: evoInstanceId,
-                type: 'media',
-                to: phone,
-                payload: {
-                  type: m.kind === 'sticker' ? 'image' : m.kind, // Evolution no tiene sticker dedicado, manda como image
-                  url: m.url,
-                  mimetype: m.mime || (m.kind === 'audio' ? 'audio/ogg' : undefined),
-                  fileName: m.filename || (m.kind === 'audio' ? `audio-${Date.now()}.ogg` : undefined),
-                  caption: m.kind === 'audio' ? undefined : (body.content || m.caption || undefined),
-                },
-              };
-            } else {
-              evoBody = {
-                organization_id: orgId,
-                instance_id: evoInstanceId,
-                type: 'text',
-                to: phone,
-                payload: { text: body.content },
-              };
-            }
+          const sendRes = await sendWhatsAppForConversation({
+            supabase,
+            conversation: routerConv,
+            to: phone,
+            text: hasMedia ? (body.media?.caption || body.content || '') : body.content,
+            media: hasMedia ? body.media : undefined,
+          });
 
-            const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', { body: evoBody });
-            const sendOk = !sendErr && (sendData as any)?.ok !== false;
-            if (!sendOk) {
-              console.error('[webchat-inbox] evolution-send FAILED:', JSON.stringify({ sendErr, sendData }).slice(0, 500));
-              // Mark message as failed delivery — preserva metadata.media existente
-              const baseMeta = (insertData.metadata as Record<string, unknown>) || {};
-              await supabase
-                .from('webchat_messages')
-                .update({
-                  metadata: {
-                    ...baseMeta,
-                    delivery_status: 'failed',
-                    error: sendErr?.message || (sendData as any)?.body || 'Unknown error',
-                    failed_at: new Date().toISOString(),
-                  },
-                })
-                .eq('id', message.id);
-            } else {
-              console.log('[webchat-inbox] Sent via Evolution Go:', JSON.stringify(sendData).slice(0, 200));
-            }
-          } else {
-            // Sin instância Evolution conectada — marca fala visível
-            console.error('[webchat-inbox] No connected Evolution instance for org', orgId);
+          if (!sendRes.ok) {
             const baseMeta = (insertData.metadata as Record<string, unknown>) || {};
+            const errLabel =
+              sendRes.error === 'NO_CONNECTION'
+                ? 'Conversa sem conexão WhatsApp vinculada. Reatribua a conversa a um número conectado.'
+                : sendRes.error === 'OUT_OF_WINDOW'
+                  ? 'Fora da janela 24h da Meta — envie um template HSM aprovado.'
+                  : (sendRes.message || sendRes.error || 'Falha no envio');
             await supabase
               .from('webchat_messages')
               .update({
                 metadata: {
                   ...baseMeta,
                   delivery_status: 'failed',
-                  error: 'Ningunoa instância WhatsApp conectada. Conecte uma instância em Configuraciones → WhatsApp.',
+                  error: errLabel,
+                  provider: sendRes.provider,
                   failed_at: new Date().toISOString(),
                 },
               })
               .eq('id', message.id);
+          } else {
+            console.log(`[webchat-inbox] Sent via ${sendRes.provider} (conv=${conversation.id})`);
           }
         } catch (sendError) {
           console.error('[webchat-inbox] WhatsApp send error (non-fatal):', sendError);
         }
       }
+
 
       // Instagram Direct (Meta) — rota para instagram-send
       if (conversation.channel === 'instagram' && (conversation as any).instagram_connection_id && (conversation as any).ig_sender_id) {
@@ -741,8 +781,8 @@ serve(async (req) => {
 
 
       // Broadcast message to all listeners on this conversation channel.
-      // Inclui `client_temp_id` (se enviado) para el frontend conseguir substituir
-      // a bolha otimista por lel mensaje real, evitando duplicação visual.
+      // Inclui `client_temp_id` (se enviado) para o frontend conseguir substituir
+      // a bolha otimista pela mensagem real, evitando duplicação visual.
       const broadcastPayload = body.client_temp_id
         ? { ...message, client_temp_id: body.client_temp_id }
         : message;
@@ -865,7 +905,7 @@ serve(async (req) => {
       }
       if (!finalSectorId) {
         return new Response(
-          JSON.stringify({ error: 'Ninguno sector configurado para esta organización. Crea um sector antes de aceitar conversaciones.' }),
+          JSON.stringify({ error: 'Nenhum setor configurado para esta organização. Crie um setor antes de aceitar conversas.' }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
@@ -878,7 +918,7 @@ serve(async (req) => {
 
       const previousAssignee = convRow.assigned_user_id;
 
-      // Update conversation — agente único: limpa IA
+      // Update conversation — atendente único: limpa IA
       const { error: upErr } = await supabase
         .from('webchat_conversations')
         .update({
@@ -914,8 +954,8 @@ serve(async (req) => {
         supabase.from('sectors').select('name').eq('id', finalSectorId).maybeSingle(),
       ]);
       const sysMsg = previousAssignee && previousAssignee !== user.id
-        ? `👮 ${profile?.full_name || 'Admin'} assumiu o atención — sector ${sector?.name || ''}`
-        : `✋ ${profile?.full_name || 'Agente'} aceitou o atención — sector ${sector?.name || ''}`;
+        ? `👮 ${profile?.full_name || 'Admin'} asumió la atención — sector ${sector?.name || ''}`
+        : `✋ ${profile?.full_name || 'Agente'} aceptó la atención — sector ${sector?.name || ''}`;
       await supabase.from('webchat_messages').insert({
         conversation_id: conversationId,
         direction: 'outbound',
@@ -990,7 +1030,7 @@ serve(async (req) => {
         conversation_id: body.conversation_id,
         direction: 'outbound',
         sender_type: 'bot',
-        content: `📋 Conversación reabierta por ${profile?.full_name || 'agente'}`,
+        content: `📋 Conversa reaberta por ${profile?.full_name || 'agente'}`,
       });
 
       return new Response(
@@ -1063,7 +1103,7 @@ serve(async (req) => {
       );
     }
 
-    // ACTION: Link tel lead
+    // ACTION: Link to lead
     if (action === 'link-lead' && req.method === 'POST') {
       const body = await req.json();
 
@@ -1091,7 +1131,7 @@ serve(async (req) => {
 
       let leadId = body.lead_id;
 
-      // If nel lead_id provided, create new lead
+      // If no lead_id provided, create new lead
       if (!leadId) {
         const { data: newLead, error: leadError } = await supabase
           .from('leads')
@@ -1125,7 +1165,7 @@ serve(async (req) => {
         leadId = newLead.id;
       }
 
-      // Link conversation tel lead
+      // Link conversation to lead
       const { error: updateError } = await supabase
         .from('webchat_conversations')
         .update({ lead_id: leadId })
@@ -1145,7 +1185,7 @@ serve(async (req) => {
         .eq('id', leadId)
         .single();
 
-      // Se la conversación aún no tiene producto definido e el lead tiene, herda automaticamente.
+      // Se a conversa ainda não tem produto definido e o lead tem, herda automaticamente.
       if (lead?.product_id && !conversation.product_id) {
         await supabase
           .from('webchat_conversations')
@@ -1153,7 +1193,7 @@ serve(async (req) => {
           .eq('id', body.conversation_id);
       }
 
-      // Broadcast: notifica clientes que o detalle de la conversación mudou
+      // Broadcast: notifica clientes que o detalhe da conversa mudou
       try {
         const ch = supabase.channel(`conversation:${body.conversation_id}`);
         await ch.send({ type: 'broadcast', event: 'conversation_updated', payload: { lead_id: leadId } });
@@ -1167,7 +1207,7 @@ serve(async (req) => {
       );
     }
 
-    // ACTION: Set conversation product (override manual por el agente)
+    // ACTION: Set conversation product (override manual pelo atendente)
     if (action === 'set-product' && req.method === 'POST') {
       const body = bodyJson || await req.json();
       const conversationId = body.conversation_id;
@@ -1180,7 +1220,7 @@ serve(async (req) => {
         );
       }
 
-      // Garante que la conversación pertence à org do usuario
+      // Garante que a conversa pertence à org do usuário
       const { data: conv, error: convErr } = await supabase
         .from('webchat_conversations')
         .select('id, organization_id, lead_id')
@@ -1200,7 +1240,7 @@ serve(async (req) => {
         );
       }
 
-      // Se fue passado product_id, valida que pertence à org
+      // Se foi passado product_id, valida que pertence à org
       if (productId) {
         const { data: prod } = await supabase
           .from('products')
@@ -1227,7 +1267,7 @@ serve(async (req) => {
         );
       }
 
-      // Se há lead vinculado, propaga o producto prel lead también (mantém consistência do CRM).
+      // Se há lead vinculado, propaga o produto pro lead também (mantém consistência do CRM).
       if (productId && conv.lead_id) {
         await supabase
           .from('leads')
@@ -1295,7 +1335,7 @@ serve(async (req) => {
         conversation_id: body.conversation_id,
         direction: 'outbound',
         sender_type: 'bot',
-        content: `📋 Bot ativado por ${agentProfile?.full_name || 'agente'}`,
+        content: `📋 Bot activado por ${agentProfile?.full_name || 'agente'}`,
       });
 
       // Log event
@@ -1327,7 +1367,7 @@ serve(async (req) => {
               },
               body: JSON.stringify({
                 conversation_id: body.conversation_id,
-                message: '[SISTEMA] El agente humano activó el bot. Analizá el historial de la conversación y enviá un mensaje estratégico para reconectar con el lead, considerando todo el contexto anterior.',
+                message: '[SISTEMA] O agente humano ativou o bot. Analise o histórico da conversa e envie uma mensagem estratégica para reconectar com o lead, considerando todo o contexto anterior.',
                 product_id: productId,
                 visitor_name: conv.visitor_name,
                 agent_config: {
@@ -1336,7 +1376,7 @@ serve(async (req) => {
                   sales_prompt: agentConfig.sales_prompt,
                   knowledge_base: agentConfig.knowledge_base,
                   faq: agentConfig.faq || [],
-                  fallback_message: agentConfig.fallback_message || 'Hola! Cómo posso ajudar?',
+                  fallback_message: agentConfig.fallback_message || 'Olá! Como posso ajudar?',
                   temperature: agentConfig.temperature ?? 0.7,
                   max_tokens: agentConfig.max_tokens ?? 500,
                   persona_style: agentConfig.persona_style || 'friendly',
@@ -1358,30 +1398,19 @@ serve(async (req) => {
                       : (botData?.response ? [String(botData.response)] : []));
 
                 if (chunks.length > 0 && conv.visitor_phone && conv.channel === 'whatsapp') {
-                  // Usa unified evolution-send (resolves the org's default/correct instance)
+                  const routerConv = {
+                    id: conv.id,
+                    organization_id: orgId,
+                    meta_connection_id: (conv as any).meta_connection_id || null,
+                    evolution_instance_id: (conv as any).evolution_instance_id || null,
+                    visitor_phone: conv.visitor_phone,
+                  };
                   for (let i = 0; i < chunks.length; i++) {
                     const text = chunks[i];
-                    try {
-                      const sendRes = await fetch(`${supabaseUrl}/functions/v1/evolution-send`, {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          Authorization: `Bearer ${supabaseKey}`,
-                          apikey: supabaseKey,
-                        },
-                        body: JSON.stringify({
-                          organization_id: orgId,
-                          instance_id: (conv as any).evolution_instance_id || null,
-                          type: 'text',
-                          to: conv.visitor_phone,
-                          payload: { text },
-                        }),
-                      });
-                      const sendBody = await sendRes.text();
-                      console.log('[webchat-inbox] activate-bot send chunk', i + 1, '/', chunks.length, 'status:', sendRes.status, 'body:', sendBody.slice(0, 200));
-                    } catch (sendErr) {
-                      console.error('[webchat-inbox] activate-bot send exception:', sendErr);
-                    }
+                    const sendRes = await sendWhatsAppForConversation({
+                      supabase, conversation: routerConv, to: conv.visitor_phone, text,
+                    });
+                    console.log('[webchat-inbox] activate-bot chunk', i + 1, '/', chunks.length, 'provider:', sendRes.provider, 'ok:', sendRes.ok);
                     if (i < chunks.length - 1) {
                       await new Promise((r) => setTimeout(r, 1200));
                     }
@@ -1452,7 +1481,7 @@ serve(async (req) => {
       let reactivationMessage: string;
 
       if (hasHistory && productId) {
-        // Usa AI to generate contextual reactivation message
+        // Use AI to generate contextual reactivation message
         // Find the best agent for this product
         let agentId: string | null = null;
         const { data: defaultAgent } = await supabase
@@ -1493,7 +1522,7 @@ serve(async (req) => {
             },
             body: JSON.stringify({
               conversation_id: body.conversation_id,
-              message: `[SISTEMA] Vos sos un agente de reactivación. Analizá el historial de abajo y enviá UN mensaje corto y estratégico para retomar la conversación con ${visitorName}. Sé natural, hacé referencia al último asunto discutido e incluí una pregunta abierta para reenganchar. NO te presentes de nuevo. NO repitas información ya provista.\n\nHistorial:\n${historySummary}`,
+              message: `[SISTEMA] Você é um agente de reativação. Analise o histórico abaixo e envie UMA mensagem curta e estratégica para retomar a conversa com ${visitorName}. Seja natural, faça referência ao último assunto discutido e inclua uma pergunta aberta para reengajar. NÃO se apresente novamente. NÃO repita informações já fornecidas.\n\nHistórico:\n${historySummary}`,
               product_id: productId,
               visitor_name: visitorName,
               agent_id: agentId,
@@ -1502,18 +1531,18 @@ serve(async (req) => {
 
           if (botResponse.ok) {
             const botData = await botResponse.json();
-            reactivationMessage = botData.message?.content || botData.response || `Hola ${visitorName}! Percebi que no avançamos na nossla conversación. Aún posso te ajudar?`;
+            reactivationMessage = botData.message?.content || botData.response || `Olá ${visitorName}! Percebi que não avançamos na nossa conversa. Ainda posso te ajudar?`;
           } else {
             await botResponse.text();
-            reactivationMessage = `Hola ${visitorName}! Percebi que no avançamos na nossla conversación. Aún posso te ajudar? 😊`;
+            reactivationMessage = `Olá ${visitorName}! Percebi que não avançamos na nossa conversa. Ainda posso te ajudar? 😊`;
           }
         } catch (botError) {
           console.error('[ai-reactivate] Bot error:', botError);
-          reactivationMessage = `Hola ${visitorName}! Percebi que no avançamos na nossla conversación. Aún posso te ajudar? 😊`;
+          reactivationMessage = `Olá ${visitorName}! Percebi que não avançamos na nossa conversa. Ainda posso te ajudar? 😊`;
         }
       } else {
         // No history - send default reactivation message
-        reactivationMessage = `Hola ${visitorName}! Percebi que usted demonstrou interés em nuestra solución, mas no avançamos en la conversación. Usted aún tiene interés? Puedo te enviar a demostración para vos testar! 😊`;
+        reactivationMessage = `Olá ${visitorName}! Percebi que você demonstrou interesse em nossa solução, mas não avançamos na conversa. Você ainda tem interesse? Posso te enviar a demonstração pra você testar! 😊`;
       }
 
       // Save message as bot outbound (status stays the same)
@@ -1533,27 +1562,17 @@ serve(async (req) => {
       // Send via external channel if needed (use unified evolution-send for WhatsApp)
       const isExternalChannel = ['whatsapp', 'instagram', 'facebook'].includes(conv.channel || '');
       if (isExternalChannel && conv.visitor_phone && conv.channel === 'whatsapp') {
-        try {
-          const sendRes = await fetch(`${supabaseUrl}/functions/v1/evolution-send`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${supabaseKey}`,
-              apikey: supabaseKey,
-            },
-            body: JSON.stringify({
-              organization_id: orgId,
-              instance_id: (conv as any).evolution_instance_id || null,
-              type: 'text',
-              to: conv.visitor_phone,
-              payload: { text: reactivationMessage },
-            }),
-          });
-          const sendBody = await sendRes.text();
-          console.log('[ai-reactivate] evolution-send status:', sendRes.status, 'body:', sendBody.slice(0, 200));
-        } catch (sendError) {
-          console.error('[ai-reactivate] External send error (non-fatal):', sendError);
-        }
+        const routerConv = {
+          id: conv.id,
+          organization_id: orgId,
+          meta_connection_id: (conv as any).meta_connection_id || null,
+          evolution_instance_id: (conv as any).evolution_instance_id || null,
+          visitor_phone: conv.visitor_phone,
+        };
+        const sendRes = await sendWhatsAppForConversation({
+          supabase, conversation: routerConv, to: conv.visitor_phone, text: reactivationMessage,
+        });
+        console.log('[ai-reactivate] provider:', sendRes.provider, 'ok:', sendRes.ok, 'err:', sendRes.error || '-');
       }
 
       return new Response(
@@ -1603,7 +1622,7 @@ serve(async (req) => {
         conversation_id: body.conversation_id,
         direction: 'outbound',
         sender_type: 'bot',
-        content: `📋 Flujo "${flow.name}" iniciado`,
+        content: `📋 Fluxo "${flow.name}" iniciado`,
       });
 
       return new Response(
@@ -1663,7 +1682,7 @@ serve(async (req) => {
       // Sync edit to WhatsApp - send corrective message
       const { data: editConv } = await supabase
         .from('webchat_conversations')
-        .select('channel, visitor_phone, organization_id, evolution_instance_id')
+        .select('id, channel, visitor_phone, organization_id, evolution_instance_id, meta_connection_id')
         .eq('id', origMsg.conversation_id)
         .single();
 
@@ -1672,14 +1691,17 @@ serve(async (req) => {
           let phone = editConv.visitor_phone.replace(/\D/g, '');
           if (!phone.startsWith('55')) phone = '55' + phone;
           const correctionMessage = `*Correção:* ${body.new_content}`;
-          await supabase.functions.invoke('evolution-send', {
-            body: {
+          await sendWhatsAppForConversation({
+            supabase,
+            conversation: {
+              id: (editConv as any).id,
               organization_id: orgId,
-              instance_id: (editConv as any).evolution_instance_id || undefined,
-              type: 'text',
-              to: phone,
-              payload: { text: correctionMessage },
+              meta_connection_id: (editConv as any).meta_connection_id || null,
+              evolution_instance_id: (editConv as any).evolution_instance_id || null,
+              visitor_phone: editConv.visitor_phone,
             },
+            to: phone,
+            text: correctionMessage,
           });
         } catch (sendError) {
           console.error('[edit-message] WhatsApp sync error (non-fatal):', sendError);
@@ -1731,7 +1753,7 @@ serve(async (req) => {
       // Sync delete to WhatsApp - send notification
       const { data: delConv } = await supabase
         .from('webchat_conversations')
-        .select('channel, visitor_phone, organization_id, evolution_instance_id')
+        .select('id, channel, visitor_phone, organization_id, evolution_instance_id, meta_connection_id')
         .eq('id', origMsg.conversation_id)
         .single();
 
@@ -1739,15 +1761,18 @@ serve(async (req) => {
         try {
           let phone = delConv.visitor_phone.replace(/\D/g, '');
           if (!phone.startsWith('55')) phone = '55' + phone;
-          const deleteNotification = '⚠️ Umel mensaje anterior fue removida por el agente.';
-          await supabase.functions.invoke('evolution-send', {
-            body: {
+          const deleteNotification = '⚠️ Uma mensagem anterior foi removida pelo atendente.';
+          await sendWhatsAppForConversation({
+            supabase,
+            conversation: {
+              id: (delConv as any).id,
               organization_id: orgId,
-              instance_id: (delConv as any).evolution_instance_id || undefined,
-              type: 'text',
-              to: phone,
-              payload: { text: deleteNotification },
+              meta_connection_id: (delConv as any).meta_connection_id || null,
+              evolution_instance_id: (delConv as any).evolution_instance_id || null,
+              visitor_phone: delConv.visitor_phone,
             },
+            to: phone,
+            text: deleteNotification,
           });
         } catch (sendError) {
           console.error('[delete-message] WhatsApp sync error (non-fatal):', sendError);
@@ -1820,7 +1845,7 @@ serve(async (req) => {
       // Verify target conversation belongs to same org
       const { data: targetConv } = await supabase
         .from('webchat_conversations')
-        .select('id, channel, visitor_phone, evolution_instance_id')
+        .select('id, channel, visitor_phone, organization_id, evolution_instance_id, meta_connection_id')
         .eq('id', body.target_conversation_id)
         .eq('organization_id', orgId)
         .single();
@@ -1857,14 +1882,17 @@ serve(async (req) => {
         try {
           let phone = targetConv.visitor_phone.replace(/\D/g, '');
           if (!phone.startsWith('55')) phone = '55' + phone;
-          await supabase.functions.invoke('evolution-send', {
-            body: {
+          await sendWhatsAppForConversation({
+            supabase,
+            conversation: {
+              id: (targetConv as any).id,
               organization_id: orgId,
-              instance_id: (targetConv as any).evolution_instance_id || undefined,
-              type: 'text',
-              to: phone,
-              payload: { text: origMsg.content },
+              meta_connection_id: (targetConv as any).meta_connection_id || null,
+              evolution_instance_id: (targetConv as any).evolution_instance_id || null,
+              visitor_phone: targetConv.visitor_phone,
             },
+            to: phone,
+            text: origMsg.content,
           });
         } catch (sendError) {
           console.error('[forward-message] WhatsApp send error:', sendError);

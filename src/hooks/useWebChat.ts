@@ -175,7 +175,7 @@ export function useWebChatWidget(widgetId: string) {
   });
 }
 
-// Hook para buscar widget por producto
+// Hook para buscar widget por produto
 export function useWebChatWidgetByProduct(productId: string) {
   const { profile } = useAuth();
   
@@ -214,7 +214,7 @@ export function useWebChatWidgetByProduct(productId: string) {
   });
 }
 
-// Hook para crear widget para producto
+// Hook para criar widget para produto
 export function useCreateProductWidget() {
   const queryClient = useQueryClient();
   const { profile } = useAuth();
@@ -346,16 +346,19 @@ export function useUpdateAgentConfig() {
 }
 
 // ============================================================================
-// Hooks for Conversations (Inbox) — todos los filtros son aplicados no backend
+// Hooks for Conversations (Inbox) — todos os filtros são aplicados no backend
 // ============================================================================
 
 export interface InboxBackendFilters {
-  tab?: 'attending' | 'waiting' | 'resolved' | 'all';
-  product_ids?: string[];        // puede incluir '__none__'
-  sector_ids?: string[];         // puede incluir '__none__'
-  assigned_user_ids?: string[];  // puede incluir 'unassigned'
+  tab?: 'attending' | 'agents' | 'waiting' | 'resolved' | 'all';
+  product_ids?: string[];        // pode incluir '__none__'
+  sector_ids?: string[];         // pode incluir '__none__'
+  assigned_user_ids?: string[];  // pode incluir 'unassigned'
   tag_ids?: string[];
-  channel?: string | null;
+  channel?: string | null;       // legacy single
+  channels?: string[];           // multi
+  connections?: string[];        // formato "evolution:<id>" | "meta:<id>" | "instagram:<id>"
+  agent_ids?: string[];          // filtro por agente IA (current_agent_id)
   search?: string | null;
 }
 
@@ -368,9 +371,13 @@ function buildInboxParams(filters?: InboxBackendFilters): URLSearchParams {
   if (filters?.assigned_user_ids?.length) params.set('assigned_user_ids', filters.assigned_user_ids.join(','));
   if (filters?.tag_ids?.length) params.set('tag_ids', filters.tag_ids.join(','));
   if (filters?.channel) params.set('channel', filters.channel);
+  if (filters?.channels?.length) params.set('channels', filters.channels.join(','));
+  if (filters?.connections?.length) params.set('connections', filters.connections.join(','));
+  if (filters?.agent_ids?.length) params.set('agent_ids', filters.agent_ids.join(','));
   if (filters?.search) params.set('search', filters.search);
   return params;
 }
+
 
 export function useWebChatConversations(filters?: InboxBackendFilters & { limit?: number }) {
   const { session } = useAuth();
@@ -422,7 +429,7 @@ export function useWebChatConversationCounts(filters?: Omit<InboxBackendFilters,
         },
       });
       if (!res.ok) throw new Error('Failed to fetch conversation counts');
-      return (await res.json()) as { attending: number; waiting: number; resolved: number };
+      return (await res.json()) as { attending: number; agents: number; waiting: number; resolved: number };
     },
     enabled: !!session?.access_token,
     refetchInterval: 60000,
@@ -462,9 +469,9 @@ export function useWebChatConversation(conversationId: string) {
     },
     enabled: !!session?.access_token && !!conversationId,
     staleTime: 30000,
-    // Mantém a conversación anterior visível mientras a nova carrega — elimina o "flash" de loading
+    // Mantém a conversa anterior visível enquanto a nova carrega — elimina o "flash" de loading
     placeholderData: (prev) => prev,
-    // Pinta cabeçalho/última mensaje instantaneamente a partir do cache da lista de conversaciones
+    // Pinta cabeçalho/última mensagem instantaneamente a partir do cache da lista de conversas
     initialData: () => {
       if (!conversationId) return undefined;
       const list = queryClient.getQueryData<any>(['webchat-conversations']);
@@ -473,11 +480,11 @@ export function useWebChatConversation(conversationId: string) {
       if (!found) return undefined;
       return { conversation: found as WebChatConversation, messages: [] as WebChatMessage[] };
     },
-    initialDataUpdatedAt: 0, // fuerza refetch em background mismo con initialData
+    initialDataUpdatedAt: 0, // força refetch em background mesmo com initialData
     refetchInterval: 15000,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: false,
-    // No insiste em IDs inválidos / sin permiso
+    // Não insiste em IDs inválidos / sem permissão
     retry: (failureCount, error: any) => {
       if (error?.status === 404 || error?.status === 403) return false;
       return failureCount < 2;
@@ -509,6 +516,7 @@ export function useAssignConversation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
+      queryClient.invalidateQueries({ queryKey: ['webchat-conversation-counts'] });
     },
   });
 }
@@ -559,12 +567,12 @@ export function useSendAgentMessage() {
     },
     // Optimistic update - show message immediately.
     // Usa um clientTempId estável que é enviado para o backend e ecoado de volta
-    // no broadcast `new_message` — assim o listener consegue SUBSTITUIR a burbuja
-    // otimista por la mensaje persistida em vez de duplicar.
+    // no broadcast `new_message` — assim o listener consegue SUBSTITUIR a bolha
+    // otimista pela mensagem persistida em vez de duplicar.
     onMutate: async (vars) => {
       const { conversationId, content, media } = vars;
       const clientTempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-      // Anexa no objeto de variables para o mutationFn enviá-lo ao backend
+      // Anexa no objeto de variáveis para o mutationFn enviá-lo ao backend
       (vars as any).clientTempId = clientTempId;
 
       // Cancel outgoing refetches
@@ -593,7 +601,7 @@ export function useSendAgentMessage() {
               created_at: new Date().toISOString(),
               profiles: {
                 id: user?.id,
-                full_name: profile?.full_name || 'Usted',
+                full_name: profile?.full_name || 'Você',
                 avatar_url: profile?.avatar_url || null,
               },
             },
@@ -613,6 +621,8 @@ export function useSendAgentMessage() {
       // Always refetch after error or success to ensure data is in sync
       queryClient.invalidateQueries({ queryKey: ['webchat-conversation', conversationId] });
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
+      // Enviar auto-asigna la conversa (pasa a "Atendiendo") → refrescar contadores.
+      queryClient.invalidateQueries({ queryKey: ['webchat-conversation-counts'] });
     },
   });
 }
@@ -638,6 +648,7 @@ export function useCloseConversation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
+      queryClient.invalidateQueries({ queryKey: ['webchat-conversation-counts'] });
     },
   });
 }
@@ -669,8 +680,8 @@ export function useLinkLead() {
 }
 
 /**
- * Define (ou limpa) o producto de uma conversación do Inbox manualmente.
- * Override manual feito por el agente no painel direito.
+ * Define (ou limpa) o produto de uma conversa do Inbox manualmente.
+ * Override manual feito pelo atendente no painel direito.
  */
 export function useSetConversationProduct() {
   const queryClient = useQueryClient();
@@ -721,7 +732,7 @@ export function useSetConversationSector() {
 }
 
 // New hooks for conversation management
-// Mapeia acción -> status alvo para actualización otimista da UI.
+// Mapeia ação -> status alvo para atualização otimista da UI.
 const ACTION_TO_STATUS: Record<string, string | undefined> = {
   reopen: 'human_active',
   resume: 'human_active',
@@ -752,7 +763,7 @@ function useConversationAction(actionName: string) {
       }
       return res.json();
     },
-    // Actualización otimista — UI reflete na hora, antes do servidor responder.
+    // Atualização otimista — UI reflete na hora, antes do servidor responder.
     onMutate: async (conversationId: string) => {
       const targetStatus = ACTION_TO_STATUS[actionName];
       if (!targetStatus) return { previousDetail: undefined, previousList: undefined };
@@ -767,7 +778,7 @@ function useConversationAction(actionName: string) {
         });
       }
 
-      // Atualiza todas las listas em cache (cualquier filtro)
+      // Atualiza todas as listas em cache (qualquer filtro)
       const listQueries = queryClient.getQueriesData<any>({ queryKey: ['webchat-conversations'] });
       const previousList = listQueries.map(([key, data]) => [key, data] as const);
       listQueries.forEach(([key, data]) => {
@@ -791,6 +802,8 @@ function useConversationAction(actionName: string) {
     onSettled: (_data, _err, conversationId) => {
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
       queryClient.invalidateQueries({ queryKey: ['webchat-conversation', conversationId] });
+      // Refresca los badges de las pestañas (Atendiendo/Agentes/En Fila) al instante.
+      queryClient.invalidateQueries({ queryKey: ['webchat-conversation-counts'] });
     },
   });
 }
@@ -836,6 +849,7 @@ export function useAIReactivate() {
     onSuccess: (_, conversationId) => {
       queryClient.invalidateQueries({ queryKey: ['webchat-conversation', conversationId] });
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
+      queryClient.invalidateQueries({ queryKey: ['webchat-conversation-counts'] });
     },
   });
 }
@@ -865,6 +879,7 @@ export function useTriggerFlow() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
       queryClient.invalidateQueries({ queryKey: ['webchat-conversation'] });
+      queryClient.invalidateQueries({ queryKey: ['webchat-conversation-counts'] });
     },
   });
 }
@@ -895,6 +910,7 @@ function useMessageAction(actionName: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
       queryClient.invalidateQueries({ queryKey: ['webchat-conversation'] });
+      queryClient.invalidateQueries({ queryKey: ['webchat-conversation-counts'] });
     },
   });
 }

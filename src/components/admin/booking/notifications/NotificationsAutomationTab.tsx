@@ -305,7 +305,7 @@ export function NotificationsAutomationTab({ eventTypeId }: Props) {
             rows={9}
           />
           <DialogFooter>
-            <Button onClick={() => setRecoveryEditOpen(false)}>Concluído</Button>
+            <Button onClick={() => setRecoveryEditOpen(false)}>Completado</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

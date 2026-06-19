@@ -46,7 +46,7 @@ const temperatures = [
 ];
 
 const datePresets: { value: Exclude<DatePreset, null>; label: string }[] = [
-  { value: 'today', label: 'Hoje' },
+  { value: 'today', label: 'Hoy' },
   { value: '7d', label: '7 días' },
   { value: '30d', label: '30 días' },
   { value: 'month', label: 'Este mes' },

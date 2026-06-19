@@ -139,7 +139,7 @@ export function RadarLeadActions({ item, compact, onOpenConversation }: Props) {
           defaultTitle={`Follow-up Radar IA — ${leadName}`}
           defaultDescription={[
             contextText,
-            item.followup_message ? `\nMensagem sugerida:\n"${item.followup_message}"` : '',
+            item.followup_message ? `\nMensaje sugerida:\n"${item.followup_message}"` : '',
           ].filter(Boolean).join('\n')}
         />
       )}

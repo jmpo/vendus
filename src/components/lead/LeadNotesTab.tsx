@@ -228,7 +228,7 @@ export function LeadNotesTab({ lead, isAdmin, teamMembers = [] }: LeadNotesTabPr
         </CardContent>
       </Card>
 
-      {/* Tarefas do Lead */}
+      {/* Tareas do Lead */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-sm font-medium flex items-center gap-2">

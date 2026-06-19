@@ -717,7 +717,7 @@ function WhatsAppStep({
                 <p className="text-sm text-center text-muted-foreground max-w-sm">
                   Abra o WhatsApp → <strong>Configuraciones</strong> → <strong>Dispositivos conectados</strong> → <strong>Conectar dispositivo</strong>.
                 </p>
-                <Badge variant="secondary">Aguardando leitura...</Badge>
+                <Badge variant="secondary">Esperando leitura...</Badge>
               </>
             ) : (
               <p className="text-sm text-muted-foreground">No fue posible generar o QR Code.</p>
@@ -1153,7 +1153,7 @@ function StepFooter({
 }) {
   return (
     <div className="flex items-center justify-between gap-3 pt-6 mt-6 border-t">
-      <Button variant="ghost" onClick={onBack} size="sm">Voltar</Button>
+      <Button variant="ghost" onClick={onBack} size="sm">Volver</Button>
       <div className="flex gap-2">
         <Button variant="ghost" onClick={onSkip} size="sm">Pular esta etapa</Button>
         <Button onClick={onPrimary} disabled={loading || disabled} className="gap-2">

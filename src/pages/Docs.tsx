@@ -236,7 +236,7 @@ function Changelog() {
         "Documentación pública /docs con 4 rutas (Vendedor, Admin, Super Admin, Dev) e busca cmd+K.",
         "Radar de IA con acciones 1-clique (abrir conversación, chamar IA, atribuir, crear tarea).",
         "Preservação de historial ao trocar conexión Evolution.",
-        "Cadências inteligentes con gerador IA e auto-stop por respuesta.",
+        "Cadencias inteligentes con gerador IA e auto-stop por respuesta.",
       ],
     },
     {
