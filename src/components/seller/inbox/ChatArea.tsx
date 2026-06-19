@@ -342,10 +342,10 @@ export function ChatArea({
 
   const getStatusText = () => {
     switch (status) {
-      case 'active': return 'Conversa ativa';
-      case 'waiting': return 'Esperando atendimento';
+      case 'active': return 'Conversación activa';
+      case 'waiting': return 'Esperando atención';
       case 'bot_active': return 'Atención por IA';
-      case 'closed': return 'Conversa encerrada';
+      case 'closed': return 'Conversación cerrada';
       default: return status;
     }
   };
@@ -624,7 +624,7 @@ export function ChatArea({
                   Retomar
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Retomar atendimento humano</TooltipContent>
+              <TooltipContent>Retomar atención humana</TooltipContent>
             </Tooltip>
           )}
 
@@ -730,8 +730,8 @@ export function ChatArea({
             </div>
           ) : messages.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              <p className="text-sm">Nenhuma mensagem ainda</p>
-              <p className="text-xs mt-1">Envie uma mensagem para iniciar</p>
+              <p className="text-sm">Ningún mensaje todavía</p>
+              <p className="text-xs mt-1">Enviá un mensaje para iniciar</p>
             </div>
           ) : (
             <div className="space-y-6">

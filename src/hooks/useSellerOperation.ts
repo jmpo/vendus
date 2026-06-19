@@ -10,7 +10,7 @@ export interface PriorityItem {
   status?: string | null;
   reason: string;
   ageMinutes?: number;
-  actionLabel: 'Responder' | 'Ligar' | 'Abrir';
+  actionLabel: 'Responder' | 'Llamar' | 'Abrir';
   actionTab: 'inbox' | 'leads' | 'bookings';
   payloadId: string;
 }
@@ -82,21 +82,21 @@ const humanizeAge = (mins: number) => {
 };
 
 const formatHHmm = (iso: string) =>
-  new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  new Date(iso).toLocaleTimeString('es-PY', { hour: '2-digit', minute: '2-digit', hour12: false });
 
 const formatCountdown = (iso: string) => {
   const diff = new Date(iso).getTime() - Date.now();
   if (diff <= 0) {
     const past = Math.floor(-diff / 60_000);
-    if (past < 60) return `há ${past} min`;
+    if (past < 60) return `hace ${past} min`;
     const h = Math.floor(past / 60);
-    return `há ${h}h`;
+    return `hace ${h}h`;
   }
   const mins = Math.floor(diff / 60_000);
-  if (mins < 60) return `Em ${mins} min`;
+  if (mins < 60) return `En ${mins} min`;
   const h = Math.floor(mins / 60);
   const m = mins % 60;
-  return m ? `Em ${h}h${m.toString().padStart(2, '0')}min` : `Em ${h}h`;
+  return m ? `En ${h}h${m.toString().padStart(2, '0')}min` : `En ${h}h`;
 };
 
 const safeCount = (res: { count?: number | null } | undefined | null) =>
@@ -237,7 +237,7 @@ export function useSellerOperation() {
       const priorities: PriorityItem[] = [];
       for (const c of prioritiesConvsRes.data ?? []) {
         const leadRel: any = (c as any).leads;
-        const name = leadRel?.name || (c as any).visitor_name || 'Contato';
+        const name = leadRel?.name || (c as any).visitor_name || 'Contacto';
         const ageMin = minutesSince((c as any).last_message_at);
         priorities.push({
           id: `conv-${c.id}`,
@@ -245,7 +245,7 @@ export function useSellerOperation() {
           name,
           company: leadRel?.company ?? null,
           status: leadRel?.status ?? null,
-          reason: `Sem resposta há ${humanizeAge(ageMin)}`,
+          reason: `Sin respuesta hace ${humanizeAge(ageMin)}`,
           ageMinutes: ageMin,
           actionLabel: 'Responder',
           actionTab: 'inbox',
@@ -266,8 +266,8 @@ export function useSellerOperation() {
           priorities.unshift({
             id: `evt-${futureEvent.id}`,
             kind: 'meeting',
-            name: futureEvent.lead?.name || futureEvent.title || 'Reunião',
-            reason: `Reunião às ${time}`,
+            name: futureEvent.lead?.name || futureEvent.title || 'Reunión',
+            reason: `Reunión a las ${time}`,
             actionLabel: 'Abrir',
             actionTab: 'bookings',
             payloadId: futureEvent.id,
@@ -284,10 +284,10 @@ export function useSellerOperation() {
           company: (l as any).company ?? null,
           status: (l as any).status ?? null,
           reason: l.company
-            ? `${l.company} • Lead quente`
-            : 'Lead quente sem ação recente',
+            ? `${l.company} • Lead caliente`
+            : 'Lead caliente sin acción reciente',
           ageMinutes: ageMin,
-          actionLabel: 'Ligar',
+          actionLabel: 'Llamar',
           actionTab: 'leads',
           payloadId: l.id,
         });
@@ -298,7 +298,7 @@ export function useSellerOperation() {
       const nextEvent: NextEvent | null = futureEvent
         ? {
             id: futureEvent.id,
-            title: futureEvent.title || 'Reunião',
+            title: futureEvent.title || 'Reunión',
             startTime: futureEvent.start_time,
             withName: futureEvent.lead?.name ?? null,
           }
@@ -312,7 +312,7 @@ export function useSellerOperation() {
           time: formatHHmm(e.start_time),
           startIso: e.start_time,
           kind: 'meeting',
-          title: e.lead?.name ? `Reunião com ${e.lead.name}` : e.title || 'Reunião',
+          title: e.lead?.name ? `Reunión con ${e.lead.name}` : e.title || 'Reunión',
           description: e.title || undefined,
           countdown: formatCountdown(e.start_time),
           tone: 'emerald',
@@ -351,14 +351,14 @@ export function useSellerOperation() {
         insights.push({
           id: 'hot',
           icon: 'flame',
-          text: `${hotCount} lead${hotCount > 1 ? 's' : ''} quente${hotCount > 1 ? 's' : ''} sem retorno`,
+          text: `${hotCount} ${hotCount > 1 ? 'leads calientes' : 'lead caliente'} sin respuesta`,
         });
       }
       if (overdue > 0) {
         insights.push({
           id: 'overdue',
           icon: 'alert',
-          text: `Você possui ${overdue} tarefa${overdue > 1 ? 's' : ''} vencida${overdue > 1 ? 's' : ''}`,
+          text: `Tenés ${overdue} ${overdue > 1 ? 'tareas vencidas' : 'tarea vencida'}`,
         });
       }
       if (nextEvent) {
@@ -373,7 +373,7 @@ export function useSellerOperation() {
           insights.push({
             id: 'meetings-soon',
             icon: 'calendar',
-            text: `${meetingsSoon} reunião${meetingsSoon > 1 ? 'ões' : ''} começam em 30 minutos`,
+            text: `${meetingsSoon} ${meetingsSoon > 1 ? 'reuniones empiezan' : 'reunión empieza'} en 30 minutos`,
           });
         } else if (mins >= 0 && mins <= 120) {
           insights.push({
@@ -381,8 +381,8 @@ export function useSellerOperation() {
             icon: 'calendar',
             text:
               mins < 60
-                ? `1 reunião em ${mins} min`
-                : `1 reunião em ${Math.round(mins / 60)}h`,
+                ? `1 reunión en ${mins} min`
+                : `1 reunión en ${Math.round(mins / 60)}h`,
           });
         }
       }
@@ -390,7 +390,7 @@ export function useSellerOperation() {
         insights.push({
           id: 'unanswered',
           icon: 'message',
-          text: `${unanswered} conversa${unanswered > 1 ? 's' : ''} aguardam resposta`,
+          text: `${unanswered} ${unanswered > 1 ? 'conversaciones esperan' : 'conversación espera'} respuesta`,
         });
       }
 

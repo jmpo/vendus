@@ -106,7 +106,7 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
       toast.success('Oportunidade criada');
       onClose();
     } catch {
-      toast.error('Erro ao criar oportunidade');
+      toast.error('Error al crear la oportunidad');
     }
   };
 

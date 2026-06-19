@@ -137,12 +137,12 @@ const TABS: { key: TabKey; label: string }[] = [
 ];
 
 const EMPTY_COPY: Record<TabKey, { title: string; subtitle: string }> = {
-  today: { title: 'Tudo em dia por aqui.', subtitle: 'Nenhuma atividade pendente para hoje.' },
-  overdue: { title: 'Nenhuma atividade atrasada.', subtitle: 'Ótimo trabalho.' },
-  scheduled: { title: 'Sem atividades agendadas.', subtitle: 'Aproveite para criar a próxima.' },
-  meetings: { title: 'Nenhuma reunião agendada para hoje.', subtitle: '' },
-  cadences: { title: 'Nenhuma ação de cadência pendente.', subtitle: '' },
-  done: { title: 'Nenhuma atividade concluída ainda.', subtitle: '' },
+  today: { title: 'Todo al día por acá.', subtitle: 'Ninguna actividad pendiente para hoy.' },
+  overdue: { title: 'Ninguna actividad atrasada.', subtitle: '¡Excelente trabajo!' },
+  scheduled: { title: 'Sin actividades agendadas.', subtitle: 'Aprovechá para crear la próxima.' },
+  meetings: { title: 'Ninguna reunión agendada para hoy.', subtitle: '' },
+  cadences: { title: 'Ninguna acción de cadencia pendiente.', subtitle: '' },
+  done: { title: 'Ninguna actividad completada todavía.', subtitle: '' },
 };
 
 function formatWhen(due: string) {
@@ -225,10 +225,10 @@ export function ActivityCenter({ userId, productId, productName }: ActivityCente
       if (a.source === 'task') {
         if (a.status === 'completed') {
           await uncompleteTask.mutateAsync(a.source_id);
-          toast.success('Atividade reaberta');
+          toast.success('Actividad reabierta');
         } else {
           await completeTask.mutateAsync(a.source_id);
-          toast.success('Atividade concluída');
+          toast.success('Actividad completada');
         }
       } else if (a.source === 'calendar_event') {
         const newStatus = a.status === 'completed' ? 'scheduled' : 'completed';
@@ -237,23 +237,23 @@ export function ActivityCenter({ userId, productId, productName }: ActivityCente
           .update({ status: newStatus })
           .eq('id', a.source_id);
         if (error) throw error;
-        toast.success(newStatus === 'completed' ? 'Reunião concluída' : 'Reunião reaberta');
+        toast.success(newStatus === 'completed' ? 'Reunión completada' : 'Reunión reabierta');
       } else {
-        toast.info('Esta atividade não pode ser concluída manualmente');
+        toast.info('Esta actividad no se puede completar manualmente');
         return;
       }
       queryClient.invalidateQueries({ queryKey: ['seller-activities'] });
     } catch {
-      toast.error('Erro ao atualizar atividade');
+      toast.error('Error al actualizar la actividad');
     }
   };
 
   const handleDelete = async (a: Activity) => {
     const labels: Record<string, { confirm: string; success: string }> = {
-      task: { confirm: 'Eliminar esta tarefa?', success: 'Tarefa excluída' },
-      scheduled_message: { confirm: 'Cancelar o envio desta mensagem agendada?', success: 'Mensaje cancelada' },
-      calendar_event: { confirm: 'Cancelar esta reunião?', success: 'Reunião cancelada' },
-      cadence_step: { confirm: 'Cancelar este passo da cadência?', success: 'Passo da cadência cancelado' },
+      task: { confirm: '¿Eliminar esta tarea?', success: 'Tarea eliminada' },
+      scheduled_message: { confirm: '¿Cancelar el envío de este mensaje agendado?', success: 'Mensaje cancelado' },
+      calendar_event: { confirm: '¿Cancelar esta reunión?', success: 'Reunión cancelada' },
+      cadence_step: { confirm: '¿Cancelar este paso de la cadencia?', success: 'Paso de la cadencia cancelado' },
     };
     const cfg = labels[a.source];
     if (!cfg) return;
@@ -283,7 +283,7 @@ export function ActivityCenter({ userId, productId, productName }: ActivityCente
       toast.success(cfg.success);
       queryClient.invalidateQueries({ queryKey: ['seller-activities'] });
     } catch {
-      toast.error('Erro ao cancelar atividade');
+      toast.error('Error al cancelar la actividad');
     }
   };
 
@@ -568,7 +568,7 @@ export function ActivityCenter({ userId, productId, productName }: ActivityCente
               {(priorities?.hotLeadsUnassigned ?? 0) > 0 && (
                 <SuggestionItem
                   icon={<Zap className="h-4 w-4 text-amber-500" />}
-                  title={`${priorities!.hotLeadsUnassigned} lead(s) quente(s) sem atendimento`}
+                  title={`${priorities!.hotLeadsUnassigned} lead(s) caliente(s) sin atención`}
                   action="Ver leads"
                   onAction={() => navigate('leads')}
                 />
@@ -576,7 +576,7 @@ export function ActivityCenter({ userId, productId, productName }: ActivityCente
               {(priorities?.pendingMeetings ?? 0) > 0 && (
                 <SuggestionItem
                   icon={<CalendarDays className="h-4 w-4 text-sky-500" />}
-                  title={`Você tem ${priorities!.pendingMeetings} reunião(ões) agendada(s) hoje`}
+                  title={`Tenés ${priorities!.pendingMeetings} reunión(es) agendada(s) hoy`}
                   action="Ver agenda"
                   onAction={() => navigate('bookings')}
                 />
@@ -584,8 +584,8 @@ export function ActivityCenter({ userId, productId, productName }: ActivityCente
               {(priorities?.overdueTasks ?? 0) > 0 && (
                 <SuggestionItem
                   icon={<AlertTriangle className="h-4 w-4 text-destructive" />}
-                  title={`${priorities!.overdueTasks} atividade(s) atrasada(s)`}
-                  action="Resolver agora"
+                  title={`${priorities!.overdueTasks} actividad(es) atrasada(s)`}
+                  action="Resolver ahora"
                   onAction={() => setTab('overdue')}
                 />
               )}
@@ -1117,7 +1117,7 @@ function NewActivityDialog({
       onCreated();
       onClose();
     } catch (e: any) {
-      toast.error(e?.message ?? 'Erro ao criar atividade');
+      toast.error(e?.message ?? 'Error al crear la actividad');
     } finally {
       setSaving(false);
     }
@@ -1131,7 +1131,7 @@ function NewActivityDialog({
 
       <div className="space-y-4 pt-2">
         <div className="space-y-2">
-          <Label>Tipo de atividade</Label>
+          <Label>Tipo de actividad</Label>
           <Select value={type} onValueChange={setType}>
             <SelectTrigger>
               <SelectValue />
@@ -1160,7 +1160,7 @@ function NewActivityDialog({
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Detalhes da atividade..."
+            placeholder="Detalles de la actividad..."
             rows={3}
           />
         </div>
@@ -1229,11 +1229,11 @@ function NewActivityDialog({
 
         {isScheduled && (
           <div className="space-y-2">
-            <Label>Mensaje que será enviada</Label>
+            <Label>Mensaje que se enviará</Label>
             <Textarea
               value={messageBody}
               onChange={(e) => setMessageBody(e.target.value)}
-              placeholder="Conteúdo da mensagem..."
+              placeholder="Contenido del mensaje..."
               rows={3}
             />
           </div>
@@ -1487,7 +1487,7 @@ function RescheduleDialog({
       onDone();
       onClose();
     } catch (e) {
-      toast.error('Erro ao reagendar atividade');
+      toast.error('Error al reagendar la actividad');
     } finally {
       setSaving(false);
     }

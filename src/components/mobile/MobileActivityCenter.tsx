@@ -189,7 +189,7 @@ export function MobileActivityCenter({ userId, productId, productName }: MobileA
 
   const handleToggle = (a: Activity) => {
     if (a.source !== 'task') {
-      toast.info('Conclusão disponível apenas para tarefas.');
+      toast.info('La finalización solo está disponible para tareas.');
       return;
     }
     haptics.selection();
@@ -210,7 +210,7 @@ export function MobileActivityCenter({ userId, productId, productName }: MobileA
 
   const handleDelete = (a: Activity) => {
     if (a.source !== 'task') {
-      toast.info('Exclusão disponível apenas para tarefas.');
+      toast.info('La eliminación solo está disponible para tareas.');
       return;
     }
     deleteTask.mutate(a.source_id);
@@ -241,7 +241,7 @@ export function MobileActivityCenter({ userId, productId, productName }: MobileA
           setNtTitle('');
           setNtDesc('');
         },
-        onError: (e: any) => toast.error(e?.message ?? 'Erro ao criar.'),
+        onError: (e: any) => toast.error(e?.message ?? 'Error al crear.'),
       },
     );
   };
@@ -321,7 +321,7 @@ export function MobileActivityCenter({ userId, productId, productName }: MobileA
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar atividade ou lead..."
+            placeholder="Buscar actividad o lead..."
             className="h-9 text-sm"
           />
           <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
@@ -541,7 +541,7 @@ export function MobileActivityCenter({ userId, productId, productName }: MobileA
         </SheetTrigger>
         <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>Nova atividade{productName ? ` · ${productName}` : ''}</SheetTitle>
+            <SheetTitle>Nueva actividad{productName ? ` · ${productName}` : ''}</SheetTitle>
           </SheetHeader>
           <div className="space-y-3 py-4">
             <div className="space-y-1.5">
@@ -632,12 +632,12 @@ export function MobileActivityCenter({ userId, productId, productName }: MobileA
 
 function EmptyTab({ tab }: { tab: TabId }) {
   const map: Record<TabId, { title: string; sub: string }> = {
-    today: { title: 'Nada para hoje 🎯', sub: 'Aproveite para prospectar novos leads.' },
-    overdue: { title: 'Nenhuma atrasada 🎉', sub: 'Você está em dia!' },
-    scheduled: { title: 'Sem próximas atividades', sub: 'Agende um follow-up no FAB +.' },
-    meetings: { title: 'Sem reuniões', sub: 'Conecte sua agenda para ver eventos.' },
-    cadences: { title: 'Sem cadências ativas', sub: 'Inscreva leads em cadências.' },
-    done: { title: 'Sem concluídas', sub: 'Atividades concluídas aparecem aqui.' },
+    today: { title: 'Nada para hoy 🎯', sub: 'Aprovechá para prospectar nuevos leads.' },
+    overdue: { title: 'Ninguna atrasada 🎉', sub: '¡Estás al día!' },
+    scheduled: { title: 'Sin próximas actividades', sub: 'Agendá un follow-up en el FAB +.' },
+    meetings: { title: 'Sin reuniones', sub: 'Conectá tu agenda para ver eventos.' },
+    cadences: { title: 'Sin cadencias activas', sub: 'Inscribí leads en cadencias.' },
+    done: { title: 'Sin completadas', sub: 'Las actividades completadas aparecen acá.' },
   };
   const e = map[tab];
   return (

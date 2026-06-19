@@ -231,9 +231,9 @@ export function ScheduleMessageDialog({
       if (error) throw error;
       toast({
         title: occurrences.length > 1
-          ? `${occurrences.length} mensagens agendadas`
-          : 'Mensaje agendada!',
-        description: `Próximo envio: ${format(occurrences[0], "dd/MM 'às' HH:mm", { locale: ptBR })}`,
+          ? `${occurrences.length} mensajes agendados`
+          : 'Mensaje agendado!',
+        description: `Próximo envío: ${format(occurrences[0], "dd/MM 'a las' HH:mm", { locale: ptBR })}`,
       });
       setContent('');
       setMedia(null);
@@ -241,7 +241,7 @@ export function ScheduleMessageDialog({
       onOpenChange(false);
     } catch (e: any) {
       toast({
-        title: 'Erro ao agendar mensagem',
+        title: 'Error al agendar mensaje',
         description: e?.message,
         variant: 'destructive',
       });
@@ -299,7 +299,7 @@ export function ScheduleMessageDialog({
                 ref={textareaRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder={media ? 'Adicione uma legenda...' : 'Digite a mensagem que será enviada...'}
+                placeholder={media ? 'Agregá una leyenda...' : 'Escribí el mensaje que se enviará...'}
                 rows={media ? 4 : 7}
                 className="resize-none mt-1"
               />

@@ -573,8 +573,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       await closeConversation.mutateAsync(selectedConversation.id);
       setSelectedConversation(null);
       toast({
-        title: 'Conversa encerrada',
-        description: 'A conversa foi encerrada com sucesso.',
+        title: 'Conversación cerrada',
+        description: 'La conversación se cerró con éxito.',
       });
     } catch (error) {
       toast({
@@ -935,7 +935,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   const handleCloseAllTickets = useCallback(async () => {
     const open = filteredConversations.filter(c => c.status !== 'closed');
     await Promise.allSettled(open.map(c => closeConversation.mutateAsync(c.id)));
-    toast({ title: `${open.length} atendimentos encerrados` });
+    toast({ title: `${open.length} atenciones cerradas` });
     refetchConversations();
   }, [filteredConversations, closeConversation, toast, refetchConversations]);
 
@@ -1115,7 +1115,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
                 if (!linkedLead?.id) { toast({ title: 'Sem lead vinculado' }); return; }
                 await supabase.from('leads').update({ temperature: 'hot' }).eq('id', linkedLead.id);
                 queryClient.invalidateQueries({ queryKey: ['linked-lead'] });
-                toast({ title: '🔥 Lead marcado como quente' });
+                toast({ title: '🔥 Lead marcado como caliente' });
               }}
               onSendFlow={() => setShowSendFlow(true)}
               onSendCadence={() => setShowSendCadence(true)}

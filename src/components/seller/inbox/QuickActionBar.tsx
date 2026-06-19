@@ -68,7 +68,7 @@ export function QuickActionBar({
               Catálogo
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Enviar produto do catálogo no chat</TooltipContent>
+          <TooltipContent>Enviar producto del catálogo en el chat</TooltipContent>
         </Tooltip>
       )}
 
@@ -85,7 +85,7 @@ export function QuickActionBar({
               Cobrar
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Gerar e enviar link de pagamento</TooltipContent>
+          <TooltipContent>Generar y enviar link de pago</TooltipContent>
         </Tooltip>
       )}
 
@@ -99,10 +99,10 @@ export function QuickActionBar({
               onClick={onCreateEvent}
             >
               <CalendarPlus className="h-3.5 w-3.5" />
-              Novo Evento
+              Nuevo Evento
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Criar evento na agenda já vinculado a este lead</TooltipContent>
+          <TooltipContent>Crear evento en la agenda ya vinculado a este lead</TooltipContent>
         </Tooltip>
       )}
 
@@ -114,7 +114,7 @@ export function QuickActionBar({
               Tareas
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Criar nova tarefa para você</TooltipContent>
+          <TooltipContent>Crear nueva tarea para vos</TooltipContent>
         </Tooltip>
       )}
 
@@ -128,10 +128,10 @@ export function QuickActionBar({
               onClick={onCreateDeal}
             >
               <DollarSign className="h-3.5 w-3.5" />
-              Oportunidade
+              Oportunidad
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Registrar uma nova oportunidade no pipeline</TooltipContent>
+          <TooltipContent>Registrar una nueva oportunidad en el pipeline</TooltipContent>
         </Tooltip>
       )}
 
@@ -145,7 +145,7 @@ export function QuickActionBar({
           </PopoverTrigger>
           <PopoverContent align="start" className="w-56 p-1">
             <div className="text-[10px] uppercase tracking-wider text-muted-foreground px-2 py-1.5">
-              Mover para etapa
+              Mover a etapa
             </div>
             <div className="flex flex-col">
               {pipelineStages.map((stage) => (
@@ -178,7 +178,7 @@ export function QuickActionBar({
               Cadencia
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Iniciar cadência para o lead</TooltipContent>
+          <TooltipContent>Iniciar cadencia para el lead</TooltipContent>
         </Tooltip>
       )}
     </div>

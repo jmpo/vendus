@@ -145,28 +145,28 @@ export function generateInsight(stats: {
   if (stats.atRiskLeads && stats.atRiskLeads > 0) {
     return {
       type: 'warning',
-      message: `${stats.atRiskLeads} lead${stats.atRiskLeads > 1 ? 's' : ''} no ${stats.atRiskLeads > 1 ? 'foram contatados' : 'fue contatado'} nos últimos 3 días. Priorize-os!`,
+      message: `${stats.atRiskLeads} lead${stats.atRiskLeads > 1 ? 's' : ''} ${stats.atRiskLeads > 1 ? 'no fueron contactados' : 'no fue contactado'} en los últimos 3 días. ¡Priorizalos!`,
     };
   }
 
   if (stats.hotLeads && stats.hotLeads > 0) {
     return {
       type: 'success',
-      message: `Usted tiene ${stats.hotLeads} lead${stats.hotLeads > 1 ? 's' : ''} quente${stats.hotLeads > 1 ? 's' : ''} prontos para fechar. Aproveite o momento!`,
+      message: `Tenés ${stats.hotLeads} lead${stats.hotLeads > 1 ? 's' : ''} caliente${stats.hotLeads > 1 ? 's' : ''} listo${stats.hotLeads > 1 ? 's' : ''} para cerrar. ¡Aprovechá el momento!`,
     };
   }
 
   if (stats.conversionRate && stats.conversionRate > 30) {
     return {
       type: 'success',
-      message: `Su taxa de conversión está em ${stats.conversionRate}%. Continue assim!`,
+      message: `Tu tasa de conversión está en ${stats.conversionRate}%. ¡Seguí así!`,
     };
   }
 
   if (stats.pendingTasks && stats.pendingTasks > 5) {
     return {
       type: 'info',
-      message: `Usted tiene ${stats.pendingTasks} tareas pendentes hoy. Foque nas prioritárias!`,
+      message: `Tenés ${stats.pendingTasks} tareas pendientes hoy. ¡Enfocate en las prioritarias!`,
     };
   }
 

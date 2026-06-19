@@ -334,11 +334,11 @@ export function ConversationList({
             <p className="text-sm font-medium">Ninguna conversación</p>
             <p className="text-xs mt-1">
               {activeTab === 'waiting'
-                ? 'No hay conversas aguardando atendimento'
+                ? 'No hay conversaciones esperando atención'
                 : activeTab === 'agents'
-                ? 'Ninguna conversación com agente IA'
+                ? 'Ninguna conversación con agente IA'
                 : activeTab === 'resolved'
-                ? 'Nenhum atendimento resolvido'
+                ? 'Ninguna atención resuelta'
                 : 'Sin conversaciones en esta pestaña'}
             </p>
           </div>
@@ -430,7 +430,7 @@ export function ConversationList({
                     >
                       {preview || (
                         <span className="italic opacity-70">
-                          {conv.last_message_at ? 'Mensaje indisponível' : 'Sem mensagens ainda'}
+                          {conv.last_message_at ? 'Mensaje no disponible' : 'Sin mensajes todavía'}
                         </span>
                       )}
                     </p>

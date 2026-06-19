@@ -48,9 +48,9 @@ const openPriority = (
 
 const greeting = () => {
   const h = new Date().getHours();
-  if (h < 12) return 'Bom dia';
-  if (h < 18) return 'Boa tarde';
-  return 'Boa noite';
+  if (h < 12) return 'Buenos días';
+  if (h < 18) return 'Buenas tardes';
+  return 'Buenas noches';
 };
 
 const firstName = (full?: string | null) =>
@@ -100,7 +100,7 @@ const priorityActionIcon = (p: PriorityItem) => {
   switch (p.actionLabel) {
     case 'Responder':
       return MessageCircle;
-    case 'Ligar':
+    case 'Llamar':
       return Phone;
     case 'Abrir':
       return Calendar;
@@ -137,25 +137,25 @@ const toneClasses = (tone: TimelineItem['tone']) => {
 
 const formatCountdown = (iso: string) => {
   const diff = new Date(iso).getTime() - Date.now();
-  if (diff <= 0) return 'Agora';
+  if (diff <= 0) return 'Ahora';
   const mins = Math.floor(diff / 60_000);
-  if (mins < 60) return `Em ${mins} min`;
+  if (mins < 60) return `En ${mins} min`;
   const h = Math.floor(mins / 60);
   const m = mins % 60;
-  return m ? `Em ${h}h${m.toString().padStart(2, '0')}min` : `Em ${h}h`;
+  return m ? `En ${h}h${m.toString().padStart(2, '0')}min` : `En ${h}h`;
 };
 
 const formatTime = (iso: string) =>
-  new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  new Date(iso).toLocaleTimeString('es-PY', { hour: '2-digit', minute: '2-digit', hour12: false });
 
 const statusLabel = (status?: string | null) => {
   if (!status) return null;
   const s = status.toLowerCase();
-  if (s.includes('propost')) return { label: 'Proposta', cls: 'bg-violet-50 text-violet-700 border-violet-200' };
-  if (s.includes('negoc')) return { label: 'Negociação', cls: 'bg-amber-50 text-amber-700 border-amber-200' };
+  if (s.includes('propost') || s.includes('propues')) return { label: 'Propuesta', cls: 'bg-violet-50 text-violet-700 border-violet-200' };
+  if (s.includes('negoc')) return { label: 'Negociación', cls: 'bg-amber-50 text-amber-700 border-amber-200' };
   if (s.includes('follow')) return { label: 'Follow-up', cls: 'bg-sky-50 text-sky-700 border-sky-200' };
-  if (s.includes('qualif')) return { label: 'Qualificação', cls: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
-  if (s.includes('novo') || s.includes('new')) return { label: 'Novo', cls: 'bg-slate-50 text-slate-700 border-slate-200' };
+  if (s.includes('qualif') || s.includes('calif')) return { label: 'Calificación', cls: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
+  if (s.includes('novo') || s.includes('nuevo') || s.includes('new')) return { label: 'Nuevo', cls: 'bg-slate-50 text-slate-700 border-slate-200' };
   return { label: status, cls: 'bg-slate-50 text-slate-700 border-slate-200' };
 };
 
@@ -172,12 +172,12 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
         {greeting()}, {name}! <span aria-hidden>👋</span>
       </h1>
       <p className="text-sm text-muted-foreground mt-1">
-        Foque no que importa e boa vendas!
+        Enfocate en lo que importa. ¡Buenas ventas!
       </p>
     </div>
   );
 
-  // ===================== MOBILE (UNCHANGED) =====================
+  // ===================== MOBILE =====================
   if (variant === 'mobile') {
     const KpiCards = (
       <div className="grid grid-cols-2 gap-3">
@@ -194,12 +194,12 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
           <p className="text-sm font-semibold text-foreground leading-tight">
             Conversaciones
             <br />
-            sem resposta
+            sin respuesta
           </p>
           <p className="mt-3 text-4xl font-bold text-destructive">
             {isLoading ? '—' : data?.unansweredCount ?? 0}
           </p>
-          <p className="text-xs text-destructive/80 mt-2">Esperando você</p>
+          <p className="text-xs text-destructive/80 mt-2">Esperando a vos</p>
         </Card>
 
         <Card
@@ -215,12 +215,12 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
           <p className="text-sm font-semibold text-foreground leading-tight">
             Leads
             <br />
-            em atendimento
+            en atención
           </p>
           <p className="mt-3 text-4xl font-bold text-emerald-600">
             {isLoading ? '—' : data?.activeLeadsCount ?? 0}
           </p>
-          <p className="text-xs text-emerald-600/80 mt-2">Ativos no pipeline</p>
+          <p className="text-xs text-emerald-600/80 mt-2">Activos en el pipeline</p>
         </Card>
       </div>
     );
@@ -230,7 +230,7 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Flame className="h-5 w-5 text-orange-500" />
-            <h3 className="font-semibold text-foreground">Prioridades agora</h3>
+            <h3 className="font-semibold text-foreground">Prioridades ahora</h3>
           </div>
           <button
             onClick={() => onNavigate('leads')}
@@ -242,7 +242,7 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
 
         {!data || data.priorities.length === 0 ? (
           <div className="py-8 text-center text-sm text-muted-foreground">
-            Tudo em ordem por enquanto. Nenhuma ação urgente.
+            Todo en orden por ahora. Ninguna acción urgente.
           </div>
         ) : (
           <div className="space-y-2">
@@ -251,7 +251,7 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
               const tone =
                 p.actionLabel === 'Responder'
                   ? 'bg-destructive/10 text-destructive hover:bg-destructive/15'
-                  : p.actionLabel === 'Ligar'
+                  : p.actionLabel === 'Llamar'
                   ? 'bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/15'
                   : 'bg-violet-500/10 text-violet-600 hover:bg-violet-500/15';
 
@@ -291,12 +291,12 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
       <Card className="p-5 rounded-2xl border-border">
         <div className="flex items-center gap-2 mb-3">
           <Calendar className="h-5 w-5 text-emerald-600" />
-          <h3 className="font-semibold text-foreground">Próximo compromisso</h3>
+          <h3 className="font-semibold text-foreground">Próximo compromiso</h3>
         </div>
         {!data?.nextEvent ? (
           <div className="flex items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              Você não possui reuniões agendadas.
+              No tenés reuniones agendadas.
             </p>
             <Button variant="outline" size="sm" onClick={() => onNavigate('bookings')} className="rounded-full">
               Abrir agenda
@@ -307,7 +307,7 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
             <div className="flex-1 min-w-0">
               <p className="text-3xl font-bold text-foreground">{formatTime(data.nextEvent.startTime)}</p>
               <p className="mt-1 text-sm font-medium text-foreground truncate">
-                {data.nextEvent.withName ? `Reunião com ${data.nextEvent.withName}` : data.nextEvent.title}
+                {data.nextEvent.withName ? `Reunión con ${data.nextEvent.withName}` : data.nextEvent.title}
               </p>
               <p className="text-xs text-emerald-600 font-medium mt-0.5">
                 {formatCountdown(data.nextEvent.startTime)}
@@ -326,11 +326,11 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-amber-500" />
-            <h3 className="font-semibold text-foreground">IA Assistente</h3>
+            <h3 className="font-semibold text-foreground">IA Asistente</h3>
           </div>
         </div>
         {!data || data.insights.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-2">Sem alertas no momento.</p>
+          <p className="text-sm text-muted-foreground py-2">Sin alertas por el momento.</p>
         ) : (
           <ul className="space-y-2.5">
             {data.insights.map((i) => (
@@ -350,7 +350,7 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
       <Card className="p-5 rounded-2xl border-border">
         <div className="flex items-center gap-2 mb-4">
           <Calendar className="h-5 w-5 text-emerald-600" />
-          <h3 className="font-semibold text-foreground">Meu Dia</h3>
+          <h3 className="font-semibold text-foreground">Mi Día</h3>
         </div>
         <div className="grid grid-cols-3 gap-4 text-center">
           <button onClick={() => onNavigate('tasks')} className="rounded-xl py-2 hover:bg-muted/40 transition-colors">
@@ -359,11 +359,11 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
           </button>
           <button onClick={() => onNavigate('bookings')} className="rounded-xl py-2 hover:bg-muted/40 transition-colors">
             <p className="text-3xl font-bold text-sky-600">{data?.myDay.meetings ?? 0}</p>
-            <p className="text-xs text-muted-foreground mt-1">Reuniões</p>
+            <p className="text-xs text-muted-foreground mt-1">Reuniones</p>
           </button>
           <button onClick={() => onNavigate('leads')} className="rounded-xl py-2 hover:bg-muted/40 transition-colors">
             <p className="text-3xl font-bold text-violet-600">{data?.myDay.activeLeads ?? 0}</p>
-            <p className="text-xs text-muted-foreground mt-1">Leads ativos</p>
+            <p className="text-xs text-muted-foreground mt-1">Leads activos</p>
           </button>
         </div>
       </Card>
@@ -383,7 +383,7 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
 
   // ===================== DESKTOP =====================
 
-  // ---- Linha 1: 4 KPIs ----
+  // ---- Fila 1: 4 KPIs ----
   type KpiSpec = {
     label: string;
     value: number | string;
@@ -407,33 +407,33 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
 
   const kpis: KpiSpec[] = [
     {
-      label: 'Conversaciones sem resposta',
+      label: 'Conversaciones sin respuesta',
       value: isLoading ? '—' : data?.unansweredCount ?? 0,
-      sub: 'Esperando você',
+      sub: 'Esperando a vos',
       Icon: MessageCircle,
       tab: 'inbox',
       accent: 'destructive',
     },
     {
-      label: 'Leads em atendimento',
+      label: 'Leads en atención',
       value: isLoading ? '—' : data?.activeLeadsCount ?? 0,
-      sub: 'Ativos no pipeline',
+      sub: 'Activos en el pipeline',
       Icon: Users,
       tab: 'leads',
       accent: 'emerald',
     },
     {
-      label: 'Reuniões hoje',
+      label: 'Reuniones hoy',
       value: isLoading ? '—' : data?.todayMeetings ?? 0,
-      sub: 'Agendadas para hoje',
+      sub: 'Agendadas para hoy',
       Icon: Calendar,
       tab: 'bookings',
       accent: 'violet',
     },
     {
-      label: 'Tareas pendentes',
+      label: 'Tareas pendientes',
       value: isLoading ? '—' : data?.todayPendingTasks ?? 0,
-      sub: 'Precisam ser concluídas',
+      sub: 'Deben completarse',
       Icon: CheckSquare,
       tab: 'tasks',
       accent: 'amber',
@@ -465,7 +465,7 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
     </div>
   );
 
-  // ---- Linha 2 esquerda: Meu Dia (timeline) ----
+  // ---- Fila 2 izquierda: Mi Día (timeline) ----
   const MyDayTimeline = (
     <Card className="p-6 rounded-2xl border-border h-full flex flex-col">
       <div className="flex items-start gap-2 mb-5">
@@ -473,14 +473,14 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
           <Calendar className="h-4.5 w-4.5 text-emerald-600" />
         </div>
         <div>
-          <h3 className="font-semibold text-foreground">Meu Dia</h3>
-          <p className="text-xs text-muted-foreground">Sua agenda e próximas ações</p>
+          <h3 className="font-semibold text-foreground">Mi Día</h3>
+          <p className="text-xs text-muted-foreground">Tu agenda y próximas acciones</p>
         </div>
       </div>
 
       {!data || data.timeline.length === 0 ? (
         <div className="flex-1 flex items-center justify-center py-10 text-sm text-muted-foreground text-center">
-          Nada agendado para hoje. <br /> Aproveite para prospectar novos leads.
+          Nada agendado para hoy. <br /> Aprovechá para prospectar nuevos leads.
         </div>
       ) : (
         <div className="flex-1 space-y-4">
@@ -522,7 +522,7 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
     </Card>
   );
 
-  // ---- Linha 2 direita: Leads Prioritários ----
+  // ---- Fila 2 derecha: Leads Prioritarios ----
   const PriorityLeads = (
     <Card className="p-6 rounded-2xl border-border h-full flex flex-col">
       <div className="flex items-start gap-2 mb-5">
@@ -530,14 +530,14 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
           <Sparkles className="h-4.5 w-4.5 text-amber-500" />
         </div>
         <div>
-          <h3 className="font-semibold text-foreground">Leads Prioritários</h3>
-          <p className="text-xs text-muted-foreground">Quem precisa da sua atenção agora</p>
+          <h3 className="font-semibold text-foreground">Leads Prioritarios</h3>
+          <p className="text-xs text-muted-foreground">Quién necesita tu atención ahora</p>
         </div>
       </div>
 
       {!data || data.priorities.length === 0 ? (
         <div className="flex-1 flex items-center justify-center py-10 text-sm text-muted-foreground">
-          Nenhum lead urgente no momento.
+          Ningún lead urgente por el momento.
         </div>
       ) : (
         <div className="flex-1 space-y-3">
@@ -562,7 +562,7 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
                   </Badge>
                 )}
                 <span className="text-xs text-red-500 font-medium hidden xl:inline whitespace-nowrap">
-                  {p.ageMinutes ? `há ${p.ageMinutes >= 60 ? Math.floor(p.ageMinutes / 60) + 'h' : p.ageMinutes + 'min'}` : ''}
+                  {p.ageMinutes ? `hace ${p.ageMinutes >= 60 ? Math.floor(p.ageMinutes / 60) + 'h' : p.ageMinutes + 'min'}` : ''}
                 </span>
                 <Button
                   variant="outline"
@@ -571,7 +571,7 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
                   className="rounded-lg gap-1.5 h-8 text-xs"
                 >
                   <MessageCircle className="h-3.5 w-3.5 text-emerald-600" />
-                  Abrir conversa
+                  Abrir conversación
                 </Button>
               </div>
             );
@@ -583,12 +583,12 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
         onClick={() => onNavigate('leads')}
         className="mt-5 text-sm font-medium text-emerald-600 hover:underline flex items-center justify-center gap-1"
       >
-        Ver todos os leads <ArrowRight className="h-3.5 w-3.5" />
+        Ver todos los leads <ArrowRight className="h-3.5 w-3.5" />
       </button>
     </Card>
   );
 
-  // ---- Linha 3: IA Assistente full width ----
+  // ---- Fila 3: IA Asistente full width ----
   const AIRow = (
     <Card className="p-6 rounded-2xl border-amber-200/60 bg-amber-50/40 dark:bg-amber-500/5">
       <div className="flex items-start justify-between mb-4">
@@ -597,20 +597,20 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
             <Sparkles className="h-4.5 w-4.5 text-amber-500" />
           </div>
           <div>
-            <h3 className="font-semibold text-foreground">IA Assistente</h3>
-            <p className="text-xs text-muted-foreground">Insights para você agir melhor</p>
+            <h3 className="font-semibold text-foreground">IA Asistente</h3>
+            <p className="text-xs text-muted-foreground">Insights para que actúes mejor</p>
           </div>
         </div>
         <button
           onClick={() => onNavigate('ai')}
           className="text-sm font-medium text-amber-600 flex items-center gap-1 hover:underline"
         >
-          Ver todas as sugestões <ArrowRight className="h-3.5 w-3.5" />
+          Ver todas las sugerencias <ArrowRight className="h-3.5 w-3.5" />
         </button>
       </div>
 
       {!data || data.insights.length === 0 ? (
-        <p className="text-sm text-muted-foreground py-2">Sem alertas no momento. Foco na execução.</p>
+        <p className="text-sm text-muted-foreground py-2">Sin alertas por el momento. Enfocate en ejecutar.</p>
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {data.insights.slice(0, 4).map((i) => (
@@ -632,11 +632,11 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
     </Card>
   );
 
-  // ---- Linha 4: 4 cards horizontais compactos ----
+  // ---- Fila 4: 4 cards horizontales compactos ----
   type FooterSpec = { label: string; value: number; Icon: typeof MessageCircle; tone: string; iconColor: string; tab: string };
   const footers: FooterSpec[] = [
     {
-      label: 'Conversaciones hoje',
+      label: 'Conversaciones hoy',
       value: data?.footer.conversationsToday ?? 0,
       Icon: MessageCircle,
       tone: 'bg-emerald-100',
@@ -644,7 +644,7 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
       tab: 'inbox',
     },
     {
-      label: 'Cadencias ativas',
+      label: 'Cadencias activas',
       value: data?.footer.activeCadences ?? 0,
       Icon: Send,
       tone: 'bg-sky-100',
@@ -652,7 +652,7 @@ export function SellerHome({ onNavigate, variant }: SellerHomeProps) {
       tab: 'cadence',
     },
     {
-      label: 'Mensajes agendadas',
+      label: 'Mensajes agendados',
       value: data?.footer.scheduledMessages ?? 0,
       Icon: Mail,
       tone: 'bg-amber-100',

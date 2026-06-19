@@ -62,7 +62,7 @@ export function ScheduleFollowupDialog({
       setNote('');
       onOpenChange(false);
     } catch {
-      toast({ title: 'Erro ao criar tarefa', variant: 'destructive' });
+      toast({ title: 'Error al crear la tarea', variant: 'destructive' });
     } finally {
       setIsSaving(false);
     }

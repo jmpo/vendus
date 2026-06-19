@@ -311,7 +311,7 @@ export function TransferConversationModal({
       const baseNote =
         transferType === 'agent'
           ? targetAgent?.agent_type === 'admin'
-            ? `🔒 Transferido al Agente Administrador: ${targetAgent?.name} — teste/intervenção manual por ${profile?.full_name ?? 'gestor'}${
+            ? `🔒 Transferido al Agente Administrador: ${targetAgent?.name} — prueba/intervención manual por ${profile?.full_name ?? 'gestor'}${
                 internalNote ? ` — ${internalNote}` : ''
               }`
             : `🤖 Transferido al Agente IA: ${targetAgent?.name ?? selectedAgentId}${
@@ -344,8 +344,8 @@ export function TransferConversationModal({
         transferType === 'user'
           ? 'La conversación fue transferida con éxito.'
           : transferType === 'sector'
-          ? `A conversación fue enviada para o sector "${targetSector?.name ?? ''}".`
-          : `Agente IA "${targetAgent?.name ?? ''}" ahora está atendendo.`;
+          ? `La conversación fue enviada al sector "${targetSector?.name ?? ''}".`
+          : `Agente IA "${targetAgent?.name ?? ''}" ahora está atendiendo.`;
       const fullDesc = newInstance
         ? `${baseDesc} Conexión cambiada a ${newInstance.name}.`
         : baseDesc;
@@ -569,8 +569,8 @@ export function TransferConversationModal({
               </ScrollArea>
               <p className="text-xs text-muted-foreground">
                 {hasAdminInList
-                  ? 'Agentes 🔒 Admin son privados do gestor — use solo para teste o intervenção. A conversación volta ao modo IA con o agente elegido.'
-                  : 'A conversación volta ao modo IA con este agente assumindo o atención.'}
+                  ? 'Los agentes 🔒 Admin son privados del gestor — usá solo para prueba o intervención. La conversación vuelve al modo IA con el agente elegido.'
+                  : 'La conversación vuelve al modo IA con este agente asumiendo la atención.'}
               </p>
             </div>
           )}
