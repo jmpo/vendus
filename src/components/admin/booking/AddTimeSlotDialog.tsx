@@ -15,8 +15,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { DAY_NAMES } from '@/hooks/useUserAvailability';
+import { DAY_NAMES, DAY_ABBREVIATIONS } from '@/hooks/useUserAvailability';
 import { Plus, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+// Orden de la semana: Lun..Dom
+const WEEK_ORDER = [1, 2, 3, 4, 5, 6, 0];
 
 // Generate equipo options in 30-minute increments
 const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
@@ -36,18 +40,32 @@ interface AddTimeSlotDialogProps {
   dayOfWeek: number;
   onAdd: (slots: TimeSlot[]) => void;
   isLoading?: boolean;
+  /** Si true, muestra selector de días y aplica los intervalos a TODOS los marcados. */
+  multiDay?: boolean;
+  /** Callback para el modo multi-día: recibe los días seleccionados + los intervalos. */
+  onAddDays?: (days: number[], slots: TimeSlot[]) => void;
 }
 
-export function AddTimeSlotDialog({ 
-  open, 
-  onOpenChange, 
-  dayOfWeek, 
+export function AddTimeSlotDialog({
+  open,
+  onOpenChange,
+  dayOfWeek,
   onAdd,
-  isLoading 
+  isLoading,
+  multiDay = false,
+  onAddDays,
 }: AddTimeSlotDialogProps) {
   const [slots, setSlots] = useState<TimeSlot[]>([
     { start_time: '09:00', end_time: '12:00' },
   ]);
+  // Modo multi-día: días seleccionados (por defecto Lun-Vie).
+  const [selectedDays, setSelectedDays] = useState<number[]>([1, 2, 3, 4, 5]);
+
+  const toggleDay = (day: number) => {
+    setSelectedDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+    );
+  };
 
   const handleAddSlot = () => {
     const lastSlot = slots[slots.length - 1];
@@ -72,26 +90,63 @@ export function AddTimeSlotDialog({
   const handleSave = () => {
     // Validate that end times are after start times
     const validSlots = slots.filter(slot => slot.start_time < slot.end_time);
-    if (validSlots.length > 0) {
+    if (validSlots.length === 0) return;
+    if (multiDay) {
+      if (selectedDays.length === 0) return;
+      onAddDays?.(selectedDays, validSlots);
+    } else {
       onAdd(validSlots);
-      setSlots([{ start_time: '09:00', end_time: '12:00' }]);
     }
+    setSlots([{ start_time: '09:00', end_time: '12:00' }]);
   };
 
   const handleClose = () => {
     onOpenChange(false);
     setSlots([{ start_time: '09:00', end_time: '12:00' }]);
+    setSelectedDays([1, 2, 3, 4, 5]);
   };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Agregar horarios - {DAY_NAMES[dayOfWeek]}</DialogTitle>
+          <DialogTitle>{multiDay ? 'Configurar varios días' : `Agregar horarios - ${DAY_NAMES[dayOfWeek]}`}</DialogTitle>
           <DialogDescription>
-            Defina os intervalos de disponibilidad para este día
+            {multiDay
+              ? 'Elegí los días y definí los intervalos: se aplican a todos los días marcados de una vez.'
+              : 'Defina los intervalos de disponibilidad para este día'}
           </DialogDescription>
         </DialogHeader>
+
+        {multiDay && (
+          <div className="space-y-2 pt-2">
+            <span className="text-sm font-medium">Aplicar a estos días:</span>
+            <div className="flex flex-wrap gap-2">
+              {WEEK_ORDER.map((day) => {
+                const active = selectedDays.includes(day);
+                return (
+                  <button
+                    key={day}
+                    type="button"
+                    onClick={() => toggleDay(day)}
+                    className={cn(
+                      'px-3 py-1.5 rounded-full text-xs font-medium border transition-colors',
+                      active
+                        ? 'bg-primary text-primary-foreground border-primary'
+                        : 'bg-muted/40 text-muted-foreground border-border hover:bg-muted'
+                    )}
+                  >
+                    {DAY_ABBREVIATIONS[day]}
+                  </button>
+                );
+              })}
+            </div>
+            {selectedDays.length === 0 && (
+              <p className="text-sm text-destructive">Seleccioná al menos un día</p>
+            )}
+            <p className="text-xs text-muted-foreground">⚠️ Reemplaza los horarios existentes de los días seleccionados.</p>
+          </div>
+        )}
 
         <div className="space-y-3 py-4">
           {slots.map((slot, index) => (
@@ -162,9 +217,9 @@ export function AddTimeSlotDialog({
           <Button type="button" variant="outline" onClick={handleClose}>
             Cancelar
           </Button>
-          <Button 
-            onClick={handleSave} 
-            disabled={slots.length === 0 || slots.some(s => s.start_time >= s.end_time) || isLoading}
+          <Button
+            onClick={handleSave}
+            disabled={slots.length === 0 || slots.some(s => s.start_time >= s.end_time) || (multiDay && selectedDays.length === 0) || isLoading}
           >
             {isLoading ? 'Salvando...' : 'Guardar'}
           </Button>

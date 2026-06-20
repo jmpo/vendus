@@ -1548,6 +1548,50 @@ serve(async (req) => {
               };
             }
           }
+        } else if (currentState === 'em_atendimento' && !convInit.current_agent_id) {
+          // 🩹 RECUPERACIÓN de conversación HUÉRFANA: "en atención" pero sin especialista
+          // asignado (pasa si el ruteo falló o el estado se corrompió). Sin esto, respondía
+          // un agente genérico SIN cerebro ni herramientas (catálogo/fotos). Acá re-ruteamos.
+          console.warn('[webchat-bot] 🩹 Orphan recovery: em_atendimento sin current_agent_id');
+          try {
+            let recovered: any = null;
+            // 1) Si ya hay producto, asigná su especialista (closer por defecto).
+            if (convInit.product_id) {
+              recovered = await findSpecialistForProduct(supabase, convInit.product_id, 'compra');
+            }
+            // 2) Sin producto o sin especialista → re-orquestar para clasificar y rutear.
+            if (!recovered) {
+              const { data: orgRowR } = await supabase.from('organizations').select('name').eq('id', convInit.organization_id).maybeSingle();
+              const { data: prodsR } = await supabase.from('products').select('id, name, description').eq('organization_id', convInit.organization_id).eq('is_active', true).limit(20);
+              const { data: orchAgentR } = await supabase.from('product_agents').select('additional_prompt').eq('id', orchConfig.orchestrator_agent_id).maybeSingle();
+              const r = await runOrchestrator({
+                supabase,
+                organizationId: convInit.organization_id,
+                organizationName: orgRowR?.name || 'a empresa',
+                channel: convInit.channel || 'chat',
+                channelIdentifier: convInit.visitor_phone || null,
+                products: (prodsR || []).map((p: any) => ({ id: p.id, name: p.name, description: p.description })),
+                orchestratorContext: convInit.orchestrator_context || '',
+                questionCount: 0,
+                maxTriageQuestions: 0,
+                message: body.message,
+                customPrompt: orchAgentR?.additional_prompt || null,
+              });
+              if (r.produto_id && r.confianca >= (orchConfig.min_confidence ?? 0.45)) {
+                recovered = await findSpecialistForProduct(supabase, r.produto_id, r.intencao);
+              }
+            }
+            if (recovered) {
+              activeAgent = recovered;
+              if (recovered.product_id) body.product_id = recovered.product_id;
+              await supabase.from('webchat_conversations')
+                .update({ current_agent_id: recovered.id, product_id: recovered.product_id ?? convInit.product_id ?? null })
+                .eq('id', body.conversation_id);
+              console.log('[webchat-bot] 🩹 Orphan recovered → assigned specialist:', recovered.name);
+            } else {
+              console.warn('[webchat-bot] 🩹 Orphan recovery: no specialist resolved — falling through');
+            }
+          } catch (e) { console.warn('[webchat-bot] orphan recovery failed (non-fatal):', e); }
         } else if (currentState === 'em_atendimento' && convInit.current_agent_id) {
           // Already in active conversation — load the assigned specialist
           const { data: assigned } = await supabase
@@ -2619,7 +2663,7 @@ Tenemos estos disponibles 👇
             existingBookingPrompt = `\n\n⚠️ EL CLIENTE YA TIENE UNA CITA AGENDADA: "${existingBooking.title}" el ${_bDate}.
 - Si el cliente PREGUNTA cuándo es su cita, qué fecha tiene, o te pide que se la recuerdes → respondé SIEMPRE de inmediato y directo: "Tu ${existingBooking.title} está agendado para el ${_bDate}". Eso NO es repetir de más, es responder lo que te preguntó. NUNCA respondas esa pregunta con otra pregunta ni con una vaguedad como "¿algún detalle a ajustar?".
 - Cuando surja el tema de CAMBIAR el horario, recordá la cita una vez y confirmá que quiere modificarla. Apenas confirme, NO repitas el recordatorio: AVANZÁ.
-- Si el cliente ya te dio un día y una hora concretos (ej.: "el lunes a las 14"), NO des más vueltas: llamá schedule_meeting de una con ese día y hora (ya tenés su email). El sistema reagenda solo, cancelando la cita anterior.
+- Si el cliente ya te dio un día y una hora concretos (ej.: "el lunes a las 14"), NO des más vueltas: llamá schedule_meeting de una con ese día y hora (el email NO es necesario). El sistema reagenda solo, cancelando la cita anterior.
 - Solo si el horario que pide no está disponible, ofrecé alternativas de ESE día. Nunca repreguntes lo que el cliente ya respondió.`;
           }
         }
@@ -2639,11 +2683,10 @@ Tenemos estos disponibles 👇
         const hasLeadEmail = !!(leadContext?.email);
         const emailEnforcementPrompt = hasLeadEmail
           ? ''
-          : `\n\n🚨 EMAIL OBRIGATÓRIO ANTES DE AGENDAR:
-- Usted TODAVÍA NO tiene el email del cliente.
-- ANTES de ofrecer cualquier horario ou llamar schedule_meeting, usted NECESITÁS recolectar el email real.
-- Usa a frase exata (ou variação natural): "Para reservar ese horario y enviarte la confirmación, ¿cuál es tu mejor email?"
-- NUNCA use emails inventados como "ejemplo.com", "cliente@email.com", etc. Se no tiene el email real, PERGUNTE.`;
+          : `\n\n📧 EMAIL = OPCIONAL (no es requisito para agendar):
+- Mostrar horarios NO requiere email. Si el cliente pregunta disponibilidad, llamá check_available_slots y ofrecé los reales.
+- Cuando el cliente elige un horario, podés ofrecer mandarle la confirmación por email ("¿querés que te la mande también por correo?"). Si lo da, usalo; si NO, agendá igual — la confirmación va por WhatsApp.
+- JAMÁS bloquees ni demores la reserva por falta de email. JAMÁS uses emails inventados.`;
 
         const _hoy = new Date();
         const _hoyLabel = _hoy.toLocaleDateString('es-PY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -2657,25 +2700,55 @@ Tenés 2 herramientas:
 
 🛑 REGLAS ABSOLUTAS:
 
-A) PRIMERO preguntá al cliente qué DÍA y qué FRANJA (mañana o tarde) le queda mejor. NO ofrezcas ningún horario ni llames ninguna herramienta todavía. Ejemplo: "¿Qué día y en qué horario te quedaría más cómodo para coordinar?".
+A) Si el cliente AÚN no dijo qué día/franja prefiere, preguntáselo (sin ofrecer horarios todavía): "¿Qué día y en qué horario te quedaría más cómodo para coordinar?".
+   🔴 PERO si el cliente YA mencionó un día (ej.: "el lunes", "el viernes", "mañana") o una franja → NO repreguntes: llamá check_available_slots DE UNA con ese día (target_weekday) y ofrecé los horarios reales. Repreguntar lo que ya dijo es el error #1 a evitar.
 
-B) RECIÉN cuando el cliente te diga su preferencia de día/franja, llamá check_available_slots para ver la disponibilidad REAL de ese momento, y ofrecé 1-2 horarios concretos de los que devuelva la herramienta. Nunca ofrezcas horarios sin haber preguntado antes la preferencia.
+B) Apenas tengas el día/franja (que el cliente te dio o ya mencionó), llamá check_available_slots y ofrecé 1-2 horarios concretos de los que devuelva la herramienta. Mostrar disponibilidad NO requiere email.
 
-C) NUNCA inventes fechas ni horarios. Si todavía no llamaste check_available_slots, está PROHIBIDO mencionar cualquier fecha/hora específica. Si necesitás consultar, decí solo "dejame ver mi agenda un momento" y llamá la herramienta.
+C) NUNCA AFIRMES que un horario está libre sin que el sistema lo confirme, ni inventes horarios. Si vas a PROPONER vos los horarios, primero llamá check_available_slots. (Excepción: si el cliente ya te dio una hora concreta, ver regla G.)
 
-D) NUNCA llames schedule_meeting sin el email REAL del cliente. Si falta, pedilo: "Para reservar ese horario y enviarte la confirmación, ¿cuál es tu mejor email?". Nunca uses emails inventados.
+G) ⚡ ATAJO — EL CLIENTE PIDE UNA HORA CONCRETA DIRECTAMENTE (caso muy común): si el cliente ya dice fecha + hora ("quiero el lunes a las 15", "agendame mañana 10am", "el viernes a la tarde 16hs"), NO le preguntes disponibilidad ni muestres slots primero: llamá schedule_meeting DIRECTO con ese día y hora. El sistema valida solo si está libre — si lo está, agenda; si no, te devuelve un aviso con el rango disponible para que ofrezcas otra hora. No le hagas dar vueltas cuando ya te dijo lo que quiere.
+
+D) EMAIL = OPCIONAL (somos WhatsApp-first: el teléfono ya es el contacto). Cuando el cliente elige un horario, pedí el email UNA sola vez de forma natural: "¿Querés que te mande también la confirmación por email? Pasame tu correo si querés". Si lo da → usalo. Si NO lo da, dice que no, o lo ignora → AGENDÁ IGUAL sin email (la confirmación va por WhatsApp). NUNCA bloquees ni demores la reserva por falta de email. NUNCA uses emails inventados.
 
 E) NUNCA escribas "✅ Reunión agendada", "reserva confirmada" ni "confirmación enviada" ANTES de recibir la respuesta de éxito de schedule_meeting. Ese texto lo genera el sistema automáticamente cuando la herramienta tiene éxito. Si lo escribís antes, el sistema BLOQUEA tu mensaje.
 
 F) Si el cliente pide otro día/horario distinto al ofrecido, llamá check_available_slots de nuevo (podés aumentar days_ahead hasta 14). Nunca digas que no hay disponibilidad sin consultar la herramienta primero.
 
-FLUJO OBLIGATORIO (preguntar la preferencia ANTES de ofrecer):
-1. Detectar interés en agendar → preguntar qué DÍA y FRANJA prefiere (sin ofrecer horarios todavía)
-2. El cliente responde su preferencia → (si falta el email, pedirlo) → llamar check_available_slots
-3. Ofrecer 1-2 horarios reales de ese día/franja
-4. El cliente confirma un horario → llamar schedule_meeting con (nombre, email REAL, fecha, hora)
+FLUJO OBLIGATORIO:
+1. Detectar interés en agendar → si el cliente NO mencionó día, preguntá qué DÍA y FRANJA prefiere. Si YA mencionó un día (ej. "el lunes") → saltá al paso 2 directamente.
+2. Con el día/franja → llamar check_available_slots (SIN pedir email todavía) → mostrar 1-2 horarios reales de ese día
+3. El cliente elige un horario → ofrecé (opcional) mandar confirmación por email; si lo da, genial; si no, seguí
+4. Llamar schedule_meeting con (nombre, fecha, hora) + email SOLO si el cliente lo dio. El teléfono de WhatsApp ya va como contacto.
 5. El sistema responde éxito → el texto de confirmación aparece automáticamente${existingBookingPrompt}${emailEnforcementPrompt}
 ${leadDataPrompt}
+
+💬 EJEMPLOS DE CASOS REALES (seguilos como guía):
+
+· Caso 1 — pide hora directa (lo más común):
+  Cliente: "Quiero ir el lunes a las 15hs a ver el auto"
+  → [llamás schedule_meeting con lunes 15:00 directo] → "¡Listo! Te agendo el lunes a las 15:00 👍" (si el sistema confirma)
+  (NO respondas "¿qué día preferís?" — ya te lo dijo)
+
+· Caso 2 — pide hora directa pero está ocupada:
+  Cliente: "Agendame mañana a las 10"
+  → [schedule_meeting 10:00 → sistema avisa ocupado de 09:30 a 10:30, rango 08:00-18:00]
+  → "Justo a las 10 ya tengo una visita 🙈. Mañana puedo de 08:00 a 18:00 — ¿te sirve 11:00 o más tarde?"
+
+· Caso 3 — pregunta disponibilidad de un día:
+  Cliente: "¿Qué horarios tenés el viernes?"
+  → [check_available_slots(viernes)] → "El viernes tengo disponible de 08:00 a 18:00 👌 Por ejemplo 09:00, 13:00 o 16:00, ¿cuál te queda mejor?"
+
+· Caso 4 — rechaza los ofrecidos:
+  Cliente: "Esos no me quedan, ¿otros?"
+  → [check_available_slots de nuevo, excluyendo los ya ofrecidos] → ofrecés horarios DISTINTOS
+
+· Caso 5 — quiere agendar pero sin día:
+  Cliente: "Sí, quiero coordinar una visita"
+  → "¡Genial! ¿Qué día y horario te queda más cómodo?" (acá SÍ preguntás, porque no dio día)
+
+· Caso 6 — confirma sin dar email:
+  Cliente: "El lunes 15:00 perfecto" → "¿Te mando la confirmación por email? (opcional)" → Cliente: "No hace falta" → [schedule_meeting sin email] → confirmás por WhatsApp.
 
 🛑 ANTI-REPETICIÓN:
 - Si ya pediste el email y el cliente respondió con algo que parece email (contiene @), el email YA fue recolectado. NO lo pidas de nuevo, avanzá al próximo paso.
@@ -2707,13 +2780,13 @@ ${leadDataPrompt}
               type: "object",
               properties: {
                 guest_name: { type: "string", description: "Nombre completo del cliente" },
-                guest_email: { type: "string", description: "Email del cliente" },
+                guest_email: { type: "string", description: "Email del cliente (OPCIONAL — no es obligatorio para agendar; si el cliente no lo dio, omitilo)" },
                 guest_phone: { type: "string", description: "Teléfono (opcional)" },
                 preferred_date: { type: "string", description: "Fecha YYYY-MM-DD. Si pasás target_weekday, este campo se ignora." },
                 preferred_time: { type: "string", description: "Horario HH:MM" },
                 target_weekday: { type: "string", enum: ["lunes","martes","miércoles","jueves","viernes","sábado","domingo"], description: "Si el cliente confirmó un DÍA DE LA SEMANA (ej.: 'el lunes'), pasá el nombre del día acá: el sistema calcula la fecha exacta del próximo día con ese nombre. Es MÁS confiable que preferred_date — al reagendar, usá SIEMPRE el día NUEVO que pidió el cliente, nunca el de la cita anterior." }
               },
-              required: ["guest_name", "guest_email", "preferred_time"]
+              required: ["guest_name", "preferred_time"]
             }
           }
         });
@@ -3777,15 +3850,25 @@ REGRAS DE USO:
                   : Infinity;
 
                 let skipSlotSearch = false;
+                const excludeOfferedTimes: Set<string> = new Set();
                 if (recentSlotMsg && slotMsgAgeMin < 60) {
                   const offered = recentSlotMsg.metadata.scheduling_context.suggestions || [];
                   const guestEmail = leadContext?.email || capturedFromMessage.email || '';
                   const guestName = leadContext?.name || body.visitor_name || 'Cliente';
+                  const userMsgLower = (body.message || '').toLowerCase();
 
+                  // ¿El cliente RECHAZA los horarios ofrecidos y pide OTROS? → no bloquear:
+                  // re-buscamos y ofrecemos horarios DIFERENTES a los ya ofrecidos.
+                  const wantsOtherSlots = /\b(otro|otros|otra|otras|distint|diferente|m[áa]s temprano|m[áa]s tarde|m[áa]s tardecita|no me queda|no me viene|no me sirve|no puedo|nada de eso|esos no|ninguno|alguno m[áa]s|m[áa]s opciones|otro horario)\b/.test(userMsgLower);
+
+                  if (wantsOtherSlots) {
+                    offered.forEach((s: any) => excludeOfferedTimes.add(`${s.date}|${s.time}`));
+                    console.log('[webchat-bot] 🔄 Cliente pidió OTROS horarios — re-buscando, excluyendo', excludeOfferedTimes.size, 'ya ofrecidos');
+                    // skipSlotSearch queda false → la búsqueda corre abajo excluyendo los ofrecidos.
+                  } else {
                   console.log('[webchat-bot] 🛑 BLOCKING redundant check_available_slots — slots already offered', slotMsgAgeMin.toFixed(1), 'min ago');
 
                   // Try to deterministically match user's confirmation against offered slots
-                  const userMsgLower = (body.message || '').toLowerCase();
                   let matchedSlot: any = null;
                   for (let i = 0; i < offered.length; i++) {
                     const s = offered[i];
@@ -3801,30 +3884,32 @@ REGRAS DE USO:
                     }
                   }
 
-                  if (matchedSlot && guestEmail) {
+                  if (matchedSlot) {
                     // Deterministic shortcut: rewrite this toolCall as schedule_meeting
                     // and let the schedule_meeting branch below execute it.
+                    // El email es OPCIONAL (CRM WhatsApp-first): si no lo tenemos, agendamos
+                    // igual usando el teléfono como contacto; la confirmación va por WhatsApp.
+                    const guestPhone = leadContext?.phone || body.visitor_phone || '';
                     toolCall.function.name = 'schedule_meeting';
                     toolCall.function.arguments = JSON.stringify({
                       guest_name: guestName,
-                      guest_email: guestEmail,
+                      guest_email: guestEmail || undefined,
+                      guest_phone: guestPhone || undefined,
                       preferred_date: matchedSlot.date,
                       preferred_time: matchedSlot.time,
                     });
-                    console.log('[webchat-bot] 🔁 Deterministic redirect → schedule_meeting', matchedSlot.date, matchedSlot.time);
+                    console.log('[webchat-bot] 🔁 Deterministic redirect → schedule_meeting', matchedSlot.date, matchedSlot.time, guestEmail ? '(con email)' : '(sin email, solo WhatsApp)');
                     // skipSlotSearch stays false here, but the dispatch below uses if-else;
                     // we set skipSlotSearch=true and re-route by finishing this branch
                     // and letting a small inline schedule_meeting trigger run.
                     skipSlotSearch = true;
-                  } else if (!guestEmail) {
-                    responseContent = 'Para reservar ese horario, ¿cuál es tu mejor email para enviarte la confirmación?';
-                    skipSlotSearch = true;
                   } else {
-                    // Have email but couldn't match slot text → ask short clarification
+                    // No pudo emparejar el mensaje con un horario ofrecido → pedir aclaración corta.
                     const opts = offered.map((s: any, i: number) => `${i + 1}) ${s.dateLabel || s.date} a las ${s.time}`).join(' o ');
                     responseContent = `¿Cuál de estos preferís: ${opts}?`;
                     skipSlotSearch = true;
                   }
+                  } // fin else (no pidió otros horarios)
                 }
 
                 if (!skipSlotSearch) {
@@ -3854,6 +3939,9 @@ REGRAS DE USO:
                 } else {
                   const today = new Date();
                   const allSlots: Array<{ date: string; dateLabel: string; time: string; period: 'morning' | 'afternoon' }> = [];
+                  // Guardamos los rangos REALES de disponibilidad por fecha (incluye horarios
+                  // cortados, ej. 08:00-12:00 y 14:00-18:00) para comunicar el rango con precisión.
+                  const dayRangesByDate: Record<string, { start: string; end: string }[]> = {};
 
                   for (let d = 0; d < daysAhead; d++) {
                     const checkDate = new Date(today);
@@ -3892,6 +3980,7 @@ REGRAS DE USO:
                     }
 
                     if (timeRanges.length === 0) continue;
+                    dayRangesByDate[dateStr] = timeRanges;
 
                     // Fetch existing events
                     const { data: existingEvents } = await supabase
@@ -3953,20 +4042,47 @@ REGRAS DE USO:
                     if (allSlots.length >= 10) break;
                   }
 
-                  // Strategic selection: pick 1 morning + 1 afternoon slot, preferring same/next day
-                  const morningSlots = allSlots.filter(s => s.period === 'morning');
-                  const afternoonSlots = allSlots.filter(s => s.period === 'afternoon');
+                  // Excluir los horarios ya ofrecidos (cuando el cliente pidió OTROS).
+                  const availSlots = excludeOfferedTimes.size > 0
+                    ? allSlots.filter(s => !excludeOfferedTimes.has(`${s.date}|${s.time}`))
+                    : allSlots;
 
-                  const suggestions: typeof allSlots = [];
-                  if (morningSlots.length > 0) suggestions.push(morningSlots[0]);
-                  if (afternoonSlots.length > 0) suggestions.push(afternoonSlots[0]);
-                  // Fallback: if only one period available, pick 2 from same period
-                  if (suggestions.length === 0 && allSlots.length > 0) {
-                    suggestions.push(allSlots[0]);
-                    if (allSlots.length > 1) suggestions.push(allSlots[1]);
-                  } else if (suggestions.length === 1 && allSlots.length > 1) {
-                    const extra = allSlots.find(s => s.time !== suggestions[0].time || s.date !== suggestions[0].date);
-                    if (extra) suggestions.push(extra);
+                  // Helper: elegir N horarios BIEN distribuidos (no siempre los primeros).
+                  const pickSpread = (arr: typeof allSlots, n: number): typeof allSlots => {
+                    if (arr.length <= n) return [...arr];
+                    const out: typeof allSlots = [];
+                    const step = (arr.length - 1) / (n - 1);
+                    for (let i = 0; i < n; i++) out.push(arr[Math.round(i * step)]);
+                    return out.filter((s, idx, a) => a.findIndex(x => x.date === s.date && x.time === s.time) === idx);
+                  };
+
+                  // ¿La consulta es de UN día (cliente pidió "el lunes") o el rango cae en un solo día?
+                  const distinctDays = new Set(availSlots.map(s => s.date));
+                  const primaryDate = availSlots[0]?.date;
+                  const sameDaySlots = availSlots.filter(s => s.date === primaryDate);
+                  const isSingleDay = !!targetDate || distinctDays.size <= 1;
+
+                  // Rango(s) REAL(es) de disponibilidad del día principal — respeta horarios cortados.
+                  const _primaryRanges = dayRangesByDate[primaryDate] || [];
+                  const rangesTxt = _primaryRanges.length
+                    ? _primaryRanges.map(r => `${String(r.start).slice(0, 5)} a ${String(r.end).slice(0, 5)}`).join(' y de ')
+                    : null;
+                  const isSplitDay = _primaryRanges.length > 1; // horario cortado (ej. mañana + tarde)
+                  const wideDay = sameDaySlots.length >= 4; // hay mucha disponibilidad ese día
+
+                  let suggestions: typeof allSlots = [];
+                  if (isSingleDay) {
+                    // Un solo día → ofrecer 3 horarios bien repartidos (mañana/mediodía/tarde).
+                    suggestions = pickSpread(sameDaySlots, 3);
+                  } else {
+                    // Varios días → mañana + tarde del día más cercano + 1 opción extra repartida.
+                    const morningSlots = availSlots.filter(s => s.period === 'morning');
+                    const afternoonSlots = availSlots.filter(s => s.period === 'afternoon');
+                    if (morningSlots.length > 0) suggestions.push(morningSlots[0]);
+                    if (afternoonSlots.length > 0) suggestions.push(afternoonSlots[0]);
+                    const extra = availSlots.find(s => !suggestions.some(x => x.date === s.date && x.time === s.time));
+                    if (extra && suggestions.length < 3) suggestions.push(extra);
+                    if (suggestions.length === 0) suggestions = pickSpread(availSlots, 2);
                   }
 
                   if (suggestions.length === 0) {
@@ -3993,13 +4109,23 @@ REGRAS DE USO:
                     suggestions.forEach((s, i) => {
                       slotsInfo += `\nOpción ${i + 1}: ${s.dateLabel} a las ${s.time} (${s.period === 'morning' ? 'mañana' : 'tarde'}) [data: ${s.date}]`;
                     });
+                    // Comunicar la AMPLITUD real: si el día tiene mucha disponibilidad, el agente
+                    // debe aclarar el rango y que el cliente puede elegir CUALQUIER horario dentro,
+                    // no solo los ejemplos (evita la sensación de "solo hay 08:00 y 12:00").
+                    if (isSingleDay && wideDay && rangesTxt) {
+                      const _dl = sameDaySlots[0]?.dateLabel || '';
+                      slotsInfo += `\n\n🟢 DISPONIBILIDAD: ${_dl} atiendo de ${rangesTxt}.${isSplitDay ? ' ⚠️ Es horario CORTADO: NO ofrezcas ni aceptes horarios en el intervalo del corte (ej. mediodía); solo dentro de esos bloques.' : ''} Las opciones de arriba son solo EJEMPLOS. Decile el rango y que puede elegir cualquier horario DENTRO de esos bloques; si propone una hora concreta dentro, tomala directamente. NO le hagas sentir que solo hay 2-3 horarios.`;
+                    }
+                    if (excludeOfferedTimes.size > 0) {
+                      slotsInfo += `\n\n♻️ El cliente pidió OTROS horarios distintos a los anteriores: estos son nuevos, NO repitas los ya ofrecidos.`;
+                    }
                     slotsInfo += '\n\nPresentá estos horarios al cliente de forma natural y estratégica. Mostrá la fecha en lenguaje natural (por ejemplo: lunes 22), nunca el formato técnico (YYYY-MM-DD). Si el cliente pidió un día puntual, ofrecé horarios de ESE día.';
 
                     // FIX 3: slim follow-up prompt — drop emailEnforcement, anti-CTAs etc.
                     // We only want a clean "present these slots and ask which one" reply.
                     const slimAgentName = activeAgent?.name || 'Assistente';
                     const slimAgentPersona = activeAgent?.personality || 'consultivo, claro e cordial';
-                    const slimFollowUpSystem = `Vos sos ${slimAgentName}. Tom: ${slimAgentPersona}.\n\nPresentá los horarios encontrados de forma natural y corta (máximo 2 líneas) y preguntá cuál prefiere el cliente. RESPETÁ el día que pidió el cliente: si pidió un día puntual, ofrecé horarios de ESE día. NUNCA preguntes el email de nuevo — ya lo tenés o lo pedirás después. NUNCA diga "dejame ver la agenda" — acabás de verla. NUNCA inventes otros horarios además de los encontrados.`;
+                    const slimFollowUpSystem = `Vos sos ${slimAgentName}. Tom: ${slimAgentPersona}.\n\nPresentá la disponibilidad de forma natural y corta (máximo 2 líneas) y preguntá qué horario prefiere el cliente. Si la info indica DISPONIBILIDAD AMPLIA, mencioná el RANGO (ej.: "el lunes tengo disponible de 08:00 a 17:30, ¿a qué hora te queda mejor?") en vez de aparentar que solo hay 2-3 horarios; igual podés sugerir 1-2 ejemplos. Si no, ofrecé los horarios encontrados. RESPETÁ el día que pidió el cliente. Aceptá cualquier hora que el cliente proponga DENTRO del rango/horarios disponibles. NUNCA preguntes el email de nuevo. NUNCA digas "dejame ver la agenda" — acabás de verla. NUNCA inventes horarios fuera de la disponibilidad real.`;
 
                     // Make a follow-up call to the AI with the slot info
                     const followUpResponse = await fetch(aiConfig.endpoint, {
@@ -4082,7 +4208,69 @@ REGRAS DE USO:
                   // so a string like "14:00" stays as 14:00 BRT (17:00 UTC) and NOT as 14:00 UTC (11:00 BRT).
                   const startTime = new Date(`${resolvedDate}T${args.preferred_time}:00-03:00`);
                   const endTime = new Date(startTime.getTime() + eventType.duration_minutes * 60000);
-                  
+
+                  // === VALIDACIÓN DE DISPONIBILIDAD (caso "cliente pide hora directa") ===
+                  // El cliente muchas veces dice "quiero el lunes a las 15" sin preguntar antes.
+                  // Antes de agendar, verificamos que esa hora esté DENTRO del horario del vendedor
+                  // y LIBRE. Si no, no agendamos: ofrecemos alternativas de ese día.
+                  try {
+                    const _reqDow = new Date(`${resolvedDate}T00:00:00`).getDay();
+                    const { data: _availRows } = await supabase
+                      .from('user_availability')
+                      .select('start_time, end_time')
+                      .eq('user_id', scheduleUserId)
+                      .eq('day_of_week', _reqDow)
+                      .eq('is_available', true);
+                    const { data: _ovr } = await supabase
+                      .from('availability_overrides')
+                      .select('is_available, start_time, end_time')
+                      .eq('user_id', scheduleUserId)
+                      .eq('date', resolvedDate)
+                      .maybeSingle();
+
+                    let _ranges: { start: string; end: string }[] = [];
+                    if (_ovr && _ovr.is_available === false) _ranges = [];
+                    else if (_ovr && _ovr.is_available && _ovr.start_time && _ovr.end_time) _ranges = [{ start: _ovr.start_time, end: _ovr.end_time }];
+                    else if (_availRows && _availRows.length) _ranges = _availRows.map((a: any) => ({ start: a.start_time, end: a.end_time }));
+
+                    const _toMin = (t: string) => { const [h, m] = String(t).split(':').map(Number); return h * 60 + (m || 0); };
+                    const _reqStartMin = _toMin(args.preferred_time);
+                    const _reqEndMin = _reqStartMin + eventType.duration_minutes;
+                    const _withinHours = _ranges.some(r => _reqStartMin >= _toMin(r.start) && _reqEndMin <= _toMin(r.end));
+
+                    // Conflicto con otros eventos del día (comparando instantes reales, TZ-safe).
+                    // Ignora citas del MISMO lead (se cancelan al reagendar).
+                    let _conflict = false;
+                    if (_withinHours) {
+                      const { data: _evs } = await supabase
+                        .from('calendar_events')
+                        .select('start_time, end_time, lead_id')
+                        .eq('user_id', scheduleUserId)
+                        .neq('status', 'cancelled')
+                        .gte('start_time', `${resolvedDate}T00:00:00`)
+                        .lte('start_time', `${resolvedDate}T23:59:59`);
+                      const _reqS = startTime.getTime(), _reqE = endTime.getTime();
+                      for (const ev of _evs || []) {
+                        if (leadId && ev.lead_id === leadId) continue;
+                        if (_reqS < new Date(ev.end_time).getTime() && _reqE > new Date(ev.start_time).getTime()) { _conflict = true; break; }
+                      }
+                    }
+
+                    if (!_withinHours || _conflict) {
+                      const _why = !_withinHours ? 'está fuera de mi horario de atención' : 'ya lo tengo ocupado';
+                      const _winTxt = _ranges.length
+                        ? _ranges.map(r => `${String(r.start).slice(0, 5)} a ${String(r.end).slice(0, 5)}`).join(' y ')
+                        : null;
+                      responseContent = _winTxt
+                        ? `Uy, justo las ${args.preferred_time} de ese día ${_why} 🙈. Ese día atiendo de ${_winTxt}. ¿Qué otro horario dentro de ese rango te queda bien?`
+                        : `Ese día no tengo disponibilidad. ¿Querés que veamos otro día?`;
+                      console.warn('[webchat-bot] ⛔ schedule_meeting rechazado (no disponible):', resolvedDate, args.preferred_time, _why);
+                      break;
+                    }
+                  } catch (_valErr) {
+                    console.warn('[webchat-bot] validación de disponibilidad falló (sigo, no bloqueo):', _valErr);
+                  }
+
                   // Get user's org
                    const { data: hostProfile } = await supabase
                     .from('profiles')
@@ -4100,7 +4288,7 @@ REGRAS DE USO:
                           : JSON.stringify(eventType.location_details))
                       : null;
 
-                    const baseDescription = `Agendado via chat AI\nCliente: ${args.guest_name}\nEmail: ${args.guest_email}${args.guest_phone ? `\nTelefone: ${args.guest_phone}` : ''}`;
+                    const baseDescription = `Agendado via chat AI\nCliente: ${args.guest_name}${args.guest_phone ? `\nTeléfono: ${args.guest_phone}` : ''}${args.guest_email ? `\nEmail: ${args.guest_email}` : ''}`;
                     const fullDescription = locationDetailsText
                       ? `${baseDescription}\n\nLocal: ${locationDetailsText}`
                       : baseDescription;
@@ -4151,7 +4339,7 @@ REGRAS DE USO:
                         location: eventType.location_type || null,
                         create_meet: eventType.create_meet ?? false,
                         color: eventType.color || null,
-                        attendees: [{ email: args.guest_email, name: args.guest_name }],
+                        attendees: args.guest_email ? [{ email: args.guest_email, name: args.guest_name }] : [],
                         lead_id: leadId || null,
                         product_id: resolvedProductId,
                         metadata: {
@@ -4182,20 +4370,20 @@ REGRAS DE USO:
                     }
 
                     // Create booking request — calendar_event_id ahora es OBRIGATÓRIO
-                    await supabase.from('booking_requests').insert({
+                    const { data: bookingReq } = await supabase.from('booking_requests').insert({
                       event_type_id: eventType.id,
                       host_user_id: scheduleUserId,
                       organization_id: hostProfile.organization_id,
                       guest_name: args.guest_name,
-                      guest_email: args.guest_email,
-                      guest_phone: args.guest_phone || null,
+                      guest_email: args.guest_email || null,
+                      guest_phone: args.guest_phone || (leadContext?.phone || body.visitor_phone || null),
                       start_time: startTime.toISOString(),
                       end_time: endTime.toISOString(),
                       timezone: 'America/Sao_Paulo',
                       status: 'confirmed',
                       calendar_event_id: calendarEvent.id,
                       lead_id: leadId || null,
-                    });
+                    }).select('id').single();
                     
                     // Send confirmation email to the guest
                     const confirmationToken = crypto.randomUUID();
@@ -4210,32 +4398,38 @@ REGRAS DE USO:
                       const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
                       const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
                       
-                      const emailResp = await fetch(`${supabaseUrl}/functions/v1/send-booking-confirmation`, {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization': `Bearer ${supabaseKey}`,
-                        },
-                        body: JSON.stringify({
-                          bookingId: calendarEvent?.id || '',
-                          guestName: args.guest_name,
-                          guestEmail: args.guest_email,
-                          eventName: eventType.name,
-                          hostName: hostProfile.full_name || 'Equipo',
-                          startTime: startTime.toISOString(),
-                          endTime: endTime.toISOString(),
-                          meetLink: calendarEvent?.meet_link || '',
-                          confirmationToken,
-                          confirmationUrl,
-                        }),
-                      });
-                      
-                      if (emailResp.ok) {
-                        const emailJson = await emailResp.json().catch(() => ({}));
-                        emailSent = !!emailJson?.success;
-                        console.log('[webchat-bot] Confirmation email response:', emailResp.status, 'success:', emailSent);
+                      // Email es OPCIONAL: solo enviamos confirmación por mail si el cliente lo dio.
+                      // Sin email, la confirmación va por WhatsApp (el mensaje de éxito del bot).
+                      if (args.guest_email) {
+                        const emailResp = await fetch(`${supabaseUrl}/functions/v1/send-booking-confirmation`, {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${supabaseKey}`,
+                          },
+                          body: JSON.stringify({
+                            bookingId: calendarEvent?.id || '',
+                            guestName: args.guest_name,
+                            guestEmail: args.guest_email,
+                            eventName: eventType.name,
+                            hostName: hostProfile.full_name || 'Equipo',
+                            startTime: startTime.toISOString(),
+                            endTime: endTime.toISOString(),
+                            meetLink: calendarEvent?.meet_link || '',
+                            confirmationToken,
+                            confirmationUrl,
+                          }),
+                        });
+
+                        if (emailResp.ok) {
+                          const emailJson = await emailResp.json().catch(() => ({}));
+                          emailSent = !!emailJson?.success;
+                          console.log('[webchat-bot] Confirmation email response:', emailResp.status, 'success:', emailSent);
+                        } else {
+                          console.error('[webchat-bot] Confirmation email HTTP error:', emailResp.status, await emailResp.text().catch(() => ''));
+                        }
                       } else {
-                        console.error('[webchat-bot] Confirmation email HTTP error:', emailResp.status, await emailResp.text().catch(() => ''));
+                        console.log('[webchat-bot] 📱 Sin email — confirmación solo por WhatsApp');
                       }
                     } catch (emailError) {
                       console.error('[webchat-bot] Failed to send confirmation email:', emailError);
@@ -4243,6 +4437,82 @@ REGRAS DE USO:
                     
                     // Mark schedule as truly succeeded — guard for anti-hallucination check
                     scheduleSucceeded = true;
+
+                    // === Encolar automatizaciones de la cita (recordatorios + recovery + aviso interno) ===
+                    // El bot ya CONFIRMA en el chat, así que NO encolamos 'confirmation' (sería duplicado).
+                    // Sí encolamos recordatorios por WhatsApp (clave para reducir ausencias), el follow-up
+                    // de no-show y el aviso al vendedor. Mismo patrón que booking-submit (página pública).
+                    try {
+                      if (bookingReq?.id) {
+                        const { data: bnSettings } = await supabase
+                          .from('booking_notification_settings')
+                          .select('*')
+                          .eq('event_type_id', eventType.id)
+                          .maybeSingle();
+                        const { data: bnReminders } = await supabase
+                          .from('booking_reminders')
+                          .select('*')
+                          .eq('event_type_id', eventType.id)
+                          .eq('is_active', true)
+                          .order('order_index', { ascending: true });
+
+                        const _jobs: any[] = [];
+                        const _now = new Date();
+                        const _unitMs: Record<string, number> = { minutes: 60_000, hours: 3_600_000, days: 86_400_000 };
+                        const _startMs = startTime.getTime();
+
+                        // Aviso interno al vendedor (nueva cita)
+                        if (!bnSettings || bnSettings.notify_seller_on_new) {
+                          _jobs.push({
+                            booking_id: bookingReq.id,
+                            organization_id: hostProfile.organization_id,
+                            kind: 'internal_notification',
+                            channel: bnSettings?.internal_channel || 'both',
+                            scheduled_for: _now.toISOString(),
+                            status: 'pending',
+                            payload: { event: 'new', source: 'webchat-bot' },
+                          });
+                        }
+                        // Recordatorios (X antes de la cita)
+                        for (const r of bnReminders || []) {
+                          const _offset = (r.offset_value || 0) * (_unitMs[r.offset_unit] || 60_000);
+                          const _runAt = new Date(_startMs - _offset);
+                          if (_runAt.getTime() <= _now.getTime()) continue; // ya pasó
+                          _jobs.push({
+                            booking_id: bookingReq.id,
+                            organization_id: hostProfile.organization_id,
+                            reminder_id: r.id,
+                            kind: 'reminder',
+                            channel: r.channel || 'whatsapp',
+                            scheduled_for: _runAt.toISOString(),
+                            status: 'pending',
+                            payload: {},
+                          });
+                        }
+                        // Recovery (no-show)
+                        if (bnSettings?.recovery_enabled) {
+                          const _offset = (bnSettings.recovery_offset_value || 0) * (_unitMs[bnSettings.recovery_offset_unit] || 3_600_000);
+                          const _runAt = new Date(_startMs + _offset);
+                          _jobs.push({
+                            booking_id: bookingReq.id,
+                            organization_id: hostProfile.organization_id,
+                            kind: 'recovery',
+                            channel: bnSettings.send_whatsapp ? 'whatsapp' : 'email',
+                            scheduled_for: _runAt.toISOString(),
+                            status: 'pending',
+                            payload: {},
+                          });
+                        }
+
+                        if (_jobs.length > 0) {
+                          const { error: _jobsErr } = await supabase.from('booking_scheduled_jobs').insert(_jobs);
+                          if (_jobsErr) console.error('[webchat-bot] enqueue booking jobs error:', _jobsErr);
+                          else console.log('[webchat-bot] 📨 Encolados', _jobs.length, 'jobs de cita (recordatorios/recovery/aviso)');
+                        }
+                      }
+                    } catch (_enqErr) {
+                      console.warn('[webchat-bot] enqueue de automatizaciones falló (non-fatal):', _enqErr);
+                    }
 
                     // === Fire-and-forget: push to host's Google Calendar if connected ===
                     try {

@@ -21,10 +21,11 @@ const BATCH_SIZE = 25;
 
 function normalizePhone(raw: string | null | undefined): string | null {
   if (!raw) return null;
-  let p = raw.replace(/\D/g, "");
-  if (!p) return null;
-  if (!p.startsWith("55")) p = "55" + p;
-  return p;
+  const p = raw.replace(/\D/g, "");
+  return p || null;
+  // Nota: NO forzamos prefijo de país (Brasil "55"). sendWhatsAppToPhone busca la
+  // conversación del lead por variantes del teléfono y usa SU conexión real (igual
+  // que el bot). Forzar "55" rompía números de otros países (ej. Paraguay 595...).
 }
 
 Deno.serve(async (req) => {

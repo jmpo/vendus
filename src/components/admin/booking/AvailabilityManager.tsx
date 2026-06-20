@@ -55,6 +55,7 @@ export function AvailabilityManager() {
   const [overrideDialogOpen, setOverrideDialogOpen] = useState(false);
   const [copyDialogOpen, setCopyDialogOpen] = useState(false);
   const [addSlotDialogOpen, setAddSlotDialogOpen] = useState(false);
+  const [addSlotMultiDay, setAddSlotMultiDay] = useState(false);
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const [isCopying, setIsCopying] = useState(false);
   const [overrideForm, setOverrideForm] = useState({
@@ -71,7 +72,39 @@ export function AvailabilityManager() {
 
   const handleOpenAddSlotDialog = (day: number) => {
     setSelectedDay(day);
+    setAddSlotMultiDay(false);
     setAddSlotDialogOpen(true);
+  };
+
+  const handleOpenMultiDayDialog = () => {
+    setAddSlotMultiDay(true);
+    setAddSlotDialogOpen(true);
+  };
+
+  // Aplica los intervalos a VARIOS días de una vez (reemplaza los existentes de cada día).
+  const handleAddSlotsToDays = async (days: number[], slots: { start_time: string; end_time: string }[]) => {
+    setIsCopying(true);
+    try {
+      for (const day of days) {
+        const existingSlots = availability.filter(s => s.day_of_week === day);
+        for (const slot of existingSlots) {
+          await removeTimeSlot.mutateAsync(slot.id);
+        }
+        for (const slot of slots) {
+          await addTimeSlot.mutateAsync({
+            day_of_week: day,
+            start_time: slot.start_time,
+            end_time: slot.end_time,
+          });
+        }
+      }
+      toast.success(`Horarios aplicados a ${days.length} día${days.length !== 1 ? 's' : ''}`);
+      setAddSlotDialogOpen(false);
+    } catch (error) {
+      toast.error('Error al aplicar horarios');
+    } finally {
+      setIsCopying(false);
+    }
   };
 
   const handleCopyToMultipleDays = async (toDays: number[]) => {
@@ -342,7 +375,7 @@ export function AvailabilityManager() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleOpenAddSlotDialog(1)}
+                  onClick={handleOpenMultiDayDialog}
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Añadir múltiples horarios
@@ -440,7 +473,9 @@ export function AvailabilityManager() {
         onOpenChange={setAddSlotDialogOpen}
         dayOfWeek={selectedDay}
         onAdd={handleAddMultipleSlots}
-        isLoading={addTimeSlot.isPending}
+        multiDay={addSlotMultiDay}
+        onAddDays={handleAddSlotsToDays}
+        isLoading={addTimeSlot.isPending || isCopying}
       />
 
       {/* Override Dialog */}

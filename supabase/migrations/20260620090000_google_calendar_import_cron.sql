@@ -1,0 +1,19 @@
+-- Cron: importar eventos de Google Calendar al CRM cada 10 min, para que la
+-- disponibilidad del agendamiento respete eventos creados directamente en Google
+-- (antes solo se importaba con "Sincronizar ahora" manual / frontend).
+--
+-- NOTA: los cron jobs de este proyecto viven en la DB (pg_cron), no en migraciones.
+-- Este archivo documenta el job. Al aplicarlo en un entorno nuevo, reemplazá
+-- <SERVICE_ROLE_KEY> por el service_role JWT real (NO commitear el real al repo).
+-- En el entorno actual ya está creado y activo.
+
+-- select cron.unschedule('google-calendar-sync-cron');  -- si ya existe
+-- select cron.schedule(
+--   'google-calendar-sync-cron',
+--   '*/10 * * * *',
+--   $job$ select net.http_post(
+--     url:='https://jtdvnyqxhsrtqpamtepz.supabase.co/functions/v1/google-calendar-sync-cron',
+--     headers:='{"Content-Type":"application/json","Authorization":"Bearer <SERVICE_ROLE_KEY>"}'::jsonb,
+--     body:='{}'::jsonb
+--   ) $job$
+-- );
