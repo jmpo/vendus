@@ -131,9 +131,9 @@ FORMATO DE RESPOSTA (JSON):
   "suggested_description": "Descripción corta do objetivo",
   "blocks": [
     { "type": "text", "data": { "content": "Boas-vindas..." } },
-    { "type": "buttons", "data": { "label": "Pergunta?", "variable_name": "q1",
+    { "type": "buttons", "data": { "content": "Pergunta?", "variable_name": "q1",
       "options": [{"id":"1","letter":"A","label":"Opción","score":10,"tag":"opt-tag"}] } },
-    { "type": "input", "data": { "label":"Su nombre", "variable_name":"nombre", "input_type":"text", "required":true } },
+    { "type": "input", "data": { "content":"Su nombre", "placeholder":"Su nombre", "variable_name":"nombre", "input_type":"text", "required":true } },
     { "type": "end", "data": {
         "content": "Resultado!",
         "result_tiers": [
@@ -195,11 +195,19 @@ Retorne SOLO o JSON.`;
       return new Response(JSON.stringify({ error: 'IA no gerou preguntas válidas.' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
+    // El builder usa data.content como título; si la IA respondió con data.label, lo migramos.
+    const blocks = (parsed.blocks as any[]).map((b) => {
+      if (!b || typeof b !== 'object') return b;
+      const data = { ...(b.data || {}) };
+      if (!data.content && data.label) data.content = data.label;
+      return { ...b, data };
+    });
+
     return new Response(JSON.stringify({
       success: true,
       suggested_name: parsed.suggested_name || name || 'Quiz IA',
       suggested_description: parsed.suggested_description || objective || '',
-      blocks: parsed.blocks,
+      blocks,
       suggested_tags: parsed.suggested_tags || [],
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 

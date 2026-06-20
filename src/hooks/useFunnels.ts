@@ -23,9 +23,19 @@ import { Json } from '@/integrations/supabase/types';
 // =====================================================
 
 function parseFunnel(raw: any): Funnel {
+  // El builder de quiz usa data.content como título de la pregunta, pero la IA
+  // (quiz-generate-ai) a veces lo guarda en data.label. Normalizamos al cargar para
+  // que quizzes generados por IA muestren su contenido en editor/preview/público.
+  const normalizeQuizBlocks = (fb: any[]): any[] =>
+    raw.channel_type === 'quiz'
+      ? fb.map((b: any) => (b?.data && !b.data.content && b.data.label)
+          ? { ...b, data: { ...b.data, content: b.data.label } }
+          : b)
+      : fb;
+
   return {
     ...raw,
-    flow_blocks: (raw.flow_blocks as FunnelBlock[]) || [],
+    flow_blocks: normalizeQuizBlocks((raw.flow_blocks as FunnelBlock[]) || []),
     channels: (raw.channels as FunnelChannelConfig) || {
       chat: { enabled: false, slug_override: null },
       form: { enabled: false, slug_override: null },
