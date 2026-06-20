@@ -63,17 +63,25 @@ export function ConversionRulesManager() {
   const [valueSource, setValueSource] = useState<ConversionValueSource>('none');
   const [fixedValue, setFixedValue] = useState<string>('');
 
-  const stagesForProduct = useMemo(() => {
-    if (productId === 'all') return stages as any[];
-    return (stages as any[]).filter((s) => s.product_id === productId);
-  }, [stages, productId]);
+  // Etapas etiquetadas con su producto (evita el "duplicado" cuando hay varios productos
+  // con etapas del mismo nombre). La etapa YA implica el producto (son product-scoped).
+  const stageOptions = useMemo(
+    () => (stages as any[]).map((s) => ({
+      id: s.id,
+      product_id: s.product_id,
+      label: `${productName(s.product_id)} · ${s.name}`,
+    })),
+    [stages, products],
+  );
 
   const canSave = triggerType === 'stage' ? !!stageId : !!tagId;
 
   const handleCreate = () => {
     if (!canSave) return;
+    // En regla por etapa, el product_id sale de la etapa elegida (coherente).
+    const stageProductId = (stages as any[]).find((s) => s.id === stageId)?.product_id ?? null;
     create.mutate({
-      product_id: productId === 'all' ? null : productId,
+      product_id: triggerType === 'stage' ? stageProductId : (productId === 'all' ? null : productId),
       trigger_type: triggerType,
       stage_id: triggerType === 'stage' ? stageId : null,
       tag_id: triggerType === 'tag' ? tagId : null,
@@ -115,37 +123,39 @@ export function ConversionRulesManager() {
               </Select>
             </div>
 
-            <div className="space-y-1.5">
-              <Label className="text-xs">Producto</Label>
-              <Select value={productId} onValueChange={setProductId}>
-                <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos los productos</SelectItem>
-                  {(products as any[]).map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
-                </SelectContent>
-              </Select>
-            </div>
-
             {triggerType === 'stage' ? (
               <div className="space-y-1.5">
                 <Label className="text-xs">Etapa</Label>
                 <Select value={stageId} onValueChange={setStageId}>
                   <SelectTrigger className="h-9"><SelectValue placeholder="Elegí etapa…" /></SelectTrigger>
                   <SelectContent>
-                    {stagesForProduct.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
+                    {stageOptions.map((s) => <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>)}
                   </SelectContent>
                 </Select>
+                <p className="text-[10px] text-muted-foreground">Cada etapa pertenece a su producto (mostrado adelante).</p>
               </div>
             ) : (
-              <div className="space-y-1.5">
-                <Label className="text-xs">Etiqueta</Label>
-                <Select value={tagId} onValueChange={setTagId}>
-                  <SelectTrigger className="h-9"><SelectValue placeholder="Elegí etiqueta…" /></SelectTrigger>
-                  <SelectContent>
-                    {(tags as any[]).map((t) => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
+              <>
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Producto</Label>
+                  <Select value={productId} onValueChange={setProductId}>
+                    <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos los productos</SelectItem>
+                      {(products as any[]).map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Etiqueta</Label>
+                  <Select value={tagId} onValueChange={setTagId}>
+                    <SelectTrigger className="h-9"><SelectValue placeholder="Elegí etiqueta…" /></SelectTrigger>
+                    <SelectContent>
+                      {(tags as any[]).map((t) => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
             )}
 
             <div className="space-y-1.5">
