@@ -9,6 +9,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { SuperAdminRoute } from "@/components/auth/SuperAdminRoute";
 import { BootstrapGuard } from "@/components/BootstrapGuard";
+import { ImpersonationBanner } from "@/components/ImpersonationBanner";
 import { AlertTriangle, Loader2, RefreshCw } from "lucide-react";
 import { usePlatformBranding } from "@/hooks/usePlatformBranding";
 import { lazyWithRetry } from "@/lib/lazyWithRetry";
@@ -124,6 +125,7 @@ const App = () => (
       <AuthProvider>
         <TooltipProvider>
         <PlatformBrandingLoader />
+        <ImpersonationBanner />
         <Toaster />
         <Sonner />
         <BrowserRouter>

@@ -53,6 +53,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { toast } from 'sonner';
+import { startImpersonation } from '@/hooks/useImpersonation';
 import { getPublicAppUrl } from '@/lib/publicUrl';
 
 interface OrganizationDetailPageProps {
@@ -346,7 +347,22 @@ export function OrganizationDetailPage({ orgId, onBack }: OrganizationDetailPage
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button 
+          <Button
+            variant="outline"
+            onClick={async () => {
+              if (!confirm(`¿Entrar como ${org.name} para dar soporte? Vas a ver y operar como el cliente (queda registrado en auditoría).`)) return;
+              try {
+                toast.loading('Entrando como cliente…', { id: 'imp' });
+                await startImpersonation(orgId);
+              } catch (e: any) {
+                toast.error('No se pudo impersonar', { id: 'imp', description: e?.message });
+              }
+            }}
+          >
+            <UserCog className="h-4 w-4 mr-2" />
+            Impersonar (soporte)
+          </Button>
+          <Button
             variant={org.status === 'active' ? 'destructive' : 'default'}
             onClick={handleToggleStatus}
             disabled={updateOrganization.isPending}
