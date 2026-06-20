@@ -1,171 +1,128 @@
-import { 
-  Activity, 
-  CheckCircle,
-  Database,
-  Server,
-  Wifi,
-  Clock,
-  Zap
-} from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
+import { Activity, CheckCircle, AlertTriangle, XCircle, RefreshCw } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { formatDistanceToNow } from 'date-fns';
+import { es } from 'date-fns/locale';
+
+interface Issue { severity: 'critical' | 'warning'; key: string; title: string; detail: string; }
+interface HealthResult { ok: boolean; issues: Issue[]; checked_at: string; error?: string; }
+
+const CHECK_LABELS: { key: string; label: string }[] = [
+  { key: 'cron', label: 'Crons / tareas programadas' },
+  { key: 'outreach', label: 'Follow-ups (cola de envíos)' },
+  { key: 'http', label: 'Funciones internas (errores 5xx)' },
+  { key: 'conv', label: 'Conversaciones → lead' },
+  { key: 'ai', label: 'Inteligencia Artificial (key)' },
+];
 
 export function SystemHealth() {
-  // In a real app, these would come from actual health checks
-  const services = [
-    { 
-      name: 'API Principal', 
-      status: 'operational', 
-      uptime: 99.99, 
-      latency: '45ms',
-      icon: Server 
-    },
-    { 
-      name: 'Banco de Dados', 
-      status: 'operational', 
-      uptime: 99.95, 
-      latency: '12ms',
-      icon: Database 
-    },
-    { 
-      name: 'Autenticación', 
-      status: 'operational', 
-      uptime: 99.99, 
-      latency: '35ms',
-      icon: Wifi 
-    },
-    { 
-      name: 'Edge Functions', 
-      status: 'operational', 
-      uptime: 99.90, 
-      latency: '120ms',
-      icon: Zap 
-    },
-  ];
+  const [refreshing, setRefreshing] = useState(false);
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'operational':
-        return (
-          <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
-            <CheckCircle className="h-3 w-3 mr-1" />
-            Operacional
-          </Badge>
-        );
-      case 'degraded':
-        return (
-          <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20">
-            <Activity className="h-3 w-3 mr-1" />
-            Degradado
-          </Badge>
-        );
-      case 'down':
-        return (
-          <Badge className="bg-red-500/10 text-red-500 border-red-500/20">
-            Fuera de Servicio
-          </Badge>
-        );
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
+  const { data, isLoading, refetch, dataUpdatedAt } = useQuery({
+    queryKey: ['system-health'],
+    queryFn: async (): Promise<HealthResult> => {
+      const { data, error } = await supabase.functions.invoke('system-health-check', { body: {} });
+      if (error) throw error;
+      return data as HealthResult;
+    },
+    refetchInterval: 60_000, // refresca solo cada 1 min
+  });
+
+  const issues = data?.issues ?? [];
+  const allOk = !!data?.ok && issues.length === 0;
+  const hasCritical = issues.some((i) => i.severity === 'critical');
+
+  const issueForCheck = (key: string) => issues.find((i) => i.key.startsWith(key));
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
   };
-
-  const allOperational = services.every(s => s.status === 'operational');
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Salud del Sistema</h1>
-        <p className="text-muted-foreground">Estado de los servicios de la plataforma</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Salud del Sistema</h1>
+          <p className="text-muted-foreground">
+            Estado real de la plataforma · chequeo automático cada 30 min
+            {dataUpdatedAt ? ` · visto ${formatDistanceToNow(new Date(dataUpdatedAt), { addSuffix: true, locale: es })}` : ''}
+          </p>
+        </div>
+        <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshing || isLoading}>
+          <RefreshCw className={`h-4 w-4 mr-2 ${refreshing || isLoading ? 'animate-spin' : ''}`} />
+          Verificar ahora
+        </Button>
       </div>
 
-      {/* Overall Status */}
-      <Card className={allOperational ? 'border-emerald-500/50' : 'border-amber-500/50'}>
+      {/* Estado general */}
+      <Card className={allOk ? 'border-emerald-500/50' : hasCritical ? 'border-red-500/50' : 'border-amber-500/50'}>
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
             <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
-              allOperational ? 'bg-emerald-500/10' : 'bg-amber-500/10'
+              allOk ? 'bg-emerald-500/10' : hasCritical ? 'bg-red-500/10' : 'bg-amber-500/10'
             }`}>
-              <Activity className={`h-8 w-8 ${
-                allOperational ? 'text-emerald-500' : 'text-amber-500'
-              }`} />
+              {allOk ? <CheckCircle className="h-8 w-8 text-emerald-500" />
+                : hasCritical ? <XCircle className="h-8 w-8 text-red-500" />
+                : <AlertTriangle className="h-8 w-8 text-amber-500" />}
             </div>
             <div>
-              <h2 className={`text-2xl font-bold ${
-                allOperational ? 'text-emerald-500' : 'text-amber-500'
-              }`}>
-                {allOperational ? 'Todos los sistemas operativos' : 'Algunos servicios degradados'}
+              <h2 className={`text-2xl font-bold ${allOk ? 'text-emerald-500' : hasCritical ? 'text-red-500' : 'text-amber-500'}`}>
+                {isLoading ? 'Verificando…' : allOk ? 'Todos los sistemas operativos' : `${issues.length} problema(s) detectado(s)`}
               </h2>
               <p className="text-muted-foreground">
-                {allOperational 
-                  ? 'No se han detectado problemas en este momento'
-                  : 'Estamos trabajando para resolver los problemas'
-                }
+                {allOk ? 'No se detectaron problemas en este momento.' : 'Revisá los detalles abajo. Los admins ya fueron notificados.'}
               </p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Services Grid */}
+      {/* Checks individuales */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {services.map((service) => (
-          <Card key={service.name}>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
-                    <service.icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <CardTitle className="text-base">{service.name}</CardTitle>
+        {CHECK_LABELS.map((c) => {
+          const iss = issueForCheck(c.key);
+          return (
+            <Card key={c.key}>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base">{c.label}</CardTitle>
+                  {!iss ? (
+                    <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
+                      <CheckCircle className="h-3 w-3 mr-1" /> OK
+                    </Badge>
+                  ) : iss.severity === 'critical' ? (
+                    <Badge className="bg-red-500/10 text-red-500 border-red-500/20">
+                      <XCircle className="h-3 w-3 mr-1" /> Crítico
+                    </Badge>
+                  ) : (
+                    <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20">
+                      <AlertTriangle className="h-3 w-3 mr-1" /> Atención
+                    </Badge>
+                  )}
                 </div>
-                {getStatusBadge(service.status)}
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">Uptime</p>
-                  <p className="text-lg font-semibold">{service.uptime}%</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Latencia</p>
-                  <p className="text-lg font-semibold">{service.latency}</p>
-                </div>
-              </div>
-              <div className="space-y-1">
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Disponibilidad en los últimos 30 días</span>
-                  <span>{service.uptime}%</span>
-                </div>
-                <Progress value={service.uptime} className="h-2" />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardHeader>
+              {iss && (
+                <CardContent>
+                  <p className="text-sm font-medium">{iss.title}</p>
+                  <p className="text-xs text-muted-foreground mt-1 break-words">{iss.detail}</p>
+                </CardContent>
+              )}
+            </Card>
+          );
+        })}
       </div>
 
-      {/* Recent Incidents */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
-            Incidentes Recientes
-          </CardTitle>
-          <CardDescription>Últimos 30 días</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8">
-            <CheckCircle className="h-12 w-12 mx-auto text-emerald-500 mb-4" />
-            <p className="text-muted-foreground">Ningún incidente registrado</p>
-            <p className="text-sm text-muted-foreground">
-              La plataforma funciona con normalidad
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      {data?.error && (
+        <Card className="border-red-500/50">
+          <CardContent className="pt-6 text-sm text-red-500">No se pudo correr el chequeo: {data.error}</CardContent>
+        </Card>
+      )}
     </div>
   );
 }

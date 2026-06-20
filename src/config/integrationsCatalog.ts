@@ -150,6 +150,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
         configKey: 'cakto',
         logoSrc: '/integrations/logos/cakto.svg',
         keywords: ['cakto', 'checkout', 'pix', 'split', 'infoproduto'],
+        comingSoon: true,
       },
       {
         id: 'hotmart',
@@ -170,6 +171,7 @@ export const integrationsCatalog: IntegrationCategory[] = [
         configKey: 'doppus',
         logoSrc: '/integrations/logos/doppus.png',
         keywords: ['doppus', 'infoproduto', 'postback', 'webhook', 'assinatura', 'pagamento'],
+        comingSoon: true,
       },
       {
         id: 'stripe',
