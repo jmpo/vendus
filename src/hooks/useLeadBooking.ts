@@ -25,11 +25,13 @@ export function useLeadBooking(
     queryKey: ['lead-booking', leadId, phoneDigits],
     enabled: !!leadId || phoneDigits.length >= 6,
     queryFn: async (): Promise<LeadBooking[]> => {
+      // OJO: NO filtramos por event_type='booking'. La sincronización de Google
+      // re-importa las citas y les cambia el event_type a 'meeting' (pero conserva
+      // el metadata). Por eso matcheamos por lead_id o por metadata.guest_phone.
       const base = () =>
         supabase
           .from('calendar_events')
           .select('id, title, start_time, end_time, status, location')
-          .eq('event_type', 'booking')
           .neq('status', 'cancelled')
           .gte('start_time', new Date().toISOString())
           .order('start_time', { ascending: true })

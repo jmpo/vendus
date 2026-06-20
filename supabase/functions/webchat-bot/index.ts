@@ -4198,7 +4198,21 @@ REGRAS DE USO:
               try {
                 const args = JSON.parse(toolCall.function.arguments);
                 console.log('[webchat-bot] Schedule meeting requested:', args);
-                
+
+                // Resolver el TELÉFONO del contacto de forma confiable (para vincular la cita
+                // al contacto en el panel). Prioridad: el que pasó el modelo > lead > teléfono
+                // de la conversación (visitor_phone). convInit no está en scope acá, así que
+                // lo buscamos directo si hace falta.
+                let convPhone: string | null = args.guest_phone || leadContext?.phone || null;
+                if (!convPhone && body.conversation_id) {
+                  const { data: _cph } = await supabase
+                    .from('webchat_conversations')
+                    .select('visitor_phone')
+                    .eq('id', body.conversation_id)
+                    .maybeSingle();
+                  convPhone = (_cph as any)?.visitor_phone || null;
+                }
+
                 // Find event type for this user.
                 // Se el cliente passou event_type_id (escolheu entre múltiples), prioriza esse.
                 // Sino usa allowedEventTypes[0] (vínculo del agente) ou fallback para el mais antigo.
@@ -4377,7 +4391,7 @@ REGRAS DE USO:
                           booking_event_type_id: eventType.id,
                           guest_name: args.guest_name,
                           guest_email: args.guest_email,
-                          guest_phone: args.guest_phone || leadContext?.phone || body.visitor_phone || null,
+                          guest_phone: convPhone,
                           source: 'webchat-bot',
                         },
                       })
@@ -4407,7 +4421,7 @@ REGRAS DE USO:
                       organization_id: hostProfile.organization_id,
                       guest_name: args.guest_name,
                       guest_email: args.guest_email || null,
-                      guest_phone: args.guest_phone || (leadContext?.phone || body.visitor_phone || null),
+                      guest_phone: convPhone,
                       start_time: startTime.toISOString(),
                       end_time: endTime.toISOString(),
                       timezone: 'America/Sao_Paulo',
