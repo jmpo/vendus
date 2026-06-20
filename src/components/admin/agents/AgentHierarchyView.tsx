@@ -25,6 +25,7 @@ interface Connector {
   fromId: string;
   toId: string;
   highlight?: boolean;
+  label?: string;
 }
 
 const GLOBAL_TYPES = ['admin', 'support', 'financial'];
@@ -38,7 +39,7 @@ function ConnectorsSvg({
   connectors: Connector[];
   refresh: number;
 }) {
-  const [paths, setPaths] = useState<{ d: string; highlight?: boolean }[]>([]);
+  const [paths, setPaths] = useState<{ d: string; highlight?: boolean; label?: string; mx: number; my: number }[]>([]);
   const [size, setSize] = useState({ w: 0, h: 0 });
 
   useEffect(() => {
@@ -48,7 +49,7 @@ function ConnectorsSvg({
       const cBox = container.getBoundingClientRect();
       setSize({ w: cBox.width, h: cBox.height });
 
-      const next: { d: string; highlight?: boolean }[] = [];
+      const next: { d: string; highlight?: boolean; label?: string; mx: number; my: number }[] = [];
       for (const c of connectors) {
         const from = container.querySelector<HTMLElement>(
           `[data-tree-id="${c.fromId}"]`
@@ -67,7 +68,7 @@ function ConnectorsSvg({
         const my = (y1 + y2) / 2;
         // Cubic bezier vertical
         const d = `M ${x1},${y1} C ${x1},${my} ${x2},${my} ${x2},${y2}`;
-        next.push({ d, highlight: c.highlight });
+        next.push({ d, highlight: c.highlight, label: c.label, mx: (x1 + x2) / 2, my });
       }
       setPaths(next);
     };
@@ -108,6 +109,16 @@ function ConnectorsSvg({
           strokeLinecap="round"
         />
       ))}
+      {/* Etiquetas de las conexiones (qué dispara cada ruta) */}
+      {paths.filter((p) => p.label).map((p, i) => {
+        const w = (p.label!.length * 6.2) + 16;
+        return (
+          <g key={`lbl-${i}`} transform={`translate(${p.mx - w / 2}, ${p.my - 10})`}>
+            <rect width={w} height={20} rx={10} fill="hsl(var(--background))" stroke="hsl(var(--border))" />
+            <text x={w / 2} y={14} textAnchor="middle" fontSize="11" fill="hsl(var(--foreground))">{p.label}</text>
+          </g>
+        );
+      })}
     </svg>
   );
 }
@@ -183,27 +194,39 @@ export function AgentHierarchyView({
     };
   }, [agents, products]);
 
+  // Etiqueta de la ruta según el tipo de agente destino (el orquestador deriva por intención).
+  const intentLabelForType = (type: string): string | undefined => {
+    switch (type) {
+      case 'sdr': return 'ℹ️ Info / dudas';
+      case 'closer': return '🛒 Compra / precio';
+      case 'support': return '🛠️ Soporte';
+      case 'financial': return '💰 Pago / financiero';
+      default: return undefined;
+    }
+  };
+
   // Build connector list
   const connectors: Connector[] = useMemo(() => {
     const out: Connector[] = [];
     if (orchestrator) {
-      // Connect Orchestrator to each global agent (highlighted)
+      // Connect Orchestrator to each global agent (highlighted) — etiqueta por su rol
       for (const g of globals) {
-        out.push({ fromId: orchestrator.id, toId: g.id, highlight: true });
+        out.push({ fromId: orchestrator.id, toId: g.id, highlight: true, label: intentLabelForType(g.agent_type) });
       }
-      // Connect Orchestrator to each product header (subtle, indicates oversight)
+      // Connect Orchestrator to each product header — deriva al especialista del producto
       for (const grp of byProduct) {
         out.push({
           fromId: orchestrator.id,
           toId: `product-header-${grp.product.id}`,
           highlight: true,
+          label: 'por producto',
         });
       }
     }
     for (const grp of byProduct) {
       const headerId = `product-header-${grp.product.id}`;
       for (const a of grp.agents) {
-        out.push({ fromId: headerId, toId: a.id });
+        out.push({ fromId: headerId, toId: a.id, label: intentLabelForType(a.agent_type) });
       }
     }
     return out;
@@ -212,6 +235,20 @@ export function AgentHierarchyView({
   if (agents.length === 0) return null;
 
   return (
+    <div className="space-y-4">
+      {/* Leyenda: cómo rutea el orquestador */}
+      <div className="rounded-lg border bg-muted/30 p-3">
+        <p className="text-xs font-semibold mb-2">¿Cómo decide a qué agente derivar?</p>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] text-muted-foreground">
+          <span className="flex items-center gap-1.5"><span className="font-medium text-primary">Orquestador</span> recibe TODO y clasifica marca + intención, luego:</span>
+          <span className="flex items-center gap-1">ℹ️ Info/dudas → <span className="font-medium text-foreground">SDR</span></span>
+          <span className="flex items-center gap-1">🛒 Compra/precio → <span className="font-medium text-foreground">Closer</span> (del producto)</span>
+          <span className="flex items-center gap-1">🛠️ Soporte → <span className="font-medium text-foreground">Soporte</span></span>
+          <span className="flex items-center gap-1">💰 Pago → <span className="font-medium text-foreground">Financiero</span></span>
+          <span className="flex items-center gap-1">🙋 "hablar con humano" → <span className="font-medium text-foreground">persona</span></span>
+        </div>
+      </div>
+
     <div ref={containerRef} className="relative w-full overflow-x-auto pb-4">
       <ConnectorsSvg
         containerRef={containerRef}
@@ -309,6 +346,7 @@ export function AgentHierarchyView({
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 }
