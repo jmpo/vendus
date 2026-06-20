@@ -176,6 +176,14 @@ export function CampaignWizard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.audience_filters?.lead_ids]);
 
+  // ¿Todas las conexiones elegidas son API oficial (Meta/Zernio)? → envío inmediato.
+  const onlyApiConnections = useMemo(() => {
+    const types = form.instance_strategy === 'manual'
+      ? form.instance_distribution.map((d) => d.connection_type)
+      : instances.filter(isInstanceReady).map((i: any) => i.connection_type);
+    return types.length > 0 && types.every((t) => t === 'meta_whatsapp' || t === 'zernio');
+  }, [form.instance_strategy, form.instance_distribution, instances]);
+
 
   // Carregar dados auxiliares (produtos, agentes, instâncias)
   useEffect(() => {
@@ -356,7 +364,12 @@ export function CampaignWizard({
       recurrence: form.schedule_type === 'recurring' ? form.recurrence : null,
       post_response_actions: form.post_response_actions,
       post_cadence_id: form.post_cadence_id ?? null,
-      meta_template_config: (form.meta_template_config?.templates?.length ?? 0) > 0 ? form.meta_template_config : null,
+      // Persiste la config si hay plantillas Meta O una plantilla Zernio (se guarda en .zernio).
+      meta_template_config:
+        ((form.meta_template_config?.templates?.length ?? 0) > 0 ||
+          (form.meta_template_config as any)?.zernio?.zernio_template_name)
+          ? form.meta_template_config
+          : null,
     };
 
   };
@@ -768,8 +781,18 @@ export function CampaignWizard({
 
       <Card>
         <CardHeader><CardTitle className="text-base">6. Velocidad</CardTitle></CardHeader>
-        <CardContent>
-          <RadioGroup value={form.speed_preset} onValueChange={(v) => setForm({ ...form, speed_preset: v })} className="grid grid-cols-2 md:grid-cols-4 gap-2">
+        <CardContent className="space-y-3">
+          {onlyApiConnections && (
+            <div className="rounded-md border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-700 dark:text-emerald-400">
+              <strong>Envío inmediato (API oficial).</strong> Con plantilla aprobada de Meta/Zernio no hay riesgo de baneo,
+              así que los mensajes salen de una. El retardo entre envíos solo aplica a WhatsApp por QR (Evolution).
+            </div>
+          )}
+          <RadioGroup
+            value={form.speed_preset}
+            onValueChange={(v) => setForm({ ...form, speed_preset: v })}
+            className={`grid grid-cols-2 md:grid-cols-4 gap-2 ${onlyApiConnections ? 'opacity-50 pointer-events-none' : ''}`}
+          >
             {SPEED_PRESETS.map((p) => (
               <label key={p.value} className={`p-3 border rounded cursor-pointer ${form.speed_preset === p.value ? 'border-primary bg-primary/5' : ''}`}>
                 <div className="flex items-center gap-2 mb-1">

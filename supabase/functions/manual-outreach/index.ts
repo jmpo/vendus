@@ -224,7 +224,7 @@ Deno.serve(async (req) => {
           const nums = Object.keys(varMap).map((k) => parseInt(k, 10)).filter((n) => !isNaN(n)).sort((a, b) => a - b);
           zernioParams = nums.map((n) => resolveVar(varMap[String(n)]));
         } else {
-          zernioParams = (template_config as any).params ?? (template_config as any).template_params ?? [leadFirstName];
+          zernioParams = (template_config as any)?.params ?? (template_config as any)?.template_params ?? [leadFirstName];
         }
 
         const zernioTemplate = connection_type === 'zernio' && template_config && (template_config as any).zernio_template_name
@@ -237,6 +237,8 @@ Deno.serve(async (req) => {
 
         // === Guard Meta: fora da janela 24h sem template = bloqueia antes da IA ===
         const useTemplate = !!(template_config?.template_id && connection_type === 'meta_whatsapp');
+        // Si se enviará una plantilla (Meta o Zernio), NO se genera mensaje con IA (no hace falta).
+        const willSendTemplate = useTemplate || !!zernioTemplate;
         if (connection_type === 'meta_whatsapp' && !useTemplate) {
           let withinWindow = false;
           if (existingConv?.id) {
@@ -259,7 +261,7 @@ Deno.serve(async (req) => {
           const convMeta: Record<string, unknown> = {
             ai_outreach: true,
             manual_trigger: true,
-            outreach_mode: useTemplate ? 'template' : mode,
+            outreach_mode: willSendTemplate ? 'template' : mode,
             created_via: 'manual_outreach',
           };
           // Persistir campaign_id para que respostas (botões HSM) consigam aplicar button_actions
@@ -316,7 +318,7 @@ Deno.serve(async (req) => {
 
         // === Gera mensagem (texto livre) OU prepara template ===
         let bubbles: string[] = [];
-        if (!useTemplate) {
+        if (!willSendTemplate) {
           const eventCtxLines = event_context
             ? Object.entries(event_context).map(([k, v]) => `- ${k}: ${v}`).join("\n")
             : "";

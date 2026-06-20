@@ -208,7 +208,10 @@ Deno.serve(async (req) => {
     // Constrói targets
     const distribution = campaign.context_distribution as string;
     const targets: any[] = [];
-    let cursor = baseTime;
+    // Cursor SOLO para Evolution (necesita retardo anti-baneo). Las conexiones oficiales
+    // (Meta/Zernio) usan plantilla aprobada → sin riesgo → envío inmediato (todas en baseTime;
+    // el dispatcher ya throttlea por tick para respetar el rate-limit de Meta).
+    let evoCursor = baseTime;
     let seqIdx = 0;
     let instIdx = 0;
 
@@ -235,9 +238,15 @@ Deno.serve(async (req) => {
         inst = instances[Math.floor(Math.random() * instances.length)];
       }
 
-      // Spread time
-      cursor += randomBetween(minSec, maxSec) * 1000;
-      const scheduledFor = new Date(cursor).toISOString();
+      // Spread time: Evolution con retardo (anti-baneo); Meta/Zernio inmediato.
+      const isApi = inst.connection_type === "meta_whatsapp" || inst.connection_type === "zernio";
+      let scheduledFor: string;
+      if (isApi) {
+        scheduledFor = new Date(baseTime).toISOString();
+      } else {
+        evoCursor += randomBetween(minSec, maxSec) * 1000;
+        scheduledFor = new Date(evoCursor).toISOString();
+      }
 
       targets.push({
         campaign_id,
