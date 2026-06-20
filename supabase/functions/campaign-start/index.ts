@@ -95,8 +95,8 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Resolve instâncias disponíveis (Evolution + Meta WhatsApp)
-    let instances: Array<{ id: string; status: string; connection_type: 'evolution' | 'meta_whatsapp'; weight: number }> = [];
+    // Resolve instâncias disponíveis (Evolution + Meta WhatsApp + Zernio)
+    let instances: Array<{ id: string; status: string; connection_type: 'evolution' | 'meta_whatsapp' | 'zernio'; weight: number }> = [];
     const distItems = Array.isArray(campaign.instance_distribution) ? (campaign.instance_distribution as any[]) : [];
 
     if (campaign.instance_strategy === "manual" && distItems.length) {
@@ -108,13 +108,20 @@ Deno.serve(async (req) => {
         .filter((i) => i.connection_type === 'meta_whatsapp')
         .map((i) => i.instance_id)
         .filter(Boolean);
+      const zernioIds = distItems
+        .filter((i) => i.connection_type === 'zernio')
+        .map((i) => i.instance_id)
+        .filter(Boolean);
 
-      const [{ data: evos }, { data: metas }] = await Promise.all([
+      const [{ data: evos }, { data: metas }, { data: zernios }] = await Promise.all([
         evoIds.length
           ? supabase.from("evolution_instances").select("id, status").in("id", evoIds)
           : Promise.resolve({ data: [] as any[] }),
         metaIds.length
           ? supabase.from("whatsapp_meta_connections").select("id, status").in("id", metaIds)
+          : Promise.resolve({ data: [] as any[] }),
+        zernioIds.length
+          ? supabase.from("zernio_connections").select("id, status").in("id", zernioIds)
           : Promise.resolve({ data: [] as any[] }),
       ]);
 
@@ -126,9 +133,12 @@ Deno.serve(async (req) => {
         ...((metas ?? []) as any[])
           .filter((i) => i.status === "active")
           .map((i) => ({ id: i.id, status: i.status, connection_type: 'meta_whatsapp' as const, weight: findWeight(i.id) })),
+        ...((zernios ?? []) as any[])
+          .filter((i) => i.status === "active")
+          .map((i) => ({ id: i.id, status: i.status, connection_type: 'zernio' as const, weight: findWeight(i.id) })),
       ];
     } else {
-      const [{ data: evos }, { data: metas }] = await Promise.all([
+      const [{ data: evos }, { data: metas }, { data: zernios }] = await Promise.all([
         supabase
           .from("evolution_instances")
           .select("id, status")
@@ -139,10 +149,16 @@ Deno.serve(async (req) => {
           .select("id, status")
           .eq("organization_id", campaign.organization_id)
           .eq("status", "active"),
+        supabase
+          .from("zernio_connections")
+          .select("id, status")
+          .eq("organization_id", campaign.organization_id)
+          .eq("status", "active"),
       ]);
       instances = [
         ...((evos ?? []) as any[]).map((i) => ({ id: i.id, status: i.status, connection_type: 'evolution' as const, weight: 1 })),
         ...((metas ?? []) as any[]).map((i) => ({ id: i.id, status: i.status, connection_type: 'meta_whatsapp' as const, weight: 1 })),
+        ...((zernios ?? []) as any[]).map((i) => ({ id: i.id, status: i.status, connection_type: 'zernio' as const, weight: 1 })),
       ];
     }
 

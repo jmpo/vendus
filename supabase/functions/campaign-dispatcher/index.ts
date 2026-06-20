@@ -187,6 +187,13 @@ Deno.serve(async (req) => {
             .update({ status: "skipped", error: result.reason ?? "skipped" })
             .eq("id", t.id);
           skipped++;
+        } else if (result.error || result.sent !== true) {
+          // manual-outreach reportó fallo de envío (NO marcar como enviado).
+          await supabase
+            .from("campaign_targets")
+            .update({ status: "failed", error: result.error ?? "send failed" })
+            .eq("id", t.id);
+          failed++;
         } else {
           await supabase
             .from("campaign_targets")

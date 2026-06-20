@@ -90,13 +90,16 @@ Deno.serve(async (req: Request) => {
   if (type === 'template' || (!zernioConvId && template)) {
     // Iniciar/reenganchar con template
     if (!template?.name || !template?.language) return json({ error: 'template.name y template.language requeridos' }, 400);
-    res = await zfetch(apiKey, '/inbox/conversations', {
+    const tplBody = {
       accountId,
       participantId: phone,
       templateName: template.name,
       templateLanguage: template.language,
       ...(template.params ? { templateParams: template.params } : {}),
-    });
+    };
+    console.log('[zernio-send] template →', JSON.stringify(tplBody));
+    res = await zfetch(apiKey, '/inbox/conversations', tplBody);
+    console.log('[zernio-send] template ← status', res.status, JSON.stringify(res.data).slice(0, 500));
     zernioMsgId = res.data?.data?.messageId ?? null;
     const newConvId = res.data?.data?.conversationId ?? null;
     if (res.ok && newConvId && conversation_id) {

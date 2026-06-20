@@ -2,6 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { splitIntoBubbles } from "../_shared/humanizer.ts";
 import { recordLovableUsage } from "../_shared/ai-router.ts";
 import { resolveAgentSendConnection } from "../_shared/agent-connection.ts";
+import { normalizePhoneBR } from "../_shared/phone.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -133,12 +134,13 @@ Deno.serve(async (req) => {
           continue;
         }
 
-        let leadPhone = lead?.phone?.replace(/\D/g, "");
+        // Normaliza respetando números internacionales (no fuerza prefijo 55 en números
+        // que ya tienen código de país, p. ej. Paraguay 595…).
+        const leadPhone = normalizePhoneBR(lead?.phone) ?? "";
         if (!leadPhone) {
           results.push({ leadId, skipped: true, reason: "No phone" });
           continue;
         }
-        if (!leadPhone.startsWith("55")) leadPhone = "55" + leadPhone;
 
         // Conversa existente?
         const { data: existingConv } = await supabase
