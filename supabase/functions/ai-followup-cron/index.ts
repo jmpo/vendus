@@ -386,7 +386,18 @@ Gere uma mensagem de follow-up estratégica DIFERENTE das anteriores.`;
                 continue;
               }
               const tplLang = agent.followup_template_language || 'es';
-              const tplParams = Array.isArray(agent.followup_template_params) ? agent.followup_template_params : [];
+              // Resolver variables del lead en los parámetros de la plantilla.
+              // Soporta {nombre}, {primer_nombre}, {telefono}, {email} con los datos guardados del lead.
+              const _ld = item.lead_data || {};
+              const _fullName = String(_ld.name || '').trim();
+              const _vars: Record<string, string> = {
+                nombre: _fullName,
+                primer_nombre: _fullName.split(' ')[0] || _fullName,
+                telefono: String(_ld.phone || ''),
+                email: String(_ld.email || ''),
+              };
+              const resolveVars = (s: string) => String(s).replace(/\{(\w+)\}/g, (m, k) => (k in _vars ? _vars[k] : m));
+              const tplParams = (Array.isArray(agent.followup_template_params) ? agent.followup_template_params : []).map(resolveVars);
               let tplOk = false;
               let tplErr = '';
               if (decision.provider === 'zernio') {

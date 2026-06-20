@@ -333,10 +333,10 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
                 />
               </div>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label className="text-xs">Parámetros (opcional, separados por coma — para {'{{1}}'}, {'{{2}}'}…)</Label>
               <Input
-                placeholder="ej: Hola, Citroën C4 Cactus"
+                placeholder="ej: {primer_nombre}, Citroën C4 Cactus"
                 value={Array.isArray(formData.followup_template_params) ? formData.followup_template_params.join(', ') : ''}
                 onChange={(e) =>
                   onChange({
@@ -346,6 +346,28 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
                   })
                 }
               />
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-[10px] text-muted-foreground">Insertar dato del lead:</span>
+                {[
+                  { v: '{primer_nombre}', l: 'Primer nombre' },
+                  { v: '{nombre}', l: 'Nombre' },
+                  { v: '{telefono}', l: 'Teléfono' },
+                  { v: '{email}', l: 'Email' },
+                ].map((opt) => (
+                  <button
+                    key={opt.v}
+                    type="button"
+                    onClick={() => {
+                      const cur = Array.isArray(formData.followup_template_params) ? formData.followup_template_params : [];
+                      onChange({ followup_template_params: [...cur, opt.v] });
+                    }}
+                    className="px-2 py-0.5 rounded-full border text-[10px] bg-muted/40 hover:bg-muted transition-colors"
+                  >
+                    + {opt.l}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] text-muted-foreground">Las variables del lead se reemplazan al enviar (ej. {'{primer_nombre}'} → "Marcelo").</p>
             </div>
           </Card>
         </>

@@ -135,6 +135,17 @@ export function AgentEditor({
 }: AgentEditorProps) {
   const [formData, setFormData] = useState<Partial<ProductAgent>>(DEFAULT_AGENT);
   const [activeTab, setActiveTab] = useState('identity');
+  // Modo simple (default): oculta pestañas avanzadas (Humanización, Canales) para que el
+  // cliente implemente rápido. "Mostrar avanzado" las despliega.
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const ADVANCED_TABS = ['humanization', 'channels'];
+  const toggleAdvanced = () => {
+    setShowAdvanced((v) => {
+      const next = !v;
+      if (!next && ADVANCED_TABS.includes(activeTab)) setActiveTab('identity');
+      return next;
+    });
+  };
   const [optimizingField, setOptimizingField] = useState<string | null>(null);
   const [isRetraining, setIsRetraining] = useState(false);
   const [scope, setScope] = useState<'global' | 'product'>('global');
@@ -413,7 +424,8 @@ export function AgentEditor({
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col min-h-0">
-          <div className="mt-4 shrink-0 overflow-x-auto px-6">
+          <div className="mt-4 shrink-0 px-6 flex items-center gap-2">
+            <div className="overflow-x-auto min-w-0 flex-1">
             {formData.agent_type === 'admin' ? (
               // Admin agent: 5 focused tabs (Identity, Personality, Objective, Executive, History/Test)
               <TabsList className="inline-flex h-auto w-max gap-1">
@@ -479,10 +491,12 @@ export function AgentEditor({
                   <MessageSquare className="h-3 w-3 mr-1" />
                   Tono
                 </TabsTrigger>
-                <TabsTrigger value="humanization" className="text-xs whitespace-nowrap">
-                  <Sparkles className="h-3 w-3 mr-1" />
-                  Humanización
-                </TabsTrigger>
+                {showAdvanced && (
+                  <TabsTrigger value="humanization" className="text-xs whitespace-nowrap">
+                    <Sparkles className="h-3 w-3 mr-1" />
+                    Humanización
+                  </TabsTrigger>
+                )}
                 <TabsTrigger value="followup" className="text-xs whitespace-nowrap">
                   <Repeat className="h-3 w-3 mr-1" />
                   Follow-up
@@ -495,10 +509,12 @@ export function AgentEditor({
                   <Calendar className="h-3 w-3 mr-1" />
                   Agendamiento
                 </TabsTrigger>
-                <TabsTrigger value="channels" className="text-xs whitespace-nowrap">
-                  <Zap className="h-3 w-3 mr-1" />
-                  Canales
-                </TabsTrigger>
+                {showAdvanced && (
+                  <TabsTrigger value="channels" className="text-xs whitespace-nowrap">
+                    <Zap className="h-3 w-3 mr-1" />
+                    Canales
+                  </TabsTrigger>
+                )}
                 {isSupport && (
                   <TabsTrigger value="support" className="text-xs whitespace-nowrap">
                     <BookOpen className="h-3 w-3 mr-1" />
@@ -514,6 +530,18 @@ export function AgentEditor({
                   Probar
                 </TabsTrigger>
               </TabsList>
+            )}
+            </div>
+            {formData.agent_type !== 'admin' && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="shrink-0 text-xs text-muted-foreground"
+                onClick={toggleAdvanced}
+              >
+                {showAdvanced ? 'Ocultar avanzado' : 'Mostrar avanzado'}
+              </Button>
             )}
           </div>
 
