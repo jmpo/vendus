@@ -74,6 +74,18 @@ export function useConversionRules() {
     onError: (e: any) => toast.error('Error al crear la regla', { description: e.message }),
   });
 
+  const update = useMutation({
+    mutationFn: async ({ id, ...rule }: NewConversionRule & { id: string }) => {
+      const { error } = await supabase.from('conversion_event_rules').update(rule).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['conversion-rules', orgId] });
+      toast.success('Regla actualizada');
+    },
+    onError: (e: any) => toast.error('Error al actualizar la regla', { description: e.message }),
+  });
+
   const toggle = useMutation({
     mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
       const { error } = await supabase.from('conversion_event_rules').update({ is_active }).eq('id', id);
@@ -95,5 +107,5 @@ export function useConversionRules() {
     onError: (e: any) => toast.error('Error al eliminar', { description: e.message }),
   });
 
-  return { rules, create, toggle, remove };
+  return { rules, create, update, toggle, remove };
 }

@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
-import { Target, Plus, Trash2, Tag as TagIcon, Route } from 'lucide-react';
+import { Target, Plus, Trash2, Tag as TagIcon, Route, Pencil, X } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -20,7 +20,7 @@ import {
 export function ConversionRulesManager() {
   const { profile } = useAuth();
   const orgId = profile?.organization_id;
-  const { rules, create, toggle, remove } = useConversionRules();
+  const { rules, create, update, toggle, remove } = useConversionRules();
 
   // Catálogos para los selectores
   const { data: products = [] } = useQuery({
@@ -54,7 +54,10 @@ export function ConversionRulesManager() {
   const tagName = (id: string | null) => (tags as any[]).find((t) => t.id === id)?.name ?? '—';
   const eventLabel = (e: string) => CONVERSION_EVENTS.find((x) => x.value === e)?.label ?? e;
 
+  const list = rules.data ?? [];
+
   // Form
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [triggerType, setTriggerType] = useState<ConversionTriggerType>('stage');
   const [productId, setProductId] = useState<string>('all');
   const [stageId, setStageId] = useState<string>('');
@@ -74,13 +77,39 @@ export function ConversionRulesManager() {
     [stages, products],
   );
 
+  // Etapas y etiquetas YA configuradas (para no permitir duplicar). Excluye la regla
+  // que se está editando, así su propia etapa/etiqueta sigue seleccionable.
+  const usedStageIds = useMemo(
+    () => new Set(list.filter((r) => r.trigger_type === 'stage' && r.id !== editingId).map((r) => r.stage_id)),
+    [list, editingId],
+  );
+  const usedTagKeys = useMemo(
+    () => new Set(list.filter((r) => r.trigger_type === 'tag' && r.id !== editingId).map((r) => `${r.tag_id}|${r.product_id ?? 'all'}`)),
+    [list, editingId],
+  );
+
+  const resetForm = () => {
+    setEditingId(null); setTriggerType('stage'); setProductId('all');
+    setStageId(''); setTagId(''); setEventName('Purchase'); setValueSource('none'); setFixedValue('');
+  };
+
+  const startEdit = (r: any) => {
+    setEditingId(r.id);
+    setTriggerType(r.trigger_type);
+    setProductId(r.product_id ?? 'all');
+    setStageId(r.stage_id ?? '');
+    setTagId(r.tag_id ?? '');
+    setEventName(r.event_name);
+    setValueSource(r.value_source);
+    setFixedValue(r.fixed_value != null ? String(r.fixed_value) : '');
+  };
+
   const canSave = triggerType === 'stage' ? !!stageId : !!tagId;
 
-  const handleCreate = () => {
+  const handleSave = () => {
     if (!canSave) return;
-    // En regla por etapa, el product_id sale de la etapa elegida (coherente).
     const stageProductId = (stages as any[]).find((s) => s.id === stageId)?.product_id ?? null;
-    create.mutate({
+    const payload = {
       product_id: triggerType === 'stage' ? stageProductId : (productId === 'all' ? null : productId),
       trigger_type: triggerType,
       stage_id: triggerType === 'stage' ? stageId : null,
@@ -88,12 +117,13 @@ export function ConversionRulesManager() {
       event_name: eventName,
       value_source: valueSource,
       fixed_value: valueSource === 'fixed' ? Number(fixedValue) || 0 : null,
-    }, {
-      onSuccess: () => { setStageId(''); setTagId(''); setFixedValue(''); },
-    });
+    };
+    if (editingId) {
+      update.mutate({ id: editingId, ...payload }, { onSuccess: resetForm });
+    } else {
+      create.mutate(payload, { onSuccess: () => { setStageId(''); setTagId(''); setFixedValue(''); } });
+    }
   };
-
-  const list = rules.data ?? [];
 
   return (
     <Card>
@@ -129,10 +159,17 @@ export function ConversionRulesManager() {
                 <Select value={stageId} onValueChange={setStageId}>
                   <SelectTrigger className="h-9"><SelectValue placeholder="Elegí etapa…" /></SelectTrigger>
                   <SelectContent>
-                    {stageOptions.map((s) => <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>)}
+                    {stageOptions.map((s) => {
+                      const used = usedStageIds.has(s.id);
+                      return (
+                        <SelectItem key={s.id} value={s.id} disabled={used}>
+                          {s.label}{used ? ' — ya configurada' : ''}
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
-                <p className="text-[10px] text-muted-foreground">Cada etapa pertenece a su producto (mostrado adelante).</p>
+                <p className="text-[10px] text-muted-foreground">Cada etapa pertenece a su producto. Las ya configuradas aparecen deshabilitadas (evita duplicar).</p>
               </div>
             ) : (
               <>
@@ -151,7 +188,14 @@ export function ConversionRulesManager() {
                   <Select value={tagId} onValueChange={setTagId}>
                     <SelectTrigger className="h-9"><SelectValue placeholder="Elegí etiqueta…" /></SelectTrigger>
                     <SelectContent>
-                      {(tags as any[]).map((t) => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}
+                      {(tags as any[]).map((t) => {
+                        const used = usedTagKeys.has(`${t.id}|${productId === 'all' ? 'all' : productId}`);
+                        return (
+                          <SelectItem key={t.id} value={t.id} disabled={used}>
+                            {t.name}{used ? ' — ya configurada' : ''}
+                          </SelectItem>
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                 </div>
@@ -187,9 +231,16 @@ export function ConversionRulesManager() {
               </div>
             )}
           </div>
-          <Button size="sm" onClick={handleCreate} disabled={!canSave || create.isPending}>
-            <Plus className="h-4 w-4 mr-1.5" /> Agregar regla
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button size="sm" onClick={handleSave} disabled={!canSave || create.isPending || update.isPending}>
+              <Plus className="h-4 w-4 mr-1.5" /> {editingId ? 'Guardar cambios' : 'Agregar regla'}
+            </Button>
+            {editingId && (
+              <Button size="sm" variant="ghost" onClick={resetForm}>
+                <X className="h-4 w-4 mr-1" /> Cancelar
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Lista de reglas */}
@@ -200,20 +251,25 @@ export function ConversionRulesManager() {
         ) : (
           <div className="space-y-2">
             {list.map((r) => (
-              <div key={r.id} className="flex items-center gap-3 rounded-lg border p-3 text-sm">
+              <div key={r.id} className={`flex items-center gap-3 rounded-lg border p-3 text-sm ${editingId === r.id ? 'border-primary ring-1 ring-primary bg-primary/5' : ''}`}>
                 <Badge variant="outline" className="gap-1 shrink-0">
                   {r.trigger_type === 'stage' ? <Route className="h-3 w-3" /> : <TagIcon className="h-3 w-3" />}
-                  {r.trigger_type === 'stage' ? stageName(r.stage_id) : tagName(r.tag_id)}
+                  {r.trigger_type === 'stage'
+                    ? `${productName(r.product_id)} · ${stageName(r.stage_id)}`
+                    : tagName(r.tag_id)}
                 </Badge>
                 <span className="text-muted-foreground">→</span>
                 <Badge className="shrink-0">{eventLabel(r.event_name)}</Badge>
                 <span className="text-xs text-muted-foreground truncate">
-                  {productName(r.product_id)}
-                  {r.value_source !== 'none' && ` · valor: ${r.value_source === 'fixed' ? r.fixed_value : 'deal'}`}
+                  {r.trigger_type === 'tag' && `${productName(r.product_id)} · `}
+                  {r.value_source !== 'none' ? `valor: ${r.value_source === 'fixed' ? r.fixed_value : 'deal'}` : 'sin valor'}
                 </span>
-                <div className="ml-auto flex items-center gap-2 shrink-0">
+                <div className="ml-auto flex items-center gap-1 shrink-0">
                   <Switch checked={r.is_active} onCheckedChange={(v) => toggle.mutate({ id: r.id, is_active: v })} />
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => remove.mutate(r.id)}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => startEdit(r)} title="Editar">
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => remove.mutate(r.id)} title="Eliminar">
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
