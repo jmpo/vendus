@@ -111,14 +111,16 @@ export function useSellerActivities(userId?: string, productId?: string) {
       if (productId) eventsQuery = eventsQuery.eq('product_id', productId);
       const eventsRes = await eventsQuery;
 
-      // 3) Mensagens agendadas (org)
+      // 3) Mensagens agendadas (org) — acotado por fecha + tope de seguridad
       const scheduledRes = await supabase
         .from('scheduled_messages')
         .select('id, content, scheduled_at, status, conversation_id')
         .eq('organization_id', orgId!)
         .eq('created_by', userId!)
         .gte('scheduled_at', horizonStart)
-        .lte('scheduled_at', horizonEnd);
+        .lte('scheduled_at', horizonEnd)
+        .order('scheduled_at', { ascending: true })
+        .limit(200);
 
       // 4) Cadência futura (org) — só pendente
       const cadenceRes = await supabase

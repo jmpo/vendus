@@ -26,6 +26,7 @@ export function PlaybookView({ product }: PlaybookViewProps) {
   const isMobile = useIsMobile();
 
   const handleCopyPitch = async (pitch: string, type: string) => {
+    if (!pitch) return;
     await navigator.clipboard.writeText(pitch);
     setCopiedPitch(type);
     toast.success('¡Pitch copiado!');
@@ -110,6 +111,7 @@ export function PlaybookView({ product }: PlaybookViewProps) {
                   <Button
                     variant="soft"
                     size="sm"
+                    disabled={!pitch.content}
                     onClick={() => handleCopyPitch(pitch.content, pitch.type)}
                     className={cn("gap-2", isMobile && "w-full")}
                   >
@@ -127,9 +129,13 @@ export function PlaybookView({ product }: PlaybookViewProps) {
                   </Button>
                 </div>
                 <div className="p-4 rounded-lg bg-secondary/50 border border-border">
-                  <p className="text-sm text-foreground leading-relaxed">
-                    {pitch.content}
-                  </p>
+                  {pitch.content ? (
+                    <p className="text-sm text-foreground leading-relaxed">{pitch.content}</p>
+                  ) : (
+                    <p className="text-sm text-muted-foreground italic">
+                      Sin {pitch.label.toLowerCase()} configurado. El admin puede agregarlo en el producto.
+                    </p>
+                  )}
                 </div>
               </div>
             ))}

@@ -396,9 +396,16 @@ export function useWebChatConversations(filters?: InboxBackendFilters & { limit?
         },
       });
 
-      if (!res.ok) throw new Error('Failed to fetch conversations');
-      const data = await res.json();
-      return data.conversations as WebChatConversation[];
+      if (!res.ok) {
+        let body: any = null;
+        try { body = await res.json(); } catch { /* ignore */ }
+        const err: any = new Error(body?.error || `No se pudieron cargar las conversaciones (${res.status})`);
+        err.status = res.status;
+        throw err;
+      }
+      const data = await res.json().catch(() => null);
+      // Tolerante al schema: si la edge function no devuelve un array, no rompe la UI
+      return (Array.isArray(data?.conversations) ? data.conversations : []) as WebChatConversation[];
     },
     enabled: !!session?.access_token,
     // Mostra dados em cache instantaneamente e revalida em background (estilo WhatsApp)
