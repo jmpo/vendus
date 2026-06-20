@@ -687,8 +687,8 @@ export function useCreateOrganizationInvitation() {
         .eq('id', organizationId)
         .single();
       
-      // Enviar email de convite
-      await supabase.functions.invoke('send-invite-email', {
+      // Enviar email de convite — chequear error (antes fallaba en silencio)
+      const { error: emailErr } = await supabase.functions.invoke('send-invite-email', {
         body: {
           email: email.toLowerCase(),
           inviteLink: `${getPublicAppUrl()}/aceitar-convite?token=${data.token}`,
@@ -697,7 +697,10 @@ export function useCreateOrganizationInvitation() {
           invitedByName: 'Super Admin',
         },
       });
-      
+      if (emailErr) {
+        throw new Error(`Invitación creada, pero el email NO se pudo enviar (${emailErr.message}). Reenviá la invitación o copiá el link manualmente.`);
+      }
+
       return data;
     },
     onSuccess: (_, { organizationId }) => {
@@ -758,7 +761,7 @@ export function useResendOrganizationInvitation() {
       invitation: { id: string; email: string; role: string; token: string };
       organizationName: string;
     }) => {
-      await supabase.functions.invoke('send-invite-email', {
+      const { error: emailErr } = await supabase.functions.invoke('send-invite-email', {
         body: {
           email: invitation.email,
           inviteLink: `${getPublicAppUrl()}/aceitar-convite?token=${invitation.token}`,
@@ -767,6 +770,7 @@ export function useResendOrganizationInvitation() {
           invitedByName: 'Super Admin',
         },
       });
+      if (emailErr) throw new Error(`No se pudo reenviar el email: ${emailErr.message}`);
       return invitation;
     },
   });

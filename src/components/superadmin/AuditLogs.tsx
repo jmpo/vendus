@@ -11,17 +11,41 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useAuditLogs } from '@/hooks/useSuperAdmin';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 export function AuditLogs() {
   const [search, setSearch] = useState('');
+  const [orgFilter, setOrgFilter] = useState<string>('all');
   const { data: logs, isLoading } = useAuditLogs(100);
 
+  const { data: orgs = [] } = useQuery({
+    queryKey: ['audit-orgs'],
+    queryFn: async () => {
+      const { data } = await supabase.from('organizations').select('id, name').order('name');
+      return data ?? [];
+    },
+  });
+
+  const orgName = (id: string) => (orgs as any[]).find((o) => o.id === id)?.name?.toLowerCase() ?? '';
+
   const filteredLogs = logs?.filter((log: any) => {
-    return log.action?.toLowerCase().includes(search.toLowerCase()) ||
-           log.profiles?.full_name?.toLowerCase().includes(search.toLowerCase()) ||
-           log.entity_type?.toLowerCase().includes(search.toLowerCase());
+    const term = search.toLowerCase();
+    const meta = log.metadata ? JSON.stringify(log.metadata).toLowerCase() : '';
+    const matchesSearch = !term ||
+      log.action?.toLowerCase().includes(term) ||
+      log.profiles?.full_name?.toLowerCase().includes(term) ||
+      log.entity_type?.toLowerCase().includes(term) ||
+      meta.includes(term);
+    // Filtro por cliente: acción sobre esa org (entity_id) o metadata referenciándola
+    const matchesOrg = orgFilter === 'all' ||
+      log.entity_id === orgFilter ||
+      log.metadata?.organization_id === orgFilter ||
+      (log.metadata?.org_name && String(log.metadata.org_name).toLowerCase() === orgName(orgFilter));
+    return matchesSearch && matchesOrg;
   }) || [];
 
   const getEntityBadge = (type: string) => {
@@ -56,12 +80,23 @@ export function AuditLogs() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por acción, usuario o tipo..."
+                placeholder="Buscar por acción, usuario, tipo o datos..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-10"
               />
             </div>
+            <Select value={orgFilter} onValueChange={setOrgFilter}>
+              <SelectTrigger className="w-full sm:w-64">
+                <SelectValue placeholder="Filtrar por cliente" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos los clientes</SelectItem>
+                {(orgs as any[]).map((o) => (
+                  <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>

@@ -95,7 +95,11 @@ export function SubscriptionsManager() {
   };
 
   const handleSendReminder = async (sub: any) => {
-    toast.success(`Recordatorio enviado para ${sub.organizations?.name}`);
+    // El envío automático de recordatorios de cobro aún no está implementado.
+    // No mostramos "éxito" para no dar un falso positivo (antes mentía).
+    toast.info('Recordatorio de cobro: aún no automatizado', {
+      description: `Por ahora contactá manualmente a ${sub.organizations?.name || 'el cliente'}.`,
+    });
   };
 
   const handleSuspend = async (sub: any) => {

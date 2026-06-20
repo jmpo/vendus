@@ -50,7 +50,7 @@ const menuItems = [
 
   { id: 'subscriptions', label: 'Suscripciones', icon: CreditCard },
   { id: 'billing', label: 'Facturación', icon: FileText },
-  { id: 'payments', label: 'Pagos (Cakto)', icon: Banknote },
+  { id: 'payments', label: 'Pagos', icon: Banknote },
   { id: 'whatsapp', label: 'WhatsApp / Evolution', icon: Smartphone },
   { id: 'sales-leads', label: 'Leads Comerciales', icon: Megaphone },
   { id: 'help', label: 'Centro de Ayuda', icon: HelpCircle },

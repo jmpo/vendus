@@ -142,17 +142,6 @@ export const integrationsCatalog: IntegrationCategory[] = [
     description: 'Gateways de pagamento e cobrança',
     items: [
       {
-        id: 'cakto',
-        name: 'Cakto',
-        description: 'Checkout, PIX, tarjeta e split (BR)',
-        icon: CreditCard,
-        color: 'bg-emerald-500/10 text-emerald-500',
-        configKey: 'cakto',
-        logoSrc: '/integrations/logos/cakto.svg',
-        keywords: ['cakto', 'checkout', 'pix', 'split', 'infoproduto'],
-        comingSoon: true,
-      },
-      {
         id: 'hotmart',
         name: 'Hotmart',
         description: 'Vendas, PIX, boletos, reembolsos e assinaturas',
@@ -161,17 +150,6 @@ export const integrationsCatalog: IntegrationCategory[] = [
         configKey: 'hotmart',
         logoSrc: '/integrations/logos/hotmart.png',
         keywords: ['hotmart', 'infoproduto', 'curso', 'postback', 'webhook', 'assinatura'],
-      },
-      {
-        id: 'doppus',
-        name: 'Doppus',
-        description: 'Vendas, PIX, tarjeta e assinaturas (BR)',
-        icon: CreditCard,
-        color: 'bg-orange-500/10 text-orange-500',
-        configKey: 'doppus',
-        logoSrc: '/integrations/logos/doppus.png',
-        keywords: ['doppus', 'infoproduto', 'postback', 'webhook', 'assinatura', 'pagamento'],
-        comingSoon: true,
       },
       {
         id: 'stripe',
