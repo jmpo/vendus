@@ -11,6 +11,8 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 interface FinancialPanelProps {
   productId: string;
@@ -27,9 +29,24 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
   const { data: dealsSummary } = useDealsSummary(productId, userId);
   const { data: pipelineSummary } = usePipelineFinancialSummary(productId, userId);
 
-  // Mock goal - na prática viria de user_product_assignments
-  const monthlyGoal = 50000;
-  const goalProgress = dealsSummary ? (dealsSummary.monthlyWon / monthlyGoal) * 100 : 0;
+  // Meta real desde user_product_assignments (no hardcodear). Si no hay meta, no mostramos %.
+  const { data: assignment } = useQuery({
+    queryKey: ['user-monthly-goal', userId, productId],
+    queryFn: async () => {
+      if (!userId || !productId) return null;
+      const { data } = await supabase
+        .from('user_product_assignments')
+        .select('monthly_goal')
+        .eq('user_id', userId)
+        .eq('product_id', productId)
+        .maybeSingle();
+      return data;
+    },
+    enabled: !!userId && !!productId,
+  });
+  const monthlyGoal = Number((assignment as any)?.monthly_goal) || 0;
+  const hasGoal = monthlyGoal > 0;
+  const goalProgress = hasGoal && dealsSummary ? (dealsSummary.monthlyWon / monthlyGoal) * 100 : 0;
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -104,13 +121,24 @@ export function FinancialPanel({ productId, productName }: FinancialPanelProps) 
             <Target className={cn("text-orange-500", isMobile ? "h-4 w-4" : "h-4 w-4")} />
           </CardHeader>
           <CardContent className={isMobile ? "p-4 pt-0" : ""}>
-            <div className={cn("font-bold", isMobile ? "text-xl" : "text-2xl")}>
-              {goalProgress.toFixed(0)}%
-            </div>
-            <Progress value={Math.min(goalProgress, 100)} className="mt-2 h-2" />
-            <p className="text-xs text-muted-foreground mt-1">
-              ₲ {(dealsSummary?.monthlyWon || 0).toLocaleString('es-PY')} / ₲ {monthlyGoal.toLocaleString('es-PY')}
-            </p>
+            {hasGoal ? (
+              <>
+                <div className={cn("font-bold", isMobile ? "text-xl" : "text-2xl")}>
+                  {goalProgress.toFixed(0)}%
+                </div>
+                <Progress value={Math.min(goalProgress, 100)} className="mt-2 h-2" />
+                <p className="text-xs text-muted-foreground mt-1">
+                  ₲ {(dealsSummary?.monthlyWon || 0).toLocaleString('es-PY')} / ₲ {monthlyGoal.toLocaleString('es-PY')}
+                </p>
+              </>
+            ) : (
+              <>
+                <div className={cn("font-bold", isMobile ? "text-xl" : "text-2xl")}>
+                  ₲ {(dealsSummary?.monthlyWon || 0).toLocaleString('es-PY')}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Vendido este mes · sin meta configurada</p>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
