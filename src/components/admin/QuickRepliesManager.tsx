@@ -42,10 +42,13 @@ export function QuickRepliesManager() {
     queryKey: ['quick-replies-admin', profile?.organization_id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
+      // El admin gestiona solo las COMPARTIDAS del equipo; las personales de cada
+      // vendedor (is_personal=true) quedan en su propio inbox.
       const { data, error } = await supabase
         .from('quick_replies')
         .select('*')
         .eq('organization_id', profile.organization_id)
+        .eq('is_personal', false)
         .order('category')
         .order('title');
       if (error) throw error;

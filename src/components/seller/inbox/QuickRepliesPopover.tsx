@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Search, MessageSquare, Plus, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { Search, MessageSquare, Plus, Loader2, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
@@ -13,7 +14,8 @@ import {
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 interface QuickReply {
   id: string;
@@ -21,6 +23,8 @@ interface QuickReply {
   title: string;
   content: string;
   shortcut: string | null;
+  is_personal?: boolean;
+  created_by?: string | null;
 }
 
 interface QuickRepliesPopoverProps {
@@ -39,18 +43,28 @@ export function QuickRepliesPopover({
   productName = 'nosso producto',
 }: QuickRepliesPopoverProps) {
   const { profile } = useAuth();
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
 
+  // Crear respuesta personal
+  const [showCreate, setShowCreate] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+  const [newContent, setNewContent] = useState('');
+  const [newShortcut, setNewShortcut] = useState('');
+  const [saving, setSaving] = useState(false);
+
   const { data: quickReplies = [], isLoading } = useQuery({
-    queryKey: ['quick-replies', profile?.organization_id],
+    queryKey: ['quick-replies', profile?.organization_id, profile?.id],
     queryFn: async () => {
       if (!profile?.organization_id) return [];
-      
+
+      // Compartidas del equipo (is_personal=false) + las personales del vendedor
       const { data, error } = await supabase
         .from('quick_replies')
         .select('*')
         .eq('organization_id', profile.organization_id)
         .eq('is_active', true)
+        .or(`is_personal.eq.false,created_by.eq.${profile.id}`)
         .order('category', { ascending: true })
         .order('title', { ascending: true });
 
@@ -59,6 +73,31 @@ export function QuickRepliesPopover({
     },
     enabled: !!profile?.organization_id && open,
   });
+
+  const handleCreate = async () => {
+    if (!profile?.organization_id || !newTitle.trim() || !newContent.trim()) return;
+    setSaving(true);
+    try {
+      const { error } = await supabase.from('quick_replies').insert({
+        organization_id: profile.organization_id,
+        created_by: profile.id,
+        is_personal: true,
+        category: 'Mías',
+        title: newTitle.trim(),
+        content: newContent.trim(),
+        shortcut: newShortcut.trim() || null,
+        is_active: true,
+      } as any);
+      if (error) throw error;
+      toast.success('Respuesta rápida creada');
+      setNewTitle(''); setNewContent(''); setNewShortcut(''); setShowCreate(false);
+      queryClient.invalidateQueries({ queryKey: ['quick-replies'] });
+    } catch (e: any) {
+      toast.error(e.message ?? 'No se pudo crear');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   // Filter by search
   const filteredReplies = quickReplies.filter(reply =>
@@ -147,11 +186,38 @@ export function QuickRepliesPopover({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px] p-0">
         <DialogHeader className="p-4 pb-0">
-          <DialogTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5 text-primary" />
-            Respuestas rápidas
+          <DialogTitle className="flex items-center justify-between gap-2">
+            <span className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5 text-primary" />
+              Respuestas rápidas
+            </span>
+            <Button variant={showCreate ? 'secondary' : 'outline'} size="sm" className="h-7 gap-1" onClick={() => setShowCreate((v) => !v)}>
+              {showCreate ? <X className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
+              {showCreate ? 'Cerrar' : 'Nueva'}
+            </Button>
           </DialogTitle>
         </DialogHeader>
+
+        {/* Crear respuesta personal */}
+        {showCreate && (
+          <div className="px-4 py-3 border-b bg-muted/20 space-y-2">
+            <Input placeholder="Título (ej: Saludo inicial)" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="h-8" />
+            <Textarea
+              placeholder="Mensaje… podés usar {{nombre}} y {{producto}}"
+              value={newContent}
+              onChange={(e) => setNewContent(e.target.value)}
+              rows={3}
+              className="text-sm"
+            />
+            <div className="flex items-center gap-2">
+              <Input placeholder="Atajo opcional (ej: /saludo)" value={newShortcut} onChange={(e) => setNewShortcut(e.target.value)} className="h-8 flex-1" />
+              <Button size="sm" className="h-8" onClick={handleCreate} disabled={saving || !newTitle.trim() || !newContent.trim()}>
+                {saving ? <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> : null} Guardar
+              </Button>
+            </div>
+            <p className="text-[11px] text-muted-foreground">Será personal (solo vos la verás), además de las del equipo.</p>
+          </div>
+        )}
 
         {/* Search */}
         <div className="px-4 py-3 border-b">
@@ -203,6 +269,9 @@ export function QuickRepliesPopover({
                                 <Badge variant="secondary" className="text-[10px] h-5">
                                   {reply.shortcut}
                                 </Badge>
+                              )}
+                              {reply.is_personal && (
+                                <Badge variant="outline" className="text-[10px] h-5">Mía</Badge>
                               )}
                             </div>
                             <p className="text-xs text-muted-foreground line-clamp-2">
