@@ -3,7 +3,7 @@ import {
   User, Phone, Mail, MapPin, Building,
   ExternalLink, Plus, Calendar, CalendarPlus, X,
   MessageCircle, Clock, DollarSign, Edit, Ban, Volume2,
-  Tag, Route, Sparkles, History, Info, Bot, Users2, Plug,
+  Tag, Route, Sparkles, History, Info, Bot, Users2, Plug, Package,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -36,6 +36,7 @@ import {
 import { useSetConversationSector } from '@/hooks/useWebChat';
 import { useSectors } from '@/hooks/useSectors';
 import { useLeadBooking } from '@/hooks/useLeadBooking';
+import { useConversationProduct } from '@/hooks/useConversationProduct';
 import { toast } from '@/hooks/use-toast';
 
 interface Lead {
@@ -136,6 +137,7 @@ export function LeadContextPanel({
   // Lead tags (only if a lead is linked)
   const { data: leadTagAssignments = [] } = useLeadTagsForLead(lead?.id || undefined);
   const { data: leadBookings = [] } = useLeadBooking(lead?.id, displayPhone);
+  const { products: convProducts, current: convProduct, reassign: reassignProduct } = useConversationProduct(conversationId, lead?.id);
   const leadTags = leadTagAssignments.map((a) => a.tag).filter(Boolean);
 
   return (
@@ -330,6 +332,31 @@ export function LeadContextPanel({
                     </p>
                     <p className="text-xs font-medium truncate">{currentAgent.name} · IA</p>
                   </div>
+                </div>
+              )}
+
+              {/* Producto / línea (corrección manual si la IA clasificó mal) */}
+              {(convProducts.data?.length ?? 0) > 0 && (
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                    <Package className="h-3 w-3" /> Producto / línea
+                  </Label>
+                  <Select
+                    value={convProduct.data ?? 'none'}
+                    onValueChange={(val) => { if (val !== 'none') reassignProduct.mutate(val); }}
+                    disabled={reassignProduct.isPending}
+                  >
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue placeholder="Sin producto" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none" disabled>Sin producto</SelectItem>
+                      {(convProducts.data ?? []).map((p: any) => (
+                        <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-[10px] text-muted-foreground">Cambialo si la IA asignó mal — pasa la conversación al especialista correcto.</p>
                 </div>
               )}
 
