@@ -1,6 +1,7 @@
 // Hotmart Postback (Webhook) — público, valida hottok por organización
 // Mapeia eventos da Hotmart para nuestra engine de tag automations
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
+import { provisionFromHotmartOrder, suspendPlatformPlanHotmart } from '../_shared/hotmart-plan-provisioning.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -56,6 +57,55 @@ Deno.serve(async (req) => {
     const url = new URL(req.url);
     const orgId = url.searchParams.get('org');
     const hottokParam = url.searchParams.get('hottok') ?? req.headers.get('x-hotmart-hottok');
+
+    // ── BILLING DE PLATAFORMA (venta del CRM por Hotmart) ──────────────────────
+    // ?scope=platform → no es la venta de un cliente, es alguien comprando el CRM.
+    // Crea/activa la organización + usuario admin según el plan mapeado.
+    if (url.searchParams.get('scope') === 'platform') {
+      const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+      const { data: pcred } = await admin
+        .from('hotmart_credentials')
+        .select('hottok')
+        .is('organization_id', null)
+        .eq('is_active', true)
+        .limit(1)
+        .maybeSingle();
+      const payloadP = await req.json().catch(() => null);
+      if (!payloadP) return json({ error: 'invalid json' }, 400);
+      const incoming = hottokParam ?? payloadP.hottok ?? payloadP.data?.hottok;
+      if (pcred?.hottok && pcred.hottok !== incoming) {
+        console.warn('[hotmart-webhook] platform: invalid hottok');
+        return json({ error: 'invalid hottok' }, 401);
+      }
+      const evt: string = payloadP.event ?? payloadP.type ?? 'UNKNOWN';
+      const dataP = payloadP.data ?? payloadP;
+      const purchaseP = dataP.purchase ?? dataP;
+      const buyerP = dataP.buyer ?? purchaseP.buyer ?? {};
+      const productP = dataP.product ?? purchaseP.product ?? {};
+      const subP = dataP.subscription ?? purchaseP.subscription ?? null;
+      const rawStatusP = (purchaseP.status ?? dataP.status ?? '').toString().toUpperCase();
+      const statusP = STATUS_MAP[rawStatusP] ?? STATUS_MAP[String(evt).replace('PURCHASE_', '')] ?? 'pending';
+      const order = {
+        hotmart_transaction_id: String(purchaseP.transaction ?? purchaseP.id ?? dataP.transaction ?? ''),
+        hotmart_subscription_code: subP?.subscriber?.code ?? subP?.code ?? null,
+        customer_email: buyerP.email ?? null,
+        customer_name: buyerP.name ?? null,
+        customer_phone: normalizePhone(buyerP.phone ?? buyerP.checkout_phone ?? null),
+        amount: Number(purchaseP.price?.value ?? dataP.amount ?? 0),
+        status: statusP,
+        hotmart_product_id: String(productP.id ?? productP.ucode ?? ''),
+        product_name: productP.name ?? null,
+      };
+      const isCancel = statusP === 'refunded' || statusP === 'chargeback' || statusP === 'cancelled' || String(evt).toUpperCase().includes('CANCELLATION');
+      if (isCancel) {
+        const r = await suspendPlatformPlanHotmart(admin, order.customer_email ?? '');
+        console.log('[hotmart-webhook] platform suspend', JSON.stringify(r));
+        return json({ ok: true, scope: 'platform', action: 'suspend', result: r });
+      }
+      const r = await provisionFromHotmartOrder(admin, order);
+      console.log('[hotmart-webhook] platform provision', JSON.stringify({ ok: r.ok, org: r.organization_id, skipped: r.skipped, errors: r.errors }));
+      return json({ ok: r.ok, scope: 'platform', result: r });
+    }
 
     if (!orgId) return json({ error: 'org query param required' }, 400);
 

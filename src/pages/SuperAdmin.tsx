@@ -18,7 +18,7 @@ import { PlatformAIUsageDashboard } from '@/components/superadmin/PlatformAIUsag
 
 
 
-import { CaktoSuperAdminPanel } from '@/components/superadmin/payments/CaktoSuperAdminPanel';
+import { HotmartSuperAdminPanel } from '@/components/superadmin/payments/HotmartSuperAdminPanel';
 import { HelpManager } from '@/components/superadmin/HelpManager';
 import { ReleasesManager } from '@/components/superadmin/ReleasesManager';
 import { SupportTickets } from '@/components/admin/support/SupportTickets';
@@ -66,7 +66,7 @@ export default function SuperAdmin() {
       case 'billing':
         return <BillingManager />;
       case 'payments':
-        return <CaktoSuperAdminPanel />;
+        return <HotmartSuperAdminPanel />;
       case 'branding':
         return <PlatformSettings />;
       case 'email':
