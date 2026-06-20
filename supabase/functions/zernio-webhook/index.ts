@@ -235,14 +235,18 @@ async function handleInbound(sb: any, conn: any, payload: any) {
 // Estado de plantillas (aprobada/rechazada) → notifica al equipo.
 // La primera plantilla aprobada de la org recibe una notificación especial de felicitación.
 async function handleTemplateStatus(sb: any, conn: any, payload: any) {
+  // Log del payload crudo para poder afinar (la doc de Zernio no lo documenta).
+  console.log('[zernio-webhook] template.status payload:', JSON.stringify(payload).slice(0, 800));
+
   const t = payload?.template ?? payload?.data ?? payload?.message_template ?? payload ?? {};
-  const rawStatus = String(t.status ?? t.event ?? payload?.status ?? '').toUpperCase();
-  const name = t.name ?? t.template_name ?? t.templateName ?? t.display_name ?? 'tu plantilla';
+  const name = t.name ?? t.template_name ?? t.templateName ?? t.display_name ?? payload?.name ?? 'tu plantilla';
   const reason = t.rejected_reason ?? t.reason ?? t.rejection_reason ?? null;
 
+  // Detección robusta del estado: escanea todo el payload (shape no documentado por Zernio).
+  const blob = JSON.stringify(payload ?? {}).toUpperCase();
   let approved: boolean | null = null;
-  if (rawStatus.includes('APPROV')) approved = true;
-  else if (rawStatus.includes('REJECT') || rawStatus.includes('DECLIN')) approved = false;
+  if (/APPROVED/.test(blob)) approved = true;
+  else if (/REJECTED|DECLINED/.test(blob)) approved = false;
   if (approved === null) return; // PENDING u otro → no notificamos
 
   // ¿Es la PRIMERA plantilla aprobada de esta organización?
@@ -274,14 +278,14 @@ async function handleTemplateStatus(sb: any, conn: any, payload: any) {
     : `La plantilla "${name}" fue rechazada por Meta${reason ? `: ${reason}` : ''}. Editala y reenviala a revisión.`;
 
   const rows = Array.from(recipients).map((uid) => ({
-    organization_id: conn.organization_id,
     user_id: uid,
     title,
     message,
     type: 'opportunity' as any,
     metadata: { kind: 'template_status', template: name, approved, first: isFirst, source: 'zernio' },
   }));
-  await sb.from('notifications').insert(rows);
+  const { error: notifErr } = await sb.from('notifications').insert(rows);
+  if (notifErr) console.error('[zernio-webhook] notification insert failed', notifErr);
 }
 
 function bytesToBase64(bytes: Uint8Array): string {

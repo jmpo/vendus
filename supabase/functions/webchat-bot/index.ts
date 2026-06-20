@@ -161,7 +161,6 @@ async function escalateToHuman(
         .eq('profiles.organization_id', organizationId);
       (admins || []).forEach((a: any) => a.user_id && recipients.add(a.user_id));
       const rows = Array.from(recipients).map((uid) => ({
-        organization_id: organizationId,
         user_id: uid,
         title: '🔴 Cliente necesita atención humana',
         message: `La IA derivó una conversación a la fila${reason ? `: ${reason}` : ''}. Tomala desde el inbox (pestaña "En Fila").`,
@@ -169,7 +168,10 @@ async function escalateToHuman(
         product_id: productId || null,
         metadata: { conversation_id: conversationId, reason: reason || null, source },
       }));
-      if (rows.length > 0) await supabase.from('notifications').insert(rows);
+      if (rows.length > 0) {
+        const { error: notifErr } = await supabase.from('notifications').insert(rows);
+        if (notifErr) console.error('[webchat-bot] handoff notification insert failed:', notifErr);
+      }
     } catch (notifErr) {
       console.warn('[webchat-bot] handoff notify failed:', notifErr);
     }

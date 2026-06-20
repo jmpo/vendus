@@ -7,6 +7,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { recordLovableUsage } from "../_shared/ai-router.ts";
+import { sendWhatsAppForConversation } from "../_shared/whatsapp-router.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -110,20 +111,24 @@ async function deliverViaChannel(
     return;
   }
 
-  // 3) For WhatsApp: deliver through evolution-send (works for Evolution Go).
-  //    For other providers we rely on existing inbound→bot pipelines; the
-  //    saved message still appears in the unified Inbox.
+  // 3) WhatsApp: entregá por la conexión REAL de la conversa (Evolution/Meta/Zernio) vía router.
   if (channel === "whatsapp" && conv.visitor_phone) {
     try {
-      await supabase.functions.invoke("evolution-send", {
-        body: {
+      await sendWhatsAppForConversation({
+        supabase,
+        conversation: {
+          id: conv.id,
           organization_id: conv.organization_id,
-          number: conv.visitor_phone,
-          text,
+          meta_connection_id: (conv as any).meta_connection_id ?? null,
+          evolution_instance_id: (conv as any).evolution_instance_id ?? null,
+          zernio_connection_id: (conv as any).zernio_connection_id ?? null,
+          visitor_phone: conv.visitor_phone,
         },
+        to: conv.visitor_phone,
+        text,
       });
     } catch (e) {
-      console.warn("[handoff-greeter] evolution-send failed (non-fatal):", e);
+      console.warn("[handoff-greeter] router send failed (non-fatal):", e);
     }
   }
 }
@@ -189,7 +194,7 @@ serve(async (req) => {
     // Re-load conversation (it may have changed during the wait)
     const { data: conv } = await supabase
       .from("webchat_conversations")
-      .select("id, organization_id, channel, visitor_phone, lead_id, current_agent_id")
+      .select("id, organization_id, channel, visitor_phone, lead_id, current_agent_id, meta_connection_id, evolution_instance_id, zernio_connection_id")
       .eq("id", body.conversation_id)
       .maybeSingle();
 
