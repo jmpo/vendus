@@ -2691,7 +2691,7 @@ Tenemos estos disponibles 👇
         const _hoy = new Date();
         const _hoyLabel = _hoy.toLocaleDateString('es-PY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         const _hoyISO = _hoy.toISOString().split('T')[0];
-        systemPrompt += `\n\n📆 HOY ES: ${_hoyLabel}. Si el cliente pide un día de la semana (ej.: "el lunes", "el viernes"), pasá ese día en el parámetro target_weekday de check_available_slots — el sistema calcula la fecha exacta y te devuelve solo los horarios de ESE día. Si el cliente NO especifica un día, no pases target_weekday.
+        systemPrompt += `\n\n📆 HOY ES: ${_hoyLabel}. Si el cliente pide UN día de la semana (ej.: "el lunes"), pasalo en target_weekday de check_available_slots. Si pide VARIOS días (ej.: "lunes y martes", "el finde"), pasalos TODOS en target_weekdays (array) en UNA sola llamada — el sistema devuelve la disponibilidad de cada día y vos los presentás TODOS. Si el cliente NO especifica día, no pases ninguno.
 
 📅 AGENDAMIENTO (seguí el orden — NO te saltes pasos):
 Tenés 2 herramientas:
@@ -2759,12 +2759,13 @@ ${leadDataPrompt}
           type: "function",
           function: {
             name: "check_available_slots",
-            description: "Consultar horarios disponibles en los próximos días. SIEMPRE llamá antes de sugerir reserva. Retorna 2 sugerencias estratégicas (mañana e tarde).",
+            description: "Consultar horarios disponibles. SIEMPRE llamá antes de sugerir reserva. Si el cliente pide UN día usá target_weekday; si pide VARIOS días (ej. 'lunes y martes') usá target_weekdays con TODOS — devuelve la disponibilidad de cada día.",
             parameters: {
               type: "object",
               properties: {
                 days_ahead: { type: "number", description: "Cuántos días hacia adelante verificar (por defecto 7, máximo 14)." },
-                target_weekday: { type: "string", enum: ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"], description: "Si el cliente pide un día de la semana (ej.: 'el lunes', 'el viernes'), pasá el nombre del día acá en minúsculas. El sistema calcula la próxima fecha de ese día y devuelve SOLO horarios de ese día." }
+                target_weekday: { type: "string", enum: ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"], description: "Si el cliente pide UN día de la semana (ej.: 'el lunes'), pasá el nombre acá en minúsculas." },
+                target_weekdays: { type: "array", items: { type: "string", enum: ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"] }, description: "Si el cliente pide VARIOS días (ej.: 'lunes y martes', 'el finde'), pasá TODOS los nombres acá. El sistema devuelve la disponibilidad de cada uno." }
               },
               required: []
             }
@@ -3815,19 +3816,26 @@ REGRAS DE USO:
               try {
                 const args = JSON.parse(toolCall.function.arguments);
                 let daysAhead = Math.min(args.days_ahead || 7, 14);
-                // El modelo pasa el NOMBRE del día; el código calcula la próxima fecha (más confiable)
-                let targetDate: string | null = null;
+                // El modelo pasa el/los NOMBRE(s) del día; el código calcula las próximas fechas.
                 const _wdMap: Record<string, number> = { 'domingo': 0, 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, 'jueves': 4, 'viernes': 5, 'sábado': 6, 'sabado': 6 };
-                const _wd = typeof args.target_weekday === 'string' ? _wdMap[args.target_weekday.toLowerCase().trim()] : undefined;
-                if (_wd !== undefined) {
+                // Unificamos target_weekday (uno) + target_weekdays (varios) en un set de fechas.
+                const _requestedDayNames: string[] = [];
+                if (typeof args.target_weekday === 'string') _requestedDayNames.push(args.target_weekday);
+                if (Array.isArray(args.target_weekdays)) for (const d of args.target_weekdays) if (typeof d === 'string') _requestedDayNames.push(d);
+                const targetDates = new Set<string>();
+                for (const name of _requestedDayNames) {
+                  const _wd = _wdMap[name.toLowerCase().trim()];
+                  if (_wd === undefined) continue;
                   const _t = new Date();
                   for (let i = 1; i <= 14; i++) {
                     const _c = new Date(_t); _c.setDate(_t.getDate() + i);
-                    if (_c.getDay() === _wd) { targetDate = _c.toISOString().split('T')[0]; break; }
+                    if (_c.getDay() === _wd) { targetDates.add(_c.toISOString().split('T')[0]); break; }
                   }
-                  daysAhead = 14; // asegurar alcanzar el día pedido
                 }
-                console.log('[webchat-bot] Checking available slots for next', daysAhead, 'days');
+                // back-compat: targetDate = primera fecha pedida (si hay una sola) o null.
+                const targetDate: string | null = targetDates.size === 1 ? [...targetDates][0] : null;
+                if (targetDates.size > 0) daysAhead = 14; // asegurar alcanzar los días pedidos
+                console.log('[webchat-bot] Checking available slots — requested days:', [...targetDates], 'daysAhead', daysAhead);
 
                 // ============================================================
                 // FIX 2 — GUARD: block redundant check_available_slots if we
@@ -3947,8 +3955,8 @@ REGRAS DE USO:
                     const checkDate = new Date(today);
                     checkDate.setDate(today.getDate() + d);
                     const dateStr = checkDate.toISOString().split('T')[0];
-                    // Si el cliente pidió un día puntual, procesá SOLO ese día
-                    if (targetDate && dateStr !== targetDate) continue;
+                    // Si el cliente pidió día(s) puntual(es), procesá SOLO esos días
+                    if (targetDates.size > 0 && !targetDates.has(dateStr)) continue;
                     const dayOfWeek = checkDate.getDay();
 
                     // Skip if today and already past business hours
@@ -4070,8 +4078,18 @@ REGRAS DE USO:
                   const isSplitDay = _primaryRanges.length > 1; // horario cortado (ej. mañana + tarde)
                   const wideDay = sameDaySlots.length >= 4; // hay mucha disponibilidad ese día
 
+                  // El cliente pidió EXPLÍCITAMENTE varios días (ej. "lunes y martes").
+                  const multiDayRequested = targetDates.size >= 2;
+                  const orderedTargetDates = [...targetDates].sort();
+
                   let suggestions: typeof allSlots = [];
-                  if (isSingleDay) {
+                  if (multiDayRequested) {
+                    // Para CADA día pedido, 2 horarios repartidos (así no se "cuelga" ningún día).
+                    for (const dt of orderedTargetDates) {
+                      const daySlots = availSlots.filter(s => s.date === dt);
+                      suggestions.push(...pickSpread(daySlots, 2));
+                    }
+                  } else if (isSingleDay) {
                     // Un solo día → ofrecer 3 horarios bien repartidos (mañana/mediodía/tarde).
                     suggestions = pickSpread(sameDaySlots, 3);
                   } else {
@@ -4112,7 +4130,20 @@ REGRAS DE USO:
                     // Comunicar la AMPLITUD real: si el día tiene mucha disponibilidad, el agente
                     // debe aclarar el rango y que el cliente puede elegir CUALQUIER horario dentro,
                     // no solo los ejemplos (evita la sensación de "solo hay 08:00 y 12:00").
-                    if (isSingleDay && wideDay && rangesTxt) {
+                    if (multiDayRequested) {
+                      // Desglose POR DÍA — el agente DEBE presentar TODOS los días pedidos.
+                      slotsInfo += `\n\n🟢 DISPONIBILIDAD POR DÍA (presentá TODOS, no te olvides de ninguno):`;
+                      for (const dt of orderedTargetDates) {
+                        const _dl = availSlots.find(s => s.date === dt)?.dateLabel
+                          || new Date(`${dt}T12:00:00`).toLocaleDateString('es-PY', { weekday: 'long', day: 'numeric', month: 'long' });
+                        const _rngs = dayRangesByDate[dt] || [];
+                        const _txt = _rngs.length
+                          ? `atiendo de ${_rngs.map(r => `${String(r.start).slice(0, 5)} a ${String(r.end).slice(0, 5)}`).join(' y de ')}${_rngs.length > 1 ? ' (horario cortado: NO ofrezcas el intervalo del medio)' : ''}`
+                          : 'SIN disponibilidad ese día';
+                        slotsInfo += `\n- ${_dl}: ${_txt}`;
+                      }
+                      slotsInfo += `\n\nDecile el rango de CADA día y preguntá qué día y horario prefiere. Puede elegir cualquier horario dentro de esos bloques.`;
+                    } else if (isSingleDay && wideDay && rangesTxt) {
                       const _dl = sameDaySlots[0]?.dateLabel || '';
                       slotsInfo += `\n\n🟢 DISPONIBILIDAD: ${_dl} atiendo de ${rangesTxt}.${isSplitDay ? ' ⚠️ Es horario CORTADO: NO ofrezcas ni aceptes horarios en el intervalo del corte (ej. mediodía); solo dentro de esos bloques.' : ''} Las opciones de arriba son solo EJEMPLOS. Decile el rango y que puede elegir cualquier horario DENTRO de esos bloques; si propone una hora concreta dentro, tomala directamente. NO le hagas sentir que solo hay 2-3 horarios.`;
                     }
@@ -4125,7 +4156,7 @@ REGRAS DE USO:
                     // We only want a clean "present these slots and ask which one" reply.
                     const slimAgentName = activeAgent?.name || 'Assistente';
                     const slimAgentPersona = activeAgent?.personality || 'consultivo, claro e cordial';
-                    const slimFollowUpSystem = `Vos sos ${slimAgentName}. Tom: ${slimAgentPersona}.\n\nPresentá la disponibilidad de forma natural y corta (máximo 2 líneas) y preguntá qué horario prefiere el cliente. Si la info indica DISPONIBILIDAD AMPLIA, mencioná el RANGO (ej.: "el lunes tengo disponible de 08:00 a 17:30, ¿a qué hora te queda mejor?") en vez de aparentar que solo hay 2-3 horarios; igual podés sugerir 1-2 ejemplos. Si no, ofrecé los horarios encontrados. RESPETÁ el día que pidió el cliente. Aceptá cualquier hora que el cliente proponga DENTRO del rango/horarios disponibles. NUNCA preguntes el email de nuevo. NUNCA digas "dejame ver la agenda" — acabás de verla. NUNCA inventes horarios fuera de la disponibilidad real.`;
+                    const slimFollowUpSystem = `Vos sos ${slimAgentName}. Tom: ${slimAgentPersona}.\n\nPresentá la disponibilidad de forma natural y corta y preguntá qué horario prefiere el cliente. ⚠️ Si la info trae DISPONIBILIDAD POR DÍA (varios días), presentá TODOS los días pedidos con su rango (NO te olvides de ninguno). Si es un solo día con DISPONIBILIDAD AMPLIA, mencioná el RANGO (ej.: "el lunes de 08:00 a 17:30, ¿a qué hora te queda?") en vez de aparentar que solo hay 2-3 horarios; igual podés sugerir 1-2 ejemplos. RESPETÁ el/los día(s) que pidió el cliente. Aceptá cualquier hora que el cliente proponga DENTRO del rango/horarios disponibles. NUNCA preguntes el email de nuevo. NUNCA digas "dejame ver la agenda" — acabás de verla. NUNCA inventes horarios fuera de la disponibilidad real.`;
 
                     // Make a follow-up call to the AI with the slot info
                     const followUpResponse = await fetch(aiConfig.endpoint, {
@@ -4346,7 +4377,7 @@ REGRAS DE USO:
                           booking_event_type_id: eventType.id,
                           guest_name: args.guest_name,
                           guest_email: args.guest_email,
-                          guest_phone: args.guest_phone || null,
+                          guest_phone: args.guest_phone || leadContext?.phone || body.visitor_phone || null,
                           source: 'webchat-bot',
                         },
                       })
@@ -4617,10 +4648,15 @@ REGRAS DE USO:
                     const formattedDate = startTime.toLocaleDateString('es-PY', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Sao_Paulo' });
                     const formattedTime = startTime.toLocaleTimeString('es-PY', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/Sao_Paulo' });
                     
-                    if (emailSent) {
+                    if (!args.guest_email) {
+                      // CRM WhatsApp-first: sin email es el flujo normal. Confirmamos por WhatsApp,
+                      // SIN mencionar nada de email (no es un error ni una falta).
+                      responseContent = `✅ ¡Reunión agendada con éxito!\n\n📅 ${formattedDate} a las ${formattedTime}\n\nTe espero. ¿Te puedo ayudar con algo más?`;
+                    } else if (emailSent) {
                       responseContent = `✅ ¡Reunión agendada con éxito!\n\n📅 ${formattedDate} a las ${formattedTime}\n📧 Confirmación enviada a ${args.guest_email}\n\n¿Te puedo ayudar con algo más?`;
                     } else {
-                      responseContent = `✅ Reunión agendada con éxito!\n\n📅 ${formattedDate} a las ${formattedTime}\n\n⚠️ Tuve un problema al enviar el email automático a ${args.guest_email}. Nuestro equipo te va a enviar la confirmación manualmente en instantes.`;
+                      // Había email pero el envío falló → confirmamos igual y avisamos al equipo.
+                      responseContent = `✅ ¡Reunión agendada con éxito!\n\n📅 ${formattedDate} a las ${formattedTime}\n\nTe va a llegar la confirmación en instantes. ¿Te puedo ayudar con algo más?`;
                       // Notify internal team
                       try {
                         await supabase.from('notifications').insert({

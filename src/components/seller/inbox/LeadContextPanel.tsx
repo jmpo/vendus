@@ -135,7 +135,7 @@ export function LeadContextPanel({
 
   // Lead tags (only if a lead is linked)
   const { data: leadTagAssignments = [] } = useLeadTagsForLead(lead?.id || undefined);
-  const { data: leadBookings = [] } = useLeadBooking(lead?.id);
+  const { data: leadBookings = [] } = useLeadBooking(lead?.id, displayPhone);
   const leadTags = leadTagAssignments.map((a) => a.tag).filter(Boolean);
 
   return (
@@ -436,7 +436,7 @@ export function LeadContextPanel({
                   <Separator />
                   <div className="space-y-2">
                     <h5 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                      <Calendar className="h-3 w-3" /> Cita agendada
+                      <Calendar className="h-3 w-3" /> {leadBookings.length > 1 ? 'Citas agendadas' : 'Cita agendada'}
                     </h5>
                     {leadBookings.map((b) => (
                       <div key={b.id} className="rounded-lg border border-primary/30 bg-primary/5 p-2.5 space-y-1">
