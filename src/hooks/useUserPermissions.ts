@@ -21,27 +21,29 @@ export interface UserPermissions {
   allow_connection_actions: boolean;
   view_unassigned_sector_tickets: boolean;
   view_ai_agents_tab: boolean;
+  allow_campaigns: boolean;
   view_schedules_mode: 'all' | 'mine_only';
 }
 
 export type PermissionKey = keyof Omit<UserPermissions, 'id' | 'user_id' | 'organization_id' | 'view_schedules_mode'>;
 
 export const PERMISSION_LABELS: Record<PermissionKey, { label: string; category: string }> = {
-  view_queue_conversations: { label: 'Ver fila de atendimento (meus setores)', category: 'Atendimento' },
-  view_unassigned_sector_tickets: { label: 'Ver tickets sem setor definido', category: 'Atendimento' },
-  view_other_users_conversations: { label: 'Ver conversas de outros vendedores nos meus setores', category: 'Atendimento' },
-  view_other_queues_conversations: { label: 'Ver conversas de setores que não participo (supervisor)', category: 'Atendimento' },
-  view_ai_agents_tab: { label: 'Ver aba "Agentes" (conversas com IA) no Inbox', category: 'Atendimento' },
-  allow_close_pending_tickets: { label: 'Permitir encerrar tickets pendentes em massa', category: 'Atendimento' },
-  view_all_contacts: { label: 'Ver todos os contatos', category: 'CRM' },
+  view_queue_conversations: { label: 'Ver fila de atención (mis sectores)', category: 'Atención' },
+  view_unassigned_sector_tickets: { label: 'Ver tickets sin sector definido', category: 'Atención' },
+  view_other_users_conversations: { label: 'Ver conversaciones de otros vendedores en mis sectores', category: 'Atención' },
+  view_other_queues_conversations: { label: 'Ver conversaciones de sectores que no participo (supervisor)', category: 'Atención' },
+  view_ai_agents_tab: { label: 'Ver pestaña "Agentes" (conversaciones con IA) en el Inbox', category: 'Atención' },
+  allow_close_pending_tickets: { label: 'Permitir cerrar tickets pendientes en masa', category: 'Atención' },
+  view_all_contacts: { label: 'Ver todos los contactos', category: 'CRM' },
   allow_pipeline: { label: 'Permitir Pipeline', category: 'CRM' },
-  allow_manage_client_portfolio: { label: 'Gerenciar carteira de clientes', category: 'CRM' },
-  view_all_kanban_cards: { label: 'Ver todos os cards do Kanban', category: 'CRM' },
-  view_all_schedules: { label: 'Ver todos os agendamentos', category: 'Calendário' },
-  allow_dashboard: { label: 'Ver Dashboard', category: 'Painéis' },
-  allow_inbox_panel: { label: 'Ver Painel de Atendimentos', category: 'Painéis' },
-  allow_groups: { label: 'Permitir Grupos', category: 'Organização' },
-  allow_connection_actions: { label: 'Permitir ações nas conexões', category: 'Organização' },
+  allow_manage_client_portfolio: { label: 'Gestionar cartera de clientes', category: 'CRM' },
+  view_all_kanban_cards: { label: 'Ver todos los cards del Kanban', category: 'CRM' },
+  view_all_schedules: { label: 'Ver todas las reservas', category: 'Calendario' },
+  allow_dashboard: { label: 'Ver Dashboard', category: 'Paneles' },
+  allow_inbox_panel: { label: 'Ver Panel de Atenciones', category: 'Paneles' },
+  allow_groups: { label: 'Permitir Grupos', category: 'Organización' },
+  allow_connection_actions: { label: 'Permitir acciones en conexiones', category: 'Organización' },
+  allow_campaigns: { label: 'Crear y enviar Campañas Inteligentes (solo a sus leads)', category: 'Marketing' },
 };
 
 export function useMyPermissions() {

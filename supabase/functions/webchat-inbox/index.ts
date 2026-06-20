@@ -736,6 +736,21 @@ serve(async (req) => {
               .eq('id', message.id);
           } else {
             console.log(`[webchat-inbox] Sent via ${sendRes.provider} (conv=${conversation.id})`);
+            // Marca la fila ÚNICA con proveedor + id + estado, para que el webhook de
+            // entrega (message.delivered/read) la encuentre por metadata.zernio_message_id.
+            const baseMeta = (insertData.metadata as Record<string, unknown>) || {};
+            await supabase
+              .from('webchat_messages')
+              .update({
+                delivery_status: 'sent',
+                metadata: {
+                  ...baseMeta,
+                  provider: sendRes.provider,
+                  ...(sendRes.message_id ? { zernio_message_id: sendRes.message_id } : {}),
+                  sent_at: new Date().toISOString(),
+                },
+              })
+              .eq('id', message.id);
           }
         } catch (sendError) {
           console.error('[webchat-inbox] WhatsApp send error (non-fatal):', sendError);

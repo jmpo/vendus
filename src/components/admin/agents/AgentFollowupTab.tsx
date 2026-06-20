@@ -20,9 +20,9 @@ const MAX_ATTEMPTS = 5;
 const DEFAULT_INTERVALS = [15, 120, 1440, 2880, 4320]; // min
 
 const TONE_OPTIONS = [
-  { value: 'short',        label: 'Curto e direto',           hint: '"Ainda aí? Posso continuar?"' },
-  { value: 'warm',         label: 'Caloroso e consultivo',     hint: '"Oi {nome}, tudo bem? Ficou alguma dúvida?"' },
-  { value: 'provocative',  label: 'Provocativo / quebra de objeção', hint: '"Se preço for o tema, consigo te mostrar o ROI rapidinho."' },
+  { value: 'short',        label: 'Corto y directo',           hint: '"¿Seguís ahí? ¿Puedo continuar?"' },
+  { value: 'warm',         label: 'Cálido y consultivo',       hint: '"Hola {nome}, ¿todo bien? ¿Te quedó alguna duda?"' },
+  { value: 'provocative',  label: 'Provocativo / rompe la objeción', hint: '"Si el precio es el tema, te muestro el ROI rapidito."' },
 ] as const;
 
 const CHANNELS = [
@@ -96,8 +96,8 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
           <div>
             <Label className="text-base">Follow-up automático contextual</Label>
             <p className="text-sm text-muted-foreground mt-1">
-              Quando o lead "some" no meio da conversa, o agente envia uma retomada gerada por IA
-              com o contexto real, citando o nome e o assunto. Tom natural, sem cara de robô.
+              Cuando el lead "desaparece" en medio de la conversación, el agente envía un seguimiento generado por IA
+              con el contexto real, citando el nombre y el tema. Tono natural, sin cara de robot.
             </p>
           </div>
         </div>
@@ -109,16 +109,16 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
 
       {enabled && (
         <>
-          {/* Tentativas + intervalos */}
+          {/* Intentos + intervalos */}
           <Card className="p-4 space-y-4">
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-primary" />
-              <Label className="text-sm font-semibold">Tentativas e intervalos</Label>
+              <Label className="text-sm font-semibold">Intentos e intervalos</Label>
             </div>
 
             <div className="grid grid-cols-2 gap-3 items-end">
               <div className="space-y-1">
-                <Label className="text-xs">Quantas tentativas?</Label>
+                <Label className="text-xs">¿Cuántos intentos?</Label>
                 <Select
                   value={String(maxAttempts)}
                   onValueChange={(v) => setMaxAttempts(parseInt(v, 10))}
@@ -126,22 +126,22 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {[1, 2, 3, 4, 5].map((n) => (
-                      <SelectItem key={n} value={String(n)}>{n} tentativa{n > 1 ? 's' : ''}</SelectItem>
+                      <SelectItem key={n} value={String(n)}>{n} intento{n > 1 ? 's' : ''}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <p className="text-xs text-muted-foreground">
-                Após esgotar, o lead sai da régua automática.
+                Al agotarse, el lead sale de la secuencia automática.
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs">Quanto tempo após o silêncio do lead?</Label>
+              <Label className="text-xs">¿Cuánto tiempo después del silencio del lead?</Label>
               {Array.from({ length: maxAttempts }).map((_, i) => (
                 <div key={i} className="grid grid-cols-[80px_1fr_90px] gap-2 items-center">
                   <span className="text-sm font-medium">
-                    {i + 1}ª {i === 0 ? '➜' : '➜'}
+                    {i + 1}º {i === 0 ? '➜' : '➜'}
                   </span>
                   <Input
                     type="number"
@@ -155,16 +155,16 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
                 </div>
               ))}
               <p className="text-[11px] text-muted-foreground">
-                Os intervalos contam a partir da última mensagem do agente sem resposta.
+                Los intervalos cuentan desde el último mensaje del agente sin respuesta.
               </p>
             </div>
           </Card>
 
-          {/* Tom */}
+          {/* Tono */}
           <Card className="p-4 space-y-3">
             <div className="flex items-center gap-2">
               <MessageSquare className="h-4 w-4 text-primary" />
-              <Label className="text-sm font-semibold">Tom da retomada</Label>
+              <Label className="text-sm font-semibold">Tono del seguimiento</Label>
             </div>
             <div className="grid gap-2">
               {TONE_OPTIONS.map((opt) => (
@@ -189,23 +189,23 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
             </div>
           </Card>
 
-          {/* Dicas por tentativa */}
+          {/* Intención por intento */}
           <Card className="p-4 space-y-3">
             <div className="flex items-center gap-2">
               <Lightbulb className="h-4 w-4 text-primary" />
-              <Label className="text-sm font-semibold">Intenção de cada tentativa (opcional)</Label>
+              <Label className="text-sm font-semibold">Intención de cada intento (opcional)</Label>
             </div>
             <p className="text-xs text-muted-foreground">
-              A IA escreve a mensagem do zero usando o contexto. Aqui você só guia a intenção.
-              Ex: "checar dúvida residual", "oferecer prova social", "oferecer ligação".
+              La IA escribe el mensaje desde cero usando el contexto. Acá solo guiás la intención.
+              Ej: "chequear duda residual", "ofrecer prueba social", "ofrecer llamada".
             </p>
             {Array.from({ length: maxAttempts }).map((_, i) => {
               const attempt = i + 1;
               return (
                 <div key={attempt} className="grid grid-cols-[60px_1fr] gap-2 items-center">
-                  <span className="text-sm font-medium">{attempt}ª</span>
+                  <span className="text-sm font-medium">{attempt}º</span>
                   <Input
-                    placeholder="Ex: oferecer falar por ligação"
+                    placeholder="Ej: ofrecer hablar por llamada"
                     value={getHint(attempt)}
                     onChange={(e) => setHint(attempt, e.target.value)}
                   />
@@ -214,21 +214,21 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
             })}
           </Card>
 
-          {/* Instruções extras */}
+          {/* Instrucciones extra */}
           <Card className="p-4 space-y-2">
-            <Label className="text-sm font-semibold">Instruções extras gerais</Label>
+            <Label className="text-sm font-semibold">Instrucciones extra generales</Label>
             <Textarea
               rows={3}
-              placeholder="Ex: na última tentativa, ofereça enviar material em vídeo ou agendar uma call rápida."
+              placeholder="Ej: en el último intento, ofrecé enviar material en video o agendar una llamada rápida."
               value={extra}
               onChange={(e) => onChange({ followup_extra_instructions: e.target.value })}
             />
           </Card>
 
-          {/* Canais + Guardrails */}
+          {/* Canales + Guardrails */}
           <Card className="p-4 space-y-4">
             <div>
-              <Label className="text-sm font-semibold">Canais permitidos</Label>
+              <Label className="text-sm font-semibold">Canales permitidos</Label>
               <div className="flex flex-wrap gap-3 mt-2">
                 {CHANNELS.map((c) => (
                   <label key={c.id} className="flex items-center gap-2 text-sm">
@@ -247,30 +247,30 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
 
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm">Respeitar horário comercial</div>
-                  <div className="text-xs text-muted-foreground">Adia a tentativa para o próximo expediente.</div>
+                  <div className="text-sm">Respetar el horario comercial</div>
+                  <div className="text-xs text-muted-foreground">Posterga el intento al próximo horario laboral.</div>
                 </div>
                 <Switch checked={respectHours} onCheckedChange={(v) => onChange({ followup_respect_business_hours: v })} />
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm">Parar se conversa for para humano</div>
-                  <div className="text-xs text-muted-foreground">Encerra a régua quando um atendente assume.</div>
+                  <div className="text-sm">Detener si la conversación pasa a un humano</div>
+                  <div className="text-xs text-muted-foreground">Cierra la secuencia cuando un agente asume.</div>
                 </div>
                 <Switch checked={stopOnHuman} onCheckedChange={(v) => onChange({ followup_stop_on_human: v })} />
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm">Parar se reunião for agendada</div>
-                  <div className="text-xs text-muted-foreground">Se a IA ou o vendedor agendou, não insiste.</div>
+                  <div className="text-sm">Detener si se agenda una reunión</div>
+                  <div className="text-xs text-muted-foreground">Si la IA o el vendedor agendó, no insiste.</div>
                 </div>
                 <Switch checked={stopOnBooking} onCheckedChange={(v) => onChange({ followup_stop_on_booking: v })} />
               </div>
 
               <div className="text-xs text-muted-foreground pt-2">
-                Sempre interrompido quando o lead responde, marca opt-out, ou a conversa é fechada/perdida.
+                Siempre se interrumpe cuando el lead responde, marca opt-out, o la conversación se cierra/pierde.
               </div>
             </div>
           </Card>

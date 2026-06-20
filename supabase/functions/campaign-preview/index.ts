@@ -2,7 +2,7 @@
 // POST { organization_id, audience_filters, exclusion_filters }
 // → { total_audience, will_receive, excluded, sample_ids }
 
-import { resolveAudience, createServiceClient, type CampaignFilters } from "../_shared/campaign-audience.ts";
+import { resolveAudience, createServiceClient, getSellerRestriction, type CampaignFilters } from "../_shared/campaign-audience.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -25,11 +25,14 @@ Deno.serve(async (req) => {
     }
 
     const supabase = createServiceClient();
+    // Vendedor → solo sus leads asignados; admin/manager → sin restricción.
+    const restrictTo = await getSellerRestriction(supabase, req.headers.get("Authorization"));
     const { leadIds, total, excluded } = await resolveAudience(
       supabase,
       organization_id,
       audience_filters ?? {},
       exclusion_filters ?? {},
+      restrictTo,
     );
 
     return new Response(

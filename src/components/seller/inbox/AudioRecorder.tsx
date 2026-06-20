@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Mic, Trash2, Send, Loader2, Pause } from 'lucide-react';
+import { Trash2, Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Mp3Encoder } from '@breezystack/lamejs';
 
 interface AudioRecorderProps {
-  /** Chamado cuando o usuario confirma o envio. Retorna o Blob + duración ms. */
+  /** Llamado cuando el usuario confirma el envío. Devuelve el Blob MP3 + duración ms. */
   onConfirm: (blob: Blob, durationMs: number) => void;
   onCancel: () => void;
   disabled?: boolean;
@@ -17,100 +18,104 @@ function formatTime(ms: number) {
   return `${mm}:${ss}`;
 }
 
+/** Codifica PCM (Float32 mono) a MP3 con lamejs. WhatsApp no acepta el webm de MediaRecorder. */
+function encodeMp3(samples: Float32Array, sampleRate: number): Blob {
+  const enc = new Mp3Encoder(1, sampleRate, 128);
+  const blockSize = 1152;
+  const pcm = new Int16Array(samples.length);
+  for (let i = 0; i < samples.length; i++) {
+    const s = Math.max(-1, Math.min(1, samples[i]));
+    pcm[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
+  }
+  const chunks: Uint8Array[] = [];
+  for (let i = 0; i < pcm.length; i += blockSize) {
+    const buf = enc.encodeBuffer(pcm.subarray(i, i + blockSize));
+    if (buf.length) chunks.push(buf);
+  }
+  const end = enc.flush();
+  if (end.length) chunks.push(end);
+  return new Blob(chunks as BlobPart[], { type: 'audio/mpeg' });
+}
+
 /**
- * Gravador de audio inline. Pede permiso do mic, mostra timer,
- * permite cancelar (lixeira) ou confirmar (enviar).
+ * Grabador de audio inline. Captura PCM crudo vía Web Audio y lo codifica a MP3
+ * (formato soportado por WhatsApp, junto con OGG-opus/AAC/AMR).
  */
 export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderProps) {
   const [elapsed, setElapsed] = useState(0);
   const [isStarting, setIsStarting] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
+  const ctxRef = useRef<AudioContext | null>(null);
+  const processorRef = useRef<ScriptProcessorNode | null>(null);
+  const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  const buffersRef = useRef<Float32Array[]>([]);
   const startTimeRef = useRef<number>(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Inicia ao montar
+  const teardown = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    try { processorRef.current?.disconnect(); } catch { /* noop */ }
+    try { sourceRef.current?.disconnect(); } catch { /* noop */ }
+    try { ctxRef.current?.close(); } catch { /* noop */ }
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+  };
+
+  // Inicia al montar
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        if (cancelled) {
-          stream.getTracks().forEach(t => t.stop());
-          return;
-        }
+        if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
         streamRef.current = stream;
-        const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-          ? 'audio/webm;codecs=opus'
-          : MediaRecorder.isTypeSupported('audio/webm')
-          ? 'audio/webm'
-          : '';
-        const rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
-        mediaRecorderRef.current = rec;
-        chunksRef.current = [];
-        rec.ondataavailable = (e) => {
-          if (e.data.size > 0) chunksRef.current.push(e.data);
+        const Ctx = window.AudioContext || (window as any).webkitAudioContext;
+        const ctx: AudioContext = new Ctx();
+        ctxRef.current = ctx;
+        const source = ctx.createMediaStreamSource(stream);
+        sourceRef.current = source;
+        const processor = ctx.createScriptProcessor(4096, 1, 1);
+        processorRef.current = processor;
+        buffersRef.current = [];
+        processor.onaudioprocess = (e) => {
+          buffersRef.current.push(new Float32Array(e.inputBuffer.getChannelData(0)));
         };
-        rec.start(250);
+        source.connect(processor);
+        processor.connect(ctx.destination); // necesario para que dispare onaudioprocess
         startTimeRef.current = Date.now();
-        timerRef.current = setInterval(() => {
-          setElapsed(Date.now() - startTimeRef.current);
-        }, 200);
+        timerRef.current = setInterval(() => setElapsed(Date.now() - startTimeRef.current), 200);
         setIsStarting(false);
       } catch (e: any) {
-        setError(e?.message || 'Permiso de microfone negada.');
+        if (cancelled) return;
+        setError(e?.message || 'Permiso de micrófono denegado.');
         setIsStarting(false);
       }
     })();
 
-    return () => {
-      cancelled = true;
-      if (timerRef.current) clearInterval(timerRef.current);
-      const rec = mediaRecorderRef.current;
-      if (rec && rec.state !== 'inactive') {
-        try { rec.stop(); } catch { /* noop */ }
-      }
-      streamRef.current?.getTracks().forEach((t) => t.stop());
-    };
+    return () => { cancelled = true; teardown(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const stopAndGetBlob = (): Promise<Blob> => {
-    return new Promise((resolve, reject) => {
-      const rec = mediaRecorderRef.current;
-      if (!rec) { reject(new Error('Recorder ausente')); return; }
-      if (rec.state === 'inactive') {
-        const blob = new Blob(chunksRef.current, { type: rec.mimeType || 'audio/webm' });
-        resolve(blob); return;
-      }
-      rec.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: rec.mimeType || 'audio/webm' });
-        resolve(blob);
-      };
-      rec.stop();
-    });
-  };
-
-  const handleConfirm = async () => {
+  const handleConfirm = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     const duration = Date.now() - startTimeRef.current;
     try {
-      const blob = await stopAndGetBlob();
-      streamRef.current?.getTracks().forEach((t) => t.stop());
+      const sampleRate = ctxRef.current?.sampleRate || 44100;
+      const parts = buffersRef.current;
+      const total = parts.reduce((n, b) => n + b.length, 0);
+      const merged = new Float32Array(total);
+      let offset = 0;
+      for (const b of parts) { merged.set(b, offset); offset += b.length; }
+      teardown();
+      const blob = encodeMp3(merged, sampleRate);
       onConfirm(blob, duration);
     } catch (e: any) {
-      setError(e?.message || 'Fallo ao finalizar gravação.');
+      setError(e?.message || 'Fallo al finalizar la grabación.');
     }
   };
 
   const handleCancel = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    const rec = mediaRecorderRef.current;
-    if (rec && rec.state !== 'inactive') {
-      try { rec.stop(); } catch { /* noop */ }
-    }
-    streamRef.current?.getTracks().forEach((t) => t.stop());
+    teardown();
     onCancel();
   };
 
@@ -131,7 +136,7 @@ export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderPr
         className="h-9 w-9 text-destructive hover:text-destructive hover:bg-destructive/10"
         onClick={handleCancel}
         disabled={disabled || isStarting}
-        aria-label="Cancelar gravação"
+        aria-label="Cancelar grabación"
       >
         <Trash2 className="h-4 w-4" />
       </Button>
@@ -143,7 +148,7 @@ export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderPr
         )} />
         <span className="text-sm font-mono tabular-nums">{formatTime(elapsed)}</span>
         <span className="text-xs text-muted-foreground hidden sm:inline">
-          {isStarting ? 'Iniciando microfone…' : 'Grabando...� toque em enviar para concluir'}
+          {isStarting ? 'Iniciando micrófono…' : 'Grabando… tocá enviar para terminar'}
         </span>
       </div>
 

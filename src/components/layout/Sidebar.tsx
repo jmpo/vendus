@@ -20,12 +20,14 @@ import {
   DollarSign,
   Shield,
   MessageSquare,
-  CalendarCheck
+  CalendarCheck,
+  Megaphone
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/ui/Logo';
 import { Tables } from '@/integrations/supabase/types';
 import { prefetchIndexTab } from '@/pages/Index';
+import { useMyPermissions } from '@/hooks/useUserPermissions';
 
 type DBProduct = Tables<'products'>;
 
@@ -66,10 +68,15 @@ export function Sidebar({
 }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const { isAdmin, isManager, isSuperAdmin } = useAuth();
+  const { data: myPerms } = useMyPermissions();
   const showAdminLink = isAdmin() || isManager();
   const showSuperAdminLink = isSuperAdmin();
 
-  const navItems = selectedProduct ? productNavItems : [];
+  // Vendedor con permiso (o admin/manager) ve "Campañas" en su propio menú.
+  const canCampaigns = isAdmin() || isManager() || !!myPerms?.allow_campaigns;
+  const navItems = selectedProduct
+    ? (canCampaigns ? [...productNavItems, { id: 'campaigns', label: 'Campañas', icon: Megaphone }] : productNavItems)
+    : [];
 
   const toggleCollapsed = () => {
     setCollapsed((prev) => {
@@ -189,7 +196,7 @@ export function Sidebar({
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
           >
             <Shield size={20} />
-            {!collapsed && <span className="text-sm">Painel Admin</span>}
+            {!collapsed && <span className="text-sm">Panel Admin</span>}
           </Link>
         )}
         <Link

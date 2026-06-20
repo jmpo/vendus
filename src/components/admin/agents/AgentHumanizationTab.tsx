@@ -306,7 +306,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
 
             <ToggleRow
               label='Mostrar "escribiendo..." real en WhatsApp'
-              hint="Dispara o status real (Evolution Go) en el celular del cliente. Teste em Admin → WhatsApp → Instâncias → Testar presença."
+              hint="Dispara el estado real (Evolution Go) en el celular del cliente. Probalo en Admin → WhatsApp → Instancias → Probar presencia."
               checked={cfg.timing?.typing_indicator !== false}
               onCheckedChange={(v) => setTiming({ typing_indicator: v })}
             />
@@ -350,11 +350,11 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               value={cfg.splitting?.aggressiveness ?? 3}
               onChange={(v) => setSplit({ aggressiveness: v })}
               hintMap={{
-                1: '1 — Nunca quebra',
-                2: '2 — Só mensajes longas',
+                1: '1 — Nunca divide',
+                2: '2 — Solo mensajes largos',
                 3: '3 — Equilibrado (2-3 burbujas)',
-                4: '4 — Quebra mucho (3-4 burbujas)',
-                5: '5 — Cada frase = uma burbuja',
+                4: '4 — Divide mucho (3-4 burbujas)',
+                5: '5 — Cada frase = una burbuja',
               }}
             />
             <div className="grid grid-cols-2 gap-4">
@@ -457,12 +457,12 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
         <Card className="mt-4">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <MessageCircle className="h-4 w-4 text-primary" /> Tiques & Gírias
+              <MessageCircle className="h-4 w-4 text-primary" /> Tics y Modismos
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-xs">Região linguística</Label>
+              <Label className="text-xs">Región lingüística</Label>
               <Select
                 value={cfg.tics?.region ?? 'neutral'}
                 onValueChange={(v) => setTics({ region: v as LinguisticRegion })}
@@ -480,7 +480,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               </Select>
             </div>
             <TagsInput
-              label="Gírias específicas (até 20)"
+              label="Modismos específicos (hasta 20)"
               max={20}
               items={cfg.tics?.slang ?? []}
               onChange={(items) => setTics({ slang: items })}
@@ -526,7 +526,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
               </div>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              Detectadas ANTES da IA responder. Em "Reply direto", o agente envia o texto fixo (sin chamar IA). Em "Injetar contexto", a IA recebe a instrucción e responde do manera correcto.
+              Detectadas ANTES de que la IA responda. En "Reply directo", el agente envía el texto fijo (sin llamar a la IA). En "Inyectar contexto", la IA recibe la instrucción y responde de manera correcta.
             </p>
           </CardHeader>
           <CardContent className={cn('space-y-3', cfg.reactions?.enabled === false && 'opacity-50 pointer-events-none')}>

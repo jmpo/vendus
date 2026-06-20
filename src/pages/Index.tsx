@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef, useTransition, lazy, Suspense } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useMyPermissions } from '@/hooks/useUserPermissions';
 import { usePlatformName } from '@/hooks/usePlatformName';
 import { useProducts, useAssignedProducts } from '@/hooks/useProducts';
 import { useCadence } from '@/hooks/useCadence';
@@ -40,6 +41,7 @@ const f = {
   MobileTaskList: () => import('@/components/mobile/MobileTaskList').then(m => ({ default: m.MobileTaskList })),
   MobileActivityCenter: () => import('@/components/mobile/MobileActivityCenter').then(m => ({ default: m.MobileActivityCenter })),
   MobileGoalsView: () => import('@/components/mobile/MobileGoalsView').then(m => ({ default: m.MobileGoalsView })),
+  CampaignsManager: () => import('@/components/admin/campaigns/CampaignsManager').then(m => ({ default: m.CampaignsManager })),
 };
 
 const CadenceView = lazy(f.CadenceView);
@@ -58,6 +60,7 @@ const MobileKanban = lazy(f.MobileKanban);
 const MobileTaskList = lazy(f.MobileTaskList);
 const MobileActivityCenter = lazy(f.MobileActivityCenter);
 const MobileGoalsView = lazy(f.MobileGoalsView);
+const CampaignsManager = lazy(f.CampaignsManager);
 
 // Mapa tab → factory(s) para prefetch on-hover.
 const tabFactories: Record<string, Array<() => Promise<unknown>>> = {
@@ -73,6 +76,7 @@ const tabFactories: Record<string, Array<() => Promise<unknown>>> = {
   objections: [f.ObjectionsView],
   materials: [f.MaterialsView],
   ai: [f.AIChat],
+  campaigns: [f.CampaignsManager],
 };
 
 export function prefetchIndexTab(tab: string) {
@@ -125,6 +129,7 @@ function InitialLoadingScreen() {
 
 const Index = () => {
   const { user, profile, isAdmin, isManager, isSuperAdmin } = useAuth();
+  const { data: myPerms } = useMyPermissions();
   const { platformName } = usePlatformName();
   const isMobile = useIsMobile();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -422,6 +427,10 @@ const Index = () => {
 
       case 'ai':
         return <AIChat productName={selectedProduct.name} productId={selectedProduct.id} />;
+
+      case 'campaigns':
+        if (!(isAdminOrManager || myPerms?.allow_campaigns)) return null;
+        return <CampaignsManager />;
 
       default:
         return null;

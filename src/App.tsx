@@ -99,8 +99,8 @@ class RouteErrorBoundary extends Component<{ children: ReactNode }, { error: Err
               <AlertTriangle className="h-6 w-6 text-destructive" />
             </div>
             <div className="space-y-2">
-              <h1 className="text-lg font-semibold text-foreground">No foi posible cargar a aplicación</h1>
-              <p className="text-sm text-muted-foreground">A versión local ficou desatualizada. Recarregue para buscar a versión mais recente.</p>
+              <h1 className="text-lg font-semibold text-foreground">No se pudo cargar la aplicación</h1>
+              <p className="text-sm text-muted-foreground">La versión local quedó desactualizada. Recargá para obtener la versión más reciente.</p>
             </div>
             <button
               type="button"
@@ -108,7 +108,7 @@ class RouteErrorBoundary extends Component<{ children: ReactNode }, { error: Err
               className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <RefreshCw className="mr-2 h-4 w-4" />
-              Recarregar
+              Recargar
             </button>
           </div>
         </div>

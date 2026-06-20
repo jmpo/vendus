@@ -200,14 +200,36 @@ Deno.serve(async (req) => {
         }
 
         // Template Zernio (identificado por NAME + language, no por template_id de Meta).
-        // Primer nombre del lead para rellenar {{1}} por defecto.
         const leadFirstName = (lead?.name ? String(lead.name).trim().split(/\s+/)[0] : '') || 'Hola';
+
+        // Resuelve un valor de variable según el mapeo configurado en la campaña.
+        const resolveVar = (m: any): string => {
+          switch (m?.source) {
+            case 'full_name': return (lead?.name ? String(lead.name).trim() : '') || leadFirstName;
+            case 'email':     return (lead?.email ? String(lead.email).trim() : '') || '';
+            case 'phone':     return leadPhone || '';
+            case 'static':    return String(m?.static_value ?? '');
+            case 'first_name':
+            default:          return leadFirstName;
+          }
+        };
+
+        // params en orden de variable ({{1}}, {{2}}, …) desde variable_mapping; si no hay mapeo,
+        // mantiene compatibilidad: params explícitos o {{1}} = primer nombre.
+        const varMap = (template_config as any)?.variable_mapping ?? null;
+        let zernioParams: string[];
+        if (varMap && Object.keys(varMap).length) {
+          const nums = Object.keys(varMap).map((k) => parseInt(k, 10)).filter((n) => !isNaN(n)).sort((a, b) => a - b);
+          zernioParams = nums.map((n) => resolveVar(varMap[String(n)]));
+        } else {
+          zernioParams = (template_config as any).params ?? (template_config as any).template_params ?? [leadFirstName];
+        }
+
         const zernioTemplate = connection_type === 'zernio' && template_config && (template_config as any).zernio_template_name
           ? {
               name: (template_config as any).zernio_template_name,
               language: (template_config as any).zernio_template_language || 'es',
-              // Variables de la plantilla: si no vienen explícitas, rellena {{1}} con el primer nombre.
-              params: (template_config as any).params ?? (template_config as any).template_params ?? [leadFirstName],
+              params: zernioParams,
             }
           : null;
 

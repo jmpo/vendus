@@ -14,6 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { LEAD_ORIGINS, LEAD_CHANNELS } from '@/hooks/useLeadTracking';
 import { useContextLibrary } from '@/hooks/useCampaignContexts';
+import { useAuth } from '@/hooks/useAuth';
 import { useLeadTags } from '@/hooks/useLeadTags';
 import { useCustomFields, type CustomField } from '@/hooks/useCustomFields';
 import { TagFormDialog } from '@/components/admin/tags/TagFormDialog';
@@ -45,6 +46,7 @@ function normalizeMetaTemplateConfig(raw: any): CampaignMetaTemplateConfig {
 type CustomFieldFilter = { key: string; op: string; value: any };
 
 type Filters = {
+  lead_ids?: string[];
   origins?: string[];
   channels?: string[];
   stage_ids?: string[];
@@ -122,6 +124,9 @@ export function CampaignWizard({
   const [saving, setSaving] = useState(false);
   const [starting, setStarting] = useState(false);
   const { contexts: libraryContexts } = useContextLibrary(orgId);
+  const { user, isAdmin, isManager } = useAuth();
+  // Vendedor → el selector manual y los envíos se limitan a sus leads asignados.
+  const restrictAssignedTo = (isAdmin() || isManager()) ? null : (user?.id ?? null);
   const { data: tags = [] } = useLeadTags();
   const { fields: customFields = [] } = useCustomFields();
 
@@ -133,6 +138,8 @@ export function CampaignWizard({
   const [preview, setPreview] = useState<{ total: number; will: number; excluded: number } | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [tagDialogOpen, setTagDialogOpen] = useState(false);
+  // Modo de destinatarios: por filtros (segmentación) o contactos elegidos a mano.
+  const [recipientMode, setRecipientMode] = useState<'filters' | 'manual'>('filters');
 
   const [form, setForm] = useState({
     name: '',
@@ -162,6 +169,12 @@ export function CampaignWizard({
     post_cadence_id: null as string | null,
     meta_template_config: { templates: [], strategy: 'random', button_actions: {} } as CampaignMetaTemplateConfig,
   });
+
+  // Si la campaña cargada ya tiene contactos elegidos a mano, abrir en modo manual.
+  useEffect(() => {
+    if ((form.audience_filters?.lead_ids?.length ?? 0) > 0) setRecipientMode('manual');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.audience_filters?.lead_ids]);
 
 
   // Carregar dados auxiliares (produtos, agentes, instâncias)
@@ -317,7 +330,7 @@ export function CampaignWizard({
   };
 
   const buildPayload = () => {
-    if (!orgId) throw new Error('Organização não encontrada');
+    if (!orgId) throw new Error('Organización no encontrada');
     const contexts = [...form.contexts];
     if (form.inline_context.trim() && !contexts.some((c) => c.inline_text === form.inline_context)) {
       contexts.push({ inline_text: form.inline_context.trim(), weight: 1 });
@@ -349,8 +362,8 @@ export function CampaignWizard({
   };
 
   const saveDraft = async (): Promise<string | null> => {
-    if (!form.name.trim()) { toast.error('Nome da campanha é obrigatório'); return null; }
-    if (!form.agent_id) { toast.error('Seleccioná um agente'); return null; }
+    if (!form.name.trim()) { toast.error('El nombre de la campaña es obligatorio'); return null; }
+    if (!form.agent_id) { toast.error('Seleccioná un agente'); return null; }
     setSaving(true);
     try {
       const payload = buildPayload();
@@ -358,7 +371,7 @@ export function CampaignWizard({
         ? await supabase.from('campaigns').update(payload).eq('id', campaignId).select('id').single()
         : await supabase.from('campaigns').insert(payload).select('id').single();
       if (error) { toast.error(error.message); return null; }
-      toast.success('Rascunho salvo');
+      toast.success('Borrador guardado');
       return data?.id ?? null;
     } finally {
       setSaving(false);
@@ -366,16 +379,16 @@ export function CampaignWizard({
   };
 
   const start = async () => {
-    if (!preview?.will) { toast.error('Sem leads no público para enviar'); return; }
+    if (!preview?.will) { toast.error('No hay leads en el público para enviar'); return; }
     const ready = instances.filter(isInstanceReady);
-    if (!ready.length) { toast.error('Nenhum número WhatsApp conectado'); return; }
+    if (!ready.length) { toast.error('No hay ningún número de WhatsApp conectado'); return; }
     const id = await saveDraft();
     if (!id) return;
     setStarting(true);
     const { data, error } = await supabase.functions.invoke('campaign-start', { body: { campaign_id: id } });
     setStarting(false);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Campanha iniciada · ${data?.scheduled ?? 0} envios programados`);
+    toast.success(`Campaña iniciada · ${data?.scheduled ?? 0} envíos programados`);
     onClose();
   };
 
@@ -386,7 +399,7 @@ export function CampaignWizard({
   }, [form.contexts, libraryContexts]);
 
   if (loading) {
-    return <div className="p-10 text-center text-muted-foreground">Carregando…</div>;
+    return <div className="p-10 text-center text-muted-foreground">Cargando…</div>;
   }
 
   return (
@@ -396,34 +409,34 @@ export function CampaignWizard({
           <ArrowLeft className="h-4 w-4 mr-2" />Volver
         </Button>
         <h1 className="font-semibold flex-1 truncate">
-          {campaignId ? 'Editar campanha' : 'Nova campanha inteligente'}
+          {campaignId ? 'Editar campaña' : 'Nueva campaña inteligente'}
         </h1>
         <Button variant="outline" onClick={saveDraft} disabled={saving}>
           {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-          Guardar rascunho
+          Guardar borrador
         </Button>
         <Button onClick={start} disabled={starting || saving}>
           {starting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Rocket className="h-4 w-4 mr-2" />}
-          Iniciar campanha
+          Iniciar campaña
         </Button>
       </div>
 
-      {/* 1. Configuração */}
+      {/* 1. Configuración */}
       <Card>
-        <CardHeader><CardTitle className="text-base">1. Configuração</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">1. Configuración</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           <div>
-            <Label>Nome da campanha *</Label>
-            <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ex: Reativação Live Vendus" />
+            <Label>Nombre de la campaña *</Label>
+            <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ej: Reactivación Live Vendus" />
           </div>
           <div>
-            <Label>Descrição</Label>
+            <Label>Descripción</Label>
             <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </div>
           <div>
-            <Label>Produto (define as etapas do pipeline)</Label>
+            <Label>Producto (define las etapas del pipeline)</Label>
             <Select value={productId} onValueChange={setProductId}>
-              <SelectTrigger><SelectValue placeholder="Seleccioná um produto" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Seleccioná un producto" /></SelectTrigger>
               <SelectContent>
                 {products.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
               </SelectContent>
@@ -434,73 +447,108 @@ export function CampaignWizard({
 
       {/* 2. Público */}
       <Card>
-        <CardHeader><CardTitle className="text-base">2. Quem deve receber?</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">2. ¿Quién debe recibir?</CardTitle></CardHeader>
         <CardContent className="space-y-4">
-          <FilterBlock
-            title="Origens"
-            options={LEAD_ORIGINS}
-            selected={form.audience_filters.origins ?? []}
-            onToggle={(v) => toggleArr('audience_filters', 'origins', v)}
-          />
-          <FilterBlock
-            title="Canais"
-            options={LEAD_CHANNELS}
-            selected={form.audience_filters.channels ?? []}
-            onToggle={(v) => toggleArr('audience_filters', 'channels', v)}
-          />
-          <FilterBlock
-            title="Etapas do Pipeline"
-            options={stages.map((s) => ({ value: s.id, label: s.name }))}
-            selected={form.audience_filters.stage_ids ?? []}
-            onToggle={(v) => toggleArr('audience_filters', 'stage_ids', v)}
-            emptyHint={productId ? 'Este produto não tem etapas.' : 'Seleccioná um produto acima.'}
-          />
-          <TagFilterBlock
-            title="Etiquetas (possui ao menos uma)"
-            tags={tags}
-            selected={form.audience_filters.tag_ids ?? []}
-            onToggle={(v) => toggleArr('audience_filters', 'tag_ids', v)}
-            onCreateNew={() => setTagDialogOpen(true)}
-          />
-          <CustomFieldsFilter
-            fields={customFields}
-            filters={form.audience_filters.custom_fields ?? []}
-            onChange={(updater) => updateCustomFieldFilters('audience_filters', updater)}
-          />
+          {/* Selector de modo: por filtros (segmento) o contactos elegidos a mano */}
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant={recipientMode === 'filters' ? 'default' : 'outline'}
+              onClick={() => {
+                setRecipientMode('filters');
+                setForm((f) => ({ ...f, audience_filters: { ...f.audience_filters, lead_ids: undefined } }));
+              }}
+            >
+              Por filtros
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant={recipientMode === 'manual' ? 'default' : 'outline'}
+              onClick={() => setRecipientMode('manual')}
+            >
+              Elegir contactos
+            </Button>
+          </div>
+
+          {recipientMode === 'manual' ? (
+            <ContactPicker
+              orgId={orgId}
+              restrictAssignedTo={restrictAssignedTo}
+              selected={form.audience_filters.lead_ids ?? []}
+              onChange={(ids) => setForm((f) => ({ ...f, audience_filters: { ...f.audience_filters, lead_ids: ids } }))}
+            />
+          ) : (
+            <>
+              <FilterBlock
+                title="Orígenes"
+                options={LEAD_ORIGINS}
+                selected={form.audience_filters.origins ?? []}
+                onToggle={(v) => toggleArr('audience_filters', 'origins', v)}
+              />
+              <FilterBlock
+                title="Canales"
+                options={LEAD_CHANNELS}
+                selected={form.audience_filters.channels ?? []}
+                onToggle={(v) => toggleArr('audience_filters', 'channels', v)}
+              />
+              <FilterBlock
+                title="Etapas del Pipeline"
+                options={stages.map((s) => ({ value: s.id, label: s.name }))}
+                selected={form.audience_filters.stage_ids ?? []}
+                onToggle={(v) => toggleArr('audience_filters', 'stage_ids', v)}
+                emptyHint={productId ? 'Este producto no tiene etapas.' : 'Seleccioná un producto arriba.'}
+              />
+              <TagFilterBlock
+                title="Etiquetas (tiene al menos una)"
+                tags={tags}
+                selected={form.audience_filters.tag_ids ?? []}
+                onToggle={(v) => toggleArr('audience_filters', 'tag_ids', v)}
+                onCreateNew={() => setTagDialogOpen(true)}
+              />
+              <CustomFieldsFilter
+                fields={customFields}
+                filters={form.audience_filters.custom_fields ?? []}
+                onChange={(updater) => updateCustomFieldFilters('audience_filters', updater)}
+              />
+            </>
+          )}
         </CardContent>
       </Card>
 
       {/* 2b. Busca específica */}
+      {recipientMode === 'filters' && (
       <Card>
         <CardHeader><CardTitle className="text-base">Buscar leads específicos</CardTitle></CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <Label>Nome contém</Label>
+            <Label>El nombre contiene</Label>
             <Input
               value={form.audience_filters.search?.name ?? ''}
               onChange={(e) => setSearchField('name', e.target.value)}
-              placeholder="Ex: João"
+              placeholder="Ej: Juan"
             />
           </div>
           <div>
-            <Label>E-mail contém</Label>
+            <Label>El email contiene</Label>
             <Input
               value={form.audience_filters.search?.email ?? ''}
               onChange={(e) => setSearchField('email', e.target.value)}
-              placeholder="Ex: @gmail.com"
+              placeholder="Ej: @gmail.com"
             />
           </div>
           <div>
-            <Label>Telefone contém</Label>
+            <Label>El teléfono contiene</Label>
             <Input
               value={form.audience_filters.search?.phone ?? ''}
               onChange={(e) => setSearchField('phone', e.target.value)}
-              placeholder="Ex: 5511"
+              placeholder="Ej: 595"
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <Label>Inscrito a partir de</Label>
+              <Label>Inscrito desde</Label>
               <Input
                 type="date"
                 value={form.audience_filters.created_after?.slice(0, 10) ?? ''}
@@ -508,7 +556,7 @@ export function CampaignWizard({
               />
             </div>
             <div>
-              <Label>Até</Label>
+              <Label>Hasta</Label>
               <Input
                 type="date"
                 value={form.audience_filters.created_before?.slice(0, 10) ?? ''}
@@ -518,13 +566,14 @@ export function CampaignWizard({
           </div>
         </CardContent>
       </Card>
+      )}
 
-      {/* 3. Exclusões */}
+      {/* 3. Exclusiones */}
       <Card className="border-destructive/30">
-        <CardHeader><CardTitle className="text-base">3. Quem NÃO deve receber?</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">3. ¿Quién NO debe recibir?</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <TagFilterBlock
-            title="Sem as etiquetas"
+            title="Sin las etiquetas"
             tags={tags}
             selected={form.exclusion_filters.tag_ids ?? []}
             onToggle={(v) => toggleArr('exclusion_filters', 'tag_ids', v)}
@@ -532,14 +581,14 @@ export function CampaignWizard({
             destructive
           />
           <FilterBlock
-            title="Sem origens"
+            title="Sin orígenes"
             options={LEAD_ORIGINS}
             selected={form.exclusion_filters.origins ?? []}
             onToggle={(v) => toggleArr('exclusion_filters', 'origins', v)}
             destructive
           />
           <FilterBlock
-            title="Sem canais"
+            title="Sin canales"
             options={LEAD_CHANNELS}
             selected={form.exclusion_filters.channels ?? []}
             onToggle={(v) => toggleArr('exclusion_filters', 'channels', v)}
@@ -554,24 +603,24 @@ export function CampaignWizard({
         </CardContent>
       </Card>
 
-      {/* Resumo público */}
+      {/* Resumen público */}
       <Card className="bg-primary/5 border-primary/20">
         <CardContent className="p-4 flex flex-wrap items-center gap-6 text-sm">
           {previewLoading && <Loader2 className="h-4 w-4 animate-spin" />}
           <div><span className="text-muted-foreground">Encontrados:</span> <strong>{preview?.total ?? '—'}</strong></div>
-          <div><span className="text-muted-foreground">Receberão:</span> <strong className="text-primary text-lg">{preview?.will ?? '—'}</strong></div>
-          <div><span className="text-muted-foreground">Excluídos:</span> <strong>{preview?.excluded ?? 0}</strong></div>
+          <div><span className="text-muted-foreground">Recibirán:</span> <strong className="text-primary text-lg">{preview?.will ?? '—'}</strong></div>
+          <div><span className="text-muted-foreground">Excluidos:</span> <strong>{preview?.excluded ?? 0}</strong></div>
         </CardContent>
       </Card>
 
-      {/* 4. Agente e Contexto */}
+      {/* 4. Agente y Contexto */}
       <Card>
-        <CardHeader><CardTitle className="text-base">4. Agente IA e Contexto</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">4. Agente IA y Contexto</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <div>
             <Label>Agente *</Label>
             <Select value={form.agent_id} onValueChange={(v) => setForm({ ...form, agent_id: v })}>
-              <SelectTrigger><SelectValue placeholder="Seleccioná um agente" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Seleccioná un agente" /></SelectTrigger>
               <SelectContent>
                 {agents.map((a) => <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>)}
               </SelectContent>
@@ -584,13 +633,13 @@ export function CampaignWizard({
               rows={5}
               value={form.inline_context}
               onChange={(e) => setForm({ ...form, inline_context: e.target.value })}
-              placeholder="Ex: Este lead participou da aula ao vivo. Descubra qual foi sua principal objeção. Não envie proposta imediatamente."
+              placeholder="Ej: Este lead participó de la clase en vivo. Descubrí cuál fue su principal objeción. No envíes propuesta de inmediato."
             />
           </div>
 
           {!!libraryContexts.length && (
             <div>
-              <Label>Ou selecione contextos da biblioteca</Label>
+              <Label>O elegí contextos de la biblioteca</Label>
               <div className="flex flex-wrap gap-2 mt-1">
                 {libraryContexts.map((c) => {
                   const sel = form.contexts.some((x) => x.context_id === c.id);
@@ -614,10 +663,10 @@ export function CampaignWizard({
 
           {(selectedContexts.length > 0 || form.contexts.length > 1) && (
             <div>
-              <Label>Distribuição entre contextos</Label>
+              <Label>Distribución entre contextos</Label>
               <RadioGroup value={form.context_distribution} onValueChange={(v) => setForm({ ...form, context_distribution: v })} className="flex gap-4 mt-1">
-                <label className="flex items-center gap-2"><RadioGroupItem value="random" />Aleatório</label>
-                <label className="flex items-center gap-2"><RadioGroupItem value="sequential" />Sequencial</label>
+                <label className="flex items-center gap-2"><RadioGroupItem value="random" />Aleatorio</label>
+                <label className="flex items-center gap-2"><RadioGroupItem value="sequential" />Secuencial</label>
                 <label className="flex items-center gap-2"><RadioGroupItem value="weighted" />Por peso</label>
               </RadioGroup>
             </div>
@@ -627,12 +676,12 @@ export function CampaignWizard({
 
       {/* 5. Números */}
       <Card>
-        <CardHeader><CardTitle className="text-base">5. Números de envio</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">5. Números de envío</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           <RadioGroup value={form.instance_strategy} onValueChange={(v) => setForm({ ...form, instance_strategy: v })} className="flex gap-4">
-            <label className="flex items-center gap-2"><RadioGroupItem value="all" />Todos conectados</label>
-            <label className="flex items-center gap-2"><RadioGroupItem value="rotation" />Rodízio automático</label>
-            <label className="flex items-center gap-2"><RadioGroupItem value="manual" />Escolha manual</label>
+            <label className="flex items-center gap-2"><RadioGroupItem value="all" />Todos los conectados</label>
+            <label className="flex items-center gap-2"><RadioGroupItem value="rotation" />Rotación automática</label>
+            <label className="flex items-center gap-2"><RadioGroupItem value="manual" />Elección manual</label>
           </RadioGroup>
 
           <div className="grid gap-2">
@@ -663,7 +712,7 @@ export function CampaignWizard({
               );
             })}
             {!instances.filter(isInstanceReady).length && (
-              <p className="text-xs text-muted-foreground">Nenhum número WhatsApp ativo. Conecte uma instância Evolution ou ative uma conexão Meta API Oficial.</p>
+              <p className="text-xs text-muted-foreground">No hay ningún número de WhatsApp activo. Conectá una instancia Evolution o activá una conexión Meta API Oficial.</p>
             )}
           </div>
         </CardContent>
@@ -677,7 +726,7 @@ export function CampaignWizard({
           </CardHeader>
           <CardContent className="space-y-2">
             <p className="text-xs text-muted-foreground">
-              Para enviar via conexão Meta API Oficial em uma primeira abordagem (fora da janela de 24h), selecione um template aprovado. A IA preenche as variáveis com dados do lead.
+              Para enviar por la conexión Meta API Oficial en un primer contacto (fuera de la ventana de 24 h), seleccioná un template aprobado. La IA completa las variables con los datos del lead.
             </p>
             <MultiTemplatePicker
               organizationId={orgId}
@@ -702,7 +751,7 @@ export function CampaignWizard({
             </CardHeader>
             <CardContent className="space-y-2">
               <p className="text-xs text-muted-foreground">
-                Para una primera abordagem por Zernio (fuera de la ventana de 24h) se requiere una plantilla aprobada. Elegí una:
+                Para un primer contacto por Zernio (fuera de la ventana de 24 h) se requiere una plantilla aprobada. Elegí una:
               </p>
               <ZernioCampaignTemplatePicker
                 organizationId={orgId}
@@ -718,7 +767,7 @@ export function CampaignWizard({
       {/* 6. Velocidade */}
 
       <Card>
-        <CardHeader><CardTitle className="text-base">6. Velocidade</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">6. Velocidad</CardTitle></CardHeader>
         <CardContent>
           <RadioGroup value={form.speed_preset} onValueChange={(v) => setForm({ ...form, speed_preset: v })} className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {SPEED_PRESETS.map((p) => (
@@ -736,12 +785,12 @@ export function CampaignWizard({
 
       {/* 7. Agenda */}
       <Card>
-        <CardHeader><CardTitle className="text-base">7. Quando enviar?</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">7. ¿Cuándo enviar?</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           <RadioGroup value={form.schedule_type} onValueChange={(v) => setForm({ ...form, schedule_type: v })} className="flex gap-4">
-            <label className="flex items-center gap-2"><RadioGroupItem value="now" />Enviar agora</label>
+            <label className="flex items-center gap-2"><RadioGroupItem value="now" />Enviar ahora</label>
             <label className="flex items-center gap-2"><RadioGroupItem value="scheduled" />Agendar</label>
-            <label className="flex items-center gap-2"><RadioGroupItem value="recurring" />Recorrente</label>
+            <label className="flex items-center gap-2"><RadioGroupItem value="recurring" />Recurrente</label>
           </RadioGroup>
           {form.schedule_type === 'scheduled' && (
             <Input type="datetime-local" value={form.scheduled_at} onChange={(e) => setForm({ ...form, scheduled_at: e.target.value })} />
@@ -749,17 +798,17 @@ export function CampaignWizard({
           {form.schedule_type === 'recurring' && (
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Início</Label>
+                <Label>Inicio</Label>
                 <Input type="time" value={form.recurrence.start} onChange={(e) => setForm({ ...form, recurrence: { ...form.recurrence, start: e.target.value } })} />
               </div>
               <div>
-                <Label>Fim</Label>
+                <Label>Fin</Label>
                 <Input type="time" value={form.recurrence.end} onChange={(e) => setForm({ ...form, recurrence: { ...form.recurrence, end: e.target.value } })} />
               </div>
               <div className="col-span-2">
-                <Label>Dias da semana</Label>
+                <Label>Días de la semana</Label>
                 <div className="flex gap-1 flex-wrap mt-1">
-                  {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map((d, idx) => {
+                  {['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map((d, idx) => {
                     const sel = form.recurrence.days?.includes(idx);
                     return (
                       <Badge
@@ -786,35 +835,35 @@ export function CampaignWizard({
         </CardContent>
       </Card>
 
-      {/* 8. Pós-resposta */}
+      {/* 8. Post-respuesta */}
       <Card>
-        <CardHeader><CardTitle className="text-base">8. Quando o lead responder…</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">8. Cuando el lead responda…</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           <label className="flex items-center gap-2">
             <Checkbox
               checked={form.post_response_actions.stop}
               onCheckedChange={(c) => setForm({ ...form, post_response_actions: { ...form.post_response_actions, stop: !!c } })}
             />
-            Parar campanha para este lead
+            Detener la campaña para este lead
           </label>
           <label className="flex items-center gap-2">
             <Checkbox
               checked={form.post_response_actions.take_over}
               onCheckedChange={(c) => setForm({ ...form, post_response_actions: { ...form.post_response_actions, take_over: !!c } })}
             />
-            Assumir conversa automaticamente (humano)
+            Asumir la conversación automáticamente (humano)
           </label>
           <Separator />
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Mover para etapa</Label>
+              <Label>Mover a la etapa</Label>
               <Select
                 value={form.post_response_actions.stage_id || 'none'}
                 onValueChange={(v) => setForm({ ...form, post_response_actions: { ...form.post_response_actions, stage_id: v === 'none' ? '' : v } })}
               >
-                <SelectTrigger><SelectValue placeholder="Manter etapa atual" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Mantener etapa actual" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Manter atual</SelectItem>
+                  <SelectItem value="none">Mantener actual</SelectItem>
                   {stages.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
                 </SelectContent>
               </Select>
@@ -825,19 +874,19 @@ export function CampaignWizard({
                 value={form.post_response_actions.temperature || 'none'}
                 onValueChange={(v) => setForm({ ...form, post_response_actions: { ...form.post_response_actions, temperature: v === 'none' ? '' : v } })}
               >
-                <SelectTrigger><SelectValue placeholder="Manter" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Mantener" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Manter</SelectItem>
-                  <SelectItem value="cold">Frio</SelectItem>
-                  <SelectItem value="warm">Morno</SelectItem>
-                  <SelectItem value="hot">Quente</SelectItem>
+                  <SelectItem value="none">Mantener</SelectItem>
+                  <SelectItem value="cold">Frío</SelectItem>
+                  <SelectItem value="warm">Tibio</SelectItem>
+                  <SelectItem value="hot">Caliente</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           <Separator />
           <div>
-            <Label>Etiquetas aplicadas ao responder</Label>
+            <Label>Etiquetas aplicadas al responder</Label>
             <div className="flex flex-wrap gap-2 mt-1">
               {tags.map((t) => {
                 const sel = form.post_response_actions.tags_add?.includes(t.id);
@@ -859,12 +908,12 @@ export function CampaignWizard({
                 );
               })}
               <Badge variant="outline" className="cursor-pointer border-dashed" onClick={() => setTagDialogOpen(true)}>
-                <Plus className="h-3 w-3 mr-1" />Nova etiqueta
+                <Plus className="h-3 w-3 mr-1" />Nueva etiqueta
               </Badge>
             </div>
           </div>
           <div>
-            <Label>Remover etiquetas ao responder</Label>
+            <Label>Quitar etiquetas al responder</Label>
             <div className="flex flex-wrap gap-2 mt-1">
               {tags.map((t) => {
                 const sel = form.post_response_actions.tags_remove?.includes(t.id);
@@ -888,24 +937,24 @@ export function CampaignWizard({
             </div>
           </div>
           <div>
-            <Label>Nota automática no lead (opcional)</Label>
+            <Label>Nota automática en el lead (opcional)</Label>
             <Textarea
               rows={2}
               value={form.post_response_actions.note ?? ''}
               onChange={(e) => setForm({ ...form, post_response_actions: { ...form.post_response_actions, note: e.target.value } })}
-              placeholder="Ex: Lead respondeu à campanha de reativação — verificar contexto."
+              placeholder="Ej: El lead respondió a la campaña de reactivación — verificar contexto."
             />
           </div>
           <Separator />
           <div>
-            <Label>Após o disparo — inserir em cadência</Label>
+            <Label>Después del envío — inscribir en cadencia</Label>
             <p className="text-xs text-muted-foreground mb-2">
-              Cada lead disparado pela campanha é inscrito automaticamente nesta cadência.
+              Cada lead alcanzado por la campaña se inscribe automáticamente en esta cadencia.
             </p>
             <CadencePicker
               value={form.post_cadence_id ?? null}
               onChange={(id) => setForm({ ...form, post_cadence_id: id })}
-              placeholder="Não inscrever em cadência"
+              placeholder="No inscribir en cadencia"
             />
           </div>
         </CardContent>
@@ -1031,7 +1080,7 @@ function CustomFieldsFilter({
                     {fields.map((cf) => (
                       <SelectItem key={cf.id} value={cf.field_key}>{cf.name}</SelectItem>
                     ))}
-                    {!fields.length && <SelectItem value="__none__" disabled>Nenhum campo cadastrado</SelectItem>}
+                    {!fields.length && <SelectItem value="__none__" disabled>Ningún campo creado</SelectItem>}
                   </SelectContent>
                 </Select>
               </div>
@@ -1056,8 +1105,8 @@ function CustomFieldsFilter({
                   <Select value={String(f.value ?? '')} onValueChange={(v) => update(i, { value: v })}>
                     <SelectTrigger className="h-9"><SelectValue placeholder="Valor" /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="true">Sim</SelectItem>
-                      <SelectItem value="false">Não</SelectItem>
+                      <SelectItem value="true">Sí</SelectItem>
+                      <SelectItem value="false">No</SelectItem>
                     </SelectContent>
                   </Select>
                 )}
@@ -1099,8 +1148,98 @@ function CustomFieldsFilter({
         })}
         <Button variant="outline" size="sm" onClick={add} disabled={!fields.length}>
           <Plus className="h-3 w-3 mr-1" />
-          {fields.length ? 'Agregar filtro por campo' : 'Nenhum campo personalizado cadastrado'}
+          {fields.length ? 'Agregar filtro por campo' : 'No hay campos personalizados creados'}
         </Button>
+      </div>
+    </div>
+  );
+}
+
+// Selector de contactos a mano: lista leads con teléfono, búsqueda + "Seleccionar todos".
+function ContactPicker({
+  orgId,
+  restrictAssignedTo,
+  selected,
+  onChange,
+}: {
+  orgId: string | undefined;
+  restrictAssignedTo?: string | null;
+  selected: string[];
+  onChange: (ids: string[]) => void;
+}) {
+  const [leads, setLeads] = useState<Array<{ id: string; name: string | null; phone: string | null }>>([]);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (!orgId) return;
+    setLoading(true);
+    (async () => {
+      let q = supabase
+        .from('leads')
+        .select('id, name, phone')
+        .eq('organization_id', orgId)
+        .not('phone', 'is', null);
+      // Vendedor: solo sus leads asignados (alineado con la restricción del backend).
+      if (restrictAssignedTo) q = q.eq('assigned_to', restrictAssignedTo);
+      const { data } = await q.order('created_at', { ascending: false }).limit(1000);
+      setLeads((data ?? []) as any[]);
+      setLoading(false);
+    })();
+  }, [orgId, restrictAssignedTo]);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return leads;
+    return leads.filter((l) =>
+      (l.name ?? '').toLowerCase().includes(q) || (l.phone ?? '').toLowerCase().includes(q),
+    );
+  }, [leads, search]);
+
+  const selectedSet = useMemo(() => new Set(selected), [selected]);
+  const allFilteredSelected = filtered.length > 0 && filtered.every((l) => selectedSet.has(l.id));
+
+  const toggle = (id: string) => {
+    const next = new Set(selectedSet);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    onChange(Array.from(next));
+  };
+
+  const toggleAllFiltered = () => {
+    const next = new Set(selectedSet);
+    if (allFilteredSelected) filtered.forEach((l) => next.delete(l.id));
+    else filtered.forEach((l) => next.add(l.id));
+    onChange(Array.from(next));
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2">
+        <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar por nombre o teléfono…"
+          className="h-9"
+        />
+        <Button type="button" variant="outline" size="sm" onClick={toggleAllFiltered} disabled={!filtered.length}>
+          {allFilteredSelected ? 'Quitar todos' : 'Seleccionar todos'}
+        </Button>
+      </div>
+      <p className="text-xs text-muted-foreground">{selected.length} contacto(s) seleccionado(s)</p>
+      <div className="max-h-72 overflow-y-auto rounded-md border divide-y">
+        {loading ? (
+          <p className="p-3 text-xs text-muted-foreground flex items-center gap-1.5"><Loader2 className="h-3.5 w-3.5 animate-spin" /> Cargando contactos…</p>
+        ) : filtered.length === 0 ? (
+          <p className="p-3 text-xs text-muted-foreground">{leads.length === 0 ? 'No hay contactos con teléfono.' : 'Sin resultados para la búsqueda.'}</p>
+        ) : (
+          filtered.map((l) => (
+            <label key={l.id} className="flex items-center gap-3 px-3 py-2 hover:bg-muted/40 cursor-pointer text-sm">
+              <Checkbox checked={selectedSet.has(l.id)} onCheckedChange={() => toggle(l.id)} />
+              <span className="flex-1 truncate">{l.name || 'Sin nombre'}</span>
+              <span className="text-xs text-muted-foreground">{l.phone}</span>
+            </label>
+          ))
+        )}
       </div>
     </div>
   );

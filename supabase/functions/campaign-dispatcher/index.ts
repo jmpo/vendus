@@ -136,9 +136,11 @@ Deno.serve(async (req) => {
         }
       } else if (t.connection_type === 'zernio' && cfg?.zernio?.zernio_template_name) {
         // Zernio identifica la plantilla por NAME + language (no por template_id de Meta).
+        // variable_mapping mapea cada {{n}} a un campo del lead (lo resuelve manual-outreach por lead).
         chosenTemplate = {
           zernio_template_name: cfg.zernio.zernio_template_name,
           zernio_template_language: cfg.zernio.zernio_template_language || 'es',
+          variable_mapping: cfg.zernio.variable_mapping ?? {},
         };
       }
 

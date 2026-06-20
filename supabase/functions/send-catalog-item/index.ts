@@ -154,8 +154,19 @@ Deno.serve(async (req) => {
     let deliveryChannel = channel;
     let lastProviderError: string | null = null;
     const sentCounts = { images: 0, videos: 0, documents: 0 };
+    let providerRecorded = false; // true cuando el provider (router) ya grabó el mensaje → evita duplicado
 
-    const imageList = buildImageList(item);
+    // WhatsApp solo soporta JPEG/PNG en imágenes. AVIF/WebP fallan (error 131053).
+    // Las servimos transcodeadas a JPG vía proxy de imágenes (wsrv.nl) para que Meta las descargue.
+    const waImageUrl = (u: string): string => {
+      if (!u) return u;
+      if (/\.(avif|webp)(\?|$)/i.test(u)) {
+        return `https://wsrv.nl/?url=${encodeURIComponent(u)}&output=jpg&w=1600&q=82`;
+      }
+      return u;
+    };
+
+    const imageList = buildImageList(item).map(waImageUrl);
     const videos: string[] = Array.isArray(item.videos) ? item.videos : [];
     const documents: Array<{ url: string; name: string; type?: string }> =
       Array.isArray(item.documents) ? item.documents : [];
@@ -459,6 +470,7 @@ Deno.serve(async (req) => {
       const okMain = await sendViaRouter("image", imageList[0], caption);
       if (okMain) {
         delivered = true;
+        providerRecorded = true; // zernio-send/meta-send ya grabó+broadcasteó el mensaje
         sentCounts.images++;
         if (sendExtraImages) {
           for (const img of imageList.slice(1, 3)) {
@@ -491,48 +503,51 @@ Deno.serve(async (req) => {
     }
 
     // === Persist message in history ===
-    const { data: msg, error: msgErr } = await supabase
-      .from("webchat_messages")
-      .insert({
-        conversation_id: body.conversation_id,
-        direction: "outbound",
-        sender_type: "bot",
-        content: caption,
-        message_type: "catalog_card",
-        metadata: {
-          catalog_item: {
-            id: item.id,
-            title: item.title,
-            price: item.price,
-            currency: item.currency,
-            url: item.url,
-            thumbnail_url: item.thumbnail_url,
-            images: item.images || [],
-            videos,
-            documents,
-            attributes: item.attributes || {},
+    // Si el envío fue por el router (Meta/Zernio), esas funciones YA grabaron y
+    // broadcastearon el mensaje → no insertamos de nuevo (evita la burbuja duplicada).
+    let msg: any = null;
+    if (!providerRecorded) {
+      const { data, error: msgErr } = await supabase
+        .from("webchat_messages")
+        .insert({
+          conversation_id: body.conversation_id,
+          direction: "outbound",
+          sender_type: "bot",
+          content: caption,
+          message_type: "catalog_card",
+          metadata: {
+            catalog_item: {
+              id: item.id,
+              title: item.title,
+              price: item.price,
+              currency: item.currency,
+              url: item.url,
+              thumbnail_url: item.thumbnail_url,
+              images: item.images || [],
+              videos,
+              documents,
+              attributes: item.attributes || {},
+            },
+            delivered,
+            delivery_channel: deliveryChannel,
+            sent_counts: sentCounts,
+            provider_error: lastProviderError,
           },
-          delivered,
-          delivery_channel: deliveryChannel,
-          sent_counts: sentCounts,
-          provider_error: lastProviderError,
-        },
-      })
-      .select()
-      .single();
+        })
+        .select()
+        .single();
+      msg = data;
+      if (msgErr) console.error("[send-catalog-item] persist error:", msgErr);
 
-    if (msgErr) {
-      console.error("[send-catalog-item] persist error:", msgErr);
-    }
-
-    // Broadcast realtime → el inbox muestra la tarjeta del catálogo al instante.
-    if (msg) {
-      try {
-        const ch = supabase.channel(`conversation:${conv.id}`);
-        await ch.send({ type: "broadcast", event: "new_message", payload: msg });
-        await supabase.removeChannel(ch);
-      } catch (e) {
-        console.error("[send-catalog-item] broadcast non-fatal:", e);
+      // Broadcast realtime → el inbox muestra la tarjeta del catálogo al instante.
+      if (msg) {
+        try {
+          const ch = supabase.channel(`conversation:${conv.id}`);
+          await ch.send({ type: "broadcast", event: "new_message", payload: msg });
+          await supabase.removeChannel(ch);
+        } catch (e) {
+          console.error("[send-catalog-item] broadcast non-fatal:", e);
+        }
       }
     }
 

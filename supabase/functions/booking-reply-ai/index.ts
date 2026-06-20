@@ -7,6 +7,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 import { resolveAIConfig, prepareAIRequestBody } from "../_shared/ai-router.ts";
+import { sendWhatsAppToPhone } from "../_shared/whatsapp-router.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -184,18 +185,20 @@ Siempre execute UMA tool. Después escreva uma respuesta corta e gentil para env
     payload: { intent, args: toolCall?.function?.arguments, message_text, result: toolResult },
   });
 
-  // Send WhatsApp reply if instance provided
-  if (instance_id && booking.guest_phone) {
+  // Envía la respuesta por la conexión REAL del lead (Meta/Evolution/Zernio).
+  // Si no hay conversación, cae a la instancia Evolution recibida (legado).
+  if (booking.guest_phone) {
     try {
-      await supabase.functions.invoke("evolution-send", {
-        body: {
-          organization_id: booking.organization_id,
-          instance_id,
-          type: "text",
-          to: booking.guest_phone.replace(/\D/g, "").replace(/^(\d)/, "55$1").replace(/^5555/, "55"),
-          payload: { text: replyText },
-        },
+      const sendRes = await sendWhatsAppToPhone({
+        supabase,
+        organizationId: booking.organization_id,
+        phone: booking.guest_phone,
+        text: replyText,
+        fallbackEvolutionInstanceId: instance_id ?? null,
       });
+      if (!sendRes.ok) {
+        console.warn(`[booking-reply-ai] reply not sent (provider=${sendRes.provider}): ${sendRes.error || sendRes.message}`);
+      }
     } catch (e: any) {
       console.warn("[booking-reply-ai] send reply failed:", e?.message || e);
     }

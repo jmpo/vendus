@@ -714,8 +714,8 @@ export function AdminExecutivePanel({ compact = false }: AdminExecutivePanelProp
                   {/* NOVO: pico de leads em producto */}
                   <div className="flex items-center justify-between gap-3 flex-wrap">
                     <div>
-                      <Label className="text-sm font-medium">Pico de leads em producto específico</Label>
-                      <p className="text-xs text-muted-foreground">Alertar cuando volume &gt; X% acima da media</p>
+                      <Label className="text-sm font-medium">Pico de leads en un producto específico</Label>
+                      <p className="text-xs text-muted-foreground">Alertar cuando el volumen &gt; X% por encima de la media</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Switch

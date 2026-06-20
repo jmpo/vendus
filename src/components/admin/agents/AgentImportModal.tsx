@@ -320,7 +320,7 @@ export function AgentImportModal({ open, onOpenChange, fixedProductId, onDraftRe
         },
       });
       if (error) throw error;
-      if (!data?.agent) throw new Error('Respuesta inválida da IA');
+      if (!data?.agent) throw new Error('Respuesta inválida de la IA');
 
       const finalProductId = (fixedProductId ?? null) || (productId === '__global__' ? null : productId);
       const draft: Partial<ProductAgent> = {

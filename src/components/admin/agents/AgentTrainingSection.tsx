@@ -45,9 +45,9 @@ const CATEGORIES = [
   { value: 'communication', label: '💬 Comunicación', description: 'Rapport, escucha activa, lenguaje corporal' },
   { value: 'objections', label: '🛡️ Objeciones', description: 'Técnicas de manejo de objeciones' },
   { value: 'closing', label: '✅ Cierre', description: 'Técnicas de cierre de ventas' },
-  { value: 'prospecting', label: '🔍 Prospección', description: 'Como encontrar e abordar leads' },
-  { value: 'negotiation', label: '🤝 Negociación', description: 'Táticas de negociación' },
-  { value: 'general', label: '📋 General', description: 'Otros materiales de treinamento' },
+  { value: 'prospecting', label: '🔍 Prospección', description: 'Cómo encontrar y abordar leads' },
+  { value: 'negotiation', label: '🤝 Negociación', description: 'Tácticas de negociación' },
+  { value: 'general', label: '📋 General', description: 'Otros materiales de entrenamiento' },
 ];
 
 export function AgentTrainingSection({ agentId, productId }: AgentTrainingSectionProps) {

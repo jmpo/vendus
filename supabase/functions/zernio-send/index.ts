@@ -60,6 +60,7 @@ Deno.serve(async (req: Request) => {
   const {
     connection_id, organization_id, conversation_id,
     to, type = 'text', text, media, template,
+    record = true, // si false: el llamador ya grabó la fila (evita bolha dupla)
   } = body ?? {};
 
   if (!connection_id || !to) return json({ error: 'missing connection_id or to' }, 400);
@@ -112,19 +113,22 @@ Deno.serve(async (req: Request) => {
     }
     // Freeform dentro de conversación abierta. Si hay media, el caption va como message.
     const msgText = text || (hasMedia ? media.caption : undefined);
-    res = await zfetch(apiKey, `/inbox/conversations/${zernioConvId}/messages`, {
+    const freeformBody = {
       accountId,
       ...(msgText ? { message: msgText } : {}),
       ...(hasMedia ? { attachmentUrl: media.url, attachmentType: mapAttachmentType(media.kind) } : {}),
       ...(hasMedia && media.kind === 'audio' && media.ptt ? { voiceNote: true } : {}),
-    });
+    };
+    console.log('[zernio-send] freeform →', JSON.stringify({ convId: zernioConvId, attachmentType: (freeformBody as any).attachmentType, hasMedia, kind: media?.kind, mime: media?.mime, url: media?.url?.slice(0, 120) }));
+    res = await zfetch(apiKey, `/inbox/conversations/${zernioConvId}/messages`, freeformBody);
+    console.log('[zernio-send] freeform ← status', res.status, JSON.stringify(res.data).slice(0, 400));
     zernioMsgId = res.data?.data?.messageId ?? res.data?.messageId ?? null;
   } else {
     return json({ error: 'NO_CONVERSATION', message: 'Sin conversación abierta — se requiere un template para iniciar.' }, 422);
   }
 
-  // Registrar el mensaje saliente
-  if (conversation_id) {
+  // Registrar el mensaje saliente (solo si el llamador no lo grabó ya).
+  if (conversation_id && record !== false) {
     const { data: insertedMsg } = await sb.from('webchat_messages').insert({
       conversation_id,
       direction: 'outbound',

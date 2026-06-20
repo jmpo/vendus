@@ -74,15 +74,20 @@ export async function resolveAudience(
   organizationId: string,
   audience: CampaignFilters,
   exclusion: CampaignFilters,
+  // Si se provee, la audiencia se restringe a leads asignados a este usuario
+  // (vendedor con permiso de campañas → solo alcanza sus propios leads).
+  restrictAssignedTo?: string | null,
 ): Promise<{ leadIds: string[]; total: number; excluded: number }> {
   let baseRows: any[] = [];
 
   if (audience.lead_ids?.length) {
-    const { data } = await supabase
+    let q = supabase
       .from("leads")
       .select("id, metadata")
       .eq("organization_id", organizationId)
       .in("id", audience.lead_ids);
+    if (restrictAssignedTo) q = q.eq("assigned_to", restrictAssignedTo);
+    const { data } = await q;
     baseRows = data ?? [];
   } else {
     let q = supabase
@@ -91,10 +96,13 @@ export async function resolveAudience(
       .eq("organization_id", organizationId)
       .limit(PAGE * 50);
 
+    // Restricción de vendedor: pisa cualquier filtro assigned_to del cliente.
+    if (restrictAssignedTo) q = q.eq("assigned_to", restrictAssignedTo);
+    else if (audience.assigned_to?.length) q = q.in("assigned_to", audience.assigned_to);
+
     if (audience.origins?.length) q = q.in("lead_origin", audience.origins);
     if (audience.channels?.length) q = q.in("lead_channel", audience.channels);
     if (audience.stage_ids?.length) q = q.in("current_stage_id", audience.stage_ids);
-    if (audience.assigned_to?.length) q = q.in("assigned_to", audience.assigned_to);
     if (audience.temperature?.length) q = q.in("temperature", audience.temperature);
     if (audience.created_after) q = q.gte("created_at", audience.created_after);
     if (audience.created_before) q = q.lte("created_at", audience.created_before);
@@ -165,4 +173,23 @@ export async function resolveAudience(
 
 export function createServiceClient(): SupabaseClient {
   return createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+}
+
+// Devuelve el user_id al que restringir la audiencia, o null si el caller es
+// admin/manager (sin restricción) o no se puede identificar (service-to-service).
+// Un vendedor (rol no privilegiado) solo puede alcanzar SUS leads asignados.
+export async function getSellerRestriction(
+  supabase: SupabaseClient,
+  authHeader: string | null,
+): Promise<string | null> {
+  if (!authHeader) return null; // invocación interna (dispatcher con service key)
+  const token = authHeader.replace(/^[Bb]earer\s+/, "");
+  // El token de service-role no representa un usuario → sin restricción.
+  if (token === Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")) return null;
+  const { data: u } = await supabase.auth.getUser(token);
+  const userId = u?.user?.id;
+  if (!userId) return null;
+  const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", userId);
+  const privileged = (roles ?? []).some((r: any) => r.role === "admin" || r.role === "manager");
+  return privileged ? null : userId;
 }

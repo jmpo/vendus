@@ -10,6 +10,7 @@ import {
   renderTemplate,
   DEFAULT_TEMPLATES,
 } from "../_shared/booking-templates.ts";
+import { sendWhatsAppToPhone } from "../_shared/whatsapp-router.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -208,20 +209,24 @@ async function processJob(supabase: any, job: any, siteUrl: string) {
   let waMessageId: string | null = null;
 
   // === WhatsApp ===
-  if ((channel === "whatsapp" || channel === "both") && targetPhone && settings?.whatsapp_instance_id) {
+  // Rutea por la conexión REAL del lead (Meta/Evolution/Zernio) buscando su conversación
+  // por teléfono; si no hay, cae a la instancia Evolution configurada (legado).
+  if ((channel === "whatsapp" || channel === "both") && targetPhone) {
     try {
-      const { data: sendRes, error: sendErr } = await supabase.functions.invoke("evolution-send", {
-        body: {
-          organization_id: job.organization_id,
-          instance_id: settings.whatsapp_instance_id,
-          type: "text",
-          to: targetPhone,
-          payload: { text: waText },
-        },
+      const sendRes = await sendWhatsAppToPhone({
+        supabase,
+        organizationId: job.organization_id,
+        phone: targetPhone,
+        text: waText,
+        fallbackEvolutionInstanceId: settings?.whatsapp_instance_id ?? null,
       });
-      if (sendErr) throw sendErr;
-      waSent = true;
-      waMessageId = sendRes?.body?.key?.id || sendRes?.messageId || null;
+      if (sendRes.ok) {
+        waSent = true;
+        waMessageId = sendRes.message_id || (sendRes.raw as any)?.body?.key?.id || (sendRes.raw as any)?.messageId || null;
+      } else {
+        // OUT_OF_WINDOW en Meta/Zernio (fuera de 24h) → requiere plantilla; el email cubre el aviso.
+        console.warn(`[dispatcher] whatsapp not sent (provider=${sendRes.provider}): ${sendRes.error || sendRes.message}`);
+      }
     } catch (e: any) {
       console.error("[dispatcher] whatsapp send error:", e?.message || e);
     }

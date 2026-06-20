@@ -2,7 +2,7 @@
 // sorteia contexto + número, calcula scheduled_for por preset de velocidade.
 // POST { campaign_id }
 
-import { resolveAudience, createServiceClient, type CampaignFilters } from "../_shared/campaign-audience.ts";
+import { resolveAudience, createServiceClient, getSellerRestriction, type CampaignFilters } from "../_shared/campaign-audience.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -65,12 +65,16 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Vendedor que inicia su propia campaña → audiencia restringida a sus leads.
+    const restrictTo = await getSellerRestriction(supabase, req.headers.get("Authorization"));
+
     // Resolve público (snapshot)
     const audience = await resolveAudience(
       supabase,
       campaign.organization_id,
       (campaign.audience_filters ?? {}) as CampaignFilters,
       (campaign.exclusion_filters ?? {}) as CampaignFilters,
+      restrictTo,
     );
     let { leadIds } = audience;
     const { total } = audience;

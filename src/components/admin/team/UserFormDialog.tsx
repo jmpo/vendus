@@ -469,12 +469,12 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
           <TabsContent value="permissions" className="space-y-5 pt-5">
             {!isEdit ? (
               <p className="text-sm text-muted-foreground text-center py-8">
-                Permisos poderão ser configuradas após crear o usuario.<br />
-                Defaults serán aplicadas automaticamente conforme o perfil elegido.
+                Los permisos se pueden configurar después de crear el usuario.<br />
+                Se aplican valores por defecto automáticamente según el perfil elegido.
               </p>
             ) : !permissions ? (
               <div className="text-center py-8 space-y-3">
-                <p className="text-sm text-muted-foreground">Permisos aún no foram inicializadas.</p>
+                <p className="text-sm text-muted-foreground">Los permisos todavía no se inicializaron.</p>
                 <Button
                   onClick={() => member && initPermissions.mutate({ userId: member.id, organizationId: member.organization_id || '', role: general.role })}
                   disabled={initPermissions.isPending}
@@ -485,6 +485,12 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
               </div>
             ) : (
               <>
+                {(member?.roles ?? []).some((r: any) => ['admin', 'manager', 'super_admin'].includes(r.role)) && (
+                  <div className="rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-700 dark:text-amber-400">
+                    <strong>Este usuario es admin/manager.</strong> Tiene acceso completo sin importar estos permisos
+                    (los toggles de abajo solo afectan a usuarios con rol Vendedor).
+                  </div>
+                )}
                 <div className="space-y-1.5">
                   <Label>Modo de visualización de reservas</Label>
                   <Select
@@ -493,8 +499,8 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
                   >
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="mine_only">Somente os meus</SelectItem>
-                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="mine_only">Solo las mías</SelectItem>
+                      <SelectItem value="all">Todas</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -512,7 +518,7 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
                           >
                             <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="disabled">Desabilitado</SelectItem>
+                              <SelectItem value="disabled">Deshabilitado</SelectItem>
                               <SelectItem value="enabled">Habilitado</SelectItem>
                             </SelectContent>
                           </Select>
@@ -551,26 +557,26 @@ export function UserFormDialog({ member, open, onOpenChange }: UserFormDialogPro
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="text-sm font-semibold">Notificaciones neste Dispositivo (Push)</h4>
+                  <h4 className="text-sm font-semibold">Notificaciones en este dispositivo (Push)</h4>
                   <div className="p-4 border rounded-lg text-center space-y-2">
                     <p className="text-xs text-muted-foreground">
-                      Receba notificaciones mismo con o navegador cerrado ou minimizado.
+                      Recibí notificaciones aunque tengas el navegador cerrado o minimizado.
                     </p>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={async () => {
-                        if (!('Notification' in window)) return toast.error('Navegador sin suporte');
+                        if (!('Notification' in window)) return toast.error('Navegador sin soporte');
                         const perm = await Notification.requestPermission();
                         if (perm === 'granted') {
                           setLocalNotifs((n) => ({ ...n, push_enabled: true }));
-                          toast.success('Notificaciones ativadas neste dispositivo');
+                          toast.success('Notificaciones activadas en este dispositivo');
                         } else {
-                          toast.error('Permiso negada');
+                          toast.error('Permiso denegado');
                         }
                       }}
                     >
-                      Ativar Notificaciones neste Dispositivo
+                      Activar notificaciones en este dispositivo
                     </Button>
                   </div>
                 </div>

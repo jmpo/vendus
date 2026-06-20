@@ -221,7 +221,7 @@ export function ChatInput({
   // ---------- Audio gravado ----------
   const handleAudioConfirm = async (blob: Blob, durationMs: number) => {
     setIsRecording(false);
-    const file = new File([blob], `audio-${Date.now()}.webm`, { type: blob.type || 'audio/webm' });
+    const file = new File([blob], `audio-${Date.now()}.mp3`, { type: blob.type || 'audio/mpeg' });
     try {
       const { media } = await upload(file, { kind: 'audio', durationMs });
       onSend('', media);
@@ -232,7 +232,7 @@ export function ChatInput({
 
   // ---------- Contacto / Enquete / Link de Reunión ----------
   const handleContactConfirm = ({ name, phone }: { name: string; phone: string }) => {
-    onSend(`📇 *Contacto*\nNome: ${name}\nTelefone: ${phone}`);
+    onSend(`📇 *Contacto*\nNombre: ${name}\nTeléfono: ${phone}`);
   };
 
   const handlePollConfirm = ({ question, options }: { question: string; options: string[] }) => {
