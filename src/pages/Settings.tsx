@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useUpdatePassword } from '@/hooks/useProfile';
@@ -52,12 +52,18 @@ export default function Settings() {
   });
 
   // Notification preferences
-  const [notifications, setNotifications] = useState({
-    email: true,
-    push: true,
-    sound: true,
-    dailySummary: true
+  // Preferencias de notificación — persistidas en localStorage (antes solo eran estado
+  // local y se perdían al recargar: feature fantasma). Ahora la preferencia se guarda.
+  const [notifications, setNotifications] = useState(() => {
+    try {
+      const raw = localStorage.getItem('vendus_notif_prefs');
+      if (raw) return JSON.parse(raw) as { email: boolean; push: boolean; sound: boolean; dailySummary: boolean };
+    } catch { /* ignore */ }
+    return { email: true, push: true, sound: true, dailySummary: true };
   });
+  useEffect(() => {
+    try { localStorage.setItem('vendus_notif_prefs', JSON.stringify(notifications)); } catch { /* ignore */ }
+  }, [notifications]);
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

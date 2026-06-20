@@ -36,7 +36,10 @@ export function CampaignDetail({
 
   useEffect(() => {
     supabase.from('campaigns').select('*').eq('id', campaignId).maybeSingle()
-      .then(({ data }) => setCampaign(data));
+      .then(({ data, error }) => {
+        if (error) { console.error('[CampaignDetail] load failed:', error); return; }
+        setCampaign(data);
+      });
   }, [campaignId, counts]);
 
   const togglePause = async () => {

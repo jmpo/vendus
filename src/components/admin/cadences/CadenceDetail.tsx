@@ -14,13 +14,18 @@ interface Props {
 
 export function CadenceDetail({ cadenceId, onBack, onEdit }: Props) {
   const [cadence, setCadence] = useState<any>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const { steps } = useCadenceSteps(cadenceId);
 
   useEffect(() => {
     supabase.from('cadences' as any).select('*').eq('id', cadenceId).maybeSingle()
-      .then(({ data }) => setCadence(data));
+      .then(({ data, error }) => {
+        if (error) { console.error('[CadenceDetail] load failed:', error); setLoadError(error.message); }
+        else setCadence(data);
+      });
   }, [cadenceId]);
 
+  if (loadError) return <div className="p-6 text-destructive text-sm">No se pudo cargar la cadencia: {loadError}</div>;
   if (!cadence) return <div className="p-6">Cargando…</div>;
 
   return (
