@@ -98,7 +98,8 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
       });
 
       if (stageId) {
-        await supabase.from('leads').update({ current_stage_id: stageId }).eq('id', leadId);
+        const { error: stageErr } = await supabase.from('leads').update({ current_stage_id: stageId }).eq('id', leadId);
+        if (stageErr) throw stageErr;
         queryClient.invalidateQueries({ queryKey: ['linked-lead'] });
         queryClient.invalidateQueries({ queryKey: ['leads'] });
       }

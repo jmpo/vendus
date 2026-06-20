@@ -449,7 +449,12 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
   // Handle move stage
   const handleMoveStage = useCallback(async (stageId: string) => {
     if (!linkedLead?.id) return;
-    await supabase.from('leads').update({ current_stage_id: stageId }).eq('id', linkedLead.id);
+    // .select() para detectar bloqueo silencioso de RLS (0 filas = lead no asignado a vos)
+    const { data, error } = await supabase.from('leads').update({ current_stage_id: stageId }).eq('id', linkedLead.id).select('id');
+    if (error || !data?.length) {
+      toast({ title: 'No se pudo mover la etapa', description: 'Es posible que este lead no esté asignado a vos.', variant: 'destructive' });
+      return;
+    }
     queryClient.invalidateQueries({ queryKey: ['linked-lead', selectedConversation?.lead_id] });
     toast({ title: 'Estágio atualizado' });
   }, [linkedLead?.id, selectedConversation?.lead_id, queryClient, toast]);
@@ -1113,7 +1118,11 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
               onScheduleFollowup={() => setShowScheduleFollowup(true)}
               onMarkHot={async () => {
                 if (!linkedLead?.id) { toast({ title: 'Sem lead vinculado' }); return; }
-                await supabase.from('leads').update({ temperature: 'hot' }).eq('id', linkedLead.id);
+                const { data, error } = await supabase.from('leads').update({ temperature: 'hot' }).eq('id', linkedLead.id).select('id');
+                if (error || !data?.length) {
+                  toast({ title: 'No se pudo marcar el lead', description: 'Es posible que no esté asignado a vos.', variant: 'destructive' });
+                  return;
+                }
                 queryClient.invalidateQueries({ queryKey: ['linked-lead'] });
                 toast({ title: '🔥 Lead marcado como caliente' });
               }}
@@ -1254,8 +1263,9 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
               onClose={() => setShowEditContact(false)}
               lead={linkedLead as any}
               onSave={async (updates) => {
-                const { error } = await supabase.from('leads').update(updates).eq('id', linkedLead.id);
+                const { data, error } = await supabase.from('leads').update(updates).eq('id', linkedLead.id).select('id');
                 if (error) throw error;
+                if (!data?.length) throw new Error('No se pudo guardar: el lead no está asignado a vos.');
                 queryClient.invalidateQueries({ queryKey: ['linked-lead'] });
                 queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
               }}
