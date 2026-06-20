@@ -95,18 +95,22 @@ function ConnectorsSvg({
     >
       <defs>
         <linearGradient id="hier-gradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.4" />
+          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="1" />
+          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.7" />
         </linearGradient>
+        <marker id="hier-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="hsl(var(--primary))" />
+        </marker>
       </defs>
       {paths.map((p, i) => (
         <path
           key={i}
           d={p.d}
           fill="none"
-          stroke={p.highlight ? 'url(#hier-gradient)' : 'hsl(var(--border))'}
-          strokeWidth={p.highlight ? 2 : 1.5}
+          stroke={p.highlight ? 'url(#hier-gradient)' : 'hsl(var(--primary) / 0.5)'}
+          strokeWidth={p.highlight ? 2.5 : 2}
           strokeLinecap="round"
+          markerEnd="url(#hier-arrow)"
         />
       ))}
       {/* Etiquetas de las conexiones (qué dispara cada ruta) */}
