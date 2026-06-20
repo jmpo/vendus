@@ -274,6 +274,56 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
               </div>
             </div>
           </Card>
+
+          {/* Plantilla de reenganche (fuera de 24h) */}
+          <Card className="p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <Repeat className="h-4 w-4 text-primary" />
+              <Label className="text-sm font-semibold">Plantilla de reenganche (fuera de 24h)</Label>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              En WhatsApp <strong>oficial (Zernio/Meta)</strong>, pasadas <strong>24h</strong> sin respuesta del cliente
+              ya no se puede mandar texto libre: WhatsApp exige una <strong>plantilla aprobada</strong>. Cargá acá el
+              nombre EXACTO de tu plantilla aprobada en Zernio para que el follow-up post-24h salga igual.
+              <br />
+              <span className="text-muted-foreground/80">
+                (En Evolution no hace falta — no tiene límite de 24h. Si lo dejás vacío, el follow-up fuera de 24h en
+                Zernio/Meta no se envía y queda registrado el motivo.)
+              </span>
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1">
+                <Label className="text-xs">Nombre de la plantilla</Label>
+                <Input
+                  placeholder="ej: reenganche_seguimiento"
+                  value={formData.followup_template_name ?? ''}
+                  onChange={(e) => onChange({ followup_template_name: e.target.value || null })}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">Idioma</Label>
+                <Input
+                  placeholder="es"
+                  value={formData.followup_template_language ?? 'es'}
+                  onChange={(e) => onChange({ followup_template_language: e.target.value || 'es' })}
+                />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Parámetros (opcional, separados por coma — para {'{{1}}'}, {'{{2}}'}…)</Label>
+              <Input
+                placeholder="ej: Hola, Citroën C4 Cactus"
+                value={Array.isArray(formData.followup_template_params) ? formData.followup_template_params.join(', ') : ''}
+                onChange={(e) =>
+                  onChange({
+                    followup_template_params: e.target.value
+                      ? e.target.value.split(',').map((s) => s.trim()).filter(Boolean)
+                      : [],
+                  })
+                }
+              />
+            </div>
+          </Card>
         </>
       )}
     </div>

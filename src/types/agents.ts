@@ -137,6 +137,10 @@ export interface ProductAgent {
   followup_stop_on_booking?: boolean;
   followup_channels?: string[];
   followup_attempt_hints?: Array<{ attempt: number; hint: string }> | any;
+  // Plantilla de reenganche para follow-up fuera de la ventana de 24h (Meta/Zernio oficial)
+  followup_template_name?: string | null;
+  followup_template_language?: string | null;
+  followup_template_params?: string[] | any;
   // === Welcome + Quick Menu (Orquestrador) ===
   welcome_enabled?: boolean;
   welcome_message?: string | null;

@@ -98,6 +98,7 @@ const PRODUCT_AGENTS_COLUMNS = new Set<string>([
   'followup_tone', 'followup_extra_instructions', 'followup_respect_business_hours',
   'followup_stop_on_human', 'followup_stop_on_booking', 'followup_channels',
   'followup_attempt_hints',
+  'followup_template_name', 'followup_template_language', 'followup_template_params',
 ]);
 
 function pickAgentFields<T extends Record<string, unknown>>(payload: T): Partial<T> {
