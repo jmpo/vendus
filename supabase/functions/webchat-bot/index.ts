@@ -4437,7 +4437,6 @@ REGRAS DE USO:
                       responseContent = 'Tuve un problema técnico para reservar ese horario en la agenda. ¿Me das un minuto que lo confirmo con el equipo?';
                       try {
                         await supabase.from('notifications').insert({
-                          organization_id: hostProfile.organization_id,
                           user_id: scheduleUserId,
                           title: '⚠️ Fallo ao crear reserva via IA',
                           message: `No pude crear el evento en lla agenda para ${args.guest_name} (${args.guest_email}) em ${args.preferred_date} ${args.preferred_time}. Verificá manualmente. Error: ${calendarInsertError?.message || 'desconocido'}`,
@@ -4668,7 +4667,6 @@ REGRAS DE USO:
                       const notifMsg = `${eventType.name} con ${args.guest_name} (${args.guest_email}) em ${formattedDateNotif} a las ${formattedTimeNotif}.`;
 
                       const notifRows = Array.from(recipientIds).map((uid) => ({
-                        organization_id: hostProfile.organization_id,
                         user_id: uid,
                         title: notifTitle,
                         message: notifMsg,
@@ -4708,7 +4706,6 @@ REGRAS DE USO:
                       // Notify internal team
                       try {
                         await supabase.from('notifications').insert({
-                          organization_id: hostProfile.organization_id,
                           user_id: scheduleUserId,
                           title: '⚠️ Email de confirmación falló',
                           message: `Reserva creado para ${args.guest_name} (${args.guest_email}) em ${formattedDate} ${formattedTime}, mas el email automático no fue enviado. Confirme manualmente.`,

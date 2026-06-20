@@ -448,7 +448,6 @@ async function applyActions(supabase: any, orgId: string, item: any, actions: Ac
       if (lead?.assigned_to) {
         await supabase.from('notifications').insert({
           user_id: lead.assigned_to,
-          organization_id: orgId,
           title: `🎯 Lead ${item.classification.toUpperCase()} detectado`,
           message: item.reason,
           type: 'opportunity_radar',

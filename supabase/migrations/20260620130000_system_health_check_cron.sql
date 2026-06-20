@@ -1,0 +1,12 @@
+-- Monitoreo "sobre la marcha": cron cada 30 min que corre system-health-check.
+-- Detecta crons fallidos, follow-ups fallidos, errores 5xx internos, conversaciones
+-- WhatsApp sin lead y key de IA inválida → genera notificaciones system_alert a los admins.
+-- También se desprogramó 'cakto-recovery-trigger' (no se usa; tiraba HTTP 400 cada hora).
+--
+-- NOTA: los cron jobs viven en pg_cron (no en migraciones). Documentado aquí; ya aplicado.
+-- select cron.unschedule('cakto-recovery-trigger');
+-- select cron.schedule('system-health-check', '*/30 * * * *', $job$
+--   select net.http_post(
+--     url:='https://jtdvnyqxhsrtqpamtepz.supabase.co/functions/v1/system-health-check',
+--     headers:='{"Content-Type":"application/json","Authorization":"Bearer <SERVICE_ROLE_KEY>"}'::jsonb,
+--     body:='{}'::jsonb) $job$);
