@@ -114,7 +114,7 @@ serve(async (req) => {
             // Check if event already exists (by google_event_id)
             const { data: existingEvent } = await supabase
               .from("calendar_events")
-              .select("id")
+              .select("id, event_type")
               .eq("user_id", userId)
               .eq("google_event_id", gEvent.id)
               .single();
@@ -139,10 +139,12 @@ serve(async (req) => {
             };
 
             if (existingEvent) {
-              // Update existing
+              // Update existing — PRESERVAR el event_type local (ej. 'booking'): no pisarlo
+              // con 'meeting', porque rompía queries de citas (useLeadBooking, recordatorios).
+              const { event_type: _ignoreType, ...eventDataNoType } = eventData;
               await supabase
                 .from("calendar_events")
-                .update(eventData)
+                .update(eventDataNoType)
                 .eq("id", existingEvent.id);
             } else {
               // Insert new

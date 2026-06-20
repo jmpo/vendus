@@ -76,7 +76,7 @@ REGLAS
 function buildPrompt(input: OrchestratorRunInput): string {
   const productsList = input.products.length
     ? input.products
-        .map((p) => `- ${p.name} (id: ${p.id})${p.description ? ` — ${p.description.slice(0, 120)}` : ''}`)
+        .map((p) => `- ${p.name} (id: ${p.id})${p.description ? ` — ${p.description.slice(0, 300)}` : ''}`)
         .join('\n')
     : '- (ningún producto registrado)';
 

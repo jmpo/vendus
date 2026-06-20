@@ -1379,18 +1379,26 @@ serve(async (req) => {
             confianca: result.confianca,
           }));
 
-          // Persist orchestration log (best-effort)
+          // Persist orchestration log (best-effort). Columnas REALES de la tabla
+          // (antes usaba nombres viejos inexistentes → el insert siempre fallaba).
           try {
+            const _minConfLog = orchConfig.min_confidence ?? 0.6;
+            const _action = result.intencao === 'humano'
+              ? 'handoff_human'
+              : (result.produto_id && result.confianca >= _minConfLog) ? 'route' : 'clarify';
             await supabase.from('orchestration_logs').insert({
               organization_id: convInit.organization_id,
               conversation_id: body.conversation_id,
               lead_id: convInit.lead_id || null,
-              message: body.message,
-              detected_intent: result.intencao,
-              detected_product_id: result.produto_id,
-              confidence: result.confianca,
-              extracted_context: result.contexto_extraido,
-              orchestrator_response: result.respuesta_orquestrador || null,
+              channel: convInit.channel || 'whatsapp',
+              message_in: body.message,
+              intencao: result.intencao,
+              produto_id: result.produto_id,
+              produto_nome: result.produto_nome || null,
+              confianca: result.confianca,
+              contexto_extraido: result.contexto_extraido,
+              action: _action,
+              raw_response: result as any,
             });
           } catch (logErr) {
             console.warn('[webchat-bot] orchestration_logs insert failed (non-fatal):', logErr);
@@ -2336,6 +2344,32 @@ serve(async (req) => {
               (lead as any).tags = (tagRows ?? []).map((r: any) => r.lead_tags?.name).filter(Boolean);
             } catch { (lead as any).tags = []; }
             leadContext = lead;
+            // EMBUDO: asociar el producto resuelto al lead y meterlo en la PRIMERA etapa
+            // del pipeline (si aún no tiene). Así el lead entra al embudo/reportes solo.
+            // body.product_id ya viene resuelto por el orquestador o el especialista.
+            if (body.product_id && (!lead.product_id || !lead.current_stage_id)) {
+              try {
+                const leadUpd: Record<string, any> = {};
+                if (!lead.product_id) leadUpd.product_id = body.product_id;
+                if (!lead.current_stage_id) {
+                  const { data: firstStage } = await supabase
+                    .from('pipeline_stages')
+                    .select('id')
+                    .eq('product_id', body.product_id)
+                    .eq('is_won', false)
+                    .eq('is_lost', false)
+                    .order('order_index', { ascending: true })
+                    .limit(1)
+                    .maybeSingle();
+                  if (firstStage?.id) leadUpd.current_stage_id = firstStage.id;
+                }
+                if (Object.keys(leadUpd).length > 0) {
+                  await supabase.from('leads').update(leadUpd).eq('id', lead.id);
+                  Object.assign(leadContext as any, leadUpd);
+                  console.log('[webchat-bot] 🎯 lead', lead.id, 'entró al embudo:', leadUpd);
+                }
+              } catch (e) { console.warn('[webchat-bot] lead funnel backfill failed:', e); }
+            }
             // Detect if lead is already a customer (won stage OR "Cliente" tag OR has won deal)
             let isCustomer = false;
             if (lead.current_stage_id) {

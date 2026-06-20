@@ -1,6 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { recordLovableUsage } from '../_shared/ai-router.ts';
 import { sendWhatsAppForConversation } from '../_shared/whatsapp-router.ts';
+import { resolveOutreachDecision, logOutreachDecision } from '../_shared/whatsapp-window.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -360,6 +361,7 @@ Gere uma mensagem de follow-up estratégica DIFERENTE das anteriores.`;
         // Enviar por la conexión REAL de la conversa (Evolution / Meta / Zernio) vía router.
         // Sin conversación vinculada, fallback a Evolution Go (legacy, auto-resolve instancia).
         let sendSuccess = false;
+        let sentContent = followupMessage; // lo que se guardará en la conversación (freeform o marca de plantilla)
         try {
           if (item.conversation_id) {
             const { data: convRow } = await supabase
@@ -367,21 +369,69 @@ Gere uma mensagem de follow-up estratégica DIFERENTE das anteriores.`;
               .select('id, organization_id, meta_connection_id, evolution_instance_id, zernio_connection_id, visitor_phone')
               .eq('id', item.conversation_id)
               .maybeSingle();
-            const sendRes = await sendWhatsAppForConversation({
-              supabase,
-              conversation: convRow ?? { id: item.conversation_id, organization_id: item.organization_id, visitor_phone: phone },
-              to: phone,
-              text: followupMessage,
-            });
-            sendSuccess = !!sendRes?.ok;
-            if (!sendSuccess) {
-              const reason = sendRes?.error === 'OUT_OF_WINDOW'
-                ? 'Fuera de ventana 24h — requiere template (follow-up oficial)'
-                : (sendRes?.error || 'router send failed');
-              console.error(`[FollowupCron] router send failed for ${item.id}:`, reason);
-              await releaseForRetry(`router send failed: ${reason}`);
-              failed++;
-              continue;
+            const conv = convRow ?? { id: item.conversation_id, organization_id: item.organization_id, visitor_phone: phone };
+
+            // Decidir modo según proveedor + ventana de 24h (Evolution = libre; Meta/Zernio = 24h).
+            const decision = await resolveOutreachDecision(supabase, conv);
+            logOutreachDecision('FollowupCron', { item: item.id, conv: item.conversation_id, attempt: attemptNumber }, decision);
+
+            if (decision.mode === 'template_required') {
+              // Fuera de 24h en WhatsApp oficial → SOLO plantilla aprobada (HSM).
+              const tplName = agent.followup_template_name;
+              if (!tplName) {
+                const msg = `OUT_OF_WINDOW_NO_TEMPLATE: lead fuera de 24h en ${decision.provider} y el agente "${agent.name}" no tiene plantilla de reenganche (followup_template_name). Configurá una plantilla aprobada para reenganchar.`;
+                console.error(`[FollowupCron] ⛔ ${item.id}: ${msg}`);
+                await supabase.from('ai_outreach_queue').update({ status: 'failed', error_message: msg }).eq('id', item.id);
+                failed++;
+                continue;
+              }
+              const tplLang = agent.followup_template_language || 'es';
+              const tplParams = Array.isArray(agent.followup_template_params) ? agent.followup_template_params : [];
+              let tplOk = false;
+              let tplErr = '';
+              if (decision.provider === 'zernio') {
+                const r = await supabase.functions.invoke('zernio-send', {
+                  body: { connection_id: conv.zernio_connection_id, organization_id: item.organization_id, conversation_id: item.conversation_id, to: phone, type: 'template', template: { name: tplName, language: tplLang, params: tplParams } },
+                });
+                tplOk = !r.error && (r.data as any)?.ok !== false && !(r.data as any)?.error;
+                tplErr = r.error?.message || (r.data as any)?.error || 'zernio template failed';
+              } else if (decision.provider === 'meta') {
+                const r = await supabase.functions.invoke('meta-whatsapp-send', {
+                  body: { organization_id: item.organization_id, connection_id: conv.meta_connection_id, conversation_id: item.conversation_id, to: phone, type: 'template', template: { name: tplName, language: tplLang, params: tplParams } },
+                });
+                tplOk = !r.error && (r.data as any)?.ok !== false && !(r.data as any)?.error;
+                tplErr = r.error?.message || (r.data as any)?.error || 'meta template failed';
+              } else {
+                tplErr = `proveedor inesperado para template: ${decision.provider}`;
+              }
+              if (!tplOk) {
+                console.error(`[FollowupCron] template send failed ${item.id}:`, tplErr);
+                await releaseForRetry(`template send failed (${decision.provider}): ${tplErr}`);
+                failed++;
+                continue;
+              }
+              console.log(`[FollowupCron] ✅ reenganche por PLANTILLA '${tplName}' (${decision.provider}, fuera de 24h) item=${item.id}`);
+              sentContent = `📩 Plantilla de reenganche: ${tplName}`;
+              sendSuccess = true;
+            } else {
+              // freeform: Evolution (sin límite) o dentro de 24h en oficial.
+              const sendRes = await sendWhatsAppForConversation({
+                supabase,
+                conversation: conv,
+                to: phone,
+                text: followupMessage,
+              });
+              sendSuccess = !!sendRes?.ok;
+              if (!sendSuccess) {
+                const reason = sendRes?.error === 'OUT_OF_WINDOW'
+                  ? 'OUT_OF_WINDOW pese a decisión freeform — revisar last_inbound_at de la conversación'
+                  : (sendRes?.error || 'router send failed');
+                console.error(`[FollowupCron] router send failed for ${item.id}:`, reason);
+                await releaseForRetry(`router send failed: ${reason}`);
+                failed++;
+                continue;
+              }
+              console.log(`[FollowupCron] ✅ freeform enviado (${decision.provider}, ${decision.reason}) item=${item.id}`);
             }
           } else {
             const { data: sendData, error: sendErr } = await supabase.functions.invoke('evolution-send', {
@@ -402,13 +452,13 @@ Gere uma mensagem de follow-up estratégica DIFERENTE das anteriores.`;
           continue;
         }
 
-        // Save message in conversation
+        // Save message in conversation (freeform real, o marca de la plantilla enviada)
         if (item.conversation_id) {
           await supabase
             .from('webchat_messages')
             .insert({
               conversation_id: item.conversation_id,
-              content: followupMessage,
+              content: sentContent,
               sender_type: 'bot',
               direction: 'outbound',
             });

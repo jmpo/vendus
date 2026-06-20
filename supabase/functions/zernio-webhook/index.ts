@@ -105,7 +105,7 @@ async function handleInbound(sb: any, conn: any, payload: any) {
   //    tiene su propia conversación con el mismo contacto — no se mezclan entre canales.
   const { data: existing } = await sb
     .from('webchat_conversations')
-    .select('id, status')
+    .select('id, status, lead_id')
     .eq('organization_id', conn.organization_id)
     .eq('channel', 'whatsapp')
     .eq('zernio_connection_id', conn.id)
@@ -114,18 +114,66 @@ async function handleInbound(sb: any, conn: any, payload: any) {
     .order('last_message_at', { ascending: false, nullsFirst: false })
     .limit(1);
 
+  // Find-or-create del LEAD por teléfono (sin duplicar). El CRM es WhatsApp-first:
+  // cada contacto que escribe DEBE tener un lead → habilita etiquetas, pipeline,
+  // reportes, follow-up y vinculación de citas. (Antes Zernio no creaba lead nunca.)
+  const ensureLeadId = async (): Promise<string | null> => {
+    try {
+      // Buscar por phone_normalized (columna INDEXADA + base del UNIQUE (org, phone_normalized)).
+      const { data: existingLead } = await sb
+        .from('leads')
+        .select('id')
+        .eq('organization_id', conn.organization_id)
+        .eq('phone_normalized', fromNorm)
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      if (existingLead?.id) return existingLead.id;
+      const { data: newLead, error: leadErr } = await sb
+        .from('leads')
+        .insert({
+          organization_id: conn.organization_id,
+          name: contactName || fromNorm,
+          phone: fromNorm,
+          phone_normalized: fromNorm, // necesario para el UNIQUE (org, phone_normalized) → dedup real
+          source: 'whatsapp',
+          whatsapp_opt_in: true, // nos escribió → opted-in (habilita follow-up/campañas)
+        })
+        .select('id')
+        .single();
+      if (leadErr) {
+        // Carrera / violación de UNIQUE: si otro mensaje lo creó en paralelo, re-buscar.
+        const { data: race } = await sb
+          .from('leads').select('id')
+          .eq('organization_id', conn.organization_id).eq('phone_normalized', fromNorm)
+          .order('created_at', { ascending: true }).limit(1).maybeSingle();
+        if (race?.id) return race.id;
+        console.error('[zernio-webhook] lead create error', leadErr.message);
+        return null;
+      }
+      return newLead?.id || null;
+    } catch (e) {
+      console.error('[zernio-webhook] ensureLead failed', e);
+      return null;
+    }
+  };
+
   let conversationId: string;
   if (existing && existing.length > 0) {
     conversationId = existing[0].id;
+    // Backfill: conversación vieja sin lead → vincular ahora.
+    const leadIdForExisting = existing[0].lead_id || (await ensureLeadId());
     await sb.from('webchat_conversations').update({
       last_inbound_at: new Date().toISOString(),
       last_message_at: new Date().toISOString(),
       zernio_conversation_id: zernioConvId || undefined,
       ...(contactName ? { visitor_name: contactName } : {}),
+      ...(existing[0].lead_id ? {} : (leadIdForExisting ? { lead_id: leadIdForExisting } : {})),
     }).eq('id', conversationId);
   } else {
     const { data: widget } = await sb
       .from('webchat_widgets').select('id').eq('organization_id', conn.organization_id).eq('is_active', true).limit(1).maybeSingle();
+    const leadIdForNew = await ensureLeadId();
     const { data: created, error: insErr } = await sb
       .from('webchat_conversations')
       .insert({
@@ -138,6 +186,7 @@ async function handleInbound(sb: any, conn: any, payload: any) {
         visitor_name: contactName ?? fromNorm,
         zernio_connection_id: conn.id,
         zernio_conversation_id: zernioConvId || null,
+        lead_id: leadIdForNew,
         last_inbound_at: new Date().toISOString(),
         last_message_at: new Date().toISOString(),
       })
