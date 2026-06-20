@@ -354,11 +354,12 @@ Deno.serve(async (req) => {
       console.error('[funnel-submit] Fase 4 post-actions error:', postErr);
     }
 
-    // 8. Update funnel analytics
-    await supabase.rpc('increment_funnel_leads', {
+    // 8. Update funnel analytics (no debe romper el flujo si falla, pero SÍ se loguea)
+    const { error: incErr } = await supabase.rpc('increment_funnel_leads', {
       p_funnel_id: funnel.id,
       p_channel: channel,
     });
+    if (incErr) console.error('[funnel-submit] increment_funnel_leads FALLÓ:', channel, incErr.message);
 
     // 8.5 Fire webhooks configured as 'on_complete' (now we have lead_id)
     try {
