@@ -210,7 +210,11 @@ export async function resolveAIConfig(
       return buildLovableConfig(envLovableKey || pool.api_key, usedModel, 'gateway', extra);
     }
 
-    // 4) Pool vacío
+    // 4) Pool vacío → cae al fallback de entorno.
+    //    Self-hosted: si hay OPENAI_API_KEY propia, usar OpenAI (no exige pool de plataforma).
+    if (envOpenAIKey) {
+      return { ...envFallbackConfig, model: preferredModel || adaptModelForProvider(routedModel || DEFAULT_MODEL, 'openai') };
+    }
     if (plan.provider === 'lovable' && envLovableKey) {
       return { ...envFallbackConfig, model: preferredModel || routedModel || DEFAULT_MODEL };
     }

@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { splitIntoBubbles } from "../_shared/humanizer.ts";
-import { recordLovableUsage } from "../_shared/ai-router.ts";
+import { recordLovableUsage, resolveAIConfig, recordAIUsage } from "../_shared/ai-router.ts";
 import { resolveAgentSendConnection } from "../_shared/agent-connection.ts";
 import { normalizePhoneBR } from "../_shared/phone.ts";
 
@@ -17,7 +17,6 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const body = await req.json() as {
@@ -355,11 +354,13 @@ Email: ${lead?.email || "Não informado"}
 Telefone: ${leadPhone}
 Temperatura: ${lead?.temperature || "indefinida"}`;
 
-          const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+          // Router de IA: usa la conexión configurada (OpenAI propio / Lovable / pool). NO hardcodea Lovable.
+          const aiCfg = await resolveAIConfig(supabase, organization_id, 'agent_chat');
+          const aiResponse = await fetch(aiCfg.endpoint, {
             method: "POST",
-            headers: { Authorization: `Bearer ${lovableApiKey}`, "Content-Type": "application/json" },
+            headers: aiCfg.headers,
             body: JSON.stringify({
-              model: "google/gemini-2.5-flash",
+              model: aiCfg.model,
               messages: [
                 { role: "system", content: systemPrompt },
                 { role: "user", content: userPrompt },
@@ -368,13 +369,15 @@ Temperatura: ${lead?.temperature || "indefinida"}`;
           });
 
           if (!aiResponse.ok) {
+            const errTxt = await aiResponse.text().catch(() => '');
+            console.error('[ManualOutreach] AI failed', aiResponse.status, aiCfg.provider, errTxt.slice(0, 200));
             await logFailedMessage(supabase, conversationId, `[falha IA ${aiResponse.status}]`, `AI failed: ${aiResponse.status}`);
             results.push({ leadId, error: `AI failed: ${aiResponse.status}`, conversationId });
             continue;
           }
 
           const aiData = await aiResponse.json();
-          await recordLovableUsage(supabase, organization_id, 'agent_chat', 'google/gemini-2.5-flash', aiData?.usage, 'manual-outreach');
+          await recordAIUsage(supabase, organization_id, aiCfg, 'agent_chat', aiData?.usage, 'manual-outreach');
           const generatedMessage = aiData.choices?.[0]?.message?.content?.trim();
           if (!generatedMessage) {
             await logFailedMessage(supabase, conversationId, '[IA retornou vazio]', 'AI returned empty message');

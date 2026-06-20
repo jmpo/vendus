@@ -284,6 +284,16 @@ Deno.serve(async (req) => {
       })
       .eq("id", campaign_id);
 
+    // Dispara el dispatcher YA (sin esperar el cron de 1 min) → envío inmediato.
+    // Fire-and-forget: no bloquea la respuesta. El cron sigue como respaldo.
+    try {
+      fetch(`${supabaseUrl}/functions/v1/campaign-dispatcher`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceKey}` },
+        body: "{}",
+      }).catch((e) => console.error("[campaign-start] dispatcher trigger non-fatal:", e));
+    } catch (_) { /* noop */ }
+
     // Incrementa usage_count dos contextos da biblioteca
     const usedIds = Array.from(new Set(contextEntries.map((c) => c.id).filter(Boolean))) as string[];
     if (usedIds.length) {

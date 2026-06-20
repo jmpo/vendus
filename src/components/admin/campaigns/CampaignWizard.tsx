@@ -60,10 +60,10 @@ type Filters = {
 };
 
 const SPEED_PRESETS = [
-  { value: 'safe', label: '🐢 Seguro', desc: '2 a 5 minutos entre envios' },
-  { value: 'recommended', label: '🟢 Recomendado', desc: '1 a 3 minutos entre envios' },
+  { value: 'safe', label: '🐢 Seguro', desc: '2 a 5 minutos entre envíos' },
+  { value: 'recommended', label: '🟢 Recomendado', desc: '1 a 3 minutos entre envíos' },
   { value: 'fast', label: '🚀 Rápido', desc: '30 segundos a 2 minutos' },
-  { value: 'aggressive', label: '⚠️ Agressivo', desc: '10 a 45 segundos' },
+  { value: 'aggressive', label: '⚠️ Agresivo', desc: '10 a 45 segundos' },
 ];
 
 const FULL_OPERATORS = [
