@@ -2111,13 +2111,16 @@ serve(async (req) => {
         }
       } catch { /* non-fatal */ }
 
-      // Fetch product knowledge if enabled
-      if (body.agent_config.use_product_brain && body.product_id) {
+      // Fetch product knowledge — por defecto ENCENDIDO (use_product_brain solía no existir
+      // como columna; si no viene definido lo tratamos como true para no perder el cerebro).
+      let gotProductBrain = false;
+      if (body.agent_config.use_product_brain !== false && body.product_id) {
         const productKnowledge = await fetchProductBrain(supabase, body.product_id);
         if (productKnowledge) {
           systemPrompt += productKnowledge;
+          gotProductBrain = true;
         }
-        
+
         // Also fetch sales training materials (product + agent-specific)
         const trainingKnowledge = await fetchTrainingMaterials(supabase, body.product_id, activeAgent?.id);
         if (trainingKnowledge) {
@@ -2125,6 +2128,35 @@ serve(async (req) => {
         }
       } else if (body.agent_config.knowledge_base) {
         systemPrompt += `\n\nBase de conocimiento:\n${body.agent_config.knowledge_base}`;
+      }
+
+      // Si NO se cargó un cerebro de producto real (orquestador/global, o product_id inválido/vacío),
+      // inyecta el catálogo REAL de la org para que NO invente marcas/productos.
+      if (!gotProductBrain) {
+        try {
+          // Resuelve el org de la conversación (el scope acá no tiene organizationId).
+          let _orgId: string | null = null;
+          if (body.conversation_id) {
+            const { data: _c } = await supabase
+              .from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
+            _orgId = (_c as any)?.organization_id ?? null;
+          }
+          if (_orgId) {
+            const { data: orgProducts } = await supabase
+              .from('products')
+              .select('name, short_description, description')
+              .eq('organization_id', _orgId)
+              .eq('is_active', true)
+              .order('name');
+            if (orgProducts && orgProducts.length) {
+              systemPrompt += `\n\n=== 🏷️ MARCAS / PRODUCTOS QUE OFRECEMOS (RESPONDÉ SOLO CON ESTOS — NUNCA inventes otros) ===`;
+              for (const p of orgProducts as any[]) {
+                const d = p.short_description || (p.description ? String(p.description).slice(0, 180) : '');
+                systemPrompt += `\n- ${p.name}${d ? `: ${d}` : ''}`;
+              }
+            }
+          }
+        } catch (e) { console.warn('[webchat-bot] org product catalog inject failed:', e); }
       }
       
       // Add FAQ context — HIGH PRIORITY for direct answers

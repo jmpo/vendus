@@ -30,7 +30,7 @@ async function buildDailySummary(orgId: string): Promise<string> {
   const endISO = new Date(yesterday.setHours(23, 59, 59, 999)).toISOString();
 
   const [leadsRes, dealsRes, convsRes, eventsRes, profileRes] = await Promise.all([
-    supabase.from("leads").select("id, lead_score", { count: "exact" })
+    supabase.from("leads").select("id, temperature", { count: "exact" })
       .eq("organization_id", orgId).gte("created_at", startISO).lte("created_at", endISO),
     supabase.from("deals").select("deal_value")
       .eq("organization_id", orgId).eq("status", "won")
@@ -43,7 +43,7 @@ async function buildDailySummary(orgId: string): Promise<string> {
   ]);
 
   const totalLeads = leadsRes.count ?? 0;
-  const hotLeads = (leadsRes.data ?? []).filter((l: any) => (l.lead_score ?? 0) >= 70).length;
+  const hotLeads = (leadsRes.data ?? []).filter((l: any) => l.temperature === 'hot').length;
   const closedRevenue = (dealsRes.data ?? []).reduce((s: number, d: any) => s + Number(d.deal_value ?? 0), 0);
   const activeChats = convsRes.count ?? 0;
   const meetings = eventsRes.count ?? 0;

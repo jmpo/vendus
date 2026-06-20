@@ -42,13 +42,13 @@ function computeScheduledAt(step: any, fromDate: Date): Date {
 async function evaluateStepConditions(supabase: any, conditions: any, lead_id: string): Promise<{ ok: boolean; reason?: string }> {
   if (!conditions || !Object.keys(conditions).length) return { ok: true };
 
-  // not_purchased — lead no tiene deal em estágio won
+  // not_purchased — lead no tiene un deal ganado (deals.status = 'won')
   if (conditions.not_purchased) {
     const { data } = await supabase
       .from("deals")
-      .select("id, stage_id, pipeline_stages!inner(stage_type)")
+      .select("id")
       .eq("lead_id", lead_id)
-      .eq("pipeline_stages.stage_type", "won")
+      .eq("status", "won")
       .limit(1);
     if (data && data.length) return { ok: false, reason: "Lead ya comprou" };
   }
