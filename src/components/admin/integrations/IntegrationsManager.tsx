@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils';
 import { integrationsCatalog, type IntegrationItem } from '@/config/integrationsCatalog';
 import { IntegrationCard } from './IntegrationCard';
 import { IntegrationConfigDrawer } from './IntegrationConfigDrawer';
+import { ConversionRulesManager } from './ConversionRulesManager';
 import { useIntegrations } from '@/hooks/useIntegrations';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
@@ -211,6 +212,9 @@ export function IntegrationsManager() {
           </Badge>
         </div>
       </div>
+
+      {/* Eventos de conversión configurables (Pixel/Ads) */}
+      <ConversionRulesManager />
 
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
         {/* Desktop sidebar */}
