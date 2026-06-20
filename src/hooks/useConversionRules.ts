@@ -14,6 +14,7 @@ export interface ConversionRule {
   product_id: string | null;
   trigger_type: ConversionTriggerType;
   stage_id: string | null;
+  stage_name: string | null;
   tag_id: string | null;
   event_name: ConversionEventName;
   value_source: ConversionValueSource;
@@ -26,6 +27,7 @@ export interface NewConversionRule {
   product_id: string | null;
   trigger_type: ConversionTriggerType;
   stage_id: string | null;
+  stage_name: string | null;
   tag_id: string | null;
   event_name: ConversionEventName;
   value_source: ConversionValueSource;

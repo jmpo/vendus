@@ -50,7 +50,6 @@ export function ConversionRulesManager() {
   });
 
   const productName = (id: string | null) => id ? ((products as any[]).find((p) => p.id === id)?.name ?? '—') : 'Todos';
-  const stageName = (id: string | null) => (stages as any[]).find((s) => s.id === id)?.name ?? '—';
   const tagName = (id: string | null) => (tags as any[]).find((t) => t.id === id)?.name ?? '—';
   const eventLabel = (e: string) => CONVERSION_EVENTS.find((x) => x.value === e)?.label ?? e;
 
@@ -60,27 +59,23 @@ export function ConversionRulesManager() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [triggerType, setTriggerType] = useState<ConversionTriggerType>('stage');
   const [productId, setProductId] = useState<string>('all');
-  const [stageId, setStageId] = useState<string>('');
+  const [selectedStage, setSelectedStage] = useState<string>(''); // nombre de etapa (aplica a todas las líneas)
   const [tagId, setTagId] = useState<string>('');
   const [eventName, setEventName] = useState<ConversionEventName>('Purchase');
   const [valueSource, setValueSource] = useState<ConversionValueSource>('none');
   const [fixedValue, setFixedValue] = useState<string>('');
 
-  // Etapas etiquetadas con su producto (evita el "duplicado" cuando hay varios productos
-  // con etapas del mismo nombre). La etapa YA implica el producto (son product-scoped).
-  const stageOptions = useMemo(
-    () => (stages as any[]).map((s) => ({
-      id: s.id,
-      product_id: s.product_id,
-      label: `${productName(s.product_id)} · ${s.name}`,
-    })),
-    [stages, products],
+  // Nombres de etapa ÚNICOS (modelo "etapas estándar compartidas"): una sola "Calificación"
+  // que aplica a todas las líneas/productos. Sin duplicados en el dropdown.
+  const stageNameOptions = useMemo(
+    () => Array.from(new Set((stages as any[]).map((s) => s.name))).sort(),
+    [stages],
   );
 
-  // Etapas y etiquetas YA configuradas (para no permitir duplicar). Excluye la regla
-  // que se está editando, así su propia etapa/etiqueta sigue seleccionable.
-  const usedStageIds = useMemo(
-    () => new Set(list.filter((r) => r.trigger_type === 'stage' && r.id !== editingId).map((r) => r.stage_id)),
+  // Etapas (por nombre) y etiquetas YA configuradas → no permitir duplicar. Excluye la
+  // regla que se está editando, así su propia etapa/etiqueta sigue seleccionable.
+  const usedStageNames = useMemo(
+    () => new Set(list.filter((r) => r.trigger_type === 'stage' && r.id !== editingId).map((r) => r.stage_name)),
     [list, editingId],
   );
   const usedTagKeys = useMemo(
@@ -90,29 +85,30 @@ export function ConversionRulesManager() {
 
   const resetForm = () => {
     setEditingId(null); setTriggerType('stage'); setProductId('all');
-    setStageId(''); setTagId(''); setEventName('Purchase'); setValueSource('none'); setFixedValue('');
+    setSelectedStage(''); setTagId(''); setEventName('Purchase'); setValueSource('none'); setFixedValue('');
   };
 
   const startEdit = (r: any) => {
     setEditingId(r.id);
     setTriggerType(r.trigger_type);
     setProductId(r.product_id ?? 'all');
-    setStageId(r.stage_id ?? '');
+    setSelectedStage(r.stage_name ?? '');
     setTagId(r.tag_id ?? '');
     setEventName(r.event_name);
     setValueSource(r.value_source);
     setFixedValue(r.fixed_value != null ? String(r.fixed_value) : '');
   };
 
-  const canSave = triggerType === 'stage' ? !!stageId : !!tagId;
+  const canSave = triggerType === 'stage' ? !!selectedStage : !!tagId;
 
   const handleSave = () => {
     if (!canSave) return;
-    const stageProductId = (stages as any[]).find((s) => s.id === stageId)?.product_id ?? null;
     const payload = {
-      product_id: triggerType === 'stage' ? stageProductId : (productId === 'all' ? null : productId),
+      // Regla por etapa = por NOMBRE y para TODAS las líneas (product_id null).
+      product_id: triggerType === 'stage' ? null : (productId === 'all' ? null : productId),
       trigger_type: triggerType,
-      stage_id: triggerType === 'stage' ? stageId : null,
+      stage_id: null,
+      stage_name: triggerType === 'stage' ? selectedStage : null,
       tag_id: triggerType === 'tag' ? tagId : null,
       event_name: eventName,
       value_source: valueSource,
@@ -121,7 +117,7 @@ export function ConversionRulesManager() {
     if (editingId) {
       update.mutate({ id: editingId, ...payload }, { onSuccess: resetForm });
     } else {
-      create.mutate(payload, { onSuccess: () => { setStageId(''); setTagId(''); setFixedValue(''); } });
+      create.mutate(payload, { onSuccess: () => { setSelectedStage(''); setTagId(''); setFixedValue(''); } });
     }
   };
 
@@ -156,20 +152,20 @@ export function ConversionRulesManager() {
             {triggerType === 'stage' ? (
               <div className="space-y-1.5">
                 <Label className="text-xs">Etapa</Label>
-                <Select value={stageId} onValueChange={setStageId}>
+                <Select value={selectedStage} onValueChange={setSelectedStage}>
                   <SelectTrigger className="h-9"><SelectValue placeholder="Elegí etapa…" /></SelectTrigger>
                   <SelectContent>
-                    {stageOptions.map((s) => {
-                      const used = usedStageIds.has(s.id);
+                    {stageNameOptions.map((name) => {
+                      const used = usedStageNames.has(name);
                       return (
-                        <SelectItem key={s.id} value={s.id} disabled={used}>
-                          {s.label}{used ? ' — ya configurada' : ''}
+                        <SelectItem key={name} value={name} disabled={used}>
+                          {name}{used ? ' — ya configurada' : ''}
                         </SelectItem>
                       );
                     })}
                   </SelectContent>
                 </Select>
-                <p className="text-[10px] text-muted-foreground">Cada etapa pertenece a su producto. Las ya configuradas aparecen deshabilitadas (evita duplicar).</p>
+                <p className="text-[10px] text-muted-foreground">Aplica a esa etapa en TODAS tus líneas/productos. Las ya configuradas aparecen deshabilitadas (evita duplicar).</p>
               </div>
             ) : (
               <>
@@ -254,15 +250,13 @@ export function ConversionRulesManager() {
               <div key={r.id} className={`flex items-center gap-3 rounded-lg border p-3 text-sm ${editingId === r.id ? 'border-primary ring-1 ring-primary bg-primary/5' : ''}`}>
                 <Badge variant="outline" className="gap-1 shrink-0">
                   {r.trigger_type === 'stage' ? <Route className="h-3 w-3" /> : <TagIcon className="h-3 w-3" />}
-                  {r.trigger_type === 'stage'
-                    ? `${productName(r.product_id)} · ${stageName(r.stage_id)}`
-                    : tagName(r.tag_id)}
+                  {r.trigger_type === 'stage' ? r.stage_name : tagName(r.tag_id)}
                 </Badge>
                 <span className="text-muted-foreground">→</span>
                 <Badge className="shrink-0">{eventLabel(r.event_name)}</Badge>
                 <span className="text-xs text-muted-foreground truncate">
-                  {r.trigger_type === 'tag' && `${productName(r.product_id)} · `}
-                  {r.value_source !== 'none' ? `valor: ${r.value_source === 'fixed' ? r.fixed_value : 'deal'}` : 'sin valor'}
+                  {r.trigger_type === 'stage' ? 'todas las líneas' : productName(r.product_id)}
+                  {r.value_source !== 'none' ? ` · valor: ${r.value_source === 'fixed' ? r.fixed_value : 'deal'}` : ''}
                 </span>
                 <div className="ml-auto flex items-center gap-1 shrink-0">
                   <Switch checked={r.is_active} onCheckedChange={(v) => toggle.mutate({ id: r.id, is_active: v })} />
