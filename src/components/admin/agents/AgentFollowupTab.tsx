@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/select';
 import { Repeat, MessageSquare, Clock, Lightbulb } from 'lucide-react';
 import { ProductAgent } from '@/types/agents';
+import { useZernioTemplates } from '@/hooks/useZernioTemplates';
 
 interface Props {
   formData: Partial<ProductAgent>;
@@ -38,6 +39,7 @@ function formatInterval(min: number): string {
 }
 
 export function AgentFollowupTab({ formData, onChange }: Props) {
+  const { data: zernioTemplates = [], isLoading: tplLoading } = useZernioTemplates();
   const enabled        = !!formData.followup_enabled;
   const maxAttempts    = formData.followup_max_attempts ?? 3;
   const intervals      = useMemo(
@@ -293,12 +295,34 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
             </p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1">
-                <Label className="text-xs">Nombre de la plantilla</Label>
-                <Input
-                  placeholder="ej: reenganche_seguimiento"
-                  value={formData.followup_template_name ?? ''}
-                  onChange={(e) => onChange({ followup_template_name: e.target.value || null })}
-                />
+                <Label className="text-xs">Plantilla aprobada</Label>
+                {zernioTemplates.length > 0 ? (
+                  <Select
+                    value={formData.followup_template_name ?? ''}
+                    onValueChange={(name) => {
+                      const t = zernioTemplates.find((x) => x.name === name);
+                      onChange({ followup_template_name: name || null, followup_template_language: t?.language || 'es' });
+                    }}
+                  >
+                    <SelectTrigger><SelectValue placeholder={tplLoading ? 'Cargando…' : 'Elegí una plantilla'} /></SelectTrigger>
+                    <SelectContent>
+                      {zernioTemplates.map((t) => (
+                        <SelectItem key={`${t.name}-${t.language}`} value={t.name}>
+                          {t.name} <span className="text-muted-foreground">· {t.language}</span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    placeholder={tplLoading ? 'Cargando plantillas…' : 'ej: reenganche_seguimiento'}
+                    value={formData.followup_template_name ?? ''}
+                    onChange={(e) => onChange({ followup_template_name: e.target.value || null })}
+                  />
+                )}
+                {zernioTemplates.length === 0 && !tplLoading && (
+                  <p className="text-[10px] text-muted-foreground">No encontré plantillas aprobadas en Zernio. Podés escribir el nombre exacto a mano.</p>
+                )}
               </div>
               <div className="space-y-1">
                 <Label className="text-xs">Idioma</Label>
