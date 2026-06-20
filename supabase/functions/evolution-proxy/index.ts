@@ -472,10 +472,10 @@ Deno.serve(async (req) => {
       // Busca slug da org para prefixar nombre (evita colisão global no Evolution Go)
       const { data: orgRow } = await supabase
         .from("organizations")
-        .select("slug, name")
+        .select("name")
         .eq("id", orgId)
         .maybeSingle();
-      const orgSlug = (orgRow?.slug || (orgRow?.name || "org")
+      const orgSlug = ((orgRow?.name || "org")
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")

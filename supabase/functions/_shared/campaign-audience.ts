@@ -106,8 +106,8 @@ export async function resolveAudience(
     if (audience.temperature?.length) q = q.in("temperature", audience.temperature);
     if (audience.created_after) q = q.gte("created_at", audience.created_after);
     if (audience.created_before) q = q.lte("created_at", audience.created_before);
-    if (audience.last_interaction_after) q = q.gte("last_interaction_at", audience.last_interaction_after);
-    if (audience.last_interaction_before) q = q.lte("last_interaction_at", audience.last_interaction_before);
+    if (audience.last_interaction_after) q = q.gte("last_contact_at", audience.last_interaction_after);
+    if (audience.last_interaction_before) q = q.lte("last_contact_at", audience.last_interaction_before);
     if (audience.has_phone !== false) q = q.not("phone", "is", null);
     if (audience.search?.name) q = q.ilike("name", `%${audience.search.name}%`);
     if (audience.search?.email) q = q.ilike("email", `%${audience.search.email}%`);

@@ -87,7 +87,6 @@ Garantia: ${product.guarantee || 'N/A'}
         .from('product_knowledge_sources')
         .select('title, source_type, extracted_content, question, answer')
         .eq('product_id', product_id)
-        .eq('status', 'processed')
         .eq('is_active', true)
         .limit(10);
 
@@ -103,13 +102,13 @@ Garantia: ${product.guarantee || 'N/A'}
       // Fetch agent training materials
       const { data: trainingMaterials } = await supabase
         .from('agent_training_materials')
-        .select('content')
+        .select('extracted_content')
         .eq('product_id', product_id)
         .limit(5);
 
       if (trainingMaterials && trainingMaterials.length > 0) {
-        knowledgeContext += '\n\nMateriais de Treinamento:\n' + 
-          trainingMaterials.map(m => m.content?.substring(0, 500)).join('\n');
+        knowledgeContext += '\n\nMateriais de Treinamento:\n' +
+          trainingMaterials.map(m => m.extracted_content?.substring(0, 500)).join('\n');
       }
     }
 

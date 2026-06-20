@@ -158,11 +158,11 @@ Deno.serve(async (req) => {
             const pid = agent.product_id || funnelRow?.product_id;
             const { data: product } = await supabase
               .from('products')
-              .select('name, description, brain_summary')
+              .select('name, description, knowledge_base')
               .eq('id', pid)
               .maybeSingle();
             if (product) {
-              brainContext = `\n\n## Producto: ${product.name}\n${product.description || ''}\n${product.brain_summary || ''}`.trim();
+              brainContext = `\n\n## Producto: ${product.name}\n${product.description || ''}\n${product.knowledge_base || ''}`.trim();
             }
           }
 

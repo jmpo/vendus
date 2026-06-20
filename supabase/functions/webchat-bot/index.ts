@@ -2243,11 +2243,22 @@ serve(async (req) => {
           leadId = convLead.lead_id;
           const { data: lead } = await supabase
             .from('leads')
-            .select('id, name, email, phone, temperature, tags, deal_value, company, source, custom_fields, current_stage_id, assigned_to, product_id, metadata, lead_origin')
+            .select('id, name, email, phone, temperature, deal_value, company, source, current_stage_id, assigned_to, product_id, metadata, lead_origin')
             .eq('id', convLead.lead_id)
             .maybeSingle();
-          
+
           if (lead) {
+            // `tags` y `custom_fields` NO son columnas de `leads`: custom_fields vive en
+            // metadata y los tags en lead_tag_assignments. Antes se pedían en el select,
+            // este fallaba y el agente perdía TODO el contexto del lead. Las hidratamos acá.
+            (lead as any).custom_fields = (lead.metadata as any)?.custom_fields ?? {};
+            try {
+              const { data: tagRows } = await supabase
+                .from('lead_tag_assignments')
+                .select('lead_tags(name)')
+                .eq('lead_id', lead.id);
+              (lead as any).tags = (tagRows ?? []).map((r: any) => r.lead_tags?.name).filter(Boolean);
+            } catch { (lead as any).tags = []; }
             leadContext = lead;
             // Detect if lead is already a customer (won stage OR "Cliente" tag OR has won deal)
             let isCustomer = false;
@@ -4571,7 +4582,7 @@ REGRAS DE USO:
                       if (convL?.lead_id) {
                         const { data: lead } = await supabase
                           .from('leads')
-                          .select('name, full_name')
+                          .select('name')
                           .eq('id', convL.lead_id)
                           .maybeSingle();
                         nomeLead = ((lead as any)?.full_name || (lead as any)?.name || '').split(' ')[0] || '';
@@ -5004,7 +5015,7 @@ REGRAS DE USO:
           if (convForHandoff?.lead_id) {
             const { data: lead } = await supabase
               .from('leads')
-              .select('name, full_name')
+              .select('name')
               .eq('id', convForHandoff.lead_id)
               .maybeSingle();
             leadFirstName = ((lead as any)?.full_name || (lead as any)?.name || '').split(' ')[0] || '';

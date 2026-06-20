@@ -93,9 +93,9 @@ async function checkOfflineSellers(cfg: OrgCfg) {
 
   const { data } = await supabase
     .from("user_status")
-    .select("user_id, status, status_changed_at, profiles(full_name, organization_id)")
+    .select("user_id, status, last_status_change, profiles(full_name, organization_id)")
     .eq("status", "offline")
-    .lt("status_changed_at", cutoff);
+    .lt("last_status_change", cutoff);
 
   for (const s of (data ?? []) as any[]) {
     if (s.profiles?.organization_id !== cfg.organization_id) continue;

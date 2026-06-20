@@ -304,13 +304,14 @@ async function classifyConversation(supabase: any, orgId: string, conv: any, api
     // Últimas 20 mensajes
     const { data: messages } = await supabase
       .from('webchat_messages')
-      .select('role, content, created_at')
+      .select('direction, content, created_at')
       .eq('conversation_id', conv.id)
       .order('created_at', { ascending: false })
       .limit(20);
 
     const msgs = (messages || []).reverse();
-    const clientMsgs = msgs.filter((m: any) => m.role === 'user').length;
+    // En webchat_messages el cliente = direction 'inbound' (no existe columna `role`).
+    const clientMsgs = msgs.filter((m: any) => m.direction === 'inbound').length;
 
     // Heurística rápida: sin mensajes del cliente
     if (clientMsgs === 0) {
@@ -327,9 +328,9 @@ async function classifyConversation(supabase: any, orgId: string, conv: any, api
 
     const leadSnap = await getLeadSnapshot(supabase, conv);
     const daysSince = Math.floor((Date.now() - new Date(conv.last_message_at).getTime()) / 86400000);
-    const lastMsgFromClient = msgs[msgs.length - 1]?.role === 'user';
+    const lastMsgFromClient = msgs[msgs.length - 1]?.direction === 'inbound';
 
-    const transcript = msgs.map((m: any) => `${m.role === 'user' ? 'CLIENTE' : 'EMPRESA'}: ${m.content?.slice(0, 300) || ''}`).join('\n');
+    const transcript = msgs.map((m: any) => `${m.direction === 'inbound' ? 'CLIENTE' : 'EMPRESA'}: ${m.content?.slice(0, 300) || ''}`).join('\n');
 
     const prompt = `Sos un especialista em ventas analisando una conversación para classificar o potencial del lead.
 

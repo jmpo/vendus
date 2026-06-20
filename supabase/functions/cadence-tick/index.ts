@@ -84,10 +84,10 @@ async function getStepContext(supabase: any, step: any): Promise<string> {
   if (step.context_id) {
     const { data } = await supabase
       .from("campaign_contexts")
-      .select("content, name")
+      .select("instructions, name")
       .eq("id", step.context_id)
       .maybeSingle();
-    if (data?.content) return data.content as string;
+    if (data?.instructions) return data.instructions as string;
   }
   return step.objective ?? "";
 }

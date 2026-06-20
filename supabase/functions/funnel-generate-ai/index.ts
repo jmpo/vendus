@@ -76,7 +76,6 @@ Problemas que resolve: ${product.problems_solved || 'N/A'}
         .from('product_knowledge_sources')
         .select('title, source_type, extracted_content, question, answer')
         .eq('product_id', product_id)
-        .eq('status', 'processed')
         .eq('is_active', true)
         .limit(10);
 

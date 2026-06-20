@@ -219,10 +219,10 @@ serve(async (req) => {
     if (conv.lead_id) {
       const { data: lead } = await supabase
         .from("leads")
-        .select("name, full_name")
+        .select("name")
         .eq("id", conv.lead_id)
         .maybeSingle();
-      leadName = (lead?.full_name || lead?.name || "").split(" ")[0] || "";
+      leadName = (lead?.name || "").split(" ")[0] || "";
     }
     if (agent.product_id) {
       const { data: prod } = await supabase

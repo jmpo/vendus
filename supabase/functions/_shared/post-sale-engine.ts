@@ -317,7 +317,7 @@ export async function runPostSaleActions(
     try {
       const { data: tpl } = await supabase
         .from('email_templates')
-        .select('subject, html_content, text_content, name')
+        .select('subject, html_content, name')
         .eq('id', action.email_template_id)
         .single();
 
