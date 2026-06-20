@@ -128,6 +128,9 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     isTakeover: false,
     previousAssigneeName: null,
   });
+  // IDs aceptados por mí en esta sesión — desbloquea el composer al instante y evita que
+  // un refetch tardío vuelva a mostrar "Aceptar atención" (la tardanza al escribir).
+  const [recentlyAccepted, setRecentlyAccepted] = useState<Set<string>>(new Set());
   const [isTyping, setIsTyping] = useState(false);
   
   const [showEditContact, setShowEditContact] = useState(false);
@@ -885,6 +888,9 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       const detailKey = ['webchat-conversation', selectedConversation.id];
       const previousDetail = queryClient.getQueryData<any>(detailKey);
 
+      // Marca como aceptada localmente (desbloqueo instantáneo y a prueba de refetch)
+      setRecentlyAccepted((prev) => new Set(prev).add(selectedConversation.id));
+
       // Patch otimista do detalhe — desbloqueia o composer instantaneamente
       const nowIso = new Date().toISOString();
       if (previousDetail?.conversation && user?.id) {
@@ -922,6 +928,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         if (previousDetail !== undefined) {
           queryClient.setQueryData(detailKey, previousDetail);
         }
+        setRecentlyAccepted((prev) => { const n = new Set(prev); n.delete(selectedConversation.id); return n; });
         toast({ title: 'Erro ao aceitar', description: e?.message, variant: 'destructive' });
       }
     }
@@ -1078,6 +1085,9 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
               leadId={(conversationDetail?.conversation as any)?.lead_id || (selectedConversation as any)?.lead_id || null}
               currentAgentName={(conversationDetail?.conversation as any)?.current_agent?.name || (selectedConversation as any)?.current_agent_name || null}
               needsAccept={(() => {
+                // Si ya la acepté en esta sesión, el composer queda habilitado sí o sí
+                // (no esperamos al refetch del servidor).
+                if (selectedConversation && recentlyAccepted.has(selectedConversation.id)) return false;
                 const freshStatus = (conversationDetail?.conversation as any)?.status ?? selectedConversation?.status;
                 const freshAssigned = (conversationDetail?.conversation as any)?.assigned_user_id;
                 return !!selectedConversation
@@ -1245,6 +1255,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
           isTakeover={acceptDialog.isTakeover}
           previousAssigneeName={acceptDialog.previousAssigneeName}
           onAccepted={() => {
+            setRecentlyAccepted((prev) => new Set(prev).add(selectedConversation.id));
             queryClient.invalidateQueries({
               queryKey: ['webchat-conversation', selectedConversation.id],
               refetchType: 'active',
