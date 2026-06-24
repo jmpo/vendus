@@ -372,9 +372,10 @@ export function ChatArea({
   const lastMessageAt = messages.length > 0 ? messages[messages.length - 1].created_at : null;
 
   // Ventana 24h (WhatsApp oficial): fuera de ella solo se puede enviar plantilla.
+  // El "último inbound" es el último mensaje del CLIENTE (sender_type='visitor').
   const lastInboundAt = (() => {
     for (let i = messages.length - 1; i >= 0; i--) {
-      if ((messages[i] as any).senderType === 'visitor') return messages[i].created_at;
+      if (messages[i].sender_type === 'visitor') return messages[i].created_at;
     }
     return null;
   })();
