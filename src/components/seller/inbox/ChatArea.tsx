@@ -27,6 +27,7 @@ import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
 import { OutOfWindowTemplateBar } from './OutOfWindowTemplateBar';
 import { WindowCountdown } from './WindowCountdown';
+import { HandbackCountdown } from './HandbackCountdown';
 import { useMessageReactions } from '@/hooks/useMessageReactions';
 import { TypingIndicator } from './TypingIndicator';
 import { QuickRepliesPopover } from './QuickRepliesPopover';
@@ -866,6 +867,9 @@ export function ChatArea({
               </Button>
             </div>
           )}
+
+          {/* Cuánto falta para que la IA retome (inactividad humana) */}
+          <HandbackCountdown lastActivityAt={lastMessageAt} status={status} />
 
           {outOfWindow && zernioConnectionId ? (
             <OutOfWindowTemplateBar
