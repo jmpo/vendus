@@ -73,7 +73,13 @@ Deno.serve(async (req) => {
       const payloadP = await req.json().catch(() => null);
       if (!payloadP) return json({ error: 'invalid json' }, 400);
       const incoming = hottokParam ?? payloadP.hottok ?? payloadP.data?.hottok;
-      if (pcred?.hottok && pcred.hottok !== incoming) {
+      // Seguridad: el hottok es OBLIGATORIO. Sin un hottok configurado (o si no coincide),
+      // se rechaza — evita que alguien dispare provisioning con un payload falso.
+      if (!pcred?.hottok) {
+        console.warn('[hotmart-webhook] platform: hottok no configurado — rechazado');
+        return json({ error: 'platform hottok not configured' }, 401);
+      }
+      if (pcred.hottok !== incoming) {
         console.warn('[hotmart-webhook] platform: invalid hottok');
         return json({ error: 'invalid hottok' }, 401);
       }
