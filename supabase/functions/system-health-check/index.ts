@@ -66,6 +66,22 @@ Deno.serve(async (req) => {
       issues.push({ severity: 'critical', key: 'ai:key', title: '⛔ Error verificando key de IA', detail: String(e) });
     }
 
+    // 6) Mensajes WhatsApp SALIENTES fallidos (envíos que no llegaron al cliente)
+    const failedOut = (await sql`select count(*)::int as n from webchat_messages where delivery_status='failed' and direction='outbound' and created_at > now() - interval '1 hour'`)[0] as any;
+    if (Number(failedOut.n) >= 5) {
+      const sample = (await sql`select left(metadata->>'error',200) as e from webchat_messages where delivery_status='failed' and direction='outbound' order by created_at desc limit 1`)[0] as any;
+      issues.push({ severity: 'critical', key: 'wa:send-failed', title: `⛔ ${failedOut.n} mensajes WhatsApp fallaron (1h)`, detail: `Posible conexión caída o fuera de ventana 24h. Ej: ${sample?.e || 'sin detalle'}` });
+    }
+
+    // 7) Conexiones WhatsApp caídas (avisar ANTES de que fallen los envíos)
+    const downConns = await sql`
+      select 'Zernio' as prov, coalesce(display_name, id::text) as name, status from zernio_connections where status is not null and status not in ('active','connected','open')
+      union all
+      select 'Evolution' as prov, id::text as name, status from evolution_instances where status is not null and status not in ('connected','open')`;
+    for (const c of downConns as any[]) {
+      issues.push({ severity: 'warning', key: `wa:conn:${c.prov}:${c.name}`, title: `⚠️ Conexión WhatsApp caída: ${c.prov}`, detail: `${c.name} — estado: ${c.status}. Los mensajes por este número pueden fallar.` });
+    }
+
     // Alertar a admins por cada problema NUEVO (dedup 60 min por title)
     if (issues.length > 0) {
       const admins = await sql`select distinct ur.user_id from user_roles ur where ur.role in ('admin','owner','super_admin')`;

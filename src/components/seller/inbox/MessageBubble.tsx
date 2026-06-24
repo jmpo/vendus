@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import {
   Bot, User, Check, CheckCheck, Clock, AlertCircle,
   MoreHorizontal, Pencil, Trash2, Reply, Forward, Star, X,
-  Ban
+  Ban, RotateCcw
 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -45,6 +45,7 @@ export interface MessageBubbleProps {
   onDelete?: (messageId: string) => void;
   onStar?: (messageId: string) => void;
   onForward?: (messageId: string) => void;
+  onRetry?: (messageId: string) => void;
   currentUserId?: string;
   senderId?: string | null;
   metadata?: any;
@@ -72,6 +73,7 @@ export function MessageBubble({
   onDelete,
   onStar,
   onForward,
+  onRetry,
   currentUserId,
   senderId,
   metadata,
@@ -96,17 +98,29 @@ export function MessageBubble({
 
     if (effectiveStatus === 'failed') {
       return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="inline-flex"><AlertCircle className="h-3.5 w-3.5 text-destructive" /></span>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-xs">
-              <p className="text-xs font-medium">Falha ao enviar</p>
-              {deliveryError && <p className="text-xs opacity-80 mt-1">{deliveryError}</p>}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <span className="inline-flex items-center gap-1">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="inline-flex"><AlertCircle className="h-3.5 w-3.5 text-destructive" /></span>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="max-w-xs">
+                <p className="text-xs font-medium">Falló el envío</p>
+                {deliveryError && <p className="text-xs opacity-80 mt-1">{deliveryError}</p>}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          {isOwnMessage && onRetry && (
+            <button
+              type="button"
+              onClick={() => onRetry(id)}
+              className="inline-flex items-center gap-0.5 text-[10px] font-medium text-destructive hover:underline"
+              title="Reintentar envío"
+            >
+              <RotateCcw className="h-3 w-3" /> Reintentar
+            </button>
+          )}
+        </span>
       );
     }
 

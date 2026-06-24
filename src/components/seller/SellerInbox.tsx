@@ -564,6 +564,21 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     }
   };
 
+  // Reintenta un mensaje saliente fallido: reenvía el MISMO mensaje vía su conexión (sin burbuja nueva)
+  const handleRetryMessage = async (messageId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('webchat-inbox', {
+        body: { action: 'retry', message_id: messageId },
+      });
+      if (error) throw error;
+      if (data?.ok === false) throw new Error(data?.message || data?.error || 'No se pudo reenviar');
+      toast({ title: '✅ Mensaje reenviado' });
+      queryClient.invalidateQueries({ queryKey: ['webchat-conversation', selectedConversation?.id] });
+    } catch (e: any) {
+      toast({ title: 'No se pudo reenviar', description: e?.message, variant: 'destructive' });
+    }
+  };
+
   const handleForwardMessage = async (messageId: string, targetConversationId: string) => {
     try {
       await forwardMessageMutation.mutateAsync({ message_id: messageId, target_conversation_id: targetConversationId });
@@ -1109,6 +1124,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
               onSendMessage={handleSendMessage}
               onEditMessage={handleEditMessage}
               onDeleteMessage={handleDeleteMessage}
+              onRetryMessage={handleRetryMessage}
               onStarMessage={handleStarMessage}
               onForwardMessage={handleForwardMessage}
               onClose={handleCloseConversation}

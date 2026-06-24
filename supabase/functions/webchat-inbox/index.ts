@@ -725,6 +725,7 @@ serve(async (req) => {
             await supabase
               .from('webchat_messages')
               .update({
+                delivery_status: 'failed', // columna top-level → health-check/retry la encuentran por query
                 metadata: {
                   ...baseMeta,
                   delivery_status: 'failed',
@@ -753,7 +754,22 @@ serve(async (req) => {
               .eq('id', message.id);
           }
         } catch (sendError) {
-          console.error('[webchat-inbox] WhatsApp send error (non-fatal):', sendError);
+          // Excepción en el envío → marcamos el mensaje como fallido (antes quedaba sin
+          // marca = pérdida silenciosa). Así se ve en la UI y es reintentable.
+          console.error('[webchat-inbox] WhatsApp send error:', sendError);
+          const baseMeta = (insertData.metadata as Record<string, unknown>) || {};
+          await supabase
+            .from('webchat_messages')
+            .update({
+              delivery_status: 'failed',
+              metadata: {
+                ...baseMeta,
+                delivery_status: 'failed',
+                error: (sendError as any)?.message || String(sendError),
+                failed_at: new Date().toISOString(),
+              },
+            })
+            .eq('id', message.id);
         }
       }
 
@@ -819,6 +835,74 @@ serve(async (req) => {
         JSON.stringify({ message: broadcastPayload }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+
+    // ACTION: Reintentar un mensaje saliente fallido (reenvía el MISMO mensaje, sin burbuja nueva)
+    if (action === 'retry' && req.method === 'POST') {
+      const messageId = bodyParsed?.message_id;
+      if (!messageId) {
+        return new Response(JSON.stringify({ error: 'message_id required' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+      const { data: msg } = await supabase
+        .from('webchat_messages')
+        .select('id, conversation_id, direction, content, content_type, metadata')
+        .eq('id', messageId)
+        .maybeSingle();
+      if (!msg) return new Response(JSON.stringify({ error: 'message not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      if (msg.direction !== 'outbound') return new Response(JSON.stringify({ error: 'solo mensajes salientes' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+
+      const { data: conv } = await supabase
+        .from('webchat_conversations')
+        .select('id, organization_id, channel, visitor_phone, meta_connection_id, evolution_instance_id, zernio_connection_id')
+        .eq('id', msg.conversation_id)
+        .eq('organization_id', orgId)
+        .maybeSingle();
+      if (!conv) return new Response(JSON.stringify({ error: 'conversation not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      if (conv.channel !== 'whatsapp' || !conv.visitor_phone) {
+        return new Response(JSON.stringify({ error: 'reintento solo disponible para WhatsApp' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+
+      const meta = (msg.metadata as Record<string, unknown>) || {};
+      const { delivery_status: _ds, error: _err, ...metaRest } = meta as any;
+      const retryCount = (Number((meta as any).retry_count) || 0) + 1;
+      const mediaMeta = (meta as any).media;
+
+      // Estado "reenviando"
+      await supabase.from('webchat_messages').update({
+        delivery_status: 'sending',
+        metadata: { ...metaRest, retry_count: retryCount, retrying_at: new Date().toISOString() },
+      }).eq('id', messageId);
+
+      let phone = conv.visitor_phone.replace(/\D/g, '');
+      if (!phone.startsWith('55')) phone = '55' + phone;
+
+      const sendRes = await sendWhatsAppForConversation({
+        supabase,
+        conversation: {
+          id: conv.id, organization_id: orgId,
+          meta_connection_id: conv.meta_connection_id,
+          evolution_instance_id: conv.evolution_instance_id,
+          zernio_connection_id: conv.zernio_connection_id,
+          visitor_phone: conv.visitor_phone,
+        },
+        to: phone,
+        text: mediaMeta ? (mediaMeta.caption || msg.content || '') : msg.content,
+        media: mediaMeta || undefined,
+      });
+
+      if (!sendRes.ok) {
+        await supabase.from('webchat_messages').update({
+          delivery_status: 'failed',
+          metadata: { ...metaRest, delivery_status: 'failed', retry_count: retryCount, error: sendRes.message || sendRes.error || 'Falla en el reenvío', failed_at: new Date().toISOString() },
+        }).eq('id', messageId);
+        return new Response(JSON.stringify({ ok: false, error: sendRes.error, message: sendRes.message }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+
+      await supabase.from('webchat_messages').update({
+        delivery_status: 'sent',
+        metadata: { ...metaRest, retry_count: retryCount, provider: sendRes.provider, ...(sendRes.message_id ? { zernio_message_id: sendRes.message_id } : {}), sent_at: new Date().toISOString() },
+      }).eq('id', messageId);
+      return new Response(JSON.stringify({ ok: true, provider: sendRes.provider }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     // ACTION: Close conversation

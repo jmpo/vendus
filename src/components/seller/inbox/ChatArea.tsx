@@ -93,6 +93,7 @@ interface ChatAreaProps {
   onSendMessage: (content: string, replyToMessageId?: string, media?: import('./MediaAttachment').MediaPayload) => void;
   onEditMessage?: (messageId: string, newContent: string) => void;
   onDeleteMessage?: (messageId: string) => void;
+  onRetryMessage?: (messageId: string) => void;
   onStarMessage?: (messageId: string) => void;
   onForwardMessage?: (messageId: string, targetConversationId: string) => void;
   onClose?: () => void;
@@ -165,6 +166,7 @@ export function ChatArea({
   onSendMessage,
   onEditMessage,
   onDeleteMessage,
+  onRetryMessage,
   onStarMessage,
   onForwardMessage,
   onClose,
@@ -772,6 +774,7 @@ export function ChatArea({
                           onReply={handleReply}
                           onEdit={onEditMessage}
                           onDelete={onDeleteMessage}
+                          onRetry={onRetryMessage}
                           onStar={onStarMessage}
                           onForward={onForwardMessage ? handleForward : undefined}
                           reactions={summarizeReactions(msg.id)}
