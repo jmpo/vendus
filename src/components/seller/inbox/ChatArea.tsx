@@ -25,6 +25,7 @@ import { cn } from '@/lib/utils';
 import { ChannelBadge } from './ChannelBadge';
 import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
+import { OutOfWindowTemplateBar } from './OutOfWindowTemplateBar';
 import { useMessageReactions } from '@/hooks/useMessageReactions';
 import { TypingIndicator } from './TypingIndicator';
 import { QuickRepliesPopover } from './QuickRepliesPopover';
@@ -62,6 +63,7 @@ interface ChatAreaProps {
   metaConnectionId?: string | null;
   instagramConnectionId?: string | null;
   evolutionInstanceId?: string | null;
+  zernioConnectionId?: string | null;
   status: string;
   messages: Message[];
   isLoading?: boolean;
@@ -145,6 +147,7 @@ export function ChatArea({
   metaConnectionId,
   instagramConnectionId,
   evolutionInstanceId,
+  zernioConnectionId,
   status,
   messages,
   isLoading,
@@ -367,6 +370,18 @@ export function ChatArea({
 
   // Status dinâmico do header mobile (Online / Digitando / Última interação)
   const lastMessageAt = messages.length > 0 ? messages[messages.length - 1].created_at : null;
+
+  // Ventana 24h (WhatsApp oficial): fuera de ella solo se puede enviar plantilla.
+  const lastInboundAt = (() => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if ((messages[i] as any).senderType === 'visitor') return messages[i].created_at;
+    }
+    return null;
+  })();
+  const isOfficialWhatsApp = channel === 'whatsapp' && !!(zernioConnectionId || metaConnectionId);
+  const outOfWindow =
+    isOfficialWhatsApp &&
+    (!lastInboundAt || Date.now() - new Date(lastInboundAt).getTime() > 24 * 60 * 60 * 1000);
   const mobileStatusLine = isTyping
     ? 'Digitando…'
     : peerOnline
@@ -844,18 +859,26 @@ export function ChatArea({
             </div>
           )}
 
-          <ChatInput
-            onSend={(content, media) => {
-              handleSendWithReply(content, media);
-            }}
-            onTyping={onTyping}
-            onOpenQuickReplies={() => setQuickRepliesOpen(true)}
-            isSending={isSending}
-            placeholder={`Mensaje para ${visitorName || 'visitante'}...`}
-            aiSuggestion={aiSuggestion}
-            onClearSuggestion={() => setAiSuggestion('')}
-            onScheduleMessage={onScheduleMessage}
-          />
+          {outOfWindow && zernioConnectionId ? (
+            <OutOfWindowTemplateBar
+              conversationId={conversationId}
+              zernioConnectionId={zernioConnectionId}
+              visitorPhone={visitorPhone ?? null}
+            />
+          ) : (
+            <ChatInput
+              onSend={(content, media) => {
+                handleSendWithReply(content, media);
+              }}
+              onTyping={onTyping}
+              onOpenQuickReplies={() => setQuickRepliesOpen(true)}
+              isSending={isSending}
+              placeholder={`Mensaje para ${visitorName || 'visitante'}...`}
+              aiSuggestion={aiSuggestion}
+              onClearSuggestion={() => setAiSuggestion('')}
+              onScheduleMessage={onScheduleMessage}
+            />
+          )}
         </>
       ) : (
         <div className="p-3 border-t border-border bg-muted/30 flex-shrink-0">
