@@ -63,7 +63,7 @@ Deno.serve(async (req: Request) => {
     record = true, // si false: el llamador ya grabó la fila (evita bolha dupla)
   } = body ?? {};
 
-  if (!connection_id || !to) return json({ error: 'missing connection_id or to' }, 400);
+  if (!connection_id || (!to && type !== 'typing')) return json({ error: 'missing connection_id or to' }, 400);
 
   const { data: conn, error: connErr } = await sb
     .from('zernio_connections').select('*').eq('id', connection_id).maybeSingle();
@@ -81,6 +81,14 @@ Deno.serve(async (req: Request) => {
     const { data: convRow } = await sb
       .from('webchat_conversations').select('zernio_conversation_id').eq('id', conversation_id).maybeSingle();
     zernioConvId = (convRow as any)?.zernio_conversation_id ?? null;
+  }
+
+  // Indicador "escribiendo…" (humanización). No envía mensaje ni graba fila.
+  // WhatsApp lo muestra hasta 25s y marca el último entrante como leído.
+  if (type === 'typing') {
+    if (!zernioConvId) return json({ ok: false, error: 'no_zernio_conversation' });
+    const r = await zfetch(apiKey, `/inbox/conversations/${zernioConvId}/typing`, { accountId });
+    return json({ ok: r.ok, status: r.status });
   }
 
   const hasMedia = media && media.url && media.kind;

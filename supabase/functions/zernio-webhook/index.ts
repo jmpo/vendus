@@ -274,12 +274,21 @@ async function handleInbound(sb: any, conn: any, payload: any) {
       : ((botRes as any)?.response ? [(botRes as any).response] : []);
     for (const chunk of chunks) {
       if (!chunk || typeof chunk !== 'string') continue;
+      // "Escribiendo…" visible en el WhatsApp del cliente antes de cada burbuja (humanización).
+      try {
+        await sb.functions.invoke('zernio-send', {
+          body: { connection_id: conn.id, organization_id: conn.organization_id, conversation_id: conversationId, to: fromNorm, type: 'typing' },
+        });
+        // Delay proporcional al largo del mensaje (más natural), acotado 1.2–5s.
+        const thinkMs = Math.min(5000, Math.max(1200, chunk.length * 45));
+        await new Promise((r) => setTimeout(r, thinkMs));
+      } catch { /* typing non-fatal */ }
       try {
         await sb.functions.invoke('zernio-send', {
           body: { connection_id: conn.id, organization_id: conn.organization_id, conversation_id: conversationId, to: fromNorm, type: 'text', text: chunk },
         });
       } catch (sendErr) { console.error('[zernio-webhook] zernio-send error', sendErr); }
-      await new Promise((r) => setTimeout(r, 800));
+      await new Promise((r) => setTimeout(r, 600));
     }
   } catch (e) {
     console.error('[zernio-webhook] webchat-bot invoke error', e);
