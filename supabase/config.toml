@@ -1,1 +1,23 @@
 project_id = "irzqnonmrfozjywfpxmi"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Webhooks PÚBLICOS: reciben POST de terceros (Zernio, Evolution, Meta, Hotmart)
+# que NO mandan un JWT de Supabase. DEBEN tener verify_jwt = false, si no el
+# gateway los rechaza con 401 y se PIERDEN los mensajes entrantes silenciosamente.
+# (Cada uno valida por su cuenta: account_id/firma HMAC/hottok.)
+# ⚠️ NO quitar: un deploy sin --no-verify-jwt los volvería a romper; esto lo evita.
+# ─────────────────────────────────────────────────────────────────────────────
+[functions.zernio-webhook]
+verify_jwt = false
+
+[functions.evolution-webhook]
+verify_jwt = false
+
+[functions.meta-whatsapp-webhook]
+verify_jwt = false
+
+[functions.instagram-webhook]
+verify_jwt = false
+
+[functions.hotmart-webhook]
+verify_jwt = false
