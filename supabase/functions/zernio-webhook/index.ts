@@ -569,16 +569,20 @@ async function handleOutgoing(sb: any, conn: any, payload: any, event: string) {
   const status = statusMap[event] ?? 'sent';
   const rank: Record<string, number> = { sent: 1, delivered: 2, read: 3 };
 
-  // Buscar nuestra fila por id interno (lo que guarda zernio-send) o por wamid.
+  // Buscar nuestra fila. OJO: zernio-send guarda en zernio_message_id el id que devuelve
+  // la API de envío de Zernio, que suele ser el WAMID (platformMessageId), NO el id interno
+  // del webhook (m.id). Por eso probamos las 3 combinaciones — si solo buscáramos por m.id,
+  // no la encontraríamos y se insertaría una fila DUPLICADA en cada sent/delivered/read.
   let found: any = null;
-  if (internalId) {
+  const tries: Array<[string, string]> = [
+    ['metadata->>zernio_message_id', internalId],
+    ['metadata->>zernio_message_id', platformId],          // ← zernio-send guarda el WAMID acá
+    ['metadata->>zernio_platform_message_id', platformId],
+  ];
+  for (const [col, val] of tries) {
+    if (found || !val) continue;
     const r = await sb.from('webchat_messages').select('id, delivery_status, metadata')
-      .eq('metadata->>zernio_message_id', internalId).order('created_at', { ascending: false }).limit(1).maybeSingle();
-    found = r.data;
-  }
-  if (!found && platformId) {
-    const r = await sb.from('webchat_messages').select('id, delivery_status, metadata')
-      .eq('metadata->>zernio_platform_message_id', platformId).order('created_at', { ascending: false }).limit(1).maybeSingle();
+      .eq(col, val).order('created_at', { ascending: false }).limit(1).maybeSingle();
     found = r.data;
   }
 
