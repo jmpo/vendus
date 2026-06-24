@@ -344,6 +344,7 @@ export default function PublicQuizRunner() {
             {isComplete && !currentBlock ? (
               <motion.div
                 key="thanks"
+                data-testid="quiz-complete"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
@@ -422,6 +423,7 @@ export default function PublicQuizRunner() {
                         <button
                           key={opt.id}
                           type="button"
+                          data-testid="quiz-option"
                           onClick={() => handleSelectOption(opt.id)}
                           className="w-full text-left px-4 py-4 sm:py-[18px] flex items-center gap-3 transition-all active:scale-[0.99]"
                           style={{
@@ -453,6 +455,7 @@ export default function PublicQuizRunner() {
                   <div className="mb-2">
                     <input
                       autoFocus
+                      data-testid="quiz-input"
                       type={currentBlock.data.input_type === 'email' ? 'email' : currentBlock.data.input_type === 'phone' ? 'tel' : 'text'}
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
@@ -487,7 +490,7 @@ export default function PublicQuizRunner() {
                         );
                       }
                       return (
-                        <div className="text-center py-6">
+                        <div className="text-center py-6" data-testid="quiz-complete">
                           <div
                             className="h-14 w-14 rounded-full flex items-center justify-center mx-auto mb-4"
                             style={{ background: a.primary_color }}
@@ -512,6 +515,7 @@ export default function PublicQuizRunner() {
                 {currentBlock.type !== 'end' && (
                   <button
                     type="button"
+                    data-testid="quiz-cta"
                     onClick={
                       currentBlock.type === 'buttons'
                         ? handleConfirmOption
