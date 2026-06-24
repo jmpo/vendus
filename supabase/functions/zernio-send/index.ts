@@ -60,6 +60,7 @@ Deno.serve(async (req: Request) => {
   const {
     connection_id, organization_id, conversation_id,
     to, type = 'text', text, media, template,
+    buttons, interactive, // mensajes interactivos (botones / lista) — passthrough a Zernio
     record = true, // si false: el llamador ya grabó la fila (evita bolha dupla)
   } = body ?? {};
 
@@ -129,6 +130,8 @@ Deno.serve(async (req: Request) => {
       ...(msgText ? { message: msgText } : {}),
       ...(hasMedia ? { attachmentUrl: media.url, attachmentType: mapAttachmentType(media.kind) } : {}),
       ...(hasMedia && media.kind === 'audio' && media.ptt ? { voiceNote: true } : {}),
+      ...(buttons ? { buttons } : {}),
+      ...(interactive ? { interactive } : {}),
     };
     console.log('[zernio-send] freeform →', JSON.stringify({ convId: zernioConvId, attachmentType: (freeformBody as any).attachmentType, hasMedia, kind: media?.kind, mime: media?.mime, url: media?.url?.slice(0, 120) }));
     res = await zfetch(apiKey, `/inbox/conversations/${zernioConvId}/messages`, freeformBody);
