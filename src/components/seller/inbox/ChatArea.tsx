@@ -382,6 +382,16 @@ export function ChatArea({
   // Status dinâmico do header mobile (Online / Digitando / Última interação)
   const lastMessageAt = messages.length > 0 ? messages[messages.length - 1].created_at : null;
 
+  // Ancla del handback = la actividad MÁS reciente: el last_message_at de la conversación
+  // (autoritativo, lo que usa el cron) o el último mensaje recibido por realtime (instantáneo).
+  // Así el timer se reinicia al toque cuando llega un mensaje nuevo, sin esperar el refetch.
+  const handbackAnchor = (() => {
+    const a = conversationLastMessageAt ? new Date(conversationLastMessageAt).getTime() : 0;
+    const b = lastMessageAt ? new Date(lastMessageAt).getTime() : 0;
+    const max = Math.max(a, b);
+    return max > 0 ? new Date(max).toISOString() : null;
+  })();
+
   // Ventana 24h (WhatsApp oficial): fuera de ella solo se puede enviar plantilla.
   // Ancla preferida: last_inbound_at de la conversación (= sentAt real de Zernio, preciso al
   // segundo para el costo). Fallback: último mensaje del cliente en la lista.
@@ -563,7 +573,7 @@ export function ChatArea({
                 size="sm"
               />
               <HandbackCountdown
-                lastActivityAt={conversationLastMessageAt || lastMessageAt}
+                lastActivityAt={handbackAnchor}
                 status={status}
                 idleMinutes={handbackIdleMinutes}
               />

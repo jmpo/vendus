@@ -629,21 +629,44 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     } catch { toast({ title: 'Erro', description: 'Não foi possível devolver.', variant: 'destructive' }); }
   };
 
+  // Patch optimista del estado de la conversación en el cache de detalle → la UI
+  // (chip "IA en Xm", composer, header) refleja el cambio AL INSTANTE, sin esperar refetch.
+  const patchConvStatus = useCallback((convId: string, patch: Record<string, any>) => {
+    const key = ['webchat-conversation', convId];
+    const prev = queryClient.getQueryData<any>(key);
+    if (prev?.conversation) {
+      queryClient.setQueryData(key, { ...prev, conversation: { ...prev.conversation, ...patch } });
+    }
+    return { key, prev };
+  }, [queryClient]);
+
   // Handle resume
   const handleResumeConversation = async () => {
     if (!selectedConversation) return;
+    const { key, prev } = patchConvStatus(selectedConversation.id, { status: 'human_active', assigned_user_id: user?.id });
+    setRecentlyAccepted((s) => new Set(s).add(selectedConversation.id));
     try {
       await resumeConversation.mutateAsync(selectedConversation.id);
       toast({ title: 'Atención retomado' });
-    } catch { toast({ title: 'Erro', description: 'Não foi possível retomar.', variant: 'destructive' }); }
+      queryClient.invalidateQueries({ queryKey: key, refetchType: 'active' });
+    } catch {
+      if (prev !== undefined) queryClient.setQueryData(key, prev);
+      toast({ title: 'Erro', description: 'Não foi possível retomar.', variant: 'destructive' });
+    }
   };
 
   const handleActivateBot = async () => {
     if (!selectedConversation) return;
+    // Al activar el bot → status bot_active al instante: desaparece el chip "IA en Xm".
+    const { key, prev } = patchConvStatus(selectedConversation.id, { status: 'bot_active' });
     try {
       await activateBotMutation.mutateAsync(selectedConversation.id);
       toast({ title: 'Bot activado', description: 'La IA enviará un mensaje estratégico.' });
-    } catch { toast({ title: 'Erro', description: 'Não foi possível ativar o bot.', variant: 'destructive' }); }
+      queryClient.invalidateQueries({ queryKey: key, refetchType: 'active' });
+    } catch {
+      if (prev !== undefined) queryClient.setQueryData(key, prev);
+      toast({ title: 'Erro', description: 'Não foi possível ativar o bot.', variant: 'destructive' });
+    }
   };
 
   // Handle transfer
