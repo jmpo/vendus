@@ -61,20 +61,22 @@ Deno.serve(async (req: Request) => {
   }
 
   const event: string = payload?.event ?? '';
+  const msg = payload?.message ?? {};
   try {
-    if (event === 'message.received') {
-      const m = payload?.message ?? {};
-      if (m.direction === 'incoming') {
-        // Respondemos 200 al instante y procesamos en segundo plano (IA + envío de respuestas).
-        // Evita que Zernio marque el webhook como "failed" por timeout y reintente.
-        EdgeRuntime.waitUntil(
-          handleInbound(sb, conn, payload).catch((e) => console.error('[zernio-webhook] handleInbound bg error', e)),
-        );
-      }
-    } else if (event === 'message.delivered' || event === 'message.read' || event === 'message.failed') {
-      const id = String(payload?.message?.platformMessageId ?? payload?.message?.id ?? '');
-      const status = event === 'message.delivered' ? 'delivered' : event === 'message.read' ? 'read' : 'failed';
-      if (id) await sb.from('webchat_messages').update({ delivery_status: status }).eq('metadata->>zernio_message_id', id);
+    if (event === 'message.received' && msg.direction === 'incoming') {
+      // Entrante del cliente. Respondemos 200 al toque y procesamos en background (IA + sentAt).
+      EdgeRuntime.waitUntil(
+        handleInbound(sb, conn, payload).catch((e) => console.error('[zernio-webhook] handleInbound bg error', e)),
+      );
+    } else if (
+      msg.direction === 'outgoing' &&
+      (event === 'message.sent' || event === 'message.delivered' || event === 'message.read' || event === 'message.failed' || event === 'message.received')
+    ) {
+      // Saliente: actualiza estado y — si fue enviado DESDE el panel de Zernio (no desde el
+      // CRM) — lo registra para que el CRM sea un espejo completo de la conversación.
+      EdgeRuntime.waitUntil(
+        handleOutgoing(sb, conn, payload, event).catch((e) => console.error('[zernio-webhook] handleOutgoing bg error', e)),
+      );
     } else if (event.startsWith('whatsapp.template')) {
       await handleTemplateStatus(sb, conn, payload);
     }
@@ -94,6 +96,9 @@ async function handleInbound(sb: any, conn: any, payload: any) {
   const zernioConvId = String(m.conversationId ?? '');
   const platformMsgId = String(m.platformMessageId ?? m.id ?? '');
   const contactName = sender.name ?? null;
+  // Timestamp REAL de WhatsApp (cuándo el cliente envió) → ancla de la ventana 24h.
+  // Crítico para costos: usar esto, NO el momento en que nuestra DB inserta.
+  const inboundAt = String(m.sentAt ?? new Date().toISOString());
 
   // Marca la conexión como verificada al recibir el primer evento (Zernio no tiene handshake).
   if (!conn.webhook_subscribed_at) {
@@ -164,7 +169,7 @@ async function handleInbound(sb: any, conn: any, payload: any) {
     // Backfill: conversación vieja sin lead → vincular ahora.
     const leadIdForExisting = existing[0].lead_id || (await ensureLeadId());
     await sb.from('webchat_conversations').update({
-      last_inbound_at: new Date().toISOString(),
+      last_inbound_at: inboundAt,
       last_message_at: new Date().toISOString(),
       zernio_conversation_id: zernioConvId || undefined,
       ...(contactName ? { visitor_name: contactName } : {}),
@@ -187,7 +192,7 @@ async function handleInbound(sb: any, conn: any, payload: any) {
         zernio_connection_id: conn.id,
         zernio_conversation_id: zernioConvId || null,
         lead_id: leadIdForNew,
-        last_inbound_at: new Date().toISOString(),
+        last_inbound_at: inboundAt,
         last_message_at: new Date().toISOString(),
       })
       .select('id').single();
@@ -278,6 +283,73 @@ async function handleInbound(sb: any, conn: any, payload: any) {
     }
   } catch (e) {
     console.error('[zernio-webhook] webchat-bot invoke error', e);
+  }
+}
+
+// Mensaje SALIENTE de Zernio: actualiza el estado de los que envió el CRM y REGISTRA
+// los que se enviaron desde el panel de Zernio (para que el CRM sea espejo completo).
+async function handleOutgoing(sb: any, conn: any, payload: any, event: string) {
+  const m = payload.message ?? {};
+  const internalId = String(m.id ?? '');
+  const platformId = String(m.platformMessageId ?? '');
+  const statusMap: Record<string, string> = {
+    'message.read': 'read', 'message.delivered': 'delivered',
+    'message.failed': 'failed', 'message.sent': 'sent', 'message.received': 'sent',
+  };
+  const status = statusMap[event] ?? 'sent';
+  const rank: Record<string, number> = { sent: 1, delivered: 2, read: 3 };
+
+  // Buscar nuestra fila por id interno (lo que guarda zernio-send) o por wamid.
+  let found: any = null;
+  if (internalId) {
+    const r = await sb.from('webchat_messages').select('id, delivery_status')
+      .eq('metadata->>zernio_message_id', internalId).order('created_at', { ascending: false }).limit(1).maybeSingle();
+    found = r.data;
+  }
+  if (!found && platformId) {
+    const r = await sb.from('webchat_messages').select('id, delivery_status')
+      .eq('metadata->>zernio_platform_message_id', platformId).order('created_at', { ascending: false }).limit(1).maybeSingle();
+    found = r.data;
+  }
+
+  if (found) {
+    // Solo "sube" el estado (no bajar read→delivered); failed siempre gana.
+    const cur = rank[found.delivery_status as string] ?? 0;
+    if (status === 'failed' || (rank[status] ?? 0) >= cur) {
+      await sb.from('webchat_messages').update({ delivery_status: status }).eq('id', found.id);
+    }
+    return;
+  }
+
+  // No la tenemos → enviado DESDE el panel de Zernio → registrar como saliente.
+  const participant = String(payload?.conversation?.participantId ?? '').replace(/^\+/, '');
+  if (!participant) return;
+  const phoneNorm = normalizePhoneBR(participant) ?? participant;
+  const { data: conv } = await sb.from('webchat_conversations').select('id')
+    .eq('organization_id', conn.organization_id).eq('channel', 'whatsapp')
+    .eq('zernio_connection_id', conn.id).eq('visitor_phone_normalized', phoneNorm)
+    .neq('status', 'closed').order('last_message_at', { ascending: false }).limit(1).maybeSingle();
+  if (!conv) return;
+
+  const { data: inserted, error: insErr } = await sb.from('webchat_messages').insert({
+    conversation_id: conv.id,
+    direction: 'outbound',
+    sender_type: 'agent',
+    content: String(m.text ?? '[mensaje]'),
+    delivery_status: status,
+    metadata: {
+      provider: 'zernio', zernio_message_id: internalId || null,
+      zernio_platform_message_id: platformId || null, sent_from: 'zernio', zernio_sent_at: m.sentAt ?? null,
+    },
+  }).select('*').single();
+  if (insErr) return; // carrera con otra entrega del mismo mensaje → ignorar
+  await sb.from('webchat_conversations').update({ last_message_at: m.sentAt ?? new Date().toISOString() }).eq('id', conv.id);
+  if (inserted) {
+    try {
+      const ch = sb.channel(`conversation:${conv.id}`);
+      await ch.send({ type: 'broadcast', event: 'new_message', payload: inserted });
+      await sb.removeChannel(ch);
+    } catch (_) { /* non-fatal */ }
   }
 }
 

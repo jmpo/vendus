@@ -26,6 +26,7 @@ import { ChannelBadge } from './ChannelBadge';
 import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
 import { OutOfWindowTemplateBar } from './OutOfWindowTemplateBar';
+import { WindowCountdown } from './WindowCountdown';
 import { useMessageReactions } from '@/hooks/useMessageReactions';
 import { TypingIndicator } from './TypingIndicator';
 import { QuickRepliesPopover } from './QuickRepliesPopover';
@@ -64,6 +65,8 @@ interface ChatAreaProps {
   instagramConnectionId?: string | null;
   evolutionInstanceId?: string | null;
   zernioConnectionId?: string | null;
+  /** Timestamp real del último mensaje del cliente (sentAt de Zernio) → ancla de la ventana 24h. */
+  lastInboundAt?: string | null;
   status: string;
   messages: Message[];
   isLoading?: boolean;
@@ -148,6 +151,7 @@ export function ChatArea({
   instagramConnectionId,
   evolutionInstanceId,
   zernioConnectionId,
+  lastInboundAt: lastInboundAtProp,
   status,
   messages,
   isLoading,
@@ -372,13 +376,16 @@ export function ChatArea({
   const lastMessageAt = messages.length > 0 ? messages[messages.length - 1].created_at : null;
 
   // Ventana 24h (WhatsApp oficial): fuera de ella solo se puede enviar plantilla.
-  // El "último inbound" es el último mensaje del CLIENTE (sender_type='visitor').
-  const lastInboundAt = (() => {
-    for (let i = messages.length - 1; i >= 0; i--) {
-      if (messages[i].sender_type === 'visitor') return messages[i].created_at;
-    }
-    return null;
-  })();
+  // Ancla preferida: last_inbound_at de la conversación (= sentAt real de Zernio, preciso al
+  // segundo para el costo). Fallback: último mensaje del cliente en la lista.
+  const lastInboundAt =
+    lastInboundAtProp ||
+    (() => {
+      for (let i = messages.length - 1; i >= 0; i--) {
+        if (messages[i].sender_type === 'visitor') return messages[i].created_at;
+      }
+      return null;
+    })();
   const isOfficialWhatsApp = channel === 'whatsapp' && !!(zernioConnectionId || metaConnectionId);
   const outOfWindow =
     isOfficialWhatsApp &&
@@ -867,7 +874,9 @@ export function ChatArea({
               visitorPhone={visitorPhone ?? null}
             />
           ) : (
-            <ChatInput
+            <>
+              {isOfficialWhatsApp && <WindowCountdown lastInboundAt={lastInboundAt} />}
+              <ChatInput
               onSend={(content, media) => {
                 handleSendWithReply(content, media);
               }}
@@ -878,7 +887,8 @@ export function ChatArea({
               aiSuggestion={aiSuggestion}
               onClearSuggestion={() => setAiSuggestion('')}
               onScheduleMessage={onScheduleMessage}
-            />
+              />
+            </>
           )}
         </>
       ) : (

@@ -1086,6 +1086,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
               instagramConnectionId={(conversationDetail?.conversation as any)?.instagram_connection_id || (selectedConversation as any)?.instagram_connection_id || null}
               evolutionInstanceId={(conversationDetail?.conversation as any)?.evolution_instance_id || (selectedConversation as any)?.evolution_instance_id || null}
               zernioConnectionId={(conversationDetail?.conversation as any)?.zernio_connection_id || (selectedConversation as any)?.zernio_connection_id || null}
+              lastInboundAt={(conversationDetail?.conversation as any)?.last_inbound_at || (selectedConversation as any)?.last_inbound_at || null}
               status={(conversationDetail?.conversation as any)?.status || selectedConversation?.status || 'active'}
               messages={messages}
               isLoading={loadingDetail}
