@@ -334,6 +334,17 @@ export function MessageBubble({
           </>
         )}
 
+        {/* Botones interactivos enviados al cliente (lo que se le ofreció en WhatsApp) */}
+        {!isDeleted && Array.isArray((metadata as any)?.buttons) && (metadata as any).buttons.length > 0 && (
+          <div className="mt-2 flex flex-col gap-1 border-t border-current/10 pt-2">
+            {(metadata as any).buttons.map((b: any, i: number) => (
+              <span key={i} className="inline-flex items-center justify-center rounded-md border border-current/25 px-2 py-1 text-[11px] font-medium opacity-80">
+                {b.title || b.text || b.label || 'Opción'}
+              </span>
+            ))}
+          </div>
+        )}
+
         {/* Time and status */}
         {!isEditing && (
           <div

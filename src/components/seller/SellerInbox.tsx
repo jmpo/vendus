@@ -795,6 +795,21 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
           return { ...old, messages: [...msgs, incoming] };
         });
       })
+      .on('broadcast', { event: 'message_updated' }, (payload) => {
+        // Edición / borrado de un mensaje (ej.: el cliente editó o eliminó en WhatsApp).
+        // Parchea la fila en la cache por id (sin agregar duplicado).
+        const updated = payload.payload as any;
+        if (!updated?.id) return;
+        queryClient.setQueryData(['webchat-conversation', conversationId], (old: any) => {
+          if (!old) return old;
+          const msgs = old.messages || [];
+          const idx = msgs.findIndex((m: any) => m.id === updated.id);
+          if (idx < 0) return old;
+          const next = msgs.slice();
+          next[idx] = { ...next[idx], ...updated };
+          return { ...old, messages: next };
+        });
+      })
       .on('broadcast', { event: 'typing' }, (payload) => {
         if (payload.payload?.sender_type === 'visitor') {
           setIsTyping(true);

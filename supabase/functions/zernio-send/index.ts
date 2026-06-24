@@ -61,6 +61,7 @@ Deno.serve(async (req: Request) => {
     connection_id, organization_id, conversation_id,
     to, type = 'text', text, media, template,
     buttons, interactive, // mensajes interactivos (botones / lista) — passthrough a Zernio
+    extra_metadata, // metadata extra a fundir en la fila guardada (ej: scheduling_context)
     record = true, // si false: el llamador ya grabó la fila (evita bolha dupla)
   } = body ?? {};
 
@@ -156,6 +157,9 @@ Deno.serve(async (req: Request) => {
         zernio_message_id: zernioMsgId,
         ...(hasMedia ? { media } : {}),
         ...(template ? { template } : {}),
+        ...(buttons ? { buttons } : {}),
+        ...(interactive ? { interactive } : {}),
+        ...(extra_metadata && typeof extra_metadata === 'object' ? extra_metadata : {}),
         ...(res.ok ? {} : { error: res.data?.error ?? res.data ?? `status ${res.status}`, failed_at: new Date().toISOString() }),
       },
     }).select('*').single();

@@ -1980,6 +1980,10 @@ serve(async (req) => {
     
     // Check for auto-switch configuration
     let schedulingMetadata: any = null;
+    // Botones interactivos de agendamiento (SOLO en el flujo de reserva). Cuando
+    // check_available_slots ofrece ≤3 horarios, los devolvemos acá para que el
+    // webhook (Zernio) los mande como botones en vez de texto. null = sin botones.
+    let schedulingButtons: { body: string; buttons: Array<{ type: string; title: string; payload: string }> } | null = null;
     let autoSwitchConfig: Array<{ agent_id: string; trigger_condition: string }> = [];
     if (flowVariables['__auto_switch_config']) {
       try { 
@@ -3206,12 +3210,12 @@ ${leadDataPrompt}
               type: "function",
               function: {
                 name: "send_catalog_item",
-                description: "Enviar UN ítem del catálogo al cliente (foto + título + precio + link). Usá include_videos=true si el cliente pidió video/tour/demostración. Usá include_documents=true si pidió ficha/folleto/PDF. Llamala apenas el cliente pida fotos/video/material, O cuando presentes un modelo concreto que le interesó. Enviá UN ítem por vez (no varios de golpe), pero NO esperes confirmaciones de más: si el cliente quiere ver el vehículo, enviá la foto YA, en el mismo turno.",
+                description: "Enviar UN ítem del catálogo al cliente (foto + título + precio, SIN links externos). Usá include_videos=true si el cliente pidió video/tour/demostración. Usá include_documents=true si pidió ficha/folleto/PDF. Llamala apenas el cliente pida fotos/video/material, O — PROACTIVAMENTE — apenas el cliente muestre interés en un modelo concreto (no esperes a que pida la foto). Enviá UN ítem por vez (no varios de golpe), pero NO esperes confirmaciones de más: si el cliente quiere ver el vehículo, enviá la foto YA, en el mismo turno.",
                 parameters: {
                   type: "object",
                   properties: {
                     item_id: { type: "string", description: "ID del ítem devuelto por search_catalog" },
-                    caption: { type: "string", description: "Legenda customizada opcional. Se vacío, gera automaticamente." },
+                    caption: { type: "string", description: "Legenda customizada opcional. Se vacío, gera automaticamente. NUNCA incluyas links/URLs externos en la legenda." },
                     include_videos: { type: "boolean", description: "Inclui vídeo se disponible. SÓ use se cliente pediu vídeo/tour explicitamente. Default false." },
                     include_documents: { type: "boolean", description: "Inclui PDF/documento se disponible. SÓ use se cliente pediu ficha/folleto/PDF/specs. Default false." },
                   },
@@ -3221,28 +3225,28 @@ ${leadDataPrompt}
             });
 
             systemPrompt += `\n\n📦 CATÁLOGO PESQUISÁVEL DISPONÍVEL (CANAL OFICIAL DE ENVIO DE MÍDIA):
-Tenés acceso a un catálogo de ítems (vehículos) con búsqueda semántica y multimedia (fotos, vídeos, PDFs, link).
-Este catálogo es el CANAL OFICIAL para entregar fotos, videos, fichas y links en este WhatsApp.
+Tenés acceso a un catálogo de ítems (vehículos) con búsqueda semántica y multimedia (fotos, vídeos, PDFs).
+Este catálogo es el CANAL OFICIAL para entregar fotos, videos y fichas en este WhatsApp.
 
 🚨 REGLAS PRIORITARIAS — INCUMPLIRLAS ES ERROR GRAVE:
-- Si el cliente pide FOTO, VIDEO, FICHA, FOLLETO, LINK, IMÁGENES, TOUR o MATERIAL → DEBÉS llamar search_catalog (si todavía no sabés cuál ítem) e INMEDIATAMENTE send_catalog_item para enviárselo EN EL MISMO TURNO. Sin rodeos. NUNCA digas "te las envío", "ahora te paso las fotos" o "te las mando enseguida" sin enviarlas ya: el cliente quiere verlas AL INSTANTE.
+- Si el cliente pide FOTO, VIDEO, FICHA, FOLLETO, IMÁGENES, TOUR o MATERIAL → DEBÉS llamar search_catalog (si todavía no sabés cuál ítem) e INMEDIATAMENTE send_catalog_item para enviárselo EN EL MISMO TURNO. Sin rodeos. NUNCA digas "te las envío", "ahora te paso las fotos" o "te las mando enseguida" sin enviarlas ya: el cliente quiere verlas AL INSTANTE.
 - Apenas presentes o recomiendes un modelo, enviá su foto con send_catalog_item (no solo lo describas en texto): una foto vende más que mil palabras.
 - Si el cliente pide VIDEO, tour o demostración → usá send_catalog_item con include_videos=true.
 - PROHIBIDO inventar bloqueos. NUNCA digas "no puedo enviar por acá", "el sistema restringe", "está off-market", "no está abierto al público", "necesita registro previo", "voy a coordinar con un especialista" ni "no tengo acceso" si NO hay una regla explícita registrada. Si el ítem está en el catálogo y activo, PODÉS y DEBÉS enviarlo.
 - Solo podés negar el envío si: (a) search_catalog devolvió 0 ítems compatibles, o (b) hay una instrucción explícita que lo prohíbe. En cualquier otro caso, ENVIÁ.
-- Si el cliente pidió solo "el link", llamá send_catalog_item igual — el link oficial va incluido.
+- 🚫 NO enviamos links externos (cotizar / sitio web / formulario). Si el cliente pide "el link" o más info, mandá las FOTOS del modelo con send_catalog_item. Para agendar, usá la herramienta de reserva (horarios/botones), NUNCA un link.
 
 REGRAS DE USO:
 1. Cliente descreve o que procura (sin pedir mídia todavía) → search_catalog con query + filtros relevantes
-2. Cliente pede mídia/link diretamente sobre algo identificável → search_catalog imediato e después send_catalog_item nel ítem correto (no preguntes "qual?" se ya es óbvio por lel mensaje)
+2. Cliente pede mídia diretamente sobre algo identificável → search_catalog imediato e después send_catalog_item nel ítem correto (no preguntes "qual?" se ya es óbvio por lel mensaje)
 3. Presentá no MÁXIMO 3 opciones en texto corto e estratégico cuando hay múltiples resultados
 4. NUNCA invente ítems — só fale de ítems devueltos por search_catalog
 5. Cada item tiene flags has_video e has_document. Cuando relevante, OFEREÇA: "Tengo fotos, video y la ficha. ¿Te mando todo o empezamos por las fotos?"
-6. send_catalog_item: por defecto envía FOTO + título + precio + link. Usa include_videos=true se cliente pediu video/tour/demostración. Usa include_documents=true se pediu ficha/folleto/specs/PDF/brochure/planta.
+6. send_catalog_item: por defecto envía FOTO + título + precio (SIN links externos). Usa include_videos=true se cliente pediu video/tour/demostración. Usa include_documents=true se pediu ficha/folleto/specs/PDF/brochure/planta.
 7. Escale con bueno senso: foto → (se interés) vídeo → (se precisar) documento. Mas se el cliente pediu "manda tudo", mande tudo.
 8. Múltiples ítems: um por vez, esperándo reação entre envios.
 9. search_catalog vacío → ofrezcas relaxar filtros / otra região / otra faixa. NUNCA invente desculpa de "off-market" ou "restricción".
-10. Se o envio falhar por algún motivo técnico, mande por el menos o LINK oficial del ítem (nunca devuelvas respuesta vacía).`;
+10. Se o envio falhar por algún motivo técnico, reintentá el envío de las fotos o avisá brevemente que las mandás enseguida (nunca devuelvas respuesta vacía ni un link externo).`;
           }
         }
       } catch (catErr) {
@@ -4219,6 +4223,33 @@ REGRAS DE USO:
                         `Opción ${i + 1}: ${s.dateLabel} a las ${s.time}`
                       ).join('\n');
                       responseContent = `Encontré estos horarios disponibles:\n\n${responseContent}\n\n¿Cuál te queda mejor?`;
+                    }
+
+                    // === BOTONES DE AGENDAMIENTO (SOLO en el flujo de reserva) ===
+                    // Si hay 1-3 horarios, los exponemos como botones para que el cliente
+                    // TOQUE en vez de escribir. El webhook (Zernio) los manda como mensaje
+                    // interactivo; en canales sin botones (Evolution/webchat) queda el texto
+                    // natural de arriba. Botones SOLO acá — en el resto de la charla, texto.
+                    if (suggestions.length >= 1 && suggestions.length <= 3) {
+                      const sameDay = suggestions.every((s) => s.date === suggestions[0].date);
+                      const btnTitle = (s: any): string => {
+                        if (sameDay) return String(s.time).slice(0, 20);
+                        const parts = String(s.dateLabel || '').split(' ');
+                        const wd = parts[0] ? parts[0].charAt(0).toUpperCase() + parts[0].slice(1, 3) : '';
+                        const dd = parts[1] || '';
+                        return `${wd} ${dd} ${s.time}`.trim().slice(0, 20);
+                      };
+                      schedulingButtons = {
+                        body: (responseContent && responseContent.trim())
+                          ? responseContent.trim()
+                          : '¿Qué horario te queda mejor?',
+                        buttons: suggestions.slice(0, 3).map((s) => ({
+                          type: 'postback',
+                          title: btnTitle(s),
+                          payload: `slot|${s.date}|${s.time}`,
+                        })),
+                      };
+                      console.log('[webchat-bot] 📅 schedulingButtons preparados:', schedulingButtons.buttons.length);
                     }
                   }
                 }
@@ -5667,6 +5698,7 @@ REGRAS DE USO:
           typingIndicator: humanResult.typingIndicator,
           postponeUntil: humanResult.postponeUntil,
           metadata: schedulingMetadata || null,
+          scheduling_buttons: schedulingButtons || null,
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -5851,6 +5883,15 @@ NUNCA AJA COMO SUPORTE (a menos que su agent_type seja explicitamente "support")
 - Se o objetivo principal menciona "transferir pra suporte", eso es uma INSTRUÇÃO DE ROTEAMENTO, no um ejemplo de fala — no copie esse tom
 - Se o lead pedir suporte explicitamente E for um cliente atual con problema técnico, use la herramienta transfer_to_human ou transfer_to_agent (nunca finja ser suporte)
 - Para cualquier otra intención (compra, duda comercial, reserva), seguí tu rol de ventas/SDR normalmente
+
+═══════════════════════════════════════
+
+📸 FOTOS Y CATÁLOGO (REGLA PRIORITARIA — ENVÍO PROACTIVO):
+- Apenas el cliente muestre interés en un modelo/vehículo/ítem específico (lo nombra, pregunta por él, o vos identificás cuál le conviene) → ENVIÁ las fotos INMEDIATAMENTE con send_catalog_item. NO esperes a que las pida.
+- PRIORIZÁ SIEMPRE mostrar fotos: una imagen vende más que un párrafo. Mandá las fotos primero y seguí la conversación después.
+- Si no sabés el id del ítem, buscá con search_catalog y enviálo con send_catalog_item. Ese es el canal oficial de envío.
+- Enviá las fotos de un modelo UNA vez en la conversación — no repitas las mismas si ya las mandaste.
+- 🚫 NUNCA mandes links externos (cotizar, sitio web, formulario, "agendá acá"). Para agendar usá la herramienta de reserva (horarios/botones), NUNCA un link.
 
 ═══════════════════════════════════════\n\n`;
 

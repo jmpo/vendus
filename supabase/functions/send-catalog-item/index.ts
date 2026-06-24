@@ -56,10 +56,9 @@ function buildCaption(item: any, override?: string | null): string {
     lines.push("");
     lines.push(desc);
   }
-  if (item.url) {
-    lines.push("");
-    lines.push(`🔗 ${item.url}`);
-  }
+  // NOTA: NO agregamos item.url. El cliente quiere solo fotos + info, sin links
+  // externos (cotizar/sitio/agendamiento). El agendamiento se hace con la
+  // herramienta de reserva (botones/horarios), nunca con un link en el caption.
   return lines.join("\n");
 }
 
