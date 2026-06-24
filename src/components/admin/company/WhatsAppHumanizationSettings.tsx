@@ -23,6 +23,7 @@ interface HumanizationSettings {
   presence_recording_enabled: boolean;
   presence_typing_chars_per_sec: number;
   presence_jitter_pct: number;
+  handback_idle_minutes: number;
 }
 
 const DEFAULTS: HumanizationSettings = {
@@ -38,6 +39,7 @@ const DEFAULTS: HumanizationSettings = {
   presence_recording_enabled: true,
   presence_typing_chars_per_sec: 28,
   presence_jitter_pct: 15,
+  handback_idle_minutes: 30,
 };
 
 export function WhatsAppHumanizationSettings() {
@@ -52,7 +54,7 @@ export function WhatsAppHumanizationSettings() {
       const { data, error } = await supabase
         .from('organizations')
         .select(
-          'ai_grouping_enabled, ai_grouping_window_ms, ai_grouping_max_ms, ai_typing_min_ms, ai_typing_max_ms, ai_dedup_enabled, ai_dedup_window_ms, ai_single_processing_per_conversation, presence_enabled, presence_recording_enabled, presence_typing_chars_per_sec, presence_jitter_pct'
+          'ai_grouping_enabled, ai_grouping_window_ms, ai_grouping_max_ms, ai_typing_min_ms, ai_typing_max_ms, ai_dedup_enabled, ai_dedup_window_ms, ai_single_processing_per_conversation, presence_enabled, presence_recording_enabled, presence_typing_chars_per_sec, presence_jitter_pct, handback_idle_minutes'
         )
         .eq('id', orgId!)
         .maybeSingle();
@@ -76,6 +78,7 @@ export function WhatsAppHumanizationSettings() {
         ai_typing_min_ms: clamp(form.ai_typing_min_ms, 0, 15000),
         ai_typing_max_ms: clamp(form.ai_typing_max_ms, 500, 30000),
         ai_dedup_window_ms: clamp(form.ai_dedup_window_ms, 5000, 600000),
+        handback_idle_minutes: clamp(form.handback_idle_minutes, 1, 1440),
       };
       const { error } = await supabase.from('organizations').update(payload).eq('id', orgId);
       if (error) throw error;
@@ -209,6 +212,20 @@ export function WhatsAppHumanizationSettings() {
                 onChange={(v) => update('ai_dedup_window_ms', v)}
                 min={5000}
                 max={600000}
+              />
+            </Section>
+
+            <Section
+              title="Devolución a la IA por inactividad"
+              hint="Si un humano toma la conversación y no responde en este tiempo, la IA la retoma para no dejar al cliente esperando. El vendedor ve la cuenta regresiva en el chat."
+            >
+              <Field
+                label="Minutos antes de que la IA retome"
+                hint="Por defecto 30 min. Cada mensaje reinicia el contador."
+                value={form.handback_idle_minutes}
+                onChange={(v) => update('handback_idle_minutes', v)}
+                min={1}
+                max={1440}
               />
             </Section>
 

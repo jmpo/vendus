@@ -8,7 +8,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const IDLE_MINUTES = 30; // tiempo de inactividad antes de que la IA retome
+const DEFAULT_IDLE_MINUTES = 30; // fallback si la org no configuró handback_idle_minutes
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -18,15 +18,14 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
   );
 
-  const cutoff = new Date(Date.now() - IDLE_MINUTES * 60_000).toISOString();
-
-  // Conversaciones en atención humana (tomada o esperando) sin actividad reciente
-  const { data: stale, error } = await supabase
+  // Conversaciones en atención humana (tomada o esperando). Filtramos por inactividad
+  // POR ORGANIZACIÓN (cada org configura su handback_idle_minutes).
+  const { data: candidates, error } = await supabase
     .from("webchat_conversations")
-    .select("id, assigned_user_id, visitor_name, status, last_message_at")
+    .select("id, organization_id, assigned_user_id, visitor_name, status, last_message_at")
     .in("status", ["human_active", "waiting_human"])
-    .lt("last_message_at", cutoff)
-    .limit(50);
+    .order("last_message_at", { ascending: true })
+    .limit(200);
 
   if (error) {
     console.error("[human-handback] query error:", error.message);
@@ -35,8 +34,27 @@ Deno.serve(async (req) => {
     });
   }
 
+  // Mapa org → idle_minutes
+  const orgIds = [...new Set((candidates || []).map((c) => c.organization_id).filter(Boolean))];
+  const idleByOrg = new Map<string, number>();
+  if (orgIds.length) {
+    const { data: orgs } = await supabase
+      .from("organizations")
+      .select("id, handback_idle_minutes")
+      .in("id", orgIds);
+    for (const o of orgs || []) idleByOrg.set(o.id, Number(o.handback_idle_minutes) || DEFAULT_IDLE_MINUTES);
+  }
+
+  const nowMs = Date.now();
+  const stale = (candidates || []).filter((c) => {
+    if (!c.last_message_at) return false;
+    const idle = idleByOrg.get(c.organization_id) ?? DEFAULT_IDLE_MINUTES;
+    return nowMs - new Date(c.last_message_at).getTime() > idle * 60_000;
+  });
+
   let handed = 0;
-  for (const conv of (stale || [])) {
+  for (const conv of stale) {
+    const IDLE_MINUTES = idleByOrg.get(conv.organization_id) ?? DEFAULT_IDLE_MINUTES;
     try {
       // Devolver la conversación a la IA
       await supabase
@@ -63,7 +81,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  return new Response(JSON.stringify({ ok: true, handed_back: handed, checked: (stale || []).length }), {
+  return new Response(JSON.stringify({ ok: true, handed_back: handed, checked: stale.length, candidates: (candidates || []).length }), {
     status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 });

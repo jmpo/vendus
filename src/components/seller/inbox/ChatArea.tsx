@@ -68,6 +68,10 @@ interface ChatAreaProps {
   zernioConnectionId?: string | null;
   /** Timestamp real del último mensaje del cliente (sentAt de Zernio) → ancla de la ventana 24h. */
   lastInboundAt?: string | null;
+  /** last_message_at autoritativo de la conversación → ancla del handback (lo que usa el cron). */
+  conversationLastMessageAt?: string | null;
+  /** Minutos de inactividad antes de que la IA retome (configurable por organización). */
+  handbackIdleMinutes?: number;
   status: string;
   messages: Message[];
   isLoading?: boolean;
@@ -153,6 +157,8 @@ export function ChatArea({
   evolutionInstanceId,
   zernioConnectionId,
   lastInboundAt: lastInboundAtProp,
+  conversationLastMessageAt,
+  handbackIdleMinutes = 30,
   status,
   messages,
   isLoading,
@@ -556,6 +562,11 @@ export function ChatArea({
                 }}
                 size="sm"
               />
+              <HandbackCountdown
+                lastActivityAt={conversationLastMessageAt || lastMessageAt}
+                status={status}
+                idleMinutes={handbackIdleMinutes}
+              />
             </div>
             <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground min-w-0 truncate">
               {ticketCode && (
@@ -867,9 +878,6 @@ export function ChatArea({
               </Button>
             </div>
           )}
-
-          {/* Cuánto falta para que la IA retome (inactividad humana) */}
-          <HandbackCountdown lastActivityAt={lastMessageAt} status={status} />
 
           {outOfWindow && zernioConnectionId ? (
             <OutOfWindowTemplateBar

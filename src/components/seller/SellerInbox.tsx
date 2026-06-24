@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
 import { useMyPermissions } from '@/hooks/useUserPermissions';
 import { useWebChatConversations, useWebChatConversationCounts, useWebChatConversation, useSendAgentMessage, useCloseConversation, useReopenConversation, useReturnToQueue, useResumeConversation, useActivateBot, useEditMessage, useDeleteMessage, useStarMessage, useForwardMessage, useAssignConversation, type InboxBackendFilters } from '@/hooks/useWebChat';
+import { useHandbackIdleMinutes } from '@/hooks/useHandbackIdleMinutes';
 import { useEvolutionInstances } from '@/hooks/useEvolutionInstances';
 import { useMetaWAConnections } from '@/hooks/useMetaWhatsApp';
 import { useInstagramConnections } from '@/hooks/useInstagramConnections';
@@ -54,6 +55,7 @@ interface SellerInboxProps {
 export function SellerInbox({ productId, pendingConversationId, onConversationSelected, mode = 'seller', onConversationOpenChange }: SellerInboxProps) {
   const isAdminMode = mode === 'admin';
   const { user, profile, roles } = useAuth();
+  const handbackIdleMinutes = useHandbackIdleMinutes();
   const isAdminRole = roles?.includes('admin') || roles?.includes('super_admin');
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -1087,6 +1089,8 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
               evolutionInstanceId={(conversationDetail?.conversation as any)?.evolution_instance_id || (selectedConversation as any)?.evolution_instance_id || null}
               zernioConnectionId={(conversationDetail?.conversation as any)?.zernio_connection_id || (selectedConversation as any)?.zernio_connection_id || null}
               lastInboundAt={(conversationDetail?.conversation as any)?.last_inbound_at || (selectedConversation as any)?.last_inbound_at || null}
+              conversationLastMessageAt={(conversationDetail?.conversation as any)?.last_message_at || (selectedConversation as any)?.last_message_at || null}
+              handbackIdleMinutes={handbackIdleMinutes}
               status={(conversationDetail?.conversation as any)?.status || selectedConversation?.status || 'active'}
               messages={messages}
               isLoading={loadingDetail}
