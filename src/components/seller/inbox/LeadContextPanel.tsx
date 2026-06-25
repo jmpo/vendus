@@ -23,6 +23,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { formatMessageTime } from '@/lib/messageFormat';
 import { InternalNotes } from './InternalNotes';
+import { LeadMemoryCard } from './LeadMemoryCard';
 import { JourneyTimeline } from './JourneyTimeline';
 import { ConversationHistoryList } from './ConversationHistoryList';
 import { AISummaryTab } from './AISummaryTab';
@@ -204,6 +205,9 @@ export function LeadContextPanel({
                   </a>
                 )}
               </div>
+
+              {/* 🗂️ Ficha de memoria del cliente (lo que la IA fue aprendiendo) */}
+              <LeadMemoryCard leadId={lead?.id} />
 
               {/* Tags del lead (chips inline) */}
               <div className="space-y-1.5">

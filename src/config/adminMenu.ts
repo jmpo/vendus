@@ -31,6 +31,7 @@ import {
   ListChecks,
   Filter,
   Activity,
+  Brain,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -75,6 +76,7 @@ export const menuGroups: AdminMenuGroup[] = [
     icon: Sparkles,
     items: [
       { id: 'agents', label: 'Agentes IA', icon: Bot },
+      { id: 'agent-learnings', label: 'Aprendizajes IA', icon: Brain },
       { id: 'campaigns', label: 'Campañas Inteligentes', icon: Megaphone },
       { id: 'cadences', label: 'Cadencias Inteligentes', icon: Sparkles },
       { id: 'webhooks', label: 'Webhooks', icon: Webhook },

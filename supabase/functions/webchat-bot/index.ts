@@ -2186,6 +2186,29 @@ serve(async (req) => {
         systemPrompt += `\n\nBase de conocimiento:\n${body.agent_config.knowledge_base}`;
       }
 
+      // 🧠 CEREBRO QUE APRENDE: aprendizajes auto-generados (agent-learning-cron) a
+      // partir de conversaciones que CERRARON (test drive agendado / venta ganada).
+      // El agente mejora solo sin tocar nada. Inspirado en la memoria de Hermes (Nous).
+      try {
+        const learnOrgId = (activeAgent as any)?.organization_id || null;
+        if (learnOrgId) {
+          const { data: learnings } = await supabase
+            .from('agent_learnings')
+            .select('insight, category, agent_type')
+            .eq('organization_id', learnOrgId)
+            .eq('active', true)
+            .limit(12);
+          const at = activeAgent?.agent_type || null;
+          const relevant = (learnings || []).filter((l: any) => !l.agent_type || l.agent_type === at).slice(0, 6);
+          if (relevant.length > 0) {
+            systemPrompt += `\n\n🧠 APRENDIZAJES DE VENTAS QUE FUNCIONAN (destilados de conversaciones reales que cerraron — aplicalos con naturalidad):`;
+            relevant.forEach((l: any) => {
+              systemPrompt += `\n- ${l.category ? `[${l.category}] ` : ''}${l.insight}`;
+            });
+          }
+        }
+      } catch { /* non-fatal */ }
+
       // Si NO se cargó un cerebro de producto real (orquestador/global, o product_id inválido/vacío),
       // inyecta el catálogo REAL de la org para que NO invente marcas/productos.
       if (!gotProductBrain) {
@@ -2449,6 +2472,31 @@ Este contato YA COMPROU e es um CLIENTE ATIVO. Por eso:
         if (capturedFromMessage.email && !leadContext.email) leadContext.email = capturedFromMessage.email;
         if (capturedFromMessage.phone && !leadContext.phone) leadContext.phone = capturedFromMessage.phone;
       }
+
+      // 🗂️ FICHA DE MEMORIA DEL CLIENTE (memoria por cliente, inspirada en Hermes).
+      // (a) LEE la ficha existente y la inyecta → sobrevive al recorte de 40 mensajes,
+      //     así el agente NO re-pregunta lo que el cliente ya dijo y personaliza.
+      // (b) Programa su actualización en background (la función se auto-throttlea cada ~6 msgs).
+      try {
+        const _memLeadId = leadId || (leadContext as any)?.id || null;
+        if (_memLeadId) {
+          const { data: memRow } = await supabase
+            .from('lead_memory').select('summary, facts').eq('lead_id', _memLeadId).maybeSingle();
+          if (memRow && (memRow.summary || (memRow.facts && Object.keys(memRow.facts).length))) {
+            systemPrompt += `\n\n🗂️ FICHA DEL CLIENTE (lo que YA sabemos — usalo y NO lo vuelvas a preguntar):`;
+            if (memRow.summary) systemPrompt += `\n${memRow.summary}`;
+            const factsObj = (memRow.facts && typeof memRow.facts === 'object') ? memRow.facts : {};
+            const factsLines = Object.entries(factsObj).map(([k, v]) => `  • ${k}: ${v}`).join('\n');
+            if (factsLines) systemPrompt += `\n${factsLines}`;
+          }
+          const _memOrg = (leadContext as any)?.organization_id || (activeAgent as any)?.organization_id || null;
+          const _p = supabase.functions.invoke('lead-memory-update', {
+            body: { conversation_id: body.conversation_id, lead_id: _memLeadId, organization_id: _memOrg },
+          });
+          const _er = (globalThis as any).EdgeRuntime;
+          if (_er?.waitUntil) _er.waitUntil(_p.catch(() => {})); else _p.catch(() => {});
+        }
+      } catch { /* non-fatal */ }
 
       // Final instructions for response format
       const maxLength = body.agent_config.max_message_length || 300;
@@ -5883,6 +5931,16 @@ NUNCA AJA COMO SUPORTE (a menos que su agent_type seja explicitamente "support")
 - Se o objetivo principal menciona "transferir pra suporte", eso es uma INSTRUÇÃO DE ROTEAMENTO, no um ejemplo de fala — no copie esse tom
 - Se o lead pedir suporte explicitamente E for um cliente atual con problema técnico, use la herramienta transfer_to_human ou transfer_to_agent (nunca finja ser suporte)
 - Para cualquier otra intención (compra, duda comercial, reserva), seguí tu rol de ventas/SDR normalmente
+
+═══════════════════════════════════════
+
+🔎 DESCUBRIMIENTO ANTES DE CERRAR (venta consultiva — REGLA CLAVE):
+- ANTES de recomendar un modelo concreto o proponer agendar, ENTENDÉ la necesidad real. NO saltes al CTA sin saber para qué/para quién es: una recomendación sin entender convierte peor y se siente transaccional.
+- Preguntá lo esencial, 1 pregunta por turno y SIN interrogar: ¿para qué lo va a usar (ciudad/ruta/trabajo)?, ¿cuántos viajan o es para la familia?, ¿0km o usado?, ¿rango de presupuesto o cuota?, ¿financiación o contado?, ¿entrega un usado en parte de pago?
+- Con 2-3 respuestas clave YA tenés para recomendar con criterio. NO hagas más de 3-4 preguntas en total: descubrí lo justo y avanzá (no es un interrogatorio).
+- Si el cliente YA dio un dato (en esta charla o en su ficha), NO lo vuelvas a preguntar — usalo. Si venís de un handoff, NO re-descubras de cero: validá 1 dato clave y seguí.
+- Al recomendar, CONECTÁ el vehículo con lo que dijo el cliente ("como viajás con la familia y querés bajo consumo, el X te encaja porque…"). Eso vende más que tirar specs sueltas.
+- Recién DESPUÉS de entender → mostrá las fotos y ofrecé el test drive.
 
 ═══════════════════════════════════════
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { SuperAdminSidebar } from '@/components/superadmin/SuperAdminSidebar';
 import { SuperAdminDashboard } from '@/components/superadmin/SuperAdminDashboard';
+import { AgentLearningsSuperPanel } from '@/components/superadmin/AgentLearningsSuperPanel';
 import { OrganizationsManager } from '@/components/superadmin/OrganizationsManager';
 import { OrganizationDetailPage } from '@/components/superadmin/OrganizationDetailPage';
 import { UsersManager } from '@/components/superadmin/UsersManager';
@@ -89,6 +90,8 @@ export default function SuperAdmin() {
         return <AgentToolExecutionsPanel />;
       case 'ai-quality':
         return <AIQualityPanel />;
+      case 'agent-learnings':
+        return <AgentLearningsSuperPanel />;
       default:
         return <SuperAdminDashboard onNavigate={setActiveSection} />;
     }
