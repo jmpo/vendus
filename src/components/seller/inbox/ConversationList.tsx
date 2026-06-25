@@ -435,6 +435,15 @@ export function ConversationList({
                       )}
                     </p>
 
+                    {/* 🙋 DERIVADA POR LA IA — esperando atención humana (aviso llamativo) */}
+                    {conv.status === 'waiting_human' && !conv.current_agent_name && (
+                      <div className="mt-1.5">
+                        <Badge className="h-5 px-2 text-[10px] font-bold gap-1 bg-amber-500/20 text-amber-600 border border-amber-500/50 animate-pulse">
+                          🙋 Derivada por IA — atendé
+                        </Badge>
+                      </div>
+                    )}
+
                     {/* Linha 3: tags (setor + produto + atendente) */}
                     {(conv.sector_name || conv.product_name || (showAssignedUser && conv.assigned_user_name) || conv.current_agent_name) && (
                       <div className="flex items-center gap-1 flex-nowrap overflow-hidden mt-1.5 min-w-0">

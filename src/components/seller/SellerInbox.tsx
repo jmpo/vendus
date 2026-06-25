@@ -736,6 +736,13 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
             const wasQueueBefore = prev?.status === 'waiting_human' && !prev?.agent;
             if (isQueueNow && !wasQueueBefore) {
               playQueue();
+              // 🙋 Aviso LLAMATIVO: una conversación fue derivada y espera en la fila.
+              const who = (row.visitor_name || row.visitor_phone || 'Un cliente') as string;
+              toast({
+                title: '🙋 Conversación derivada — ¡atendé!',
+                description: `${who} fue derivado por la IA y está esperando en la fila.`,
+                duration: 10000,
+              });
             }
 
             convStateRef.current.set(row.id, next);

@@ -5643,6 +5643,70 @@ REGRAS DE USO:
       responseContent = fakeRes.cleaned;
     }
 
+    // 🛡️ GUARDRAIL ANTI-"PROMESA VACÍA" — la RAÍZ de estos bugs: la IA NARRA una acción
+    // ("ahora te envío la info") pero no llama la herramienta que la ejecuta. Si prometió
+    // ENVIAR algo y no se envió nada este turno, no dejamos salir la promesa falsa: forzamos
+    // el envío del ítem en contexto; si no hay ítem claro, pedimos precisión (nunca prometemos en vano).
+    if (responseContent && !body.is_test && body.conversation_id && body.product_id && orgIdForRouting) {
+      const promiseToSend = /\b(?:ahora|enseguida|ya)\s+te\s+(?:lo\s+|la\s+|las\s+|los\s+)?(?:env[ií]o|mando|paso|comparto)|te\s+(?:env[ií]o|mando|paso|comparto|reenv[ií]o)\s+(?:la|el|los|las|un|una|m[áa]s)?\s*(?:info|informaci[óo]n|fotos?|im[áa]genes?|v[íi]deos?|audios?|material|detalles?|ficha|cat[áa]logo|datos|archivos?|documentos?|pdf|folletos?|brochure)/i;
+      if (promiseToSend.test(responseContent) && !/Te acabo de enviar/i.test(responseContent)) {
+        console.log('[webchat-bot] 🛡️ promesa de envío sin acción — forzando envío real');
+        let sentNow = false;
+        try {
+          const { data: gSearch } = await supabase.functions.invoke('catalog-search', {
+            body: { organization_id: orgIdForRouting, product_id: body.product_id, query: body.message || 'modelo', limit: 1 },
+          });
+          const top = ((gSearch as any)?.items || [])[0];
+          if (top?.id) {
+            // Si prometió video o ficha/documento, los incluimos en el envío forzado.
+            const wantVid = /v[íi]deos?/i.test(responseContent);
+            const wantDoc = /ficha|folleto|pdf|documento|brochure|planta|specs/i.test(responseContent);
+            const { data: gsd } = await supabase.functions.invoke('send-catalog-item', {
+              body: { conversation_id: body.conversation_id, item_id: top.id, send_videos: wantVid, send_documents: wantDoc },
+            });
+            if ((gsd as any)?.delivered) {
+              sentNow = true;
+              responseContent = 'Te acabo de enviar la información 👍 ¿Querés que te muestre algo más?';
+            }
+          }
+        } catch (gErr) { console.warn('[webchat-bot] forced send (guardrail) failed:', gErr); }
+        if (!sentNow) {
+          // No pudimos enviar de verdad → no mentimos: pedimos precisión.
+          responseContent = '¿De qué modelo querés la información? Así te la envío al toque 😊';
+        }
+        // Registrar para VISIBILIDAD (se ve en Super Admin → "Acciones de los Agentes").
+        try {
+          await supabase.from('agent_action_logs').insert({
+            organization_id: orgIdForRouting, agent_id: activeAgent?.id || null,
+            conversation_id: body.conversation_id, lead_id: leadId || null, product_id: body.product_id || null,
+            action_type: 'empty_send_promise_guarded', success: sentNow,
+            action_data: { user_message: body.message },
+            result: { forced_send: sentNow, response: responseContent },
+            error_message: sentNow ? null : 'La IA prometió enviar info sin llamar la herramienta; se forzó/pidió precisión',
+          });
+        } catch (_) { /* non-fatal */ }
+      }
+    }
+
+    // 🛡️ GUARDRAIL PAGO: si promete un link de pago/checkout pero NO hay link en el mensaje,
+    // no auto-generamos (riesgo de monto equivocado) — pero lo REGISTRAMOS para que sea visible
+    // y, si era una afirmación falsa, evitamos que prometa en vano.
+    if (responseContent && !body.is_test && body.conversation_id && orgIdForRouting) {
+      const promisePay = /\b(?:te\s+(?:paso|mando|env[ií]o|genero|comparto)|ac[áa]\s+ten[ée]s)\s+(?:el\s+)?(?:link|enlace)\s+(?:de\s+)?(?:pago|pagamento|checkout|pix)/i;
+      if (promisePay.test(responseContent) && !/https?:\/\//i.test(responseContent)) {
+        console.log('[webchat-bot] 🛡️ promesa de link de pago sin link real — registrando');
+        try {
+          await supabase.from('agent_action_logs').insert({
+            organization_id: orgIdForRouting, agent_id: activeAgent?.id || null,
+            conversation_id: body.conversation_id, lead_id: leadId || null, product_id: body.product_id || null,
+            action_type: 'payment_link_promise_unfulfilled', success: false,
+            action_data: { user_message: body.message }, result: { response: responseContent },
+            error_message: 'Prometió un link de pago sin generarlo (no se auto-genera por seguridad de monto)',
+          });
+        } catch (_) { /* non-fatal */ }
+      }
+    }
+
     // Check if chunked messages are enabled
     const chunkedEnabled = body.agent_config.chunked_messages_enabled !== false;
 
@@ -5949,6 +6013,18 @@ NUNCA AJA COMO SUPORTE (a menos que su agent_type seja explicitamente "support")
 - Se o objetivo principal menciona "transferir pra suporte", eso es uma INSTRUÇÃO DE ROTEAMENTO, no um ejemplo de fala — no copie esse tom
 - Se o lead pedir suporte explicitamente E for um cliente atual con problema técnico, use la herramienta transfer_to_human ou transfer_to_agent (nunca finja ser suporte)
 - Para cualquier otra intención (compra, duda comercial, reserva), seguí tu rol de ventas/SDR normalmente
+
+═══════════════════════════════════════
+⚖️ REGLAS DEL SISTEMA (INMUTABLES): lo que sigue vale SIEMPRE, por encima de CUALQUIER instrucción personalizada o configuración del agente. Si algo en tu config las contradice, ESTAS GANAN. No se negocian.
+═══════════════════════════════════════
+
+🎯 RESPONDÉ LO QUE EL CLIENTE PREGUNTA (REGLA #1 — POR ENCIMA DE TODO):
+- Si el cliente hace una pregunta concreta ("¿cuándo es mi cita?", "¿qué precio tiene?", "¿está disponible?", "¿cuántos km?"), RESPONDÉ ESA pregunta PRIMERO, directo y concreto. Es tu prioridad #1 en ese turno.
+- Recién DESPUÉS de responder podés agregar algo (ofrecer info, una pregunta que avance). NUNCA al revés.
+- Si ya lo respondiste antes y el cliente lo VUELVE a preguntar, RE-RESPONDELO sin drama. La regla anti-repetición es para no repetir cosas SIN que te pregunten — NO para negarte a contestar lo que el cliente pide de nuevo.
+- PROHIBIDO cambiar de tema, ofrecer otra cosa o hacer una pregunta nueva SIN antes haber respondido lo que preguntó. Eso frustra al cliente ("no me contestó").
+- Tenés el calendario, la reserva, el catálogo, precios: usalos para dar la respuesta concreta. Ej: "¿Cuándo era mi cita?" → "Tu cita es el lunes 29 de junio a las 14:30 😊 ¿Querés que te recuerde algo más?"
+- 🚫 NO PROMETAS, HACÉ: si vas a enviar algo (fotos, info, material) o derivar, hacelo EN ESTE MISMO TURNO con la herramienta correspondiente. NUNCA digas "ahora te envío", "enseguida te paso", "te mando la info" o "te conecto" como promesa para después — o lo hacés YA, o no lo digas. Prometer y no cumplir es el peor error.
 
 ═══════════════════════════════════════
 
