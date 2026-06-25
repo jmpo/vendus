@@ -408,10 +408,13 @@ export function useWebChatConversations(filters?: InboxBackendFilters & { limit?
       return (Array.isArray(data?.conversations) ? data.conversations : []) as WebChatConversation[];
     },
     enabled: !!session?.access_token,
-    // Mostra dados em cache instantaneamente e revalida em background (estilo WhatsApp)
-    staleTime: 30_000,
+    // Mostra dados em cache instantaneamente e revalida em background (estilo WhatsApp).
+    // 'always' forçava um refetch a CADA troca de aba (mesmo com cache) → lento. Com
+    // realtime + polling + refetch ao focar, a freshness já está coberta; usar a cache
+    // torna a troca de abas instantânea.
+    staleTime: 60_000,
     gcTime: 30 * 60_000,
-    refetchOnMount: 'always',
+    refetchOnMount: true,
     refetchOnWindowFocus: true,
     refetchInterval: 60_000,
     refetchIntervalInBackground: false,
@@ -501,7 +504,7 @@ export function useWebChatConversation(conversationId: string) {
 
 export function useAssignConversation() {
   const queryClient = useQueryClient();
-  const { session } = useAuth();
+  const { session, user } = useAuth();
 
   return useMutation({
     mutationFn: async (conversationId: string) => {
@@ -521,8 +524,35 @@ export function useAssignConversation() {
       }
       return res.json();
     },
-    onSuccess: () => {
+    // Optimista: la conversación salta a "Atendiendo" al instante, sin esperar la red.
+    onMutate: async (conversationId: string) => {
+      await queryClient.cancelQueries({ queryKey: ['webchat-conversation', conversationId] });
+      const patch = { status: 'human_active', assigned_user_id: user?.id ?? null };
+      const previousDetail = queryClient.getQueryData<any>(['webchat-conversation', conversationId]);
+      if (previousDetail?.conversation) {
+        queryClient.setQueryData(['webchat-conversation', conversationId], {
+          ...previousDetail,
+          conversation: { ...previousDetail.conversation, ...patch },
+        });
+      }
+      const listQueries = queryClient.getQueriesData<any>({ queryKey: ['webchat-conversations'] });
+      const previousList = listQueries.map(([key, data]) => [key, data] as const);
+      listQueries.forEach(([key, data]) => {
+        if (!Array.isArray(data)) return;
+        queryClient.setQueryData(
+          key,
+          data.map((c: any) => (c.id === conversationId ? { ...c, ...patch } : c)),
+        );
+      });
+      return { previousDetail, previousList };
+    },
+    onError: (_err, conversationId, ctx: any) => {
+      if (ctx?.previousDetail) queryClient.setQueryData(['webchat-conversation', conversationId], ctx.previousDetail);
+      if (ctx?.previousList) ctx.previousList.forEach(([key, data]: any) => queryClient.setQueryData(key, data));
+    },
+    onSettled: (_data, _err, conversationId) => {
       queryClient.invalidateQueries({ queryKey: ['webchat-conversations'] });
+      queryClient.invalidateQueries({ queryKey: ['webchat-conversation', conversationId] });
       queryClient.invalidateQueries({ queryKey: ['webchat-conversation-counts'] });
     },
   });

@@ -77,22 +77,43 @@ Deno.serve(async (req) => {
     const downConns = await sql`
       select 'Zernio' as prov, coalesce(display_name, id::text) as name, status from zernio_connections where status is not null and status not in ('active','connected','open')
       union all
-      select 'Evolution' as prov, id::text as name, status from evolution_instances where status is not null and status not in ('connected','open')`;
+      select 'Evolution' as prov, id::text as name, status from evolution_instances
+        where status is not null
+          -- Solo caídas REALES: 'qr_pending'/'qrcode'/'connecting'/'created' = nunca conectada
+          -- (instancia sin configurar o sin usar) → no es una caída, no alertamos.
+          and status not in ('connected','open','qr_pending','qrcode','connecting','created','disconnected_by_user')`;
     for (const c of downConns as any[]) {
       issues.push({ severity: 'warning', key: `wa:conn:${c.prov}:${c.name}`, title: `⚠️ Conexión WhatsApp caída: ${c.prov}`, detail: `${c.name} — estado: ${c.status}. Los mensajes por este número pueden fallar.` });
     }
 
+    // 8) Conversaciones EN FILA (waiting_human) que nadie tomó hace rato → quedaron "colgadas".
+    const stuckQueue = (await sql`
+      select count(*)::int as n from webchat_conversations
+      where (status = 'waiting_human' or needs_human = true)
+        and assigned_user_id is null and current_agent_id is null
+        and last_message_at < now() - interval '10 minutes'
+        and last_message_at > now() - interval '24 hours'`)[0] as any;
+    if (Number(stuckQueue.n) > 0) {
+      const sample = (await sql`
+        select coalesce(visitor_phone, 'cliente') as who, to_char(now() - last_message_at, 'HH24:MI') as wait
+        from webchat_conversations
+        where (status='waiting_human' or needs_human=true) and assigned_user_id is null and current_agent_id is null
+          and last_message_at < now() - interval '10 minutes' and last_message_at > now() - interval '24 hours'
+        order by last_message_at asc limit 1`)[0] as any;
+      issues.push({ severity: 'critical', key: 'conv:stuck-queue', title: `⛔ ${stuckQueue.n} lead(s) esperando sin atención`, detail: `Clientes en la fila que nadie tomó. Ej: ${sample?.who} esperando hace ${sample?.wait}. Entrá al inbox y atendelos.` });
+    }
+
     // Alertar a admins por cada problema NUEVO (dedup 60 min por title)
     if (issues.length > 0) {
-      const admins = await sql`select distinct ur.user_id from user_roles ur where ur.role in ('admin','owner','super_admin')`;
+      const admins = await sql`select distinct ur.user_id from user_roles ur where ur.role in ('admin','manager','super_admin')`;
       const adminIds = (admins as any[]).map((a) => a.user_id).filter(Boolean);
       for (const iss of issues) {
-        const recent = (await sql`select 1 from notifications where type='system_alert' and title=${iss.title} and created_at > now() - interval '60 minutes' limit 1`);
+        const recent = (await sql`select 1 from notifications where type='system' and title=${iss.title} and created_at > now() - interval '60 minutes' limit 1`);
         if (recent.length > 0) continue; // ya avisado hace poco
         for (const uid of adminIds) {
           try {
             await sql`insert into notifications (user_id, type, title, message, metadata)
-              values (${uid}, 'system_alert', ${iss.title}, ${iss.detail}, ${sql.json({ severity: iss.severity, key: iss.key })})`;
+              values (${uid}, 'system', ${iss.title}, ${iss.detail}, ${sql.json({ severity: iss.severity, key: iss.key })})`;
           } catch (_) { /* non-fatal */ }
         }
       }

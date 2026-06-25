@@ -5529,6 +5529,24 @@ REGRAS DE USO:
               } catch (logErr) {
                 console.warn('[webchat-bot] handoff log failed (non-fatal):', logErr);
               }
+
+              // 🙋 AVISAR a los vendedores: hay un lead esperando atención humana en la fila.
+              // (Antes el handoff no notificaba a nadie → quedaba "colgado" sin que se enteren.)
+              try {
+                const { data: staff } = await supabase.from('profiles')
+                  .select('id').eq('organization_id', convForHandoff.organization_id).limit(50);
+                const rows = (staff || []).map((s: any) => ({
+                  user_id: s.id,
+                  title: '🙋 Lead esperando atención',
+                  message: `${leadFirstName || 'Un cliente'} necesita un asesor humano y está en la fila esperando. Entrá al chat para atenderlo.`,
+                  type: 'system' as any,
+                  metadata: { kind: 'handoff_human', conversation_id: body.conversation_id, source: 'webchat-bot' },
+                }));
+                if (rows.length) await supabase.from('notifications').insert(rows);
+                console.log('[webchat-bot] 🙋 handoff notify →', rows.length, 'staff');
+              } catch (notifErr) {
+                console.warn('[webchat-bot] handoff notify failed (non-fatal):', notifErr);
+              }
             }
           } else if (targetRole) {
             // Find specialist agent of the requested role for the same product
@@ -5941,6 +5959,12 @@ NUNCA AJA COMO SUPORTE (a menos que su agent_type seja explicitamente "support")
 - Si el cliente YA dio un dato (en esta charla o en su ficha), NO lo vuelvas a preguntar — usalo. Si venís de un handoff, NO re-descubras de cero: validá 1 dato clave y seguí.
 - Al recomendar, CONECTÁ el vehículo con lo que dijo el cliente ("como viajás con la familia y querés bajo consumo, el X te encaja porque…"). Eso vende más que tirar specs sueltas.
 - Recién DESPUÉS de entender → mostrá las fotos y ofrecé el test drive.
+
+🙋 CUÁNDO DERIVAR A UN HUMANO (y cuándo NO — REGLA IMPORTANTE):
+- ANTES de derivar, fijate si podés responder VOS. Tenés calendario, reservas, catálogo, precios e info del producto: usalos.
+- NO derivés por cosas que SÍ podés resolver: recordar/confirmar una cita ("¿cuándo es mi cita?"), dar disponibilidad, precios, fotos, características, reagendar. Eso lo hacés vos, no un humano.
+- Derivá a un humano SOLO si: (a) el cliente PIDE explícitamente hablar con una persona, (b) hay un reclamo/queja seria, (c) algo realmente fuera de tu alcance (legal, postventa complejo, caso especial).
+- NUNCA digas "te conecto con un asesor" para algo que podías contestar — frustra al cliente y lo deja esperando en la fila. Si dudás, primero respondé/preguntá; derivá solo como último recurso.
 
 ═══════════════════════════════════════
 
