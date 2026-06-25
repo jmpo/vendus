@@ -6,6 +6,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { hmacSha256Hex, timingSafeEqual } from '../_shared/meta-graph.ts';
 import { normalizePhoneBR } from '../_shared/phone.ts';
+import { decryptSecret } from '../_shared/meta-crypto.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -226,7 +227,12 @@ async function handleInbound(sb: any, conn: any, payload: any) {
   const att = Array.isArray(m.attachments) ? m.attachments[0] : null;
   let content = String(m.text ?? '').trim();
   let contentType = 'text';
-  const metadata: Record<string, any> = { provider: 'zernio', zernio_message_id: platformMsgId };
+  const metadata: Record<string, any> = {
+    provider: 'zernio',
+    zernio_message_id: platformMsgId,
+    // id interno de Zernio (distinto del wamid) — necesario para reaccionar al mensaje.
+    ...(m.id ? { zernio_internal_id: String(m.id) } : {}),
+  };
   // Interactivos (botón/lista)
   if (payload?.metadata?.interactiveId || payload?.metadata?.buttonPayload) {
     metadata.interactive = payload.metadata;
@@ -234,18 +240,44 @@ async function handleInbound(sb: any, conn: any, payload: any) {
   if (att?.url) {
     const kind = att.type === 'image' ? 'image' : att.type === 'audio' ? 'audio' : att.type === 'video' ? 'video' : att.type === 'sticker' ? 'sticker' : 'document';
     contentType = kind === 'image' ? 'image' : kind === 'audio' ? 'audio' : kind === 'video' ? 'video' : 'file';
-    metadata.media = { url: att.url, kind, ...(att.payload ? { payload: att.payload } : {}) };
     const label: Record<string, string> = { image: '[imagen]', audio: '[audio]', video: '[vídeo]', document: '[documento]', sticker: '[sticker]' };
     if (!content) content = label[kind] ?? `[${att.type}]`;
 
-    // Audio/imagen → transcripción/visión para que la IA "entienda"
-    if (kind === 'audio' || kind === 'image') {
+    // ⚠️ La URL de media de Zernio NO es pública — requiere la API key (Bearer). Si guardáramos
+    // esa URL cruda, el navegador no la puede reproducir y la transcripción falla. Por eso:
+    //  1) la bajamos CON auth, 2) la re-hosteamos en Storage (URL que el navegador SÍ abre),
+    //  3) usamos los bytes para transcribir (para que la IA entienda y responda).
+    let mediaUrl = att.url;
+    let mediaBytes: Uint8Array | null = null;
+    let mediaMime = '';
+    try {
+      const apiKey = await decryptSecret(conn.api_key_encrypted);
+      const bin = await fetch(att.url, { headers: { Authorization: `Bearer ${apiKey}` } });
+      if (bin.ok) {
+        mediaMime = bin.headers.get('content-type') ?? (kind === 'audio' ? 'audio/ogg' : kind === 'image' ? 'image/jpeg' : kind === 'video' ? 'video/mp4' : 'application/octet-stream');
+        mediaBytes = new Uint8Array(await bin.arrayBuffer());
+        const ext = /ogg/.test(mediaMime) ? '.ogg' : /(mpeg|mp3)/.test(mediaMime) ? '.mp3' : /mp4/.test(mediaMime) ? '.mp4' : /png/.test(mediaMime) ? '.png' : /(jpeg|jpg)/.test(mediaMime) ? '.jpg' : /pdf/.test(mediaMime) ? '.pdf' : '';
+        const path = `${conn.organization_id}/${conn.id}/${platformMsgId || Date.now()}${ext}`;
+        const { error: upErr } = await sb.storage.from('whatsapp-meta-media').upload(path, mediaBytes, { contentType: mediaMime, upsert: true });
+        if (!upErr) {
+          const { data: signed } = await sb.storage.from('whatsapp-meta-media').createSignedUrl(path, 60 * 60 * 24 * 365);
+          if (signed?.signedUrl) mediaUrl = signed.signedUrl; // URL accesible por el navegador
+        } else {
+          console.warn('[zernio-webhook] media upload failed', upErr.message);
+        }
+      } else {
+        console.warn('[zernio-webhook] media fetch no-ok', bin.status);
+      }
+    } catch (e) { console.warn('[zernio-webhook] media download/rehost failed', e); }
+
+    metadata.media = { url: mediaUrl, kind, ...(att.payload ? { payload: att.payload } : {}) };
+
+    // Audio/imagen → transcripción/visión (desde los bytes ya bajados con auth).
+    if ((kind === 'audio' || kind === 'image') && mediaBytes) {
       try {
-        const bin = await fetch(att.url);
-        const buf = new Uint8Array(await bin.arrayBuffer());
-        const b64 = bytesToBase64(buf);
+        const b64 = bytesToBase64(mediaBytes);
         const { data: tRes } = await sb.functions.invoke('process-media-message', {
-          body: { kind, base64: b64, mime: bin.headers.get('content-type') ?? (kind === 'audio' ? 'audio/ogg' : 'image/jpeg'), organization_id: conn.organization_id },
+          body: { kind, base64: b64, mime: mediaMime || (kind === 'audio' ? 'audio/ogg' : 'image/jpeg'), organization_id: conn.organization_id },
         });
         const txt = (tRes as any)?.text ? String((tRes as any).text).trim() : '';
         if (txt) metadata.transcription = kind === 'audio' ? `🎙️ Audio del cliente (transcrito): ${txt}` : `🖼️ Imagen del cliente: ${txt}`;

@@ -712,6 +712,7 @@ serve(async (req) => {
             to: phone,
             text: hasMedia ? (body.media?.caption || body.content || '') : body.content,
             media: hasMedia ? body.media : undefined,
+            reply_to_message_id: body.reply_to_message_id, // responder citando → replyTo en WhatsApp
           });
 
           if (!sendRes.ok) {
@@ -1418,10 +1419,32 @@ serve(async (req) => {
         );
       }
 
-      // Update status to bot_active
+      // Reset COMPLETO a modo bot. Antes solo seteaba status='bot_active' pero dejaba
+      // assigned_user_id + orchestrator_state='humano' → el bot seguía viendo un humano.
+      // Y con 'em_atendimento' SIN agente asignado, el bot no sabía con quién responder y
+      // se callaba. Por eso resolvemos y asignamos el agente activo del producto.
+      const { data: convForBot } = await supabase
+        .from('webchat_conversations').select('product_id, current_agent_id').eq('id', body.conversation_id).maybeSingle();
+      let resumeAgentId: string | null = (convForBot as any)?.current_agent_id ?? null;
+      if (!resumeAgentId && (convForBot as any)?.product_id) {
+        const { data: ag } = await supabase
+          .from('product_agents').select('id')
+          .eq('product_id', (convForBot as any).product_id).eq('is_active', true)
+          .order('is_default', { ascending: false })
+          .order('created_at', { ascending: true })
+          .limit(1).maybeSingle();
+        resumeAgentId = (ag as any)?.id ?? null;
+      }
       await supabase
         .from('webchat_conversations')
-        .update({ status: 'bot_active' })
+        .update({
+          status: 'bot_active',
+          assigned_user_id: null,
+          needs_human: false,
+          // 'em_atendimento' = CONTINÚA con contexto (no re-triagea), CON el agente asignado.
+          orchestrator_state: 'em_atendimento',
+          current_agent_id: resumeAgentId,
+        })
         .eq('id', body.conversation_id);
 
       // Get user's profile name

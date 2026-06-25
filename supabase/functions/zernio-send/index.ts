@@ -62,6 +62,7 @@ Deno.serve(async (req: Request) => {
     to, type = 'text', text, media, template,
     buttons, interactive, // mensajes interactivos (botones / lista) — passthrough a Zernio
     extra_metadata, // metadata extra a fundir en la fila guardada (ej: scheduling_context)
+    reply_to_message_id, // UUID del mensaje a citar (responder encima) → se traduce a replyTo (wamid)
     record = true, // si false: el llamador ya grabó la fila (evita bolha dupla)
   } = body ?? {};
 
@@ -124,6 +125,13 @@ Deno.serve(async (req: Request) => {
         return json({ ok: false, error: 'OUT_OF_WINDOW', message: 'Fuera de la ventana 24h — se requiere un template HSM aprobado.' }, 200);
       }
     }
+    // Responder citando: Zernio usa `replyTo` = platformMessageId (wamid) del mensaje objetivo.
+    let replyTo: string | null = null;
+    if (reply_to_message_id) {
+      const { data: tgt } = await sb.from('webchat_messages').select('metadata').eq('id', reply_to_message_id).maybeSingle();
+      const tmeta = (tgt as any)?.metadata || {};
+      replyTo = tmeta.zernio_platform_message_id || tmeta.zernio_message_id || null;
+    }
     // Freeform dentro de conversación abierta. Si hay media, el caption va como message.
     const msgText = text || (hasMedia ? media.caption : undefined);
     const freeformBody = {
@@ -133,6 +141,7 @@ Deno.serve(async (req: Request) => {
       ...(hasMedia && media.kind === 'audio' && media.ptt ? { voiceNote: true } : {}),
       ...(buttons ? { buttons } : {}),
       ...(interactive ? { interactive } : {}),
+      ...(replyTo ? { replyTo } : {}),
     };
     console.log('[zernio-send] freeform →', JSON.stringify({ convId: zernioConvId, attachmentType: (freeformBody as any).attachmentType, hasMedia, kind: media?.kind, mime: media?.mime, url: media?.url?.slice(0, 120) }));
     res = await zfetch(apiKey, `/inbox/conversations/${zernioConvId}/messages`, freeformBody);

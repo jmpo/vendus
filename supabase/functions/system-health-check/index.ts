@@ -89,7 +89,8 @@ Deno.serve(async (req) => {
     // 8) Conversaciones EN FILA (waiting_human) que nadie tomó hace rato → quedaron "colgadas".
     const stuckQueue = (await sql`
       select count(*)::int as n from webchat_conversations
-      where (status = 'waiting_human' or needs_human = true)
+      where status = 'waiting_human'
+        and status not in ('bot_active','human_active','closed')
         and assigned_user_id is null and current_agent_id is null
         and last_message_at < now() - interval '10 minutes'
         and last_message_at > now() - interval '24 hours'`)[0] as any;
@@ -97,7 +98,7 @@ Deno.serve(async (req) => {
       const sample = (await sql`
         select coalesce(visitor_phone, 'cliente') as who, to_char(now() - last_message_at, 'HH24:MI') as wait
         from webchat_conversations
-        where (status='waiting_human' or needs_human=true) and assigned_user_id is null and current_agent_id is null
+        where status='waiting_human' and assigned_user_id is null and current_agent_id is null
           and last_message_at < now() - interval '10 minutes' and last_message_at > now() - interval '24 hours'
         order by last_message_at asc limit 1`)[0] as any;
       issues.push({ severity: 'critical', key: 'conv:stuck-queue', title: `⛔ ${stuckQueue.n} lead(s) esperando sin atención`, detail: `Clientes en la fila que nadie tomó. Ej: ${sample?.who} esperando hace ${sample?.wait}. Entrá al inbox y atendelos.` });

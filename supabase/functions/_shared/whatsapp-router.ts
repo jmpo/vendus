@@ -36,6 +36,7 @@ export type WARouterInput = {
   to: string; // já normalizado idealmente
   text?: string;
   media?: WAMedia;
+  reply_to_message_id?: string | null; // UUID del mensaje a citar (responder encima)
 };
 
 import { phoneVariantsBR } from './phone.ts';
@@ -101,6 +102,7 @@ export async function sendWhatsAppForConversation(
         type: input.media ? input.media.kind : 'text',
         text: input.text,
         media: input.media,
+        reply_to_message_id: input.reply_to_message_id, // responder citando (replyTo en Zernio)
         // O chamador (webchat-inbox/etc) já inseriu a mensagem. zernio-send só
         // resolve a conversa/janela 24h e envia — NÃO grava 2ª linha (evita bolha dupla).
         record: false,

@@ -172,7 +172,13 @@ export function useMessageReactions(conversationId: string | null | undefined) {
         reactor_type: 'agent',
       });
 
-      if (error) {
+      if (!error) {
+        // Reflejar la reacción en WhatsApp (sentido saliente). Solo aplica a Zernio;
+        // si no es Zernio, la función responde ok:false y la reacción queda solo en el CRM.
+        supabase.functions.invoke('zernio-react', {
+          body: { conversation_id: conversationId, message_id: messageId, emoji },
+        }).catch(() => { /* no bloquea la UI */ });
+      } else {
         // Reverte otimismo
         setReactionsByMessage((prev) => {
           const next = new Map(prev);
