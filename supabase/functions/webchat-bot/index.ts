@@ -2034,6 +2034,9 @@ serve(async (req) => {
     let responseContent: string = '';
     let responseButtons: ChatButton[] | null = null;
     let responseVideoUrl: string | null = null;
+    // org de la conversación — hoisteada al scope del handler para que TODAS las referencias
+    // (recordAIUsage, guardrails) la vean. Antes vivía dentro de un try{} y crasheaba el bot.
+    let orgIdForRouting: string | null = null;
     
     if (reactionDirectReply) {
       // Skip AI entirely — use the reaction's pre-defined reply.
@@ -3484,7 +3487,7 @@ REGRAS DE USO:
         // Configuraciones > Integraciones > Roteamento de IA. Se a org tiver chave
         // externa (ex.: OpenAI) configurada, chamamos direto o provedor — sin
         // gastar créditos Lovable.
-        let orgIdForRouting = (activeAgent as any)?.organization_id || null;
+        orgIdForRouting = (activeAgent as any)?.organization_id || null;
         if (!orgIdForRouting && body.conversation_id) {
           const { data: convForRouting } = await supabase
             .from('webchat_conversations')
@@ -3797,9 +3800,7 @@ REGRAS DE USO:
                       if (sendErr) {
                         console.error('[webchat-bot] chained send_catalog_item error:', sendErr);
                         const fallbackItem = items.find((i: any) => i.id === sendArgs.item_id) || items[0];
-                        responseContent = fallbackItem?.url
-                          ? `Acá está: ${fallbackItem.title} — ${fallbackItem.url}`
-                          : 'Hubo un problema al enviar. ¿Te mando el link manualmente?';
+                        responseContent = `Disculpá, tuve un inconveniente al mandarte las fotos de ${fallbackItem?.title || 'el vehículo'}. ¿Querés que te cuente los detalles por acá?`;
                       } else {
                         const sent = sendData as any;
                         console.log('[webchat-bot] 📦 chained catalog item sent:', sent?.delivered, sent?.delivery_channel, sent?.sent_counts);
@@ -3811,14 +3812,12 @@ REGRAS DE USO:
                         const summary = parts.length > 0 ? parts.join(' + ') : 'los detalles';
                         responseContent = sent?.delivered
                           ? `Te acabo de enviar ${summary} de ${sent?.item?.title || 'el vehículo'}. ¿Qué te parece?`
-                          : `Acá está: ${sent?.item?.title || 'item'}${sent?.item?.url ? ` — ${sent.item.url}` : ''}. ¿Qué te parece?`;
+                          : `Disculpá, tuve un inconveniente con las fotos de ${sent?.item?.title || 'el vehículo'}. ¿Querés que te cuente los detalles por acá?`;
                       }
                     } catch (chainErr) {
                       console.error('[webchat-bot] chain send_catalog_item exception:', chainErr);
                       const fallbackItem = items[0];
-                      responseContent = fallbackItem?.url
-                        ? `Acá está: ${fallbackItem.title} — ${fallbackItem.url}`
-                        : 'No pude enviar ahora. ¿Querés que intente de nuevo?';
+                      responseContent = `Disculpá, tuve un inconveniente al mandarte las fotos de ${fallbackItem?.title || 'el vehículo'}. ¿Querés que te cuente los detalles por acá?`;
                     }
                   } else {
                     // Plain text response from follow-up
@@ -3846,7 +3845,7 @@ REGRAS DE USO:
                         const summary = parts.length > 0 ? parts.join(' + ') : 'los detalles';
                         responseContent = sent?.delivered
                           ? `Te acabo de enviar ${summary} de ${topItem.title}. ¿Qué te parece?`
-                          : `Acá está: ${topItem.title}${topItem.url ? ` — ${topItem.url}` : ''}. ¿Qué te parece?`;
+                          : `Disculpá, tuve un inconveniente con las fotos de ${topItem.title}. ¿Querés que te cuente los detalles por acá?`;
                       } catch (e) {
                         console.error('[webchat-bot] fallback direct send failed:', e);
                       }
@@ -3879,7 +3878,7 @@ REGRAS DE USO:
 
                   if (sendErr) {
                     console.error('[webchat-bot] send_catalog_item error:', sendErr);
-                    responseContent = 'Hubo un problema al enviar el ítem. ¿Te mando el link manualmente?';
+                    responseContent = 'Disculpá, tuve un inconveniente al mandarte las fotos. ¿Querés que te cuente los detalles por acá?';
                   } else {
                     const sent = sendData as any;
                     console.log('[webchat-bot] 📦 catalog item sent:', sent?.delivered, sent?.delivery_channel, sent?.sent_counts);
@@ -3891,7 +3890,7 @@ REGRAS DE USO:
                     const summary = parts.length > 0 ? parts.join(' + ') : 'los detalles';
                     responseContent = sent?.delivered
                       ? `Te acabo de enviar ${summary}. ¿Qué te parece?`
-                      : `Acá está: ${sent?.item?.title || 'item'}${sent?.item?.url ? ` — ${sent.item.url}` : ''}. ¿Qué te parece?`;
+                      : `Disculpá, tuve un inconveniente con las fotos${sent?.item?.title ? ` de ${sent.item.title}` : ''}. ¿Querés que te cuente los detalles por acá?`;
                   }
                 }
               } catch (catErr) {
@@ -5643,18 +5642,31 @@ REGRAS DE USO:
       responseContent = fakeRes.cleaned;
     }
 
+    // org id EN SCOPE para los guardrails (orgIdForRouting vive dentro de otro try{} y no
+    // llega hasta acá — usarlo causaba ReferenceError y crasheaba el bot en cada respuesta).
+    const guardOrgId = (activeAgent as any)?.organization_id || (leadContext as any)?.organization_id || null;
+
     // 🛡️ GUARDRAIL ANTI-"PROMESA VACÍA" — la RAÍZ de estos bugs: la IA NARRA una acción
     // ("ahora te envío la info") pero no llama la herramienta que la ejecuta. Si prometió
     // ENVIAR algo y no se envió nada este turno, no dejamos salir la promesa falsa: forzamos
     // el envío del ítem en contexto; si no hay ítem claro, pedimos precisión (nunca prometemos en vano).
-    if (responseContent && !body.is_test && body.conversation_id && body.product_id && orgIdForRouting) {
-      const promiseToSend = /\b(?:ahora|enseguida|ya)\s+te\s+(?:lo\s+|la\s+|las\s+|los\s+)?(?:env[ií]o|mando|paso|comparto)|te\s+(?:env[ií]o|mando|paso|comparto|reenv[ií]o)\s+(?:la|el|los|las|un|una|m[áa]s)?\s*(?:info|informaci[óo]n|fotos?|im[áa]genes?|v[íi]deos?|audios?|material|detalles?|ficha|cat[áa]logo|datos|archivos?|documentos?|pdf|folletos?|brochure)/i;
+    if (responseContent && !body.is_test && body.conversation_id && body.product_id && guardOrgId) {
+      const OBJ = '(?:info|informaci[óo]n|fotos?|im[áa]gen(?:es)?|v[íi]deos?|audios?|material|detalles?|ficha|cat[áa]logo|datos|archivos?|documentos?|pdf|folletos?|brochure)';
+      const promiseToSend = new RegExp(
+        // "ahora/ya te envío/mando…"
+        `\\b(?:ahora|enseguida|ya)\\s+te\\s+(?:lo\\s+|la\\s+|las\\s+|los\\s+)?(?:env[ií]o|mando|paso|comparto)` +
+        // "te envío/mando/puedo enviar… <objeto>"
+        `|te\\s+(?:env[ií]o|mando|paso|comparto|reenv[ií]o|puedo\\s+(?:enviar|mandar|pasar|compartir))\\s+(?:la|el|los|las|un|una|m[áa]s)?\\s*${OBJ}` +
+        // "¿querés / te gustaría que te mande/envíe… <objeto>?"  (ofrecimiento que el cliente acepta)
+        `|(?:quer[ée]s|quieres|te\\s+gustar[íi]a|gustar[íi]a)\\s+que\\s+te\\s+(?:mande|env[ií]e|pase|comparta)\\s+(?:la|el|los|las|un|una)?\\s*${OBJ}`,
+        'i'
+      );
       if (promiseToSend.test(responseContent) && !/Te acabo de enviar/i.test(responseContent)) {
         console.log('[webchat-bot] 🛡️ promesa de envío sin acción — forzando envío real');
         let sentNow = false;
         try {
           const { data: gSearch } = await supabase.functions.invoke('catalog-search', {
-            body: { organization_id: orgIdForRouting, product_id: body.product_id, query: body.message || 'modelo', limit: 1 },
+            body: { organization_id: guardOrgId, product_id: body.product_id, query: body.message || 'modelo', limit: 1 },
           });
           const top = ((gSearch as any)?.items || [])[0];
           if (top?.id) {
@@ -5677,7 +5689,7 @@ REGRAS DE USO:
         // Registrar para VISIBILIDAD (se ve en Super Admin → "Acciones de los Agentes").
         try {
           await supabase.from('agent_action_logs').insert({
-            organization_id: orgIdForRouting, agent_id: activeAgent?.id || null,
+            organization_id: guardOrgId, agent_id: activeAgent?.id || null,
             conversation_id: body.conversation_id, lead_id: leadId || null, product_id: body.product_id || null,
             action_type: 'empty_send_promise_guarded', success: sentNow,
             action_data: { user_message: body.message },
@@ -5691,13 +5703,13 @@ REGRAS DE USO:
     // 🛡️ GUARDRAIL PAGO: si promete un link de pago/checkout pero NO hay link en el mensaje,
     // no auto-generamos (riesgo de monto equivocado) — pero lo REGISTRAMOS para que sea visible
     // y, si era una afirmación falsa, evitamos que prometa en vano.
-    if (responseContent && !body.is_test && body.conversation_id && orgIdForRouting) {
+    if (responseContent && !body.is_test && body.conversation_id && guardOrgId) {
       const promisePay = /\b(?:te\s+(?:paso|mando|env[ií]o|genero|comparto)|ac[áa]\s+ten[ée]s)\s+(?:el\s+)?(?:link|enlace)\s+(?:de\s+)?(?:pago|pagamento|checkout|pix)/i;
       if (promisePay.test(responseContent) && !/https?:\/\//i.test(responseContent)) {
         console.log('[webchat-bot] 🛡️ promesa de link de pago sin link real — registrando');
         try {
           await supabase.from('agent_action_logs').insert({
-            organization_id: orgIdForRouting, agent_id: activeAgent?.id || null,
+            organization_id: guardOrgId, agent_id: activeAgent?.id || null,
             conversation_id: body.conversation_id, lead_id: leadId || null, product_id: body.product_id || null,
             action_type: 'payment_link_promise_unfulfilled', success: false,
             action_data: { user_message: body.message }, result: { response: responseContent },
@@ -6050,6 +6062,11 @@ NUNCA AJA COMO SUPORTE (a menos que su agent_type seja explicitamente "support")
 - Si no sabés el id del ítem, buscá con search_catalog y enviálo con send_catalog_item. Ese es el canal oficial de envío.
 - Enviá las fotos de un modelo UNA vez en la conversación — no repitas las mismas si ya las mandaste.
 - 🚫 NUNCA mandes links externos (cotizar, sitio web, formulario, "agendá acá"). Para agendar usá la herramienta de reserva (horarios/botones), NUNCA un link.
+
+🖼️ IMÁGENES QUE MANDA EL CLIENTE:
+- SÍ recibís una descripción de cada imagen (visión) — el mensaje viene como "🖼️ Imagen del cliente: …". Usala, NO digas "no pude ver la imagen" (sí la viste).
+- Si la imagen es RELEVANTE (un vehículo, una ficha, un documento, un usado que entrega) → respondé sobre lo que muestra.
+- Si la imagen NO tiene que ver con la compra (un screenshot, un meme, algo ajeno) → reconocé que LA VISTE pero que no parece relacionada, y reconducí amable. Ej: "Vi la imagen, pero no parece estar relacionada con un vehículo 🤔 ¿Me contás qué necesitás o qué auto te interesa?" — NUNCA digas que no la pudiste ver.
 
 ═══════════════════════════════════════\n\n`;
 
