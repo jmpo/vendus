@@ -239,6 +239,14 @@ images: array de URLs absolutas das fotos del ítem.`,
       }).eq("id", logId);
     }
 
+    // Baja a Storage las imágenes externas de los ítems sincronizados (en background, no bloquea la respuesta).
+    if (created > 0 || updated > 0) {
+      const rehostBg = supabase.functions
+        .invoke("catalog-rehost-media", { body: { organization_id: body.organization_id, product_id: body.product_id ?? null } })
+        .catch(() => { /* non-fatal */ });
+      (globalThis as any).EdgeRuntime?.waitUntil?.(rehostBg);
+    }
+
     return new Response(JSON.stringify({
       success: true,
       items_found: urls.length,

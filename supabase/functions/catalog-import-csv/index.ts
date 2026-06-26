@@ -68,6 +68,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Baja a Storage las imágenes externas de los ítems importados (en background, no bloquea la respuesta).
+    const ids = (data || []).map((d: any) => d.id);
+    const rehostBg = (async () => {
+      for (const id of ids) {
+        try { await supabase.functions.invoke("catalog-rehost-media", { body: { item_id: id } }); } catch (_) { /* non-fatal */ }
+      }
+    })();
+    (globalThis as any).EdgeRuntime?.waitUntil?.(rehostBg);
+
     return new Response(JSON.stringify({ success: true, inserted: data?.length ?? 0 }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

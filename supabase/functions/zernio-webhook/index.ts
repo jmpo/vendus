@@ -7,6 +7,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 import { hmacSha256Hex, timingSafeEqual } from '../_shared/meta-graph.ts';
 import { normalizePhoneBR } from '../_shared/phone.ts';
 import { decryptSecret } from '../_shared/meta-crypto.ts';
+import { notifySendFailure, orgAdminIds } from '../_shared/alerts.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -462,15 +463,10 @@ async function notifyWhatsAppError(sb: any, conn: any, code: string, reason: str
       .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString()).limit(1);
     if (recent && recent.length) return; // ya avisamos por este código hace poco
 
-    const recipients = new Set<string>();
-    const { data: admins } = await sb.from('user_roles')
-      .select('user_id, profiles!inner(organization_id)')
-      .in('role', ['admin', 'super_admin'])
-      .eq('profiles.organization_id', conn.organization_id);
-    (admins || []).forEach((a: any) => a.user_id && recipients.add(a.user_id));
-    if (recipients.size === 0) return;
+    const recipients = await orgAdminIds(sb, conn.organization_id);
+    if (recipients.length === 0) return;
 
-    const rows = Array.from(recipients).map((uid) => ({
+    const rows = recipients.map((uid) => ({
       user_id: uid,
       title: '⚠️ Error de WhatsApp',
       message: `${reason}${code ? ` (código ${code})` : ''}. Revisá la conexión de WhatsApp en Configuración.`,
@@ -517,15 +513,10 @@ async function handleNumberStatus(sb: any, conn: any, payload: any, event: strin
       .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString()).limit(1);
     if (recent && recent.length) return;
 
-    const recipients = new Set<string>();
-    const { data: admins } = await sb.from('user_roles')
-      .select('user_id, profiles!inner(organization_id)')
-      .in('role', ['admin', 'super_admin'])
-      .eq('profiles.organization_id', conn.organization_id);
-    (admins || []).forEach((a: any) => a.user_id && recipients.add(a.user_id));
-    if (recipients.size === 0) return;
+    const recipients = await orgAdminIds(sb, conn.organization_id);
+    if (recipients.length === 0) return;
 
-    const rows = Array.from(recipients).map((uid) => ({
+    const rows = recipients.map((uid) => ({
       user_id: uid,
       title: info.title,
       message: info.msg,
@@ -616,14 +607,10 @@ async function handleAdLead(sb: any, conn: any, payload: any) {
   const phone = l?.phone ?? l?.phoneNumber ?? l?.phone_number ?? null;
   const email = l?.email ?? null;
   try {
-    const recipients = new Set<string>();
-    const { data: admins } = await sb.from('user_roles')
-      .select('user_id, profiles!inner(organization_id)').in('role', ['admin', 'super_admin'])
-      .eq('profiles.organization_id', conn.organization_id);
-    (admins || []).forEach((a: any) => a.user_id && recipients.add(a.user_id));
-    if (recipients.size === 0) return;
+    const recipients = await orgAdminIds(sb, conn.organization_id);
+    if (recipients.length === 0) return;
     const desc = [name, phone, email].filter(Boolean).join(' · ') || 'sin datos de contacto';
-    const rows = Array.from(recipients).map((uid) => ({
+    const rows = recipients.map((uid) => ({
       user_id: uid, title: '🎯 Nuevo lead de anuncio',
       message: `Llegó un lead desde un anuncio: ${desc}.`,
       type: 'opportunity' as any,
@@ -658,7 +645,7 @@ async function handleOutgoing(sb: any, conn: any, payload: any, event: string) {
   ];
   for (const [col, val] of tries) {
     if (found || !val) continue;
-    const r = await sb.from('webchat_messages').select('id, delivery_status, metadata')
+    const r = await sb.from('webchat_messages').select('id, conversation_id, delivery_status, metadata')
       .eq(col, val).order('created_at', { ascending: false }).limit(1).maybeSingle();
     found = r.data;
   }
@@ -674,7 +661,19 @@ async function handleOutgoing(sb: any, conn: any, payload: any, event: string) {
         else console.log('[zernio-webhook] message.failed:', code, '—', reason);
         // Guardar motivo en la fila → el CRM muestra el banner con el porqué real.
         patch.metadata = { ...(found.metadata || {}), error: reason, error_code: code || null, failed_at: new Date().toISOString() };
+        // Aviso de CONEXIÓN a admins (códigos críticos, throttle 1/h).
         if (code && ZERNIO_CRITICAL_ERRORS.has(code)) await notifyWhatsAppError(sb, conn, code, reason);
+        // Aviso por CONVERSACIÓN al vendedor + admins: "no le llegó tu mensaje a X" (cualquier código).
+        const participant = String(payload?.conversation?.participantId ?? '').replace(/^\+/, '');
+        await notifySendFailure(sb, {
+          organizationId: conn.organization_id,
+          conversationId: found.conversation_id,
+          who: participant || null,
+          what: 'el mensaje',
+          reason,
+          throttleKey: `send_fail:${found.conversation_id}`,
+          metadata: { error_code: code || null, message_id: found.id, source: 'zernio_webhook' },
+        });
       }
       await sb.from('webchat_messages').update(patch).eq('id', found.id);
     }
@@ -699,6 +698,15 @@ async function handleOutgoing(sb: any, conn: any, payload: any, event: string) {
     else console.log('[zernio-webhook] message.failed (no-rastreado):', code, '—', reason);
     failMeta = { error: reason, error_code: code || null, failed_at: new Date().toISOString() };
     if (code && ZERNIO_CRITICAL_ERRORS.has(code)) await notifyWhatsAppError(sb, conn, code, reason);
+    await notifySendFailure(sb, {
+      organizationId: conn.organization_id,
+      conversationId: conv.id,
+      who: participant || null,
+      what: 'el mensaje',
+      reason,
+      throttleKey: `send_fail:${conv.id}`,
+      metadata: { error_code: code || null, source: 'zernio_panel' },
+    });
   }
   const { data: inserted, error: insErr } = await sb.from('webchat_messages').insert({
     conversation_id: conv.id,

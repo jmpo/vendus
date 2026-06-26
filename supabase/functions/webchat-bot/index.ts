@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { notifySendFailure } from "../_shared/alerts.ts";
 import { matchAgentByMessage, type MatcherChannel } from "../_shared/agent-matcher.ts";
 import { parseHandoffTag, handoffTargetToAgentRole } from "../_shared/handoff-parser.ts";
 import { runOrchestrator, type Intent } from "../_shared/orchestrator.ts";
@@ -3787,7 +3788,7 @@ REGRAS DE USO:
                       if (explicitMediaRequest && wantsVideo) sendArgs.include_videos = true;
                       if (explicitMediaRequest && wantsDoc) sendArgs.include_documents = true;
 
-                      const { data: sendData, error: sendErr } = await supabase.functions.invoke('send-catalog-item', {
+                      const callChainSend = () => supabase.functions.invoke('send-catalog-item', {
                         body: {
                           conversation_id: body.conversation_id,
                           item_id: sendArgs.item_id,
@@ -3796,11 +3797,27 @@ REGRAS DE USO:
                           send_documents: sendArgs.include_documents === true,
                         },
                       });
+                      let { data: sendData, error: sendErr } = await callChainSend();
+                      if (sendErr || (sendData as any)?.delivered === false) {
+                        console.warn('[webchat-bot] chained send_catalog_item 1er intento falló, reintentando…', (sendErr as any)?.message || (sendData as any)?.provider_error);
+                        await new Promise((r) => setTimeout(r, 900));
+                        ({ data: sendData, error: sendErr } = await callChainSend());
+                      }
 
                       if (sendErr) {
-                        console.error('[webchat-bot] chained send_catalog_item error:', sendErr);
+                        console.error('[webchat-bot] chained send_catalog_item error (tras reintento):', sendErr);
                         const fallbackItem = items.find((i: any) => i.id === sendArgs.item_id) || items[0];
                         responseContent = `Disculpá, tuve un inconveniente al mandarte las fotos de ${fallbackItem?.title || 'el vehículo'}. ¿Querés que te cuente los detalles por acá?`;
+                        await notifySendFailure(supabase, {
+                          organizationId: (activeAgent as any)?.organization_id || (leadContext as any)?.organization_id || '',
+                          conversationId: body.conversation_id,
+                          who: body.visitor_name || null,
+                          what: `las fotos${fallbackItem?.title ? ` de ${fallbackItem.title}` : ''}`,
+                          reason: (sendErr as any)?.message || 'fallo al enviar la foto',
+                          throttleKey: `send_fail:${body.conversation_id}`,
+                          productId: body.product_id || null,
+                          metadata: { source: 'webchat_bot_catalog_chain', item_id: sendArgs.item_id },
+                        });
                       } else {
                         const sent = sendData as any;
                         console.log('[webchat-bot] 📦 chained catalog item sent:', sent?.delivered, sent?.delivery_channel, sent?.sent_counts);
@@ -3866,7 +3883,9 @@ REGRAS DE USO:
                 if (!args.item_id) {
                   responseContent = choice.message?.content || '¿Puedo enviarte más detalles? ¿Confirmás cuál te interesa?';
                 } else {
-                  const { data: sendData, error: sendErr } = await supabase.functions.invoke('send-catalog-item', {
+                  // Invocación con REINTENTO: un error transitorio (cold start / timeout) NO debe
+                  // perder la foto. Reintentamos una vez ante error de invocación o delivered=false.
+                  const callSend = () => supabase.functions.invoke('send-catalog-item', {
                     body: {
                       conversation_id: body.conversation_id,
                       item_id: args.item_id,
@@ -3875,10 +3894,27 @@ REGRAS DE USO:
                       send_documents: args.include_documents === true,
                     },
                   });
+                  let { data: sendData, error: sendErr } = await callSend();
+                  if (sendErr || (sendData as any)?.delivered === false) {
+                    console.warn('[webchat-bot] send_catalog_item 1er intento falló, reintentando…', (sendErr as any)?.message || (sendData as any)?.provider_error);
+                    await new Promise((r) => setTimeout(r, 900));
+                    ({ data: sendData, error: sendErr } = await callSend());
+                  }
 
                   if (sendErr) {
-                    console.error('[webchat-bot] send_catalog_item error:', sendErr);
+                    console.error('[webchat-bot] send_catalog_item error (tras reintento):', sendErr);
                     responseContent = 'Disculpá, tuve un inconveniente al mandarte las fotos. ¿Querés que te cuente los detalles por acá?';
+                    // El reintento NO alcanzó → avisamos al vendedor para que reenvíe a mano.
+                    await notifySendFailure(supabase, {
+                      organizationId: (activeAgent as any)?.organization_id || (leadContext as any)?.organization_id || '',
+                      conversationId: body.conversation_id,
+                      who: body.visitor_name || null,
+                      what: 'las fotos del catálogo',
+                      reason: (sendErr as any)?.message || 'fallo al enviar la foto',
+                      throttleKey: `send_fail:${body.conversation_id}`,
+                      productId: body.product_id || null,
+                      metadata: { source: 'webchat_bot_catalog', item_id: args.item_id },
+                    });
                   } else {
                     const sent = sendData as any;
                     console.log('[webchat-bot] 📦 catalog item sent:', sent?.delivered, sent?.delivery_channel, sent?.sent_counts);

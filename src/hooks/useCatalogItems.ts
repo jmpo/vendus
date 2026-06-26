@@ -42,6 +42,30 @@ export function useCatalogItems(productId?: string | null, search?: string) {
   });
 }
 
+// ¿El ítem tiene alguna media en una URL EXTERNA (no en nuestro Storage)?
+// Si es así, la bajamos a Storage para que el envío no dependa de servidores ajenos.
+function hasExternalMedia(item: any): boolean {
+  const urls = [
+    ...(Array.isArray(item?.images) ? item.images : []),
+    item?.thumbnail_url,
+    ...(Array.isArray(item?.videos) ? item.videos : []),
+    ...((Array.isArray(item?.documents) ? item.documents : []).map((d: any) => d?.url)),
+  ];
+  return urls.some(
+    (u) => typeof u === 'string' && /^https?:\/\//i.test(u) && !u.includes('/storage/v1/object/public/catalog-media/'),
+  );
+}
+
+// Rehospeda la media externa del ítem a Storage (no-fatal: nunca rompe el guardado).
+async function rehostItemMedia(item: any): Promise<void> {
+  try {
+    if (!item?.id || !hasExternalMedia(item)) return;
+    await supabase.functions.invoke('catalog-rehost-media', { body: { item_id: item.id } });
+  } catch (e) {
+    console.warn('[catalog] rehost media non-fatal:', e);
+  }
+}
+
 export function useCatalogItemMutations(productId?: string | null) {
   const qc = useQueryClient();
 
@@ -59,6 +83,8 @@ export function useCatalogItemMutations(productId?: string | null) {
         .select()
         .single();
       if (error) throw error;
+      // Baja a Storage cualquier URL externa (ej: foto pegada manualmente) antes de seguir.
+      await rehostItemMedia(data);
       return data;
     },
     onSuccess: () => {
@@ -77,6 +103,8 @@ export function useCatalogItemMutations(productId?: string | null) {
         .select()
         .single();
       if (error) throw error;
+      // Si se pegó/cambió una URL externa, la bajamos a Storage.
+      await rehostItemMedia(data);
       return data;
     },
     onSuccess: () => {
