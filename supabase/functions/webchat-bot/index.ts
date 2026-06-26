@@ -5652,21 +5652,28 @@ REGRAS DE USO:
     // el envío del ítem en contexto; si no hay ítem claro, pedimos precisión (nunca prometemos en vano).
     if (responseContent && !body.is_test && body.conversation_id && body.product_id && guardOrgId) {
       const OBJ = '(?:info|informaci[óo]n|fotos?|im[áa]gen(?:es)?|v[íi]deos?|audios?|material|detalles?|ficha|cat[áa]logo|datos|archivos?|documentos?|pdf|folletos?|brochure)';
+      // \w NO cubre acentos sin flag unicode → cortaba "enviar[é]". Esta clase SÍ incluye á/é/í/ó/ú/ñ,
+      // y los STEMS de verbo cubren TODOS los tiempos (envío/enviaré/enviar; mando/mandaré; comparto/compartiré).
+      const W = '[\\wáéíóúüñÁÉÍÓÚÜÑ]';
+      const VERB = `(?:env[ií]${W}*|mand${W}*|pas[aoeáéíó]${W}*|compart${W}*|comparto|reenv[ií]${W}*|adjunt${W}*|alcanz${W}*|voy\\s+a\\s+(?:enviar|mandar|pasar|compartir|adjuntar|alcanzar)|paso\\s+a\\s+(?:enviar|mandar|pasar|compartir)|puedo\\s+(?:enviar|mandar|pasar|compartir|adjuntar))`;
       const promiseToSend = new RegExp(
-        // "ahora/ya te envío/mando…"
-        `\\b(?:ahora|enseguida|ya)\\s+te\\s+(?:lo\\s+|la\\s+|las\\s+|los\\s+)?(?:env[ií]o|mando|paso|comparto)` +
-        // "te envío/mando/puedo enviar… <objeto>"
-        `|te\\s+(?:env[ií]o|mando|paso|comparto|reenv[ií]o|puedo\\s+(?:enviar|mandar|pasar|compartir))\\s+(?:la|el|los|las|un|una|m[áa]s)?\\s*${OBJ}` +
+        // "te (ya/ahora/…) <verbo-envío cualquier tiempo> … <objeto>"  ← cubre presente Y futuro ("te enviaré las fotos")
+        `te\\s+(?:ya\\s+|ahora\\s+|enseguida\\s+|lo\\s+|la\\s+|las\\s+|los\\s+|en\\s+breve\\s+)*${VERB}\\s+(?:la|el|los|las|un|una|unas|unos|m[áa]s|tu|tus)?\\s*${OBJ}` +
+        // "ahora/ya/enseguida te <verbo>…" (promesa genérica de envío, sin objeto explícito)
+        `|\\b(?:ahora|enseguida|ya|en\\s+un\\s+momento|en\\s+breve)\\s+(?:mismo\\s+)?te\\s+(?:lo\\s+|la\\s+|las\\s+|los\\s+)?(?:env[ií]${W}*|mand${W}*|comparto|compart[íoe]${W}*|reenv[ií]${W}*|adjunt${W}*|paso\\b)` +
         // "¿querés / te gustaría que te mande/envíe… <objeto>?"  (ofrecimiento que el cliente acepta)
-        `|(?:quer[ée]s|quieres|te\\s+gustar[íi]a|gustar[íi]a)\\s+que\\s+te\\s+(?:mande|env[ií]e|pase|comparta)\\s+(?:la|el|los|las|un|una)?\\s*${OBJ}`,
+        `|(?:quer[ée]s|quieres|te\\s+gustar[íi]a|gustar[íi]a|prefer[íi]s)\\s+que\\s+te\\s+(?:mande|env[ií]e|pase|comparta|adjunte)\\s+(?:la|el|los|las|un|una)?\\s*${OBJ}`,
         'i'
       );
       if (promiseToSend.test(responseContent) && !/Te acabo de enviar/i.test(responseContent)) {
         console.log('[webchat-bot] 🛡️ promesa de envío sin acción — forzando envío real');
         let sentNow = false;
         try {
+          // El modelo prometido casi siempre se nombra en la PROPIA respuesta de la IA ("El Citroën Basalt 0km…").
+          // Esa es mejor señal que body.message (que puede ser un "Sí" o un audio garbleado). Combinamos ambos.
+          const guardQuery = `${responseContent} ${body.message || ''}`.replace(/\s+/g, ' ').trim().slice(0, 240) || 'modelo';
           const { data: gSearch } = await supabase.functions.invoke('catalog-search', {
-            body: { organization_id: guardOrgId, product_id: body.product_id, query: body.message || 'modelo', limit: 1 },
+            body: { organization_id: guardOrgId, product_id: body.product_id, query: guardQuery, limit: 1 },
           });
           const top = ((gSearch as any)?.items || [])[0];
           if (top?.id) {
@@ -6062,11 +6069,17 @@ NUNCA AJA COMO SUPORTE (a menos que su agent_type seja explicitamente "support")
 - Si no sabés el id del ítem, buscá con search_catalog y enviálo con send_catalog_item. Ese es el canal oficial de envío.
 - Enviá las fotos de un modelo UNA vez en la conversación — no repitas las mismas si ya las mandaste.
 - 🚫 NUNCA mandes links externos (cotizar, sitio web, formulario, "agendá acá"). Para agendar usá la herramienta de reserva (horarios/botones), NUNCA un link.
+- 🚫 NUNCA pegues imágenes en formato markdown ![..](url) ni URLs de fotos en el texto. La ÚNICA forma de mandar una foto es la herramienta send_catalog_item. Si pegás una URL, al cliente le llega un link feo, no una foto.
 
 🖼️ IMÁGENES QUE MANDA EL CLIENTE:
 - SÍ recibís una descripción de cada imagen (visión) — el mensaje viene como "🖼️ Imagen del cliente: …". Usala, NO digas "no pude ver la imagen" (sí la viste).
 - Si la imagen es RELEVANTE (un vehículo, una ficha, un documento, un usado que entrega) → respondé sobre lo que muestra.
 - Si la imagen NO tiene que ver con la compra (un screenshot, un meme, algo ajeno) → reconocé que LA VISTE pero que no parece relacionada, y reconducí amable. Ej: "Vi la imagen, pero no parece estar relacionada con un vehículo 🤔 ¿Me contás qué necesitás o qué auto te interesa?" — NUNCA digas que no la pudiste ver.
+
+🎙️ AUDIOS DEL CLIENTE:
+- Recibís el audio YA transcrito ("🎙️ Audio del cliente (transcrito): …"). Tratalo como si el cliente lo hubiera ESCRITO. 🚫 NUNCA menciones "transcripción", "error de transcripción", ni que los audios se transcriben — el cliente no sabe de eso y suena raro.
+- Si una palabra suena rara o no existe (ej: "vassal" por "Basalt", "des-trais" por "test drive"), NO la repitas ni la expongas. INFERÍ lo más probable según el contexto (vehículos, agenda) y confirmá natural: "¿Te referías al Citroën Basalt?".
+- Si de verdad no entendés nada, pedí natural: "No te llegué a entender bien el audio, ¿me lo repetís o me escribís? 🙏" — sin hablar de transcripciones.
 
 ═══════════════════════════════════════\n\n`;
 

@@ -100,6 +100,33 @@ Deno.serve(async (req: Request) => {
   return new Response('ok', { status: 200, headers: { ...corsHeaders, 'Content-Type': 'text/plain' } });
 });
 
+// Saneador defensivo para WhatsApp: aunque el bot DEBE mandar fotos con send_catalog_item,
+// a veces el LLM las incrusta como markdown `![alt](url)` o deja URLs sueltas → en WhatsApp eso
+// sale como TEXTO con un link feo, no como foto. Acá lo convertimos: extraemos las imágenes para
+// mandarlas como adjunto REAL, sacamos los links externos (regla del cliente: nunca links) y
+// arreglamos el formato (negrita `**x**`→`*x*`, viñetas). Así el cliente nunca ve markdown ni URLs.
+function sanitizeChunkForWhatsApp(raw: string): { text: string; images: string[] } {
+  let t = String(raw || '');
+  const images: string[] = [];
+  const pushImg = (u: string) => { const url = u.trim(); if (url && !images.includes(url)) images.push(url); };
+
+  // 1) Imágenes markdown ![alt](url) → extraer URL como foto, quitar del texto.
+  t = t.replace(/!\[[^\]]*\]\((https?:\/\/[^\s)]+)\)/gi, (_m, url) => { pushImg(url); return ''; });
+  // 2) URLs de imagen sueltas (png/jpg/jpeg/webp/gif) → foto + quitar del texto.
+  t = t.replace(/(https?:\/\/[^\s<>()]+\.(?:png|jpe?g|webp|gif)(?:\?[^\s<>()]*)?)/gi, (_m, url) => { pushImg(url); return ''; });
+  // 3) Links markdown NO-imagen [texto](url) → dejar solo el texto (sin link, regla del cliente).
+  t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/gi, (_m, label) => label);
+  // 4) Cualquier URL externa restante → fuera (no enviamos links). Las fotos ya se extrajeron arriba.
+  t = t.replace(/\bhttps?:\/\/[^\s<>()]+/gi, '');
+  // 5) Formato WhatsApp: negrita **x**/__x__ → *x*; viñetas markdown "- " / "* " → "• ".
+  t = t.replace(/\*\*\*?([^*]+)\*\*\*?/g, '*$1*').replace(/__([^_]+)__/g, '*$1*');
+  t = t.replace(/^[ \t]*[-*]\s+/gm, '• ');
+  // 6) Limpieza de espacios/saltos que quedaron tras quitar imágenes/links.
+  t = t.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').replace(/[ \t]{2,}/g, ' ').trim();
+
+  return { text: t, images };
+}
+
 async function handleInbound(sb: any, conn: any, payload: any) {
   const m = payload.message ?? {};
   const sender = m.sender ?? {};
@@ -348,21 +375,39 @@ async function handleInbound(sb: any, conn: any, payload: any) {
     } else {
     for (const chunk of chunks) {
       if (!chunk || typeof chunk !== 'string') continue;
-      // "Escribiendo…" visible en el WhatsApp del cliente antes de cada burbuja (humanización).
-      try {
-        await sb.functions.invoke('zernio-send', {
-          body: { connection_id: conn.id, organization_id: conn.organization_id, conversation_id: conversationId, to: fromNorm, type: 'typing' },
-        });
-        // Delay proporcional al largo del mensaje (más natural), acotado 1.2–5s.
-        const thinkMs = Math.min(5000, Math.max(1200, chunk.length * 45));
-        await new Promise((r) => setTimeout(r, thinkMs));
-      } catch { /* typing non-fatal */ }
-      try {
-        await sb.functions.invoke('zernio-send', {
-          body: { connection_id: conn.id, organization_id: conn.organization_id, conversation_id: conversationId, to: fromNorm, type: 'text', text: chunk },
-        });
-      } catch (sendErr) { console.error('[zernio-webhook] zernio-send error', sendErr); }
-      await new Promise((r) => setTimeout(r, 600));
+      // Saneamos: imágenes markdown/URLs → fotos reales; links fuera; formato WhatsApp.
+      const { text: cleanText, images } = sanitizeChunkForWhatsApp(chunk);
+
+      // Burbuja de texto (solo si quedó texto real tras sanear — nunca mandamos vacío).
+      if (cleanText) {
+        // "Escribiendo…" visible en el WhatsApp del cliente antes de cada burbuja (humanización).
+        try {
+          await sb.functions.invoke('zernio-send', {
+            body: { connection_id: conn.id, organization_id: conn.organization_id, conversation_id: conversationId, to: fromNorm, type: 'typing' },
+          });
+          const thinkMs = Math.min(5000, Math.max(1200, cleanText.length * 45));
+          await new Promise((r) => setTimeout(r, thinkMs));
+        } catch { /* typing non-fatal */ }
+        try {
+          await sb.functions.invoke('zernio-send', {
+            body: { connection_id: conn.id, organization_id: conn.organization_id, conversation_id: conversationId, to: fromNorm, type: 'text', text: cleanText },
+          });
+        } catch (sendErr) { console.error('[zernio-webhook] zernio-send error', sendErr); }
+        await new Promise((r) => setTimeout(r, 600));
+      }
+
+      // Imágenes incrustadas → se envían como FOTO REAL (attachment), no como link.
+      for (const imgUrl of images) {
+        try {
+          await sb.functions.invoke('zernio-send', {
+            body: {
+              connection_id: conn.id, organization_id: conn.organization_id, conversation_id: conversationId,
+              to: fromNorm, type: 'image', media: { kind: 'image', url: imgUrl },
+            },
+          });
+        } catch (imgErr) { console.error('[zernio-webhook] zernio-send image error', imgErr); }
+        await new Promise((r) => setTimeout(r, 600));
+      }
     }
     }
   } catch (e) {
