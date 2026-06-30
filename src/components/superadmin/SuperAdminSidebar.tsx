@@ -26,6 +26,7 @@ import {
   BarChart3,
   KeyRound,
   Brain,
+  ListTree,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
@@ -56,6 +57,7 @@ const menuItems = [
   { id: 'help', label: 'Centro de Ayuda', icon: HelpCircle },
   { id: 'support', label: 'Soporte', icon: LifeBuoy },
   { id: 'agent-tools', label: 'Acciones de los Agentes', icon: Wrench },
+  { id: 'agent-traces', label: 'Traza de ejecución', icon: ListTree },
   { id: 'ai-quality', label: 'Calidad de IA', icon: BarChart3 },
   { id: 'agent-learnings', label: 'Aprendizajes IA', icon: Brain },
   { id: 'releases', label: 'Actualizaciones', icon: Sparkles },

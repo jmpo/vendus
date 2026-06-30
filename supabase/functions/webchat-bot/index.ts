@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { notifySendFailure } from "../_shared/alerts.ts";
+import { notifySendFailure, alertAIResourceProblem } from "../_shared/alerts.ts";
 import { matchAgentByMessage, type MatcherChannel } from "../_shared/agent-matcher.ts";
 import { parseHandoffTag, handoffTargetToAgentRole } from "../_shared/handoff-parser.ts";
 import { runOrchestrator, type Intent } from "../_shared/orchestrator.ts";
@@ -2038,6 +2038,15 @@ serve(async (req) => {
     // org de la conversación — hoisteada al scope del handler para que TODAS las referencias
     // (recordAIUsage, guardrails) la vean. Antes vivía dentro de un try{} y crasheaba el bot.
     let orgIdForRouting: string | null = null;
+
+    // 🔍 TRAZA DE EJECUCIÓN (auditoría tipo Oryntra): acumula los pasos del turno con latencia,
+    // y al final se guarda UN registro en agent_run_traces. Todo defensivo (nunca rompe el turno).
+    const __traceT0 = Date.now();
+    const __trace: { steps: any[]; guardrails: any[]; model?: string; usage?: any; orchestrator: any; llm_ms?: number; status?: string } =
+      { steps: [], guardrails: [], orchestrator: {}, status: 'ok' };
+    const traceStep = (type: string, name: string, detail?: any) => {
+      try { __trace.steps.push({ seq: __trace.steps.length + 1, type, name, at_ms: Date.now() - __traceT0, ...(detail || {}) }); } catch { /* */ }
+    };
     
     if (reactionDirectReply) {
       // Skip AI entirely — use the reaction's pre-defined reply.
@@ -3509,7 +3518,9 @@ REGRAS DE USO:
         try {
           aiConfig = await resolveAIConfig(supabase, orgIdForRouting, 'agent_chat');
         } catch (cfgErr: any) {
-          console.error('[webchat-bot] AI config error:', cfgErr?.message);
+          console.error('[webchat-bot] AI config error:', cfgErr?.message, cfgErr?.code);
+          // Sin saldo / sin key → la IA no responde a NADIE → avisar al admin YA.
+          await alertAIResourceProblem(supabase, { organizationId: orgIdForRouting, errorCode: cfgErr?.code });
           return new Response(JSON.stringify({
             error: 'ai_provider_not_configured',
             message: cfgErr?.message || 'Provedor de IA no configurado e fallback desativado.',
@@ -3620,16 +3631,21 @@ REGRAS DE USO:
           requestBody.tools = tools;
         }
 
+        const __llmT0 = Date.now();
         const aiResponse = await fetch(aiConfig.endpoint, {
           method: 'POST',
           headers: aiConfig.headers,
           body: JSON.stringify(prepareAIRequestBody(requestBody, aiConfig)),
         });
+        __trace.llm_ms = Date.now() - __llmT0;
+        __trace.model = agentModel;
+        traceStep('llm', 'chat_completion', { model: agentModel, provider: aiConfig.provider, status: aiResponse.status, duration_ms: __trace.llm_ms, ok: aiResponse.ok });
 
         console.log('[webchat-bot] AI response status:', aiResponse.status);
 
         if (aiResponse.ok) {
           const aiData = await aiResponse.json();
+          __trace.usage = aiData?.usage || __trace.usage;
           await recordAIUsage(supabase, orgIdForRouting, aiConfig, 'agent_chat', aiData?.usage, 'webchat-bot');
           const choice = aiData.choices?.[0];
           
@@ -3684,6 +3700,7 @@ REGRAS DE USO:
                 responseContent = choice.message?.content || body.agent_config.fallback_message;
               }
             } else if (toolCall.function.name === 'search_catalog') {
+              const __scT0 = Date.now();
               try {
                 const args = JSON.parse(toolCall.function.arguments || '{}');
                 const { data: convForCat } = await supabase
@@ -3728,6 +3745,8 @@ REGRAS DE USO:
                   items = (orgSearchData as any)?.items || [];
                   console.log('[webchat-bot] 📦 catalog-search (org-wide fallback) returned', items.length, 'items');
                 }
+
+                traceStep('tool', 'search_catalog', { query: (args.query || '').slice(0, 80), found: items.length, duration_ms: Date.now() - __scT0, ok: true });
 
                 // Detect if user EXPLICITLY asked for media in the current message
                 const userMsgLower = (body.message || '').toLowerCase();
@@ -3894,12 +3913,20 @@ REGRAS DE USO:
                       send_documents: args.include_documents === true,
                     },
                   });
+                  const __toolT0 = Date.now();
                   let { data: sendData, error: sendErr } = await callSend();
+                  let __toolRetried = false;
                   if (sendErr || (sendData as any)?.delivered === false) {
                     console.warn('[webchat-bot] send_catalog_item 1er intento falló, reintentando…', (sendErr as any)?.message || (sendData as any)?.provider_error);
                     await new Promise((r) => setTimeout(r, 900));
                     ({ data: sendData, error: sendErr } = await callSend());
+                    __toolRetried = true;
                   }
+                  traceStep('tool', 'send_catalog_item', {
+                    item_id: args.item_id, duration_ms: Date.now() - __toolT0, retried: __toolRetried,
+                    ok: !sendErr && (sendData as any)?.delivered === true, delivered: (sendData as any)?.delivered ?? false,
+                    error: sendErr ? ((sendErr as any)?.message || 'invoke_error') : null,
+                  });
 
                   if (sendErr) {
                     console.error('[webchat-bot] send_catalog_item error (tras reintento):', sendErr);
@@ -3934,6 +3961,7 @@ REGRAS DE USO:
                 responseContent = 'No pude enviar ahora. ¿Querés que intente de nuevo?';
               }
             } else if (toolCall.function.name === 'check_available_slots' && scheduleUserId) {
+              const __csT0 = Date.now();
               try {
                 const args = JSON.parse(toolCall.function.arguments);
                 let daysAhead = Math.min(args.days_ahead || 7, 14);
@@ -4338,11 +4366,14 @@ REGRAS DE USO:
                 }
                 } // end if (!skipSlotSearch)
                 console.log('[webchat-bot] Available slots check completed');
+                traceStep('tool', 'check_available_slots', { days: [...targetDates], has_buttons: !!schedulingButtons, duration_ms: Date.now() - __csT0, ok: true });
               } catch (slotsError) {
                 console.error('[webchat-bot] Check slots error:', slotsError);
+                traceStep('tool', 'check_available_slots', { duration_ms: Date.now() - __csT0, ok: false, error: String((slotsError as any)?.message || slotsError).slice(0, 120) });
                 responseContent = 'No pude verificar lla agenda ahora. ¿Intento de nuevo o te transfiero con un agente?';
               }
             } else if (toolCall.function.name === 'schedule_meeting' && scheduleUserId) {
+              const __smT0 = Date.now();
               try {
                 const args = JSON.parse(toolCall.function.arguments);
                 console.log('[webchat-bot] Schedule meeting requested:', args);
@@ -4629,6 +4660,7 @@ REGRAS DE USO:
                     
                     // Mark schedule as truly succeeded — guard for anti-hallucination check
                     scheduleSucceeded = true;
+                    traceStep('tool', 'schedule_meeting', { booked: true, slot: `${resolvedDate} ${args.preferred_time}`, duration_ms: Date.now() - __smT0, ok: true });
 
                     // === Encolar automatizaciones de la cita (recordatorios + recovery + aviso interno) ===
                     // El bot ya CONFIRMA en el chat, así que NO encolamos 'confirmation' (sería duplicado).
@@ -5455,11 +5487,21 @@ REGRAS DE USO:
         } else {
           const errorText = await aiResponse.text();
           console.error('[webchat-bot] AI API error:', aiResponse.status, errorText);
-          responseContent = body.agent_config.fallback_message || 
+          // Si el proveedor rechaza por SALDO/CUOTA/KEY → avisar al admin (la IA no responde a nadie).
+          await alertAIResourceProblem(supabase, {
+            organizationId: orgIdForRouting, status: aiResponse.status, bodyText: errorText,
+            provider: aiConfig.provider, source: aiConfig.source,
+          });
+          __trace.status = (aiResponse.status === 402 || aiResponse.status === 429) ? 'sin_saldo' : 'error';
+          (__trace as any).error = `LLM ${aiResponse.status}: ${errorText.slice(0, 200)}`;
+          responseContent = body.agent_config.fallback_message ||
             'Disculpá, no pude procesar tu mensaje. ¿Te transfiero con un agente?';
         }
       } catch (aiError) {
         console.error('[webchat-bot] AI call failed:', aiError);
+        __trace.status = 'error';
+        (__trace as any).error = String((aiError as any)?.message || aiError).slice(0, 300);
+        traceStep('llm', 'exception', { error: String((aiError as any)?.message || aiError).slice(0, 200) });
         responseContent = body.agent_config.fallback_message ||
           'Disculpá, estou con dificuldades técnicas. ¿Te transfiero para um agente?';
       }
@@ -5729,6 +5771,8 @@ REGRAS DE USO:
           // No pudimos enviar de verdad → no mentimos: pedimos precisión.
           responseContent = '¿De qué modelo querés la información? Así te la envío al toque 😊';
         }
+        __trace.guardrails.push({ name: 'empty_send_promise', action: sentNow ? 'forced_send' : 'asked_precision' });
+        traceStep('guardrail', 'empty_send_promise', { forced_send: sentNow });
         // Registrar para VISIBILIDAD (se ve en Super Admin → "Acciones de los Agentes").
         try {
           await supabase.from('agent_action_logs').insert({
@@ -5750,6 +5794,8 @@ REGRAS DE USO:
       const promisePay = /\b(?:te\s+(?:paso|mando|env[ií]o|genero|comparto)|ac[áa]\s+ten[ée]s)\s+(?:el\s+)?(?:link|enlace)\s+(?:de\s+)?(?:pago|pagamento|checkout|pix)/i;
       if (promisePay.test(responseContent) && !/https?:\/\//i.test(responseContent)) {
         console.log('[webchat-bot] 🛡️ promesa de link de pago sin link real — registrando');
+        __trace.guardrails.push({ name: 'payment_link_promise', action: 'logged' });
+        traceStep('guardrail', 'payment_link_promise', {});
         try {
           await supabase.from('agent_action_logs').insert({
             organization_id: guardOrgId, agent_id: activeAgent?.id || null,
@@ -5760,6 +5806,49 @@ REGRAS DE USO:
           });
         } catch (_) { /* non-fatal */ }
       }
+    }
+
+    // 🔍 GUARDAR LA TRAZA DE EJECUCIÓN (un registro por turno). En background (no agrega latencia),
+    // y siempre defensivo: si algo falla, NUNCA rompe la respuesta al cliente.
+    if (!body.is_test && body.conversation_id) {
+      try {
+        const traceOrg = (activeAgent as any)?.organization_id || orgIdForRouting || null;
+        const u = __trace.usage || {};
+        const pt = u.prompt_tokens || 0, ct = u.completion_tokens || 0, tt = u.total_tokens || (pt + ct);
+        // Costo estimado (USD) por modelo — precios por 1K tokens (entrada+salida aprox.).
+        const PRICE: Record<string, number> = { 'gpt-4o-mini': 0.0004, 'gpt-4o': 0.0075, 'gpt-4.1-mini': 0.0006, 'gpt-4.1': 0.006 };
+        const price = PRICE[(__trace.model || '').toLowerCase()] ?? 0.0006;
+        const cost = (tt / 1000) * price;
+        if (traceOrg) {
+          const traceRow = {
+            organization_id: traceOrg,
+            conversation_id: body.conversation_id,
+            product_id: body.product_id || null,
+            agent_id: (activeAgent as any)?.id || null,
+            agent_name: (activeAgent as any)?.name || null,
+            trigger: body.trigger || null,
+            channel: body.channel || null,
+            user_message: (body.message || '').slice(0, 1000),
+            response_preview: (responseContent || '').slice(0, 1000),
+            orchestrator: {
+              routed_agent: (activeAgent as any)?.name || null,
+              agent_role: (activeAgent as any)?.role || null,
+              ...(__trace.orchestrator || {}),
+            },
+            steps: __trace.steps,
+            guardrails: __trace.guardrails,
+            model: __trace.model || null,
+            prompt_tokens: pt, completion_tokens: ct, total_tokens: tt,
+            estimated_cost_usd: Number(cost.toFixed(6)),
+            llm_ms: __trace.llm_ms ?? null,
+            total_ms: Date.now() - __traceT0,
+            status: __trace.status || 'ok',
+            error: (__trace as any).error || null,
+          };
+          const { error: traceInsErr } = await supabase.from('agent_run_traces').insert(traceRow);
+          if (traceInsErr) console.warn('[webchat-bot] trace insert error:', traceInsErr.message);
+        }
+      } catch (trErr) { console.warn('[webchat-bot] trace build failed (non-fatal):', trErr); }
     }
 
     // Check if chunked messages are enabled

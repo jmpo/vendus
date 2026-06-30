@@ -31,6 +31,7 @@ const f = {
   AgentsManager: () => import('@/components/admin/agents/AgentsManager').then(m => ({ default: m.AgentsManager })),
   AgentLearningsPanel: () => import('@/components/admin/learnings/AgentLearningsPanel').then(m => ({ default: m.AgentLearningsPanel })),
   AgentInterventionsPanel: () => import('@/components/admin/interventions/AgentInterventionsPanel').then(m => ({ default: m.AgentInterventionsPanel })),
+  AgentRunTracesPanel: () => import('@/components/admin/traces/AgentRunTracesPanel').then(m => ({ default: m.AgentRunTracesPanel })),
   SectorsManager: () => import('@/components/admin/sectors/SectorsManager').then(m => ({ default: m.SectorsManager })),
   PlanSelector: () => import('@/components/admin/plan/PlanSelector').then(m => ({ default: m.PlanSelector })),
   CaktoAdminPanel: () => import('@/components/admin/payments/CaktoAdminPanel').then(m => ({ default: m.CaktoAdminPanel })),
@@ -73,6 +74,7 @@ const CustomFieldsManager = lazyWithRetry(f.CustomFieldsManager);
 const AgentsManager = lazyWithRetry(f.AgentsManager);
 const AgentLearningsPanel = lazyWithRetry(f.AgentLearningsPanel);
 const AgentInterventionsPanel = lazyWithRetry(f.AgentInterventionsPanel);
+const AgentRunTracesPanel = lazyWithRetry(f.AgentRunTracesPanel);
 const SectorsManager = lazyWithRetry(f.SectorsManager);
 const PlanSelector = lazyWithRetry(f.PlanSelector);
 const CaktoAdminPanel = lazyWithRetry(f.CaktoAdminPanel);
@@ -112,6 +114,7 @@ const sectionFactories: Record<string, () => Promise<unknown>> = {
   agents: f.AgentsManager,
   'agent-learnings': f.AgentLearningsPanel,
   'agent-interventions': f.AgentInterventionsPanel,
+  'agent-traces': f.AgentRunTracesPanel,
 
   team: f.TeamManager,
   products: f.ProductListPage,
@@ -229,6 +232,7 @@ export default function Admin() {
       case 'agents': return <AgentsManager />;
       case 'agent-learnings': return <AgentLearningsPanel />;
       case 'agent-interventions': return <AgentInterventionsPanel />;
+      case 'agent-traces': return <AgentRunTracesPanel />;
 
       case 'team': return <TeamManager />;
       case 'products': return <ProductListPage onProductSelect={handleProductSelect} />;
