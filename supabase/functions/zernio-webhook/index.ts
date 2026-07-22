@@ -3,7 +3,7 @@
 // Maneja message.received (entrante) → dispara webchat-bot → responde vía zernio-send.
 // También message.delivered/read/failed → actualiza delivery_status.
 // Desplegar con --no-verify-jwt.
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { hmacSha256Hex, timingSafeEqual } from '../_shared/meta-graph.ts';
 import { normalizePhoneBR } from '../_shared/phone.ts';
 import { decryptSecret } from '../_shared/meta-crypto.ts';

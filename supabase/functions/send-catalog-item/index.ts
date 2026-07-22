@@ -1,5 +1,19 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// VERSIÓN FIJADA a propósito: con "@2" (sin fijar) esm.sh resuelve a la última en CADA deploy.
+// Una versión nueva rompió functions.invoke (zernio-send devolvía 401 → "non-2xx") y las fotos
+// dejaron de enviarse. Nunca dejar esta dependencia sin fijar.
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 import { sendWhatsAppForConversation } from "../_shared/whatsapp-router.ts";
+import { notifySendFailure } from "../_shared/alerts.ts";
+
+// Motivos de fallo en lenguaje del vendedor (los lee el banner del inbox y la alerta).
+const ERROR_LABEL: Record<string, string> = {
+  OUT_OF_WINDOW: "Pasaron más de 24h desde el último mensaje del cliente — WhatsApp exige una plantilla para reabrir",
+  NO_CONNECTION: "La conversación no tiene una conexión de WhatsApp vinculada",
+  NO_CONVERSATION: "No hay conversación abierta en WhatsApp — se requiere una plantilla para iniciar",
+  missing_phone: "El contacto no tiene teléfono",
+  missing_connection: "No hay conexión de WhatsApp configurada",
+  no_images_in_catalog_item: "El ítem del catálogo no tiene fotos cargadas",
+};
 
 declare const OffscreenCanvas: {
   new (width: number, height: number): {
@@ -154,6 +168,7 @@ Deno.serve(async (req) => {
     let lastProviderError: string | null = null;
     const sentCounts = { images: 0, videos: 0, documents: 0 };
     let providerRecorded = false; // true cuando el provider (router) ya grabó el mensaje → evita duplicado
+    let providerMessageId: string | null = null; // wamid devuelto por el proveedor (para casar el webhook)
 
     // WhatsApp solo soporta JPEG/PNG en imágenes. AVIF/WebP fallan (error 131053).
     // Las servimos transcodeadas a JPG vía proxy de imágenes (wsrv.nl) para que Meta las descargue.
@@ -458,7 +473,12 @@ Deno.serve(async (req) => {
             media: { kind, url, caption: cap || undefined, filename },
           });
           if (!res.ok) { lastProviderError = res.error || `router_${res.provider}_failed`; }
-          else { deliveryChannel = res.provider; }
+          else {
+            deliveryChannel = res.provider;
+            // Guardamos el id del proveedor (wamid) de la PRIMERA media: con él, el webhook de
+            // entrega encuentra ESTA fila y le actualiza el estado (en vez de insertar un espejo).
+            if (!providerMessageId && res.message_id) providerMessageId = res.message_id;
+          }
           return res.ok;
         } catch (e: any) {
           lastProviderError = `router_exception:${e?.message || e}`;
@@ -469,7 +489,9 @@ Deno.serve(async (req) => {
       const okMain = await sendViaRouter("image", imageList[0], caption);
       if (okMain) {
         delivered = true;
-        providerRecorded = true; // zernio-send/meta-send ya grabó+broadcasteó el mensaje
+        // OJO: NO marcamos providerRecorded. El router llama a zernio-send con record:false,
+        // así que NADIE graba la foto → antes se perdía del historial y el inbox no la mostraba
+        // como tarjeta de catálogo (aparecía después como texto suelto vía el webhook espejo).
         sentCounts.images++;
         if (sendExtraImages) {
           for (const img of imageList.slice(1, 3)) {
@@ -514,6 +536,9 @@ Deno.serve(async (req) => {
           sender_type: "bot",
           content: caption,
           message_type: "catalog_card",
+          // CRÍTICO: en WhatsApp marcamos el estado real. Si queda null, la reconciliación
+          // (que busca delivery_status='failed') NUNCA lo ve y el inbox no muestra el fallo.
+          delivery_status: channel === "whatsapp" ? (delivered ? "sent" : "failed") : null,
           metadata: {
             catalog_item: {
               id: item.id,
@@ -531,6 +556,12 @@ Deno.serve(async (req) => {
             delivery_channel: deliveryChannel,
             sent_counts: sentCounts,
             provider_error: lastProviderError,
+            // Con el wamid, zernio-webhook casa esta fila y actualiza sent/delivered/read/failed.
+            ...(providerMessageId ? { provider: "zernio", zernio_message_id: providerMessageId } : {}),
+            // `error` es lo que lee el banner de fallo del inbox.
+            ...(!delivered && channel === "whatsapp"
+              ? { error: ERROR_LABEL[lastProviderError ?? ""] ?? (lastProviderError || "No se pudo enviar"), failed_at: new Date().toISOString() }
+              : {}),
           },
         })
         .select()
@@ -568,6 +599,20 @@ Deno.serve(async (req) => {
       });
     } catch (logErr) {
       console.warn("[send-catalog-item] log failed:", logErr);
+    }
+
+    // ALERTA: si la foto NO llegó al cliente, el vendedor tiene que enterarse (antes era mudo).
+    if (channel === "whatsapp" && !delivered) {
+      await notifySendFailure(supabase, {
+        organizationId: conv.organization_id,
+        conversationId: conv.id,
+        who: phone,
+        what: `las fotos de ${item.title}`,
+        reason: ERROR_LABEL[lastProviderError ?? ""] ?? (lastProviderError || "no se pudo enviar"),
+        throttleKey: `send_fail:${conv.id}`,
+        productId: item.product_id || null,
+        metadata: { source: "send_catalog_item", item_id: item.id, provider_error: lastProviderError },
+      });
     }
 
     return new Response(

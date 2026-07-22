@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// VERSIÓN FIJADA: con "@2" esm.sh resuelve a la última en CADA deploy y una versión nueva
+// rompió functions.invoke (las llamadas a send-catalog-item/catalog-search devolvían non-2xx).
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 import { notifySendFailure, alertAIResourceProblem } from "../_shared/alerts.ts";
 import { matchAgentByMessage, type MatcherChannel } from "../_shared/agent-matcher.ts";
 import { parseHandoffTag, handoffTargetToAgentRole } from "../_shared/handoff-parser.ts";

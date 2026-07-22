@@ -4,7 +4,7 @@
 //    POST /v1/inbox/conversations/{conversationId}/messages
 //  - Para iniciar/reenganchar (fuera de 24h): template
 //    POST /v1/inbox/conversations
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { decryptSecret } from '../_shared/meta-crypto.ts';
 
 const ZERNIO_BASE = 'https://zernio.com/api/v1';

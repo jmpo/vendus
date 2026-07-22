@@ -22,16 +22,23 @@ Deno.serve(async (req) => {
   const issues: Issue[] = [];
 
   try {
-    // 1) Crons con fallas recientes
-    const badCrons = await sql`
-      select j.jobname,
-        (select status from cron.job_run_details d where d.jobid=j.jobid order by start_time desc limit 1) as last_status,
-        (select start_time from cron.job_run_details d where d.jobid=j.jobid order by start_time desc limit 1) as last_run
-      from cron.job j where j.active`;
-    for (const c of badCrons as any[]) {
-      if (c.last_status && c.last_status !== 'succeeded') {
-        issues.push({ severity: 'critical', key: `cron:${c.jobname}`, title: `⚠️ Cron con fallo: ${c.jobname}`, detail: `Último estado: ${c.last_status} (${c.last_run})` });
+    // 1) Crons con fallas recientes.
+    // cron.job_run_details crece sin parar; las subconsultas correlacionadas por job hacían
+    // timeout y tumbaban todo. Ahora leemos UNA sola pasada acotada a las corridas recientes.
+    try {
+      const lastRuns = await sql`
+        select distinct on (d.jobid) d.jobid, d.status, d.start_time, j.jobname
+        from cron.job_run_details d
+        join cron.job j on j.jobid = d.jobid and j.active
+        where d.start_time > now() - interval '3 hours'
+        order by d.jobid, d.start_time desc`;
+      for (const c of lastRuns as any[]) {
+        if (c.status && c.status !== 'succeeded') {
+          issues.push({ severity: 'critical', key: `cron:${c.jobname}`, title: `⚠️ Cron con fallo: ${c.jobname}`, detail: `Último estado: ${c.status} (${c.start_time})` });
+        }
       }
+    } catch (e) {
+      console.warn('[health] chequeo de crons omitido:', String(e).slice(0, 120));
     }
 
     // 2) ai_outreach_queue fallidos
@@ -41,11 +48,22 @@ Deno.serve(async (req) => {
       issues.push({ severity: 'warning', key: 'outreach:failed', title: `⚠️ Follow-ups fallidos: ${failedOutreach.n}`, detail: sample?.e || 'sin detalle' });
     }
 
-    // 3) HTTP 5xx recientes (funciones internas fallando)
-    const http5xx = (await sql`select count(*)::int as n from net._http_response where status_code >= 500 and created > now() - interval '2 hours'`)[0] as any;
-    if (Number(http5xx.n) > 0) {
-      const sample = (await sql`select status_code, left(content,200) as c from net._http_response where status_code >= 500 and created > now() - interval '2 hours' order by id desc limit 1`)[0] as any;
-      issues.push({ severity: 'critical', key: 'http:5xx', title: `⚠️ ${http5xx.n} errores 5xx internos (2h)`, detail: `${sample?.status_code}: ${sample?.c}` });
+    // 3) HTTP 5xx recientes (funciones internas fallando).
+    // OJO: net._http_response crece MUCHO (cada llamada de cron deja una fila) y un scan por
+    // `created` hacía timeout → tumbaba TODO el health-check con 500. Acotamos por id (indexado)
+    // a las últimas filas y lo envolvemos: si igual falla, seguimos con el resto de los chequeos.
+    try {
+      const recent5xx = await sql`
+        select status_code, left(content, 200) as c
+        from (select id, status_code, content from net._http_response order by id desc limit 2000) t
+        where status_code >= 500`;
+      const n = (recent5xx as any[]).length;
+      if (n > 0) {
+        const s = (recent5xx as any[])[0];
+        issues.push({ severity: 'critical', key: 'http:5xx', title: `⚠️ ${n} errores 5xx internos (recientes)`, detail: `${s?.status_code}: ${s?.c}` });
+      }
+    } catch (e) {
+      console.warn('[health] chequeo 5xx omitido:', String(e).slice(0, 120));
     }
 
     // 4) Conversaciones WhatsApp sin lead (deberían vincularse solas)
@@ -61,7 +79,21 @@ Deno.serve(async (req) => {
         headers: { Authorization: `Bearer ${Deno.env.get('OPENAI_API_KEY')}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: 'gpt-4o-mini', messages: [{ role: 'user', content: 'ok' }], max_tokens: 1 }),
       });
-      if (!r.ok) issues.push({ severity: 'critical', key: 'ai:key', title: '⛔ Key de IA inválida', detail: `OpenAI respondió ${r.status} — la IA no puede responder.` });
+      // Distinguimos el motivo real: 401/403 = key inválida · 402/quota = SIN SALDO ·
+      // 429 puro = rate limit transitorio (NO es un problema de configuración, no alarmamos igual).
+      if (!r.ok) {
+        const bodyTxt = await r.text().catch(() => '');
+        const isQuota = /insufficient_quota|exceeded your current quota|billing/i.test(bodyTxt);
+        if (r.status === 401 || r.status === 403) {
+          issues.push({ severity: 'critical', key: 'ai:key', title: '⛔ Key de IA inválida', detail: `OpenAI respondió ${r.status} — la key es inválida o sin permiso. Revisá Integraciones → IA.` });
+        } else if (r.status === 402 || isQuota) {
+          issues.push({ severity: 'critical', key: 'ai:credits', title: '⛔ IA SIN SALDO', detail: 'Se agotaron los créditos de IA — la IA no puede responder a los clientes. Recargá para reactivarla.' });
+        } else if (r.status === 429) {
+          issues.push({ severity: 'warning', key: 'ai:ratelimit', title: '⚠️ IA con límite de solicitudes', detail: 'OpenAI respondió 429 (rate limit). Suele ser transitorio; si persiste, revisá el plan o bajá el ritmo de envíos.' });
+        } else {
+          issues.push({ severity: 'critical', key: 'ai:error', title: '⛔ La IA no responde', detail: `OpenAI respondió ${r.status}. ${bodyTxt.slice(0, 150)}` });
+        }
+      }
     } catch (e) {
       issues.push({ severity: 'critical', key: 'ai:key', title: '⛔ Error verificando key de IA', detail: String(e) });
     }
@@ -122,7 +154,11 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify({ ok: issues.length === 0, issues, checked_at: new Date().toISOString() }, null, 2), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (e) {
-    return new Response(JSON.stringify({ ok: false, error: String(e) }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    // El monitoreo NUNCA debe caerse entero: devolvemos lo que sí se pudo chequear (200)
+    // + un aviso del chequeo que falló, en vez de un 500 que deja al equipo a ciegas.
+    console.error('[health] chequeo parcial:', String(e));
+    issues.push({ severity: 'warning', key: 'health:partial', title: '⚠️ Chequeo de salud incompleto', detail: `Un chequeo falló: ${String(e).slice(0, 200)}` });
+    return new Response(JSON.stringify({ ok: false, partial: true, issues, checked_at: new Date().toISOString() }, null, 2), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } finally {
     await sql.end();
   }
