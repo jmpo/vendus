@@ -37,6 +37,10 @@ export type WARouterInput = {
   text?: string;
   media?: WAMedia;
   reply_to_message_id?: string | null; // UUID del mensaje a citar (responder encima)
+  // WhatsApp (Zernio): extras nativos. quickReplies admite 13 opciones (buttons solo 3).
+  quickReplies?: Array<Record<string, unknown>> | null;
+  location?: { latitude: number; longitude: number; name?: string; address?: string } | null;
+  contacts?: Array<Record<string, unknown>> | null;
 };
 
 import { phoneVariantsBR } from './phone.ts';
@@ -103,6 +107,9 @@ export async function sendWhatsAppForConversation(
         text: input.text,
         media: input.media,
         reply_to_message_id: input.reply_to_message_id, // responder citando (replyTo en Zernio)
+        ...(input.quickReplies ? { quickReplies: input.quickReplies } : {}),
+        ...(input.location ? { location: input.location } : {}),
+        ...(input.contacts ? { contacts: input.contacts } : {}),
         // O chamador (webchat-inbox/etc) já inseriu a mensagem. zernio-send só
         // resolve a conversa/janela 24h e envia — NÃO grava 2ª linha (evita bolha dupla).
         record: false,

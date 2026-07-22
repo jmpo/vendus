@@ -61,6 +61,9 @@ Deno.serve(async (req: Request) => {
     connection_id, organization_id, conversation_id,
     to, type = 'text', text, media, template,
     buttons, interactive, // mensajes interactivos (botones / lista) — passthrough a Zernio
+    quickReplies,         // hasta 13 opciones (excluyente con buttons, que topa en 3)
+    location,             // WhatsApp: pin de ubicación { latitude, longitude, name?, address? }
+    contacts,             // WhatsApp: tarjetas de contacto [{ name: { formatted_name }, phones?, emails? }]
     extra_metadata, // metadata extra a fundir en la fila guardada (ej: scheduling_context)
     reply_to_message_id, // UUID del mensaje a citar (responder encima) → se traduce a replyTo (wamid)
     record = true, // si false: el llamador ya grabó la fila (evita bolha dupla)
@@ -139,8 +142,13 @@ Deno.serve(async (req: Request) => {
       ...(msgText ? { message: msgText } : {}),
       ...(hasMedia ? { attachmentUrl: media.url, attachmentType: mapAttachmentType(media.kind) } : {}),
       ...(hasMedia && media.kind === 'audio' && media.ptt ? { voiceNote: true } : {}),
-      ...(buttons ? { buttons } : {}),
+      // buttons (máx 3) y quickReplies (máx 13) son EXCLUYENTES: si vienen los dos, gana quickReplies.
+      ...(quickReplies && Array.isArray(quickReplies) && quickReplies.length
+        ? { quickReplies: quickReplies.slice(0, 13) }
+        : (buttons ? { buttons } : {})),
       ...(interactive ? { interactive } : {}),
+      ...(location ? { location } : {}),
+      ...(contacts && Array.isArray(contacts) && contacts.length ? { contacts } : {}),
       ...(replyTo ? { replyTo } : {}),
     };
     console.log('[zernio-send] freeform →', JSON.stringify({ convId: zernioConvId, attachmentType: (freeformBody as any).attachmentType, hasMedia, kind: media?.kind, mime: media?.mime, url: media?.url?.slice(0, 120) }));
@@ -157,7 +165,10 @@ Deno.serve(async (req: Request) => {
       conversation_id,
       direction: 'outbound',
       sender_type: 'agent',
-      content: text ?? (hasMedia ? `[${media.kind}]` : `[${type}]`),
+      content: text ?? (hasMedia ? `[${media.kind}]`
+        : location ? `📍 Ubicación${location.name ? `: ${location.name}` : ''}`
+        : (contacts && contacts.length) ? `👤 Contacto: ${contacts[0]?.name?.formatted_name ?? ''}`.trim()
+        : `[${type}]`),
       content_type: hasMedia ? (media.kind === 'image' ? 'image' : media.kind === 'audio' ? 'audio' : media.kind === 'video' ? 'video' : 'file') : 'text',
       message_type: type,
       delivery_status: res.ok ? 'sent' : 'failed',
@@ -167,7 +178,10 @@ Deno.serve(async (req: Request) => {
         ...(hasMedia ? { media } : {}),
         ...(template ? { template } : {}),
         ...(buttons ? { buttons } : {}),
+        ...(quickReplies ? { quickReplies } : {}),
         ...(interactive ? { interactive } : {}),
+        ...(location ? { location } : {}),
+        ...(contacts ? { contacts } : {}),
         ...(extra_metadata && typeof extra_metadata === 'object' ? extra_metadata : {}),
         ...(res.ok ? {} : { error: res.data?.error ?? res.data ?? `status ${res.status}`, failed_at: new Date().toISOString() }),
       },

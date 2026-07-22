@@ -3,6 +3,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 // rompió functions.invoke (las llamadas a send-catalog-item/catalog-search devolvían non-2xx).
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 import { notifySendFailure, alertAIResourceProblem } from "../_shared/alerts.ts";
+import { sendWhatsAppForConversation } from "../_shared/whatsapp-router.ts";
 import { matchAgentByMessage, type MatcherChannel } from "../_shared/agent-matcher.ts";
 import { parseHandoffTag, handoffTargetToAgentRole } from "../_shared/handoff-parser.ts";
 import { runOrchestrator, type Intent } from "../_shared/orchestrator.ts";
@@ -1987,6 +1988,8 @@ serve(async (req) => {
     // check_available_slots ofrece ≤3 horarios, los devolvemos acá para que el
     // webhook (Zernio) los mande como botones en vez de texto. null = sin botones.
     let schedulingButtons: { body: string; buttons: Array<{ type: string; title: string; payload: string }> } | null = null;
+    // Lista interactiva de WhatsApp cuando hay MÁS de 3 horarios (los botones topan en 3).
+    let schedulingInteractive: Record<string, any> | null = null;
     let autoSwitchConfig: Array<{ agent_id: string; trigger_condition: string }> = [];
     if (flowVariables['__auto_switch_config']) {
       try { 
@@ -4343,7 +4346,20 @@ REGRAS DE USO:
                     // TOQUE en vez de escribir. El webhook (Zernio) los manda como mensaje
                     // interactivo; en canales sin botones (Evolution/webchat) queda el texto
                     // natural de arriba. Botones SOLO acá — en el resto de la charla, texto.
-                    if (suggestions.length >= 1 && suggestions.length <= 3) {
+                    // MÁS DE 3 HORARIOS → lista interactiva de WhatsApp (hasta 10 filas).
+                    // Los botones nativos topan en 3; la lista permite ofrecer la agenda real.
+                    if (suggestions.length > 3) {
+                      const rows = suggestions.slice(0, 10).map((s: any) => ({
+                        id: `slot|${s.date}|${s.time}`,
+                        title: String(`${String(s.dateLabel || '').split(' ').slice(0, 2).join(' ')} ${s.time}`).trim().slice(0, 24),
+                      }));
+                      schedulingInteractive = {
+                        type: 'list',
+                        body: { text: (responseContent && responseContent.trim()) ? responseContent.trim().slice(0, 1024) : '¿Qué horario te queda mejor?' },
+                        action: { button: 'Ver horarios', sections: [{ title: 'Disponibles', rows }] },
+                      };
+                      console.log('[webchat-bot] 📅 lista interactiva de horarios:', rows.length);
+                    } else if (suggestions.length >= 1 && suggestions.length <= 3) {
                       const sameDay = suggestions.every((s) => s.date === suggestions[0].date);
                       const btnTitle = (s: any): string => {
                         if (sameDay) return String(s.time).slice(0, 20);
@@ -4500,7 +4516,7 @@ REGRAS DE USO:
                   // Get user's org
                    const { data: hostProfile } = await supabase
                     .from('profiles')
-                    .select('organization_id, full_name')
+                    .select('organization_id, full_name, phone')
                     .eq('id', scheduleUserId)
                     .single();
                   
@@ -4663,6 +4679,58 @@ REGRAS DE USO:
                     // Mark schedule as truly succeeded — guard for anti-hallucination check
                     scheduleSucceeded = true;
                     traceStep('tool', 'schedule_meeting', { booked: true, slot: `${resolvedDate} ${args.preferred_time}`, duration_ms: Date.now() - __smT0, ok: true });
+
+                    // === EXTRAS DE CONFIRMACIÓN (WhatsApp nativo) ===
+                    // Con el test drive ya reservado, mandamos el PIN del concesionario (para que
+                    // sepa exactamente dónde ir) y la TARJETA del vendedor (para que lo tenga
+                    // agendado). Todo defensivo: si falla, la reserva ya está hecha igual.
+                    try {
+                      const { data: orgLoc } = await supabase
+                        .from('organizations')
+                        .select('name, address, latitude, longitude, location_name')
+                        .eq('id', hostProfile.organization_id).maybeSingle();
+                      const { data: convRow } = await supabase
+                        .from('webchat_conversations')
+                        .select('id, organization_id, meta_connection_id, evolution_instance_id, zernio_connection_id, visitor_phone')
+                        .eq('id', body.conversation_id).maybeSingle();
+
+                      if (convRow && (convRow as any).visitor_phone) {
+                        // 📍 Pin de ubicación (solo si está configurada la coordenada).
+                        if (orgLoc?.latitude != null && orgLoc?.longitude != null) {
+                          const locRes = await sendWhatsAppForConversation({
+                            supabase, conversation: convRow as any, to: (convRow as any).visitor_phone,
+                            location: {
+                              latitude: Number(orgLoc.latitude), longitude: Number(orgLoc.longitude),
+                              name: orgLoc.location_name || orgLoc.name || 'Concesionario',
+                              address: orgLoc.address || undefined,
+                            },
+                          });
+                          traceStep('tool', 'send_location', { ok: locRes.ok });
+                        }
+                        // 👤 Tarjeta de contacto del vendedor.
+                        // OJO (Meta #131009): `formatted_name` SOLO no alcanza — exige además
+                        // al menos un campo de nombre (first_name). Verificado contra la API real.
+                        if (hostProfile.full_name) {
+                          const _np = String(hostProfile.full_name).trim().split(/\s+/);
+                          const _first = _np[0] || hostProfile.full_name;
+                          const _last = _np.slice(1).join(' ');
+                          const cardRes = await sendWhatsAppForConversation({
+                            supabase, conversation: convRow as any, to: (convRow as any).visitor_phone,
+                            contacts: [{
+                              name: {
+                                formatted_name: hostProfile.full_name,
+                                first_name: _first,
+                                ...(_last ? { last_name: _last } : {}),
+                              },
+                              ...(hostProfile.phone ? { phones: [{ phone: hostProfile.phone, type: 'CELL' }] } : {}),
+                            }],
+                          });
+                          traceStep('tool', 'send_contact_card', { ok: cardRes.ok });
+                        }
+                      }
+                    } catch (extrasErr) {
+                      console.warn('[webchat-bot] extras de confirmación (no fatal):', extrasErr);
+                    }
 
                     // === Encolar automatizaciones de la cita (recordatorios + recovery + aviso interno) ===
                     // El bot ya CONFIRMA en el chat, así que NO encolamos 'confirmation' (sería duplicado).
@@ -5975,6 +6043,7 @@ REGRAS DE USO:
           postponeUntil: humanResult.postponeUntil,
           metadata: schedulingMetadata || null,
           scheduling_buttons: schedulingButtons || null,
+          scheduling_interactive: schedulingInteractive || null,
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

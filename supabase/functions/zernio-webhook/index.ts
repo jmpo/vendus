@@ -91,7 +91,10 @@ Deno.serve(async (req: Request) => {
     } else if (event.startsWith('whatsapp.template')) {
       await handleTemplateStatus(sb, conn, payload);
     } else if (event.startsWith('whatsapp.number') || event === 'whatsapp.automatic_event') {
-      // Estado del número/cuenta (suspensión, verificación, reactivación…) → estado + alerta.
+      // Estado del número (suspensión, verificación, reactivación…) → estado + alerta.
+      await handleNumberStatus(sb, conn, payload, event);
+    } else if (event === 'account.disconnected' || event === 'account.connected') {
+      // Estado de la CUENTA: si se desconecta se corta TODO el flujo de mensajes (fallo silencioso).
       await handleNumberStatus(sb, conn, payload, event);
     }
   } catch (e) {
@@ -350,7 +353,28 @@ async function handleInbound(sb: any, conn: any, payload: any) {
     // Lleva el scheduling_context en metadata para que el tap del cliente matchee
     // con el horario ofrecido. Botones SOLO en agendamientos (decisión del cliente).
     const sBtns = (botRes as any)?.scheduling_buttons;
-    if (sBtns && Array.isArray(sBtns.buttons) && sBtns.buttons.length > 0) {
+    const sList = (botRes as any)?.scheduling_interactive;
+    // MÁS de 3 horarios → lista interactiva nativa de WhatsApp (hasta 10 filas).
+    if (sList && sList.action) {
+      try {
+        await sb.functions.invoke('zernio-send', {
+          body: { connection_id: conn.id, organization_id: conn.organization_id, conversation_id: conversationId, to: fromNorm, type: 'typing' },
+        });
+        await new Promise((r) => setTimeout(r, 1500));
+      } catch { /* typing non-fatal */ }
+      try {
+        await sb.functions.invoke('zernio-send', {
+          body: {
+            connection_id: conn.id, organization_id: conn.organization_id, conversation_id: conversationId,
+            to: fromNorm, type: 'text', text: sList?.body?.text || '¿Qué horario te queda mejor?',
+            interactive: sList,
+            extra_metadata: (botRes as any)?.metadata?.scheduling_context
+              ? { scheduling_context: (botRes as any).metadata.scheduling_context }
+              : undefined,
+          },
+        });
+      } catch (listErr) { console.error('[zernio-webhook] zernio-send interactive list error', listErr); }
+    } else if (sBtns && Array.isArray(sBtns.buttons) && sBtns.buttons.length > 0) {
       try {
         await sb.functions.invoke('zernio-send', {
           body: { connection_id: conn.id, organization_id: conn.organization_id, conversation_id: conversationId, to: fromNorm, type: 'typing' },
@@ -493,6 +517,10 @@ const NUMBER_EVENT_INFO: Record<string, { status: string | null; critical: boole
   'whatsapp.number.reactivated':           { status: 'connected',             critical: false, title: '✅ Número de WhatsApp reactivado',        msg: 'Tu número volvió a estar activo. Ya podés enviar normalmente.' },
   'whatsapp.number.activated':             { status: 'connected',             critical: false, title: '✅ Número de WhatsApp activado',          msg: 'El número quedó activo y listo para enviar.' },
   'whatsapp.number.kyc_submitted':         { status: null,                    critical: false, title: 'ℹ️ KYC de WhatsApp enviado',             msg: 'Se envió la verificación KYC del número. Esperá la aprobación de Meta.' },
+  // Estado de la CUENTA en Zernio (distinto del número). Si se desconecta, NO entra ni sale
+  // ningún mensaje — es un fallo silencioso, hay que avisar al toque.
+  'account.disconnected':                  { status: 'disconnected',          critical: true,  title: '🚫 Cuenta de WhatsApp DESCONECTADA',     msg: 'La cuenta de WhatsApp se desconectó de Zernio. NO se envían ni reciben mensajes hasta reconectarla. Andá a Configuración → WhatsApp y reconectá.' },
+  'account.connected':                     { status: 'active',                critical: false, title: '✅ Cuenta de WhatsApp reconectada',      msg: 'La cuenta volvió a estar conectada. Los mensajes fluyen normalmente.' },
 };
 
 async function handleNumberStatus(sb: any, conn: any, payload: any, event: string) {
