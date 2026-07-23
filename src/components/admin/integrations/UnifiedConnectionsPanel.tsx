@@ -5,12 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Sparkles, Info } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { useEvolutionInstances } from '@/hooks/useEvolutionInstances';
 import { useMetaWAConnections } from '@/hooks/useMetaWhatsApp';
 import { useInstagramConnections } from '@/hooks/useInstagramConnections';
 import { useOrganizationEffectivePlan } from '@/hooks/useOrganizationPlan';
 import { supabase } from '@/integrations/supabase/client';
-import { EvolutionInstancesPanel } from './EvolutionInstancesPanel';
 import { MetaWhatsAppConnectionsPanel } from './MetaWhatsAppConnectionsPanel';
 import { InstagramConnectionsPanel } from './InstagramConnectionsPanel';
 import { ZernioConnectionsPanel } from './ZernioConnectionsPanel';
@@ -20,7 +18,6 @@ import { toast } from 'sonner';
 export function UnifiedConnectionsPanel() {
   const navigate = useNavigate();
   const { profile } = useAuth();
-  const { data: instances } = useEvolutionInstances();
   const { data: metaConns } = useMetaWAConnections();
   const { data: igConns } = useInstagramConnections();
   const { data: effectivePlan } = useOrganizationEffectivePlan(profile?.organization_id);
@@ -38,12 +35,11 @@ export function UnifiedConnectionsPanel() {
   });
 
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [openEvolutionCreate, setOpenEvolutionCreate] = useState(false);
   const [openMetaWizard, setOpenMetaWizard] = useState(false);
   const [openIgWizard, setOpenIgWizard] = useState(false);
   const [openZernio, setOpenZernio] = useState(false);
 
-  const used = (instances?.length ?? 0) + (metaConns?.length ?? 0) + (igConns?.length ?? 0) + (zernioConns?.length ?? 0);
+  const used = (metaConns?.length ?? 0) + (igConns?.length ?? 0) + (zernioConns?.length ?? 0);
   const limit = effectivePlan?.limits?.max_connections ?? 1;
   const limitReached = used >= limit;
 
@@ -52,8 +48,7 @@ export function UnifiedConnectionsPanel() {
       toast.error(`Llegaste al límite de ${limit} conexión(es). Hacé upgrade del plan.`);
       return;
     }
-    if (provider === 'evolution') setOpenEvolutionCreate(true);
-    else if (provider === 'meta_whatsapp') setOpenMetaWizard(true);
+    if (provider === 'meta_whatsapp') setOpenMetaWizard(true);
     else if (provider === 'meta_instagram') setOpenIgWizard(true);
     else if (provider === 'zernio') setOpenZernio(true);
   };
@@ -64,7 +59,7 @@ export function UnifiedConnectionsPanel() {
         <div>
           <h3 className="text-lg font-semibold">Tus Conexiones</h3>
           <p className="text-sm text-muted-foreground">
-            Gestioná todos los canales conectados (WhatsApp vía QR, WhatsApp Oficial Meta, Zernio e Instagram).
+            Gestioná todos los canales conectados (Zernio, WhatsApp Oficial Meta e Instagram).
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -93,12 +88,6 @@ export function UnifiedConnectionsPanel() {
           </p>
         </div>
       )}
-
-      <EvolutionInstancesPanel
-        hideHeader
-        openCreate={openEvolutionCreate}
-        onCloseCreate={() => setOpenEvolutionCreate(false)}
-      />
 
       <MetaWhatsAppConnectionsPanel
         hideHeader

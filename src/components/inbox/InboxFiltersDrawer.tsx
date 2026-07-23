@@ -11,7 +11,6 @@ import { useLeadTags } from '@/hooks/useLeadTags';
 import { useTeamMembers } from '@/hooks/useTeam';
 import { useProducts } from '@/hooks/useProducts';
 import { useAuth } from '@/hooks/useAuth';
-import { useEvolutionInstances } from '@/hooks/useEvolutionInstances';
 import { useMetaWAConnections } from '@/hooks/useMetaWhatsApp';
 import { useInstagramConnections } from '@/hooks/useInstagramConnections';
 import { useAllAgents } from '@/hooks/useProductAgents';
@@ -88,7 +87,6 @@ export function InboxFiltersDrawer({
   const { data: tags = [] } = useLeadTags();
   const { data: members = [] } = useTeamMembers(profile?.organization_id);
   const { data: products = [] } = useProducts();
-  const { data: evolutionInstances = [] } = useEvolutionInstances();
   const { data: metaConnections = [] } = useMetaWAConnections();
   const { data: instagramConnections = [] } = useInstagramConnections();
   const { data: allAgents = [] } = useAllAgents();
@@ -141,13 +139,8 @@ export function InboxFiltersDrawer({
     [sectors, filters.selectedSectorIds],
   );
 
-  // Lista unificada de conexões
+  // Lista unificada de conexões (Evolution fue eliminada: canal no oficial descontinuado)
   const connectionOptions = useMemo(() => {
-    const evo = (evolutionInstances || []).map((i: any) => ({
-      key: `evolution:${i.id}`,
-      label: ((i.metadata as any)?.display_name || i.name || 'WhatsApp') + (i.phone_number ? ` · +${i.phone_number}` : ''),
-      provider: 'evolution' as const,
-    }));
     const meta = (metaConnections || []).map((c: any) => ({
       key: `meta:${c.id}`,
       label: (c.display_name || 'WhatsApp Oficial') + (c.phone_number ? ` · +${c.phone_number}` : ''),
@@ -158,8 +151,8 @@ export function InboxFiltersDrawer({
       label: c.ig_username ? `@${c.ig_username}` : (c.display_name || 'Instagram'),
       provider: 'instagram' as const,
     }));
-    return [...evo, ...meta, ...ig];
-  }, [evolutionInstances, metaConnections, instagramConnections]);
+    return [...meta, ...ig];
+  }, [metaConnections, instagramConnections]);
 
   const renderHeader = (title: string, onBack?: () => void) => (
     <div className="flex items-center justify-between px-4 h-14 border-b border-border bg-background">

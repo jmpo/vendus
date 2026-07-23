@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Badge } from '@/components/ui/badge';
 import { Smartphone, ShieldCheck, Instagram, ChevronRight, Globe } from 'lucide-react';
 
-export type ConnectionProvider = 'evolution' | 'meta_whatsapp' | 'meta_instagram' | 'zernio';
+export type ConnectionProvider = 'meta_whatsapp' | 'meta_instagram' | 'zernio';
 
 interface Props {
   open: boolean;
@@ -62,19 +62,11 @@ export function NewConnectionDialog({ open, onClose, onSelect }: Props) {
 
         <div className="space-y-3 pt-2">
           <Option
-            icon={<Smartphone className="h-5 w-5 text-green-600" />}
-            iconBg="bg-green-500/10"
-            title="WhatsApp vía QR Code"
-            description="Evolution Go — conecta rápido escaneando el QR en el celular. Sin necesidad de Meta App."
-            badge={{ label: 'Recomendado', variant: 'default' }}
-            onClick={() => handle('evolution')}
-          />
-          <Option
             icon={<Globe className="h-5 w-5 text-sky-600" />}
             iconBg="bg-sky-500/10"
             title="WhatsApp Oficial vía Zernio"
             description="Número virtual oficial (partner de Meta). Solo pegás tu API key — sin QR, sin crear Meta App, sin riesgo de bloqueo. La forma más simple de tener WhatsApp oficial."
-            badge={{ label: 'Fácil', variant: 'default' }}
+            badge={{ label: 'Recomendado', variant: 'default' }}
             onClick={() => handle('zernio')}
           />
           <Option

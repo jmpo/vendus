@@ -13,7 +13,6 @@ import { EmailSettings } from '@/components/superadmin/EmailSettings';
 import { AuditLogs } from '@/components/superadmin/AuditLogs';
 import { SystemHealth } from '@/components/superadmin/SystemHealth';
 import { SalesLeadsManager } from '@/components/superadmin/SalesLeadsManager';
-import { EvolutionManager } from '@/components/superadmin/EvolutionManager';
 import { PlansManager } from '@/components/superadmin/PlansManager';
 import { PlatformAIKeysManager } from '@/components/superadmin/PlatformAIKeysManager';
 import { PlatformAIUsageDashboard } from '@/components/superadmin/PlatformAIUsageDashboard';
@@ -79,8 +78,6 @@ export default function SuperAdmin() {
         return <SystemHealth />;
       case 'sales-leads':
         return <SalesLeadsManager />;
-      case 'whatsapp':
-        return <EvolutionManager />;
       case 'help':
         return <HelpManager />;
       case 'releases':

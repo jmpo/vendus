@@ -139,7 +139,47 @@ export function CampaignWizard({
   const [previewLoading, setPreviewLoading] = useState(false);
   const [tagDialogOpen, setTagDialogOpen] = useState(false);
   // Modo de destinatarios: por filtros (segmentación) o contactos elegidos a mano.
-  const [recipientMode, setRecipientMode] = useState<'filters' | 'manual'>('filters');
+  const [recipientMode, setRecipientMode] = useState<'filters' | 'manual' | 'phones'>('filters');
+  // "Pegar números": permite escribir teléfonos sueltos (como el Broadcast de Zernio).
+  // Los que no existen como lead se crean solos, porque la campaña se arma con lead_ids.
+  const [phonesText, setPhonesText] = useState('');
+  const [phonesBusy, setPhonesBusy] = useState(false);
+
+  const procesarNumeros = async () => {
+    if (!orgId) return;
+    const crudos = phonesText.split(/[\n,;]+/).map((s) => s.trim()).filter(Boolean);
+    const numeros = Array.from(new Set(crudos.map((s) => s.replace(/[^\d]/g, '')).filter((s) => s.length >= 8)));
+    if (numeros.length === 0) { toast.error('No encontré números válidos (mínimo 8 dígitos)'); return; }
+
+    setPhonesBusy(true);
+    try {
+      // 1) ¿Cuáles ya existen como lead en esta organización?
+      const { data: existentes } = await supabase
+        .from('leads').select('id, phone').eq('organization_id', orgId).in('phone', numeros);
+      const mapa = new Map<string, string>();
+      (existentes ?? []).forEach((l: any) => { if (l.phone) mapa.set(String(l.phone).replace(/[^\d]/g, ''), l.id); });
+
+      // 2) Crear los que faltan
+      const faltantes = numeros.filter((n) => !mapa.has(n));
+      let creados = 0;
+      if (faltantes.length > 0) {
+        const { data: nuevos, error } = await supabase.from('leads').insert(
+          faltantes.map((n) => ({ organization_id: orgId, name: n, phone: n, source: 'campaña' })),
+        ).select('id, phone');
+        if (error) throw error;
+        (nuevos ?? []).forEach((l: any) => { if (l.phone) mapa.set(String(l.phone).replace(/[^\d]/g, ''), l.id); });
+        creados = nuevos?.length ?? 0;
+      }
+
+      const ids = numeros.map((n) => mapa.get(n)).filter(Boolean) as string[];
+      setForm((f) => ({ ...f, audience_filters: { ...f.audience_filters, lead_ids: ids } }));
+      toast.success(`${ids.length} destinatario(s) listos${creados ? ` · ${creados} contacto(s) nuevo(s)` : ''}`);
+    } catch (e: any) {
+      toast.error('No se pudieron procesar los números: ' + (e?.message ?? e));
+    } finally {
+      setPhonesBusy(false);
+    }
+  };
 
   const [form, setForm] = useState({
     name: '',
@@ -483,9 +523,40 @@ export function CampaignWizard({
             >
               Elegir contactos
             </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant={recipientMode === 'phones' ? 'default' : 'outline'}
+              onClick={() => setRecipientMode('phones')}
+            >
+              Pegar números
+            </Button>
           </div>
 
-          {recipientMode === 'manual' ? (
+          {recipientMode === 'phones' ? (
+            <div className="space-y-2">
+              <Textarea
+                rows={6}
+                placeholder={"595991733685\n595981234567\n..."}
+                value={phonesText}
+                onChange={(e) => setPhonesText(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">
+                Un número por línea (también acepta comas). Los que todavía no estén en tu base se
+                crean como contacto automáticamente.
+              </p>
+              <div className="flex items-center gap-3">
+                <Button type="button" size="sm" onClick={procesarNumeros} disabled={phonesBusy || !phonesText.trim()}>
+                  {phonesBusy ? 'Procesando…' : 'Cargar destinatarios'}
+                </Button>
+                {(form.audience_filters.lead_ids?.length ?? 0) > 0 && (
+                  <span className="text-xs text-emerald-600">
+                    {form.audience_filters.lead_ids!.length} destinatario(s) cargados ✓
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : recipientMode === 'manual' ? (
             <ContactPicker
               orgId={orgId}
               restrictAssignedTo={restrictAssignedTo}

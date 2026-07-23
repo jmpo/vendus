@@ -73,12 +73,13 @@ export async function sendWhatsAppForConversation(
     input.media = { ...input.media, url: normalizeImageUrlForWA(input.media.url) };
   }
 
-  // Prioridade: Meta (oficial) > Evolution > Zernio. Respeita a conexão de origem.
-  const provider: 'meta' | 'evolution' | 'zernio' | 'none' =
-    conversation.meta_connection_id ? 'meta'
-      : conversation.evolution_instance_id ? 'evolution'
-        : conversation.zernio_connection_id ? 'zernio'
-          : 'none';
+  // Prioridad: Zernio (canal oficial actual) > Meta. Evolution (API NO oficial) quedó DESACTIVADA:
+  // el número se bloqueaba y ya no se usa. Si una conversación vieja todavía tiene
+  // evolution_instance_id, se IGNORA a propósito y se envía por Zernio si hay conexión.
+  const provider: 'meta' | 'zernio' | 'none' =
+    conversation.zernio_connection_id ? 'zernio'
+      : conversation.meta_connection_id ? 'meta'
+        : 'none';
 
   console.log(
     `[wa-router] provider=${provider} conv=${conversation.id ?? '-'} ` +
@@ -160,45 +161,9 @@ export async function sendWhatsAppForConversation(
     return { ok: true, provider, raw: data };
   }
 
-  // provider === 'evolution'
-  let evoBody: Record<string, unknown>;
-  if (input.media) {
-    const m = input.media;
-    evoBody = {
-      organization_id: conversation.organization_id,
-      instance_id: conversation.evolution_instance_id,
-      type: 'media',
-      to,
-      payload: {
-        type: m.kind === 'sticker' ? 'image' : m.kind,
-        url: m.url,
-        mimetype: m.mime || (m.kind === 'audio' ? 'audio/ogg' : undefined),
-        fileName: m.filename || (m.kind === 'audio' ? `audio-${Date.now()}.ogg` : undefined),
-        caption: m.kind === 'audio' ? undefined : (input.text || m.caption || undefined),
-      },
-    };
-  } else {
-    evoBody = {
-      organization_id: conversation.organization_id,
-      instance_id: conversation.evolution_instance_id,
-      type: 'text',
-      to,
-      payload: { text: input.text ?? '' },
-    };
-  }
-
-  const { data, error } = await supabase.functions.invoke('evolution-send', { body: evoBody });
-  const ok = !error && (data as any)?.ok !== false;
-  if (!ok) {
-    console.error('[wa-router] evolution-send FAILED:', JSON.stringify({ error, data }).slice(0, 500));
-    return {
-      ok: false,
-      provider,
-      error: error?.message || (data as any)?.body || 'evolution-send failed',
-      raw: data,
-    };
-  }
-  return { ok: true, provider, raw: data };
+  // Evolution (API no oficial) fue ELIMINADA: sus funciones ya no existen y el canal se abandonó
+  // porque bloqueaban el número. Este punto es inalcanzable (provider ∈ zernio|meta|none).
+  return { ok: false, provider, error: 'NO_PROVIDER', message: 'Sin proveedor de WhatsApp disponible.' };
 }
 
 // Envío proativo a un teléfono SIN conversación explícita (booking, recordatorios, etc.).
@@ -229,10 +194,7 @@ export async function sendWhatsAppToPhone(opts: {
     if (data) conversation = data as WAConversation;
   }
 
-  if (
-    conversation &&
-    (conversation.meta_connection_id || conversation.evolution_instance_id || conversation.zernio_connection_id)
-  ) {
+  if (conversation && (conversation.zernio_connection_id || conversation.meta_connection_id)) {
     return sendWhatsAppForConversation({
       supabase,
       conversation,
@@ -242,20 +204,24 @@ export async function sendWhatsAppToPhone(opts: {
     });
   }
 
-  // Fallback legado: instancia Evolution configurada (mantém o comportamento atual).
-  if (opts.fallbackEvolutionInstanceId) {
+  // Sin conversación previa: usamos la conexión Zernio ACTIVA de la organización.
+  // (Antes acá caía a una instancia Evolution; ese canal ya no existe.)
+  const { data: zconn } = await supabase
+    .from('zernio_connections')
+    .select('id')
+    .eq('organization_id', organizationId)
+    .eq('status', 'active')
+    .limit(1)
+    .maybeSingle();
+  if (zconn?.id) {
     return sendWhatsAppForConversation({
       supabase,
-      conversation: {
-        organization_id: organizationId,
-        evolution_instance_id: opts.fallbackEvolutionInstanceId,
-        visitor_phone: phone,
-      },
+      conversation: { organization_id: organizationId, zernio_connection_id: zconn.id, visitor_phone: phone },
       to: phone,
       text: opts.text,
       media: opts.media,
     });
   }
 
-  return { ok: false, provider: 'none', error: 'NO_CONNECTION', message: 'Sin conversación ni instancia para enviar.' };
+  return { ok: false, provider: 'none', error: 'NO_CONNECTION', message: 'La organización no tiene una conexión de WhatsApp activa.' };
 }

@@ -35,7 +35,6 @@ const f = {
   SectorsManager: () => import('@/components/admin/sectors/SectorsManager').then(m => ({ default: m.SectorsManager })),
   PlanSelector: () => import('@/components/admin/plan/PlanSelector').then(m => ({ default: m.PlanSelector })),
   CaktoAdminPanel: () => import('@/components/admin/payments/CaktoAdminPanel').then(m => ({ default: m.CaktoAdminPanel })),
-  EvolutionInstancesPanel: () => import('@/components/admin/integrations/EvolutionInstancesPanel').then(m => ({ default: m.EvolutionInstancesPanel })),
   UnifiedConnectionsPanel: () => import('@/components/admin/integrations/UnifiedConnectionsPanel').then(m => ({ default: m.UnifiedConnectionsPanel })),
   TagsManager: () => import('@/components/admin/tags/TagsManager').then(m => ({ default: m.TagsManager })),
   BusinessHoursManager: () => import('@/components/admin/schedules/BusinessHoursManager').then(m => ({ default: m.BusinessHoursManager })),
@@ -78,7 +77,6 @@ const AgentRunTracesPanel = lazyWithRetry(f.AgentRunTracesPanel);
 const SectorsManager = lazyWithRetry(f.SectorsManager);
 const PlanSelector = lazyWithRetry(f.PlanSelector);
 const CaktoAdminPanel = lazyWithRetry(f.CaktoAdminPanel);
-const EvolutionInstancesPanel = lazyWithRetry(f.EvolutionInstancesPanel);
 const UnifiedConnectionsPanel = lazyWithRetry(f.UnifiedConnectionsPanel);
 const TagsManager = lazyWithRetry(f.TagsManager);
 const BusinessHoursManager = lazyWithRetry(f.BusinessHoursManager);

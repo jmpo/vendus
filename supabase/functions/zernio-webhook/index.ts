@@ -718,6 +718,34 @@ async function handleOutgoing(sb: any, conn: any, payload: any, event: string) {
     .neq('status', 'closed').order('last_message_at', { ascending: false }).limit(1).maybeSingle();
   if (!conv) return;
 
+  // ADOPCIÓN DE BROADCAST: las plantillas se envían por la API de Broadcasts, que NO devuelve
+  // un wamid por destinatario. Nuestra fila quedó sin id, así que el evento no la encuentra por
+  // los ids de arriba y se insertaría un DUPLICADO. La adoptamos: buscamos una plantilla saliente
+  // reciente de esta conversación enviada por broadcast y le pegamos el wamid.
+  {
+    const { data: pendiente } = await sb.from('webchat_messages')
+      .select('id, metadata')
+      .eq('conversation_id', conv.id)
+      .eq('direction', 'outbound')
+      .eq('message_type', 'template')
+      .is('metadata->>zernio_message_id', null)
+      .not('metadata->>zernio_broadcast_id', 'is', null)
+      .gte('created_at', new Date(Date.now() - 15 * 60 * 1000).toISOString())
+      .order('created_at', { ascending: false }).limit(1).maybeSingle();
+    if (pendiente) {
+      const meta = { ...((pendiente as any).metadata || {}), zernio_message_id: internalId || null, zernio_platform_message_id: platformId || null };
+      const patch: any = { delivery_status: status, metadata: meta };
+      if (status === 'failed') {
+        const { code, reason } = extractZernioError(payload, m);
+        patch.metadata = { ...meta, error: reason, error_code: code || null, failed_at: new Date().toISOString() };
+        if (code && ZERNIO_CRITICAL_ERRORS.has(code)) await notifyWhatsAppError(sb, conn, code, reason);
+      }
+      await sb.from('webchat_messages').update(patch).eq('id', (pendiente as any).id);
+      console.log('[zernio-webhook] plantilla de broadcast adoptada:', (pendiente as any).id, '→', status);
+      return;
+    }
+  }
+
   // Si llega como fallido (sin que lo tengamos), igual capturamos el motivo.
   let failMeta: Record<string, any> = {};
   if (status === 'failed') {

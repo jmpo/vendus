@@ -398,51 +398,9 @@ Deno.serve(async (req) => {
       }
     };
 
-    // === WhatsApp delivery via Evolution (provider único, sin fallback) ===
-    if (channel === "whatsapp" && phone && conv.evolution_instance_id && imageList.length > 0) {
-      // 1. Foto principal con caption completa
-      const okMain = await sendViaEvolution("image", imageList[0], caption);
-      if (okMain) {
-        delivered = true;
-        deliveryChannel = "evolution";
-        sentCounts.images++;
-
-        // 2. Fotos extras (hasta 2)
-        if (sendExtraImages) {
-          const extras = imageList.slice(1, 3);
-          for (const img of extras) {
-            await sleep(DELAY_MS);
-            const ok = await sendViaEvolution("image", img, "");
-            if (ok) sentCounts.images++;
-          }
-        }
-
-        // 3. Vídeo (1)
-        if (sendVideos && videos[0]) {
-          await sleep(DELAY_MS);
-          const ok = await sendViaEvolution("video", videos[0], `🎬 Vídeo: ${item.title}`);
-          if (ok) sentCounts.videos++;
-        }
-
-        // 4. Documento (1)
-        if (sendDocuments && documents[0]?.url) {
-          await sleep(DELAY_MS);
-          const doc = documents[0];
-          const ok = await sendViaEvolution(
-            "document",
-            doc.url,
-            "",
-            doc.name || `${item.title}.pdf`,
-          );
-          if (ok) sentCounts.documents++;
-        }
-      } else {
-        console.error(
-          "[send-catalog-item] FAILED to deliver via Evolution. error:",
-          lastProviderError,
-        );
-      }
-    } else if (
+    // Evolution (API no oficial) fue eliminada: antes tenía PRIORIDAD sobre Zernio acá, así que
+    // una conversación con instancia vieja mandaba por el canal bloqueado. Ahora todo va por Zernio/Meta.
+    if (
       channel === "whatsapp" && phone &&
       ((conv as any).meta_connection_id || (conv as any).zernio_connection_id) &&
       imageList.length > 0

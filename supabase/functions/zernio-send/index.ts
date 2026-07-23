@@ -39,6 +39,23 @@ async function zfetch(apiKey: string, path: string, body: unknown) {
   }
 }
 
+// profileId de Zernio: obligatorio para la API de Broadcasts (la única que puede enviar
+// plantillas con header de imagen). Se resuelve on-demand; solo se usa en envíos de plantilla.
+async function getProfileId(apiKey: string): Promise<string | null> {
+  try {
+    const r = await fetch(`${ZERNIO_BASE}/profiles`, { headers: { Authorization: `Bearer ${apiKey}` } });
+    if (!r.ok) return null;
+    const d = await r.json().catch(() => null);
+    const list = d?.profiles ?? d?.data ?? d ?? [];
+    if (!Array.isArray(list) || list.length === 0) return null;
+    const def = list.find((p: any) => p?.isDefault) ?? list[0];
+    return def?._id ?? def?.id ?? null;
+  } catch (e) {
+    console.error('[zernio-send] getProfileId falló:', String(e));
+    return null;
+  }
+}
+
 // Nuestro media.kind → attachmentType de Zernio
 function mapAttachmentType(kind?: string): string {
   switch (kind) {
@@ -100,25 +117,48 @@ Deno.serve(async (req: Request) => {
   const hasMedia = media && media.url && media.kind;
   let res: { ok: boolean; status: number; data: any };
   let zernioMsgId: string | null = null;
+  let zernioBroadcastId: string | null = null; // plantillas: id del broadcast (no hay wamid por destinatario)
 
   if (type === 'template' || (!zernioConvId && template)) {
-    // Iniciar/reenganchar con template
+    // ─── PLANTILLAS: se envían por BROADCASTS, no por /inbox/conversations ───
+    // /inbox/conversations solo acepta templateName/Language/Params y NO permite pasar la
+    // media del header → las plantillas con imagen fallaban con 131053 ("formato no soportado").
+    // La API de Broadcasts resuelve sola la media aprobada de la plantilla (verificado contra
+    // la API real: basta con { name, language }). Flujo de 3 pasos: crear → destinatarios → enviar.
     if (!template?.name || !template?.language) return json({ error: 'template.name y template.language requeridos' }, 400);
-    const tplBody = {
-      accountId,
-      participantId: phone,
-      templateName: template.name,
-      templateLanguage: template.language,
-      ...(template.params ? { templateParams: template.params } : {}),
-    };
-    console.log('[zernio-send] template →', JSON.stringify(tplBody));
-    res = await zfetch(apiKey, '/inbox/conversations', tplBody);
-    console.log('[zernio-send] template ← status', res.status, JSON.stringify(res.data).slice(0, 500));
-    zernioMsgId = res.data?.data?.messageId ?? null;
-    const newConvId = res.data?.data?.conversationId ?? null;
-    if (res.ok && newConvId && conversation_id) {
-      await sb.from('webchat_conversations').update({ zernio_conversation_id: newConvId }).eq('id', conversation_id);
-      zernioConvId = newConvId;
+
+    const profileId = await getProfileId(apiKey);
+    if (!profileId) {
+      res = { ok: false, status: 502, data: { error: 'No se pudo resolver el profileId de Zernio' } };
+    } else {
+      const nombre = `${template.name}-${Date.now()}`;
+      const crear = await zfetch(apiKey, '/broadcasts', {
+        profileId, accountId, platform: 'whatsapp', name: nombre,
+        template: { name: template.name, language: template.language },
+      });
+      const bId = crear.data?.broadcast?.id ?? crear.data?.data?.id ?? null;
+      console.log('[zernio-send] broadcast crear ←', crear.status, bId);
+
+      if (!crear.ok || !bId) {
+        res = { ok: false, status: crear.status, data: crear.data };
+      } else {
+        const dest = await zfetch(apiKey, `/broadcasts/${bId}/recipients`, { phones: [phone], useSegment: false });
+        console.log('[zernio-send] broadcast destinatarios ←', dest.status, JSON.stringify(dest.data).slice(0, 200));
+        if (!dest.ok || (dest.data?.added ?? 0) < 1) {
+          res = { ok: false, status: dest.status, data: { error: 'No se pudo agregar el destinatario', raw: dest.data } };
+        } else {
+          const env = await zfetch(apiKey, `/broadcasts/${bId}/send`, {});
+          console.log('[zernio-send] broadcast enviar ←', env.status, JSON.stringify(env.data).slice(0, 200));
+          const enviados = Number(env.data?.sent ?? 0);
+          res = enviados > 0
+            ? { ok: true, status: env.status, data: { ...env.data, broadcastId: bId } }
+            : { ok: false, status: env.status, data: { error: `Broadcast sin envíos (failed: ${env.data?.failed ?? '?'})`, raw: env.data } };
+          // Broadcasts no devuelve un wamid por destinatario; guardamos el id del broadcast
+          // para poder rastrearlo (el webhook de entrega espeja el mensaje).
+          zernioMsgId = null;
+          zernioBroadcastId = bId;
+        }
+      }
     }
   } else if (zernioConvId) {
     // Ventana 24h: fuera de ella, WhatsApp oficial NO permite mensajes libres → exige template.
@@ -175,6 +215,7 @@ Deno.serve(async (req: Request) => {
       metadata: {
         provider: 'zernio',
         zernio_message_id: zernioMsgId,
+        ...(zernioBroadcastId ? { zernio_broadcast_id: zernioBroadcastId } : {}),
         ...(hasMedia ? { media } : {}),
         ...(template ? { template } : {}),
         ...(buttons ? { buttons } : {}),
