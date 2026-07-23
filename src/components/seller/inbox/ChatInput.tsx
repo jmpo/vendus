@@ -224,7 +224,8 @@ export function ChatInput({
     const file = new File([blob], `audio-${Date.now()}.mp3`, { type: blob.type || 'audio/mpeg' });
     try {
       const { media } = await upload(file, { kind: 'audio', durationMs });
-      onSend('', media);
+      // ptt = nota de voz: WhatsApp la muestra como burbuja de voz (con velocidad 1x/1.5x/2x)
+      onSend('', { ...media, ptt: true });
     } catch {
       // toast no useEffect
     }
@@ -445,52 +446,43 @@ export function ChatInput({
                 <TooltipContent>Programar mensaje</TooltipContent>
               </Tooltip>
 
+              {/* Mic SIEMPRE visible (como Zernio) — antes desaparecía al escribir texto */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => setIsRecording(true)}
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                    disabled={composerDisabled || !!pending}
+                  >
+                    <Mic className="h-5 w-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Grabar nota de voz</TooltipContent>
+              </Tooltip>
+
               <AnimatePresence mode="wait" initial={false}>
-                {canSend ? (
-                  <motion.div
-                    key="send"
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.8, opacity: 0 }}
-                    transition={{ duration: 0.15 }}
+                <motion.div
+                  key="send"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.8, opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <Button
+                    onClick={handleSend}
+                    disabled={composerDisabled || (!pending && !input.trim())}
+                    size="icon"
+                    className="h-10 w-10 rounded-full shadow-sm"
                   >
-                    <Button
-                      onClick={handleSend}
-                      disabled={composerDisabled || (!pending && !input.trim())}
-                      size="icon"
-                      className="h-10 w-10 rounded-full shadow-sm"
-                    >
-                      {isSending || isUploading ? (
-                        <Loader2 className="h-5 w-5 animate-spin" />
-                      ) : (
-                        <Send className="h-5 w-5" />
-                      )}
-                    </Button>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="mic"
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.8, opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          onClick={() => setIsRecording(true)}
-                          variant="secondary"
-                          size="icon"
-                          className="h-10 w-10 rounded-full"
-                          disabled={composerDisabled}
-                        >
-                          <Mic className="h-5 w-5" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Gravar audio</TooltipContent>
-                    </Tooltip>
-                  </motion.div>
-                )}
+                    {isSending || isUploading ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <Send className="h-5 w-5" />
+                    )}
+                  </Button>
+                </motion.div>
               </AnimatePresence>
             </div>
           </div>

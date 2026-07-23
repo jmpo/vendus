@@ -331,6 +331,9 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
           evolution_instance_id: conv.evolution_instance_id || null,
           meta_connection_id: conv.meta_connection_id || null,
           instagram_connection_id: conv.instagram_connection_id || null,
+          // Para "Atendiste hace poco" en la pestaña Agentes
+          accepted_by: (conv as any).accepted_by || null,
+          accepted_at: (conv as any).accepted_at || null,
         } as any;
       }),
     [conversationsData, productNameById],

@@ -12,7 +12,8 @@ import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { previewWithMedia } from '@/lib/messageFormat';
 import { format, isToday, isYesterday, differenceInDays } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
+import { useAuth } from '@/hooks/useAuth';
 
 export interface Conversation {
   id: string;
@@ -39,6 +40,9 @@ export interface Conversation {
   evolution_instance_id?: string | null;
   meta_connection_id?: string | null;
   instagram_connection_id?: string | null;
+  /** Último humano que atendió (no se limpia al volver al bot) — permite "atendidas por vos". */
+  accepted_by?: string | null;
+  accepted_at?: string | null;
 }
 
 interface ConversationListProps {
@@ -109,7 +113,17 @@ export function ConversationList({
 }: ConversationListProps) {
   const [internalSearch, setInternalSearch] = useState('');
   const [internalTab, setInternalTab] = useState<StatusTab>('attending');
+  const { user } = useAuth();
   const activeTab = activeTabProp ?? internalTab;
+
+  // "Atendida por vos hace poco": el humano la atendió (accepted_by no se limpia al
+  // volver al bot) en las últimas 48h. En la pestaña Agentes van primero, para que
+  // las últimas personas con las que hablaste no queden enterradas bajo campañas.
+  const isMineRecent = (c: Conversation) =>
+    !!user?.id &&
+    c.accepted_by === user.id &&
+    !!c.accepted_at &&
+    Date.now() - new Date(c.accepted_at).getTime() < 48 * 3600 * 1000;
   const setActiveTab = (t: StatusTab) => {
     if (onTabChange) onTabChange(t);
     else setInternalTab(t);
@@ -198,14 +212,22 @@ export function ConversationList({
       );
     }
 
+    // Orden puro por recencia (estilo WhatsApp/Zernio): la última conversación SIEMPRE
+    // arriba. Antes los no-leídos saltaban primero y rompían el orden natural.
+    // En la pestaña Agentes, las que vos atendiste hace poco van antes que el resto
+    // (una campaña masiva no debe enterrar a la persona con la que acabás de hablar).
     return [...filtered].sort((a, b) => {
-      if (a.unread_count > 0 && b.unread_count === 0) return -1;
-      if (a.unread_count === 0 && b.unread_count > 0) return 1;
+      if (activeTab === 'agents') {
+        const mineA = isMineRecent(a) ? 1 : 0;
+        const mineB = isMineRecent(b) ? 1 : 0;
+        if (mineA !== mineB) return mineB - mineA;
+      }
       const dateA = a.last_message_at ? new Date(a.last_message_at).getTime() : 0;
       const dateB = b.last_message_at ? new Date(b.last_message_at).getTime() : 0;
       return dateB - dateA;
     });
-  }, [dedupedConversations, search]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dedupedConversations, search, activeTab, user?.id]);
 
   const getInitials = (name: string | null, phone: string | null) => {
     if (name) return name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase();
@@ -220,9 +242,9 @@ export function ConversationList({
     const d = new Date(date);
     if (Number.isNaN(d.getTime())) return '';
     if (isToday(d)) return format(d, 'HH:mm');
-    if (isYesterday(d)) return 'Ontem';
+    if (isYesterday(d)) return 'Ayer';
     const diff = Math.abs(differenceInDays(new Date(), d));
-    if (diff < 7) return format(d, 'EEE HH:mm', { locale: ptBR });
+    if (diff < 7) return format(d, 'EEE HH:mm', { locale: es });
     return format(d, 'dd/MM/yyyy');
   };
 
@@ -344,7 +366,19 @@ export function ConversationList({
           </div>
         ) : (
           <div className="bg-background">
-            {filteredConversations.map((conv) => {
+            {filteredConversations.map((conv, idx) => {
+              // Separadores solo en la pestaña Agentes: "atendidas por vos" arriba, resto abajo.
+              const mine = activeTab === 'agents' && isMineRecent(conv);
+              const prev = idx > 0 ? filteredConversations[idx - 1] : null;
+              const prevMine = prev ? activeTab === 'agents' && isMineRecent(prev) : null;
+              const groupHeader =
+                activeTab !== 'agents'
+                  ? null
+                  : idx === 0 && mine
+                  ? 'Atendiste hace poco'
+                  : (idx === 0 && !mine) || (prevMine && !mine)
+                  ? 'Con el agente IA'
+                  : null;
               const provider = resolveProvider(conv);
               const channelLabel = PROVIDER_LABEL[provider] ?? conv.channel;
               const channelClass =
@@ -359,8 +393,13 @@ export function ConversationList({
                   : 'bg-primary/10 text-primary border-primary/30';
               const preview = previewWithMedia(conv.last_message, conv.last_message_metadata, 60);
               return (
+              <div key={conv.id}>
+              {groupHeader && (
+                <div className="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 bg-muted/20">
+                  {groupHeader}
+                </div>
+              )}
               <button
-                key={conv.id}
                 onClick={() => onSelect(conv)}
                 className={cn(
                   'w-full text-left px-3 py-3 transition-all border-b border-border/30 relative',
@@ -509,6 +548,7 @@ export function ConversationList({
                   </div>
                 </div>
               </button>
+              </div>
               );
             })}
           </div>

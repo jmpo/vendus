@@ -87,7 +87,17 @@ export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderPr
         setIsStarting(false);
       } catch (e: any) {
         if (cancelled) return;
-        setError(e?.message || 'Permiso de micrófono denegado.');
+        // Mensajes accionables: la mayoría de los fallos acá son de permiso del navegador.
+        const name = e?.name || '';
+        const msg =
+          name === 'NotAllowedError' || name === 'SecurityError'
+            ? 'Micrófono bloqueado. Hacé clic en el candado 🔒 de la barra de direcciones → Micrófono → Permitir, y volvé a intentar.'
+            : name === 'NotFoundError'
+              ? 'No se encontró ningún micrófono en este equipo.'
+              : name === 'NotReadableError'
+                ? 'El micrófono está siendo usado por otra aplicación.'
+                : e?.message || 'No se pudo acceder al micrófono.';
+        setError(msg);
         setIsStarting(false);
       }
     })();

@@ -17,6 +17,8 @@ export interface MediaPayload {
   height?: number | null;
   caption?: string | null;
   thumbnail_url?: string | null;
+  /** true = nota de voz (push-to-talk). WhatsApp la muestra como burbuja de voz, no como archivo. */
+  ptt?: boolean | null;
 }
 
 interface MediaAttachmentProps {
