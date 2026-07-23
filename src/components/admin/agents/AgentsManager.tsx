@@ -32,7 +32,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Bot, Globe, LayoutGrid, Network, Package, Plus, Search, Sparkles, Upload } from 'lucide-react';
+import { Bot, Globe, LayoutGrid, Network, Package, Plus, Search, Sparkles, Upload, PauseCircle } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { useAiMasterSwitch } from '@/hooks/useAiMasterSwitch';
 import { AgentImportModal } from '@/components/admin/agents/AgentImportModal';
 import { AgentCard } from '@/components/admin/agents/AgentCard';
 import { AgentEditor } from '@/components/admin/agents/AgentEditor';
@@ -43,6 +45,7 @@ import { GitBranch } from 'lucide-react';
 import { AGENT_TYPE_LABELS, type AgentType, type ProductAgent } from '@/types/agents';
 
 export function AgentsManager() {
+  const { aiEnabled, setAiEnabled, isToggling } = useAiMasterSwitch();
   const { data: products, isLoading: productsLoading } = useProducts();
   const { data: agents, isLoading: agentsLoading } = useAllAgents();
   const createAgent = useCreateAgent();
@@ -259,6 +262,44 @@ export function AgentsManager() {
             <Plus className="h-4 w-4 mr-2" />
             Crear agente
           </Button>
+        </div>
+      </div>
+
+      {/* Interruptor MAESTRO: pausa la IA en TODA la organización, sin tocar cada agente. */}
+      <div
+        className={
+          'rounded-xl border p-4 flex items-start justify-between gap-4 flex-wrap ' +
+          (aiEnabled ? 'border-border bg-muted/30' : 'border-amber-500/40 bg-amber-500/10')
+        }
+      >
+        <div className="flex items-start gap-3">
+          <div
+            className={
+              'h-10 w-10 rounded-lg flex items-center justify-center shrink-0 ' +
+              (aiEnabled ? 'bg-emerald-500/15 text-emerald-600' : 'bg-amber-500/20 text-amber-600')
+            }
+          >
+            {aiEnabled ? <Bot className="h-5 w-5" /> : <PauseCircle className="h-5 w-5" />}
+          </div>
+          <div>
+            <p className="font-semibold text-sm">
+              {aiEnabled ? 'IA activa' : '⏸️ IA PAUSADA en toda la organización'}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5 max-w-2xl">
+              {aiEnabled
+                ? 'Los agentes responden normalmente. Usá este interruptor para pausar TODO de golpe (por ejemplo, si la IA está contestando mal).'
+                : 'Ningún agente está respondiendo. Los mensajes que lleguen quedan en el inbox esperando atención humana. La configuración de cada agente se mantiene intacta.'}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-xs text-muted-foreground">{aiEnabled ? 'Activa' : 'Pausada'}</span>
+          <Switch
+            checked={aiEnabled}
+            disabled={isToggling}
+            onCheckedChange={(v) => setAiEnabled(v)}
+            className="data-[state=checked]:bg-success"
+          />
         </div>
       </div>
 

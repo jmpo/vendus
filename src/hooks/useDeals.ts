@@ -8,10 +8,12 @@ export interface Deal {
   seller_id: string;
   organization_id: string;
   deal_value: number;
-  status: 'won' | 'lost' | 'cancelled';
+  /** `open` = oportunidad en curso dentro del pipeline. El resto son cierres. */
+  status: 'open' | 'won' | 'lost' | 'cancelled';
   notes: string | null;
   plan_name: string | null;
-  closed_at: string;
+  /** Sólo se completa al cerrar el negocio; en las abiertas es null. */
+  closed_at: string | null;
   created_at: string;
   updated_at: string;
   leads?: {
@@ -35,7 +37,8 @@ export function useDeals(filters?: { productId?: string; sellerId?: string; stat
       let query = supabase
         .from('deals')
         .select(`*, leads (name, company, email), products:product_id (name)`)
-        .order('closed_at', { ascending: false });
+        // Ordenamos por created_at: las oportunidades abiertas no tienen closed_at.
+        .order('created_at', { ascending: false });
 
       if (filters?.productId) {
         query = query.eq('product_id', filters.productId);
@@ -118,17 +121,20 @@ export function useCreateDeal() {
 
       if (dealError) throw dealError;
 
-      // Calcular comisión usando a rol do banco
-      const { error: commissionError } = await supabase.rpc('calculate_commission', {
-        p_deal_id: newDeal.id,
-        p_deal_value: deal.deal_value,
-        p_product_id: deal.product_id,
-        p_seller_id: deal.seller_id,
-        p_organization_id: deal.organization_id
-      });
+      // La comisión se genera recién cuando el negocio se gana.
+      // Una oportunidad abierta no debe ensuciar los reportes de comisiones.
+      if (deal.status === 'won') {
+        const { error: commissionError } = await supabase.rpc('calculate_commission', {
+          p_deal_id: newDeal.id,
+          p_deal_value: deal.deal_value,
+          p_product_id: deal.product_id,
+          p_seller_id: deal.seller_id,
+          p_organization_id: deal.organization_id
+        });
 
-      if (commissionError) {
-        console.error('Error calculating commission:', commissionError);
+        if (commissionError) {
+          console.error('Error calculating commission:', commissionError);
+        }
       }
 
       return newDeal;
@@ -147,14 +153,32 @@ export function useUpdateDeal() {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<Deal> & { id: string }) => {
+      const cierra = updates.status && updates.status !== 'open';
+      const payload: Record<string, unknown> = { ...updates };
+      // Al cerrar el negocio dejamos la fecha real de cierre.
+      if (cierra && !updates.closed_at) payload.closed_at = new Date().toISOString();
+
       const { data, error } = await supabase
         .from('deals')
-        .update(updates)
+        .update(payload as any)
         .eq('id', id)
         .select()
         .single();
 
       if (error) throw error;
+
+      // La comisión se calcula acá: es el momento en que el negocio pasa a ganado.
+      if (updates.status === 'won') {
+        const { error: commissionError } = await supabase.rpc('calculate_commission', {
+          p_deal_id: data.id,
+          p_deal_value: Number(data.deal_value),
+          p_product_id: data.product_id,
+          p_seller_id: data.seller_id,
+          p_organization_id: data.organization_id
+        });
+        if (commissionError) console.error('Error calculating commission:', commissionError);
+      }
+
       return data;
     },
     onSuccess: () => {

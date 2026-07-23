@@ -4,7 +4,7 @@
 // a partir de una conversación de Vendus.
 //   POST https://zernio.com/api/v1/whatsapp/conversions
 // eventName ∈ LeadSubmitted | Purchase | AddToCart | InitiateCheckout | ViewContent
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { decryptSecret } from '../_shared/meta-crypto.ts';
 
 const ZERNIO_BASE = 'https://zernio.com/api/v1';

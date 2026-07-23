@@ -419,9 +419,11 @@ export function useSuperAdminStats() {
         .from('leads')
         .select('*', { count: 'exact', head: true });
 
+      // Sólo negocios ganados: las oportunidades abiertas todavía no son facturación.
       const { data: deals } = await supabase
         .from('deals')
-        .select('deal_value');
+        .select('deal_value')
+        .eq('status', 'won');
       const totalDealsValue = deals?.reduce((sum, d) => sum + (Number(d.deal_value) || 0), 0) || 0;
 
       // Distribución dinâmica baseada nos planes reais registrados

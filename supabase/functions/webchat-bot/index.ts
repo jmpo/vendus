@@ -592,6 +592,31 @@ serve(async (req) => {
     console.log('[webchat-bot] Visitor name:', body.visitor_name);
     console.log('[webchat-bot] Flow context:', body.flow_context);
 
+    // ═══ INTERRUPTOR MAESTRO DE IA ═══
+    // Si la organización tiene la IA PAUSADA, salimos en SILENCIO: 200 con chunks vacíos.
+    // Así el webhook no envía nada al cliente y NO se generan errores 5xx (que dispararían
+    // alertas falsas). La conversación queda en el inbox para que la atienda una persona.
+    if (body.conversation_id && !body.is_test) {
+      try {
+        const { data: convOrg } = await supabase
+          .from('webchat_conversations').select('organization_id').eq('id', body.conversation_id).maybeSingle();
+        if (convOrg?.organization_id) {
+          const { data: orgAi } = await supabase
+            .from('organizations').select('ai_enabled').eq('id', convOrg.organization_id).maybeSingle();
+          if (orgAi && (orgAi as any).ai_enabled === false) {
+            console.log('[webchat-bot] ⏸️ IA PAUSADA para la organización — no se responde.');
+            return new Response(
+              JSON.stringify({ chunks: [], ai_paused: true, message: null }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+            );
+          }
+        }
+      } catch (e) {
+        // Si el chequeo falla NO bloqueamos la atención: seguimos como siempre.
+        console.warn('[webchat-bot] chequeo de IA pausada falló (no bloqueante):', e);
+      }
+    }
+
     // Required: conversation_id + message. Agent is optional here because the
     // orchestrator may take over and resolve the specialist agent downstream.
     if (!body.conversation_id || !body.message) {

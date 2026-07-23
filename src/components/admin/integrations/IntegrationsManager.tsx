@@ -20,7 +20,6 @@ import { cn } from '@/lib/utils';
 import { integrationsCatalog, type IntegrationItem } from '@/config/integrationsCatalog';
 import { IntegrationCard } from './IntegrationCard';
 import { IntegrationConfigDrawer } from './IntegrationConfigDrawer';
-import { ConversionRulesManager } from './ConversionRulesManager';
 import { useIntegrations } from '@/hooks/useIntegrations';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
@@ -64,9 +63,7 @@ export function IntegrationsManager() {
     if (item.alwaysActive) return true;
     if (configuredMap[item.id]) return true;
     if (item.id === 'whatsapp' && configuredMap['whatsapp_provider']) return true;
-    if (item.id === 'botconversa' && configuredMap['whatsapp_provider']) return true;
     if (item.id === 'email-config' && configuredMap['email_config']) return true;
-    if (item.id === 'sankhya' && configuredMap['sankhya']) return true;
     if (item.id === 'google-calendar' && configuredMap['google_calendar']) return true;
     if (item.id === 'facebook' && configuredMap['facebook_leads']) return true;
     return false;
@@ -212,9 +209,6 @@ export function IntegrationsManager() {
           </Badge>
         </div>
       </div>
-
-      {/* Eventos de conversión configurables (Pixel/Ads) */}
-      <ConversionRulesManager />
 
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
         {/* Desktop sidebar */}

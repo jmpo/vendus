@@ -12,8 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Plus } from 'lucide-react';
-import { format, addDays } from 'date-fns';
+import { Plus, ChevronDown } from 'lucide-react';
 
 interface DealModalProps {
   isOpen: boolean;
@@ -24,11 +23,11 @@ interface DealModalProps {
   organizationId: string;
 }
 
-const formatCurrency = (value: string) => {
-  const numericValue = value.replace(/[^\d]/g, '');
-  if (!numericValue) return '';
-  const number = parseInt(numericValue) / 100;
-  return number.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+/** Solo dígitos, mostrados con separador de miles. El valor es opcional. */
+const formatearMonto = (value: string) => {
+  const digitos = value.replace(/\D/g, '');
+  if (!digitos) return '';
+  return Number(digitos).toLocaleString('es-PY');
 };
 
 export function DealModal({ isOpen, onClose, leadId, leadName, productId, organizationId }: DealModalProps) {
@@ -37,12 +36,12 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
   const queryClient = useQueryClient();
   const { data: products = [] } = useProducts();
 
-  const [title, setTitle] = useState('');
-  const [dealValue, setDealValue] = useState('');
+  const [monto, setMonto] = useState('');
   const [pipelineId, setPipelineId] = useState<string>(productId);
   const [stageId, setStageId] = useState<string>('');
-  const [closeDate, setCloseDate] = useState(format(addDays(new Date(), 30), 'yyyy-MM-dd'));
-  const [description, setDescription] = useState('');
+  const [titulo, setTitulo] = useState('');
+  const [notas, setNotas] = useState('');
+  const [verDetalles, setVerDetalles] = useState(false);
 
   const { data: stages = [] } = useProductPipelineStages(pipelineId);
 
@@ -53,14 +52,14 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
 
   useEffect(() => {
     if (isOpen) {
-      setTitle(`Oportunidade para ${leadName}`);
-      setDealValue('');
+      setMonto('');
       setPipelineId(productId);
       setStageId('');
-      setCloseDate(format(addDays(new Date(), 30), 'yyyy-MM-dd'));
-      setDescription('');
+      setTitulo('');
+      setNotas('');
+      setVerDetalles(false);
     }
-  }, [isOpen, leadName, productId]);
+  }, [isOpen, productId]);
 
   useEffect(() => {
     if (stages.length > 0 && !stages.some((s) => s.id === stageId)) {
@@ -69,20 +68,14 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
   }, [stages, stageId]);
 
   const handleSubmit = async () => {
-    if (!title.trim()) {
-      toast.error('Informe o título da oportunidade');
-      return;
-    }
-    const normalized = dealValue.replace(/\./g, '').replace(',', '.');
-    const value = parseFloat(normalized.replace(/[^\d.-]/g, ''));
-    if (!value || value <= 0) {
-      toast.error('Digite um valor válido');
-      return;
-    }
     if (!pipelineId) {
-      toast.error('Seleccioná um pipeline');
+      toast.error('Elegí un pipeline');
       return;
     }
+
+    // Todo lo demás es opcional: si no cargan monto ni título usamos valores por defecto.
+    const valor = Number(monto.replace(/\D/g, '')) || 0;
+    const nombre = titulo.trim() || `Oportunidad · ${leadName}`;
 
     try {
       await createDeal.mutateAsync({
@@ -90,11 +83,11 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
         product_id: pipelineId,
         seller_id: user?.id || '',
         organization_id: organizationId,
-        deal_value: value,
-        status: 'open' as any,
-        plan_name: title.trim(),
-        notes: description.trim() || null,
-        closed_at: closeDate ? new Date(closeDate).toISOString() : null,
+        deal_value: valor,
+        status: 'open',
+        plan_name: nombre,
+        notes: notas.trim() || null,
+        closed_at: null,
       });
 
       if (stageId) {
@@ -104,52 +97,38 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
         queryClient.invalidateQueries({ queryKey: ['leads'] });
       }
 
-      toast.success('Oportunidade criada');
+      toast.success('Oportunidad creada');
       onClose();
-    } catch {
-      toast.error('Error al crear la oportunidad');
+    } catch (e: any) {
+      // Antes esto era un `catch {}` mudo y escondía la causa real del fallo.
+      const detalle = e?.message || e?.error_description || String(e);
+      console.error('[DealModal] error al crear la oportunidad:', e);
+      toast.error('No se pudo crear la oportunidad', { description: detalle });
     }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[640px]">
+      <DialogContent className="sm:max-w-[460px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Plus className="h-5 w-5 text-primary" />
-            Nova Oportunidade
+            Nueva oportunidad
           </DialogTitle>
         </DialogHeader>
 
-        <div className="text-sm text-muted-foreground">Contato: <span className="text-foreground">{leadName}</span></div>
+        <div className="text-sm text-muted-foreground">
+          Contacto: <span className="text-foreground font-medium">{leadName}</span>
+        </div>
 
-        <div className="grid gap-4 py-2">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="deal-title">Título da Oportunidade</Label>
-              <Input
-                id="deal-title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="deal-value">Valor</Label>
-              <Input
-                id="deal-value"
-                placeholder="R$"
-                value={dealValue}
-                onChange={(e) => setDealValue(formatCurrency(e.target.value))}
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid gap-4 py-1">
+          {/* Pipeline: solo se muestra si hay más de uno para elegir */}
+          {orgProducts.length > 1 && (
             <div className="space-y-2">
               <Label>Pipeline</Label>
               <Select value={pipelineId} onValueChange={setPipelineId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Seleccioná o pipeline" />
+                  <SelectValue placeholder="Elegí el pipeline" />
                 </SelectTrigger>
                 <SelectContent>
                   {orgProducts.map((p) => (
@@ -158,46 +137,72 @@ export function DealModal({ isOpen, onClose, leadId, leadName, productId, organi
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label>Estágio</Label>
-              <Select value={stageId} onValueChange={setStageId} disabled={stages.length === 0}>
-                <SelectTrigger>
-                  <SelectValue placeholder={stages.length === 0 ? 'Sem estágios' : 'Seleccioná o estágio'} />
-                </SelectTrigger>
-                <SelectContent>
-                  {stages.map((s) => (
-                    <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          )}
 
-          <div className="space-y-2 sm:w-1/2">
-            <Label htmlFor="deal-close">Data prevista de fechamento</Label>
-            <Input
-              id="deal-close"
-              type="date"
-              value={closeDate}
-              onChange={(e) => setCloseDate(e.target.value)}
-            />
+          <div className="space-y-2">
+            <Label>Etapa</Label>
+            <Select value={stageId} onValueChange={setStageId} disabled={stages.length === 0}>
+              <SelectTrigger>
+                <SelectValue placeholder={stages.length === 0 ? 'Este pipeline no tiene etapas' : 'Elegí la etapa'} />
+              </SelectTrigger>
+              <SelectContent>
+                {stages.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="deal-desc">Descrição</Label>
-            <Textarea
-              id="deal-desc"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={3}
+            <Label htmlFor="deal-monto">
+              Valor estimado <span className="text-muted-foreground font-normal">(opcional)</span>
+            </Label>
+            <Input
+              id="deal-monto"
+              inputMode="numeric"
+              placeholder="Ej: 150.000"
+              value={monto}
+              onChange={(e) => setMonto(formatearMonto(e.target.value))}
             />
           </div>
+
+          {!verDetalles ? (
+            <button
+              type="button"
+              onClick={() => setVerDetalles(true)}
+              className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground w-fit"
+            >
+              <ChevronDown className="h-3.5 w-3.5" />
+              Agregar título y notas
+            </button>
+          ) : (
+            <div className="grid gap-4 border-t pt-4">
+              <div className="space-y-2">
+                <Label htmlFor="deal-titulo">Título</Label>
+                <Input
+                  id="deal-titulo"
+                  placeholder={`Oportunidad · ${leadName}`}
+                  value={titulo}
+                  onChange={(e) => setTitulo(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="deal-notas">Notas</Label>
+                <Textarea
+                  id="deal-notas"
+                  rows={3}
+                  value={notas}
+                  onChange={(e) => setNotas(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         <DialogFooter>
           <Button variant="ghost" onClick={onClose}>Cancelar</Button>
           <Button onClick={handleSubmit} disabled={createDeal.isPending}>
-            Guardar
+            {createDeal.isPending ? 'Creando…' : 'Crear oportunidad'}
           </Button>
         </DialogFooter>
       </DialogContent>

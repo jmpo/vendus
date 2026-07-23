@@ -3,7 +3,7 @@
 //   POST https://graph.facebook.com/v21.0/{dataset_id}/events
 // Requiere: dataset_id configurado en la conexión + ctwa_clid capturado en la conversación
 // (lo setea meta-whatsapp-webhook desde el referral del primer mensaje tras el click del anuncio).
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { decryptSecret } from '../_shared/meta-crypto.ts';
 
 const GRAPH = 'https://graph.facebook.com/v21.0';

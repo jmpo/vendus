@@ -184,7 +184,10 @@ async function handleInbound(sb: any, conn: any, payload: any) {
           organization_id: conn.organization_id,
           name: contactName || fromNorm,
           phone: fromNorm,
-          phone_normalized: fromNorm, // necesario para el UNIQUE (org, phone_normalized) → dedup real
+          // OJO: phone_normalized es una columna GENERADA (Postgres la calcula desde phone).
+          // Escribirla explícitamente hace fallar TODO el insert (error 428C9) → durante mucho
+          // tiempo ningún lead se creó y las conversaciones quedaban sin lead (sin etiquetas,
+          // sin pipeline, sin datos). NO agregarla acá.
           source: 'whatsapp',
           whatsapp_opt_in: true, // nos escribió → opted-in (habilita follow-up/campañas)
         })

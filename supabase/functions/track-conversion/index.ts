@@ -5,7 +5,7 @@
 //   - Meta    → meta-conversion   (CAPI nativa: graph.facebook.com/{dataset}/events)
 // Acepta conversation_id directo o lead_id (resuelve su conversación de WhatsApp).
 // Desplegar con --no-verify-jwt; valida un secret compartido para llamadas desde DB triggers.
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
