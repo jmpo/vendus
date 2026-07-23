@@ -1,7 +1,8 @@
 // human-handback-cron: devuelve a la IA las conversaciones que quedaron en atención
 // humana SIN actividad por más de IDLE_MINUTES, para que ninguna atención quede colgada.
 // Avisa al vendedor asignado que la IA retomó. Corre por cron cada 5 min.
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// handback_idle_minutes = 0 → la org DESACTIVÓ la devolución automática (se saltea).
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -42,13 +43,19 @@ Deno.serve(async (req) => {
       .from("organizations")
       .select("id, handback_idle_minutes")
       .in("id", orgIds);
-    for (const o of orgs || []) idleByOrg.set(o.id, Number(o.handback_idle_minutes) || DEFAULT_IDLE_MINUTES);
+    for (const o of orgs || []) {
+      const raw = o.handback_idle_minutes;
+      // null → default 30. 0 explícito → DESACTIVADO (antes el `|| default` lo pisaba).
+      const idle = raw === null || raw === undefined ? DEFAULT_IDLE_MINUTES : Number(raw);
+      idleByOrg.set(o.id, Number.isFinite(idle) && idle >= 0 ? idle : DEFAULT_IDLE_MINUTES);
+    }
   }
 
   const nowMs = Date.now();
   const stale = (candidates || []).filter((c) => {
     if (!c.last_message_at) return false;
     const idle = idleByOrg.get(c.organization_id) ?? DEFAULT_IDLE_MINUTES;
+    if (idle === 0) return false; // org con devolución automática desactivada
     return nowMs - new Date(c.last_message_at).getTime() > idle * 60_000;
   });
 

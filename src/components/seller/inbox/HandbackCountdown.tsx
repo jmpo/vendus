@@ -25,6 +25,8 @@ export function HandbackCountdown({
 
   if (!lastActivityAt) return null;
   if (status !== 'human_active' && status !== 'waiting_human') return null;
+  // 0 = devolución automática desactivada para la org → no hay cuenta regresiva que mostrar
+  if (!idleMinutes || idleMinutes <= 0) return null;
 
   const remaining = new Date(lastActivityAt).getTime() + idleMinutes * 60_000 - now;
   const expired = remaining <= 0;

@@ -18,8 +18,11 @@ function formatTime(ms: number) {
   return `${mm}:${ss}`;
 }
 
-/** Codifica PCM (Float32 mono) a MP3 con lamejs. WhatsApp no acepta el webm de MediaRecorder. */
-function encodeMp3(samples: Float32Array, sampleRate: number): Blob {
+/**
+ * Codifica PCM → MP3 en un Web Worker (no congela la UI; antes bloqueaba ~1.5s/min de audio).
+ * Fallback inline si el worker no puede crearse.
+ */
+function encodeMp3Inline(samples: Float32Array, sampleRate: number): Blob {
   const enc = new Mp3Encoder(1, sampleRate, 128);
   const blockSize = 1152;
   const pcm = new Int16Array(samples.length);
@@ -37,6 +40,32 @@ function encodeMp3(samples: Float32Array, sampleRate: number): Blob {
   return new Blob(chunks as BlobPart[], { type: 'audio/mpeg' });
 }
 
+function encodeMp3(samples: Float32Array, sampleRate: number): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    let worker: Worker;
+    try {
+      worker = new Worker(new URL('./mp3EncoderWorker.ts', import.meta.url), { type: 'module' });
+    } catch {
+      // Sin soporte de workers → codificar inline (bloquea, pero funciona)
+      try { resolve(encodeMp3Inline(samples, sampleRate)); } catch (e) { reject(e); }
+      return;
+    }
+    worker.onmessage = (ev: MessageEvent<{ ok: boolean; blob?: Blob; error?: string }>) => {
+      worker.terminate();
+      if (ev.data?.ok && ev.data.blob) resolve(ev.data.blob);
+      else reject(new Error(ev.data?.error || 'Fallo al codificar el audio.'));
+    };
+    worker.onerror = () => {
+      worker.terminate();
+      // El worker falló (ej. CSP) → último intento inline
+      try { resolve(encodeMp3Inline(samples, sampleRate)); } catch (e) { reject(e); }
+    };
+    // Clonamos (no transferimos) el buffer: si el worker falla (ej. CSP), el
+    // fallback inline todavía necesita `samples` intacto.
+    worker.postMessage({ samples, sampleRate });
+  });
+}
+
 /**
  * Grabador de audio inline. Captura PCM crudo vía Web Audio y lo codifica a MP3
  * (formato soportado por WhatsApp, junto con OGG-opus/AAC/AMR).
@@ -44,6 +73,7 @@ function encodeMp3(samples: Float32Array, sampleRate: number): Blob {
 export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderProps) {
   const [elapsed, setElapsed] = useState(0);
   const [isStarting, setIsStarting] = useState(true);
+  const [isEncoding, setIsEncoding] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const ctxRef = useRef<AudioContext | null>(null);
@@ -106,7 +136,8 @@ export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderPr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    if (isEncoding) return;
     if (timerRef.current) clearInterval(timerRef.current);
     const duration = Date.now() - startTimeRef.current;
     try {
@@ -117,9 +148,12 @@ export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderPr
       let offset = 0;
       for (const b of parts) { merged.set(b, offset); offset += b.length; }
       teardown();
-      const blob = encodeMp3(merged, sampleRate);
+      setIsEncoding(true);
+      // Codifica en un Web Worker → la UI no se congela mientras procesa
+      const blob = await encodeMp3(merged, sampleRate);
       onConfirm(blob, duration);
     } catch (e: any) {
+      setIsEncoding(false);
       setError(e?.message || 'Fallo al finalizar la grabación.');
     }
   };
@@ -154,11 +188,11 @@ export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderPr
       <div className="flex-1 flex items-center gap-2">
         <span className={cn(
           "h-2.5 w-2.5 rounded-full bg-destructive",
-          !isStarting && "animate-pulse",
+          !isStarting && !isEncoding && "animate-pulse",
         )} />
         <span className="text-sm font-mono tabular-nums">{formatTime(elapsed)}</span>
         <span className="text-xs text-muted-foreground hidden sm:inline">
-          {isStarting ? 'Iniciando micrófono…' : 'Grabando… tocá enviar para terminar'}
+          {isStarting ? 'Iniciando micrófono…' : isEncoding ? 'Procesando audio…' : 'Grabando… tocá enviar para terminar'}
         </span>
       </div>
 
@@ -166,10 +200,10 @@ export function AudioRecorder({ onConfirm, onCancel, disabled }: AudioRecorderPr
         size="icon"
         className="h-10 w-10 rounded-full"
         onClick={handleConfirm}
-        disabled={disabled || isStarting || elapsed < 500}
+        disabled={disabled || isStarting || isEncoding || elapsed < 500}
         aria-label="Enviar audio"
       >
-        {isStarting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+        {isStarting || isEncoding ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
       </Button>
     </div>
   );

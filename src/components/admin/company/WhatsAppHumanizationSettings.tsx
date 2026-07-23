@@ -78,7 +78,9 @@ export function WhatsAppHumanizationSettings() {
         ai_typing_min_ms: clamp(form.ai_typing_min_ms, 0, 15000),
         ai_typing_max_ms: clamp(form.ai_typing_max_ms, 500, 30000),
         ai_dedup_window_ms: clamp(form.ai_dedup_window_ms, 5000, 600000),
-        handback_idle_minutes: clamp(form.handback_idle_minutes, 1, 1440),
+        // 0 = devolución automática desactivada; si está activa, entre 1 y 1440 min
+        handback_idle_minutes:
+          form.handback_idle_minutes === 0 ? 0 : clamp(form.handback_idle_minutes, 1, 1440),
       };
       const { error } = await supabase.from('organizations').update(payload).eq('id', orgId);
       if (error) throw error;
@@ -219,14 +221,26 @@ export function WhatsAppHumanizationSettings() {
               title="Devolución a la IA por inactividad"
               hint="Si un humano toma la conversación y no responde en este tiempo, la IA la retoma para no dejar al cliente esperando. El vendedor ve la cuenta regresiva en el chat."
             >
-              <Field
-                label="Minutos antes de que la IA retome"
-                hint="Por defecto 30 min. Cada mensaje reinicia el contador."
-                value={form.handback_idle_minutes}
-                onChange={(v) => update('handback_idle_minutes', v)}
-                min={1}
-                max={1440}
+              <Toggle
+                label="Devolución automática activa"
+                checked={form.handback_idle_minutes > 0}
+                onChange={(v) => update('handback_idle_minutes', v ? 30 : 0)}
               />
+              {form.handback_idle_minutes > 0 ? (
+                <Field
+                  label="Minutos antes de que la IA retome"
+                  hint="Por defecto 30 min. Cada mensaje reinicia el contador."
+                  value={form.handback_idle_minutes}
+                  onChange={(v) => update('handback_idle_minutes', v)}
+                  min={1}
+                  max={1440}
+                />
+              ) : (
+                <p className="text-xs text-muted-foreground rounded-md border border-amber-500/30 bg-amber-500/5 p-2.5">
+                  ⏸️ Desactivada: las conversaciones tomadas por un humano quedan con el humano
+                  indefinidamente — la IA nunca las retoma sola. Ideal mientras atendés todo vos.
+                </p>
+              )}
             </Section>
 
             <Section
