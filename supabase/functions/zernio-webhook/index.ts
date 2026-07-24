@@ -8,6 +8,7 @@ import { hmacSha256Hex, timingSafeEqual } from '../_shared/meta-graph.ts';
 import { normalizePhoneBR } from '../_shared/phone.ts';
 import { decryptSecret } from '../_shared/meta-crypto.ts';
 import { notifySendFailure, orgAdminIds } from '../_shared/alerts.ts';
+import { sendPushToUsers } from '../_shared/webpush.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -338,6 +339,23 @@ async function handleInbound(sb: any, conn: any, payload: any) {
       await ch.send({ type: 'broadcast', event: 'new_message', payload: insertedMsg });
       await sb.removeChannel(ch);
     } catch (e) { console.error('[zernio-webhook] broadcast (visitor) non-fatal:', e); }
+
+    // Push del dispositivo (app cerrada): al vendedor asignado o, si no hay, a los admins.
+    // El tag por conversación agrupa: N mensajes del mismo cliente = 1 notificación viva.
+    try {
+      const { data: convRow } = await sb.from('webchat_conversations')
+        .select('assigned_user_id').eq('id', conversationId).maybeSingle();
+      const targets = (convRow as any)?.assigned_user_id
+        ? [(convRow as any).assigned_user_id]
+        : await orgAdminIds(sb, conn.organization_id);
+      const preview = String(metadata.transcription || content || '[mensaje]').slice(0, 120);
+      await sendPushToUsers(sb, targets, {
+        title: `💬 ${contactName ?? fromNorm}`,
+        body: preview,
+        url: '/?tab=inbox',
+        tag: `conv-${conversationId}`,
+      });
+    } catch (e) { console.warn('[zernio-webhook] push non-fatal:', e); }
   }
 
   // 5) Disparar IA y responder

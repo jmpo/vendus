@@ -2,7 +2,8 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 // VERSIÓN FIJADA: con "@2" esm.sh resuelve a la última en CADA deploy y una versión nueva
 // rompió functions.invoke (las llamadas a send-catalog-item/catalog-search devolvían non-2xx).
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
-import { notifySendFailure, alertAIResourceProblem } from "../_shared/alerts.ts";
+import { notifySendFailure, alertAIResourceProblem, orgAdminIds, alertAdminWhatsApp } from "../_shared/alerts.ts";
+import { sendPushToUsers } from "../_shared/webpush.ts";
 import { sendWhatsAppForConversation } from "../_shared/whatsapp-router.ts";
 import { matchAgentByMessage, type MatcherChannel } from "../_shared/agent-matcher.ts";
 import { parseHandoffTag, handoffTargetToAgentRole } from "../_shared/handoff-parser.ts";
@@ -154,16 +155,12 @@ async function escalateToHuman(
     }
   }
 
-  // 3) Avisar a admins/super_admins de la organización
+  // 3) Avisar a admins/super_admins de la organización.
+  // OJO: el join `profiles!inner` NO existe en el schema → devolvía [] en silencio
+  // y estos avisos nunca llegaron. Usamos la resolución en 2 pasos del shared.
   if (organizationId) {
     try {
-      const recipients = new Set<string>();
-      const { data: admins } = await supabase
-        .from('user_roles')
-        .select('user_id, profiles!inner(organization_id)')
-        .in('role', ['admin', 'super_admin'])
-        .eq('profiles.organization_id', organizationId);
-      (admins || []).forEach((a: any) => a.user_id && recipients.add(a.user_id));
+      const recipients = new Set<string>(await orgAdminIds(supabase, organizationId));
       const rows = Array.from(recipients).map((uid) => ({
         user_id: uid,
         title: '🔴 Cliente necesita atención humana',
@@ -178,6 +175,31 @@ async function escalateToHuman(
       }
     } catch (notifErr) {
       console.warn('[webchat-bot] handoff notify failed:', notifErr);
+    }
+
+    // 4) WhatsApp directo al dueño (organizations.alert_whatsapp_phone) — se entera
+    //    aunque no esté mirando el panel. No crítico si falla (p.ej. fuera de ventana).
+    try {
+      let nombreCliente = '';
+      if (leadId) {
+        const { data: l } = await supabase.from('leads').select('name').eq('id', leadId).maybeSingle();
+        nombreCliente = (l as any)?.name || '';
+      }
+      await alertAdminWhatsApp(
+        supabase,
+        organizationId,
+        `🔴 *Atención humana requerida*\n${nombreCliente ? `Cliente: ${nombreCliente}\n` : ''}${reason ? `Motivo: ${reason}\n` : ''}La IA dejó la conversación en la fila. Entrá al inbox → pestaña "En Fila".`,
+      );
+
+      // 5) Push al teléfono/compu (suena aunque la app esté cerrada)
+      await sendPushToUsers(supabase, await orgAdminIds(supabase, organizationId), {
+        title: '🔴 Atención humana requerida',
+        body: `${nombreCliente || 'Un cliente'} quedó en la fila${reason ? ` — ${reason}` : ''}`,
+        url: '/?tab=inbox',
+        tag: `handoff-${conversationId}`,
+      });
+    } catch (waErr) {
+      console.warn('[webchat-bot] handoff whatsapp alert failed:', waErr);
     }
   }
 }

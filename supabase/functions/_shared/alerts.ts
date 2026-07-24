@@ -146,3 +146,23 @@ export async function alertAIResourceProblem(sb: any, opts: {
     return false;
   }
 }
+
+// ── Aviso URGENTE por WhatsApp al teléfono del dueño/admin ──────────────────
+// Además de la campanita in-app, manda un WhatsApp al número configurado en
+// organizations.alert_whatsapp_phone (si existe). Usado cuando la IA deriva a
+// humano o falla — el dueño se entera aunque no esté mirando el panel.
+// Limitación WhatsApp: si el número no escribió hace <24h, el texto libre no
+// entra (OUT_OF_WINDOW); en ese caso queda solo la notificación in-app.
+export async function alertAdminWhatsApp(sb: any, organizationId: string, text: string): Promise<void> {
+  try {
+    const { data: org } = await sb.from("organizations")
+      .select("alert_whatsapp_phone").eq("id", organizationId).maybeSingle();
+    const phone = String((org as any)?.alert_whatsapp_phone ?? "").replace(/\D/g, "");
+    if (!phone) return;
+    const { sendWhatsAppToPhone } = await import("./whatsapp-router.ts");
+    const res = await sendWhatsAppToPhone({ supabase: sb, organizationId, phone, text });
+    if (!res.ok) console.warn("[alertAdminWhatsApp] no entregado:", res.error, res.message);
+  } catch (e) {
+    console.warn("[alertAdminWhatsApp] fallo no crítico:", e);
+  }
+}
