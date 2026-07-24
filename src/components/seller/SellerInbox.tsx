@@ -1049,9 +1049,12 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     );
   }
 
-  // No mobile com conversa selecionada (tela cheia), usamos 100dvh — header/bottomnav somem no MobileLayout.
+  // Móvil con conversación abierta = PANTALLA COMPLETA REAL: overlay fijo por encima
+  // del header de la app y la barra inferior. Antes se confiaba en que MobileLayout los
+  // ocultara (nunca lo implementó) → el chat quedaba apretado entre ambos, sin ver su
+  // propio header (nombre + flecha atrás) y con el composer empujado fuera de pantalla.
   const rootHeightClass = isMobile && selectedConversation
-    ? 'h-[100dvh]'
+    ? 'fixed inset-0 z-[60] h-[100dvh] rounded-none border-0'
     : 'h-[calc(100dvh-7rem)]';
   return (
     <div className={cn(rootHeightClass, 'flex flex-col rounded-lg border border-border overflow-hidden bg-background')}>
