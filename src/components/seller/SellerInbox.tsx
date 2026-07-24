@@ -691,8 +691,11 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
     refetchDebounceRef.current = setTimeout(() => {
       refetchDebounceRef.current = null;
       refetchConversations();
+      // Los contadores de pestañas (Atendiendo/Agentes/En Fila) también deben moverse
+      // en vivo — antes quedaban viejos hasta un refresh manual.
+      refetchCounts();
     }, 1500);
-  }, [refetchConversations]);
+  }, [refetchConversations, refetchCounts]);
 
   // Mantém último estado conhecido por conversa para detectar transições.
   const convStateRef = useRef<Map<string, { status: string | null; agent: string | null; lastAt: string | null; assigned: string | null }>>(new Map());
@@ -749,6 +752,13 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
             }
 
             convStateRef.current.set(row.id, next);
+
+            // La conversación ABIERTA también se actualiza en vivo (estado, agente,
+            // asignación). Antes solo se refrescaba la lista → el chat que estabas
+            // mirando quedaba con el estado viejo hasta un refresh manual.
+            if (selectedIdRef.current === row.id) {
+              queryClient.invalidateQueries({ queryKey: ['webchat-conversation', row.id] });
+            }
           }
           scheduleListRefetch();
         }
@@ -762,7 +772,7 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
         refetchDebounceRef.current = null;
       }
     };
-  }, [user?.id, scheduleListRefetch, playMessage, playQueue]);
+  }, [user?.id, scheduleListRefetch, playMessage, playQueue, queryClient]);
 
   // Subscription for selected conversation messages - uses Broadcast for realtime
   useEffect(() => {
