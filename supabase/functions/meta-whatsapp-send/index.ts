@@ -3,7 +3,7 @@
 //  - dentro: texto/mídia livre
 //  - fora: exige template HSM aprovado
 
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { GRAPH_BASE, graphFetch, GraphError } from '../_shared/meta-graph.ts';
 import { decryptSecret } from '../_shared/meta-crypto.ts';
 import { normalizePhoneBR } from '../_shared/phone.ts';

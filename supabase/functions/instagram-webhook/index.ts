@@ -5,7 +5,7 @@
 // HMAC SHA-256 validado con app_secret da conexión.
 // verify_jwt = false.
 
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { hmacSha256Hex, timingSafeEqual, GRAPH_BASE } from '../_shared/meta-graph.ts';
 import { decryptSecret } from '../_shared/meta-crypto.ts';
 

@@ -2,7 +2,7 @@
 // via Evolution Go (POST /message/presence). Renova o estado a cada 7s (heartbeat)
 // porque o Baileys expira o "composing" em ~10s.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 
 type SupabaseClient = ReturnType<typeof createClient>;
 

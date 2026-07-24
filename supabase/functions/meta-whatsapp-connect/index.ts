@@ -2,7 +2,7 @@
 // Recebe credenciais do wizard, valida via Graph API, criptografa, salva.
 // Retorna webhook_url + verify_token para el cliente colar no Meta App.
 
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { GRAPH_BASE, graphFetch, GraphError } from '../_shared/meta-graph.ts';
 import { encryptSecret, generateVerifyToken } from '../_shared/meta-crypto.ts';
 

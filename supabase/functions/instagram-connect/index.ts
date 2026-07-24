@@ -2,7 +2,7 @@
 // Promove uma conexión Instagram em borrador para ATIVA.
 // Valida credenciais via Graph API, criptografa segredos e inscreve a página no app.
 
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { graphFetch, GraphError } from '../_shared/meta-graph.ts';
 import { encryptSecret } from '../_shared/meta-crypto.ts';
 

@@ -10,7 +10,7 @@
 //   GET    /enrollments?cadence_id=&lead_id=&status=  -> lista enrollments
 //   GET    /enrollments/:id                   -> detalle + runs recentes
 
-import { createClient } from "npm:@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2.90.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

@@ -2,7 +2,7 @@
 // Gestión de plantillas (HSM) de Zernio desde Vendus: listar / crear / borrar.
 // Las plantillas son necesarias para escribir FUERA de la ventana de 24h
 // (follow-ups, reenganche). Requiere usuario autenticado de la organización.
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { decryptSecret } from '../_shared/meta-crypto.ts';
 
 const ZERNIO_BASE = 'https://zernio.com/api/v1';

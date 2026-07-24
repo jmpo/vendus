@@ -559,8 +559,6 @@ export function InboxFiltersDrawer({
                   rightBadge={
                     c.provider === 'meta' ? (
                       <BadgeCheck className="h-3.5 w-3.5 text-green-600 ml-1 shrink-0" aria-label="Oficial" />
-                    ) : c.provider === 'evolution' ? (
-                      <Plug className="h-3 w-3 text-muted-foreground ml-1 shrink-0" aria-label="QR" />
                     ) : null
                   }
                   checked={filters.selectedConnections.includes(c.key)}

@@ -4,7 +4,7 @@
 //   - valida que QUIEN llama sea super_admin (rol),
 //   - registra en platform_audit_logs (quién impersonó a qué org y cuándo),
 //   - devuelve un token de magic-link que el frontend canjea por la sesión del cliente.
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.90.1';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',

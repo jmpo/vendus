@@ -1,5 +1,5 @@
 // meta-whatsapp-templates-sync
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { graphFetch } from '../_shared/meta-graph.ts';
 import { decryptSecret } from '../_shared/meta-crypto.ts';
 

@@ -1,7 +1,7 @@
 // zernio-connect
 // Recibe la API key del wizard, valida contra Zernio (GET /v1/accounts),
 // cifra y guarda la conexión, y registra el webhook automáticamente.
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { encryptSecret } from '../_shared/meta-crypto.ts';
 
 const ZERNIO_BASE = 'https://zernio.com/api/v1';

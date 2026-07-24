@@ -6,7 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 import { recordLovableUsage } from "../_shared/ai-router.ts";
 
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");

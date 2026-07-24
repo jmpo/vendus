@@ -1,7 +1,7 @@
 // webhook-keepalive: re-apunta los webhooks de las instancias de Evolution al destino.
 // Se ejecuta por cron cada pocos minutos para AUTO-RECUPERAR la conexión si el
 // servidor Evolution (easypanel) se reinicia y pierde la config del webhook.
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

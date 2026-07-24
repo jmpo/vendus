@@ -2,7 +2,7 @@
 // Uses Evolution Go exclusively. Normalizes phone (DDI 55), sends and logs into admin_agent_messages.
 
 // deno-lint-ignore-file no-explicit-any
-import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 
 export type AdminMessageType =
   | "daily_summary"

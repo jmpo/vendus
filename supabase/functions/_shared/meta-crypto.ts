@@ -2,7 +2,7 @@
 // A chave-mestre es auto-gerada em platform_settings via RPC SECURITY DEFINER.
 // Service role only — nunca exposta ao client.
 
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 
 let cachedKey: CryptoKey | null = null;
 

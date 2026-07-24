@@ -4,7 +4,7 @@
 // POST: eventos (mensagens, status). Valida X-Hub-Signature-256.
 // verify_jwt = false (público — segurança via verify_token + HMAC).
 
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { hmacSha256Hex, timingSafeEqual } from '../_shared/meta-graph.ts';
 import { decryptSecret } from '../_shared/meta-crypto.ts';
 import { normalizePhoneBR } from '../_shared/phone.ts';

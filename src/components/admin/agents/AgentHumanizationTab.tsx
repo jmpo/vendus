@@ -306,7 +306,7 @@ export function AgentHumanizationTab({ value, onChange }: Props) {
 
             <ToggleRow
               label='Mostrar "escribiendo..." real en WhatsApp'
-              hint="Dispara el estado real (Evolution Go) en el celular del cliente. Probalo en Admin → WhatsApp → Instancias → Probar presencia."
+              hint="Dispara el estado real (WhatsApp) en el celular del cliente. Probalo en Admin → WhatsApp → Instancias → Probar presencia."
               checked={cfg.timing?.typing_indicator !== false}
               onCheckedChange={(v) => setTiming({ typing_indicator: v })}
             />

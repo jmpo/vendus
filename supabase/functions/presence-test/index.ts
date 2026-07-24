@@ -3,7 +3,7 @@
 // SEM enviar ningunel mensaje. Usado por el Admin para validar se o WhatsApp
 // do número testado mostra o status real.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 import { startTyping } from "../_shared/presence.ts";
 
 const corsHeaders = {

@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 import { buildAgentTemplate, describeAgentMission, type AgentTypeKey } from "../_shared/agent-prompt-templates.ts";
 import { recordLovableUsage } from "../_shared/ai-router.ts";
 

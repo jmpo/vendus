@@ -3,7 +3,7 @@
 // recipient.id = ig_sender_id (PSID do usuario IG).
 // Detecta janela 24h via RPC is_within_24h_window.
 
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { graphFetch, GraphError } from '../_shared/meta-graph.ts';
 import { decryptSecret } from '../_shared/meta-crypto.ts';
 

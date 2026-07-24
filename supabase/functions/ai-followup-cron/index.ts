@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.90.1';
 import { recordLovableUsage } from '../_shared/ai-router.ts';
 import { sendWhatsAppForConversation } from '../_shared/whatsapp-router.ts';
 import { resolveOutreachDecision, logOutreachDecision } from '../_shared/whatsapp-window.ts';

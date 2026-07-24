@@ -4,7 +4,7 @@
 // Cada conexión recebe su propio webhook_verify_token; a URL final é
 // {SUPABASE_URL}/functions/v1/instagram-webhook/{connection_id}.
 
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
 import { generateVerifyToken } from '../_shared/meta-crypto.ts';
 
 const corsHeaders = {

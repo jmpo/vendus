@@ -15,7 +15,6 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { UserStatusIndicator } from '@/components/layout/UserStatusIndicator';
 import { HeaderProductSwitcher } from '@/components/layout/HeaderProductSwitcher';
-import { WhatsAppDisconnectedBanner } from '@/components/layout/WhatsAppDisconnectedBanner';
 import { Tables } from '@/integrations/supabase/types';
 import { useUnreadReleasesCount } from '@/hooks/useReleases';
 import { Badge } from '@/components/ui/badge';
@@ -58,7 +57,7 @@ export function Header({
 
   return (
     <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-30">
-      <WhatsAppDisconnectedBanner />
+      {/* Banner de instancias Evolution retirado: ese canal ya no existe */}
       <div className="flex items-center justify-between h-16 px-6">
         <div>
           <h1 className="text-xl font-semibold text-foreground">{title}</h1>

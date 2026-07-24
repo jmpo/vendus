@@ -166,7 +166,7 @@ export function WhatsAppHumanizationSettings() {
 
             <Section
               title="Presencia real en WhatsApp"
-              hint="Dispara el estado de 'escribiendo...' y 'grabando audio...' que aparece en el celular del cliente, en tiempo real (via Evolution Go)."
+              hint="Dispara el estado de 'escribiendo...' y 'grabando audio...' que aparece en el celular del cliente, en tiempo real (vía WhatsApp)."
             >
               <Toggle
                 label="Mostrar 'escribiendo...' real"

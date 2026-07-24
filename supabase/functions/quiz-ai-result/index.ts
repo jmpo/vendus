@@ -1,7 +1,7 @@
 // Quiz AI Result — gera diagnóstico personalizado a partir das respuestas do quiz.
 // Retorna 4 secciones: diagnostico, oportunidades, proximos_passos, oferta.
-import { createClient } from 'npm:@supabase/supabase-js@2';
-import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { createClient } from 'npm:@supabase/supabase-js@2.90.1';
+import { corsHeaders } from 'npm:@supabase/supabase-js@2.90.1/cors';
 import { resolveAIConfig, prepareAIRequestBody } from '../_shared/ai-router.ts';
 
 interface Body {

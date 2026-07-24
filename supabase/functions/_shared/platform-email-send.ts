@@ -3,7 +3,7 @@
 // Carrega o template do banco (`platform_email_templates`), substitui variáveis {{var}}
 // e enfileira via send-transactional-email con o template "platform-generic".
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 
 interface SendPlatformEmailArgs {
   slug: string;

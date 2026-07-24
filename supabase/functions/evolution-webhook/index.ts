@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 import { normalizePhoneBR, phoneVariantsBR } from "../_shared/phone.ts";
 import { startTyping } from "../_shared/presence.ts";
 

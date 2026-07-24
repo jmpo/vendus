@@ -10,7 +10,6 @@ import { useInstagramConnections } from '@/hooks/useInstagramConnections';
 import { useOrganizationEffectivePlan } from '@/hooks/useOrganizationPlan';
 import { supabase } from '@/integrations/supabase/client';
 import { MetaWhatsAppConnectionsPanel } from './MetaWhatsAppConnectionsPanel';
-import { InstagramConnectionsPanel } from './InstagramConnectionsPanel';
 import { ZernioConnectionsPanel } from './ZernioConnectionsPanel';
 import { NewConnectionDialog, type ConnectionProvider } from './NewConnectionDialog';
 import { toast } from 'sonner';
@@ -101,11 +100,7 @@ export function UnifiedConnectionsPanel() {
         onCloseWizard={() => setOpenZernio(false)}
       />
 
-      <InstagramConnectionsPanel
-        hideHeader
-        openWizard={openIgWizard}
-        onCloseWizard={() => setOpenIgWizard(false)}
-      />
+      {/* Instagram Direct fue retirado: sus edge functions ya no existen. */}
 
       <NewConnectionDialog
         open={pickerOpen}
