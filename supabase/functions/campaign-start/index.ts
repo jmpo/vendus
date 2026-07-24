@@ -284,12 +284,16 @@ Deno.serve(async (req) => {
       })
       .eq("id", campaign_id);
 
-    // Dispara el dispatcher YA (sin esperar el cron de 1 min) → envío inmediato.
+    // Dispara el dispatcher YA (sin esperar el cron de 5 min) → envío inmediato.
     // Fire-and-forget: no bloquea la respuesta. El cron sigue como respaldo.
+    // (Antes referenciaba variables inexistentes → ReferenceError silenciado por el
+    //  catch → el disparo inmediato NUNCA ocurría y todo esperaba al cron.)
     try {
-      fetch(`${supabaseUrl}/functions/v1/campaign-dispatcher`, {
+      const fnUrl = Deno.env.get("SUPABASE_URL")!;
+      const fnKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      fetch(`${fnUrl}/functions/v1/campaign-dispatcher`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceKey}` },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${fnKey}` },
         body: "{}",
       }).catch((e) => console.error("[campaign-start] dispatcher trigger non-fatal:", e));
     } catch (_) { /* noop */ }

@@ -67,6 +67,91 @@ function mapAttachmentType(kind?: string): string {
   }
 }
 
+// ─── Vista de plantilla (para que el chat la muestre igual que WhatsApp) ───
+// Estructura guardada en metadata.template_view: header_image/header_text, body,
+// footer y buttons. La imagen del header se re-hostea en Storage porque la URL
+// de scontent.whatsapp.net caduca (param `oe=`).
+export interface TemplateView {
+  name: string;
+  language: string;
+  header_image?: string | null;
+  header_text?: string | null;
+  body?: string | null;
+  footer?: string | null;
+  buttons?: Array<{ type: string; text: string; url?: string }>;
+}
+
+// Cache por isolate: un batch de campaña reutiliza el mismo fetch de plantillas.
+const tplCache = new Map<string, { at: number; list: any[] }>();
+const TPL_TTL_MS = 10 * 60_000;
+
+async function getTemplateView(
+  sb: ReturnType<typeof createClient>,
+  apiKey: string,
+  accountId: string,
+  name: string,
+  language: string,
+): Promise<TemplateView | null> {
+  try {
+    let entry = tplCache.get(accountId);
+    if (!entry || Date.now() - entry.at > TPL_TTL_MS) {
+      const r = await fetch(`${ZERNIO_BASE}/whatsapp/templates?accountId=${accountId}`, {
+        headers: { Authorization: `Bearer ${apiKey}` },
+      });
+      if (!r.ok) return null;
+      const d = await r.json().catch(() => null);
+      entry = { at: Date.now(), list: d?.templates ?? [] };
+      tplCache.set(accountId, entry);
+    }
+    const tpl = entry.list.find((t: any) => t.name === name && (!language || t.language === language))
+      ?? entry.list.find((t: any) => t.name === name);
+    if (!tpl) return null;
+
+    const view: TemplateView = { name, language: tpl.language ?? language };
+    for (const c of tpl.components ?? []) {
+      const ctype = String(c.type ?? '').toUpperCase();
+      if (ctype === 'HEADER') {
+        if (String(c.format ?? '').toUpperCase() === 'IMAGE') {
+          const raw = c.example?.header_handle?.[0] ?? null;
+          if (raw) {
+            // Re-hostear una vez por plantilla (path determinístico + upsert = idempotente)
+            try {
+              const bin = await fetch(raw);
+              if (bin.ok) {
+                const bytes = new Uint8Array(await bin.arrayBuffer());
+                const mime = bin.headers.get('content-type') ?? 'image/jpeg';
+                const ext = /png/.test(mime) ? '.png' : '.jpg';
+                const path = `templates/${accountId}/${name}${ext}`;
+                const { error: upErr } = await sb.storage.from('chat-media')
+                  .upload(path, bytes, { contentType: mime, upsert: true });
+                if (!upErr) {
+                  const { data: pub } = sb.storage.from('chat-media').getPublicUrl(path);
+                  view.header_image = pub.publicUrl;
+                }
+              }
+            } catch { /* si falla, dejamos la URL original (funciona un tiempo) */ }
+            if (!view.header_image) view.header_image = raw;
+          }
+        } else if (c.text) {
+          view.header_text = c.text;
+        }
+      } else if (ctype === 'BODY') view.body = c.text ?? null;
+      else if (ctype === 'FOOTER') view.footer = c.text ?? null;
+      else if (ctype === 'BUTTONS') {
+        view.buttons = (c.buttons ?? []).map((b: any) => ({
+          type: String(b.type ?? 'QUICK_REPLY'),
+          text: String(b.text ?? ''),
+          ...(b.url ? { url: String(b.url) } : {}),
+        }));
+      }
+    }
+    return view;
+  } catch (e) {
+    console.warn('[zernio-send] getTemplateView falló (no crítico):', String(e));
+    return null;
+  }
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'method not allowed' }, 405);
@@ -84,6 +169,14 @@ Deno.serve(async (req: Request) => {
     extra_metadata, // metadata extra a fundir en la fila guardada (ej: scheduling_context)
     reply_to_message_id, // UUID del mensaje a citar (responder encima) → se traduce a replyTo (wamid)
     record = true, // si false: el llamador ya grabó la fila (evita bolha dupla)
+    // Ahorro de ventana 24h: si el cliente respondió hace <24h, el mismo contenido de la
+    // plantilla se envía como mensaje LIBRE (gratis) en vez de broadcast (Marketing pago).
+    // Default ON — pasar false para forzar plantilla siempre.
+    prefer_free_window = true,
+    // Texto PERSONALIZADO para los envíos por ventana abierta (campañas). Si viene,
+    // reemplaza al cuerpo de la plantilla en el mensaje libre; la imagen y los botones
+    // de la plantilla se mantienen. Si está vacío, se usa el cuerpo de la plantilla.
+    free_window_message,
   } = body ?? {};
 
   if (!connection_id || (!to && type !== 'typing')) return json({ error: 'missing connection_id or to' }, 400);
@@ -118,6 +211,8 @@ Deno.serve(async (req: Request) => {
   let res: { ok: boolean; status: number; data: any };
   let zernioMsgId: string | null = null;
   let zernioBroadcastId: string | null = null; // plantillas: id del broadcast (no hay wamid por destinatario)
+  let templateView: TemplateView | null = null; // estructura visual de la plantilla (header/body/botones)
+  let sentAsFreeWindow = false; // plantilla convertida a mensaje libre (ventana 24h abierta = gratis)
 
   if (type === 'template' || (!zernioConvId && template)) {
     // ─── PLANTILLAS: se envían por BROADCASTS, no por /inbox/conversations ───
@@ -127,6 +222,45 @@ Deno.serve(async (req: Request) => {
     // la API real: basta con { name, language }). Flujo de 3 pasos: crear → destinatarios → enviar.
     if (!template?.name || !template?.language) return json({ error: 'template.name y template.language requeridos' }, 400);
 
+    // Estructura visual (no crítico: si falla, el envío sigue; solo pierde la vista rica)
+    templateView = await getTemplateView(sb, apiKey, accountId, template.name, template.language);
+
+    // ── AHORRO ventana 24h: cliente activo hace <24h → mismo contenido como mensaje
+    //    LIBRE (US$ 0) en vez de broadcast Marketing (pago). Botones QUICK_REPLY se
+    //    replican como quickReplies; la imagen del header va como adjunto. ──
+    const freeText = (typeof free_window_message === 'string' && free_window_message.trim())
+      ? free_window_message.trim()
+      : templateView?.body ?? null;
+    if (prefer_free_window && zernioConvId && conversation_id && freeText) {
+      const { data: within } = await sb.rpc('is_within_24h_window', { _conversation_id: conversation_id });
+      if (within === true) {
+        const qr = (templateView?.buttons ?? [])
+          .filter((b) => String(b.type).toUpperCase() === 'QUICK_REPLY' && b.text)
+          .map((b) => b.text as string)
+          .slice(0, 13);
+        const freeBody: Record<string, unknown> = {
+          accountId,
+          message: freeText,
+          ...(templateView?.header_image ? { attachmentUrl: templateView.header_image, attachmentType: 'image' } : {}),
+          ...(qr.length ? { quickReplies: qr } : {}),
+        };
+        const rf = await zfetch(apiKey, `/inbox/conversations/${zernioConvId}/messages`, freeBody);
+        console.log('[zernio-send] plantilla→ventana24h (gratis) ←', rf.status, JSON.stringify(rf.data).slice(0, 200));
+        if (rf.ok) {
+          res = rf;
+          zernioMsgId = rf.data?.data?.messageId ?? rf.data?.messageId ?? null;
+          sentAsFreeWindow = true;
+          // La vista guardada debe reflejar lo que REALMENTE se envió (texto custom incluido)
+          if (templateView) templateView = { ...templateView, body: freeText };
+          else templateView = { name: template.name, language: template.language, body: freeText };
+        }
+        // Si el freeform falla (p.ej. combinación no soportada), caemos al broadcast normal.
+      }
+    }
+
+    if (sentAsFreeWindow) {
+      // nada más que hacer: res/zernioMsgId ya quedaron seteados
+    } else {
     const profileId = await getProfileId(apiKey);
     if (!profileId) {
       res = { ok: false, status: 502, data: { error: 'No se pudo resolver el profileId de Zernio' } };
@@ -160,6 +294,7 @@ Deno.serve(async (req: Request) => {
         }
       }
     }
+    } // fin del else (envío por broadcast cuando no aplicó la ventana gratis)
   } else if (zernioConvId) {
     // Ventana 24h: fuera de ella, WhatsApp oficial NO permite mensajes libres → exige template.
     if (conversation_id) {
@@ -208,6 +343,9 @@ Deno.serve(async (req: Request) => {
       content: text ?? (hasMedia ? `[${media.kind}]`
         : location ? `📍 Ubicación${location.name ? `: ${location.name}` : ''}`
         : (contacts && contacts.length) ? `👤 Contacto: ${contacts[0]?.name?.formatted_name ?? ''}`.trim()
+        // Plantillas: guardamos el CUERPO real (no "[template]") → el chat y el preview
+        // de la lista muestran lo mismo que recibió el cliente.
+        : templateView?.body ? templateView.body
         : `[${type}]`),
       content_type: hasMedia ? (media.kind === 'image' ? 'image' : media.kind === 'audio' ? 'audio' : media.kind === 'video' ? 'video' : 'file') : 'text',
       message_type: type,
@@ -218,6 +356,9 @@ Deno.serve(async (req: Request) => {
         ...(zernioBroadcastId ? { zernio_broadcast_id: zernioBroadcastId } : {}),
         ...(hasMedia ? { media } : {}),
         ...(template ? { template } : {}),
+        ...(templateView ? { template_view: templateView } : {}),
+        // Ahorro: salió como mensaje libre (US$ 0) porque la ventana 24h estaba abierta
+        ...(sentAsFreeWindow ? { sent_as: 'free_window' } : {}),
         ...(buttons ? { buttons } : {}),
         ...(quickReplies ? { quickReplies } : {}),
         ...(interactive ? { interactive } : {}),

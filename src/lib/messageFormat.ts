@@ -87,8 +87,8 @@ export function truncatePreview(input: string | null | undefined, maxLen = 80): 
 const MEDIA_LABEL: Record<string, string> = {
   audio: '🎤 Audio',
   image: '📷 Foto',
-  sticker: '💟 Figurinha',
-  video: '🎬 Vídeo',
+  sticker: '💟 Sticker',
+  video: '🎬 Video',
   document: '📎 Documento',
 };
 
@@ -102,6 +102,13 @@ export function previewWithMedia(
   metadata?: any,
   maxLen = 80,
 ): string {
+  // Plantillas HSM: mostramos el cuerpo real con el ícono, no "[template]" ni el link crudo
+  const tv = metadata?.template_view;
+  if (tv?.body || tv?.name) {
+    const bodyPreview = truncatePreview(tv.body || tv.name, maxLen - 3);
+    return `📋 ${bodyPreview}`;
+  }
+
   const media = metadata?.media;
   const mediaKind = typeof media?.kind === 'string' ? media.kind.toLowerCase() : null;
   const label = mediaKind ? MEDIA_LABEL[mediaKind] : null;

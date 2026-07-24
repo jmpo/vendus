@@ -36,7 +36,7 @@ import { EmptyInboxState } from './EmptyInboxState';
 import { ForwardMessageDialog } from './ForwardMessageDialog';
 import { AcceptTicketBar } from '@/components/inbox';
 import { format, isToday, isYesterday, differenceInDays } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export interface Message {
@@ -299,14 +299,14 @@ export function ChatArea({
     }
   }, [messages.length, isTyping]);
 
-  // Helper: formata o label do separador de dia (Hoy, Ontem, dia da semana, ou data completa)
+  // Separador de día del chat (Hoy, Ayer, día de la semana, o fecha completa)
   const formatDayLabel = (dateStr: string) => {
     const d = new Date(dateStr);
     if (isToday(d)) return 'Hoy';
-    if (isYesterday(d)) return 'Ontem';
+    if (isYesterday(d)) return 'Ayer';
     const diff = differenceInDays(new Date(), d);
-    if (diff < 7) return format(d, 'EEEE', { locale: ptBR });
-    return format(d, "d 'de' MMMM", { locale: ptBR });
+    if (diff < 7) return format(d, 'EEEE', { locale: es });
+    return format(d, "d 'de' MMMM", { locale: es });
   };
 
   const handleQuickReplySelect = (content: string) => {
@@ -359,8 +359,10 @@ export function ChatArea({
   const getStatusText = () => {
     switch (status) {
       case 'active': return 'Conversación activa';
-      case 'waiting': return 'Esperando atención';
-      case 'bot_active': return 'Atención por IA';
+      case 'human_active': return 'Atención humana'; // antes salía el código crudo "human_active"
+      case 'waiting':
+      case 'waiting_human': return 'Esperando atención';
+      case 'bot_active': return 'Atendiendo la IA';
       case 'closed': return 'Conversación cerrada';
       default: return status;
     }
@@ -368,8 +370,10 @@ export function ChatArea({
 
   const getStatusColor = () => {
     switch (status) {
-      case 'active': return 'bg-green-500';
-      case 'waiting': return 'bg-yellow-500';
+      case 'active':
+      case 'human_active': return 'bg-green-500';
+      case 'waiting':
+      case 'waiting_human': return 'bg-yellow-500';
       case 'bot_active': return 'bg-blue-500';
       case 'closed': return 'bg-muted';
       default: return 'bg-muted';
@@ -408,11 +412,11 @@ export function ChatArea({
     isOfficialWhatsApp &&
     (!lastInboundAt || Date.now() - new Date(lastInboundAt).getTime() > 24 * 60 * 60 * 1000);
   const mobileStatusLine = isTyping
-    ? 'Digitando…'
+    ? 'Escribiendo…'
     : peerOnline
-    ? 'Online'
+    ? 'En línea'
     : lastMessageAt
-    ? `Última interação: ${format(new Date(lastMessageAt), "HH:mm")}`
+    ? `Última interacción: ${format(new Date(lastMessageAt), "HH:mm")}`
     : getStatusText();
 
   return (
@@ -563,15 +567,7 @@ export function ChatArea({
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
                 </span>
               )}
-              <ChannelBadge
-                conversation={{
-                  channel,
-                  meta_connection_id: metaConnectionId,
-                  instagram_connection_id: instagramConnectionId,
-                  evolution_instance_id: evolutionInstanceId,
-                }}
-                size="sm"
-              />
+              <ChannelBadge channel={channel} size="sm" />
               <HandbackCountdown
                 lastActivityAt={handbackAnchor}
                 status={status}

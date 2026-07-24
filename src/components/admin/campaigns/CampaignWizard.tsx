@@ -57,6 +57,8 @@ type Filters = {
   search?: { name?: string; email?: string; phone?: string };
   created_after?: string;
   created_before?: string;
+  /** Solo contactos con ventana 24h abierta (respondieron hace <24h) → envío gratis */
+  only_open_window?: boolean;
 };
 
 const SPEED_PRESETS = [
@@ -144,6 +146,11 @@ export function CampaignWizard({
   // Los que no existen como lead se crean solos, porque la campaña se arma con lead_ids.
   const [phonesText, setPhonesText] = useState('');
   const [phonesBusy, setPhonesBusy] = useState(false);
+  // Desglose ventana 24h de los destinatarios elegidos a mano: cuántos reciben
+  // el contenido GRATIS (ventana abierta) y cuántos por plantilla paga.
+  const [ventana24, setVentana24] = useState<{ abiertas: number; total: number } | null>(null);
+  // El wizard muestra solo lo esencial (quién / qué / cuándo). Lo demás vive acá.
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const procesarNumeros = async () => {
     if (!orgId) return;
@@ -215,6 +222,38 @@ export function CampaignWizard({
     if ((form.audience_filters?.lead_ids?.length ?? 0) > 0) setRecipientMode('manual');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.audience_filters?.lead_ids]);
+
+  // Agente por defecto: la sección vive en "Opciones avanzadas", así que si el usuario
+  // no la abre, la campaña igual queda con un agente válido (requerido por el backend).
+  useEffect(() => {
+    if (!form.agent_id && agents.length > 0) {
+      setForm((f) => (f.agent_id ? f : { ...f, agent_id: agents[0].id }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [agents, form.agent_id]);
+
+  // Desglose de ventana 24h para los destinatarios elegidos a mano.
+  // La ventana se ancla a last_inbound_at (= último mensaje del cliente, sentAt real).
+  useEffect(() => {
+    const ids: string[] = ((form.audience_filters as any)?.lead_ids ?? []) as string[];
+    if (!orgId || ids.length === 0) { setVentana24(null); return; }
+    let cancelado = false;
+    (async () => {
+      const desde = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+      const { data } = await supabase
+        .from('webchat_conversations')
+        .select('lead_id')
+        .eq('organization_id', orgId)
+        .eq('channel', 'whatsapp')
+        .in('lead_id', ids.slice(0, 1000))
+        .gte('last_inbound_at', desde);
+      if (cancelado) return;
+      const abiertos = new Set((data ?? []).map((c: any) => c.lead_id).filter(Boolean));
+      setVentana24({ abiertas: abiertos.size, total: ids.length });
+    })();
+    return () => { cancelado = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orgId, JSON.stringify((form.audience_filters as any)?.lead_ids ?? [])]);
 
   // ¿Todas las conexiones elegidas son API oficial (Meta/Zernio)? → envío inmediato.
   const onlyApiConnections = useMemo(() => {
@@ -404,10 +443,13 @@ export function CampaignWizard({
       recurrence: form.schedule_type === 'recurring' ? form.recurrence : null,
       post_response_actions: form.post_response_actions,
       post_cadence_id: form.post_cadence_id ?? null,
-      // Persiste la config si hay plantillas Meta O una plantilla Zernio (se guarda en .zernio).
+      // Persiste la config si hay plantillas Meta, una plantilla Zernio O un mensaje
+      // personalizado. Antes el mensaje escrito por el usuario se DESCARTABA si no
+      // había plantilla elegida → la campaña salía con texto inventado por la IA.
       meta_template_config:
         ((form.meta_template_config?.templates?.length ?? 0) > 0 ||
-          (form.meta_template_config as any)?.zernio?.zernio_template_name)
+          (form.meta_template_config as any)?.zernio?.zernio_template_name ||
+          (form.meta_template_config as any)?.zernio?.free_window_message?.trim())
           ? form.meta_template_config
           : null,
     };
@@ -533,6 +575,32 @@ export function CampaignWizard({
             </Button>
           </div>
 
+          {/* Por defecto la campaña NO interrumpe chats en atención humana ni re-contacta
+              a quien recibió un outreach hace <24h. Este checkbox desactiva ambas
+              protecciones — para reenvíos intencionales (ej: follow-up con mensaje nuevo). */}
+          <label className="flex items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 cursor-pointer">
+            <Checkbox
+              checked={!!(form.audience_filters as any)?.force_when_human}
+              onCheckedChange={(v) =>
+                setForm((f) => ({
+                  ...f,
+                  audience_filters: { ...f.audience_filters, force_when_human: v === true } as any,
+                }))
+              }
+              className="mt-0.5"
+            />
+            <span className="text-sm">
+              <span className="font-medium text-amber-700 dark:text-amber-400">
+                ⚡ Enviar también a conversaciones en atención humana / contactadas hace poco
+              </span>
+              <span className="block text-xs text-muted-foreground mt-0.5">
+                Por defecto la campaña se salta los chats que un humano está atendiendo y los que ya
+                recibieron un mensaje de este agente en las últimas 24 h (anti-spam). Marcalo solo si
+                este reenvío es intencional.
+              </span>
+            </span>
+          </label>
+
           {recipientMode === 'phones' ? (
             <div className="space-y-2">
               <Textarea
@@ -565,6 +633,29 @@ export function CampaignWizard({
             />
           ) : (
             <>
+              {/* Ventana 24h como FILTRO: se combina con etapa/etiquetas/etc.
+                  Ej: "CALIFICACION + ventana abierta" = solo los calificados que salen gratis. */}
+              <label className="flex items-start gap-3 rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3 cursor-pointer">
+                <Checkbox
+                  checked={!!form.audience_filters.only_open_window}
+                  onCheckedChange={(v) =>
+                    setForm((f) => ({
+                      ...f,
+                      audience_filters: { ...f.audience_filters, only_open_window: v === true },
+                    }))
+                  }
+                  className="mt-0.5"
+                />
+                <span className="text-sm">
+                  <span className="font-medium text-emerald-700 dark:text-emerald-400">
+                    🟢 Solo los que están en ventana 24h (envío gratis)
+                  </span>
+                  <span className="block text-xs text-muted-foreground mt-0.5">
+                    Se combina con los demás filtros. Ej: etapa CALIFICACION + este filtro = solo los
+                    calificados que respondieron hace menos de 24 h — a ellos se les escribe sin costo.
+                  </span>
+                </span>
+              </label>
               <FilterBlock
                 title="Orígenes"
                 options={LEAD_ORIGINS}
@@ -652,9 +743,10 @@ export function CampaignWizard({
       </Card>
       )}
 
-      {/* 3. Exclusiones */}
+      {/* Exclusiones (avanzado) */}
+      {showAdvanced && (
       <Card className="border-destructive/30">
-        <CardHeader><CardTitle className="text-base">3. ¿Quién NO debe recibir?</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">¿Quién NO debe recibir?</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <TagFilterBlock
             title="Sin las etiquetas"
@@ -686,6 +778,7 @@ export function CampaignWizard({
           />
         </CardContent>
       </Card>
+      )}
 
       {/* Resumen público */}
       <Card className="bg-primary/5 border-primary/20">
@@ -697,9 +790,10 @@ export function CampaignWizard({
         </CardContent>
       </Card>
 
-      {/* 4. Agente y Contexto */}
+      {/* Agente y Contexto (avanzado — hay agente por defecto) */}
+      {showAdvanced && (
       <Card>
-        <CardHeader><CardTitle className="text-base">4. Agente IA y Contexto</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Agente IA y Contexto</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <div>
             <Label>Agente *</Label>
@@ -757,10 +851,12 @@ export function CampaignWizard({
           )}
         </CardContent>
       </Card>
+      )}
 
-      {/* 5. Números */}
+      {/* Números (avanzado — default: todos los conectados) */}
+      {showAdvanced && (
       <Card>
-        <CardHeader><CardTitle className="text-base">5. Números de envío</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Números de envío</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           <RadioGroup value={form.instance_strategy} onValueChange={(v) => setForm({ ...form, instance_strategy: v })} className="flex gap-4">
             <label className="flex items-center gap-2"><RadioGroupItem value="all" />Todos los conectados</label>
@@ -801,12 +897,13 @@ export function CampaignWizard({
           </div>
         </CardContent>
       </Card>
+      )}
 
-      {/* 5b. Template HSM (Meta API Oficial) */}
-      {instances.some((i) => i.connection_type === 'meta_whatsapp' && isInstanceReady(i)) && (
+      {/* Template HSM Meta (avanzado — solo si hay conexión Meta directa) */}
+      {showAdvanced && instances.some((i) => i.connection_type === 'meta_whatsapp' && isInstanceReady(i)) && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">5b. Template HSM (API Oficial Meta)</CardTitle>
+            <CardTitle className="text-base">Template HSM (API Oficial Meta)</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <p className="text-xs text-muted-foreground">
@@ -831,55 +928,113 @@ export function CampaignWizard({
         return (
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">5c. Plantilla (WhatsApp Oficial vía Zernio)</CardTitle>
+              <CardTitle className="text-base">3. Mensaje a enviar (WhatsApp vía Zernio)</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <p className="text-xs text-muted-foreground">
                 Para un primer contacto por Zernio (fuera de la ventana de 24 h) se requiere una plantilla aprobada. Elegí una:
               </p>
+              {!(form.meta_template_config as any)?.zernio?.zernio_template_name &&
+                !((form.meta_template_config as any)?.zernio?.free_window_message?.trim()) && (
+                <div className="rounded-md border border-red-500/40 bg-red-500/10 p-3 text-xs text-red-700 dark:text-red-400">
+                  ⚠️ <strong>Sin plantilla y sin mensaje:</strong> el agente IA va a <strong>inventar</strong> el
+                  texto del primer mensaje para cada contacto (con la IA pausada, directamente no se envía nada).
+                  Para controlar exactamente qué se envía, elegí una plantilla y/o escribí el mensaje
+                  personalizado de abajo.
+                </div>
+              )}
+              <div className="rounded-md border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-700 dark:text-emerald-400">
+                💰 <strong>Ahorro automático:</strong> a los contactos que respondieron hace menos de 24 h
+                (ventana abierta) se les envía el mismo contenido como <strong>mensaje libre — gratis</strong>,
+                sin gastar un envío de plantilla Marketing. La plantilla paga solo se usa con los que tienen
+                la ventana cerrada.
+              </div>
+              {ventana24 && ventana24.total > 0 && (
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-400">
+                    🟢 {ventana24.abiertas} con ventana abierta → salen gratis
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/40 bg-sky-500/10 px-2.5 py-1 font-medium text-sky-700 dark:text-sky-400">
+                    💳 {ventana24.total - ventana24.abiertas} con ventana cerrada → plantilla paga
+                  </span>
+                </div>
+              )}
+              {/* Mensaje propio para los envíos GRATIS por ventana abierta (opcional).
+                  La imagen y los botones de la plantilla se mantienen; solo cambia el texto. */}
+              <div className="space-y-1.5 pt-1">
+                <Label className="text-xs font-medium">
+                  ✍️ Mensaje personalizado para los que están en ventana{' '}
+                  <span className="text-muted-foreground font-normal">(opcional)</span>
+                </Label>
+                <Textarea
+                  rows={3}
+                  placeholder="Si lo dejás vacío, se envía el mismo texto de la plantilla. La imagen y los botones se mantienen."
+                  value={(form.meta_template_config as any)?.zernio?.free_window_message ?? ''}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      meta_template_config: {
+                        ...form.meta_template_config,
+                        zernio: { ...(form.meta_template_config as any)?.zernio, free_window_message: e.target.value },
+                      } as any,
+                    })
+                  }
+                />
+                <p className="text-[11px] text-muted-foreground">
+                  Solo aplica a los envíos gratis (ventana abierta). Los que reciben la plantilla paga ven el texto aprobado por Meta — ese no se puede cambiar.
+                </p>
+              </div>
               <ZernioCampaignTemplatePicker
                 organizationId={orgId}
                 connectionId={zConnId}
                 value={(form.meta_template_config as any)?.zernio ?? null}
-                onChange={(v) => setForm({ ...form, meta_template_config: { ...form.meta_template_config, zernio: v } as any })}
+                onChange={(v) =>
+                  setForm({
+                    ...form,
+                    meta_template_config: {
+                      ...form.meta_template_config,
+                      // Cambiar de plantilla no debe borrar el mensaje custom de ventana
+                      zernio: {
+                        ...(v as any),
+                        free_window_message: (form.meta_template_config as any)?.zernio?.free_window_message ?? null,
+                      },
+                    } as any,
+                  })
+                }
               />
             </CardContent>
           </Card>
         );
       })()}
 
-      {/* 6. Velocidade */}
-
-      <Card>
-        <CardHeader><CardTitle className="text-base">6. Velocidad</CardTitle></CardHeader>
-        <CardContent className="space-y-3">
-          {onlyApiConnections && (
-            <div className="rounded-md border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-700 dark:text-emerald-400">
-              <strong>Envío inmediato (API oficial).</strong> Con plantilla aprobada de Meta/Zernio no hay riesgo de baneo,
-              así que los mensajes salen de una. El retardo entre envíos solo aplica a WhatsApp por QR (Evolution).
-            </div>
-          )}
-          <RadioGroup
-            value={form.speed_preset}
-            onValueChange={(v) => setForm({ ...form, speed_preset: v })}
-            className={`grid grid-cols-2 md:grid-cols-4 gap-2 ${onlyApiConnections ? 'opacity-50 pointer-events-none' : ''}`}
-          >
-            {SPEED_PRESETS.map((p) => (
-              <label key={p.value} className={`p-3 border rounded cursor-pointer ${form.speed_preset === p.value ? 'border-primary bg-primary/5' : ''}`}>
-                <div className="flex items-center gap-2 mb-1">
-                  <RadioGroupItem value={p.value} />
-                  <span className="font-medium text-sm">{p.label}</span>
-                </div>
-                <p className="text-xs text-muted-foreground">{p.desc}</p>
-              </label>
-            ))}
-          </RadioGroup>
-        </CardContent>
-      </Card>
+      {/* 6. Velocidad — con API oficial (Zernio/Meta) el envío es inmediato y sin riesgo,
+          así que la selección de retardo (herencia del anti-ban de Evolution) no se muestra. */}
+      {!onlyApiConnections && (
+        <Card>
+          <CardHeader><CardTitle className="text-base">6. Velocidad</CardTitle></CardHeader>
+          <CardContent className="space-y-3">
+            <RadioGroup
+              value={form.speed_preset}
+              onValueChange={(v) => setForm({ ...form, speed_preset: v })}
+              className="grid grid-cols-2 md:grid-cols-4 gap-2"
+            >
+              {SPEED_PRESETS.map((p) => (
+                <label key={p.value} className={`p-3 border rounded cursor-pointer ${form.speed_preset === p.value ? 'border-primary bg-primary/5' : ''}`}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <RadioGroupItem value={p.value} />
+                    <span className="font-medium text-sm">{p.label}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{p.desc}</p>
+                </label>
+              ))}
+            </RadioGroup>
+          </CardContent>
+        </Card>
+      )}
 
       {/* 7. Agenda */}
       <Card>
-        <CardHeader><CardTitle className="text-base">7. ¿Cuándo enviar?</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">4. ¿Cuándo enviar?</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           <RadioGroup value={form.schedule_type} onValueChange={(v) => setForm({ ...form, schedule_type: v })} className="flex gap-4">
             <label className="flex items-center gap-2"><RadioGroupItem value="now" />Enviar ahora</label>
@@ -929,9 +1084,10 @@ export function CampaignWizard({
         </CardContent>
       </Card>
 
-      {/* 8. Post-respuesta */}
+      {/* Post-respuesta (avanzado — el default "detener campaña al responder" ya viene activo) */}
+      {showAdvanced && (
       <Card>
-        <CardHeader><CardTitle className="text-base">8. Cuando el lead responda…</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Cuando el lead responda…</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           <label className="flex items-center gap-2">
             <Checkbox
@@ -1053,6 +1209,19 @@ export function CampaignWizard({
           </div>
         </CardContent>
       </Card>
+      )}
+
+      {/* Toggle de opciones avanzadas — todo lo que la mayoría de las campañas no toca */}
+      <button
+        type="button"
+        onClick={() => setShowAdvanced((v) => !v)}
+        className="w-full flex items-center justify-center gap-2 rounded-lg border border-dashed py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+      >
+        ⚙️ {showAdvanced ? 'Ocultar opciones avanzadas' : 'Opciones avanzadas'}
+        <span className="text-xs opacity-70">
+          {showAdvanced ? '' : '(exclusiones, agente IA, números, qué pasa cuando responden)'}
+        </span>
+      </button>
 
       <TagFormDialog open={tagDialogOpen} onOpenChange={setTagDialogOpen} tag={null} />
     </div>

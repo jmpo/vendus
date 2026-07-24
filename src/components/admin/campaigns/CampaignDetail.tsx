@@ -33,12 +33,29 @@ export function CampaignDetail({
 }) {
   const [campaign, setCampaign] = useState<any>(null);
   const { counts, targets } = useCampaignTargets(campaignId);
+  // Desglose de costo: cuántos envíos salieron GRATIS por ventana 24h abierta
+  // (metadata.sent_as = 'free_window') vs. por plantilla paga (broadcast).
+  const [ahorro, setAhorro] = useState<{ gratis: number; pagas: number } | null>(null);
 
   useEffect(() => {
     supabase.from('campaigns').select('*').eq('id', campaignId).maybeSingle()
       .then(({ data, error }) => {
         if (error) { console.error('[CampaignDetail] load failed:', error); return; }
         setCampaign(data);
+      });
+    supabase.from('webchat_messages')
+      .select('metadata')
+      .eq('metadata->>campaign_id', campaignId)
+      .eq('message_type', 'template')
+      .limit(2000)
+      .then(({ data }) => {
+        if (!data) return;
+        let gratis = 0, pagas = 0;
+        for (const m of data as any[]) {
+          if (m.metadata?.sent_as === 'free_window') gratis++;
+          else if (m.metadata?.zernio_broadcast_id) pagas++;
+        }
+        if (gratis + pagas > 0) setAhorro({ gratis, pagas });
       });
   }, [campaignId, counts]);
 
@@ -110,6 +127,16 @@ export function CampaignDetail({
               </div>
             ))}
           </div>
+          {ahorro && (
+            <div className="flex flex-wrap gap-2 text-xs pt-1">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-400">
+                💰 {ahorro.gratis} salieron gratis (ventana 24h abierta)
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/40 bg-sky-500/10 px-2.5 py-1 font-medium text-sky-700 dark:text-sky-400">
+                💳 {ahorro.pagas} por plantilla paga
+              </span>
+            </div>
+          )}
         </CardContent>
       </Card>
 

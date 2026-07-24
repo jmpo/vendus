@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Smartphone, ShieldCheck, Instagram, ChevronRight, Globe } from 'lucide-react';
+import { ShieldCheck, ChevronRight, Globe } from 'lucide-react';
 
 export type ConnectionProvider = 'meta_whatsapp' | 'meta_instagram' | 'zernio';
 
@@ -77,14 +77,8 @@ export function NewConnectionDialog({ open, onClose, onSelect }: Props) {
             badge={{ label: 'Avanzado', variant: 'outline' }}
             onClick={() => handle('meta_whatsapp')}
           />
-          <Option
-            icon={<Instagram className="h-5 w-5 text-pink-500" />}
-            iconBg="bg-pink-500/10"
-            title="Instagram Direct (Meta)"
-            description="API oficial para recibir y responder mensajes de Instagram profesional vía Meta. Requiere Instagram Business/Creator vinculado a una Página de Facebook."
-            badge={{ label: 'Avanzado', variant: 'outline' }}
-            onClick={() => handle('meta_instagram')}
-          />
+          {/* Instagram Direct fue retirado: sus edge functions ya no existen — ofrecerlo
+              sería una conexión que nunca recibe mensajes. Reactivar cuando se reimplante. */}
         </div>
       </DialogContent>
     </Dialog>

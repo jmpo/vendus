@@ -23,6 +23,8 @@ interface MobileLayoutProps {
   products?: DBProduct[];
   selectedProduct?: DBProduct | null;
   onSelectProduct?: (product: DBProduct) => void;
+  /** El contenido ocupa todo el alto sin padding (inbox, kanban). El padre maneja el padding. */
+  fullBleed?: boolean;
 }
 
 const ONBOARDING_KEY = 'salesos_onboarding_completed';

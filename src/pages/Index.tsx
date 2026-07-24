@@ -113,14 +113,14 @@ function InitialLoadingScreen() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 p-6 text-center">
       <Loader2 className="h-8 w-8 animate-spin text-primary" />
       <p className="text-sm text-muted-foreground">
-        {stuck ? 'Demorando mais que o esperado…' : 'Carregando seus produtos…'}
+        {stuck ? 'Está tardando más de lo esperado…' : 'Cargando tus productos…'}
       </p>
       {stuck && (
         <button
           onClick={() => window.location.reload()}
           className="text-sm font-medium text-primary underline-offset-4 hover:underline"
         >
-          Tentar novamente
+          Reintentar
         </button>
       )}
     </div>
@@ -203,9 +203,11 @@ const Index = () => {
   const visitedRef = useRef<Set<string>>(new Set([activeTab]));
   visitedRef.current.add(activeTab);
 
-  // Prefetch tabs no idle. Mobile: somente as essenciais (4G-friendly).
-  // Desktop: tudo.
+  // Prefetch de tabs en idle. Mobile: solo las esenciales (4G-friendly). Desktop: todo.
+  // En DEV se omite: forzaba a Vite a transpilar TODOS los módulos pesados de golpe
+  // durante la carga inicial → localhost tardaba muchísimo en mostrar la app.
   useEffect(() => {
+    if (import.meta.env.DEV) return;
     onIdle(() => {
       if (isMobile) {
         [f.ProductDashboard, f.MobileProductDashboard, f.LeadsKanban, f.MobileKanban, f.SellerInbox, f.MobileTaskList]

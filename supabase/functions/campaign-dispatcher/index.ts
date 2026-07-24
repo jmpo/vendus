@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
       if (!campaign) {
         const { data } = await supabase
           .from("campaigns")
-          .select("id, status, agent_id, schedule_type, recurrence, name, post_cadence_id, meta_template_config")
+          .select("id, status, agent_id, schedule_type, recurrence, name, post_cadence_id, meta_template_config, audience_filters")
           .eq("id", t.campaign_id)
           .maybeSingle();
         if (data) campaignCache.set(t.campaign_id, data);
@@ -141,7 +141,13 @@ Deno.serve(async (req) => {
           zernio_template_name: cfg.zernio.zernio_template_name,
           zernio_template_language: cfg.zernio.zernio_template_language || 'es',
           variable_mapping: cfg.zernio.variable_mapping ?? {},
+          // Texto personalizado para destinatarios con ventana 24h abierta (envío gratis)
+          free_window_message: cfg.zernio.free_window_message ?? null,
         };
+      } else if (t.connection_type === 'zernio' && cfg?.zernio?.free_window_message) {
+        // Sin plantilla pero CON mensaje escrito por el usuario → se envía ese texto
+        // tal cual (sin IA). Solo alcanza a quienes tengan la ventana 24h abierta.
+        chosenTemplate = { free_window_message: cfg.zernio.free_window_message };
       }
 
       try {
@@ -161,6 +167,9 @@ Deno.serve(async (req) => {
             instance_id: t.instance_id,
             connection_type: t.connection_type ?? 'evolution',
             template_config: chosenTemplate,
+            // Opción de la campaña: enviar aunque la conversación esté en atención humana
+            // (también salta el dedupe de outreach reciente — reenvío intencional).
+            force_when_human: !!(campaign as any)?.audience_filters?.force_when_human,
             event_context: {
               campaign_id: campaign.id,
               campaign_target_id: t.id,

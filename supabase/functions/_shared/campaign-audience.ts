@@ -1,5 +1,5 @@
 // Resolve audience and exclusion filters server-side.
-import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 
 export type CustomFieldFilter = { key: string; op: string; value: any };
 
@@ -18,7 +18,28 @@ export type CampaignFilters = {
   custom_fields?: CustomFieldFilter[];
   has_phone?: boolean;
   search?: { name?: string; email?: string; phone?: string };
+  /** Solo contactos con la ventana 24h de WhatsApp ABIERTA (respondieron hace <24h) → envío gratis. */
+  only_open_window?: boolean;
 };
+
+/** Lead ids de la org con conversación WhatsApp cuya ventana 24h está abierta. */
+async function fetchLeadIdsWithOpenWindow(
+  supabase: SupabaseClient,
+  organizationId: string,
+): Promise<Set<string>> {
+  const desde = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+  const { data } = await supabase
+    .from("webchat_conversations")
+    .select("lead_id")
+    .eq("organization_id", organizationId)
+    .eq("channel", "whatsapp")
+    .not("lead_id", "is", null)
+    .gte("last_inbound_at", desde)
+    .limit(PAGE * 10);
+  const out = new Set<string>();
+  (data ?? []).forEach((r: any) => { if (r.lead_id) out.add(r.lead_id); });
+  return out;
+}
 
 const PAGE = 1000;
 
@@ -125,6 +146,13 @@ export async function resolveAudience(
   if (audience.custom_fields?.length) {
     const keep = applyCustomFields(baseRows, audience.custom_fields);
     baseRows = baseRows.filter((r) => keep.has(r.id));
+  }
+
+  // Filtro ventana 24h: se aplica SOBRE los demás filtros (ej: etapa CALIFICACION
+  // + ventana abierta) → esos destinatarios reciben el contenido gratis.
+  if (audience.only_open_window) {
+    const abiertos = await fetchLeadIdsWithOpenWindow(supabase, organizationId);
+    baseRows = baseRows.filter((r) => abiertos.has(r.id));
   }
 
   let baseIds = baseRows.map((r) => r.id);

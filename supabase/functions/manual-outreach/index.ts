@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 import { splitIntoBubbles } from "../_shared/humanizer.ts";
 import { recordLovableUsage, resolveAIConfig, recordAIUsage } from "../_shared/ai-router.ts";
 import { resolveAgentSendConnection } from "../_shared/agent-connection.ts";
@@ -61,6 +61,17 @@ Deno.serve(async (req) => {
       .single();
 
     if (!agent) throw new Error("Agent not found");
+
+    // Interruptor MAESTRO de IA de la organización. Con ai_enabled=false la IA no
+    // puede GENERAR texto (tampoco acá — antes este módulo lo ignoraba y las campañas
+    // sin plantilla salían igual con texto inventado). Plantillas aprobadas y mensajes
+    // escritos por el usuario NO son IA → esos sí pueden salir.
+    const { data: orgAi } = await supabase
+      .from("organizations")
+      .select("ai_enabled")
+      .eq("id", organization_id)
+      .maybeSingle();
+    const aiOff = (orgAi as any)?.ai_enabled === false;
 
     // 🔒 Resolve conexão (sem fallback silencioso para default da org)
     if (!instance_id) {
@@ -315,43 +326,64 @@ Deno.serve(async (req) => {
           await supabase.from('webchat_conversations').update(patch).eq('id', conversationId);
         }
 
-        // === Gera mensagem (texto livre) OU prepara template ===
+        // === Genera mensaje (texto libre) O prepara template ===
         let bubbles: string[] = [];
-        if (!willSendTemplate) {
+
+        // Mensaje PERSONALIZADO de la campaña (escrito por el usuario): se envía TAL CUAL,
+        // sin pasar por la IA. Es el camino para campañas de texto controlado sin plantilla.
+        const customCampaignText = typeof (template_config as any)?.free_window_message === 'string'
+          ? (template_config as any).free_window_message.trim()
+          : '';
+
+        if (!willSendTemplate && customCampaignText) {
+          bubbles = [customCampaignText];
+        } else if (!willSendTemplate && aiOff) {
+          // IA apagada y sin plantilla ni mensaje del usuario → NO inventamos nada.
+          results.push({
+            leadId,
+            skipped: true,
+            reason: 'IA desactivada (interruptor maestro). Configurá una plantilla o escribí el mensaje de la campaña.',
+            code: 'AI_DISABLED',
+          });
+          continue;
+        } else if (!willSendTemplate) {
           const eventCtxLines = event_context
             ? Object.entries(event_context).map(([k, v]) => `- ${k}: ${v}`).join("\n")
             : "";
 
+          // Prompt en ESPAÑOL: el público habla español. Antes estaba en portugués
+          // (herencia de Lovable) → las campañas sin plantilla salían "Olá! Sou o...".
           const modeRules = mode === 'conversational'
-            ? `MODO: CONVERSA INTENCIONAL
-- Gere APENAS uma abertura curta (1–2 linhas, no máx. 25 palavras).
-- Faça UMA pergunta provocativa referenciando o evento.
-- NÃO entregue Pix, link, código ou dados do evento agora — só pergunte.`
-            : `MODO: MENSAGEM DIRETA
-- Gere uma mensagem completa em no máx. 2 parágrafos curtos.
-- Se houver Pix/link, coloque cada um em linha própria.
-- Termine com UMA pergunta ou CTA claro.`;
+            ? `MODO: CONVERSACIÓN INTENCIONAL
+- Generá SOLO una apertura corta (1–2 líneas, máx. 25 palabras).
+- Hacé UNA pregunta provocadora referenciando el evento.
+- NO entregues links, códigos ni datos del evento ahora — solo preguntá.`
+            : `MODO: MENSAJE DIRECTO
+- Generá un mensaje completo de máx. 2 párrafos cortos.
+- Si hay un link, ponelo en su propia línea.
+- Terminá con UNA pregunta o CTA claro.`;
 
-          const systemPrompt = `Você é ${agent.name}, um agente de ${agent.agent_type} da empresa.
-MISSÃO: ${agent.primary_objective}
-TOM DE VOZ: ${agent.tone_style || "Consultivo"}
-ESTILO DE MENSAGEM: ${agent.message_style || "Curta e objetiva"}
-${agent.can_do?.length ? `O QUE VOCÊ PODE FAZER:\n${agent.can_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
-${agent.cannot_do?.length ? `O QUE VOCÊ NÃO PODE FAZER:\n${agent.cannot_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
-${knowledgeContext ? `CONHECIMENTO DO PRODUTO:\n${knowledgeContext}` : ""}
-${objective ? `OBJETIVO DESTA ABORDAGEM: ${objective}` : ""}
+          const systemPrompt = `Sos ${agent.name}, agente de ${agent.agent_type} de la empresa.
+IDIOMA: escribí SIEMPRE en español (es-PY/es-AR neutro). NUNCA en portugués ni en otro idioma.
+MISIÓN: ${agent.primary_objective}
+TONO DE VOZ: ${agent.tone_style || "Consultivo"}
+ESTILO DE MENSAJE: ${agent.message_style || "Corto y directo"}
+${agent.can_do?.length ? `LO QUE PODÉS HACER:\n${agent.can_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
+${agent.cannot_do?.length ? `LO QUE NO PODÉS HACER:\n${agent.cannot_do.map((c: string) => `- ${c}`).join("\n")}` : ""}
+${knowledgeContext ? `CONOCIMIENTO DEL PRODUCTO:\n${knowledgeContext}` : ""}
+${objective ? `OBJETIVO DE ESTE CONTACTO: ${objective}` : ""}
 ${extra_context ? `CONTEXTO ADICIONAL: ${extra_context}` : ""}
-${eventCtxLines ? `CONTEXTO DO EVENTO:\n${eventCtxLines}` : ""}
+${eventCtxLines ? `CONTEXTO DEL EVENTO:\n${eventCtxLines}` : ""}
 ${modeRules}
-REGRAS GERAIS:
-- Gere APENAS a mensagem, sem explicações ou prefixos.
-- Seja natural e humano, sem clichês.
-- WhatsApp: sem markdown, sem HTML.`;
+REGLAS GENERALES:
+- Generá SOLO el mensaje, sin explicaciones ni prefijos.
+- Natural y humano, sin clichés.
+- WhatsApp: sin markdown, sin HTML.`;
 
-          const userPrompt = `Gere a mensagem de primeira abordagem via WhatsApp para este lead:
-Nome: ${lead?.name || "Lead"}
-Email: ${lead?.email || "Não informado"}
-Telefone: ${leadPhone}
+          const userPrompt = `Generá el mensaje de primer contacto por WhatsApp para este lead (EN ESPAÑOL):
+Nombre: ${lead?.name || "Lead"}
+Email: ${lead?.email || "No informado"}
+Teléfono: ${leadPhone}
 Temperatura: ${lead?.temperature || "indefinida"}`;
 
           // Router de IA: usa la conexión configurada (OpenAI propio / Lovable / pool). NO hardcodea Lovable.
@@ -446,7 +478,18 @@ Temperatura: ${lead?.temperature || "indefinida"}`;
           // zernio-send registra y enruta; fuera de ventana sin template devuelve OUT_OF_WINDOW.
           if (zernioTemplate) {
             const r = await supabase.functions.invoke('zernio-send', {
-              body: { connection_id: instance_id, organization_id, conversation_id: conversationId, to: leadPhone, type: 'template', template: zernioTemplate },
+              body: {
+                connection_id: instance_id, organization_id, conversation_id: conversationId,
+                to: leadPhone, type: 'template', template: zernioTemplate,
+                // Texto personalizado para ventana 24h abierta (envío gratis)
+                ...((template_config as any)?.free_window_message
+                  ? { free_window_message: (template_config as any).free_window_message }
+                  : {}),
+                // Marca el mensaje con la campaña → permite el desglose "gratis vs plantilla paga"
+                ...(event_context && (event_context as any).campaign_id
+                  ? { extra_metadata: { campaign_id: (event_context as any).campaign_id } }
+                  : {}),
+              },
             });
             const ok = !r.error && (r.data as any)?.ok !== false && !(r.data as any)?.error;
             if (!ok) { lastError = r.error?.message || (r.data as any)?.error || 'zernio template send failed'; console.error('[ManualOutreach] zernio template failed:', lastError); }

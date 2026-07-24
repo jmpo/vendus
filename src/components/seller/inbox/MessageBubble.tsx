@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import {
   Bot, User, Check, CheckCheck, Clock, AlertCircle,
   MoreHorizontal, Pencil, Trash2, Reply, Forward, Star, X,
-  Ban, RotateCcw
+  Ban, RotateCcw, ExternalLink, CornerDownLeft
 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -316,6 +316,10 @@ export function MessageBubble({
               </Button>
             </div>
           </div>
+        ) : (metadata as any)?.template_view ? (
+          /* Plantilla HSM: se muestra IGUAL que la ve el cliente en WhatsApp
+             (imagen de header, cuerpo, footer y botones). */
+          <TemplateCard view={(metadata as any).template_view} isVisitor={isVisitor} />
         ) : (
           <>
             {Array.isArray((metadata as any)?.contacts) && (metadata as any).contacts.length > 0 && (
@@ -334,16 +338,25 @@ export function MessageBubble({
           </>
         )}
 
-        {/* Botones interactivos enviados al cliente (lo que se le ofreció en WhatsApp) */}
-        {!isDeleted && Array.isArray((metadata as any)?.buttons) && (metadata as any).buttons.length > 0 && (
-          <div className="mt-2 flex flex-col gap-1 border-t border-current/10 pt-2">
-            {(metadata as any).buttons.map((b: any, i: number) => (
-              <span key={i} className="inline-flex items-center justify-center rounded-md border border-current/25 px-2 py-1 text-[11px] font-medium opacity-80">
-                {b.title || b.text || b.label || 'Opción'}
-              </span>
-            ))}
-          </div>
-        )}
+        {/* Botones/respuestas rápidas enviados al cliente (lo que se le ofreció en WhatsApp).
+            No aplica a plantillas: TemplateCard ya dibuja los suyos. */}
+        {!isDeleted && !(metadata as any)?.template_view && (() => {
+          const raw = (Array.isArray((metadata as any)?.buttons) && (metadata as any).buttons.length > 0)
+            ? (metadata as any).buttons
+            : (Array.isArray((metadata as any)?.quickReplies) && (metadata as any).quickReplies.length > 0)
+              ? (metadata as any).quickReplies
+              : null;
+          if (!raw) return null;
+          return (
+            <div className="mt-2 flex flex-col gap-1 border-t border-current/10 pt-2">
+              {raw.map((b: any, i: number) => (
+                <span key={i} className="inline-flex items-center justify-center rounded-md border border-current/25 px-2 py-1 text-[11px] font-medium opacity-80">
+                  {typeof b === 'string' ? b : (b.title || b.text || b.label || 'Opción')}
+                </span>
+              ))}
+            </div>
+          );
+        })()}
 
         {/* Time and status */}
         {!isEditing && (
@@ -460,6 +473,61 @@ function MessageMarkdown({ content, isVisitor }: { content: string; isVisitor: b
       >
         {formatted}
       </ReactMarkdown>
+    </div>
+  );
+}
+
+/**
+ * Tarjeta de plantilla HSM — replica cómo la ve el cliente en WhatsApp:
+ * imagen de header, cuerpo con formato, footer gris y botones separados.
+ * Los botones son informativos (muestran lo que el cliente puede tocar).
+ */
+function TemplateCard({ view, isVisitor }: {
+  view: {
+    name?: string;
+    header_image?: string | null;
+    header_text?: string | null;
+    body?: string | null;
+    footer?: string | null;
+    buttons?: Array<{ type?: string; text?: string; url?: string }>;
+  };
+  isVisitor: boolean;
+}) {
+  const [imgError, setImgError] = useState(false);
+  return (
+    <div className="-mx-1 -mt-0.5 min-w-[220px] max-w-[300px]">
+      {view.header_image && !imgError && (
+        <img
+          src={view.header_image}
+          alt=""
+          loading="lazy"
+          onError={() => setImgError(true)}
+          className="w-full h-auto max-h-[200px] object-cover rounded-xl mb-2 bg-black/5"
+        />
+      )}
+      {view.header_text && (
+        <p className="text-sm font-semibold mb-1">{view.header_text}</p>
+      )}
+      {view.body && <MessageMarkdown content={view.body} isVisitor={isVisitor} />}
+      {view.footer && (
+        <p className="text-[11px] text-muted-foreground/80 mt-1.5">{view.footer}</p>
+      )}
+      {Array.isArray(view.buttons) && view.buttons.length > 0 && (
+        <div className="mt-2 flex flex-col divide-y divide-current/10 border-t border-current/15">
+          {view.buttons.map((b, i) => {
+            const isUrl = String(b.type ?? '').toUpperCase() === 'URL' || !!b.url;
+            return (
+              <span
+                key={i}
+                className="inline-flex items-center justify-center gap-1.5 py-2 text-[13px] font-medium text-sky-600 dark:text-sky-400"
+              >
+                {isUrl ? <ExternalLink className="h-3.5 w-3.5" /> : <CornerDownLeft className="h-3.5 w-3.5" />}
+                {b.text || 'Opción'}
+              </span>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

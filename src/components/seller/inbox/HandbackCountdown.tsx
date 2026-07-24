@@ -31,7 +31,12 @@ export function HandbackCountdown({
   const remaining = new Date(lastActivityAt).getTime() + idleMinutes * 60_000 - now;
   const expired = remaining <= 0;
   const totalMin = Math.max(0, Math.ceil(remaining / 60_000));
-  const label = expired ? 'IA retomando…' : totalMin >= 60 ? `IA en ${Math.floor(totalMin / 60)}h ${totalMin % 60}m` : `IA en ${totalMin}m`;
+  // Label autoexplicativo: "IA en 10m" no se entendía qué significaba
+  const label = expired
+    ? 'La IA está retomando…'
+    : totalMin >= 60
+      ? `IA retoma en ${Math.floor(totalMin / 60)}h ${totalMin % 60}m`
+      : `IA retoma en ${totalMin} min`;
   const urgent = remaining < 10 * 60_000;
   const critical = remaining < 3 * 60_000;
 
