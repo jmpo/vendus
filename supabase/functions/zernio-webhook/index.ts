@@ -332,6 +332,15 @@ async function handleInbound(sb: any, conn: any, payload: any) {
   }).select('*').single();
   if (msgErr && (msgErr as any).code !== '23505') throw msgErr;
 
+  // DUPLICADO: el índice único (conversation_id, wamid) rechazó la 2ª inserción con 23505
+  // → insertedMsg es null. Zernio reenvía el mismo webhook (entrega "al menos una vez") o
+  // llegan dos a la vez (carrera). Ya se procesó la primera: cortamos acá para NO disparar
+  // la IA de nuevo ni reenviar. Antes esto generaba respuestas dobles y gastaba recursos.
+  if (!insertedMsg) {
+    console.log('[zernio-webhook] mensaje duplicado ignorado (wamid ya procesado):', platformMsgId);
+    return;
+  }
+
   // Broadcast realtime → el inbox (SellerInbox) escucha `conversation:{id}` y lo muestra al instante.
   if (insertedMsg) {
     try {

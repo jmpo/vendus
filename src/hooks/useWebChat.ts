@@ -416,7 +416,10 @@ export function useWebChatConversations(filters?: InboxBackendFilters & { limit?
     gcTime: 30 * 60_000,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
-    refetchInterval: 60_000,
+    // Realtime ya entrega los cambios al instante (postgres_changes + broadcast). Este
+    // poll es solo red de seguridad → 120s en vez de 60s reduce a la mitad el egress
+    // de tener la pestaña abierta horas, sin afectar la frescura.
+    refetchInterval: 120_000,
     refetchIntervalInBackground: false,
     placeholderData: (prev) => prev,
   });
@@ -442,7 +445,8 @@ export function useWebChatConversationCounts(filters?: Omit<InboxBackendFilters,
       return (await res.json()) as { attending: number; agents: number; waiting: number; resolved: number };
     },
     enabled: !!session?.access_token,
-    refetchInterval: 60000,
+    // Los contadores se actualizan por realtime (fix reciente); el poll es respaldo.
+    refetchInterval: 120000,
     refetchIntervalInBackground: false,
   });
 }
