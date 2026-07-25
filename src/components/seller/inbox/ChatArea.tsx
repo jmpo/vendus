@@ -28,6 +28,7 @@ import { ChatInput } from './ChatInput';
 import { OutOfWindowTemplateBar } from './OutOfWindowTemplateBar';
 import { WindowCountdown } from './WindowCountdown';
 import { HandbackCountdown } from './HandbackCountdown';
+import { FollowupBadge } from './FollowupBadge';
 import { useMessageReactions } from '@/hooks/useMessageReactions';
 import { TypingIndicator } from './TypingIndicator';
 import { QuickRepliesPopover } from './QuickRepliesPopover';
@@ -573,6 +574,7 @@ export function ChatArea({
                 status={status}
                 idleMinutes={handbackIdleMinutes}
               />
+              <FollowupBadge conversationId={conversationId} />
             </div>
             <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground min-w-0 truncate">
               {ticketCode && (
