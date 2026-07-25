@@ -367,6 +367,22 @@ async function handleInbound(sb: any, conn: any, payload: any) {
     } catch (e) { console.warn('[zernio-webhook] push non-fatal:', e); }
   }
 
+  // 4b) PARAR cadencia/campaña al responder. Esta lógica vivía SOLO en el webhook de
+  //     Evolution (retirado) → en Zernio no corría, y una cadencia le seguía mandando
+  //     pasos a un lead que ya había respondido (spam). Fire-and-forget, no bloquea la IA.
+  try {
+    const _url = Deno.env.get('SUPABASE_URL');
+    const _key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    if (_url && _key) {
+      const _body = JSON.stringify({ conversation_id: conversationId, organization_id: conn.organization_id });
+      const _h = { 'Content-Type': 'application/json', Authorization: `Bearer ${_key}` };
+      fetch(`${_url}/functions/v1/campaign-on-response`, { method: 'POST', headers: _h, body: _body })
+        .catch((e) => console.error('[zernio-webhook] campaign-on-response non-fatal:', e));
+      fetch(`${_url}/functions/v1/cadence-on-response`, { method: 'POST', headers: _h, body: _body })
+        .catch((e) => console.error('[zernio-webhook] cadence-on-response non-fatal:', e));
+    }
+  } catch (e) { console.warn('[zernio-webhook] on-response wrap non-fatal:', e); }
+
   // 5) Disparar IA y responder
   try {
     const transcription = metadata.transcription as string | undefined;
