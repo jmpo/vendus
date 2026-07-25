@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/card';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
-import { Repeat, MessageSquare, Clock, Lightbulb } from 'lucide-react';
+import { Repeat, MessageSquare, Clock, Lightbulb, ChevronDown } from 'lucide-react';
 import { ProductAgent } from '@/types/agents';
 import { useZernioTemplates } from '@/hooks/useZernioTemplates';
 
@@ -19,6 +19,21 @@ interface Props {
 
 const MAX_ATTEMPTS = 5;
 const DEFAULT_INTERVALS = [15, 120, 1440, 2880, 4320]; // min
+
+// Presets: la mayoría solo quiere "insistí un par de veces sin ser molesto".
+// Cada preset fija intentos + intervalos; lo granular queda en "avanzado".
+const PRESETS = [
+  { id: 'suave',      emoji: '🕊️', label: 'Suave',      desc: '1 recordatorio al día siguiente',        intervals: [1440] },
+  { id: 'normal',     emoji: '🟢', label: 'Normal',     desc: '2 recordatorios (2 h y al día siguiente)', intervals: [120, 1440] },
+  { id: 'insistente', emoji: '🔥', label: 'Insistente', desc: '3 recordatorios (1½ h, 8 h y al día sig.)', intervals: [90, 480, 1440] },
+] as const;
+
+function detectPreset(intervals: number[]): string {
+  for (const p of PRESETS) {
+    if (p.intervals.length === intervals.length && p.intervals.every((v, i) => v === intervals[i])) return p.id;
+  }
+  return 'custom';
+}
 
 const TONE_OPTIONS = [
   { value: 'short',        label: 'Corto y directo',           hint: '"¿Seguís ahí? ¿Puedo continuar?"' },
@@ -53,6 +68,17 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
   const channels       = formData.followup_channels ?? ['whatsapp'];
   const hints: Array<{ attempt: number; hint: string }> =
     Array.isArray(formData.followup_attempt_hints) ? formData.followup_attempt_hints as any : [];
+
+  const activePreset = detectPreset(intervals);
+  // "Avanzado" arranca abierto solo si la config no coincide con ningún preset.
+  const [showAdvanced, setShowAdvanced] = useState(activePreset === 'custom');
+
+  const applyPreset = (p: (typeof PRESETS)[number]) => {
+    onChange({
+      followup_max_attempts: p.intervals.length,
+      followup_intervals_minutes: [...p.intervals],
+    });
+  };
 
   const getHint = (attempt: number) =>
     hints.find((h) => h.attempt === attempt)?.hint ?? '';
@@ -110,6 +136,42 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
 
       {enabled && (
         <>
+          {/* Presets — lo que la mayoría necesita en un clic */}
+          <Card className="p-4 space-y-3">
+            <Label className="text-sm font-semibold">¿Con qué intensidad?</Label>
+            <div className="grid gap-2 sm:grid-cols-3">
+              {PRESETS.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => applyPreset(p)}
+                  className={`text-left rounded-lg border p-3 transition ${
+                    activePreset === p.id ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'hover:border-primary/50'
+                  }`}
+                >
+                  <div className="text-sm font-medium">{p.emoji} {p.label}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">{p.desc}</div>
+                </button>
+              ))}
+            </div>
+            {activePreset === 'custom' && (
+              <p className="text-[11px] text-muted-foreground">Configuración personalizada (ver avanzado).</p>
+            )}
+          </Card>
+
+          {/* Toggle de configuración avanzada */}
+          <button
+            type="button"
+            onClick={() => setShowAdvanced((v) => !v)}
+            className="w-full flex items-center justify-center gap-2 rounded-lg border border-dashed py-2 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+          >
+            <ChevronDown className={`h-4 w-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
+            {showAdvanced ? 'Ocultar configuración avanzada' : 'Configuración avanzada'}
+            {!showAdvanced && <span className="text-xs opacity-70">(intervalos exactos, tono, guardrails, plantilla)</span>}
+          </button>
+
+          {showAdvanced && (
+          <>
           {/* Intentos + intervalos */}
           <Card className="p-4 space-y-4">
             <div className="flex items-center gap-2">
@@ -368,6 +430,8 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
               <p className="text-[10px] text-muted-foreground">Las variables del lead se reemplazan al enviar (ej. {'{primer_nombre}'} → "Marcelo").</p>
             </div>
           </Card>
+          </>
+          )}
         </>
       )}
     </div>
