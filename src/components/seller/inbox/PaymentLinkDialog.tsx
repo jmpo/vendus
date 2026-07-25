@@ -133,11 +133,11 @@ export function PaymentLinkDialog({
             <Input
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://pay.cakto.com.br/..."
+              placeholder="https://pay.hotmart.com/..."
               type="url"
             />
             <p className="text-[11px] text-muted-foreground">
-              Cole o link gerado no Cakto, Stripe, Mercado Pago, Pix QR o cualquier gateway.
+              Pegá el link generado en Hotmart, Mercado Pago, PIX QR o cualquier gateway de pago.
             </p>
           </div>
 
