@@ -775,44 +775,7 @@ serve(async (req) => {
       }
 
 
-      // Instagram Direct (Meta) — rota para instagram-send
-      if (conversation.channel === 'instagram' && (conversation as any).instagram_connection_id && (conversation as any).ig_sender_id) {
-        try {
-          const igBody: Record<string, unknown> = {
-            connection_id: (conversation as any).instagram_connection_id,
-            organization_id: orgId,
-            conversation_id: body.conversation_id,
-            recipient_id: (conversation as any).ig_sender_id,
-          };
-          if (hasMedia) {
-            const m = body.media;
-            const typeMap: Record<string, string> = { image: 'image', audio: 'audio', video: 'video', document: 'file', sticker: 'image' };
-            igBody.media = { url: m.url, type: typeMap[m.kind] ?? 'file' };
-          } else {
-            igBody.text = body.content;
-          }
-          const { data: sendData, error: sendErr } = await supabase.functions.invoke('instagram-send', { body: igBody });
-          const sendOk = !sendErr && (sendData as any)?.ok !== false;
-          if (!sendOk) {
-            console.error('[webchat-inbox] instagram-send FAILED:', JSON.stringify({ sendErr, sendData }).slice(0, 500));
-            const baseMeta = (insertData.metadata as Record<string, unknown>) || {};
-            await supabase
-              .from('webchat_messages')
-              .update({
-                metadata: {
-                  ...baseMeta,
-                  delivery_status: 'failed',
-                  error: (sendData as any)?.message || sendErr?.message || (sendData as any)?.error || 'Unknown error',
-                  failed_at: new Date().toISOString(),
-                },
-              })
-              .eq('id', message.id);
-          }
-        } catch (sendError) {
-          console.error('[webchat-inbox] Instagram send error (non-fatal):', sendError);
-        }
-      }
-
+      // (Instagram Direct fue retirado: el canal ya no existe. Envío = WhatsApp vía Zernio.)
 
       // Broadcast message to all listeners on this conversation channel.
       // Inclui `client_temp_id` (se enviado) para o frontend conseguir substituir
