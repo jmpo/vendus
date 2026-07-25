@@ -495,7 +495,11 @@ export function useWebChatConversation(conversationId: string) {
       return { conversation: found as WebChatConversation, messages: [] as WebChatMessage[] };
     },
     initialDataUpdatedAt: 0, // força refetch em background mesmo com initialData
-    refetchInterval: 15000,
+    // Realtime ya invalida esta query al instante en cada cambio de la conversación
+    // (postgres_changes → invalidateQueries en SellerInbox). Este poll es solo red de
+    // seguridad por si Realtime dropea algo → 60s en vez de 15s baja el egress ~4x sin
+    // afectar la frescura (los mensajes nuevos siguen llegando al toque por Realtime).
+    refetchInterval: 60000,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: false,
     // Não insiste em IDs inválidos / sem permissão

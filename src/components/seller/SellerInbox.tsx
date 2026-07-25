@@ -694,7 +694,10 @@ export function SellerInbox({ productId, pendingConversationId, onConversationSe
       // Los contadores de pestañas (Atendiendo/Agentes/En Fila) también deben moverse
       // en vivo — antes quedaban viejos hasta un refresh manual.
       refetchCounts();
-    }, 1500);
+      // Debounce a 5s (antes 1.5s): bajo actividad de la IA colapsa muchas ráfagas en
+      // un solo refetch de lista → menos egress. Los avisos/sonidos NO pasan por acá
+      // (se disparan al instante en el handler de Realtime), así que no se pierde nada.
+    }, 5000);
   }, [refetchConversations, refetchCounts]);
 
   // Mantém último estado conhecido por conversa para detectar transições.
