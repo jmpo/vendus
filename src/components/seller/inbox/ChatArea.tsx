@@ -29,6 +29,7 @@ import { OutOfWindowTemplateBar } from './OutOfWindowTemplateBar';
 import { WindowCountdown } from './WindowCountdown';
 import { HandbackCountdown } from './HandbackCountdown';
 import { FollowupBadge } from './FollowupBadge';
+import { WindowBadge } from './WindowBadge';
 import { useMessageReactions } from '@/hooks/useMessageReactions';
 import { TypingIndicator } from './TypingIndicator';
 import { QuickRepliesPopover } from './QuickRepliesPopover';
@@ -534,6 +535,7 @@ export function ChatArea({
             idleMinutes={handbackIdleMinutes}
           />
           <FollowupBadge conversationId={conversationId} />
+          {isOfficialWhatsApp && <WindowBadge lastInboundAt={lastInboundAt} />}
         </div>
         </div>
       )}
@@ -584,6 +586,7 @@ export function ChatArea({
                 idleMinutes={handbackIdleMinutes}
               />
               <FollowupBadge conversationId={conversationId} />
+              {isOfficialWhatsApp && <WindowBadge lastInboundAt={lastInboundAt} />}
             </div>
             <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground min-w-0 truncate">
               {ticketCode && (

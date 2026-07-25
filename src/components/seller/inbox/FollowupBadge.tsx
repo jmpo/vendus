@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Repeat } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { isToday, isTomorrow, format } from 'date-fns';
@@ -6,24 +7,39 @@ import { useFollowupStatus } from '@/hooks/useFollowupStatus';
 
 /**
  * Chip que hace VISIBLE el seguimiento automático de la IA en la conversación:
- *   "🔄 Seguimiento IA 1/3 · próximo mañana 9:00"
- * Antes el follow-up se configuraba pero no se veía si iba a insistir, cuándo, ni en
- * qué intento. Solo aparece si hay un seguimiento programado en marcha.
+ *   "🔄 Seguimiento IA 1/3 · en 2h 15m"
+ * Con timer EN VIVO (cuenta regresiva que se actualiza sola). Solo aparece si hay
+ * un seguimiento programado en marcha. Se interrumpe si el cliente responde,
+ * un humano toma la conversación, o se agotan los intentos.
  */
-function formatWhen(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  const now = Date.now();
-  const diffMin = Math.round((d.getTime() - now) / 60000);
-  if (diffMin <= 0) return 'en breve';
-  if (diffMin < 60) return `en ${diffMin} min`;
-  if (isToday(d)) return `hoy ${format(d, 'HH:mm')}`;
-  if (isTomorrow(d)) return `mañana ${format(d, 'HH:mm')}`;
-  return format(d, "EEE d 'a las' HH:mm", { locale: es });
+function formatCountdown(iso: string, now: number): string {
+  const d = new Date(iso).getTime();
+  if (Number.isNaN(d)) return '';
+  const ms = d - now;
+  if (ms <= 0) return 'en instantes';        // vencido: el cron lo dispara en <5 min
+  const totalMin = Math.floor(ms / 60000);
+  if (totalMin < 60) return `en ${totalMin} min`;
+  // Menos de 12h: cuenta regresiva viva "en Xh Ym"
+  if (totalMin < 12 * 60) {
+    const h = Math.floor(totalMin / 60);
+    const m = totalMin % 60;
+    return `en ${h}h ${String(m).padStart(2, '0')}m`;
+  }
+  const date = new Date(iso);
+  if (isToday(date)) return `hoy ${format(date, 'HH:mm')}`;
+  if (isTomorrow(date)) return `mañana ${format(date, 'HH:mm')}`;
+  return format(date, "EEE d 'a las' HH:mm", { locale: es });
 }
 
 export function FollowupBadge({ conversationId }: { conversationId?: string | null }) {
   const { data } = useFollowupStatus(conversationId);
+  // Ticker en vivo: refresca la cuenta regresiva cada 30s sin re-consultar la base.
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 30_000);
+    return () => clearInterval(t);
+  }, []);
+
   if (!data?.active || !data.nextAt) return null;
 
   return (
@@ -32,10 +48,10 @@ export function FollowupBadge({ conversationId }: { conversationId?: string | nu
         'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium whitespace-nowrap',
         'bg-violet-500/15 text-violet-700 dark:text-violet-300',
       )}
-      title={`La IA va a hacer un seguimiento automático (intento ${data.attempt} de ${data.max}) si el cliente no responde. Se interrumpe si responde o si un humano toma la conversación.`}
+      title={`La IA hará un seguimiento automático (intento ${data.attempt} de ${data.max}) si el cliente no responde. Se interrumpe si responde o si un humano toma la conversación.`}
     >
       <Repeat className="h-3 w-3 shrink-0" />
-      Seguimiento IA {data.attempt}/{data.max} · {formatWhen(data.nextAt)}
+      Seguimiento IA {data.attempt}/{data.max} · {formatCountdown(data.nextAt, now)}
     </span>
   );
 }
