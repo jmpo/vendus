@@ -111,7 +111,6 @@ export const menuGroups: AdminMenuGroup[] = [
       { id: 'team', label: 'Equipos', icon: Users },
       { id: 'operation', label: 'Central de Operación', icon: Activity },
       { id: 'financial', label: 'Financiero', icon: DollarSign },
-      { id: 'payments', label: 'Pagos', icon: Banknote },
     ],
   },
   {

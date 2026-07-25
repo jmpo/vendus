@@ -34,7 +34,6 @@ const f = {
   AgentRunTracesPanel: () => import('@/components/admin/traces/AgentRunTracesPanel').then(m => ({ default: m.AgentRunTracesPanel })),
   SectorsManager: () => import('@/components/admin/sectors/SectorsManager').then(m => ({ default: m.SectorsManager })),
   PlanSelector: () => import('@/components/admin/plan/PlanSelector').then(m => ({ default: m.PlanSelector })),
-  CaktoAdminPanel: () => import('@/components/admin/payments/CaktoAdminPanel').then(m => ({ default: m.CaktoAdminPanel })),
   UnifiedConnectionsPanel: () => import('@/components/admin/integrations/UnifiedConnectionsPanel').then(m => ({ default: m.UnifiedConnectionsPanel })),
   TagsManager: () => import('@/components/admin/tags/TagsManager').then(m => ({ default: m.TagsManager })),
   BusinessHoursManager: () => import('@/components/admin/schedules/BusinessHoursManager').then(m => ({ default: m.BusinessHoursManager })),
@@ -76,7 +75,6 @@ const AgentInterventionsPanel = lazyWithRetry(f.AgentInterventionsPanel);
 const AgentRunTracesPanel = lazyWithRetry(f.AgentRunTracesPanel);
 const SectorsManager = lazyWithRetry(f.SectorsManager);
 const PlanSelector = lazyWithRetry(f.PlanSelector);
-const CaktoAdminPanel = lazyWithRetry(f.CaktoAdminPanel);
 const UnifiedConnectionsPanel = lazyWithRetry(f.UnifiedConnectionsPanel);
 const TagsManager = lazyWithRetry(f.TagsManager);
 const BusinessHoursManager = lazyWithRetry(f.BusinessHoursManager);
@@ -124,7 +122,6 @@ const sectionFactories: Record<string, () => Promise<unknown>> = {
   integrations: f.IntegrationsManager,
   sectors: f.SectorsManager,
   plan: f.PlanSelector,
-  payments: f.CaktoAdminPanel,
   connections: f.UnifiedConnectionsPanel,
   tags: f.TagsManager,
   schedules: f.BusinessHoursManager,
@@ -242,7 +239,6 @@ export default function Admin() {
       case 'integrations': return <IntegrationsManager />;
       case 'sectors': return <SectorsManager />;
       case 'plan': return <PlanSelector />;
-      case 'payments': return <CaktoAdminPanel />;
       case 'connections': return <UnifiedConnectionsPanel />;
       case 'tags': return <TagsManager />;
       case 'schedules': return <BusinessHoursManager />;
