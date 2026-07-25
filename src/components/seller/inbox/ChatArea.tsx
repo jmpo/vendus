@@ -526,6 +526,15 @@ export function ChatArea({
             </DropdownMenu>
           </div>
         </div>
+        {/* Fila de chips (IA retoma / seguimiento) — se oculta sola si no hay nada */}
+        <div className="px-3 pb-1.5 flex items-center gap-1.5 empty:hidden">
+          <HandbackCountdown
+            lastActivityAt={handbackAnchor}
+            status={status}
+            idleMinutes={handbackIdleMinutes}
+          />
+          <FollowupBadge conversationId={conversationId} />
+        </div>
         </div>
       )}
 
