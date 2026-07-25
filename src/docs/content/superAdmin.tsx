@@ -206,7 +206,7 @@ export const superAdminPages: DocPage[] = [
         />
         <Callout type="info" title="Roteamento de IA inteligente">
           Se uma empresa configurou <code>org_ai_credentials</code> + provider externo, a función <code>webchat-bot</code>
-          chama a API direto. Sino, usa o Lovable AI Gateway (consumindo créditos da plataforma).
+          llama a la API directo. Si no, usa el gateway de IA nativa (consumiendo créditos de la plataforma).
         </Callout>
       </>
     ),

@@ -65,7 +65,7 @@ function AIProviderConfig({ provider }: AIProviderConfigProps) {
         <CardTitle className="text-lg">{meta.name}</CardTitle>
         <CardDescription>
           Usa su propia cuenta para que la plataforma use este proveedor.
-          Por defecto, todo usa <strong>Lovable AI</strong>.
+          Por defecto, la plataforma usa su <strong>IA nativa</strong>.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -161,7 +161,7 @@ export function LovableAIInfo() {
             <Sparkles className="h-5 w-5" />
           </div>
           <div>
-            <CardTitle className="text-lg">Lovable AI</CardTitle>
+            <CardTitle className="text-lg">IA nativa</CardTitle>
             <CardDescription>Gateway nativo ya incluido en la plataforma</CardDescription>
           </div>
         </div>
@@ -174,7 +174,7 @@ export function LovableAIInfo() {
           </span>
         </div>
         <p className="text-muted-foreground">
-          Lovable AI es el proveedor predeterminado de los agentes. Da acceso a los modelos
+          La IA nativa es el proveedor predeterminado de los agentes. Da acceso a los modelos
           más modernos (Google Gemini e OpenAI GPT) sin necesidad de configurar
           cuentas externas. Ideal para comenzar rápido.
         </p>

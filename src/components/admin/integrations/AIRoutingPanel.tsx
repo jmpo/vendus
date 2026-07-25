@@ -20,7 +20,7 @@ import {
 import { useAITokenStatus } from '@/hooks/useAITokenStatus';
 
 const PROVIDER_LABELS: Record<AIProvider, string> = {
-  lovable: 'Lovable AI (predeterminado)',
+  lovable: 'IA nativa (predeterminado)',
   openai: 'OpenAI (ChatGPT)',
   anthropic: 'Anthropic (Claude)',
   gemini: 'Google Gemini',
@@ -122,7 +122,7 @@ export function AIRoutingPanel() {
         <AlertDescription>
           Elegí qual IA atende cada parte da plataforma e qual modelo usar.
           {platformAllowed ? (
-            <> <strong>Lovable AI</strong> é o predeterminado. Para usar OpenAI, Claude ou Gemini, configure a chave correspondente.</>
+            <> La <strong>IA nativa</strong> es la predeterminada. Para usar tu propia OpenAI, Claude o Gemini, configurá la clave correspondiente.</>
           ) : (
             <> Configure por el menos uma chave externa (OpenAI, Claude ou Gemini) para comenzar.</>
           )}

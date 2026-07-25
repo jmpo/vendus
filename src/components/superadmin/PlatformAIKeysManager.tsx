@@ -67,13 +67,13 @@ export function PlatformAIKeysManager() {
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-violet-500" />
-            Lovable AI
+            IA nativa
             <Badge className="bg-violet-500/20 text-violet-700 dark:text-violet-300 border-violet-500/30">
               Activa automáticamente
             </Badge>
           </CardTitle>
           <p className="text-xs text-muted-foreground mt-1">
-            A Lovable no usa chave manual — o consumo vai direto para a su workspace Lovable
+            La IA nativa no usa clave manual — el consumo va directo a tu workspace
             via <code className="text-[11px] bg-muted px-1 rounded">LOVABLE_API_KEY</code>.
             Para acompanhar quanto está siendo gasto, acesse <strong>Consumo de IA</strong> no menu.
           </p>
