@@ -28,7 +28,6 @@ const TONE_OPTIONS = [
 
 const CHANNELS = [
   { id: 'whatsapp',  label: 'WhatsApp'  },
-  { id: 'instagram', label: 'Instagram' },
   { id: 'webchat',   label: 'Webchat'   },
 ];
 
@@ -51,7 +50,7 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
   const respectHours   = formData.followup_respect_business_hours ?? true;
   const stopOnHuman    = formData.followup_stop_on_human ?? true;
   const stopOnBooking  = formData.followup_stop_on_booking ?? true;
-  const channels       = formData.followup_channels ?? ['whatsapp', 'instagram'];
+  const channels       = formData.followup_channels ?? ['whatsapp'];
   const hints: Array<{ attempt: number; hint: string }> =
     Array.isArray(formData.followup_attempt_hints) ? formData.followup_attempt_hints as any : [];
 
@@ -289,8 +288,7 @@ export function AgentFollowupTab({ formData, onChange }: Props) {
               nombre EXACTO de tu plantilla aprobada en Zernio para que el follow-up post-24h salga igual.
               <br />
               <span className="text-muted-foreground/80">
-                (En Evolution no hace falta — no tiene límite de 24h. Si lo dejás vacío, el follow-up fuera de 24h en
-                Zernio/Meta no se envía y queda registrado el motivo.)
+                (Si lo dejás vacío, el follow-up fuera de la ventana de 24h no se envía y queda registrado el motivo.)
               </span>
             </p>
             <div className="grid gap-3 sm:grid-cols-2">
