@@ -5,11 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Sparkles, Info } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { useMetaWAConnections } from '@/hooks/useMetaWhatsApp';
-import { useInstagramConnections } from '@/hooks/useInstagramConnections';
 import { useOrganizationEffectivePlan } from '@/hooks/useOrganizationPlan';
 import { supabase } from '@/integrations/supabase/client';
-import { MetaWhatsAppConnectionsPanel } from './MetaWhatsAppConnectionsPanel';
 import { ZernioConnectionsPanel } from './ZernioConnectionsPanel';
 import { NewConnectionDialog, type ConnectionProvider } from './NewConnectionDialog';
 import { toast } from 'sonner';
@@ -17,8 +14,6 @@ import { toast } from 'sonner';
 export function UnifiedConnectionsPanel() {
   const navigate = useNavigate();
   const { profile } = useAuth();
-  const { data: metaConns } = useMetaWAConnections();
-  const { data: igConns } = useInstagramConnections();
   const { data: effectivePlan } = useOrganizationEffectivePlan(profile?.organization_id);
 
   const { data: zernioConns } = useQuery({
@@ -34,11 +29,9 @@ export function UnifiedConnectionsPanel() {
   });
 
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [openMetaWizard, setOpenMetaWizard] = useState(false);
-  const [openIgWizard, setOpenIgWizard] = useState(false);
   const [openZernio, setOpenZernio] = useState(false);
 
-  const used = (metaConns?.length ?? 0) + (igConns?.length ?? 0) + (zernioConns?.length ?? 0);
+  const used = zernioConns?.length ?? 0;
   const limit = effectivePlan?.limits?.max_connections ?? 1;
   const limitReached = used >= limit;
 
@@ -47,9 +40,7 @@ export function UnifiedConnectionsPanel() {
       toast.error(`Llegaste al límite de ${limit} conexión(es). Hacé upgrade del plan.`);
       return;
     }
-    if (provider === 'meta_whatsapp') setOpenMetaWizard(true);
-    else if (provider === 'meta_instagram') setOpenIgWizard(true);
-    else if (provider === 'zernio') setOpenZernio(true);
+    if (provider === 'zernio') setOpenZernio(true);
   };
 
   return (
@@ -58,7 +49,7 @@ export function UnifiedConnectionsPanel() {
         <div>
           <h3 className="text-lg font-semibold">Tus Conexiones</h3>
           <p className="text-sm text-muted-foreground">
-            Gestioná todos los canales conectados (Zernio, WhatsApp Oficial Meta e Instagram).
+            Gestioná tu WhatsApp conectado vía Zernio.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -88,19 +79,11 @@ export function UnifiedConnectionsPanel() {
         </div>
       )}
 
-      <MetaWhatsAppConnectionsPanel
-        hideHeader
-        openWizard={openMetaWizard}
-        onCloseWizard={() => setOpenMetaWizard(false)}
-      />
-
       <ZernioConnectionsPanel
         hideHeader
         openWizard={openZernio}
         onCloseWizard={() => setOpenZernio(false)}
       />
-
-      {/* Instagram Direct fue retirado: sus edge functions ya no existen. */}
 
       <NewConnectionDialog
         open={pickerOpen}

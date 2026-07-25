@@ -1,8 +1,8 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { ShieldCheck, ChevronRight, Globe } from 'lucide-react';
+import { ChevronRight, Globe } from 'lucide-react';
 
-export type ConnectionProvider = 'meta_whatsapp' | 'meta_instagram' | 'zernio';
+export type ConnectionProvider = 'zernio';
 
 interface Props {
   open: boolean;
@@ -56,7 +56,7 @@ export function NewConnectionDialog({ open, onClose, onSelect }: Props) {
         <DialogHeader>
           <DialogTitle>Nueva conexión</DialogTitle>
           <DialogDescription>
-            Elegí qual tipo de canal usted quiere conectar.
+            Conectá tu WhatsApp oficial vía Zernio.
           </DialogDescription>
         </DialogHeader>
 
@@ -69,16 +69,6 @@ export function NewConnectionDialog({ open, onClose, onSelect }: Props) {
             badge={{ label: 'Recomendado', variant: 'default' }}
             onClick={() => handle('zernio')}
           />
-          <Option
-            icon={<ShieldCheck className="h-5 w-5 text-emerald-600" />}
-            iconBg="bg-emerald-500/10"
-            title="WhatsApp Oficial (Meta Cloud API)"
-            description="API oficial de Meta con plantillas, automatizaciones y envío a escala. Requiere que crees tu propia Meta App. Ideal para empresas que quieren número propio, plantillas aprobadas y mayor estabilidad."
-            badge={{ label: 'Avanzado', variant: 'outline' }}
-            onClick={() => handle('meta_whatsapp')}
-          />
-          {/* Instagram Direct fue retirado: sus edge functions ya no existen — ofrecerlo
-              sería una conexión que nunca recibe mensajes. Reactivar cuando se reimplante. */}
         </div>
       </DialogContent>
     </Dialog>
