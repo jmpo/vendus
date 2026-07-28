@@ -95,6 +95,17 @@ Deno.serve(async (req) => {
       }
     }
 
+    // 🛡️ Guard: audiencia vacía → NO activar (evita mandar a toda la base sin querer).
+    if (leadIds.length === 0) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "Audiencia vacía: seleccioná una lista de contactos o al menos un filtro. Por seguridad, una campaña sin destinatarios definidos NO se envía a toda tu base.",
+        }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
     // Resolve instâncias disponíveis (Evolution + Meta WhatsApp + Zernio)
     let instances: Array<{ id: string; status: string; connection_type: 'evolution' | 'meta_whatsapp' | 'zernio'; weight: number }> = [];
     const distItems = Array.isArray(campaign.instance_distribution) ? (campaign.instance_distribution as any[]) : [];

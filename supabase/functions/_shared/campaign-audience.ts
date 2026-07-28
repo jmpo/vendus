@@ -111,6 +111,20 @@ export async function resolveAudience(
     const { data } = await q;
     baseRows = data ?? [];
   } else {
+    // 🛡️ Guard anti-"mandar a todos": sin lead_ids y SIN ningún filtro, NO barrer toda
+    // la base. Audiencia vacía = 0 destinatarios. Hay que elegir una lista o un filtro
+    // explícito. (Antes, filtros vacíos = TODOS los leads con teléfono → footgun grave.)
+    const hasAnyFilter = !!(
+      audience.origins?.length || audience.channels?.length || audience.stage_ids?.length ||
+      audience.assigned_to?.length || audience.temperature?.length || audience.tag_ids?.length ||
+      audience.created_after || audience.created_before || audience.last_interaction_after ||
+      audience.last_interaction_before || audience.custom_fields?.length || audience.only_open_window ||
+      (audience.search && (audience.search.name || audience.search.email || audience.search.phone))
+    );
+    if (!hasAnyFilter) {
+      return { leadIds: [], total: 0, excluded: 0 };
+    }
+
     let q = supabase
       .from("leads")
       .select("id, metadata", { count: "exact" })
@@ -194,6 +208,28 @@ export async function resolveAudience(
     const tagged = await fetchLeadIdsByTags(supabase, organizationId, exclusion.tag_ids);
     tagged.forEach((id) => toExclude.add(id));
   }
+
+  // 🛡️ Nunca enviar al propio número de alertas de la org (evita auto-mensajearse en
+  // campañas). Matchea por los últimos 9 dígitos para tolerar variantes de formato.
+  try {
+    const { data: orgRow } = await supabase
+      .from("organizations")
+      .select("alert_whatsapp_phone")
+      .eq("id", organizationId)
+      .maybeSingle();
+    const alertRaw = (orgRow as any)?.alert_whatsapp_phone
+      ? String((orgRow as any).alert_whatsapp_phone).replace(/\D/g, "")
+      : "";
+    if (alertRaw.length >= 8) {
+      const tail = alertRaw.slice(-9);
+      const { data: ownLeads } = await supabase
+        .from("leads")
+        .select("id")
+        .eq("organization_id", organizationId)
+        .ilike("phone", `%${tail}%`);
+      (ownLeads ?? []).forEach((l: any) => toExclude.add(l.id));
+    }
+  } catch (_) { /* no bloquear el envío si falla la exclusión */ }
 
   const finalIds = baseIds.filter((id) => !toExclude.has(id));
   return { leadIds: finalIds, total, excluded: total - finalIds.length };

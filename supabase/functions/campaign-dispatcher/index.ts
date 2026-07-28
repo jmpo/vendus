@@ -8,7 +8,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const MAX_PER_TICK = 50;
+// 25 por tanda (antes 50): tandas más cortas para NO pasarse del timeout de la edge
+// function (cada envío es secuencial). El auto-continuado al final drena el resto.
+const MAX_PER_TICK = 25;
 
 function withinWindow(campaign: any): boolean {
   if (campaign.schedule_type !== "recurring") return true;
@@ -34,6 +36,15 @@ Deno.serve(async (req) => {
     const supabase = createServiceClient();
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    // 🔧 Recupera targets colgados en 'sending': un run anterior los lockeó y murió
+    // (timeout) antes de marcarlos sent/failed → quedaban trabados para siempre porque
+    // el cron solo toma 'queued'. Los >10 min en 'sending' se devuelven a la cola.
+    await supabase
+      .from("campaign_targets")
+      .update({ status: "queued" })
+      .eq("status", "sending")
+      .lt("scheduled_for", new Date(Date.now() - 10 * 60 * 1000).toISOString());
 
     const { data: targets } = await supabase
       .from("campaign_targets")
@@ -255,6 +266,24 @@ Deno.serve(async (req) => {
             .eq("id", cid)
             .eq("status", "active");
         }
+      }
+    }
+
+    // 🔁 Auto-continuar: si quedan targets 'queued' YA vencidos, re-dispara el dispatcher
+    // (fire-and-forget) para no esperar 5 min al cron. Termina solo cuando no hay más
+    // vencidos. Guardado por processed>0 → si todo se saltó (pausa/ventana) no reintenta.
+    if (processed > 0) {
+      const { count: pending } = await supabase
+        .from("campaign_targets")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "queued")
+        .lte("scheduled_for", new Date().toISOString());
+      if ((pending ?? 0) > 0) {
+        fetch(`${supabaseUrl}/functions/v1/campaign-dispatcher`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceKey}` },
+          body: "{}",
+        }).catch(() => {});
       }
     }
 
